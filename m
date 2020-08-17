@@ -2,88 +2,70 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA996C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A738AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91262065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597700376;
-	bh=Je/YzZWJ1KzQtwlFETxshgLz9HlGjQL/pqAHvFFNf94=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N7xA5LkZLehrgoRwPUGtmyzO8KHURJ9C+J2GCss/eIH4De43G9B8wj90GR9JqSnen
-	 UJ5dCwGR0QMq24x5zsvdj1+c0zXp0JbNYkMfnZ4WA3pb6grjQ9rET7IixnVZtA/TYZ
-	 aNBg8G54i9IJER5LZOz1gSvjvQNZi5SZlB8ZFDPA=
+	by mail.kernel.org (Postfix) with ESMTP id 8D61120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgHQVjf (ORCPT
+        id S1728650AbgHQVkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:39:35 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36848 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbgHQVjd (ORCPT
+        Mon, 17 Aug 2020 17:40:52 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:57878 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgHQVkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:39:33 -0400
-Received: by mail-il1-f193.google.com with SMTP id z3so15859491ilh.3;
-        Mon, 17 Aug 2020 14:39:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mw5wVwSExTMkeVX3ToMtDjg6KBaBweiQKzPEGQFQbxI=;
-        b=FRirZIULmrNh1VlmCVdWev7PGEtgYPHLeNecjGqs72zZGnexh+cn2bWp06U1PVshNg
-         ukybd+yfRNv7ek+/+OvVcuyjeCPvyWiDBKdtX0LEaRVScuQYtQBnb69tM/GK10iLj1Hb
-         Lvsc9U7SI9lq+/WmTLF7dVuvbyOpb84k4lb2OqVZCSTB9GHUe2dWHv+i5OfKvbW6lK/Q
-         EBWK2cTqsknfUHfezuNn96mI+UbvjEqlDbgw5PKAbUgelc9Nph6hYV/gPVEwupv9vKIL
-         hCx1CVzu+05hTg4X81WvP6rjMpHSjweMF0aUKTmqu+xKtZFJN8Iyh3m62amYwuv72cfG
-         dCkw==
-X-Gm-Message-State: AOAM531qJV2nEt8t92GU9eIn+n6EE2Ach9YYGr/5TKdj8rVoJ3wJE7k8
-        wZS5gNnW9H2LVHsl9L4mTKOmSU/0fA==
-X-Google-Smtp-Source: ABdhPJz4xy1sZuMoMg+yUZJPmhtdp5Jkw7yxfPY8U6JrabWfyvP6WnDM7FeHKFHOcaQfdWi4ADhMiQ==
-X-Received: by 2002:a92:dc81:: with SMTP id c1mr14028147iln.284.1597700372365;
-        Mon, 17 Aug 2020 14:39:32 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id m7sm10154817ilq.45.2020.08.17.14.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 14:39:31 -0700 (PDT)
-Received: (nullmailer pid 1614839 invoked by uid 1000);
-        Mon, 17 Aug 2020 21:39:28 -0000
-Date:   Mon, 17 Aug 2020 15:39:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-crypto@vger.kernel.org, mpm@selenic.com,
-        linux-arm-kernel@lists.infradead.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, herbert@gondor.apana.org.au,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com, vz@mleia.com,
-        horia.geanta@nxp.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] dt-bindings: rng: Convert i.MX to json-schema
-Message-ID: <20200817213928.GA1614783@bogus>
-References: <1596608884-13205-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 17 Aug 2020 17:40:51 -0400
+X-Greylist: delayed 341 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 17:40:49 EDT
+Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id C1C277A0198;
+        Mon, 17 Aug 2020 23:35:06 +0200 (CEST)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
+Date:   Mon, 17 Aug 2020 23:35:02 +0200
+User-Agent: KMail/1.9.10
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Reed <breed@users.sourceforge.net>,
+        Javier Achirica <achirica@users.sourceforge.net>,
+        Jean Tourrilhes <jt@hpl.hp.com>,
+        "Fabrice Bellet" <fabrice@bellet.info>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+References: <20200814113933.1903438-1-lee.jones@linaro.org> <87a6ytmmhm.fsf@codeaurora.org> <20200817112706.000000f2@intel.com>
+In-Reply-To: <20200817112706.000000f2@intel.com>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <1596608884-13205-1-git-send-email-Anson.Huang@nxp.com>
+Message-Id: <202008172335.02988.linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Aug 2020 14:28:04 +0800, Anson Huang wrote:
-> Convert the i.MX rng binding to DT schema format using json-schema.
+On Monday 17 August 2020 20:27:06 Jesse Brandeburg wrote:
+> On Mon, 17 Aug 2020 16:27:01 +0300
+> Kalle Valo <kvalo@codeaurora.org> wrote:
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/rng/imx-rng.txt  | 23 ----------
->  Documentation/devicetree/bindings/rng/imx-rng.yaml | 50 ++++++++++++++++++++++
->  2 files changed, 50 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rng/imx-rng.txt
->  create mode 100644 Documentation/devicetree/bindings/rng/imx-rng.yaml
+> > I was surprised to see that someone was using this driver in 2015, so
+> > I'm not sure anymore what to do. Of course we could still just remove
+> > it and later revert if someone steps up and claims the driver is still
+> > usable. Hmm. Does anyone any users of this driver?
 > 
+> What about moving the driver over into staging, which is generally the
+> way I understood to move a driver slowly out of the kernel?
 
-Applied, thanks!
+Please don't remove random drivers. I still have the Aironet PCMCIA card and can test the driver.
+
+-- 
+Ondrej Zary
