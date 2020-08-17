@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92966C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21222C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6607722BEF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F245722D2B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678379;
-	bh=L7Fuv2KHVQPkEGZguNm9DpboBBFZMLvBILGXeFQ+vY0=;
+	s=default; t=1597678388;
+	bh=cbANANyU/YMVkf+WiiSd6M9TsPsYv2l6Y4+7w6+2p+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddVbcE92BuHdO8kRXrppYADBPefq50jLi2wmgrZ+DyLK7jwkvKc4xWlFQBcDzQDS+
-	 vxC+UnTaCHAfbQ0ACja2nUPexblOwBDrKw6IOl3UtAnmScW3rj4jMTBQxLdeE05cq+
-	 ZUjlvaE4XRUjlthtpuUQ0/rb3vywVakhhS42FpsA=
+	b=thGT/1wQuiA6Fdcj+FtNovmDTSG8KibjRBl3K2ocrNUyYunsPQRbs6MyfywCrtku4
+	 TufI3HBKqi+W6lqnt8LncBRG9jOP8geVYEOtDTpdh4VtIhLH3H6Awa/FwtOty8CYF5
+	 +y1Z+LWfNpK5wbInlogEwAXtX3fijyr2G7KoVpoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbgHQPc6 (ORCPT
+        id S1730350AbgHQPdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730083AbgHQP30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:26 -0400
+        id S1730096AbgHQP3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4CA823C17;
-        Mon, 17 Aug 2020 15:29:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E14523110;
+        Mon, 17 Aug 2020 15:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678165;
-        bh=L7Fuv2KHVQPkEGZguNm9DpboBBFZMLvBILGXeFQ+vY0=;
+        s=default; t=1597678171;
+        bh=cbANANyU/YMVkf+WiiSd6M9TsPsYv2l6Y4+7w6+2p+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yM0OoTSo78kq0RpYaxz8JfVYVmP1vNK7+FS2V5xuOsDVwlDnlesi0UO2LAy2q35Bx
-         8spfmny9lngOV73cl/0hWAG4msvRWAhKEASS/f9p4H50BXTu6IO5BFkhk8Vz+129VQ
-         s1MPZL2YjLVX8Vja+76n7WBjlOHZKLvHyp3+FjWk=
+        b=HgxCLR/iRBPiinGKgXqv0PFC28BthKEfwzZRCqMU1w3RhMj8DA4MMt1mFyfcg002w
+         X+nxcw8sbo+UnoOkdeD7ZubmHcujGQEoCcN1YBs/b8UVFKOmli6XpWERFwhgeWbZ74
+         UfhaeYJAEZsF75FMmmPDF3StW7x9RX96LAmnbNVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 240/464] ima: Free the entire rule when deleting a list of rules
-Date:   Mon, 17 Aug 2020 17:13:13 +0200
-Message-Id: <20200817143845.293760421@linuxfoundation.org>
+Subject: [PATCH 5.8 242/464] ima: Fail rule parsing when buffer hook functions have an invalid action
+Date:   Mon, 17 Aug 2020 17:13:15 +0200
+Message-Id: <20200817143845.388266628@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,114 +62,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit 465aee77aae857b5fcde56ee192b33dc369fba04 ]
+[ Upstream commit 712183437ebebc89cd086ef96cf9a521fd97fd09 ]
 
-Create a function, ima_free_rule(), to free all memory associated with
-an ima_rule_entry. Use the new function to fix memory leaks of allocated
-ima_rule_entry members, such as .fsname and .keyrings, when deleting a
-list of rules.
+Buffer based hook functions, such as KEXEC_CMDLINE and KEY_CHECK, can
+only measure. The process_buffer_measurement() function quietly ignores
+all actions except measure so make this behavior clear at the time of
+policy load.
 
-Make the existing ima_lsm_free_rule() function specific to the LSM
-audit rule array of an ima_rule_entry and require that callers make an
-additional call to kfree to free the ima_rule_entry itself.
+The parsing of the keyrings conditional had a check to ensure that it
+was only specified with measure actions but the check should be on the
+hook function and not the keyrings conditional since
+"appraise func=KEY_CHECK" is not a valid rule.
 
-This fixes a memory leak seen when loading by a valid rule that contains
-an additional piece of allocated memory, such as an fsname, followed by
-an invalid rule that triggers a policy load failure:
-
- # echo -e "dont_measure fsname=securityfs\nbad syntax" > \
-    /sys/kernel/security/ima/policy
- -bash: echo: write error: Invalid argument
- # echo scan > /sys/kernel/debug/kmemleak
- # cat /sys/kernel/debug/kmemleak
- unreferenced object 0xffff9bab67ca12c0 (size 16):
-   comm "bash", pid 684, jiffies 4295212803 (age 252.344s)
-   hex dump (first 16 bytes):
-     73 65 63 75 72 69 74 79 66 73 00 6b 6b 6b 6b a5  securityfs.kkkk.
-   backtrace:
-     [<00000000adc80b1b>] kstrdup+0x2e/0x60
-     [<00000000d504cb0d>] ima_parse_add_rule+0x7d4/0x1020
-     [<00000000444825ac>] ima_write_policy+0xab/0x1d0
-     [<000000002b7f0d6c>] vfs_write+0xde/0x1d0
-     [<0000000096feedcf>] ksys_write+0x68/0xe0
-     [<0000000052b544a2>] do_syscall_64+0x56/0xa0
-     [<000000007ead1ba7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: f1b08bbcbdaf ("ima: define a new policy condition based on the filesystem name")
-Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
+Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
 Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ security/integrity/ima/ima_policy.c | 40 +++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 236a731492d1e..641582230861c 100644
+index 18271920d315d..a3d72342408ad 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -261,6 +261,21 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
- 		security_filter_rule_free(entry->lsm[i].rule);
- 		kfree(entry->lsm[i].args_p);
- 	}
+@@ -973,6 +973,43 @@ static void check_template_modsig(const struct ima_template_desc *template)
+ #undef MSG
+ }
+ 
++static bool ima_validate_rule(struct ima_rule_entry *entry)
++{
++	/* Ensure that the action is set */
++	if (entry->action == UNKNOWN)
++		return false;
++
++	/*
++	 * Ensure that the hook function is compatible with the other
++	 * components of the rule
++	 */
++	switch (entry->func) {
++	case NONE:
++	case FILE_CHECK:
++	case MMAP_CHECK:
++	case BPRM_CHECK:
++	case CREDS_CHECK:
++	case POST_SETATTR:
++	case MODULE_CHECK:
++	case FIRMWARE_CHECK:
++	case KEXEC_KERNEL_CHECK:
++	case KEXEC_INITRAMFS_CHECK:
++	case POLICY_CHECK:
++		/* Validation of these hook functions is in ima_parse_rule() */
++		break;
++	case KEXEC_CMDLINE:
++	case KEY_CHECK:
++		if (entry->action & ~(MEASURE | DONT_MEASURE))
++			return false;
++
++		break;
++	default:
++		return false;
++	}
++
++	return true;
 +}
 +
-+static void ima_free_rule(struct ima_rule_entry *entry)
-+{
-+	if (!entry)
-+		return;
-+
-+	/*
-+	 * entry->template->fields may be allocated in ima_parse_rule() but that
-+	 * reference is owned by the corresponding ima_template_desc element in
-+	 * the defined_templates list and cannot be freed here
-+	 */
-+	kfree(entry->fsname);
-+	kfree(entry->keyrings);
-+	ima_lsm_free_rule(entry);
- 	kfree(entry);
- }
- 
-@@ -302,6 +317,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 
- out_err:
- 	ima_lsm_free_rule(nentry);
-+	kfree(nentry);
- 	return NULL;
- }
- 
-@@ -315,7 +331,14 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
- 
- 	list_replace_rcu(&entry->list, &nentry->list);
- 	synchronize_rcu();
-+	/*
-+	 * ima_lsm_copy_rule() shallow copied all references, except for the
-+	 * LSM references, from entry to nentry so we only want to free the LSM
-+	 * references and the entry itself. All other memory refrences will now
-+	 * be owned by nentry.
-+	 */
- 	ima_lsm_free_rule(entry);
-+	kfree(entry);
- 
- 	return 0;
- }
-@@ -1402,15 +1425,11 @@ ssize_t ima_parse_add_rule(char *rule)
- void ima_delete_rules(void)
+ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
  {
- 	struct ima_rule_entry *entry, *tmp;
--	int i;
+ 	struct audit_buffer *ab;
+@@ -1150,7 +1187,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 			keyrings_len = strlen(args[0].from) + 1;
  
- 	temp_ima_appraise = 0;
- 	list_for_each_entry_safe(entry, tmp, &ima_temp_rules, list) {
--		for (i = 0; i < MAX_LSM_RULES; i++)
--			kfree(entry->lsm[i].args_p);
--
- 		list_del(&entry->list);
--		kfree(entry);
-+		ima_free_rule(entry);
+ 			if ((entry->keyrings) ||
+-			    (entry->action != MEASURE) ||
+ 			    (entry->func != KEY_CHECK) ||
+ 			    (keyrings_len < 2)) {
+ 				result = -EINVAL;
+@@ -1356,7 +1392,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 			break;
+ 		}
  	}
- }
- 
+-	if (!result && (entry->action == UNKNOWN))
++	if (!result && !ima_validate_rule(entry))
+ 		result = -EINVAL;
+ 	else if (entry->action == APPRAISE)
+ 		temp_ima_appraise |= ima_appraise_flag(entry->func);
 -- 
 2.25.1
 
