@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB19C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC8422CF7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2661420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680683;
-	bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
+	s=default; t=1597680698;
+	bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRJlfNwrabz+Wyaf/BycXnlxJvVLzv2SexWk/iU18xmZ1LWbHHaQ24fAJo+BkobwF
-	 1T0foQksj62riPEyrBNCQ+r5NFkAUAaLM2/wjtOrB45RNpczCVy6Hgw3ZiRvC18Cta
-	 hhW3lu49pnGZpRo/UtkhaytjmMpB8QpqkyNzX8wU=
+	b=NmmkPJQpMJYhvFqM0KwzjlSKgeNGFawLGcbPI2xa65HlcaxxQp8k7OOPDj79KRBKF
+	 rGwghw9FDoGMf9ygm1N1PfiPCHMgl7Lr1Cpm+BA/+KI/hSXOF6ZLcP1gghcDwx64Hk
+	 aWYy0WPnF++hXLO0uB2qB2JcAQXmXLwKLU2TMp0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388613AbgHQQLU (ORCPT
+        id S2388626AbgHQQLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgHQPqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:25 -0400
+        id S2387743AbgHQPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:46:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 768182075B;
-        Mon, 17 Aug 2020 15:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6252075B;
+        Mon, 17 Aug 2020 15:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679184;
-        bh=4WTP4Ogj32dlekRkN0sF2w84Av0Agk7t6IC5sMNZfM8=;
+        s=default; t=1597679198;
+        bh=JrnZwM8UAIuMLHP7tBDKi0C6XfjGffVEugHReXa9cHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZkCoAhdm5f8CoZNy/WeSpNjgFWu0A8ukXYKg3KxSn3W4hidlK+gGzrNqbSj73dc0
-         7Vp6pR7V8mIdWpX8RQwP2naIlHUPZTtopM5QHEzhTYii9PTNS70Zv/1mtmaPzPnezO
-         J1ue9wtkU8nOt/OLmMHSDqnfL4WEbnms/HQ9SokI=
+        b=bGAfcovCamjNFMJrhAP64ZegNjRniO4Vn9CqFVtnQ7j+UjM/2bo+gMON02SSI1Nse
+         bsRhH3D4PR/tCmSXB7asrAA9IU9Pg+hEOVJVh5Xsi0kOqdtl+vVpFntafXjH7FySBl
+         RGaBQXMgbloGOHNjnwEdCGCtYdvsacrmVNXg5aMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 094/393] drm/amd/display: Improve DisplayPort monitor interop
-Date:   Mon, 17 Aug 2020 17:12:24 +0200
-Message-Id: <20200817143824.187072938@linuxfoundation.org>
+Subject: [PATCH 5.7 130/393] btmrvl: Fix firmware filename for sd8997 chipset
+Date:   Mon, 17 Aug 2020 17:13:00 +0200
+Message-Id: <20200817143825.915129160@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,114 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit eec3303de3378cdfaa0bb86f43546dbbd88f94e2 ]
+[ Upstream commit 00eb0cb36fad53315047af12e83c643d3a2c2e49 ]
 
-[Why]
-DC is very fast at link training and stream enablement
-which causes issues such as blackscreens for non-compliant
-monitors.
+Firmware for sd8997 chipset is distributed by Marvell package and also as
+part of the linux-firmware repository in filename sdsd8997_combo_v4.bin.
 
-[How]
-After debugging with scaler vendors we implement the
-minimum delays at the necessary locations to ensure
-the monitor does not hang.  Delays are generic due to
-lack of IEEE OUI information on the failing displays.
+This patch fixes mwifiex driver to load correct firmware file for sd8997.
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: f0ef67485f591 ("Bluetooth: btmrvl: add sd8997 chipset support")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    |  4 +++-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 16 ++++++++++------
- .../amd/display/dc/dce110/dce110_hw_sequencer.c  | 11 ++++++++++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ drivers/bluetooth/btmrvl_sdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 67cfff1586e9f..3f157bcc174b9 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -3146,9 +3146,11 @@ void core_link_disable_stream(struct pipe_ctx *pipe_ctx)
- 			write_i2c_redriver_setting(pipe_ctx, false);
- 		}
- 	}
--	dc->hwss.disable_stream(pipe_ctx);
+diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+index 7aa2c94720bc5..4c7978cb1786f 100644
+--- a/drivers/bluetooth/btmrvl_sdio.c
++++ b/drivers/bluetooth/btmrvl_sdio.c
+@@ -346,7 +346,7 @@ static const struct btmrvl_sdio_device btmrvl_sdio_sd8987 = {
  
- 	disable_link(pipe_ctx->stream->link, pipe_ctx->stream->signal);
-+
-+	dc->hwss.disable_stream(pipe_ctx);
-+
- 	if (pipe_ctx->stream->timing.flags.DSC) {
- 		if (dc_is_dp_signal(pipe_ctx->stream->signal))
- 			dp_set_dsc_enable(pipe_ctx, false);
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index caa090d0b6acc..1ada01322cd2c 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -1103,6 +1103,10 @@ static inline enum link_training_result perform_link_training_int(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET = DPCD_TRAINING_PATTERN_VIDEOIDLE;
- 	dpcd_set_training_pattern(link, dpcd_pattern);
- 
-+	/* delay 5ms after notifying sink of idle pattern before switching output */
-+	if (link->connector_signal != SIGNAL_TYPE_EDP)
-+		msleep(5);
-+
- 	/* 4. mainlink output idle pattern*/
- 	dp_set_hw_test_pattern(link, DP_TEST_PATTERN_VIDEO_MODE, NULL, 0);
- 
-@@ -1552,6 +1556,12 @@ bool perform_link_training_with_retries(
- 	struct dc_link *link = stream->link;
- 	enum dp_panel_mode panel_mode = dp_get_panel_mode(link);
- 
-+	/* We need to do this before the link training to ensure the idle pattern in SST
-+	 * mode will be sent right after the link training
-+	 */
-+	link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
-+							pipe_ctx->stream_res.stream_enc->id, true);
-+
- 	for (j = 0; j < attempts; ++j) {
- 
- 		dp_enable_link_phy(
-@@ -1568,12 +1578,6 @@ bool perform_link_training_with_retries(
- 
- 		dp_set_panel_mode(link, panel_mode);
- 
--		/* We need to do this before the link training to ensure the idle pattern in SST
--		 * mode will be sent right after the link training
--		 */
--		link->link_enc->funcs->connect_dig_be_to_fe(link->link_enc,
--								pipe_ctx->stream_res.stream_enc->id, true);
--
- 		if (link->aux_access_disabled) {
- 			dc_link_dp_perform_link_training_skip_aux(link, link_setting);
- 			return true;
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index 10527593868cc..24ca592c90df5 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -1090,8 +1090,17 @@ void dce110_blank_stream(struct pipe_ctx *pipe_ctx)
- 		dc_link_set_abm_disable(link);
- 	}
- 
--	if (dc_is_dp_signal(pipe_ctx->stream->signal))
-+	if (dc_is_dp_signal(pipe_ctx->stream->signal)) {
- 		pipe_ctx->stream_res.stream_enc->funcs->dp_blank(pipe_ctx->stream_res.stream_enc);
-+
-+		/*
-+		 * After output is idle pattern some sinks need time to recognize the stream
-+		 * has changed or they enter protection state and hang.
-+		 */
-+		if (!dc_is_embedded_signal(pipe_ctx->stream->signal))
-+			msleep(60);
-+	}
-+
- }
- 
- 
+ static const struct btmrvl_sdio_device btmrvl_sdio_sd8997 = {
+ 	.helper         = NULL,
+-	.firmware       = "mrvl/sd8997_uapsta.bin",
++	.firmware       = "mrvl/sdsd8997_combo_v4.bin",
+ 	.reg            = &btmrvl_reg_8997,
+ 	.support_pscan_win_report = true,
+ 	.sd_blksz_fw_dl = 256,
+@@ -1833,4 +1833,4 @@ MODULE_FIRMWARE("mrvl/sd8887_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sd8897_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sdsd8977_combo_v2.bin");
+ MODULE_FIRMWARE("mrvl/sd8987_uapsta.bin");
+-MODULE_FIRMWARE("mrvl/sd8997_uapsta.bin");
++MODULE_FIRMWARE("mrvl/sdsd8997_combo_v4.bin");
 -- 
 2.25.1
 
