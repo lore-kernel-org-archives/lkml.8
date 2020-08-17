@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56C320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2DD20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693657;
-	bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
+	s=default; t=1597693661;
+	bh=+sEfMOMLHGs7h/0AYlLu4SUxfOejMe/f4lp3oYV0P3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqmF6ExKUT9ipGlpyqPC5ZaciMPtHlN/7+fkV45J52X/f4nwK8xQI2lbhKR8rm9ds
-	 IL/boouVDBOvchE2+G7fr5e1ogsPIfsXqAgw+TQ8mMOxLTMmD8cCk5JmkTMqdn7JvT
-	 PJGDMQ8BqXsMIjMdwS72O5PPQG1Vb97w3Wn8rhUA=
+	b=zJ7UDLLsZ8pVbnjF2VJv5bHbot7BjiX8hnKNWZtAhLDDWV66qVMlbJHkrlaNQ+tE8
+	 ubSUXxjHtH8Cn7ksA9jF0UgK1TY/avtNOx11GZVjzIjXWH8RvRcaCpJmkjTpqfwlyJ
+	 hIy6BMCOXzjZlYKsTo1vsKgpHxFjo9BILxfjC0DM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732619AbgHQTrg (ORCPT
+        id S1732699AbgHQTrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42480 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbgHQPUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:38 -0400
+        id S1729271AbgHQPUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF22207D3;
-        Mon, 17 Aug 2020 15:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A62632075B;
+        Mon, 17 Aug 2020 15:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677637;
-        bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
+        s=default; t=1597677635;
+        bh=+sEfMOMLHGs7h/0AYlLu4SUxfOejMe/f4lp3oYV0P3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XtsR1JUMNT499cD2twGshw68ZqI/6QZrpE+HKihyXOjS+maSgafJH7KKts+wcgcye
-         hZ5SqhAXwByrTTaGekmFfmVHRJHc7RRy/BGheohTl6t5ABZ8kQYu7mLucW7q9Sv9x8
-         qK8+FUx07WlJuVvLAmTJKNfzfrUEgfAZYvmXksrU=
+        b=qfXKtxzSwwu9LkoM6AQAnRcsq95i3yEKJH3JqXT2KfXBzbVRUk8CKgaUX3EUyG87Q
+         gwBdjRzxamjAlj4PAeqwdeBk2y2t1fkZ9EsEBLk+9yXLAJNWsEldO+HYLInfilthhb
+         skP+iBSNElZ0LYjTM48m7Ya5TKiVTNqFani93Qhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 024/464] ARM: exynos: MCPM: Restore big.LITTLE cpuidle support
-Date:   Mon, 17 Aug 2020 17:09:37 +0200
-Message-Id: <20200817143834.914697956@linuxfoundation.org>
+Subject: [PATCH 5.8 023/464] crypto: ccree - fix resource leak on error path
+Date:   Mon, 17 Aug 2020 17:09:36 +0200
+Message-Id: <20200817143834.866725624@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,70 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-[ Upstream commit ea9dd8f61c8a890843f68e8dc0062ce78365aab8 ]
+[ Upstream commit 9bc6165d608d676f05d8bf156a2c9923ee38d05b ]
 
-Call exynos_cpu_power_up(cpunr) unconditionally. This is needed by the
-big.LITTLE cpuidle driver and has no side-effects on other code paths.
+Fix a small resource leak on the error path of cipher processing.
 
-The additional soft-reset call during little core power up has been added
-to properly boot all cores on the Exynos5422-based boards with secure
-firmware (like Odroid XU3/XU4 family). This however broke big.LITTLE
-CPUidle driver, which worked only on boards without secure firmware (like
-Peach-Pit/Pi Chromebooks). Apply the workaround only when board is
-running under secure firmware.
-
-Fixes: 833b5794e330 ("ARM: EXYNOS: reset Little cores when cpu is up")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Fixes: 63ee04c8b491e ("crypto: ccree - add skcipher support")
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-exynos/mcpm-exynos.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/crypto/ccree/cc_cipher.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-index 9a681b421ae11..cd861c57d5adf 100644
---- a/arch/arm/mach-exynos/mcpm-exynos.c
-+++ b/arch/arm/mach-exynos/mcpm-exynos.c
-@@ -26,6 +26,7 @@
- #define EXYNOS5420_USE_L2_COMMON_UP_STATE	BIT(30)
+diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+index 872ea3ff1c6ba..f144fe04748b0 100644
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -159,7 +159,6 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 				     skcipher_alg.base);
+ 	struct device *dev = drvdata_to_dev(cc_alg->drvdata);
+ 	unsigned int max_key_buf_size = cc_alg->skcipher_alg.max_keysize;
+-	int rc = 0;
  
- static void __iomem *ns_sram_base_addr __ro_after_init;
-+static bool secure_firmware __ro_after_init;
+ 	dev_dbg(dev, "Initializing context @%p for %s\n", ctx_p,
+ 		crypto_tfm_alg_name(tfm));
+@@ -171,10 +170,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 	ctx_p->flow_mode = cc_alg->flow_mode;
+ 	ctx_p->drvdata = cc_alg->drvdata;
  
- /*
-  * The common v7_exit_coherency_flush API could not be used because of the
-@@ -58,15 +59,16 @@ static void __iomem *ns_sram_base_addr __ro_after_init;
- static int exynos_cpu_powerup(unsigned int cpu, unsigned int cluster)
- {
- 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
-+	bool state;
- 
- 	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
- 	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
- 		cluster >= EXYNOS5420_NR_CLUSTERS)
- 		return -EINVAL;
- 
--	if (!exynos_cpu_power_state(cpunr)) {
--		exynos_cpu_power_up(cpunr);
--
-+	state = exynos_cpu_power_state(cpunr);
-+	exynos_cpu_power_up(cpunr);
-+	if (!state && secure_firmware) {
- 		/*
- 		 * This assumes the cluster number of the big cores(Cortex A15)
- 		 * is 0 and the Little cores(Cortex A7) is 1.
-@@ -258,6 +260,8 @@ static int __init exynos_mcpm_init(void)
- 		return -ENOMEM;
- 	}
- 
-+	secure_firmware = exynos_secure_firmware_available();
++	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
++		/* Alloc hash tfm for essiv */
++		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
++		if (IS_ERR(ctx_p->shash_tfm)) {
++			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
++			return PTR_ERR(ctx_p->shash_tfm);
++		}
++	}
 +
- 	/*
- 	 * To increase the stability of KFC reset we need to program
- 	 * the PMU SPARE3 register
+ 	/* Allocate key buffer, cache line aligned */
+ 	ctx_p->user.key = kmalloc(max_key_buf_size, GFP_KERNEL);
+ 	if (!ctx_p->user.key)
+-		return -ENOMEM;
++		goto free_shash;
+ 
+ 	dev_dbg(dev, "Allocated key buffer in context. key=@%p\n",
+ 		ctx_p->user.key);
+@@ -186,21 +194,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
+ 	if (dma_mapping_error(dev, ctx_p->user.key_dma_addr)) {
+ 		dev_err(dev, "Mapping Key %u B at va=%pK for DMA failed\n",
+ 			max_key_buf_size, ctx_p->user.key);
+-		return -ENOMEM;
++		goto free_key;
+ 	}
+ 	dev_dbg(dev, "Mapped key %u B at va=%pK to dma=%pad\n",
+ 		max_key_buf_size, ctx_p->user.key, &ctx_p->user.key_dma_addr);
+ 
+-	if (ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
+-		/* Alloc hash tfm for essiv */
+-		ctx_p->shash_tfm = crypto_alloc_shash("sha256-generic", 0, 0);
+-		if (IS_ERR(ctx_p->shash_tfm)) {
+-			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
+-			return PTR_ERR(ctx_p->shash_tfm);
+-		}
+-	}
++	return 0;
+ 
+-	return rc;
++free_key:
++	kfree(ctx_p->user.key);
++free_shash:
++	crypto_free_shash(ctx_p->shash_tfm);
++
++	return -ENOMEM;
+ }
+ 
+ static void cc_cipher_exit(struct crypto_tfm *tfm)
 -- 
 2.25.1
 
