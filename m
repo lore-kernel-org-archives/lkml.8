@@ -2,158 +2,83 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB3BC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3A92054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="WtYTGKnT"
+	by mail.kernel.org (Postfix) with ESMTP id DE90420855
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgHQFph (ORCPT
+        id S1726706AbgHQFpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:45:37 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:13562 "EHLO mail1.skidata.com"
+        Mon, 17 Aug 2020 01:45:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:55031 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgHQFpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:45:33 -0400
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 01:45:30 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597643131; x=1629179131;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=VYLBjYz9lx/nrXI3opLlz8j0PHFlXG1/ZEX5YI80V6Y=;
-  b=WtYTGKnTmQpZ5x95Mjrtm4Z+2r4cq1cDd4zgMaFbUmYw5ZqfFVAKLzsI
-   qFMORePP4Gm3U+CNyiGicy7oL6ogX3Shsjcl+URUA6xGu8mcbahuL4oRU
-   fdgjOu+5nNVI7245a8TPs2fM4UieXVIEjfi4AE/b0FdGAqsqe8NYmkJUA
-   nthQDLkrZxTZRGIEMZtFqJBToNg7WTfD0bkcCUFGarDQUC0RzjpGkOC7O
-   KXoRR04L6AuDM8ODMnRS3mS2OTjVYsB03pJj3UZ4XOhPeDu9QO4hs1gvC
-   N/49SAq8YcLIyBj61grb/nqm4tfYDqlxVljsYtJAjXneGA++SmP9ykayO
-   Q==;
-IronPort-SDR: svI9QV3IU5oopAVv5yamxDgdlocA1iJY3YSUF4EoHghv0pgx7rr8qYaXkKz5Omkxq2uybaSfdj
- 1dD7IDxYChlmXsW52gUikLfeYy0fDPtToSUvTzOiSLEDrAr1H5ycWGdiqrHMmlVmzVGFcjGjCn
- vyiYzbUfXj4k21HYamaZ92VvdFf1lutJUyxZ0kD6RwOaFA6yq59RZ3P9gLdmKUd6AbU7Ummw4D
- Y2lkzlC6cjdyZtDG5ddHSKZVBFRj2gbaypEpl+VvtyBmVS+EJKOQQZ0r5NVceKThI+XQuyf8Qn
- 3/U=
-X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="26161391"
-Date:   Mon, 17 Aug 2020 07:38:13 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <catalin.marinas@arm.com>, <vkoul@kernel.org>,
-        <will.deacon@arm.com>, <shawnguo@kernel.org>, <festevam@gmail.com>,
-        <s.hauer@pengutronix.de>, <martin.fuzzey@flowbird.group>,
-        <u.kleine-koenig@pengutronix.de>, <dan.j.williams@intel.com>,
-        <matthias.schiffer@ew.tq-group.com>, <frieder.schrempf@kontron.de>,
-        <r.schwebel@pengutronix.de>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
-        <dmaengine@vger.kernel.org>, <linux-imx@nxp.com>
-Subject: Re: [PATCH v12 03/12] Revert "dmaengine: imx-sdma: refine to load
- context only once"
-Message-ID: <20200817053813.GA551027@pcleri>
-References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
- <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
+        id S1726303AbgHQFpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:45:42 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 69E1767357; Mon, 17 Aug 2020 07:45:38 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 07:45:38 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jan Kara <jack@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>
+Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in
+ include/linux/net.h
+Message-ID: <20200817054538.GA11705@lst.de>
+References: <20200816071518.6964-1-colyli@suse.de> <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+In-Reply-To: <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:53:42PM +0800, Robin Gong wrote:
-> This reverts commit ad0d92d7ba6aecbe2705907c38ff8d8be4da1e9c, because
-> in spi-imx case, burst length may be changed dynamically.
+On Sun, Aug 16, 2020 at 10:55:09AM -0700, Cong Wang wrote:
+> On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
+> >
+> > The original problem was from nvme-over-tcp code, who mistakenly uses
+> > kernel_sendpage() to send pages allocated by __get_free_pages() without
+> > __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
+> > tail pages, sending them by kernel_sendpage() may trigger a kernel panic
+> > from a corrupted kernel heap, because these pages are incorrectly freed
+> > in network stack as page_count 0 pages.
+> >
+> > This patch introduces a helper sendpage_ok(), it returns true if the
+> > checking page,
+> > - is not slab page: PageSlab(page) is false.
+> > - has page refcount: page_count(page) is not zero
+> >
+> > All drivers who want to send page to remote end by kernel_sendpage()
+> > may use this helper to check whether the page is OK. If the helper does
+> > not return true, the driver should try other non sendpage method (e.g.
+> > sock_no_sendpage()) to handle the page.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
-
-Hi Robin,
-thanks for the pointer to this patch.
-
-As you suggested I've tested the two patches on my custom i.MX6DL
-board. Therefore please feel free to add:
-
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
-
-regards;rl
-
-> ---
->  drivers/dma/imx-sdma.c | 8 --------
->  1 file changed, 8 deletions(-)
+> Can we leave this helper to mm subsystem?
 > 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 270992c..d305b80 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -377,7 +377,6 @@ struct sdma_channel {
->  	unsigned long			watermark_level;
->  	u32				shp_addr, per_addr;
->  	enum dma_status			status;
-> -	bool				context_loaded;
->  	struct imx_dma_data		data;
->  	struct work_struct		terminate_worker;
->  };
-> @@ -984,9 +983,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
->  	int ret;
->  	unsigned long flags;
->  
-> -	if (sdmac->context_loaded)
-> -		return 0;
-> -
->  	if (sdmac->direction == DMA_DEV_TO_MEM)
->  		load_address = sdmac->pc_from_device;
->  	else if (sdmac->direction == DMA_DEV_TO_DEV)
-> @@ -1029,8 +1025,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
->  
->  	spin_unlock_irqrestore(&sdma->channel_0_lock, flags);
->  
-> -	sdmac->context_loaded = true;
-> -
->  	return ret;
->  }
->  
-> @@ -1069,7 +1063,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
->  	vchan_get_all_descriptors(&sdmac->vc, &head);
->  	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
->  	vchan_dma_desc_free_list(&sdmac->vc, &head);
-> -	sdmac->context_loaded = false;
->  }
->  
->  static int sdma_terminate_all(struct dma_chan *chan)
-> @@ -1337,7 +1330,6 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
->  
->  	sdmac->event_id0 = 0;
->  	sdmac->event_id1 = 0;
-> -	sdmac->context_loaded = false;
->  
->  	sdma_set_channel_priority(sdmac, 0);
->  
-> -- 
-> 2.7.4
+> I know it is for sendpage, but its implementation is all about some
+> mm details and its two callers do not belong to net subsystem either.
 > 
-> 
+> Think this in another way: who would fix it if it is buggy? I bet mm people
+> should. ;)
 
--- 
-Richard Leitner
-Hardware R&D / Senior Embedded Linux Engineer
-
-SKIDATA | Driving Your Digital Future
-
-SKIDATA GmbH
-Untersbergstraße 40 | 5083 Grödig/Salzburg | Austria
-[t] +43-6246-888-4245 | [m] +43-664-88616370
-[w] www.skidata.com
+No.  This is all about a really unusual imitation in sendpage, which
+is pretty much unexpected.  In fact the best thing would be to make
+sock_sendpage do the right thing and call sock_no_sendpage based
+on this condition, so that driver writers don't have to worry at all.
