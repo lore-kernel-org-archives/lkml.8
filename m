@@ -2,124 +2,95 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E30204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C098020578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690551;
-	bh=PoeSaULEMpilwDNuRE2KyLF/mMUHOxM2Tnd+WvhzUtE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OtsolagJCqf9wGfWLZgK/Vc/8Re9kesjRJ2IyzUsR1nu5OsMT9pCMC3mr7NogFO7x
-	 MywwVkmlXZMUN1qsb9MR48s28sSBdNrmIZyzdBxD/+vfOv3QNFQMm4UOj60AZXEMNn
-	 75aeoWmNaIkjasA/WhuGJXwdqJALhCgkcyFTcdDY=
+	s=default; t=1597690555;
+	bh=ebV6n4RrdDkYsGcLdnPQDJFEnzE4Pi4mJ81KHMA4+8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EVk6i5jfLPBE6e0n+fG2HMaaLJ7jNR6rN48+2OF6Hz56r2I/fkqQYd7ejjbeam1Fx
+	 UaeoxM9t3PUDYL1oS1ZAda9boOhIazi7T5SIwrbSO2iK9XAnEs8hguR9Dk2wFfbTDM
+	 QStT4YPPAtd950gLkVGA2LkpP+ZiTdkjYznEMoF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403956AbgHQSzt (ORCPT
+        id S2403965AbgHQSzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730877AbgHQPu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59EAB2054F;
-        Mon, 17 Aug 2020 15:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679428;
-        bh=PoeSaULEMpilwDNuRE2KyLF/mMUHOxM2Tnd+WvhzUtE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cURM9yZHITegj3DzrY9SOa7iS8JSpXQz/mHG2COD2mm81GfmKcr7df8MYXFxZMkHy
-         4m4p3MqsR5LenhiRjtUPwFm726hkyQpM407qrHv09iL6+d1wsQUlDANFtPe4ln+ckA
-         +ZLc3Q6CAkpoFQL0iz7y5tWN66/DKCZrvfGD6V30=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 207/393] ima: Have the LSM free its audit rule
-Date:   Mon, 17 Aug 2020 17:14:17 +0200
-Message-Id: <20200817143829.664825610@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:55:53 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:39728 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730535AbgHQPu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:26 -0400
+Received: by mail-ej1-f65.google.com with SMTP id f24so18320903ejx.6;
+        Mon, 17 Aug 2020 08:50:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CvY+Gv9fZiNUpyRo8aOD2OAX4f7HvaEYlR7elhE0eDI=;
+        b=Z9tlqxxJD367x/vsFxQW1v7W2GGDyy8/7TJtOzee1d2tvH8PCI/cdgqHw3H+k6DXEm
+         wAt37Suvj1+IfZO3xr3yRiF6kGtM41lKo44G3AQ664Q6MWBZT8ZdyFXcV7WOIDSuQYAu
+         3c55axNm2VksqwpKUbf0FAGiouwKY7mFMfGLOP1yUf3JcjIZzzo/SU2x+VwcHSLsDfG3
+         RPBmQ4OL2D0zpqsGV52iGB7JrK9UfBfwvHjI0VcUUKoLC6RvbSownFkNn7tPDHS/r2CT
+         QtJpaSYpG042Hc+UpDeuCLHZwTVpc5qYLGckSiceELHVrJUurd0f8QJMUighkm168vGx
+         TABg==
+X-Gm-Message-State: AOAM532cK3jCFIk0qKYwBvgHPXWysWJ/qhKlESqlAQIlCPnyDSdqkeSm
+        VVjvtfhPGtiiyhJNHI4jz+s=
+X-Google-Smtp-Source: ABdhPJwUH2JfieM4+gZF9eNKg35FhFE+j87Rl4f371bQ3K5WOxcwB8LzeD/gzxX+LVyjfatGHlfezg==
+X-Received: by 2002:a17:906:78e:: with SMTP id l14mr16737436ejc.67.1597679424558;
+        Mon, 17 Aug 2020 08:50:24 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id g9sm14232950ejf.101.2020.08.17.08.50.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Aug 2020 08:50:23 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 17:50:21 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Remove interrupts from DMC
+ controller in Exynos5422
+Message-ID: <20200817155021.GC15887@kozik-lap>
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+ <20200708153420.29484-3-lukasz.luba@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200708153420.29484-3-lukasz.luba@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+On Wed, Jul 08, 2020 at 04:34:20PM +0100, Lukasz Luba wrote:
+> The interrupts in Dynamic Memory Controller in Exynos5422 and Odroid
+> XU3-family boards are no longer needed. They have been used in order
+> to workaround some issues in scheduled work in devfreq. Now when the
+> devfreq framework design is improved, remove the interrupt driven
+> approach and rely on devfreq monitoring mechanism with fixed intervals.
+> 
+> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi | 3 ---
+>  1 file changed, 3 deletions(-)
 
-[ Upstream commit 9ff8a616dfab96a4fa0ddd36190907dc68886d9b ]
+I think the dependencies were merged so this can be safely applied
+without bisectability problems?
 
-Ask the LSM to free its audit rule rather than directly calling kfree().
-Both AppArmor and SELinux do additional work in their audit_rule_free()
-hooks. Fix memory leaks by allowing the LSMs to perform necessary work.
-
-Fixes: b16942455193 ("ima: use the lsm policy update notifier")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc: Janne Karhunen <janne.karhunen@gmail.com>
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/integrity/ima/ima.h        | 5 +++++
- security/integrity/ima/ima_policy.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 495e28bd488e6..04c246b2b767f 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -400,6 +400,7 @@ static inline void ima_free_modsig(struct modsig *modsig)
- #ifdef CONFIG_IMA_LSM_RULES
- 
- #define security_filter_rule_init security_audit_rule_init
-+#define security_filter_rule_free security_audit_rule_free
- #define security_filter_rule_match security_audit_rule_match
- 
- #else
-@@ -410,6 +411,10 @@ static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
- 	return -EINVAL;
- }
- 
-+static inline void security_filter_rule_free(void *lsmrule)
-+{
-+}
-+
- static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
- 					     void *lsmrule)
- {
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e493063a3c344..236a731492d1e 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
- 	int i;
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--		kfree(entry->lsm[i].rule);
-+		security_filter_rule_free(entry->lsm[i].rule);
- 		kfree(entry->lsm[i].args_p);
- 	}
- 	kfree(entry);
--- 
-2.25.1
-
-
+Best regards,
+Krzysztof
 
