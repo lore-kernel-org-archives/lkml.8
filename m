@@ -2,170 +2,176 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91522C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B362063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AA12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PR5Mnv9q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oG2E2fsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389100AbgHQRdh (ORCPT
+        id S1730680AbgHQRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:33:37 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:48097 "EHLO
+        Mon, 17 Aug 2020 13:33:53 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42671 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729092AbgHQQxY (ORCPT
+        by vger.kernel.org with ESMTP id S2389020AbgHQQuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:53:24 -0400
+        Mon, 17 Aug 2020 12:50:22 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597683203; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=vvIj8nL35Cjq14NalPJcQsLYy6Oeb6O5Y2EHRW7KxX4=; b=PR5Mnv9qxlLkEC95ozeKIunl4YYUH/xQ1FLau/jxA2r3bcG+cphRi/WM1+rSPYyXZEz1GuvY
- pytrxtAiNM3PMIi2fQVAK289Tt9eP5t+U7ensV3EqpBxUsiKw/sO5A0r/ApwZLaCmmtSM4eH
- 6Y63BTdGA973XZFZIDltwQlsDfQ=
+ s=smtp; t=1597683021; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GhyGcHtsJNSaWRlw4MXPmZ9Q7h5P+6kgTtX8VYoSKpY=;
+ b=oG2E2fsPlOwWTfzzRyTRsU3HoA04Fk1ZdbyUSouafeqrGdiWxZphQ0Pu5GT39oUnC+LnwFzl
+ BkJYXD/6Wqs+frqWc8morJVqkhTPUXkQ2QO2VQpOkgbiJ4z6ETz6iixXRqgdnmldRzxoMWNk
+ V1yJ9yAYMYrt5ZPnWUmkAckQ3hU=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f3ab5f203528d4024fec304 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:53:06
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f3ab512f2b697637a950740 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 16:49:22
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF514C433A0; Mon, 17 Aug 2020 16:53:05 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id 9E919C433AF; Mon, 17 Aug 2020 16:49:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C653C433C6;
-        Mon, 17 Aug 2020 16:53:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C653C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 17 Aug 2020 10:52:59 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [Freedreno] [PATCH 05/19] iommu: add private interface for
- adreno-smmu
-Message-ID: <20200817165259.GH3221@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, freedreno@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-6-robdclark@gmail.com>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A69FC43391;
+        Mon, 17 Aug 2020 16:49:20 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814024114.1177553-6-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Aug 2020 22:19:20 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-kernel-owner@vger.kernel.org,
+        Kevin Hilman <khilman@kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+In-Reply-To: <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+ <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
+ <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org>
+ <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
+ <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
+ <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
+Message-ID: <33169e221707a2456397e478b275cfa9@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 07:41:00PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On 2020-08-17 14:14, Ulf Hansson wrote:
+> On Thu, 13 Aug 2020 at 19:26, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> 
+>> On 2020-08-13 18:04, Ulf Hansson wrote:
+>> > On Wed, 12 Aug 2020 at 19:03, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >>
+>> >> Uffe,
+>> >> Thanks for taking time to review the
+>> >> series!
+>> >>
+>> >> On 2020-08-12 15:15, Ulf Hansson wrote:
+>> >> > On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >> >>
+>> >> >> This is for power domains which needs to stay powered on for suspend
+>> >> >> but can be powered on/off as part of runtime PM. This flag is aimed at
+>> >> >> power domains coupled to remote processors which enter suspend states
+>> >> >> independent to that of the application processor. Such power domains
+>> >> >> are turned off only on remote processor crash/shutdown.
+>> >> >
+>> >> > As Kevin also requested, please elaborate more on the use case.
+>> >> >
+>> >> > Why exactly must the PM domain stay powered on during system suspend?
+>> >> > Is there a wakeup configured that needs to be managed - or is there a
+>> >> > co-processor/FW behaviour that needs to be obeyed to?
+>> >>
+>> >> Yes this is a co-processor behavior that
+>> >> needs to be obeyed. Specifically application
+>> >> processor notifies the Always on Subsystem
+>> >> (AOSS) that a particular co-processor is up
+>> >> using the power domains exposed by AOSS QMP
+>> >> driver. AOSS uses this information to wait
+>> >> for the co-processors to suspend before
+>> >> starting its sleep sequence. The application
+>> >> processor powers off these power domains only
+>> >> if the co-processor has crashed or powered
+>> >> off.
+>> >
+>> > Thanks for clarifying!
+>> >
+>> > Although, can you please elaborate a bit more on the actual use case?
+>> > What are the typical co-processor and what drivers are involved in
+>> > managing it?
+>> 
+>> The co-processors using the power domains
+>> exposed by qcom_aoss driver are modem,
+>> audio dsp, compute dsp managed using
+>> qcom_q6v5_mss and qcom_q6v5_pas driver.
+>> 
+>> >
+>> > As you may know, runtime PM becomes disabled during system suspend of
+>> > a device. Which means, if the driver tries to power off the
+>> > coprocessor (via calling pm_runtime_put() for example), somewhere in
+>> > the system suspend phase of the corresponding device, its attached PM
+>> > domain stays powered on when managed by genpd.
+>> 
+>> The drivers aren't really expected
+>> do anything during suspend/resume
+>> pretty much because the co-processors
+>> enter low-power modes independent to
+>> that of the application processor. On
+>> co-processor crash the remoteproc core
+>> does a pm_stay_awake followed by a
+>> pm_relax after crash recovery.
 > 
-> This interface will be used for drm/msm to coordinate with the
-> qcom_adreno_smmu_impl to enable/disable TTBR0 translation.
+> Okay, thanks again for clarifying. You have convinced me about the
+> need for a new flag to cope with these use cases.
 > 
-> Once TTBR0 translation is enabled, the GPU's CP (Command Processor)
-> will directly switch TTBR0 pgtables (and do the necessary TLB inv)
-> synchronized to the GPU's operation.  But help from the SMMU driver
-> is needed to initially bootstrap TTBR0 translation, which cannot be
-> done from the GPU.
+> Would you mind updating the commit message with some of the
+> information you just provided?
 > 
-> Since this is a very special case, a private interface is used to
-> avoid adding highly driver specific things to the public iommu
-> interface.
-> 
+> Additionally, to make it clear that the flag should be used to keep
+> the PM domain powered on during system suspend, but only if it's
+> already powered on - please rename the flag to GENPD_FLAG_NO_SUSPEND,
+> and update the corresponding description of it in the header file.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Thanks, naming it ^^ makes more sense :)
 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  include/linux/adreno-smmu-priv.h | 36 ++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 include/linux/adreno-smmu-priv.h
+https://lore.kernel.org/lkml/340a7aafcf0301ff3158a4e211992041@codeaurora.org/
+
+Also we wouldn't want to power on
+runtime suspended power domains with
+the NO_SUSPEND flag set, on resume as
+explained ^^. Do you agree with that
+as well?
+
 > 
-> diff --git a/include/linux/adreno-smmu-priv.h b/include/linux/adreno-smmu-priv.h
-> new file mode 100644
-> index 000000000000..a889f28afb42
-> --- /dev/null
-> +++ b/include/linux/adreno-smmu-priv.h
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2020 Google, Inc
-> + */
-> +
-> +#ifndef __ADRENO_SMMU_PRIV_H
-> +#define __ADRENO_SMMU_PRIV_H
-> +
-> +#include <linux/io-pgtable.h>
-> +
-> +/**
-> + * struct adreno_smmu_priv - private interface between adreno-smmu and GPU
-> + *
-> + * @cookie:        An opque token provided by adreno-smmu and passed
-> + *                 back into the callbacks
-> + * @get_ttbr1_cfg: Get the TTBR1 config for the GPUs context-bank
-> + * @set_ttbr0_cfg: Set the TTBR0 config for the GPUs context bank.  A
-> + *                 NULL config disables TTBR0 translation, otherwise
-> + *                 TTBR0 translation is enabled with the specified cfg
-> + *
-> + * The GPU driver (drm/msm) and adreno-smmu work together for controlling
-> + * the GPU's SMMU instance.  This is by necessity, as the GPU is directly
-> + * updating the SMMU for context switches, while on the other hand we do
-> + * not want to duplicate all of the initial setup logic from arm-smmu.
-> + *
-> + * This private interface is used for the two drivers to coordinate.  The
-> + * cookie and callback functions are populated when the GPU driver attaches
-> + * it's domain.
-> + */
-> +struct adreno_smmu_priv {
-> +    const void *cookie;
-> +    const struct io_pgtable_cfg *(*get_ttbr1_cfg)(const void *cookie);
-> +    int (*set_ttbr0_cfg)(const void *cookie, const struct io_pgtable_cfg *cfg);
-> +};
-> +
-> +#endif /* __ADRENO_SMMU_PRIV_H */
-> \ No newline at end of file
-> -- 
-> 2.26.2
+> [...]
 > 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> Kind regards
+> Uffe
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
