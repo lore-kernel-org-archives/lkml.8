@@ -2,186 +2,174 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BAFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB6620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932E120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="yc6r/Vcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgHQWlb (ORCPT
+        id S1730369AbgHQWmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:41:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:13677 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730219AbgHQWl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:41:27 -0400
-IronPort-SDR: Hd71QBBbHKbSU31DrLUmCdVUjBLFSPKGZ7c4+8+YtXhBVaEbvno5v5W+VDikjP4itcTHbU8/Wq
- z6icF/8lyRow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142428172"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="142428172"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 15:41:26 -0700
-IronPort-SDR: kbS4JUFD4lESIJPfbvyLrygG0kinU1ys9lyHsDICdewOCJc0Yg90HIsv0Y/dI8pK0iTkS6viVe
- dD8A5JBamnEg==
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="336411372"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 15:41:26 -0700
-Date:   Mon, 17 Aug 2020 15:48:25 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 2/7] iommu/uapi: Add argsz for user filled data
-Message-ID: <20200817154825.3f27190f@jacob-builder>
-In-Reply-To: <1ac39547-143b-2a2e-e142-92be023ef8d7@redhat.com>
-References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1596068467-49322-3-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1ac39547-143b-2a2e-e142-92be023ef8d7@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 17 Aug 2020 18:42:35 -0400
+Received: from mail-eopbgr690042.outbound.protection.outlook.com ([40.107.69.42]:16103
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729893AbgHQWmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:42:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MslIEWtIdQS9PSQ0IO636yR5BCPItgoD/yhCuuvDGkfd6PfCXlG51zJsivty8TgyJiulzJPHw1Hgb4JUeW8kuxH5TZYQyzA3KpYFgV1bKk0owmsYrhjkLFgErVGCKsaKE96GHfAA9P6LWfyhpOS87cUoZ/2SbYSmePewBYWzopdiijeWow7zRFZeVQf+4skByGGIk8LB3ufe5HXHbN7kpb9KMlDTZXKOHRwRYG2h8X7Lc7p9UdusIW1VpounYwpT8X3GL+Byn1MYPYhb4N0PCpzg/c33HfFRxu9t6ul7u6Fit2haT6oC4GNfgYnQB20PUUpdOf7CU0mAqd0NhpYKhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P6G6Cd5WWa/VTIfa/5kzo1CZkC8amv7UT0p2HUiZCgY=;
+ b=JXG5rr27VavbO93xKgTsP+lzKkMhFusOq+X90hITnAM3UGsQzZWzOuQ6jAsOIkcJ6K9aGeYhtpp5Sd7ComzHMfov3t3lGK4JFvLawbP7f6PKgSVRq3wM6jztm3ouhpAU8JCQWIg4K/O17Ckja4gJUNQXhOMTMo7vGvu48Fvu3t2MX2FRXgNTGOR8qVa1UDZHfjaxaAjKJBs8/K5hNYpjltiLQYhCno6B2PlSntK8Ur4jGSUcSCdfJwrAshN81793hJ7L+I1e2lPAytbksiE9c83Z+51ceJlwpMjdi23gaBLhExPZFIRPdQijTlC6mffOUsdswJU6rnOmQ9GVsKZmhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P6G6Cd5WWa/VTIfa/5kzo1CZkC8amv7UT0p2HUiZCgY=;
+ b=yc6r/Vcf1TKAgNfjJtNdjSg1Rm6mN3W6VEbkBSprTTPyKocAOauZ0w3Jc9yCbe2V5Ky51Ss+ZccWyG24pGLT1M/J9eYKArKpXQwQ5sM1hm3Q+ohdi6FdE8DNcdmi9v+moBHY+I2Ylgiar5mfcZuQuTzkGjXoW5gGnFmwlTN2z+A=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
+ by BN6PR1201MB0017.namprd12.prod.outlook.com (2603:10b6:405:53::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Mon, 17 Aug
+ 2020 22:42:30 +0000
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0]) by BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0%5]) with mapi id 15.20.3283.024; Mon, 17 Aug 2020
+ 22:42:30 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>
+Cc:     Kim Phillips <kim.phillips@amd.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/power turbostat: Support AMD Family 19h
+Date:   Mon, 17 Aug 2020 17:42:15 -0500
+Message-Id: <20200817224215.11207-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.27.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN6PR17CA0021.namprd17.prod.outlook.com
+ (2603:10b6:404:65::31) To BN8PR12MB2946.namprd12.prod.outlook.com
+ (2603:10b6:408:9d::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (165.204.84.11) by BN6PR17CA0021.namprd17.prod.outlook.com (2603:10b6:404:65::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Mon, 17 Aug 2020 22:42:29 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 23d07a3b-993b-41be-be82-08d842fed2d4
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0017:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB00179F9FCB85A00D155E3E4A875F0@BN6PR1201MB0017.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mYHk4RSv4v9MHS8k+isHkY/p77iqFkBoPUMLTdDLowLZh5o6tav0dnloka2VN8QTLFLWUZW+BV4BwooS0aqHuhE8c4+W5BmC0TH7FRr23E1WhPbcqZgByy+kHWp0tiJx5V9GoidWhk6gwl7z7kdLVs/z/1dR9rPczJv816nMu8Udj5GKpTyWBTqqpteip8HB5nNIKXkJAwXLQg0eFm+fSoSMBqGb14MZvmrlE68+yRqKk8MrQCG6wmlhNsQqDAAy5lTujotpU05tskeUnZLUDfCaPONWPatkwojGBYnqFEcbt1YT0FwpZQRB3N9BnRve/v5Dnk6ArGCN/9srmig41sAAL43+YAKbnZGy1xUsD0lEub69jdo3R9F5NUaKew1x
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(5660300002)(4326008)(83380400001)(6486002)(1076003)(16526019)(6506007)(186003)(66556008)(44832011)(66476007)(66946007)(2906002)(110136005)(8676002)(8936002)(6666004)(478600001)(316002)(69590400007)(26005)(2616005)(86362001)(36756003)(6512007)(52116002)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 973ouEUN1GkdeACGyS9RWQjlj1rZmLIUw/8zILAS51lReW0Bb6ktTBrQrPme7+iO9+p216klD0EYHeCBCPZM1W/PXGGysdCYOiKNdGExileELS2eiioLprs/yKYnXyrlSQzyIF6GqClvwHkbhH3Jdf4RP4jK42QEnvbFYVKMNuFhd4d4e84OoC2mrz7J4av9z50YlLJQz4Pm4iWO9GjofFI1SYY2TTY9MwqY7LdDwe4hzKsaRVGoMd0B0CrUTSemwIhwxwPXLLFAMLPwuiCBFOXlUBBImCBEKQSkY6V3eAxGHk3Ow+xpRtn3yPsdojEdR5A6vbSCBm4/2q5O3M7zGFV7Raq4s1HBUdNrFhXHQ6whWViXoJORNdVN27AQFEErDaUpuH+WdgrHV3Xct+MJE5j0TaOC9IUDT/GIicBsO+1oxAEsWaK+hzi+Ju2gB4Ntxn02HHjgNAPyUO1i+LNdtpExdUZPfOJ69HhnmFYH+g25ceUHL7FRHzGMBM4FSvExHzeuzERjxJy09+2qhtAmaLWscfZfGwf6/Z+tk3TpuNkg/DdA5ZTERRUfiR0X3oOH0vaxHnKfoRcX//BmWPoxt3vpiGp/kCYRihMTTWroKvIdcKyf9aPYk3IWVpfC+i7Sjiziuq254DyLSVb8v0Z6WA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23d07a3b-993b-41be-be82-08d842fed2d4
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2020 22:42:30.2187
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8eWRM1eTCvaASE5KNXMSAmLm0j6wUOjV3QicY1ubybHhUQNmor6G2C1tXHuuqv/v8F1uMSBw1uGMNfxTiwZz/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 18:59:14 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+Family 19h processors have the same RAPL (Running average power limit)
+hardware register interface as Family 17h processors.
 
-> Hi,
-> 
-> On 7/30/20 2:21 AM, Jacob Pan wrote:
-> > As IOMMU UAPI gets extended, user data size may increase. To support
-> > backward compatibiliy, this patch introduces a size field to each
-> > UAPI  
-> s/compatibiliy/compatibility
-will fix
+Change the family checks to succeed for Family 17h and above to enable
+core and package energy measurement on Family 19h machines.
 
-> > data structures. It is *always* the responsibility for the user to
-> > fill in the correct size. Padding fields are adjusted to ensure 8
-> > byte alignment.
-> > 
-> > Specific scenarios for user data handling are documented in:
-> > Documentation/userspace-api/iommu.rst  
-> 
-> you may mention the struct version does not need to be incremented as
-> no IOCTL uses the structs yet.
-Yes, good point. I also mentioned in the doc that:
+Also update the TDP to the largest found at the bottom of the page at
+amd.com->processors->servers->epyc->2nd-gen-epyc, i.e., the EPYC 7H12.
 
-"Version field is only reserved for the unlikely event of UAPI upgrade
-at its entirety."
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ tools/power/x86/turbostat/turbostat.c | 34 +++++++++------------------
+ 1 file changed, 11 insertions(+), 23 deletions(-)
 
-> > 
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  include/uapi/linux/iommu.h | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> > index e907b7091a46..d5e9014f690e 100644
-> > --- a/include/uapi/linux/iommu.h
-> > +++ b/include/uapi/linux/iommu.h
-> > @@ -135,6 +135,7 @@ enum iommu_page_response_code {
-> >  
-> >  /**
-> >   * struct iommu_page_response - Generic page response information
-> > + * @argsz: User filled size of this data
-> >   * @version: API version of this structure
-> >   * @flags: encodes whether the corresponding fields are valid
-> >   *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
-> > @@ -143,6 +144,7 @@ enum iommu_page_response_code {
-> >   * @code: response code from &enum iommu_page_response_code
-> >   */
-> >  struct iommu_page_response {
-> > +	__u32	argsz;
-> >  #define IOMMU_PAGE_RESP_VERSION_1	1
-> >  	__u32	version;
-> >  #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-> > @@ -218,6 +220,7 @@ struct iommu_inv_pasid_info {
-> >  /**
-> >   * struct iommu_cache_invalidate_info - First level/stage
-> > invalidation
-> >   *     information
-> > + * @argsz: User filled size of this data
-> >   * @version: API version of this structure
-> >   * @cache: bitfield that allows to select which caches to
-> > invalidate
-> >   * @granularity: defines the lowest granularity used for the
-> > invalidation: @@ -246,6 +249,7 @@ struct iommu_inv_pasid_info {
-> >   * must support the used granularity.
-> >   */
-> >  struct iommu_cache_invalidate_info {
-> > +	__u32	argsz;
-> >  #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
-> >  	__u32	version;
-> >  /* IOMMU paging structure cache */
-> > @@ -255,7 +259,7 @@ struct iommu_cache_invalidate_info {
-> >  #define IOMMU_CACHE_INV_TYPE_NR		(3)
-> >  	__u8	cache;
-> >  	__u8	granularity;
-> > -	__u8	padding[2];
-> > +	__u8	padding[6];
-> >  	union {
-> >  		struct iommu_inv_pasid_info pasid_info;
-> >  		struct iommu_inv_addr_info addr_info;
-> > @@ -292,6 +296,7 @@ struct iommu_gpasid_bind_data_vtd {
-> >  
-> >  /**
-> >   * struct iommu_gpasid_bind_data - Information about device and
-> > guest PASID binding
-> > + * @argsz:	User filled size of this data
-> >   * @version:	Version of this data structure
-> >   * @format:	PASID table entry format
-> >   * @flags:	Additional information on guest bind request
-> > @@ -309,17 +314,18 @@ struct iommu_gpasid_bind_data_vtd {
-> >   * PASID to host PASID based on this bind data.
-> >   */
-> >  struct iommu_gpasid_bind_data {
-> > +	__u32 argsz;
-> >  #define IOMMU_GPASID_BIND_VERSION_1	1
-> >  	__u32 version;
-> >  #define IOMMU_PASID_FORMAT_INTEL_VTD	1
-> >  	__u32 format;
-> > +	__u32 addr_width;
-> >  #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid
-> > */ __u64 flags;
-> >  	__u64 gpgd;
-> >  	__u64 hpasid;
-> >  	__u64 gpasid;
-> > -	__u32 addr_width;
-> > -	__u8  padding[12];
-> > +	__u8  padding[8];
-> >  	/* Vendor specific data */
-> >  	union {
-> >  		struct iommu_gpasid_bind_data_vtd vtd;
-> >   
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
-> 
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 33b370865d16..e38f8a0c688f 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3881,13 +3881,8 @@ double get_tdp_intel(unsigned int model)
+ 
+ double get_tdp_amd(unsigned int family)
+ {
+-	switch (family) {
+-	case 0x17:
+-	case 0x18:
+-	default:
+-		/* This is the max stock TDP of HEDT/Server Fam17h chips */
+-		return 250.0;
+-	}
++	/* This is the max stock TDP of HEDT/Server Fam17h+ chips */
++	return 280.0;
+ }
+ 
+ /*
+@@ -4069,27 +4064,20 @@ void rapl_probe_amd(unsigned int family, unsigned int model)
+ 
+ 	if (max_extended_level >= 0x80000007) {
+ 		__cpuid(0x80000007, eax, ebx, ecx, edx);
+-		/* RAPL (Fam 17h) */
++		/* RAPL (Fam 17h+) */
+ 		has_rapl = edx & (1 << 14);
+ 	}
+ 
+-	if (!has_rapl)
++	if (!has_rapl || family < 0x17)
+ 		return;
+ 
+-	switch (family) {
+-	case 0x17: /* Zen, Zen+ */
+-	case 0x18: /* Hygon Dhyana */
+-		do_rapl = RAPL_AMD_F17H | RAPL_PER_CORE_ENERGY;
+-		if (rapl_joules) {
+-			BIC_PRESENT(BIC_Pkg_J);
+-			BIC_PRESENT(BIC_Cor_J);
+-		} else {
+-			BIC_PRESENT(BIC_PkgWatt);
+-			BIC_PRESENT(BIC_CorWatt);
+-		}
+-		break;
+-	default:
+-		return;
++	do_rapl = RAPL_AMD_F17H | RAPL_PER_CORE_ENERGY;
++	if (rapl_joules) {
++		BIC_PRESENT(BIC_Pkg_J);
++		BIC_PRESENT(BIC_Cor_J);
++	} else {
++		BIC_PRESENT(BIC_PkgWatt);
++		BIC_PRESENT(BIC_CorWatt);
+ 	}
+ 
+ 	if (get_msr(base_cpu, MSR_RAPL_PWR_UNIT, &msr))
+-- 
+2.27.0
 
-[Jacob Pan]
