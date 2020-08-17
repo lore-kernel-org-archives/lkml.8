@@ -2,148 +2,144 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A56C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F8B20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="jQUbm+aD"
+	by mail.kernel.org (Postfix) with ESMTP id 48EA5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692352;
+	bh=zJJf9ufwWpUpsbzGQo2GcLdzmv5cztp9mfuTvLC4nV4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fmHPxcKhIqKn9FcpI0D4iwpXyh1wy8LledXJp77ZSat0r6CC32XlfJ/Wm1Sgv3H0K
+	 T5Xy3eARQNDKEnIVkHb5OotMAt4ctOTMPgJnBuZJR34hjvvRNLCH1Ea5Ead+ZZ+XbS
+	 C8sDva0H53rNnkQIJ8uhZx0GDRnE6gLo9kohzsgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbgHQTZh (ORCPT
+        id S1732087AbgHQTZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:25:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729722AbgHQPeD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:34:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A9BC061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:34:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so13589734wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=forissier-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EkyJvFo7augCojl61Q0zymUP0Ht/IG05CwGmKWgnw7I=;
-        b=jQUbm+aDN0MdB3JYq5Uo3qf3Afi1FkHMEd7fydzqTKYw4083p8ld4z2oJYzMw8D0o2
-         Bya1FUtZL+s44ZC2zQbBDoxjR8xTPoTBcUrFeGEXKcVYqE6upHAmm+02diU5NYuq2guT
-         8d0X/XS4G/YwwP8lubisAFShXzM5acJ03I9396Nf38hRutL/hU8y+YQz5B1UHfd3cTwP
-         xsoEsCA8aqltMpsqxOG3ZpZsyXc8ijGf21yQoalBBE2fkrqOSVHtL0vquJVmfB8mDj0u
-         dP/56lycEq0EG0mV2WB8fg29P44deRTxDYj7BWEZbYrKEgT9cm21MimStc4yxcxr+/pm
-         UpoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EkyJvFo7augCojl61Q0zymUP0Ht/IG05CwGmKWgnw7I=;
-        b=a7gCGKc2EdXf4bUKFWGnuzwHHpyU46iCQD2XPocoNZsHmrjvNYRBBDMo8A9pVuG+Wy
-         tKEXRs6aQg2cYiQT2k36RrbIj/UDiWSJGd9Wu88OwpRUHb2Ul6wb7RnashVW02e5lKwC
-         s6iWbgjh98/36COYt3NzQYpDUiQSHzUEWpH7bzBsSpD52CvVE2Nyv72LnfvDOZg14oAF
-         uix3IHNQ0SQBL9DSG7I1h7xgjUFmf1lt8DKyllBftsuw/+7+DpP9/19iXVA3wJpdmoDv
-         qoW1ghBSr8KQj7IOnl/5ToNCMza0A4nKts8X8NGcVAzyv2u4KguY4qUcLL9xO0Ka6xLN
-         rjWQ==
-X-Gm-Message-State: AOAM532LlpVAMu5KSejKvRNRcb1UUSNyKPMOZ4jb+2syJCQF+SaTh/YF
-        UWoRbJF2z+dVr+WC+6mi4kE/hg==
-X-Google-Smtp-Source: ABdhPJwikVGbCij+DSLvyYZ4g6Huh788KiCjBgWKz9IrSZrR1f5WNKHTDCMsB8/QPxKLwnzVC37LwA==
-X-Received: by 2002:a7b:cb4d:: with SMTP id v13mr15838782wmj.56.1597678441351;
-        Mon, 17 Aug 2020 08:34:01 -0700 (PDT)
-Received: from matebook.home ([2a01:e0a:3cb:7bb0:3009:af69:3d13:4910])
-        by smtp.gmail.com with ESMTPSA id i4sm31733892wrw.26.2020.08.17.08.34.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 08:34:00 -0700 (PDT)
-From:   Jerome Forissier <jerome@forissier.org>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jerome Forissier <jerome@forissier.org>
-Subject: [PATCH v2] checkpatch: add --kconfig-prefix
-Date:   Mon, 17 Aug 2020 17:33:20 +0200
-Message-Id: <20200817153320.102777-1-jerome@forissier.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200817095056.31001-1-jerome@forissier.org>
-References: <20200817095056.31001-1-jerome@forissier.org>
+        Mon, 17 Aug 2020 15:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730420AbgHQPeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 616282173E;
+        Mon, 17 Aug 2020 15:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678441;
+        bh=zJJf9ufwWpUpsbzGQo2GcLdzmv5cztp9mfuTvLC4nV4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XE7znOgmx2AHjD4YDb9XEbxMrayEuvGO1ScUwC1pxT2UkPDnQnqPJRRbs6FGCpLrx
+         iS78ufaO8TTMkZ5q8wQlSwHtnl2so4XUZCDOdUPwMDcGAgcsLYL6B/Y5wtZrDTxwpx
+         OGlxjgjpfJi7+0Ti9eoztcFhBDc5183ePg+I++sU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Harish <harish@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 318/464] selftests/powerpc: Fix CPU affinity for child process
+Date:   Mon, 17 Aug 2020 17:14:31 +0200
+Message-Id: <20200817143849.028895428@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kconfig allows to customize the CONFIG_ prefix via the $CONFIG_
-environment variable. Out-of-tree projects may therefore use Kconfig
-with a different prefix, or they may use a custom configuration tool
-which does not use the CONFIG_ prefix at all. Such projects may still
-want to adhere to the Linux kernel coding style and run checkpatch.pl.
-To make this possible, add the --kconfig-prefix command line option.
+From: Harish <harish@linux.ibm.com>
 
-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+[ Upstream commit 854eb5022be04f81e318765f089f41a57c8e5d83 ]
+
+On systems with large number of cpus, test fails trying to set
+affinity by calling sched_setaffinity() with smaller size for affinity
+mask. This patch fixes it by making sure that the size of allocated
+affinity mask is dependent on the number of CPUs as reported by
+get_nprocs().
+
+Fixes: 00b7ec5c9cf3 ("selftests/powerpc: Import Anton's context_switch2 benchmark")
+Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Harish <harish@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Reviewed-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200609081423.529664-1-harish@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkpatch.pl | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../powerpc/benchmarks/context_switch.c       | 21 ++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-v2:
-- Use a command-line/.checkpatch.conf option instead of the _CONFIG
-  environment variable.
-- Changed the patch subject (was: "checkpatch: get CONFIG_ prefix from
-  the environment").
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 2cbeae6d9aee..150dfbc04b4b 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -65,6 +65,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
- # git output parsing needs US English output, so first set backtick child process LANGUAGE
- my $git_command ='export LANGUAGE=en_US.UTF-8; git';
- my $tabsize = 8;
-+my $CONFIG_ = "CONFIG_";
+diff --git a/tools/testing/selftests/powerpc/benchmarks/context_switch.c b/tools/testing/selftests/powerpc/benchmarks/context_switch.c
+index a2e8c9da7fa53..d50cc05df4952 100644
+--- a/tools/testing/selftests/powerpc/benchmarks/context_switch.c
++++ b/tools/testing/selftests/powerpc/benchmarks/context_switch.c
+@@ -19,6 +19,7 @@
+ #include <limits.h>
+ #include <sys/time.h>
+ #include <sys/syscall.h>
++#include <sys/sysinfo.h>
+ #include <sys/types.h>
+ #include <sys/shm.h>
+ #include <linux/futex.h>
+@@ -104,8 +105,9 @@ static void start_thread_on(void *(*fn)(void *), void *arg, unsigned long cpu)
  
- sub help {
- 	my ($exitcode) = @_;
-@@ -127,6 +128,8 @@ Options:
-   --typedefsfile             Read additional types from this file
-   --color[=WHEN]             Use colors 'always', 'never', or only when output
-                              is a terminal ('auto'). Default is 'auto'.
-+  --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
-+                             $CONFIG_)
-   -h, --help, --version      display this help and exit
+ static void start_process_on(void *(*fn)(void *), void *arg, unsigned long cpu)
+ {
+-	int pid;
+-	cpu_set_t cpuset;
++	int pid, ncpus;
++	cpu_set_t *cpuset;
++	size_t size;
  
- When FILE is - read standard input.
-@@ -235,6 +238,7 @@ GetOptions(
- 	'color=s'	=> \$color,
- 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
- 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
-+	'kconfig-prefix=s'	=> \$CONFIG_,
- 	'h|help'	=> \$help,
- 	'version'	=> \$help
- ) or help(1);
-@@ -6528,16 +6532,16 @@ sub process {
- 		}
+ 	pid = fork();
+ 	if (pid == -1) {
+@@ -116,14 +118,23 @@ static void start_process_on(void *(*fn)(void *), void *arg, unsigned long cpu)
+ 	if (pid)
+ 		return;
  
- # check for IS_ENABLED() without CONFIG_<FOO> ($rawline for comments too)
--		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^CONFIG_/) {
-+		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^$CONFIG_/) {
- 			WARN("IS_ENABLED_CONFIG",
--			     "IS_ENABLED($1) is normally used as IS_ENABLED(CONFIG_$1)\n" . $herecurr);
-+			     "IS_ENABLED($1) is normally used as IS_ENABLED($CONFIG_$1)\n" . $herecurr);
- 		}
+-	CPU_ZERO(&cpuset);
+-	CPU_SET(cpu, &cpuset);
++	ncpus = get_nprocs();
++	size = CPU_ALLOC_SIZE(ncpus);
++	cpuset = CPU_ALLOC(ncpus);
++	if (!cpuset) {
++		perror("malloc");
++		exit(1);
++	}
++	CPU_ZERO_S(size, cpuset);
++	CPU_SET_S(cpu, size, cpuset);
  
- # check for #if defined CONFIG_<FOO> || defined CONFIG_<FOO>_MODULE
--		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(CONFIG_[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
-+		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)($CONFIG_[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
- 			my $config = $1;
- 			if (WARN("PREFER_IS_ENABLED",
--				 "Prefer IS_ENABLED(<FOO>) to CONFIG_<FOO> || CONFIG_<FOO>_MODULE\n" . $herecurr) &&
-+				 "Prefer IS_ENABLED(<FOO>) to $CONFIG_<FOO> || $CONFIG_<FOO>_MODULE\n" . $herecurr) &&
- 			    $fix) {
- 				$fixed[$fixlinenr] = "\+#if IS_ENABLED($config)";
- 			}
+-	if (sched_setaffinity(0, sizeof(cpuset), &cpuset)) {
++	if (sched_setaffinity(0, size, cpuset)) {
+ 		perror("sched_setaffinity");
++		CPU_FREE(cpuset);
+ 		exit(1);
+ 	}
+ 
++	CPU_FREE(cpuset);
+ 	fn(arg);
+ 
+ 	exit(0);
 -- 
 2.25.1
+
+
 
