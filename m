@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D023C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB85EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008D9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB2D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689785;
-	bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
+	s=default; t=1597689790;
+	bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TvSzfUNc0S7h0LjyTadrF4OXp/sV1iubwG34XHOuN4xpzTg4uq48yPk2frZd9dqYq
-	 CWTn8ICXbeS8R6xYhcJe6x/sLkpZKaJqW1NBe6sZVSpPRoxIYoVH0TIeyqUndVxlzJ
-	 tD/VN2lIxdF0NyB8KK1EQ9uXk5qTnddZTcXuqEQw=
+	b=I0BCU/bOIACH0E2Libjn9w4FS/KUu7Z8t8x974UuMuX2X/nSbQEBSEZ1mhKwYpGoW
+	 Ef4JHTOjiXXyYTCgO2+vsQ/yfwJC4immk6uwYIlyUERD4c8ogq9HxpomTSD0TmwdSe
+	 MGENvV4pPvJx2YN2Pd8j42UdCEmgkuxDux5gzHvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388098AbgHQSnB (ORCPT
+        id S2391463AbgHQSnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44636 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388097AbgHQP5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:10 -0400
+        id S2388100AbgHQP5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DC620885;
-        Mon, 17 Aug 2020 15:57:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FCF1208B3;
+        Mon, 17 Aug 2020 15:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679821;
-        bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
+        s=default; t=1597679827;
+        bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDHkEEWdPjbiRDpbQ6phXOGYLYCV/JS/NRg1Wk4Sz8vE3Mzr+/492RmapUph0Jeu8
-         amFytFu5xBzb/dvLz18bgOkkFN0tQw7bLN6egXD4meeNydyYsdHIwUXHCb7kiTOFN/
-         a/LIMtUKBsuBmaksub6w5jjbF1pKIpdVvmtyi7oY=
+        b=gi/aTnp0BhmgD8EHj3GrY4LfT1eAH9ukC4IkU9iNgt8ap21eKw7UJ5DLtL6IoEyx4
+         5JOoY4Wv6eIp1f2pm57O06eFpNDNoaE22s5XiqGCs29VHvdgitl3g0L/0zUwIWr+ix
+         rrpHHhOuGQVb5EfC41MvN24rvTkxZzCiJs9qa7pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>,
-        Frederic Weisbecker <frederic@kernel.org>, stable@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.7 345/393] tick/nohz: Narrow down noise while setting current tasks tick dependency
-Date:   Mon, 17 Aug 2020 17:16:35 +0200
-Message-Id: <20200817143836.335532888@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 347/393] fs/minix: check return value of sb_getblk()
+Date:   Mon, 17 Aug 2020 17:16:37 +0200
+Message-Id: <20200817143836.432506305@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,79 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 3c8920e2dbd1a55f72dc14d656df9d0097cf5c72 upstream.
+commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
 
-Setting a tick dependency on any task, including the case where a task
-sets that dependency on itself, triggers an IPI to all CPUs.  That is
-of course suboptimal but it had previously not been an issue because it
-was only used by POSIX CPU timers on nohz_full, which apparently never
-occurs in latency-sensitive workloads in production.  (Or users of such
-systems are suffering in silence on the one hand or venting their ire
-on the wrong people on the other.)
+Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
 
-But RCU now sets a task tick dependency on the current task in order
-to fix stall issues that can occur during RCU callback processing.
-Thus, RCU callback processing triggers frequent system-wide IPIs from
-nohz_full CPUs.  This is quite counter-productive, after all, avoiding
-IPIs is what nohz_full is supposed to be all about.
+This series fixes all syzbot bugs in the minix filesystem:
 
-This commit therefore optimizes tasks' self-setting of a task tick
-dependency by using tick_nohz_full_kick() to avoid the system-wide IPI.
-Instead, only the execution of the one task is disturbed, which is
-acceptable given that this disturbance is well down into the noise
-compared to the degree to which the RCU callback processing itself
-disturbs execution.
+	KASAN: null-ptr-deref Write in get_block
+	KASAN: use-after-free Write in get_block
+	KASAN: use-after-free Read in get_block
+	WARNING in inc_nlink
+	KMSAN: uninit-value in get_block
+	WARNING in drop_nlink
 
-Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
-Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: stable@kernel.org
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+It also fixes the minix filesystem to set s_maxbytes correctly, so that
+userspace sees the correct behavior when exceeding the max file size.
+
+This patch (of 6):
+
+sb_getblk() can fail, so check its return value.
+
+This fixes a NULL pointer dereference.
+
+Originally from Qiujun Huang.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
+Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/tick-sched.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ fs/minix/itree_common.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, en
- EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
+--- a/fs/minix/itree_common.c
++++ b/fs/minix/itree_common.c
+@@ -75,6 +75,7 @@ static int alloc_branch(struct inode *in
+ 	int n = 0;
+ 	int i;
+ 	int parent = minix_new_block(inode);
++	int err = -ENOSPC;
  
- /*
-- * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
-- * per task timers.
-+ * Set a per-task tick dependency. RCU need this. Also posix CPU timers
-+ * in order to elapse per task timers.
-  */
- void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
- {
--	/*
--	 * We could optimize this with just kicking the target running the task
--	 * if that noise matters for nohz full users.
--	 */
--	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
-+	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
-+		if (tsk == current) {
-+			preempt_disable();
-+			tick_nohz_full_kick();
-+			preempt_enable();
-+		} else {
-+			/*
-+			 * Some future tick_nohz_full_kick_task()
-+			 * should optimize this.
-+			 */
-+			tick_nohz_full_kick_all();
+ 	branch[0].key = cpu_to_block(parent);
+ 	if (parent) for (n = 1; n < num; n++) {
+@@ -85,6 +86,11 @@ static int alloc_branch(struct inode *in
+ 			break;
+ 		branch[n].key = cpu_to_block(nr);
+ 		bh = sb_getblk(inode->i_sb, parent);
++		if (!bh) {
++			minix_free_block(inode, nr);
++			err = -ENOMEM;
++			break;
 +		}
-+	}
+ 		lock_buffer(bh);
+ 		memset(bh->b_data, 0, bh->b_size);
+ 		branch[n].bh = bh;
+@@ -103,7 +109,7 @@ static int alloc_branch(struct inode *in
+ 		bforget(branch[i].bh);
+ 	for (i = 0; i < n; i++)
+ 		minix_free_block(inode, block_to_cpu(branch[i].key));
+-	return -ENOSPC;
++	return err;
  }
- EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
  
+ static inline int splice_branch(struct inode *inode,
 
 
