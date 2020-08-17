@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7337C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A55420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D1820658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693889;
-	bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
+	s=default; t=1597693896;
+	bh=Zm0JTxqN7Lag/Job7R8Q84ETS3hXl6RidvnjycO/Xu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1SMJ6UYz5AYRGWYQwIQmmOYnViKY+XqrRqQKxKFE6Pm9zhsOQKrX46c5Ft8kPtsO
-	 1N+SV9VGmiJymrrtghVb+ogpq89sFHKi7LPKlLkuPKAcZp+Aqk2VHUg3+FbPFf5Gse
-	 q0aduuMmYlOyh3qtX5OHX2iUg+T//U0UF3T+OhyM=
+	b=oxzp9HCXHhRVwTYYtaX7lAA3D/uvWmliEMv+G+Fku2R7BgwwGkUNG3ov/XP9lzNSo
+	 12huQAUclFZjpnVdT5nFF1pDeaYRRVr29rT7D5lt/IsZ0hzqjkIDRIQiA3EswCA2p1
+	 MGV2KzDrDSnCoUOOylzefhUlcYiwmUUth/KBKZZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgHQTvS (ORCPT
+        id S1732846AbgHQTvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40372 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbgHQPSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:18:52 -0400
+        id S1729138AbgHQPSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:18:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5968B206FA;
-        Mon, 17 Aug 2020 15:18:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B84620716;
+        Mon, 17 Aug 2020 15:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677531;
-        bh=U+gWfkrY3BsVuOe18g1jlpr8DJgrJunvSINNKdy/Hcs=;
+        s=default; t=1597677517;
+        bh=Zm0JTxqN7Lag/Job7R8Q84ETS3hXl6RidvnjycO/Xu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USt9A+jvJrvxS48wpOu0IaX/a0+2yvtoL5mRgNxMsbxehh1L0oZl1zlCzK5VvVudE
-         zYF86UmsF2dC0BCYUuMAC4TXRxJSSDvOk9ThZsPekyaOFaUgMhD+I4FuqhObJNEufl
-         /zh1qHL8kvV1tB2O4Rf0Mz9ReOkCXjDILSb945io=
+        b=Y7SkMb/uqzLj8z1KH9zDddKtzP/X6NMzkYwc6cudbp9LrKqcAypeXf7APzghsTPrt
+         w+L6yERPi2zzsB1myGe7yqr/F/4Fi8mV6+0sFCvhXuD7kX43jNaS8Bu92vpb+pC2uI
+         ruxU3k+BXHPH3tG1eCxzxbaHwiN8YgG7ILugVJKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 017/464] EDAC: Fix reference count leaks
-Date:   Mon, 17 Aug 2020 17:09:30 +0200
-Message-Id: <20200817143834.582963824@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 012/464] sched/fair: Fix NOHZ next idle balance
+Date:   Mon, 17 Aug 2020 17:09:25 +0200
+Message-Id: <20200817143834.344555529@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,57 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
+[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
 
-When kobject_init_and_add() returns an error, it should be handled
-because kobject_init_and_add() takes a reference even when it fails. If
-this function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+With commit:
+  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+rebalance_domains of the local cfs_rq happens before others idle cpus have
+updated nohz.next_balance and its value is overwritten.
 
-Therefore, replace calling kfree() and call kobject_put() and add a
-missing kobject_put() in the edac_device_register_sysfs_main_kobj()
-error path.
+Move the update of nohz.next_balance for other idles cpus before balancing
+and updating the next_balance of local cfs_rq.
 
- [ bp: Massage and merge into a single patch. ]
+Also, the nohz.next_balance is now updated only if all idle cpus got a
+chance to rebalance their domains and the idle balance has not been aborted
+because of new activities on the CPU. In case of need_resched, the idle
+load balance will be kick the next jiffie in order to address remaining
+ilb.
 
-Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
-Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
+Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
+Reported-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_device_sysfs.c | 1 +
- drivers/edac/edac_pci_sysfs.c    | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
-index 0e7ea3591b781..5e75937537997 100644
---- a/drivers/edac/edac_device_sysfs.c
-+++ b/drivers/edac/edac_device_sysfs.c
-@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 04fa8dbcfa4d7..6b3b59cc51d6c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10027,7 +10027,12 @@ static void kick_ilb(unsigned int flags)
+ {
+ 	int ilb_cpu;
  
- 	/* Error exit stack */
- err_kobj_reg:
-+	kobject_put(&edac_dev->kobj);
- 	module_put(edac_dev->owner);
+-	nohz.next_balance++;
++	/*
++	 * Increase nohz.next_balance only when if full ilb is triggered but
++	 * not if we only update stats.
++	 */
++	if (flags & NOHZ_BALANCE_KICK)
++		nohz.next_balance = jiffies+1;
  
- err_out:
-diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
-index 72c9eb9fdffbe..53042af7262e2 100644
---- a/drivers/edac/edac_pci_sysfs.c
-+++ b/drivers/edac/edac_pci_sysfs.c
-@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
+ 	ilb_cpu = find_new_ilb();
  
- 	/* Error unwind statck */
- kobject_init_and_add_fail:
--	kfree(edac_pci_top_main_kobj);
-+	kobject_put(edac_pci_top_main_kobj);
+@@ -10348,6 +10353,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 		}
+ 	}
  
- kzalloc_fail:
- 	module_put(THIS_MODULE);
++	/*
++	 * next_balance will be updated only when there is a need.
++	 * When the CPU is attached to null domain for ex, it will not be
++	 * updated.
++	 */
++	if (likely(update_next_balance))
++		nohz.next_balance = next_balance;
++
+ 	/* Newly idle CPU doesn't need an update */
+ 	if (idle != CPU_NEWLY_IDLE) {
+ 		update_blocked_averages(this_cpu);
+@@ -10368,14 +10381,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 	if (has_blocked_load)
+ 		WRITE_ONCE(nohz.has_blocked, 1);
+ 
+-	/*
+-	 * next_balance will be updated only when there is a need.
+-	 * When the CPU is attached to null domain for ex, it will not be
+-	 * updated.
+-	 */
+-	if (likely(update_next_balance))
+-		nohz.next_balance = next_balance;
+-
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
