@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCF220716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C573920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693564;
-	bh=fw0ThbpYQA6LIUcE4wTI9DtbAVDrXtiAyNGq0cTApy8=;
+	s=default; t=1597693568;
+	bh=APvDs6SRzrE3GBnZEeLG0DagUxL255mNjD/D2GdW9DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G424oVDM7Kpjm0RlrXL8rzVLS7gP4+JzTAkNaOwP/ZzlUoskP/eFUjquV+TouWvHA
-	 FmPPPWkU+3fY8PjTRf9wnBfh8cHjpvc7/cz+5NzsAKC2LcNcTLlBNM71g5YRlbMhp0
-	 ShJ3afYGJuZ5Lw+Lfs4e0rCt6uKix5lNl1JiktqY=
+	b=Hgf9JsiGa4tjX5BBkowVyBJG71jZq9Bpgrlmz9pihlOxpllqUqJmXNRyJIRfcBAlC
+	 owHhZIYBKCqVtrkF+D4W+RPHXqUsu6EOC1q3Z3yI6TVEaXR/t805ZssR9mN/tV4X9G
+	 sYdqOAeE7bh4axVbjIzRFBB6oHi1LAsJkDKCcZyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgHQPVn (ORCPT
+        id S2404392AbgHQTqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729314AbgHQPVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:04 -0400
+        id S1729373AbgHQPVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F22620716;
-        Mon, 17 Aug 2020 15:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD75F20748;
+        Mon, 17 Aug 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677663;
-        bh=fw0ThbpYQA6LIUcE4wTI9DtbAVDrXtiAyNGq0cTApy8=;
+        s=default; t=1597677700;
+        bh=APvDs6SRzrE3GBnZEeLG0DagUxL255mNjD/D2GdW9DY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMow1++WzTTisx6mYEad+uooRMpEWc0midTGEELQk/OOuXa9Agw4Nw9bk0UVAN2s2
-         Y8jT2DeQvGlz9XgWFTt//xt/37A5/2y/szJ047bXHG8oMd6msu7tfWY7hLlOoi9dEe
-         sey//2a2PqRkOT8AwvOdyAPEskJPCToYyTm+mZSM=
+        b=KwH/qp+SK/l4I6SI72VRTu4LASjdhG2QK4uOviQrvPQv1hHR5Zh78GkF9uP41wHac
+         7Iq9BHYMsJWbo8Oam8xdn2+8mrIuEP0XEbuPpxr3rxbmFOeoYS5+T7jyE2+RZ0aMME
+         vJiTHSxdRb0g6LEavA5lSxRm9+MnlPkqUS0S/8cQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 064/464] irqchip/loongson-htvec: Check return value of irq_domain_translate_onecell()
-Date:   Mon, 17 Aug 2020 17:10:17 +0200
-Message-Id: <20200817143836.831774252@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 076/464] block: dont do revalidate zones on invalid devices
+Date:   Mon, 17 Aug 2020 17:10:29 +0200
+Message-Id: <20200817143837.416131733@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,42 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit dbec37048d27cee36e103e113b5f9b1852bfe997 ]
+[ Upstream commit 1a1206dc4cf02cee4b5cbce583ee4c22368b4c28 ]
 
-Check the return value of irq_domain_translate_onecell() due to
-it may returns -EINVAL if failed.
+When we loose a device for whatever reason while (re)scanning zones, we
+trip over a NULL pointer in blk_revalidate_zone_cb, like in the following
+log:
 
-Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1594087972-21715-5-git-send-email-yangtiezhu@loongson.cn
+sd 0:0:0:0: [sda] 3418095616 4096-byte logical blocks: (14.0 TB/12.7 TiB)
+sd 0:0:0:0: [sda] 52156 zones of 65536 logical blocks
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Mode Sense: 37 00 00 08
+sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+sd 0:0:0:0: [sda] REPORT ZONES start lba 1065287680 failed
+sd 0:0:0:0: [sda] REPORT ZONES: Result: hostbyte=0x00 driverbyte=0x08
+sd 0:0:0:0: [sda] Sense Key : 0xb [current]
+sd 0:0:0:0: [sda] ASC=0x0 ASCQ=0x6
+sda: failed to revalidate zones
+sd 0:0:0:0: [sda] 0 4096-byte logical blocks: (0 B/0 B)
+sda: detected capacity change from 14000519643136 to 0
+==================================================================
+BUG: KASAN: null-ptr-deref in blk_revalidate_zone_cb+0x1b7/0x550
+Write of size 8 at addr 0000000000000010 by task kworker/u4:1/58
+
+CPU: 1 PID: 58 Comm: kworker/u4:1 Not tainted 5.8.0-rc1 #692
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+Workqueue: events_unbound async_run_entry_fn
+Call Trace:
+ dump_stack+0x7d/0xb0
+ ? blk_revalidate_zone_cb+0x1b7/0x550
+ kasan_report.cold+0x5/0x37
+ ? blk_revalidate_zone_cb+0x1b7/0x550
+ check_memory_region+0x145/0x1a0
+ blk_revalidate_zone_cb+0x1b7/0x550
+ sd_zbc_parse_report+0x1f1/0x370
+ ? blk_req_zone_write_trylock+0x200/0x200
+ ? sectors_to_logical+0x60/0x60
+ ? blk_req_zone_write_trylock+0x200/0x200
+ ? blk_req_zone_write_trylock+0x200/0x200
+ sd_zbc_report_zones+0x3c4/0x5e0
+ ? sd_dif_config_host+0x500/0x500
+ blk_revalidate_disk_zones+0x231/0x44d
+ ? _raw_write_lock_irqsave+0xb0/0xb0
+ ? blk_queue_free_zone_bitmaps+0xd0/0xd0
+ sd_zbc_read_zones+0x8cf/0x11a0
+ sd_revalidate_disk+0x305c/0x64e0
+ ? __device_add_disk+0x776/0xf20
+ ? read_capacity_16.part.0+0x1080/0x1080
+ ? blk_alloc_devt+0x250/0x250
+ ? create_object.isra.0+0x595/0xa20
+ ? kasan_unpoison_shadow+0x33/0x40
+ sd_probe+0x8dc/0xcd2
+ really_probe+0x20e/0xaf0
+ __driver_attach_async_helper+0x249/0x2d0
+ async_run_entry_fn+0xbe/0x560
+ process_one_work+0x764/0x1290
+ ? _raw_read_unlock_irqrestore+0x30/0x30
+ worker_thread+0x598/0x12f0
+ ? __kthread_parkme+0xc6/0x1b0
+ ? schedule+0xed/0x2c0
+ ? process_one_work+0x1290/0x1290
+ kthread+0x36b/0x440
+ ? kthread_create_worker_on_cpu+0xa0/0xa0
+ ret_from_fork+0x22/0x30
+==================================================================
+
+When the device is already gone we end up with the following scenario:
+The device's capacity is 0 and thus the number of zones will be 0 as well. When
+allocating the bitmap for the conventional zones, we then trip over a NULL
+pointer.
+
+So if we encounter a zoned block device with a 0 capacity, don't dare to
+revalidate the zones sizes.
+
+Fixes: 6c6b35491422 ("block: set the zone size in blk_revalidate_disk_zones atomically")
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/blk-zoned.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index b36d403383230..720cf96ae90ee 100644
---- a/drivers/irqchip/irq-loongson-htvec.c
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -109,11 +109,14 @@ static struct irq_chip htvec_irq_chip = {
- static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 			      unsigned int nr_irqs, void *arg)
- {
-+	int ret;
- 	unsigned long hwirq;
- 	unsigned int type, i;
- 	struct htvec *priv = domain->host_data;
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 23831fa8701d8..480dfff69a00c 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -497,6 +497,9 @@ int blk_revalidate_disk_zones(struct gendisk *disk,
+ 	if (WARN_ON_ONCE(!queue_is_mq(q)))
+ 		return -EIO;
  
--	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
-+	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
++	if (!get_capacity(disk))
++		return -EIO;
++
+ 	/*
+ 	 * Ensure that all memory allocations in this context are done as if
+ 	 * GFP_NOIO was specified.
 -- 
 2.25.1
 
