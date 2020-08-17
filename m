@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46242C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D222C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC7720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A32820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686304;
-	bh=ajgyln0eYXl8XAYeTG4lGHiQ1xChE2wN7yJxSMbACSM=;
+	s=default; t=1597686314;
+	bh=5KGiXZqA0KWzec0awu2qfq/1IAew9sXfSH80X8CoOmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCOdbqsLczZqL2mniyzCHJ6NElJOc33YWeav/GWvaItOE0SNbTbB972iR1bpoXKrD
-	 ahwgsmFQlxMqNYMIaAHU/wBV22bp1CWWTUW5RjaT42RxbTdkHwcU1sXs6c60bFygvc
-	 7tuYjEVIY+gcZfO6INs6EkaWpGhpRT6BCKeC8gcM=
+	b=y48MQup2xiGauEY5qAdzBtWIdbEJPJij/VvJ0+M8JF29Q0RAwKaFAsHvtsRR/JlIM
+	 DkZRefB+Tia3am1E6aEZYTQKX//hav6ivBdtHpjBR6Nj2F+nVm4yShXFL8JCJBWZHX
+	 tnuzwzG65YmfTyUolZv3f8e0GgpGJ5Q6NHcAph1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbgHQRpB (ORCPT
+        id S2389647AbgHQRpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730819AbgHQQOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:40 -0400
+        id S2388792AbgHQQOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A71220748;
-        Mon, 17 Aug 2020 16:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A61920578;
+        Mon, 17 Aug 2020 16:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680879;
-        bh=ajgyln0eYXl8XAYeTG4lGHiQ1xChE2wN7yJxSMbACSM=;
+        s=default; t=1597680872;
+        bh=5KGiXZqA0KWzec0awu2qfq/1IAew9sXfSH80X8CoOmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBQUsi2N4HTjkkgHfo3veoDOs0iMkkwf0i5wotsYftBve/iksN/PCjQ6Na4jlQ+o7
-         T4Cb3rzE8v8+mWfCbQuJ6/Ecsp9bP03gX9/3mRyEqbzgOPmIqR41K7cLjwKbGiYWQ/
-         xVLh+4Q9JHWVqEP/aWamHhp5XjWgXDs7hMawma4g=
+        b=jCDg7PbMACvPDIRHX95LklEsNV+DNEy6a/h1AUxoM28YGs7W8eN6BTqEeIXhYdGTF
+         bFXFVhDqqZO/etub3+nzPJnuzgmwjoHA9rMILN4pPMIxj5o8YDjc7a9m0nFhz6lcvo
+         0vwYqUcW/iOFG2mQ347bYntIyFayhlL0a8UTTs8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/168] thermal: ti-soc-thermal: Fix reversed condition in ti_thermal_expose_sensor()
-Date:   Mon, 17 Aug 2020 17:17:05 +0200
-Message-Id: <20200817143738.417107838@linuxfoundation.org>
+Subject: [PATCH 4.19 091/168] drm/imx: tve: fix regulator_disable error path
+Date:   Mon, 17 Aug 2020 17:17:02 +0200
+Message-Id: <20200817143738.256178488@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,34 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 0f348db01fdf128813fdd659fcc339038fb421a4 ]
+[ Upstream commit 7bb58b987fee26da2a1665c01033022624986b7c ]
 
-This condition is reversed and will cause breakage.
+Add missing regulator_disable() as devm_action to avoid dedicated
+unbind() callback and fix the missing error handling.
 
-Fixes: 7440f518dad9 ("thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200616091949.GA11940@mwanda
+Fixes: fcbc51e54d2a ("staging: drm/imx: Add support for Television Encoder (TVEv2)")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/imx/imx-tve.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index 452e034aedc13..343da0031299f 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -183,7 +183,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
+index cffd3310240e5..c19c1dfbfcdc4 100644
+--- a/drivers/gpu/drm/imx/imx-tve.c
++++ b/drivers/gpu/drm/imx/imx-tve.c
+@@ -498,6 +498,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
+ 	return 0;
+ }
  
- 	data = ti_bandgap_get_sensor_data(bgp, id);
++static void imx_tve_disable_regulator(void *data)
++{
++	struct imx_tve *tve = data;
++
++	regulator_disable(tve->dac_reg);
++}
++
+ static bool imx_tve_readable_reg(struct device *dev, unsigned int reg)
+ {
+ 	return (reg % 4 == 0) && (reg <= 0xdc);
+@@ -622,6 +629,9 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 		ret = regulator_enable(tve->dac_reg);
+ 		if (ret)
+ 			return ret;
++		ret = devm_add_action_or_reset(dev, imx_tve_disable_regulator, tve);
++		if (ret)
++			return ret;
+ 	}
  
--	if (!IS_ERR_OR_NULL(data))
-+	if (IS_ERR_OR_NULL(data))
- 		data = ti_thermal_build_data(bgp, id);
+ 	tve->clk = devm_clk_get(dev, "tve");
+@@ -668,18 +678,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ }
  
- 	if (!data)
+-static void imx_tve_unbind(struct device *dev, struct device *master,
+-	void *data)
+-{
+-	struct imx_tve *tve = dev_get_drvdata(dev);
+-
+-	if (!IS_ERR(tve->dac_reg))
+-		regulator_disable(tve->dac_reg);
+-}
+-
+ static const struct component_ops imx_tve_ops = {
+ 	.bind	= imx_tve_bind,
+-	.unbind	= imx_tve_unbind,
+ };
+ 
+ static int imx_tve_probe(struct platform_device *pdev)
 -- 
 2.25.1
 
