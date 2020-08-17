@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB999C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7244205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEDF1205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686635;
-	bh=hvnd6rY9b+ciKQ1KWJkWmZnmieEZ4BnpOAOucN+yc8o=;
+	s=default; t=1597686637;
+	bh=QuTGwHFG4PfND3wv40WtsKr+cg9CyiMKlrNdZx2m/kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3vM+2u1ezUYmKZPg4SRR5l2EvaeevhYq/9Fa6eDAfmDaO9Fmss/EJUWYtOcTm5RT
-	 tbAJPWq1hB7umD1DU75usZBw1zMggPuXZc5tJD/lVHnpk3XjjN+199EjxMiIBMwFj5
-	 hJ/2WpZaFk2WeCscYsIkLuBBn2MJVjG84p1DdBP8=
+	b=0oXvA9v6/lN79k2Q4FbS8Bz1jvaHNUIZzAp7tdlnstST5ZG5RYUAj/vb2vALRSju1
+	 qTsfpWYcJvyd4Z3o+7yVlEy8ik03tloknVvgH+x8+BZxkmTpsBuAaut2XNVb0ylYcS
+	 ATfEPxTjMbJ5YcXe6Wr3HnnWAtwsC6BDYg5DFHwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbgHQQMV (ORCPT
+        id S2389177AbgHQRug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387751AbgHQPqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:51 -0400
+        id S2388692AbgHQQMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94422065D;
-        Mon, 17 Aug 2020 15:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 975F020578;
+        Mon, 17 Aug 2020 16:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679210;
-        bh=hvnd6rY9b+ciKQ1KWJkWmZnmieEZ4BnpOAOucN+yc8o=;
+        s=default; t=1597680742;
+        bh=QuTGwHFG4PfND3wv40WtsKr+cg9CyiMKlrNdZx2m/kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xvILtrOjRnlYPG0hTRvQGgaG60J/fq6Utk3TShKtYsydAl/C7i+sgy78o6jZom7Ue
-         xiPKktQZ/EUZkqZgu57gZfLT+pwdGUrxDOvs0jVXrwyd8fEeQX4+D+L1JajxYbisuV
-         em4Ws/g8xtrmWmXdvAvyHRQdGX8C1GD0OnmdFmo8=
+        b=t7H5K/0CdSgiRMO+RFRSo3qzIfiiS4Kkwsu/9mlRu3umOLtVM0ulsYvPvLNy4a2Ua
+         fPyHnbFGiEnMaB4g5UrocNXAtibUHA9XkQPiFGhBx3cFR1nods5FuiT///GGqRR3vM
+         Wuf+txJ28z9vnkvbgLQD0Lljjy+LFl/KhIXOCMqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 134/393] Bluetooth: hci_qca: Fix an error pointer dereference
-Date:   Mon, 17 Aug 2020 17:13:04 +0200
-Message-Id: <20200817143826.109775509@linuxfoundation.org>
+Subject: [PATCH 4.19 009/168] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
+Date:   Mon, 17 Aug 2020 17:15:40 +0200
+Message-Id: <20200817143734.177619880@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
+References: <20200817143733.692105228@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,65 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit 4c07a5d7aeb39f559b29aa58ec9a8a5ab4282cb0 ]
+[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
 
-When a function like devm_clk_get_optional() function returns both error
-pointers on error and NULL then the NULL return means that the optional
-feature is deliberately disabled.  It is a special sort of success and
-should not trigger an error message.  The surrounding code should be
-written to check for NULL and not crash.
+The puma gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
 
-On the other hand, if we encounter an error, then the probe from should
-clean up and return a failure.
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
 
-In this code, if devm_clk_get_optional() returns an error pointer then
-the kernel will crash inside the call to:
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
 
-	clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-
-The error handling must be updated to prevent that.
-
-Fixes: 77131dfec6af ("Bluetooth: hci_qca: Replace devm_gpiod_get() with devm_gpiod_get_optional()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 14e4d2eaf8959..568f7ec20b000 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1941,17 +1941,17 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		}
- 
- 		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
--		if (!qcadev->susclk) {
-+		if (IS_ERR(qcadev->susclk)) {
- 			dev_warn(&serdev->dev, "failed to acquire clk\n");
--		} else {
--			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
--			if (err)
--				return err;
--
--			err = clk_prepare_enable(qcadev->susclk);
--			if (err)
--				return err;
-+			return PTR_ERR(qcadev->susclk);
- 		}
-+		err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-+		if (err)
-+			return err;
-+
-+		err = clk_prepare_enable(qcadev->susclk);
-+		if (err)
-+			return err;
- 
- 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
- 		if (err) {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index baacb6e227b95..b155f657292bd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -156,7 +156,7 @@ &gmac {
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
+-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+ 	tx_delay = <0x10>;
 -- 
 2.25.1
 
