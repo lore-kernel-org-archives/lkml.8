@@ -2,89 +2,86 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01954C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FCFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA40420786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0DxbvkUh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dKszOnRX"
+	by mail.kernel.org (Postfix) with ESMTP id D6AA120716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgHQOWV (ORCPT
+        id S1728924AbgHQOXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbgHQOWS (ORCPT
+        Mon, 17 Aug 2020 10:23:11 -0400
+Received: from smtprelay0047.hostedemail.com ([216.40.44.47]:52682 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728465AbgHQOXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:22:18 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6CDC061389;
-        Mon, 17 Aug 2020 07:22:17 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 16:22:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597674135;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j4xxhCUOoqfsgVxjLw+tTnX7DOxVf/4QOq6Nb41D69Y=;
-        b=0DxbvkUh7Jau8mQwiRKBDN4jBFCiFpqzLh6oyAeyNgyRINtyePvqVOH3GzuTk06XkUTAsA
-        9nxm6DMgVVUNPkSSD1kbNSO+JTUEjbEJTm7Jg+E7xZG/eu0e5K4sMs1pXOAkohsOn+GkED
-        f2fqB7LtzGOWx5UCXx6YiCF8ct8LjeCw6rjKi4eYGc2e58smJKhyoI/7PYG9msRLL50+ES
-        pKA31lTFFc3TkERrjsNp4iGMfXYMiRWsrDhbjlakFqWI3HsVRkz7kmfjdcun2Grts7POe2
-        WrRu8LNEuY87KYVQIXPIDozsq8lxbGEIOGT+iWNnuBfNBZTIFdqbd5a+iTa7Bw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597674135;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j4xxhCUOoqfsgVxjLw+tTnX7DOxVf/4QOq6Nb41D69Y=;
-        b=dKszOnRXHWvHJK/xrxkMKoFxXV1l9qCq/BqafMd9StHXyfU2sSC3yNXKk8PG+kL6W2GGUV
-        AdcJHK9fJ0HkyeCA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Julia Lawall <julia.lawall@inria.fr>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [PATCH] printk: fix ifnullfree.cocci warnings
-Message-ID: <20200817142214.oummrtyh5xmad5ke@linutronix.de>
-References: <alpine.DEB.2.21.2007241203410.2834@hadrien>
- <87y2n53xi6.fsf@jogness.linutronix.de>
+        Mon, 17 Aug 2020 10:23:10 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3EC1D182CF66B;
+        Mon, 17 Aug 2020 14:23:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: soup81_331683427017
+X-Filterd-Recvd-Size: 2118
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 17 Aug 2020 14:23:07 +0000 (UTC)
+Message-ID: <fafab4f8754a924a97e2115fbd95085dbf918a9b.camel@perches.com>
+Subject: Re: [PATCH] x86: Use fallthrough pseudo-keyword
+From:   Joe Perches <joe@perches.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Gustavo A. R. Silva" <kernel.org@embeddedor>
+Date:   Mon, 17 Aug 2020 07:23:05 -0700
+In-Reply-To: <20200817130227.GI549@zn.tnic>
+References: <20200707200303.GA4680@embeddedor>
+         <20200817130227.GI549@zn.tnic>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87y2n53xi6.fsf@jogness.linutronix.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-27 15:26:33 [+0206], John Ogness wrote:
-> On 2020-07-24, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > Make the code a little simpler by dropping
-> > some unneeded tests.
-> >
-> > Generated by: scripts/coccinelle/free/ifnullfree.cocci
-> >
-> > Fixes: c406fbce2054 ("printk: implement syslog")
-> > CC: John Ogness <john.ogness@linutronix.de>
-> > Signed-off-by: kernel test robot <lkp@intel.com>
+On Mon, 2020-08-17 at 15:02 +0200, Borislav Petkov wrote:
+> On Tue, Jul 07, 2020 at 03:03:03PM -0500, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 > 
-> This is for the rogue version of the printk ringbuffer within RT at the
-> moment. Until the new accepted version is mainline, we might as well
-> keep the RT variant maintained.
+> ...
 > 
-> Acked-by: John Ogness <john.ogness@linutronix.de>
+> > @@ -362,7 +361,6 @@ static short get_segment_selector(struct pt_regs *regs, int seg_reg_idx)
+> >  		case INAT_SEG_REG_GS:
+> >  			return vm86regs->gs;
+> >  		case INAT_SEG_REG_IGNORE:
+> > -			/* fall through */
+> >  		default:
+> >  			return -EINVAL;
+> >  		}
+> > @@ -386,7 +384,6 @@ static short get_segment_selector(struct pt_regs *regs, int seg_reg_idx)
+> >  		 */
+> >  		return get_user_gs(regs);
+> >  	case INAT_SEG_REG_IGNORE:
+> > -		/* fall through */
+> >  	default:
+> >  		return -EINVAL;
+> >  	}
+> 
+> What's the logic for those two to not get a fallthrough; marker?
 
-Applied.
+consecutive case labels do not need one.
 
-Sebastian
+
