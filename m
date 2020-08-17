@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8915C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0C9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA1A2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117CD2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684280;
-	bh=sYiXg3G94M+HiuTnzDDfRf926aFKFASDQAR01m4WSwM=;
+	s=default; t=1597684294;
+	bh=LHbBo7MrJEi7jSdNdXkZBGOiztoRmD1ZeW5yhPv1o0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Isp5S8h0iO96dALPTHG1EuourKbykPRD6mGGq9dDzwyDfSoQn5bOo8yjUonINgHww
-	 PQwI9t6rqncJgznJ37j5wAD+fVGmDuuop2ndJM5grQUZKbG0sW/xgjJfwY3PgV28wA
-	 UaioPzhhNt8S35R7NMTfOVF9hkbnkfyQfUsPoS9Y=
+	b=SumS1yBEY57ojrukA1e0hGZgFllQMu1kAxmiPhWmSS5FaiKXBN6BJTX7xtXiAJk8n
+	 HqepnLCJJCW15dU7dSUausB/F50ltkOWTiJbWMbmDly3F60im5PLeyOMQJetPqFAqK
+	 QXjoAWe4DQLCQ95xlVA/ZwHF6UenJBfpwjFb4p14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389435AbgHQRLO (ORCPT
+        id S2389300AbgHQRLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730784AbgHQQLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:24 -0400
+        id S2388622AbgHQQLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1BD022C9F;
-        Mon, 17 Aug 2020 16:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F95920658;
+        Mon, 17 Aug 2020 16:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680683;
-        bh=sYiXg3G94M+HiuTnzDDfRf926aFKFASDQAR01m4WSwM=;
+        s=default; t=1597680691;
+        bh=LHbBo7MrJEi7jSdNdXkZBGOiztoRmD1ZeW5yhPv1o0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ya+asStRr1qQ8+q6XIEZCK3fBIQhNM1fSm1Wm/ctVlvsALKin0skvGIy2u/s155r7
-         uvwVcHq3G3uWT5JT7oPnLvERQ91bRLFwhU4YmfMB8M9ggTSFd+GQjkT5JiphwX/UXt
-         ge/QsvVy9YuHri/wPxn//FAanI12EZylN3/QNanU=
+        b=xj1mcSUGPndCahUlnSVLHBZ2lF+6/l8LrryFlcSm+nAekLq5wvk1rxN1i5wrK/Poq
+         +DDKnRfJk8AL9ZeCb/5hx4klU1FR3ZUnk0uFXSlxO0Vfp94yf3e2Lmz6lKNZIUAIsh
+         neU0Mwbjfuo/jsHYTfLqdut1OYiQd6fMUNdumc78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Dien Pham <dien.pham.ry@renesas.com>
-Subject: [PATCH 4.19 015/168] clk: scmi: Fix min and max rate when registering clocks with discrete rates
-Date:   Mon, 17 Aug 2020 17:15:46 +0200
-Message-Id: <20200817143734.481261181@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Lu Wei <luwei32@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 018/168] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
+Date:   Mon, 17 Aug 2020 17:15:49 +0200
+Message-Id: <20200817143734.654452738@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,67 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
+[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
 
-Currently we are not initializing the scmi clock with discrete rates
-correctly. We fetch the min_rate and max_rate value only for clocks with
-ranges and ignore the ones with discrete rates. This will lead to wrong
-initialization of rate range when clock supports discrete rate.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-Fix this by using the first and the last rate in the sorted list of the
-discrete clock rates while registering the clock.
-
-Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
-Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel-hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-index a985bf5e1ac61..c65d30bba7005 100644
---- a/drivers/clk/clk-scmi.c
-+++ b/drivers/clk/clk-scmi.c
-@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
- static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
- {
- 	int ret;
-+	unsigned long min_rate, max_rate;
-+
- 	struct clk_init_data init = {
- 		.flags = CLK_GET_RATE_NOCACHE,
- 		.num_parents = 0,
-@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index c514cb73bb500..d7d69eadb9bba 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -564,7 +564,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
  
- 	sclk->hw.init = &init;
- 	ret = devm_clk_hw_register(dev, &sclk->hw);
--	if (!ret)
--		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
--				      sclk->info->range.max_rate);
-+	if (ret)
-+		return ret;
-+
-+	if (sclk->info->rate_discrete) {
-+		int num_rates = sclk->info->list.num_rates;
-+
-+		if (num_rates <= 0)
-+			return -EINVAL;
-+
-+		min_rate = sclk->info->list.rates[0];
-+		max_rate = sclk->info->list.rates[num_rates - 1];
-+	} else {
-+		min_rate = sclk->info->range.min_rate;
-+		max_rate = sclk->info->range.max_rate;
-+	}
-+
-+	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
- 	return ret;
- }
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-hid: created platform device\n");
  
 -- 
 2.25.1
