@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57275C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E00A20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B7B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690470;
-	bh=0JfNETjq/XTA0zMeFA6Xk35P+x0qg/r5ZflzwEjc7k8=;
+	s=default; t=1597690474;
+	bh=ZUJRWn2u+zLKI8OJizNnRg3pSjjcXEkJ0NkPxncDCO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDiw96hLtbYwbgkdtCH4bTMbANte7b2eBjdH7+n9DtQllprxCWJZcuAtrNXyAFIgi
-	 dzdUakPxcgNEAdwi8oywMkURtkEto5PVxZlo4IoWiqRmQujehjHuD0qil/eAoYlTmL
-	 HxIO2m8qaOQl8YIrvPVSNp/4g8LPu1iZq950/Flk=
+	b=oVtA4PAC/E2JC/0RvJpdZfOkqelWp3mooBkMTA43Uas/q6BC6vK7r6IXArfaEFpIA
+	 xkHcZlXLHJP7ZYxrA8uzxUzPFklg00nrqMczag30U4a4jEOdQME+ESCd50VGa0j6Z2
+	 RljP1uedtEc/wTyIyyciAMp0GanexzNhNoNmitDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388784AbgHQSy0 (ORCPT
+        id S1731498AbgHQSyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387500AbgHQPvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:35 -0400
+        id S1730921AbgHQPvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44D1120882;
-        Mon, 17 Aug 2020 15:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936402063A;
+        Mon, 17 Aug 2020 15:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679494;
-        bh=0JfNETjq/XTA0zMeFA6Xk35P+x0qg/r5ZflzwEjc7k8=;
+        s=default; t=1597679483;
+        bh=ZUJRWn2u+zLKI8OJizNnRg3pSjjcXEkJ0NkPxncDCO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQ4weodnUsCVDGcrdNkw9EUtumh4GkrIV6l0mElcVjYc0o5fHRTrlDBokoOdUKOwz
-         7b/n4A8k/jJw/NeUyF/GmeyBLJclz9OJvKwACEbnTipCW7WlB8/yBa0RyfLp+JxisN
-         yUStaSv1aikqFwXjQCmuWtPUUfqg9k32euFMun9E=
+        b=ZwTqD/H8CCDntyVOGUjnCJNrpBxvF0l90qgTVNNxRFJNuBSzJda5wrGyCz9YNx5Cw
+         NjxSF3slZZdJgrjYIipUx7gFQS/qlgGIZYJiTGhYUrdrybAsBrB/04qEBzOkWuTv5q
+         sHV3MR9ouAJrHt1ynHM7bo40URf55Wk+va9VLWCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 232/393] powerpc/perf: Fix missing is_sier_aviable() during build
-Date:   Mon, 17 Aug 2020 17:14:42 +0200
-Message-Id: <20200817143830.875778044@linuxfoundation.org>
+Subject: [PATCH 5.7 220/393] drm/imx: fix use after free
+Date:   Mon, 17 Aug 2020 17:14:30 +0200
+Message-Id: <20200817143830.295363269@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,50 +60,271 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit 3c9450c053f88e525b2db1e6990cdf34d14e7696 ]
+[ Upstream commit ba807c94f67fd64b3051199810d9e4dd209fdc00 ]
 
-Compilation error:
-  arch/powerpc/perf/perf_regs.c:80:undefined reference to `.is_sier_available'
+Component driver structures allocated with devm_kmalloc() in bind() are
+freed automatically after unbind(). Since the contained drm structures
+are accessed afterwards in drm_mode_config_cleanup(), move the
+allocation into probe() to extend the driver structure's lifetime to the
+lifetime of the device. This should eventually be changed to use drm
+resource managed allocations with lifetime of the drm device.
 
-Currently is_sier_available() is part of core-book3s.c, which is added
-to build based on CONFIG_PPC_PERF_CTRS.
+We also need to ensure that all componets are available during the
+unbind() so we need to call component_unbind_all() before we free
+non-devres resources like planes.
 
-A config with CONFIG_PERF_EVENTS and without CONFIG_PPC_PERF_CTRS will
-have a build break because of missing is_sier_available().
+Note this patch fixes the the use after free bug but introduces a
+possible boot loop issue. The issue is triggered if the HDMI support is
+enabled and a component driver always return -EPROBE_DEFER, see
+discussion [1] for more details.
 
-In practice it only breaks when CONFIG_FSL_EMB_PERF_EVENT=n because
-that also guards the usage of is_sier_available(). That only happens
-with CONFIG_PPC_BOOK3E_64=y and CONFIG_FSL_SOC_BOOKE=n.
+[1] https://lkml.org/lkml/2020/3/24/1467
 
-Patch adds is_sier_available() in asm/perf_event.h to fix the build
-break for configs missing CONFIG_PPC_PERF_CTRS.
-
-Fixes: 333804dc3b7a ("powerpc/perf: Update perf_regs structure to include SIER")
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-[mpe: Add detail about CONFIG_FSL_SOC_BOOKE]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200614083604.302611-1-maddy@linux.ibm.com
+Fixes: 17b5001b5143 ("imx-drm: convert to componentised device support")
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+[m.felsch@pengutronix: fix imx_tve_probe()]
+[m.felsch@pengutronix: resort component_unbind_all())
+[m.felsch@pengutronix: adapt commit message]
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/perf_event.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/imx/dw_hdmi-imx.c      | 15 ++++++++++-----
+ drivers/gpu/drm/imx/imx-drm-core.c     |  3 ++-
+ drivers/gpu/drm/imx/imx-ldb.c          | 15 ++++++++++-----
+ drivers/gpu/drm/imx/imx-tve.c          | 15 ++++++++++-----
+ drivers/gpu/drm/imx/ipuv3-crtc.c       | 21 ++++++++++-----------
+ drivers/gpu/drm/imx/parallel-display.c | 15 ++++++++++-----
+ 6 files changed, 52 insertions(+), 32 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/perf_event.h b/arch/powerpc/include/asm/perf_event.h
-index eed3954082fa2..1e8b2e1ec1db6 100644
---- a/arch/powerpc/include/asm/perf_event.h
-+++ b/arch/powerpc/include/asm/perf_event.h
-@@ -12,6 +12,8 @@
+diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
+index f22cfbf9353ed..2e12a4a3bfa11 100644
+--- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
++++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
+@@ -212,9 +212,8 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
+ 	if (!pdev->dev.of_node)
+ 		return -ENODEV;
  
- #ifdef CONFIG_PPC_PERF_CTRS
- #include <asm/perf_event_server.h>
-+#else
-+static inline bool is_sier_available(void) { return false; }
- #endif
+-	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+-	if (!hdmi)
+-		return -ENOMEM;
++	hdmi = dev_get_drvdata(dev);
++	memset(hdmi, 0, sizeof(*hdmi));
  
- #ifdef CONFIG_FSL_EMB_PERF_EVENT
+ 	match = of_match_node(dw_hdmi_imx_dt_ids, pdev->dev.of_node);
+ 	plat_data = match->data;
+@@ -239,8 +238,6 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
+ 	drm_encoder_init(drm, encoder, &dw_hdmi_imx_encoder_funcs,
+ 			 DRM_MODE_ENCODER_TMDS, NULL);
+ 
+-	platform_set_drvdata(pdev, hdmi);
+-
+ 	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
+ 
+ 	/*
+@@ -270,6 +267,14 @@ static const struct component_ops dw_hdmi_imx_ops = {
+ 
+ static int dw_hdmi_imx_probe(struct platform_device *pdev)
+ {
++	struct imx_hdmi *hdmi;
++
++	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
++	if (!hdmi)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, hdmi);
++
+ 	return component_add(&pdev->dev, &dw_hdmi_imx_ops);
+ }
+ 
+diff --git a/drivers/gpu/drm/imx/imx-drm-core.c b/drivers/gpu/drm/imx/imx-drm-core.c
+index da87c70e413b4..881c36d0f16bb 100644
+--- a/drivers/gpu/drm/imx/imx-drm-core.c
++++ b/drivers/gpu/drm/imx/imx-drm-core.c
+@@ -281,9 +281,10 @@ static void imx_drm_unbind(struct device *dev)
+ 
+ 	drm_kms_helper_poll_fini(drm);
+ 
++	component_unbind_all(drm->dev, drm);
++
+ 	drm_mode_config_cleanup(drm);
+ 
+-	component_unbind_all(drm->dev, drm);
+ 	dev_set_drvdata(dev, NULL);
+ 
+ 	drm_dev_put(drm);
+diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
+index 4da22a94790cf..8e209117b049a 100644
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -594,9 +594,8 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 	int ret;
+ 	int i;
+ 
+-	imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
+-	if (!imx_ldb)
+-		return -ENOMEM;
++	imx_ldb = dev_get_drvdata(dev);
++	memset(imx_ldb, 0, sizeof(*imx_ldb));
+ 
+ 	imx_ldb->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
+ 	if (IS_ERR(imx_ldb->regmap)) {
+@@ -704,8 +703,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 		}
+ 	}
+ 
+-	dev_set_drvdata(dev, imx_ldb);
+-
+ 	return 0;
+ 
+ free_child:
+@@ -737,6 +734,14 @@ static const struct component_ops imx_ldb_ops = {
+ 
+ static int imx_ldb_probe(struct platform_device *pdev)
+ {
++	struct imx_ldb *imx_ldb;
++
++	imx_ldb = devm_kzalloc(&pdev->dev, sizeof(*imx_ldb), GFP_KERNEL);
++	if (!imx_ldb)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, imx_ldb);
++
+ 	return component_add(&pdev->dev, &imx_ldb_ops);
+ }
+ 
+diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
+index 5bbfaa2cd0f47..9fd4b464e829c 100644
+--- a/drivers/gpu/drm/imx/imx-tve.c
++++ b/drivers/gpu/drm/imx/imx-tve.c
+@@ -546,9 +546,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	int irq;
+ 	int ret;
+ 
+-	tve = devm_kzalloc(dev, sizeof(*tve), GFP_KERNEL);
+-	if (!tve)
+-		return -ENOMEM;
++	tve = dev_get_drvdata(dev);
++	memset(tve, 0, sizeof(*tve));
+ 
+ 	tve->dev = dev;
+ 	spin_lock_init(&tve->lock);
+@@ -659,8 +658,6 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	if (ret)
+ 		return ret;
+ 
+-	dev_set_drvdata(dev, tve);
+-
+ 	return 0;
+ }
+ 
+@@ -680,6 +677,14 @@ static const struct component_ops imx_tve_ops = {
+ 
+ static int imx_tve_probe(struct platform_device *pdev)
+ {
++	struct imx_tve *tve;
++
++	tve = devm_kzalloc(&pdev->dev, sizeof(*tve), GFP_KERNEL);
++	if (!tve)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, tve);
++
+ 	return component_add(&pdev->dev, &imx_tve_ops);
+ }
+ 
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 63c0284f8b3c0..2256c9789fc2c 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -438,21 +438,13 @@ static int ipu_drm_bind(struct device *dev, struct device *master, void *data)
+ 	struct ipu_client_platformdata *pdata = dev->platform_data;
+ 	struct drm_device *drm = data;
+ 	struct ipu_crtc *ipu_crtc;
+-	int ret;
+ 
+-	ipu_crtc = devm_kzalloc(dev, sizeof(*ipu_crtc), GFP_KERNEL);
+-	if (!ipu_crtc)
+-		return -ENOMEM;
++	ipu_crtc = dev_get_drvdata(dev);
++	memset(ipu_crtc, 0, sizeof(*ipu_crtc));
+ 
+ 	ipu_crtc->dev = dev;
+ 
+-	ret = ipu_crtc_init(ipu_crtc, pdata, drm);
+-	if (ret)
+-		return ret;
+-
+-	dev_set_drvdata(dev, ipu_crtc);
+-
+-	return 0;
++	return ipu_crtc_init(ipu_crtc, pdata, drm);
+ }
+ 
+ static void ipu_drm_unbind(struct device *dev, struct device *master,
+@@ -474,6 +466,7 @@ static const struct component_ops ipu_crtc_ops = {
+ static int ipu_drm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct ipu_crtc *ipu_crtc;
+ 	int ret;
+ 
+ 	if (!dev->platform_data)
+@@ -483,6 +476,12 @@ static int ipu_drm_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ipu_crtc = devm_kzalloc(dev, sizeof(*ipu_crtc), GFP_KERNEL);
++	if (!ipu_crtc)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, ipu_crtc);
++
+ 	return component_add(dev, &ipu_crtc_ops);
+ }
+ 
+diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
+index 08fafa4bf8c21..43e109d67fe30 100644
+--- a/drivers/gpu/drm/imx/parallel-display.c
++++ b/drivers/gpu/drm/imx/parallel-display.c
+@@ -330,9 +330,8 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
+ 	u32 bus_format = 0;
+ 	const char *fmt;
+ 
+-	imxpd = devm_kzalloc(dev, sizeof(*imxpd), GFP_KERNEL);
+-	if (!imxpd)
+-		return -ENOMEM;
++	imxpd = dev_get_drvdata(dev);
++	memset(imxpd, 0, sizeof(*imxpd));
+ 
+ 	edidp = of_get_property(np, "edid", &imxpd->edid_len);
+ 	if (edidp)
+@@ -363,8 +362,6 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
+ 	if (ret)
+ 		return ret;
+ 
+-	dev_set_drvdata(dev, imxpd);
+-
+ 	return 0;
+ }
+ 
+@@ -386,6 +383,14 @@ static const struct component_ops imx_pd_ops = {
+ 
+ static int imx_pd_probe(struct platform_device *pdev)
+ {
++	struct imx_parallel_display *imxpd;
++
++	imxpd = devm_kzalloc(&pdev->dev, sizeof(*imxpd), GFP_KERNEL);
++	if (!imxpd)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, imxpd);
++
+ 	return component_add(&pdev->dev, &imx_pd_ops);
+ }
+ 
 -- 
 2.25.1
 
