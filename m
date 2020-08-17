@@ -2,111 +2,104 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E49C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5F62063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F044A20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685576;
+	bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=abk7IoxzN/BxzXZsXXj8B+VZnq6J+foYY1Tmzh5cVSvkPt359AHdu1PF+LhD6bjDe
+	 t83MRZ7C9pL1gCulxAKUKMRt61PaVgRFQ8JPCSSv3onsLGolbYKD/2ieS5OR8v6uh6
+	 YrnZT3j6CnFrd9gP2LbSXmd7W3bcPD3vMa0qR2jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389323AbgHQRb4 (ORCPT
+        id S2389205AbgHQQ4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:31:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44724 "EHLO mx2.suse.de"
+        Mon, 17 Aug 2020 12:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388918AbgHQQ5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:57:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2326AADE5;
-        Mon, 17 Aug 2020 16:57:57 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id BD1611E12CB; Mon, 17 Aug 2020 18:57:31 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 18:57:31 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v2 01/20] dax: Modify bdev_dax_pgoff() to handle NULL bdev
-Message-ID: <20200817165731.GB22500@quack2.suse.cz>
-References: <20200807195526.426056-1-vgoyal@redhat.com>
- <20200807195526.426056-2-vgoyal@redhat.com>
+        id S2388295AbgHQQEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE17420866;
+        Mon, 17 Aug 2020 16:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680260;
+        bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Zo5L7UBDGUZ9zNHURXN+AtFqwheNcSnO4enKQ6kgtshpokElUUAXVZnRcNxuzqFml
+         wRba6J1+g9YZmdYQHyKfiOKLvC+vdoHJtG3qe8eHRe+PiFSueel3n8YEgHw6hNM024
+         W9WZaYUfK3i2ybkng5OSEHi/yBzWhxdNtODFZH98=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 115/270] cxl: Fix kobject memleak
+Date:   Mon, 17 Aug 2020 17:15:16 +0200
+Message-Id: <20200817143801.501830168@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807195526.426056-2-vgoyal@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 07-08-20 15:55:07, Vivek Goyal wrote:
-> virtiofs does not have a block device but it has dax device.
-> Modify bdev_dax_pgoff() to be able to handle that.
-> 
-> If there is no bdev, that means dax offset is 0. (It can't be a partition
-> block device starting at an offset in dax device).
-> 
-> This is little hackish. There have been discussions about getting rid
-> of dax not supporting partitions.
-> 
-> https://lore.kernel.org/linux-fsdevel/20200107125159.GA15745@infradead.org/
-> 
-> IMHO, this path can easily break exisitng users. For example
-> ioctl(BLKPG_ADD_PARTITION) will start breaking on block devices
-> supporting DAX. Also, I personally find it very useful to be able to
-> partition dax devices and still be able to use DAX.
-> 
-> Alternatively, I tried to store offset into dax device information in iomap
-> interface, but that got NACKed.
-> 
-> https://lore.kernel.org/linux-fsdevel/20200217133117.GB20444@infradead.org/
-> 
-> I can't think of a good path to solve this issue properly. So to make
-> progress, it seems this patch is least bad option for now and I hope
-> we can take it.
-> 
-> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-nvdimm@lists.01.org
+From: Wang Hai <wanghai38@huawei.com>
 
-This patch looks OK to me. You can add:
+[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-								Honza
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
-> ---
->  drivers/dax/super.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 8e32345be0f7..c4bec437e88b 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -46,7 +46,8 @@ EXPORT_SYMBOL_GPL(dax_read_unlock);
->  int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
->  		pgoff_t *pgoff)
->  {
-> -	phys_addr_t phys_off = (get_start_sect(bdev) + sector) * 512;
-> +	sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
-> +	phys_addr_t phys_off = (start_sect + sector) * 512;
->  
->  	if (pgoff)
->  		*pgoff = PHYS_PFN(phys_off);
-> -- 
-> 2.25.4
-> 
+Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/misc/cxl/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
+index f0263d1a1fdf2..d97a243ad30c0 100644
+--- a/drivers/misc/cxl/sysfs.c
++++ b/drivers/misc/cxl/sysfs.c
+@@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
+ 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+ 				  &afu->dev.kobj, "cr%i", cr->cr);
+ 	if (rc)
+-		goto err;
++		goto err1;
+ 
+ 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+ 	if (rc)
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
+
+
