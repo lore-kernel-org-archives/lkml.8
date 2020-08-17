@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78664C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F003823BAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60923207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678278;
-	bh=fVsYi7eBhxo97gidGZ5lxuRWJg0zV7tBtn0iPbtwPU4=;
+	s=default; t=1597678300;
+	bh=dMwXax1wU3XGrvOxckvqD2vFqlOtAJtyY81Oja/qQQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNXp2RW4+1nL+YV/L7qpbAO1tDu2GPgv0/+tf42jGwncRLXeLj3FjcmUH6kun5XBh
-	 3CQuiUA8fzesyfx3YSAcsSUSaFwkHFSrUZVFpLaRmvOQJwZEi/w45gFNU+hAYogfiu
-	 D9ca274Jkd8RdU5JlTaOV1L9wnlI+fYCGySgoArQ=
+	b=ftBe+J/yAlftlYZg741HJwZ1sBUIws1XmqB/MA9n9zSIL+euYGzqPx6/jdhAux32v
+	 ZR5vMPOrr+jjKZuj1Zf7pYYHrROnPYsIq6Waj41j/x1+84nMZ7+ACAhV229n6BGT1i
+	 xecjnqrGtLXY3U+uKoXcgwuJOVVVBGtwDLdSiRos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbgHQPbP (ORCPT
+        id S1730288AbgHQPbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45342 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgHQP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:50 -0400
+        id S1730057AbgHQP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F044239EE;
-        Mon, 17 Aug 2020 15:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2699723A03;
+        Mon, 17 Aug 2020 15:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678130;
-        bh=fVsYi7eBhxo97gidGZ5lxuRWJg0zV7tBtn0iPbtwPU4=;
+        s=default; t=1597678141;
+        bh=dMwXax1wU3XGrvOxckvqD2vFqlOtAJtyY81Oja/qQQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xkxVEV8Tv6YXagnNQ+LU4CSMzFtnGsIjBGNxc/erWbYdIszg+dygTqggyYOQXuMWW
-         rcpCu2s3dJshDAEVuaTBgq5QZZe+pZoTIoelj2FhSjNbm5sdOUWWKsQH7GX0o/6yXo
-         7V2l21MfAXEEOoCUclhajCuQ2bN/hZCwyMsOx2eo=
+        b=i9gAE16MPk+SXO6FCXSRZsXmBzBrMgoxN1eLMBq+O6+Rh9AUitYmf6ZB152WPM85u
+         gzAFoVLO/68UIIYKvCHdGYeyB+XnW8577nJlr1RlqRPyrvHJWi8IyNQPQg5FsR5u+0
+         3iczCAy95Zxw7qpvO8visyOi6Um60NkBcFuCXMTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
+        Anton Blanchard <anton@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 229/464] mwifiex: Prevent memory corruption handling keys
-Date:   Mon, 17 Aug 2020 17:13:02 +0200
-Message-Id: <20200817143844.769552131@linuxfoundation.org>
+Subject: [PATCH 5.8 233/464] powerpc/vdso: Fix vdso cpu truncation
+Date:   Mon, 17 Aug 2020 17:13:06 +0200
+Message-Id: <20200817143844.960063079@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,80 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Milton Miller <miltonm@us.ibm.com>
 
-[ Upstream commit e18696786548244914f36ec3c46ac99c53df99c3 ]
+[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
 
-The length of the key comes from the network and it's a 16 bit number.  It
-needs to be capped to prevent a buffer overflow.
+The code in vdso_cpu_init that exposes the cpu and numa node to
+userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
+that any kernel running on a box with more than 4096 threads (NR_CPUS
+advertises a limit of of 8192 cpus) would expose userspace to two cpu
+contexts running at the same time with the same cpu number.
 
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200708115857.GA13729@mwanda
+Note: I'm not aware of any distro shipping a kernel with support for more
+than 4096 threads today, nor of any system image that currently exceeds
+4096 threads. Found via code browsing.
+
+Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
+Signed-off-by: Milton Miller <miltonm@us.ibm.com>
+Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/marvell/mwifiex/sta_cmdresp.c    | 22 +++++++++++++------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/vdso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-index f21660149f584..962d8bfe6f101 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-@@ -580,6 +580,11 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
- {
- 	struct host_cmd_ds_802_11_key_material *key =
- 						&resp->params.key_material;
-+	int len;
-+
-+	len = le16_to_cpu(key->key_param_set.key_len);
-+	if (len > sizeof(key->key_param_set.key))
-+		return -EINVAL;
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index e0f4ba45b6cc7..8dad44262e751 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -677,7 +677,7 @@ int vdso_getcpu_init(void)
+ 	node = cpu_to_node(cpu);
+ 	WARN_ON_ONCE(node > 0xffff);
  
- 	if (le16_to_cpu(key->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key->key_param_set.key_info) & KEY_MCAST)) {
-@@ -593,9 +598,8 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+-	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
++	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
+ 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
+ 	get_paca()->sprg_vdso = val;
  
- 	memset(priv->aes_key.key_param_set.key, 0,
- 	       sizeof(key->key_param_set.key));
--	priv->aes_key.key_param_set.key_len = key->key_param_set.key_len;
--	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key,
--	       le16_to_cpu(priv->aes_key.key_param_set.key_len));
-+	priv->aes_key.key_param_set.key_len = cpu_to_le16(len);
-+	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key, len);
- 
- 	return 0;
- }
-@@ -610,9 +614,14 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 					      struct host_cmd_ds_command *resp)
- {
- 	struct host_cmd_ds_802_11_key_material_v2 *key_v2;
--	__le16 len;
-+	int len;
- 
- 	key_v2 = &resp->params.key_material_v2;
-+
-+	len = le16_to_cpu(key_v2->key_param_set.key_params.aes.key_len);
-+	if (len > WLAN_KEY_LEN_CCMP)
-+		return -EINVAL;
-+
- 	if (le16_to_cpu(key_v2->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key_v2->key_param_set.key_info) & KEY_MCAST)) {
- 			mwifiex_dbg(priv->adapter, INFO, "info: key: GTK is set\n");
-@@ -628,10 +637,9 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 	memset(priv->aes_key_v2.key_param_set.key_params.aes.key, 0,
- 	       WLAN_KEY_LEN_CCMP);
- 	priv->aes_key_v2.key_param_set.key_params.aes.key_len =
--				key_v2->key_param_set.key_params.aes.key_len;
--	len = priv->aes_key_v2.key_param_set.key_params.aes.key_len;
-+				cpu_to_le16(len);
- 	memcpy(priv->aes_key_v2.key_param_set.key_params.aes.key,
--	       key_v2->key_param_set.key_params.aes.key, le16_to_cpu(len));
-+	       key_v2->key_param_set.key_params.aes.key, len);
- 
- 	return 0;
- }
 -- 
 2.25.1
 
