@@ -2,138 +2,134 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4258C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7AC920758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E510B20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgHQJjq (ORCPT
+        id S1726856AbgHQJjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:39:46 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55863 "EHLO
+        Mon, 17 Aug 2020 05:39:42 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:55829 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728412AbgHQJiS (ORCPT
+        with ESMTP id S1728395AbgHQJiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 05:38:18 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 17 Aug 2020 12:38:14 +0300
+        with SMTP; 17 Aug 2020 12:38:11 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07H9cEeu011441;
-        Mon, 17 Aug 2020 12:38:14 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07H9cBsk011397;
+        Mon, 17 Aug 2020 12:38:11 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07H9cEQ4003256;
-        Mon, 17 Aug 2020 12:38:14 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07H9cBcc003224;
+        Mon, 17 Aug 2020 12:38:11 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07H9cEGf003251;
-        Mon, 17 Aug 2020 12:38:14 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07H9c8eu003223;
+        Mon, 17 Aug 2020 12:38:08 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Jiri Pirko <jiri@mellanox.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v2 13/13] devlink: Add Documentation/networking/devlink/devlink-reload.rst
-Date:   Mon, 17 Aug 2020 12:37:52 +0300
-Message-Id: <1597657072-3130-14-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC v2 00/13] Add devlink reload action option
+Date:   Mon, 17 Aug 2020 12:37:39 +0300
+Message-Id: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devlink reload rst documentation file.
-Update index file to include it.
+Introduce new option on devlink reload API to enable the user to select the
+reload action required. Complete support for all actions in mlx5.
+The following reload actions are supported:
+  fw_live_patch: firmware live patching.
+  driver_reinit: driver entities re-initialization, applying devlink-params
+                 and devlink-resources values.
+  fw_activate: firmware activate.
 
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
----
+Each driver which support this command should expose the reload actions
+supported.
+The uAPI is backward compatible, if the reload action option is omitted
+from the reload command, the driver reinit action will be used.
+Note that when required to do firmware activation some drivers may need
+to reload the driver. On the other hand some drivers may need to reset
+the firmware to reinitialize the driver entities.
+
+Patch 1 adds the new API reload action option to devlink.
+Patch 2 exposes the supported reload actions on devlink dev get.
+Patches 3-8 add support on mlx5 for devlink reload action fw_activate
+            and handle the firmware reset events.
+Patches 9-10 add devlink enable remote dev reset parameter and use it
+             in mlx5.
+Patches 11-12 mlx5 add devlink reload live patch support and event
+              handling.
+Patch 13 adds documentation file devlink-reload.rst 
+
+Command examples:
+
+# Run reload command with fw activate reload action:
+$ devlink dev reload pci/0000:82:00.0 action fw_activate
+
+# Run reload command with driver reload action:
+$ devlink dev reload pci/0000:82:00.0 action driver_reinit
+
+# Run reload command with fw live patch reload action:
+$ devlink dev reload pci/0000:82:00.0 action fw_live_patch
+
+v1 -> v2:
 - Instead of reload levels driver,fw_reset,fw_live_patch have reload
   actions driver_reinit,fw_activate,fw_live_patch
----
- .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
- Documentation/networking/devlink/index.rst    |  1 +
- 2 files changed, 55 insertions(+)
- create mode 100644 Documentation/networking/devlink/devlink-reload.rst
+- Remove driver default level, the action driver_reinit is the default
+  action for all drivers 
 
-diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
-new file mode 100644
-index 000000000000..9846ea727f3b
---- /dev/null
-+++ b/Documentation/networking/devlink/devlink-reload.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+Devlink Reload
-+==============
-+
-+``devlink-reload`` provides mechanism to either reload driver entities,
-+applying ``devlink-params`` and ``devlink-resources`` new values or firmware
-+activation depends on reload action selected.
-+
-+Reload actions
-+=============
-+
-+User may select a reload action.
-+By default ``driver_reinit`` action is done.
-+
-+.. list-table:: Possible reload actions
-+   :widths: 5 90
-+
-+   * - Name
-+     - Description
-+   * - ``driver-reinit``
-+     - Driver entities re-initialization, including applying
-+       new values to devlink entities which are used during driver
-+       load such as ``devlink-params`` in configuration mode
-+       ``driverinit`` or ``devlink-resources``
-+   * - ``fw_activate``
-+     - Firmware activate. Can be used for firmware reload or firmware
-+       upgrade if new firmware is stored and driver supports such
-+       firmware upgrade.
-+   * - ``fw_live_patch``
-+     - Firmware live patch, applies firmware changes without reset.
-+
-+Change namespace
-+================
-+
-+All devlink instances are created in init_net and stay there for a
-+lifetime. Allow user to be able to move devlink instances into
-+namespaces during devlink reload operation. That ensures proper
-+re-instantiation of driver objects, including netdevices.
-+
-+example usage
-+-------------
-+
-+.. code:: shell
-+
-+    $ devlink dev reload help
-+    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
-+
-+    # Run reload command for devlink driver entities re-initialization:
-+    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
-+
-+    # Run reload command to activate firmware:
-+    $ devlink dev reload pci/0000:82:00.0 action fw_activate
-diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
-index 7684ae5c4a4a..d82874760ae2 100644
---- a/Documentation/networking/devlink/index.rst
-+++ b/Documentation/networking/devlink/index.rst
-@@ -20,6 +20,7 @@ general.
-    devlink-params
-    devlink-region
-    devlink-resource
-+   devlink-reload
-    devlink-trap
- 
- Driver-specific documentation
+
+Moshe Shemesh (13):
+  devlink: Add reload action option to devlink reload command
+  devlink: Add supported reload actions to dev get
+  net/mlx5: Add functions to set/query MFRL register
+  net/mlx5: Set cap for pci sync for fw update event
+  net/mlx5: Handle sync reset request event
+  net/mlx5: Handle sync reset now event
+  net/mlx5: Handle sync reset abort event
+  net/mlx5: Add support for devlink reload action fw activate
+  devlink: Add enable_remote_dev_reset generic parameter
+  net/mlx5: Add devlink param enable_remote_dev_reset support
+  net/mlx5: Add support for fw live patch event
+  net/mlx5: Add support for devlink reload action live patch
+  devlink: Add Documentation/networking/devlink/devlink-reload.rst
+
+ .../networking/devlink/devlink-params.rst     |   6 +
+ .../networking/devlink/devlink-reload.rst     |  54 +++
+ Documentation/networking/devlink/index.rst    |   1 +
+ drivers/net/ethernet/mellanox/mlx4/main.c     |   4 +-
+ .../net/ethernet/mellanox/mlx5/core/Makefile  |   2 +-
+ .../net/ethernet/mellanox/mlx5/core/devlink.c | 104 +++-
+ .../mellanox/mlx5/core/diag/fw_tracer.c       |  31 ++
+ .../mellanox/mlx5/core/diag/fw_tracer.h       |   1 +
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    | 448 ++++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/fw_reset.h    |  19 +
+ .../net/ethernet/mellanox/mlx5/core/health.c  |  35 +-
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  13 +
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   2 +
+ drivers/net/ethernet/mellanox/mlxsw/core.c    |   6 +-
+ drivers/net/netdevsim/dev.c                   |   5 +-
+ include/linux/mlx5/device.h                   |   1 +
+ include/linux/mlx5/driver.h                   |   4 +
+ include/net/devlink.h                         |   9 +-
+ include/uapi/linux/devlink.h                  |  20 +
+ net/core/devlink.c                            |  84 +++-
+ 20 files changed, 812 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/networking/devlink/devlink-reload.rst
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+
 -- 
 2.17.1
 
