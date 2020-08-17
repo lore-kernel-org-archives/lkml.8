@@ -2,152 +2,133 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79FBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889D420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684941;
-	bh=RMezxvyS8iFcMKzp1LQ+u1AFe7pYAv6qmunQOJKS+ns=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RBpCTP3ltKldJkHnuWkGSBZ0SVtiz4l59Nf6iF3Ts5zQclK7w8kJoDuwoBAvKrL1I
-	 Ol7VH12IyDnqLdY6TaifI3ijMe3LT6C9fQ/1tK8QtyxfQytlbpYU7aeE9mbUv4inhr
-	 Ks7BiYy8xpCI65ZdwjFTSXo8LXXb3HrZa/KStn3g=
+	by mail.kernel.org (Postfix) with ESMTP id 2D06820657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bSu3s1sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389790AbgHQRWU (ORCPT
+        id S2389798AbgHQRWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:20 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:42207 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388850AbgHQQhQ (ORCPT
+        Mon, 17 Aug 2020 13:22:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388881AbgHQQjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:37:16 -0400
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 07HGah91005234;
-        Tue, 18 Aug 2020 01:36:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 07HGah91005234
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597682204;
-        bh=Y9kvCkBRDORVCPVT1mJPY0BBXHAw2O9i2u+eZvD4dPI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eKqRHXAeWe6ohDPKS4xWtiJqfmxpRMMbN/ZZVDhaVYZGUG84bEZV9Byu0L/ps7QV1
-         XfmKdfdzJ4Z0UYFY+GS4TnedR97hZea2odbuHhpN7G7QlZ/bNaq+k7rLtAFvXN3a38
-         42CXBisAZe+SvuMTJZy5SXtRnk0LwbT5mgHBUOykHwJomueliJGn/SwpCKcTJxo9GD
-         Pgjzg+LyZvZuCojaE8xNdQt7W8TXna88zMMWzzJAElcvso+I5KEUyfvHLgyEfOtToz
-         YfSRZ6vbGLrWFi71PFFsOG13XxB5vanjNyEATvU2cgoSt3CbtSQbQv39pEYtYtDzBe
-         BcOkpEJCBhnag==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Mon, 17 Aug 2020 12:39:13 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07HGWh4W042775;
+        Mon, 17 Aug 2020 12:39:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=0BmdVngHH8Y+Vo7jZZrI2s5rUEGFM9MpKOvaz49g28o=;
+ b=bSu3s1sb2L3utLcDs5Eax1krHKUC/DLBTHq94cvPAXhWmE+ZdS7T7YDoTssBFOpS0MdV
+ RzsFTIDdM9Ng23LpXiX8VyLBaFoCk3VPn6vqrXAKCl9g1EJMgoAdYeQPGg9phKY+Au8i
+ 1KooFNSrskgYL3muOrwGel7GQnxpRpCc68x2MTYM5MgQDBOIaeuZ5Y3fbNxbPUoZ55Xr
+ Iv2g6H6YVUza2GbAVsLiSZolRZ1aTK3MXxwlAvqCKVHpiCWbAL5H2eAt7LRAv0psiKkN
+ 8hBFzAKw+J006F9uD3uTw88nFUFlGGlOIbgxSXh37jucnP9sVtgFDYjpYQReOI7NfZba iQ== 
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32y64dqr70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 12:39:07 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07HGQAGi029357;
+        Mon, 17 Aug 2020 16:39:06 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03wdc.us.ibm.com with ESMTP id 32yaeqpx2y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 16:39:06 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07HGd5sW44106058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 16:39:05 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0246A6A047;
+        Mon, 17 Aug 2020 16:39:05 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8953E6A051;
+        Mon, 17 Aug 2020 16:39:04 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Aug 2020 16:39:04 +0000 (GMT)
+Subject: Re: [PATCH v2] docs: update trusted-encrypted.rst
+To:     Coly Li <colyli@suse.de>, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] kconfig: qconf: fix the popup menu in the ConfigInfoView window
-Date:   Tue, 18 Aug 2020 01:36:30 +0900
-Message-Id: <20200817163631.37034-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200817163631.37034-1-masahiroy@kernel.org>
-References: <20200817163631.37034-1-masahiroy@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+References: <20200817142837.5224-1-colyli@suse.de>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <576928af-7e3f-3651-4125-75b4507b0115@linux.ibm.com>
+Date:   Mon, 17 Aug 2020 12:39:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200817142837.5224-1-colyli@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_13:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008170120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do not know when ConfigInfoView::createStandardContextMenu() is
-called.
+On 8/17/20 10:28 AM, Coly Li wrote:
+> The parameters in tmp2 commands are outdated, people are not able to
+> create trusted key by the example commands.
+>
+> This patch updates the paramerters of tpm2 commands, they are verified
+> by tpm2-tools-4.1 with Linux v5.8 kernel.
+>
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: James Bottomley <jejb@linux.ibm.com>
+> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Stefan Berger <stefanb@linux.ibm.com>
+> ---
+> Changelog:
+> v2: remove the change of trusted key related operation.
+> v1: initial version.
+>
+>   Documentation/security/keys/trusted-encrypted.rst | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
+> index 9483a7425ad5..1da879a68640 100644
+> --- a/Documentation/security/keys/trusted-encrypted.rst
+> +++ b/Documentation/security/keys/trusted-encrypted.rst
+> @@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
+>   
+>   Or with the Intel TSS 2 stack::
+>   
+> -  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
+> +  #> tpm2_createprimary --hierarchy o -G rsa2048 -c key.ctxt
+>     [...]
+> -  handle: 0x800000FF
+> -  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
+> +  #> tpm2_evictcontrol -c key.ctxt 0x81000001
+>     persistentHandle: 0x81000001
+>   
+>   Usage::
 
-Because QTextEdit::createStandardContextMenu() is not virtual,
-ConfigInfoView::createStandardContextMenu() cannot override it.
-Even if right-click the ConfigInfoView window, the "Show Debug Info"
-menu does not show up.
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 
-Build up the menu in the constructor, and invoke it from the
-contextMenuEvent().
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/kconfig/qconf.cc | 29 +++++++++++++----------------
- scripts/kconfig/qconf.h  |  4 ++--
- 2 files changed, 15 insertions(+), 18 deletions(-)
-
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index c1812563b818..5a0aa159ec80 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -1012,6 +1012,16 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
- 		configSettings->endGroup();
- 		connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
- 	}
-+
-+	contextMenu = createStandardContextMenu();
-+	QAction *action = new QAction("Show Debug Info", contextMenu);
-+
-+	action->setCheckable(true);
-+	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
-+	action->setChecked(showDebug());
-+	contextMenu->addSeparator();
-+	contextMenu->addAction(action);
- }
- 
- void ConfigInfoView::saveSettings(void)
-@@ -1268,23 +1278,10 @@ void ConfigInfoView::clicked(const QUrl &url)
- 	delete data;
- }
- 
--QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
--{
--	QMenu* popup = Parent::createStandardContextMenu(pos);
--	QAction* action = new QAction("Show Debug Info", popup);
--
--	action->setCheckable(true);
--	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
--	action->setChecked(showDebug());
--	popup->addSeparator();
--	popup->addAction(action);
--	return popup;
--}
--
--void ConfigInfoView::contextMenuEvent(QContextMenuEvent *e)
-+void ConfigInfoView::contextMenuEvent(QContextMenuEvent *event)
- {
--	Parent::contextMenuEvent(e);
-+	contextMenu->popup(event->globalPos());
-+	event->accept();
- }
- 
- ConfigSearchWindow::ConfigSearchWindow(ConfigMainWindow *parent)
-diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 461df6419f15..0b97a9817d2b 100644
---- a/scripts/kconfig/qconf.h
-+++ b/scripts/kconfig/qconf.h
-@@ -215,6 +215,7 @@ public slots:
- class ConfigInfoView : public QTextBrowser {
- 	Q_OBJECT
- 	typedef class QTextBrowser Parent;
-+	QMenu *contextMenu;
- public:
- 	ConfigInfoView(QWidget* parent, const char *name = 0);
- 	bool showDebug(void) const { return _showDebug; }
-@@ -235,8 +236,7 @@ public slots:
- 	QString debug_info(struct symbol *sym);
- 	static QString print_filter(const QString &str);
- 	static void expr_print_help(void *data, struct symbol *sym, const char *str);
--	QMenu *createStandardContextMenu(const QPoint & pos);
--	void contextMenuEvent(QContextMenuEvent *e);
-+	void contextMenuEvent(QContextMenuEvent *event);
- 
- 	struct symbol *sym;
- 	struct menu *_menu;
--- 
-2.25.1
 
