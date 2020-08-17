@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A084C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F592053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E4B20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680234;
-	bh=ennhsl72JIfwXruWZfItgNWSZh7AZzhHO7YlSTF7RGo=;
+	s=default; t=1597680253;
+	bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3jrUD8DzkcNEKleH7Fqhq3el711+h/PdlsOJxazasS6t/xKLdrh0px9Nnlr9kh6G
-	 pe/K6giF8Ms5QCiUVNW12EDQ9W32QLi3TMYSbisxL169KPDZdywlE/YXWD1IHVl71U
-	 dKP9dcMVxnb+q0jNbMWHiwVeRPtAG+TtQqEwZPrI=
+	b=WdAP/DM9gnjE+kvG5/w0Ek7q85HRn2Awa7KxjA/36lG8zIkNF8+v79piIEAaXL/Y3
+	 F8zutVhgre4v4+iZxgAGBHC0J+BBEAEDbBRsvNQv5NE4K+5ifuxYAHKW984i1JcO3f
+	 bpISycfb34jAkPqTQlWz9UprVGMNmSTkknpfS0iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388266AbgHQQDv (ORCPT
+        id S2388282AbgHQQEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbgHQPod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:33 -0400
+        id S1730488AbgHQPoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B00DC22D01;
-        Mon, 17 Aug 2020 15:44:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010F122CAE;
+        Mon, 17 Aug 2020 15:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679072;
-        bh=ennhsl72JIfwXruWZfItgNWSZh7AZzhHO7YlSTF7RGo=;
+        s=default; t=1597679069;
+        bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXJ0gvOtOwzCTxEOo+IX2XfOe8aMGxLSe1jc8uZUGmj96UFQrRxgFtL+i9f25ILBx
-         WjvE0iQZhrJo5jOe18pd0Qv4IMeFGnGK73lF6tGeyCOO0udbBto2VpFTXbAuto4tdg
-         3u8F3PZV2WbVdIiF4G09/XJBmvoowYAFy7Q4KwTw=
+        b=Y+pb6tZXeCxFDo9XrBbvq0yrING26XE6+ABZUsCIvtwxTPq7JwYHI2gHlG8ch2ItD
+         DR2YlfVRR85F/Ru1oXiUX9iQpBwPZhuiq4zCzL6tD+I5g2EZW9UKfajXEycudU17Iy
+         rCBhRxbOeAF8lJy0KVeEquWbb9Mc4v3kRa0ffYSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 085/393] btrfs: fix lockdep splat from btrfs_dump_space_info
-Date:   Mon, 17 Aug 2020 17:12:15 +0200
-Message-Id: <20200817143823.753963587@linuxfoundation.org>
+Subject: [PATCH 5.7 084/393] mmc: sdhci-cadence: do not use hardware tuning for SD mode
+Date:   Mon, 17 Aug 2020 17:12:14 +0200
+Message-Id: <20200817143823.704932164@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,196 +61,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit ab0db043c35da3477e57d4d516492b2d51a5ca0f ]
+[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
 
-When running with -o enospc_debug you can get the following splat if one
-of the dump_space_info's trip
+As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
+work around errata") stated, this IP has an errata. This commit applies
+the second workaround for the SD mode.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc5+ #20 Tainted: G           OE
-  ------------------------------------------------------
-  dd/563090 is trying to acquire lock:
-  ffff9e7dbf4f1e18 (&ctl->tree_lock){+.+.}-{2:2}, at: btrfs_dump_free_space+0x2b/0xa0 [btrfs]
+Due to the errata, it is not possible to use the hardware tuning provided
+by SDHCI_HOST_CONTROL2.
 
-  but task is already holding lock:
-  ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
+Use the software-controlled tuning like the eMMC mode.
 
-  which lock already depends on the new lock.
+Set sdhci_host_ops::platform_execute_tuning instead of overriding
+mmc_host_ops::execute_tuning.
 
-  the existing dependency chain (in reverse order) is:
-
-  -> #3 (&cache->lock){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_add_reserved_bytes+0x3c/0x3c0 [btrfs]
-	 find_free_extent+0x7ef/0x13b0 [btrfs]
-	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
-	 btrfs_alloc_tree_block+0xc1/0x340 [btrfs]
-	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
-	 __btrfs_cow_block+0x122/0x530 [btrfs]
-	 btrfs_cow_block+0x106/0x210 [btrfs]
-	 commit_cowonly_roots+0x55/0x300 [btrfs]
-	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
-	 sync_filesystem+0x74/0x90
-	 generic_shutdown_super+0x22/0x100
-	 kill_anon_super+0x14/0x30
-	 btrfs_kill_super+0x12/0x20 [btrfs]
-	 deactivate_locked_super+0x36/0x70
-	 cleanup_mnt+0x104/0x160
-	 task_work_run+0x5f/0x90
-	 __prepare_exit_to_usermode+0x1bd/0x1c0
-	 do_syscall_64+0x5e/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #2 (&space_info->lock){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_block_rsv_release+0x1a6/0x3f0 [btrfs]
-	 btrfs_inode_rsv_release+0x4f/0x170 [btrfs]
-	 btrfs_clear_delalloc_extent+0x155/0x480 [btrfs]
-	 clear_state_bit+0x81/0x1a0 [btrfs]
-	 __clear_extent_bit+0x25c/0x5d0 [btrfs]
-	 clear_extent_bit+0x15/0x20 [btrfs]
-	 btrfs_invalidatepage+0x2b7/0x3c0 [btrfs]
-	 truncate_cleanup_page+0x47/0xe0
-	 truncate_inode_pages_range+0x238/0x840
-	 truncate_pagecache+0x44/0x60
-	 btrfs_setattr+0x202/0x5e0 [btrfs]
-	 notify_change+0x33b/0x490
-	 do_truncate+0x76/0xd0
-	 path_openat+0x687/0xa10
-	 do_filp_open+0x91/0x100
-	 do_sys_openat2+0x215/0x2d0
-	 do_sys_open+0x44/0x80
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #1 (&tree->lock#2){+.+.}-{2:2}:
-	 _raw_spin_lock+0x25/0x30
-	 find_first_extent_bit+0x32/0x150 [btrfs]
-	 write_pinned_extent_entries.isra.0+0xc5/0x100 [btrfs]
-	 __btrfs_write_out_cache+0x172/0x480 [btrfs]
-	 btrfs_write_out_cache+0x7a/0xf0 [btrfs]
-	 btrfs_write_dirty_block_groups+0x286/0x3b0 [btrfs]
-	 commit_cowonly_roots+0x245/0x300 [btrfs]
-	 btrfs_commit_transaction+0x4ed/0xac0 [btrfs]
-	 close_ctree+0xf9/0x2f5 [btrfs]
-	 generic_shutdown_super+0x6c/0x100
-	 kill_anon_super+0x14/0x30
-	 btrfs_kill_super+0x12/0x20 [btrfs]
-	 deactivate_locked_super+0x36/0x70
-	 cleanup_mnt+0x104/0x160
-	 task_work_run+0x5f/0x90
-	 __prepare_exit_to_usermode+0x1bd/0x1c0
-	 do_syscall_64+0x5e/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #0 (&ctl->tree_lock){+.+.}-{2:2}:
-	 __lock_acquire+0x1240/0x2460
-	 lock_acquire+0xab/0x360
-	 _raw_spin_lock+0x25/0x30
-	 btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-	 btrfs_dump_space_info+0xf4/0x120 [btrfs]
-	 btrfs_reserve_extent+0x176/0x180 [btrfs]
-	 __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
-	 cache_save_setup+0x28d/0x3b0 [btrfs]
-	 btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
-	 btrfs_commit_transaction+0xcc/0xac0 [btrfs]
-	 btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
-	 btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
-	 btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
-	 btrfs_file_write_iter+0x3cf/0x610 [btrfs]
-	 new_sync_write+0x11e/0x1b0
-	 vfs_write+0x1c9/0x200
-	 ksys_write+0x68/0xe0
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &ctl->tree_lock --> &space_info->lock --> &cache->lock
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(&cache->lock);
-				 lock(&space_info->lock);
-				 lock(&cache->lock);
-    lock(&ctl->tree_lock);
-
-   *** DEADLOCK ***
-
-  6 locks held by dd/563090:
-   #0: ffff9e7e21d18448 (sb_writers#14){.+.+}-{0:0}, at: vfs_write+0x195/0x200
-   #1: ffff9e7dd0410ed8 (&sb->s_type->i_mutex_key#19){++++}-{3:3}, at: btrfs_file_write_iter+0x86/0x610 [btrfs]
-   #2: ffff9e7e21d18638 (sb_internal#2){.+.+}-{0:0}, at: start_transaction+0x40b/0x5b0 [btrfs]
-   #3: ffff9e7e1f05d688 (&cur_trans->cache_write_mutex){+.+.}-{3:3}, at: btrfs_start_dirty_block_groups+0x158/0x4f0 [btrfs]
-   #4: ffff9e7e2284ddb8 (&space_info->groups_sem){++++}-{3:3}, at: btrfs_dump_space_info+0x69/0x120 [btrfs]
-   #5: ffff9e7e2284d428 (&cache->lock){+.+.}-{2:2}, at: btrfs_dump_space_info+0xaa/0x120 [btrfs]
-
-  stack backtrace:
-  CPU: 3 PID: 563090 Comm: dd Tainted: G           OE     5.8.0-rc5+ #20
-  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
-  Call Trace:
-   dump_stack+0x96/0xd0
-   check_noncircular+0x162/0x180
-   __lock_acquire+0x1240/0x2460
-   ? wake_up_klogd.part.0+0x30/0x40
-   lock_acquire+0xab/0x360
-   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   _raw_spin_lock+0x25/0x30
-   ? btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   btrfs_dump_free_space+0x2b/0xa0 [btrfs]
-   btrfs_dump_space_info+0xf4/0x120 [btrfs]
-   btrfs_reserve_extent+0x176/0x180 [btrfs]
-   __btrfs_prealloc_file_range+0x145/0x550 [btrfs]
-   ? btrfs_qgroup_reserve_data+0x1d/0x60 [btrfs]
-   cache_save_setup+0x28d/0x3b0 [btrfs]
-   btrfs_start_dirty_block_groups+0x1fc/0x4f0 [btrfs]
-   btrfs_commit_transaction+0xcc/0xac0 [btrfs]
-   ? start_transaction+0xe0/0x5b0 [btrfs]
-   btrfs_alloc_data_chunk_ondemand+0x162/0x4c0 [btrfs]
-   btrfs_check_data_free_space+0x4c/0xa0 [btrfs]
-   btrfs_buffered_write.isra.0+0x19b/0x740 [btrfs]
-   ? ktime_get_coarse_real_ts64+0xa8/0xd0
-   ? trace_hardirqs_on+0x1c/0xe0
-   btrfs_file_write_iter+0x3cf/0x610 [btrfs]
-   new_sync_write+0x11e/0x1b0
-   vfs_write+0x1c9/0x200
-   ksys_write+0x68/0xe0
-   do_syscall_64+0x52/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-This is because we're holding the block_group->lock while trying to dump
-the free space cache.  However we don't need this lock, we just need it
-to read the values for the printk, so move the free space cache dumping
-outside of the block group lock.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/space-info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
 
-diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
-index 756950aba1a66..317d1d2160090 100644
---- a/fs/btrfs/space-info.c
-+++ b/fs/btrfs/space-info.c
-@@ -468,8 +468,8 @@ void btrfs_dump_space_info(struct btrfs_fs_info *fs_info,
- 			"block group %llu has %llu bytes, %llu used %llu pinned %llu reserved %s",
- 			cache->start, cache->length, cache->used, cache->pinned,
- 			cache->reserved, cache->ro ? "[readonly]" : "");
--		btrfs_dump_free_space(cache, bytes);
- 		spin_unlock(&cache->lock);
-+		btrfs_dump_free_space(cache, bytes);
- 	}
- 	if (++index < BTRFS_NR_RAID_TYPES)
- 		goto again;
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 6da6d4fb5edd7..07a4cb989a68a 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -194,57 +194,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
+ 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
+ }
+ 
+-static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+-					 unsigned int timing)
+-{
+-	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+-	u32 mode;
+-
+-	switch (timing) {
+-	case MMC_TIMING_MMC_HS:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+-		break;
+-	case MMC_TIMING_MMC_DDR52:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+-		break;
+-	case MMC_TIMING_MMC_HS200:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+-		break;
+-	case MMC_TIMING_MMC_HS400:
+-		if (priv->enhanced_strobe)
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
+-		else
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+-		break;
+-	default:
+-		mode = SDHCI_CDNS_HRS06_MODE_SD;
+-		break;
+-	}
+-
+-	sdhci_cdns_set_emmc_mode(priv, mode);
+-
+-	/* For SD, fall back to the default handler */
+-	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+-		sdhci_set_uhs_signaling(host, timing);
+-}
+-
+-static const struct sdhci_ops sdhci_cdns_ops = {
+-	.set_clock = sdhci_set_clock,
+-	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
+-	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-};
+-
+ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ {
+ 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+@@ -278,23 +227,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
+ 
+-static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
++/*
++ * In SD mode, software must not use the hardware tuning and instead perform
++ * an almost identical procedure to eMMC.
++ */
++static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+-	struct sdhci_host *host = mmc_priv(mmc);
+ 	int cur_streak = 0;
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
+ 
+ 	/*
+-	 * This handler only implements the eMMC tuning that is specific to
+-	 * this controller.  Fall back to the standard method for SD timing.
++	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
++	 * The delay is set by probe, based on the DT properties.
+ 	 */
+-	if (host->timing != MMC_TIMING_MMC_HS200)
+-		return sdhci_execute_tuning(mmc, opcode);
+-
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+-		return -EINVAL;
++	if (host->timing != MMC_TIMING_MMC_HS200 &&
++	    host->timing != MMC_TIMING_UHS_SDR104)
++		return 0;
+ 
+ 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+ 		if (sdhci_cdns_set_tune_val(host, i) ||
+@@ -317,6 +267,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
+ }
+ 
++static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
++	u32 mode;
++
++	switch (timing) {
++	case MMC_TIMING_MMC_HS:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
++		break;
++	case MMC_TIMING_MMC_DDR52:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
++		break;
++	case MMC_TIMING_MMC_HS200:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
++		break;
++	case MMC_TIMING_MMC_HS400:
++		if (priv->enhanced_strobe)
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
++		else
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
++		break;
++	default:
++		mode = SDHCI_CDNS_HRS06_MODE_SD;
++		break;
++	}
++
++	sdhci_cdns_set_emmc_mode(priv, mode);
++
++	/* For SD, fall back to the default handler */
++	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
++		sdhci_set_uhs_signaling(host, timing);
++}
++
++static const struct sdhci_ops sdhci_cdns_ops = {
++	.set_clock = sdhci_set_clock,
++	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.platform_execute_tuning = sdhci_cdns_execute_tuning,
++	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++};
++
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ 					     struct mmc_ios *ios)
+ {
+@@ -377,7 +379,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	priv->hrs_addr = host->ioaddr;
+ 	priv->enhanced_strobe = false;
+ 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
+-	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
 -- 
 2.25.1
 
