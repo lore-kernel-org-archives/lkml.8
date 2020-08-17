@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F342C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FE1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590F2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690759;
-	bh=2IZYQD92cPiTOuXoG75NAiSh0ekfURptFl303Tli+nE=;
+	s=default; t=1597690770;
+	bh=rSL6QdtU0Mf1/15eO1cQ6g+ILy1aHSvw5VXPrBmWID8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDqR09IjvqzgQZrQFSxixaOmACz1Q12Mh2n97+uqb6ZhdiAuE4UGwODELm/8SCVYn
-	 YPYFkNqIisYu5YDoSUVZJ5SqJkFN5O0/xDpczovzdLGD1GRHrDxjf09BVIKK3SFhkF
-	 738CZ/Bp+NJcscwitmDFKvO4rvu8Ir+6I/W15ic8=
+	b=XQbO+vCeBaePjQZb+z1E9cjlzFnCn0bVBgls0Ga423tVNJTMVQczKGE1U3FoP49Tn
+	 R/gnOYEo3euxjdBETo/lJA9gp0+FqTwdnmO6X15iqLTYwCv/K/xnDgtn4DT9gZqmS7
+	 XK7h6WVarBxotBiFMNwEmCj52DphOX+u4xNHLt4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391830AbgHQS7J (ORCPT
+        id S2391853AbgHQS73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387612AbgHQPsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:48:51 -0400
+        id S1730858AbgHQPsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 387CA2075B;
-        Mon, 17 Aug 2020 15:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C99292245C;
+        Mon, 17 Aug 2020 15:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679330;
-        bh=2IZYQD92cPiTOuXoG75NAiSh0ekfURptFl303Tli+nE=;
+        s=default; t=1597679316;
+        bh=rSL6QdtU0Mf1/15eO1cQ6g+ILy1aHSvw5VXPrBmWID8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGeMuL1Vwg1Y6lL+Li2TDPIK1eN1RNflH7QSL9SjqRjAnF095kF6L+j+CaMECD+UW
-         hYaULUuOWvBiGlcIk9DCq9QhLhy7/JG6Ka+ikxVYK8b7zYUCQR4kdPfpyxscdWBMn9
-         ZNVXUHqqAVdqpt5lDLr1J9HETD61K+2q0kUW60zw=
+        b=2J1CzDKNIYrChd4QZKHFEf1sJt9aZW8RQLQKuGOgyGEHFsXSGxIOw0cj1T4WOiShq
+         XdnFpb3ecsfRgkz0lgNrsjMvXVf6N1mtDnqK6+p3tjV6XUevzBrSzbEziNd/zHBRe5
+         YOrKiz9SGE3FiLNZdScmWWgIHiGvTZ1mC1SHokQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 174/393] iavf: Fix updating statistics
-Date:   Mon, 17 Aug 2020 17:13:44 +0200
-Message-Id: <20200817143828.061096784@linuxfoundation.org>
+Subject: [PATCH 5.7 170/393] drm/amdgpu: ensure 0 is returned for success in jpeg_v2_5_wait_for_idle
+Date:   Mon, 17 Aug 2020 17:13:40 +0200
+Message-Id: <20200817143827.868383785@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 9358076642f14cec8c414850d5a909cafca3a9d6 ]
+[ Upstream commit 57f01856645afe4c3d0f9915ee2bb043e8dd7982 ]
 
-Commit bac8486116b0 ("iavf: Refactor the watchdog state machine") inverted
-the logic for when to update statistics. Statistics should be updated when
-no other commands are pending, instead they were only requested when a
-command was processed. iavf_request_stats() would see a pending request
-and not request statistics to be updated. This caused statistics to never
-be updated; fix the logic.
+In the cases where adev->jpeg.num_jpeg_inst is zero or the condition
+adev->jpeg.harvest_config & (1 << i) is always non-zero the variable
+ret is never set to an error condition and the function returns
+an uninitialized value in ret.  Since the only exit condition at
+the end if the function is a success then explicitly return
+0 rather than a potentially uninitialized value in ret.
 
-Fixes: bac8486116b0 ("iavf: Refactor the watchdog state machine")
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Addresses-Coverity: ("Uninitialized scalar variable")
+Fixes: 14f43e8f88c5 ("drm/amdgpu: move JPEG2.5 out from VCN2.5")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/iavf/iavf_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 8deff711cc02c..a4b2ad29e132a 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -1948,7 +1948,10 @@ static void iavf_watchdog_task(struct work_struct *work)
- 				iavf_send_api_ver(adapter);
- 			}
- 		} else {
--			if (!iavf_process_aq_command(adapter) &&
-+			/* An error will be returned if no commands were
-+			 * processed; use this opportunity to update stats
-+			 */
-+			if (iavf_process_aq_command(adapter) &&
- 			    adapter->state == __IAVF_RUNNING)
- 				iavf_request_stats(adapter);
- 		}
+diff --git a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+index c04c2078a7c1f..a7fcb55babb85 100644
+--- a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
++++ b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+@@ -462,7 +462,7 @@ static int jpeg_v2_5_wait_for_idle(void *handle)
+ 			return ret;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int jpeg_v2_5_set_clockgating_state(void *handle,
 -- 
 2.25.1
 
