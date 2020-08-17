@@ -2,192 +2,160 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB4F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KHItjRgF"
+	by mail.kernel.org (Postfix) with ESMTP id 57CA1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597691936;
+	bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ma+Pg2k1PZsh0SjEXv9rHLA2lPgV78odrOIVGh2d/Gauw3MKZLlUS/mEy91JYbW2I
+	 9PenNTT5gPuMrivXzSaszA7nTYf5hTD5fud9d+eVvdW29DxZ8OXPUQ2FQEPizCu/gF
+	 Z6t1kCUSd3DNpIWdd7mXI4FeiQoaUAGJFV3ebgVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbgHQTSn (ORCPT
+        id S2404158AbgHQTSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:18:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53118 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387473AbgHQTS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:18:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIE8w003381;
-        Mon, 17 Aug 2020 14:18:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597691894;
-        bh=4JAd00xMiWrjvk4rZNCeC62B1mGwyRj0ceLiUfWiEyw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KHItjRgFleFmDsE9dlxLeOe4Livzma9D8/Aq823EOdA3mF6c0HN6IJElEn30q/gzP
-         iEp2yyL0dmrmTL4vYjodBH3hkxbQ7z7bRpcjQ9HxlA0IQ8jG16kkoxKxV4GmEZVm3Y
-         rSGFZi9+r5O3h+uAPCDRg/ns8yfM/I/Z9/gmuszw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIEGI087266;
-        Mon, 17 Aug 2020 14:18:14 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 17
- Aug 2020 14:18:14 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 17 Aug 2020 14:18:13 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HJID9I119292;
-        Mon, 17 Aug 2020 14:18:13 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmurphy@ti.com>, Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
-Date:   Mon, 17 Aug 2020 14:17:22 -0500
-Message-ID: <20200817191723.22416-2-r-rivera-matos@ti.com>
+        Mon, 17 Aug 2020 15:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730569AbgHQPh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F35A22C9F;
+        Mon, 17 Aug 2020 15:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678671;
+        bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kxyGl7MjixzA6GCDjz1xAM6gnUnPCD/GsAj2PPfaixdUhiS3vIuzY9SA4wjL91yy6
+         WKAVE844f/qRw004LDnk6p3+lWrQpKeNL6C4ykmRr8212TXDBcOj8bZhee4dehmyR7
+         FLRhCx2n+IIM9cCvorSv5fcFkk6rLX9FAWJXQD8Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.8 413/464] crypto: cpt - dont sleep of CRYPTO_TFM_REQ_MAY_SLEEP was not specified
+Date:   Mon, 17 Aug 2020 17:16:06 +0200
+Message-Id: <20200817143853.564692412@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817191723.22416-1-r-rivera-matos@ti.com>
-References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the bindings for the bq256xx series of battery charging ICs.
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-Datasheets:
-- https://www.ti.com/lit/ds/symlink/bq25600.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601.pdf
-- https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25618.pdf
-- https://www.ti.com/lit/ds/symlink/bq25619.pdf
+commit 9e27c99104707f083dccd3b4d79762859b5a0614 upstream.
 
-Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+There is this call chain:
+cvm_encrypt -> cvm_enc_dec -> cptvf_do_request -> process_request -> kzalloc
+where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
+was not specified.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org	# v4.11+
+Fixes: c694b233295b ("crypto: cavium - Add the Virtual Function driver for CPT")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+ drivers/crypto/cavium/cpt/cptvf_algs.c       |    1 +
+ drivers/crypto/cavium/cpt/cptvf_reqmanager.c |   12 ++++++------
+ drivers/crypto/cavium/cpt/request_manager.h  |    2 ++
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-new file mode 100644
-index 000000000000..67db4ba9fdb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+--- a/drivers/crypto/cavium/cpt/cptvf_algs.c
++++ b/drivers/crypto/cavium/cpt/cptvf_algs.c
+@@ -200,6 +200,7 @@ static inline int cvm_enc_dec(struct skc
+ 	int status;
+ 
+ 	memset(req_info, 0, sizeof(struct cpt_request_info));
++	req_info->may_sleep = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) != 0;
+ 	memset(fctx, 0, sizeof(struct fc_context));
+ 	create_input_list(req, enc, enc_iv_len);
+ 	create_output_list(req, enc_iv_len);
+--- a/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
++++ b/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
+@@ -133,7 +133,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup gather (input) components */
+ 	g_sz_bytes = ((req->incnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->gather_components = kzalloc(g_sz_bytes, GFP_KERNEL);
++	info->gather_components = kzalloc(g_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->gather_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -150,7 +150,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup scatter (output) components */
+ 	s_sz_bytes = ((req->outcnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->scatter_components = kzalloc(s_sz_bytes, GFP_KERNEL);
++	info->scatter_components = kzalloc(s_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->scatter_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -167,7 +167,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Create and initialize DPTR */
+ 	info->dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
+-	info->in_buffer = kzalloc(info->dlen, GFP_KERNEL);
++	info->in_buffer = kzalloc(info->dlen, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->in_buffer) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -195,7 +195,7 @@ static inline int setup_sgio_list(struct
+ 	}
+ 
+ 	/* Create and initialize RPTR */
+-	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, GFP_KERNEL);
++	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->out_buffer) {
+ 		ret = -ENOMEM;
+ 		goto scatter_gather_clean;
+@@ -421,7 +421,7 @@ int process_request(struct cpt_vf *cptvf
+ 	struct cpt_vq_command vq_cmd;
+ 	union cpt_inst_s cptinst;
+ 
+-	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	info = kzalloc(sizeof(*info), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for info_buffer\n");
+ 		return -ENOMEM;
+@@ -443,7 +443,7 @@ int process_request(struct cpt_vf *cptvf
+ 	 * Get buffer for union cpt_res_s response
+ 	 * structure and its physical address
+ 	 */
+-	info->completion_addr = kzalloc(sizeof(union cpt_res_s), GFP_KERNEL);
++	info->completion_addr = kzalloc(sizeof(union cpt_res_s), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info->completion_addr)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for completion_addr\n");
+ 		ret = -ENOMEM;
+--- a/drivers/crypto/cavium/cpt/request_manager.h
++++ b/drivers/crypto/cavium/cpt/request_manager.h
+@@ -62,6 +62,8 @@ struct cpt_request_info {
+ 	union ctrl_info ctrl; /* User control information */
+ 	struct cptvf_request req; /* Request Information (Core specific) */
+ 
++	bool may_sleep;
 +
-+title: TI bq256xx Switch Mode Buck Charger
-+
-+maintainers:
-+  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-+
-+description: |
-+  The bq256xx devices are a family of highly-integrated battery charge
-+  management and system power management ICs for single cell Li-ion and Li-
-+  polymer batteries.
-+
-+  Datasheets:
-+    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq25600
-+      - ti,bq25601
-+      - ti,bq25600d
-+      - ti,bq25601d
-+      - ti,bq25611d
-+      - ti,bq25618
-+      - ti,bq25619
-+
-+  reg:
-+    maxItems: 1
-+
-+  ti,watchdog-timer:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Watchdog timer in milli seconds. 0 (default) disables the watchdog
-+    minimum: 0
-+    maximum: 160000
-+    enum: [ 0, 40000, 80000, 160000]
-+
-+  input-voltage-limit-microvolt:
-+    description: |
-+       Minimum input voltage limit in micro volts with a 100000 micro volt step
-+    minimum: 3900000
-+    maximum: 5400000
-+
-+  input-current-limit-microamp:
-+    description: |
-+       Maximum input current limit in micro amps with a 100000 micro amp step
-+    minimum: 100000
-+    maximum: 3200000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    bat: battery {
-+      compatible = "simple-battery";
-+      constant-charge-current-max-microamp = <2040000>;
-+      constant-charge-voltage-max-microvolt = <4352000>;
-+      precharge-current-microamp = <180000>;
-+      termination-current-microamp = <180000>;
-+    };
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&i2c2_pins>;
-+
-+      status = "okay";
-+      clock-frequency = <400000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bq25601@6b {
-+        compatible = "ti,bq25601";
-+        reg = <0x6b>;
-+        monitored-battery = <&bat>;
-+
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+        watchdog-timer = <40000>;
-+
-+        input-voltage-limit-microvolt = <4500000>;
-+        input-current-limit-microamp = <2400000>;
-+       };
-+    };
-+...
--- 
-2.28.0
+ 	struct buf_ptr in[MAX_BUF_CNT];
+ 	struct buf_ptr out[MAX_BUF_CNT];
+ 
+
 
