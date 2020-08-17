@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0CEC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A273C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5F620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E637920578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691787;
-	bh=7gyPJKW97AuJsGRcf2153Bp6vcw0jR86aMwsAmCpXpg=;
+	s=default; t=1597691801;
+	bh=adrKwjKBYwAGO2tCI25+wx390wp6p3FolWXMxPZgFos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yhG11Bhba+E9THD10kN8+yLxIfmiY9KQv9j8aw0rdInEC26feTlOaftVR0pmHKoYD
-	 zVayRmv6cQuP+0COmJsF0FWn2gh8lGd5Idzb8PyHY2SYuGvUAkyk73c6ODlRF2bUh3
-	 tuBKs0mexvRsPLZ4ZKLSNO+o1qUkp/mynHo8rB9g=
+	b=sCJ95CaJ8jLN7IVQyzlLCmlyixvzaUQDd6+lPQyV/PgncIxPXkr6068lSd2rteiXK
+	 ovj7dIOI2OwD4WdY7//x2QadeBAfq/+GfdH2AQ0MVhRJ46XaMbq8JiXXupO9S9iIog
+	 2/V+XHPcJAlWXciZB9p/t4O2MNbl558nNYhgYvEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392192AbgHQTQV (ORCPT
+        id S2392207AbgHQTQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730643AbgHQPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:39:23 -0400
+        id S1730474AbgHQPjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:39:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C2822C9F;
-        Mon, 17 Aug 2020 15:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9AF8208E4;
+        Mon, 17 Aug 2020 15:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678763;
-        bh=7gyPJKW97AuJsGRcf2153Bp6vcw0jR86aMwsAmCpXpg=;
+        s=default; t=1597678751;
+        bh=adrKwjKBYwAGO2tCI25+wx390wp6p3FolWXMxPZgFos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0WAaiIyGjZudSoHolf+e32gx3lMmqpGTlZ8ogVuYP3UtnFKv5qK+k/Un8fukW7dfP
-         CPWLIzS36Xo2VEYaZggnzyg3Jxscq52fyLByTP35nVSzAGeOMvYyjpmnSwq4j/ohXJ
-         MCNiNYkNu+JvL8e0c2nuvH+9YN3XG/bbZtG5450U=
+        b=OrYHAoDS8R29Wu2s+EQejofZvZJ5gX2XrfBCBv/cvcReKuKW7NcPNAjE2lv3dQzys
+         ZcDeuO6AubJDTmPSFlJH2MPiQRhbPV3JGpIyY2YtqYEgpXIoBrPc48QBdaWE095wv2
+         iMsLbNtVZFSGN445XyQBqK2MajlqroCuDC5ja/0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.8 445/464] parisc: Do not use an ordered store in pa_tlb_lock()
-Date:   Mon, 17 Aug 2020 17:16:38 +0200
-Message-Id: <20200817143855.095360645@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.8 441/464] Revert "parisc: Improve interrupt handling in arch_spin_lock_flags()"
+Date:   Mon, 17 Aug 2020 17:16:34 +0200
+Message-Id: <20200817143854.900561251@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,47 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Helge Deller <deller@gmx.de>
 
-commit e72b23dec1da5e62a0090c5da1d926778284e230 upstream.
+commit 3d05b8aebc5f10ee3ab129b61100196855dd7249 upstream.
 
-No need to use an ordered store in pa_tlb_lock() and update the comment
-regarng usage of the sid register to unlocak a spinlock in
-tlb_unlock0().
+This reverts commit 2772f0efd5bbd5413db3d22e363b779ca0fa5310.
+It turns out that we want to implement the spinlock code differently.
 
-Signed-off-by: John David Anglin <dave.anglin@bell.net>
 Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: <stable@vger.kernel.org> # v5.0+
+Cc: <stable@vger.kernel.org> # v5.7+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/entry.S |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/parisc/include/asm/spinlock.h |   25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
---- a/arch/parisc/kernel/entry.S
-+++ b/arch/parisc/kernel/entry.S
-@@ -455,7 +455,7 @@
- 	LDREG		0(\ptp),\pte
- 	bb,<,n		\pte,_PAGE_PRESENT_BIT,3f
- 	b		\fault
--	stw,ma		\spc,0(\tmp)
-+	stw		\spc,0(\tmp)
- 99:	ALTERNATIVE(98b, 99b, ALT_COND_NO_SMP, INSN_NOP)
- #endif
- 2:	LDREG		0(\ptp),\pte
-@@ -463,7 +463,12 @@
- 3:
- 	.endm
+--- a/arch/parisc/include/asm/spinlock.h
++++ b/arch/parisc/include/asm/spinlock.h
+@@ -10,34 +10,25 @@
+ static inline int arch_spin_is_locked(arch_spinlock_t *x)
+ {
+ 	volatile unsigned int *a = __ldcw_align(x);
+-	smp_mb();
+ 	return *a == 0;
+ }
  
--	/* Release pa_tlb_lock lock without reloading lock address. */
-+	/* Release pa_tlb_lock lock without reloading lock address.
-+	   Note that the values in the register spc are limited to
-+	   NR_SPACE_IDS (262144). Thus, the stw instruction always
-+	   stores a nonzero value even when register spc is 64 bits.
-+	   We use an ordered store to ensure all prior accesses are
-+	   performed prior to releasing the lock. */
- 	.macro		tlb_unlock0	spc,tmp
- #ifdef CONFIG_SMP
- 98:	or,COND(=)	%r0,\spc,%r0
+-static inline void arch_spin_lock(arch_spinlock_t *x)
+-{
+-	volatile unsigned int *a;
+-
+-	a = __ldcw_align(x);
+-	while (__ldcw(a) == 0)
+-		while (*a == 0)
+-			cpu_relax();
+-}
++#define arch_spin_lock(lock) arch_spin_lock_flags(lock, 0)
+ 
+ static inline void arch_spin_lock_flags(arch_spinlock_t *x,
+ 					 unsigned long flags)
+ {
+ 	volatile unsigned int *a;
+-	unsigned long flags_dis;
+ 
+ 	a = __ldcw_align(x);
+-	while (__ldcw(a) == 0) {
+-		local_save_flags(flags_dis);
+-		local_irq_restore(flags);
++	while (__ldcw(a) == 0)
+ 		while (*a == 0)
+-			cpu_relax();
+-		local_irq_restore(flags_dis);
+-	}
++			if (flags & PSW_SM_I) {
++				local_irq_enable();
++				cpu_relax();
++				local_irq_disable();
++			} else
++				cpu_relax();
+ }
+ #define arch_spin_lock_flags arch_spin_lock_flags
+ 
 
 
