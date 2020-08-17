@@ -2,94 +2,65 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E487C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C482067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgHQLAm (ORCPT
+        id S1728356AbgHQK72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:00:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726802AbgHQLAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:00:24 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 24B4A599F9685D733EF6;
-        Mon, 17 Aug 2020 19:00:21 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.226) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 17 Aug 2020 19:00:10 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
-        <sudeep.holla@arm.com>
-CC:     <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH] ACPI/IORT: Drop the unused @ops of iort_add_device_replay()
-Date:   Mon, 17 Aug 2020 18:59:46 +0800
-Message-ID: <20200817105946.1511-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+        Mon, 17 Aug 2020 06:59:28 -0400
+Received: from muru.com ([72.249.23.125]:40508 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbgHQK7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:59:00 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 26A7980A3;
+        Mon, 17 Aug 2020 10:58:58 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 13:59:26 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, od@zcrc.me,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] usb: musb: Fix runtime PM race in musb_queue_resume_work
+Message-ID: <20200817105926.GF2994@atomide.com>
+References: <20200809125359.31025-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200809125359.31025-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit d2e1a003af56 ("ACPI/IORT: Don't call iommu_ops->add_device
-directly"), we use the IOMMU core API to replace a direct invoke of the
-specified callback. The parameter @ops has therefore became unused. Let's
-drop it.
+* Paul Cercueil <paul@crapouillou.net> [200809 12:54]:
+> musb_queue_resume_work() would call the provided callback if the runtime
+> PM status was 'active'. Otherwise, it would enqueue the request if the
+> hardware was still suspended (musb->is_runtime_suspended is true).
+> 
+> This causes a race with the runtime PM handlers, as it is possible to be
+> in the case where the runtime PM status is not yet 'active', but the
+> hardware has been awaken (PM resume function has been called).
+> 
+> When hitting the race, the resume work was not enqueued, which probably
+> triggered other bugs further down the stack. For instance, a telnet
+> connection on Ingenic SoCs would result in a 50/50 chance of a
+> segmentation fault somewhere in the musb code.
+> 
+> Rework the code so that either we call the callback directly if
+> (musb->is_runtime_suspended == 0), or enqueue the query otherwise.
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- drivers/acpi/arm64/iort.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Yes we should use is_runtime_suspended, thanks for fixing it.
+Things still work for me so:
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ec782e4a0fe4..a0ece0e201b2 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -811,8 +811,7 @@ static inline const struct iommu_ops *iort_fwspec_iommu_ops(struct device *dev)
- 	return (fwspec && fwspec->ops) ? fwspec->ops : NULL;
- }
- 
--static inline int iort_add_device_replay(const struct iommu_ops *ops,
--					 struct device *dev)
-+static inline int iort_add_device_replay(struct device *dev)
- {
- 	int err = 0;
- 
-@@ -1072,7 +1071,7 @@ const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
- 	 */
- 	if (!err) {
- 		ops = iort_fwspec_iommu_ops(dev);
--		err = iort_add_device_replay(ops, dev);
-+		err = iort_add_device_replay(dev);
- 	}
- 
- 	/* Ignore all other errors apart from EPROBE_DEFER */
-@@ -1089,8 +1088,7 @@ const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
- #else
- static inline const struct iommu_ops *iort_fwspec_iommu_ops(struct device *dev)
- { return NULL; }
--static inline int iort_add_device_replay(const struct iommu_ops *ops,
--					 struct device *dev)
-+static inline int iort_add_device_replay(struct device *dev)
- { return 0; }
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
- { return 0; }
--- 
-2.19.1
-
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
