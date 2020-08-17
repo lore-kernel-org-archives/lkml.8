@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F8AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D45220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5752E2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689352;
-	bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+	s=default; t=1597689356;
+	bh=ebDReBXON6r/dYIuzaxLcyZBV47Ar2EBxcl3ETii/CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xzXyZgEgwrGlcbMxt8YWvaYtS4/3pp6gPWiA5JZNV/v/8fC4XQZF9gna0aKVIek0D
-	 EN3imaQeP+LitHwh7fTxypfq1lG29Boo2DwQLg3qfNjyMnou5dkVSJZOCMwOFvJVMP
-	 PJm6P6S07IUumzm782JJdZJiAY7cqHOlvhEg2ROU=
+	b=2DwmU8uXav65OlNBHlYTU5Qk/3SRKUMqu36qGypB4SnF+lHNJzYvp2cV8BRgpte+Z
+	 OliRFOZZcd9PtBIWZ7DnLosQezEkiN3t//2s45vykJexWqnKq1oC1bmvmp22fMycHA
+	 yZtq9TQhTp/L3aPhDwbc0MqVxfIDAxx+AQHaH89M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391254AbgHQSfv (ORCPT
+        id S2391165AbgHQSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730979AbgHQP7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:42 -0400
+        id S1730976AbgHQP7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B007C206FA;
-        Mon, 17 Aug 2020 15:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2544C20888;
+        Mon, 17 Aug 2020 15:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679982;
-        bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+        s=default; t=1597679979;
+        bh=ebDReBXON6r/dYIuzaxLcyZBV47Ar2EBxcl3ETii/CA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzMvq6lKFrl4O+qqeLMu0kyBy5UBt4GMSpzjxCthfY4hzHujyH7QNEOxDvLZRjR+U
-         GvayliPL0/D1K2Nl5zD5RRRoyTHLan6Wz6Smf8vwygGsZCrzWHvPtUgWdOQXLA04iV
-         h26yM5a8TN9Hm1+eriHrfNXLKjAoyygVeD8DvJow=
+        b=q2RHcG9SV27bICgVgxax1XOwCtmOulhVWDgDTeJ2oV2z9wNK35WfQ94HI3+cJql2R
+         zut3wpjFltaKywAJpqPiuxFHJbS3uux7gOZI5UO4lH2FGHD4EejUmEGf/Uopfd3gdQ
+         wEsiV5NkQ85XEX3QqPDV/4/nGlu71l0bJeEbQUog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        stable@vger.kernel.org,
+        syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 385/393] s390/dasd: fix inability to use DASD with DIAG driver
-Date:   Mon, 17 Aug 2020 17:17:15 +0200
-Message-Id: <20200817143838.274411923@linuxfoundation.org>
+Subject: [PATCH 5.7 393/393] io_uring: hold ctx reference around task_work queue + execute
+Date:   Mon, 17 Aug 2020 17:17:23 +0200
+Message-Id: <20200817143838.652346152@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,105 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 9f4aa52387c68049403b59939df5c0dd8e3872cc upstream.
+commit 6d816e088c359866f9867057e04f244c608c42fe upstream.
 
-During initialization of the DASD DIAG driver a request is issued
-that has a bio structure that resides on the stack. With virtually
-mapped kernel stacks this bio address might be in virtual storage
-which is unsuitable for usage with the diag250 call.
-In this case the device can not be set online using the DIAG
-discipline and fails with -EOPNOTSUP.
-In the system journal the following error message is presented:
+We're holding the request reference, but we need to go one higher
+to ensure that the ctx remains valid after the request has finished.
+If the ring is closed with pending task_work inflight, and the
+given io_kiocb finishes sync during issue, then we need a reference
+to the ring itself around the task_work execution cycle.
 
-dasd: X.X.XXXX Setting the DASD online with discipline DIAG failed
-with rc=-95
-
-Fix by allocating the bio structure instead of having it on the stack.
-
-Fixes: ce3dc447493f ("s390: add support for virtually mapped kernel stacks")
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: stable@vger.kernel.org #4.20
+Cc: stable@vger.kernel.org # v5.7+
+Reported-by: syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/s390/block/dasd_diag.c |   25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
 
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -319,7 +319,7 @@ dasd_diag_check_device(struct dasd_devic
- 	struct dasd_diag_characteristics *rdc_data;
- 	struct vtoc_cms_label *label;
- 	struct dasd_block *block;
--	struct dasd_diag_bio bio;
-+	struct dasd_diag_bio *bio;
- 	unsigned int sb, bsize;
- 	blocknum_t end_block;
- 	int rc;
-@@ -395,29 +395,36 @@ dasd_diag_check_device(struct dasd_devic
- 		rc = -ENOMEM;
- 		goto out;
+---
+ fs/io_uring.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4214,6 +4214,8 @@ static int __io_async_wake(struct io_kio
+ 	tsk = req->task;
+ 	req->result = mask;
+ 	init_task_work(&req->task_work, func);
++	percpu_ref_get(&req->ctx->refs);
++
+ 	/*
+ 	 * If this fails, then the task is exiting. When a task exits, the
+ 	 * work gets canceled, so just cancel this request as well instead
+@@ -4313,6 +4315,7 @@ static void io_poll_task_handler(struct
+ static void io_poll_task_func(struct callback_head *cb)
+ {
+ 	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
++	struct io_ring_ctx *ctx = req->ctx;
+ 	struct io_kiocb *nxt = NULL;
+ 
+ 	io_poll_task_handler(req, &nxt);
+@@ -4323,6 +4326,7 @@ static void io_poll_task_func(struct cal
+ 		__io_queue_sqe(nxt, NULL);
+ 		mutex_unlock(&ctx->uring_lock);
  	}
-+	bio = kzalloc(sizeof(*bio), GFP_KERNEL);
-+	if (bio == NULL)  {
-+		DBF_DEV_EVENT(DBF_WARNING, device, "%s",
-+			      "No memory to allocate initialization bio");
-+		rc = -ENOMEM;
-+		goto out_label;
-+	}
- 	rc = 0;
- 	end_block = 0;
- 	/* try all sizes - needed for ECKD devices */
- 	for (bsize = 512; bsize <= PAGE_SIZE; bsize <<= 1) {
- 		mdsk_init_io(device, bsize, 0, &end_block);
--		memset(&bio, 0, sizeof (struct dasd_diag_bio));
--		bio.type = MDSK_READ_REQ;
--		bio.block_number = private->pt_block + 1;
--		bio.buffer = label;
-+		memset(bio, 0, sizeof(*bio));
-+		bio->type = MDSK_READ_REQ;
-+		bio->block_number = private->pt_block + 1;
-+		bio->buffer = label;
- 		memset(&private->iob, 0, sizeof (struct dasd_diag_rw_io));
- 		private->iob.dev_nr = rdc_data->dev_nr;
- 		private->iob.key = 0;
- 		private->iob.flags = 0;	/* do synchronous io */
- 		private->iob.block_count = 1;
- 		private->iob.interrupt_params = 0;
--		private->iob.bio_list = &bio;
-+		private->iob.bio_list = bio;
- 		private->iob.flaga = DASD_DIAG_FLAGA_DEFAULT;
- 		rc = dia250(&private->iob, RW_BIO);
- 		if (rc == 3) {
- 			pr_warn("%s: A 64-bit DIAG call failed\n",
- 				dev_name(&device->cdev->dev));
- 			rc = -EOPNOTSUPP;
--			goto out_label;
-+			goto out_bio;
- 		}
- 		mdsk_term_io(device);
- 		if (rc == 0)
-@@ -427,7 +434,7 @@ dasd_diag_check_device(struct dasd_devic
- 		pr_warn("%s: Accessing the DASD failed because of an incorrect format (rc=%d)\n",
- 			dev_name(&device->cdev->dev), rc);
- 		rc = -EIO;
--		goto out_label;
-+		goto out_bio;
++	percpu_ref_put(&ctx->refs);
+ }
+ 
+ static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
+@@ -4439,6 +4443,7 @@ static void io_async_task_func(struct ca
+ 
+ 	if (io_poll_rewait(req, &apoll->poll)) {
+ 		spin_unlock_irq(&ctx->completion_lock);
++		percpu_ref_put(&ctx->refs);
+ 		return;
  	}
- 	/* check for label block */
- 	if (memcmp(label->label_id, DASD_DIAG_CMS1,
-@@ -457,6 +464,8 @@ dasd_diag_check_device(struct dasd_devic
- 			(rc == 4) ? ", read-only device" : "");
- 		rc = 0;
- 	}
-+out_bio:
-+	kfree(bio);
- out_label:
- 	free_page((long) label);
- out:
+ 
+@@ -4476,6 +4481,7 @@ end_req:
+ 
+ 	kfree(apoll->double_poll);
+ 	kfree(apoll);
++	percpu_ref_put(&ctx->refs);
+ }
+ 
+ static int io_async_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
 
 
