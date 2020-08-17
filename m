@@ -2,124 +2,149 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE20AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8E392063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0B82063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685797;
+	bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ztOLwIIu0Y9e7/hT5b0FO3jb/jfSOV1DdfXgSxb3WDeP/L5UPpZliiwJayeXd3DXp
+	 AlGhHsz1OuZn3ULlvt283uS78xxvVw7iREe89tKn9ipwNeiehfj71SxnbYkw/VIiI8
+	 7EAGBBz9H35sfG1uUhJyAzYFVhRJJSBp8oK5v/qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgHQRgO (ORCPT
+        id S1731311AbgHQRgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:36:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63451 "EHLO mga05.intel.com"
+        Mon, 17 Aug 2020 13:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729520AbgHQRfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:35:52 -0400
-IronPort-SDR: iZ2pkLIWgHb+zSuTuzJMGbddugSrXX70XPqpsjqLko2eejEvPfli81J6y/rN7E6UxP3FtY0SSz
- QVvI0H+0g4iA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239586575"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="239586575"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 10:35:49 -0700
-IronPort-SDR: dvvwDmsrt5UqQV5AB+zOhs+Tfvhkis/zHiIHAJtkctXled78/ujgaUwhZDPT5n18ytZP9lc6x4
- Z05Ok352CRRA==
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="292499642"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 10:35:49 -0700
-Date:   Mon, 17 Aug 2020 10:35:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        peterx@redhat.com, Yang Weijiang <weijiang.yang@intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] selftests: kvm: Use a shorter encoding to clear RAX
-Message-ID: <20200817173548.GH22407@linux.intel.com>
-References: <20200817172034.26673-1-pbonzini@redhat.com>
+        id S1730036AbgHQQRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4925622BF3;
+        Mon, 17 Aug 2020 16:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597681055;
+        bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BiioFDVkmV/zn8zzMG9on7oYhdj8bcLdqHlu2n4xk/3cpgpEgvgEPhs9rjXQIC2JS
+         ekPmekzJAJVwbQVmZsMqUcLgwxI3u65gowcWZ/Xj6As027cJ5mEaWLMTTEiUYvWaod
+         2hzITFLfepwAQoCR7V2sL6UoFce9rSMpmmpHSKnE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.19 162/168] parisc: Implement __smp_store_release and __smp_load_acquire barriers
+Date:   Mon, 17 Aug 2020 17:18:13 +0200
+Message-Id: <20200817143741.752606471@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
+References: <20200817143733.692105228@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817172034.26673-1-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 01:20:34PM -0400, Paolo Bonzini wrote:
-> From: Yang Weijiang <weijiang.yang@intel.com>
+From: John David Anglin <dave.anglin@bell.net>
 
-This shouldn't be here without Weijiang's SOB.
+commit e96ebd589debd9a6a793608c4ec7019c38785dea upstream.
 
-> If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
-> by the assembler:
-> 
-> asm volatile("ss_start: "
->              "xor %%rax,%%rax\n\t"
->              "cpuid\n\t"
->              "movl $0x1a0,%%ecx\n\t"
->              "rdmsr\n\t"
->              : : : "rax", "ecx");
-> 
-> is translated to :
-> 
->   000000000040194e <ss_start>:
->   40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
->   401950:       0f a2                   cpuid
->   401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
->   401957:       0f 32                   rdmsr
-> 
-> As you can see rax is replaced with eax in target binary code.
-> This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
-> and makes the hard-coded instruction length check fail:
-> 
->         /* Instruction lengths starting at ss_start */
->         int ss_size[4] = {
->                 3,              /* xor */   <-------- 2 or 3?
->                 2,              /* cpuid */
->                 5,              /* mov */
->                 2,              /* rdmsr */
->         };
-> 
-> Encode the shorter version directly and, while at it, fix the "clobbers"
-> of the asm.
-> 
-> Reported-by: Yang Weijiang <weijiang.yang@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This patch implements the __smp_store_release and __smp_load_acquire barriers
+using ordered stores and loads.  This avoids the sync instruction present in
+the generic implementation.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: <stable@vger.kernel.org> # 4.14+
+Signed-off-by: Dave Anglin <dave.anglin@bell.net>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> ---
->  tools/testing/selftests/kvm/x86_64/debug_regs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-> index 8162c58a1234..b8d14f9db5f9 100644
-> --- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-> +++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-> @@ -40,11 +40,11 @@ static void guest_code(void)
->  
->  	/* Single step test, covers 2 basic instructions and 2 emulated */
->  	asm volatile("ss_start: "
-> -		     "xor %%rax,%%rax\n\t"
-> +		     "xor %%eax,%%eax\n\t"
->  		     "cpuid\n\t"
->  		     "movl $0x1a0,%%ecx\n\t"
->  		     "rdmsr\n\t"
-> -		     : : : "rax", "ecx");
-> +		     : : : "eax", "ebx", "ecx", "edx");
->  
->  	/* DR6.BD test */
->  	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
-> -- 
-> 2.26.2
-> 
+---
+ arch/parisc/include/asm/barrier.h |   61 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+--- a/arch/parisc/include/asm/barrier.h
++++ b/arch/parisc/include/asm/barrier.h
+@@ -26,6 +26,67 @@
+ #define __smp_rmb()	mb()
+ #define __smp_wmb()	mb()
+ 
++#define __smp_store_release(p, v)					\
++do {									\
++	typeof(p) __p = (p);						\
++        union { typeof(*p) __val; char __c[1]; } __u =			\
++                { .__val = (__force typeof(*p)) (v) };			\
++	compiletime_assert_atomic_type(*p);				\
++	switch (sizeof(*p)) {						\
++	case 1:								\
++		asm volatile("stb,ma %0,0(%1)"				\
++				: : "r"(*(__u8 *)__u.__c), "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 2:								\
++		asm volatile("sth,ma %0,0(%1)"				\
++				: : "r"(*(__u16 *)__u.__c), "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 4:								\
++		asm volatile("stw,ma %0,0(%1)"				\
++				: : "r"(*(__u32 *)__u.__c), "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 8:								\
++		if (IS_ENABLED(CONFIG_64BIT))				\
++			asm volatile("std,ma %0,0(%1)"			\
++				: : "r"(*(__u64 *)__u.__c), "r"(__p)	\
++				: "memory");				\
++		break;							\
++	}								\
++} while (0)
++
++#define __smp_load_acquire(p)						\
++({									\
++	union { typeof(*p) __val; char __c[1]; } __u;			\
++	typeof(p) __p = (p);						\
++	compiletime_assert_atomic_type(*p);				\
++	switch (sizeof(*p)) {						\
++	case 1:								\
++		asm volatile("ldb,ma 0(%1),%0"				\
++				: "=r"(*(__u8 *)__u.__c) : "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 2:								\
++		asm volatile("ldh,ma 0(%1),%0"				\
++				: "=r"(*(__u16 *)__u.__c) : "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 4:								\
++		asm volatile("ldw,ma 0(%1),%0"				\
++				: "=r"(*(__u32 *)__u.__c) : "r"(__p)	\
++				: "memory");				\
++		break;							\
++	case 8:								\
++		if (IS_ENABLED(CONFIG_64BIT))				\
++			asm volatile("ldd,ma 0(%1),%0"			\
++				: "=r"(*(__u64 *)__u.__c) : "r"(__p)	\
++				: "memory");				\
++		break;							\
++	}								\
++	__u.__val;							\
++})
+ #include <asm-generic/barrier.h>
+ 
+ #endif /* !__ASSEMBLY__ */
+
+
