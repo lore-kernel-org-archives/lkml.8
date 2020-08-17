@@ -2,491 +2,93 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B622078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768EA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ocAKOUiY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYtFxTDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgHQK7H (ORCPT
+        id S1728387AbgHQLAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:59:07 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:64837 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbgHQK5W (ORCPT
+        Mon, 17 Aug 2020 07:00:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728363AbgHQK7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:57:22 -0400
+        Mon, 17 Aug 2020 06:59:39 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383E5C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:59:39 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 77so14073729ilc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597661841; x=1629197841;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=1L8j0imCjqj6Ox0Kf+3S46R4RWttBliVjR+yZC3m/8Y=;
-  b=ocAKOUiYHhwoEXBC+PcF9OSTDymX4wH8aLEqbCUzeYAQs5y8tdAU0nDf
-   RWifU1Mixda+x/Xkj+D8r/a5d8dNzYX/Q02ZUWFyw67bFybFYrD/A3lwP
-   Ap3roaqGubR7gi+P4XR3aUtrIv+ocV/NUnD/nK1JDd2gFb3bVzO2AiXcw
-   M=;
-X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48093282"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Aug 2020 10:57:15 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 4C92BA2003;
-        Mon, 17 Aug 2020 10:57:13 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:57:12 +0000
-Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.192) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:56:56 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
-        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v20 14/15] mm/damon: Add user space selftests
-Date:   Mon, 17 Aug 2020 12:51:36 +0200
-Message-ID: <20200817105137.19296-15-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817105137.19296-1-sjpark@amazon.com>
-References: <20200817105137.19296-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mRFKMn469rvJhbWPmwRlBDaHdkmhCPJ0BZ8j32mtJZ8=;
+        b=nYtFxTDlguMrPy84wfm448P60GlInQ7IF6vj7mfgT+/kHB8EL9ZE3BIajxXy6O+CnG
+         oiOVOML039xpDFQXS9P0FqmUspW3JExsgLjasj8rZSfKaY/zPKzRjcaexFXPwd6oj9/9
+         UgahkMybxjI7uz6FwlLOLZQd/Gxjm8txa1PhkFigBFT07tviMtLt5GupPjt8ubs8hSmI
+         gXFWrIAXriIiUl9Ork9197tmvAOpzwIyfxMEzk/l+PdqgSJlp+CeCYEspyUQkczU14fh
+         RTLo4a5KTluMp+5wiqvuF1T2afYhnr+fGdLqg6ykzSNMWmR+jJ89cwiOlt42bs2429Id
+         ZKXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mRFKMn469rvJhbWPmwRlBDaHdkmhCPJ0BZ8j32mtJZ8=;
+        b=S8BgF7bec/02xoAm0CLdqRJCsHJ+GcEZ0hKg+k7iGJ+Bg0qaawK+gkbWJFmP67Mqn5
+         tkrEojjWGIAk2UPIGhtovFMI8xmgV+VlFbOUPjvdGe/OirgpWLSC0ISF+fNtdTi2CmQR
+         AEgWX0tOWw8br6Lj2PrY/6SxxpA4xuyxnuwnKlw2BuZc3S1L6/gLc3gnZqj0/RPS4cVt
+         RRlsWL4OlJmEXFUtFrxebgutYbgagU9/pFBD6quys+2rWTFJumLeBSsaIcxStHNJUSwy
+         A7ULm3ZO+0w4RCGbMs9AOYjd9QfR432ZbJzBmw17it2UcaaNkcnE7wMruH53JY1LrQLo
+         j2Yg==
+X-Gm-Message-State: AOAM532edQDpNkkEaLOPk8E4N28WsEmAeDo5VF4t9tUpSTVJyncmNZFt
+        WONcOYwWFCBE3zBEpbWhtap71ORXKcdzQbKZTgdM4EDIeg8=
+X-Google-Smtp-Source: ABdhPJz/QfASkB2AoUF3H9HAnFJU6XXHvJ/U1MYXBfXZTb/tYWN+NSY2WoyFrL+ntJxqIizgsyeEfbprGLbH/1tYPAM=
+X-Received: by 2002:a92:c7ae:: with SMTP id f14mr13948607ilk.39.1597661978616;
+ Mon, 17 Aug 2020 03:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.192]
-X-ClientProxiedBy: EX13D02UWC004.ant.amazon.com (10.43.162.236) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <1597395824-3325-1-git-send-email-zhaoyang.huang@unisoc.com>
+ <20200814131034.f71a91c6827904e12a629e04@linux-foundation.org> <20200814211459.65f6db0211872e30684a630a@linux-foundation.org>
+In-Reply-To: <20200814211459.65f6db0211872e30684a630a@linux-foundation.org>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Mon, 17 Aug 2020 18:59:27 +0800
+Message-ID: <CAGWkznFYaMLUf3cazP9x9eA-SYTu6GkXR=m3q20WowGsCZLWHw@mail.gmail.com>
+Subject: Re: [PATCH] mm : sync ra->ra_pages with bdi->ra_pages
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Roman Gushchin <klamm@yandex-team.ru>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
-
-This commit adds a simple user space tests for DAMON.  The tests are
-using kselftest framework.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- tools/testing/selftests/damon/Makefile        |   7 +
- .../selftests/damon/_chk_dependency.sh        |  28 +++
- tools/testing/selftests/damon/_chk_record.py  | 109 ++++++++++++
- .../testing/selftests/damon/debugfs_attrs.sh  | 161 ++++++++++++++++++
- .../testing/selftests/damon/debugfs_record.sh |  50 ++++++
- 5 files changed, 355 insertions(+)
- create mode 100644 tools/testing/selftests/damon/Makefile
- create mode 100644 tools/testing/selftests/damon/_chk_dependency.sh
- create mode 100644 tools/testing/selftests/damon/_chk_record.py
- create mode 100755 tools/testing/selftests/damon/debugfs_attrs.sh
- create mode 100755 tools/testing/selftests/damon/debugfs_record.sh
-
-diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
-new file mode 100644
-index 000000000000..cfd5393a4639
---- /dev/null
-+++ b/tools/testing/selftests/damon/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Makefile for damon selftests
-+
-+TEST_FILES = _chk_dependency.sh _chk_record_file.py
-+TEST_PROGS = debugfs_attrs.sh debugfs_record.sh
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/damon/_chk_dependency.sh b/tools/testing/selftests/damon/_chk_dependency.sh
-new file mode 100644
-index 000000000000..b304b7779976
---- /dev/null
-+++ b/tools/testing/selftests/damon/_chk_dependency.sh
-@@ -0,0 +1,28 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+
-+DBGFS=/sys/kernel/debug/damon
-+
-+if [ $EUID -ne 0 ];
-+then
-+	echo "Run as root"
-+	exit $ksft_skip
-+fi
-+
-+if [ ! -d $DBGFS ]
-+then
-+	echo "$DBGFS not found"
-+	exit $ksft_skip
-+fi
-+
-+for f in attrs record target_ids monitor_on
-+do
-+	if [ ! -f "$DBGFS/$f" ]
-+	then
-+		echo "$f not found"
-+		exit 1
-+	fi
-+done
-diff --git a/tools/testing/selftests/damon/_chk_record.py b/tools/testing/selftests/damon/_chk_record.py
-new file mode 100644
-index 000000000000..73e128904319
---- /dev/null
-+++ b/tools/testing/selftests/damon/_chk_record.py
-@@ -0,0 +1,109 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"Check whether the DAMON record file is valid"
-+
-+import argparse
-+import struct
-+import sys
-+
-+fmt_version = 0
-+
-+def set_fmt_version(f):
-+    global fmt_version
-+
-+    mark = f.read(16)
-+    if mark == b'damon_recfmt_ver':
-+        fmt_version = struct.unpack('i', f.read(4))[0]
-+    else:
-+        fmt_version = 0
-+        f.seek(0)
-+    return fmt_version
-+
-+def read_pid(f):
-+    if fmt_version == 1:
-+        pid = struct.unpack('i', f.read(4))[0]
-+    else:
-+        pid = struct.unpack('L', f.read(8))[0]
-+
-+def err_percent(val, expected):
-+    return abs(val - expected) / expected * 100
-+
-+def chk_task_info(f):
-+    pid = read_pid(f)
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+
-+    if nr_regions > max_nr_regions:
-+        print('too many regions: %d > %d' % (nr_regions, max_nr_regions))
-+        exit(1)
-+
-+    nr_gaps = 0
-+    eaddr = 0
-+    for r in range(nr_regions):
-+        saddr = struct.unpack('L', f.read(8))[0]
-+        if eaddr and saddr != eaddr:
-+            nr_gaps += 1
-+        eaddr = struct.unpack('L', f.read(8))[0]
-+        nr_accesses = struct.unpack('I', f.read(4))[0]
-+
-+        if saddr >= eaddr:
-+            print('wrong region [%d,%d)' % (saddr, eaddr))
-+            exit(1)
-+
-+        max_nr_accesses = aint / sint
-+        if nr_accesses > max_nr_accesses:
-+            if err_percent(nr_accesses, max_nr_accesses) > 15:
-+                print('too high nr_access: expected %d but %d' %
-+                        (max_nr_accesses, nr_accesses))
-+                exit(1)
-+    if nr_gaps != 2:
-+        print('number of gaps are not two but %d' % nr_gaps)
-+        exit(1)
-+
-+def parse_time_us(bindat):
-+    sec = struct.unpack('l', bindat[0:8])[0]
-+    nsec = struct.unpack('l', bindat[8:16])[0]
-+    return (sec * 1000000000 + nsec) / 1000
-+
-+def main():
-+    global sint
-+    global aint
-+    global min_nr
-+    global max_nr_regions
-+
-+    parser = argparse.ArgumentParser()
-+    parser.add_argument('file', metavar='<file>',
-+            help='path to the record file')
-+    parser.add_argument('--attrs', metavar='<attrs>',
-+            default='5000 100000 1000000 10 1000',
-+            help='content of debugfs attrs file')
-+    args = parser.parse_args()
-+    file_path = args.file
-+    attrs = [int(x) for x in args.attrs.split()]
-+    sint, aint, rint, min_nr, max_nr_regions = attrs
-+
-+    with open(file_path, 'rb') as f:
-+        set_fmt_version(f)
-+        last_aggr_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+
-+            now = parse_time_us(timebin)
-+            if not last_aggr_time:
-+                last_aggr_time = now
-+            else:
-+                error = err_percent(now - last_aggr_time, aint)
-+                if error > 15:
-+                    print('wrong aggr interval: expected %d, but %d' %
-+                            (aint, now - last_aggr_time))
-+                    exit(1)
-+                last_aggr_time = now
-+
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                chk_task_info(f)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/testing/selftests/damon/debugfs_attrs.sh b/tools/testing/selftests/damon/debugfs_attrs.sh
-new file mode 100755
-index 000000000000..c75557e8ba58
---- /dev/null
-+++ b/tools/testing/selftests/damon/debugfs_attrs.sh
-@@ -0,0 +1,161 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+source ./_chk_dependency.sh
-+
-+# Test attrs file
-+file="$DBGFS/attrs"
-+
-+ORIG_CONTENT=$(cat $file)
-+
-+echo 1 2 3 4 5 > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file write failed"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo 1 2 3 4 > $file
-+if [ $? -eq 0 ]
-+then
-+	echo "$file write success (should failed)"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+CONTENT=$(cat $file)
-+if [ "$CONTENT" != "1 2 3 4 5" ]
-+then
-+	echo "$file not written"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo $ORIG_CONTENT > $file
-+
-+# Test record file
-+file="$DBGFS/record"
-+
-+ORIG_CONTENT=$(cat $file)
-+
-+echo "4242 foo.bar" > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file writing sane input failed"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo abc 2 3 > $file
-+if [ $? -eq 0 ]
-+then
-+	echo "$file writing insane input 1 success (should failed)"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo 123 > $file
-+if [ $? -eq 0 ]
-+then
-+	echo "$file writing insane input 2 success (should failed)"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+CONTENT=$(cat $file)
-+if [ "$CONTENT" != "4242 foo.bar" ]
-+then
-+	echo "$file not written"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo "0 null" > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file disabling write fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+CONTENT=$(cat $file)
-+if [ "$CONTENT" != "0 null" ]
-+then
-+	echo "$file not disabled"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo "4242 foo.bar" > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file writing sane data again fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo $ORIG_CONTENT > $file
-+
-+# Test target_ids file
-+file="$DBGFS/target_ids"
-+
-+ORIG_CONTENT=$(cat $file)
-+
-+echo "1 2 3 4" > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file write fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo "1 2 abc 4" > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file write fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+CONTENT=$(cat $file)
-+if [ "$CONTENT" != "1 2" ]
-+then
-+	echo "$file not written"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo abc 2 3 > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file wrong value write fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+if [ ! -z "$(cat $file)" ]
-+then
-+	echo "$file not cleared"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo > $file
-+if [ $? -ne 0 ]
-+then
-+	echo "$file init fail"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+if [ ! -z "$(cat $file)" ]
-+then
-+	echo "$file not initialized"
-+	echo $ORIG_CONTENT > $file
-+	exit 1
-+fi
-+
-+echo $ORIG_CONTENT > $file
-+
-+echo "PASS"
-diff --git a/tools/testing/selftests/damon/debugfs_record.sh b/tools/testing/selftests/damon/debugfs_record.sh
-new file mode 100755
-index 000000000000..c0fb8d24dc32
---- /dev/null
-+++ b/tools/testing/selftests/damon/debugfs_record.sh
-@@ -0,0 +1,50 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+source ./_chk_dependency.sh
-+
-+restore_attrs()
-+{
-+	echo $ORIG_ATTRS > $DBGFS/attrs
-+	echo $ORIG_TARGET_IDS > $DBGFS/target_ids
-+	echo $ORIG_RECORD > $DBGFS/record
-+}
-+
-+ORIG_ATTRS=$(cat $DBGFS/attrs)
-+ORIG_TARGET_IDS=$(cat $DBGFS/target_ids)
-+ORIG_RECORD=$(cat $DBGFS/record)
-+
-+rfile=$pwd/damon.data
-+
-+rm -f $rfile
-+ATTRS="5000 100000 1000000 10 1000"
-+echo $ATTRS > $DBGFS/attrs
-+echo 4096 $rfile > $DBGFS/record
-+sleep 5 &
-+echo $(pidof sleep) > $DBGFS/target_ids
-+echo on > $DBGFS/monitor_on
-+sleep 0.5
-+killall sleep
-+echo off > $DBGFS/monitor_on
-+
-+sync
-+
-+if [ ! -f $rfile ]
-+then
-+	echo "record file not made"
-+	restore_attrs
-+
-+	exit 1
-+fi
-+
-+python3 ./_chk_record.py $rfile --attrs "$ATTRS"
-+if [ $? -ne 0 ]
-+then
-+	echo "record file is wrong"
-+	restore_attrs
-+	exit 1
-+fi
-+
-+rm -f $rfile
-+restore_attrs
-+echo "PASS"
--- 
-2.17.1
-
+On Sat, Aug 15, 2020 at 12:15 PM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Fri, 14 Aug 2020 13:10:34 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> > On Fri, 14 Aug 2020 17:03:44 +0800 Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+> >
+> > > Some system(like android) will turbo read during startup via expanding the
+> > > readahead window and then set it back to normal(128kb as usual). However, some
+> > > files in the system process context will keep to be opened since it is opened
+> > > up and has no chance to sync with the updated value as it is almost impossible
+> > > to change the files attached to the inode(processes are unaware of these things)
+> >
+> > How about making VM_READAHEAD_PAGES a variable?
+>
+> Or make it settable in Kconfig?
+I don't think so. The scenario I gave before is a dynamic process,
+can't be solved via menuconfig thing.
