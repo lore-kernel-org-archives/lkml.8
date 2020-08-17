@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859A420758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765A722B43
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648388;
-	bh=oTXbf1K0JfaqbK6sjMAlt2QAMJ8ewI4Je+6AHT1jcvk=;
+	s=default; t=1597648393;
+	bh=rtpZd4CzicwKfG2N+/esSbmfEn6gndlbOTXOwshb8U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8UyzPM2snsT2MldhoZRNtYLufzQEyzQh9usxHwjTVNfHPvqnBzGtLOv2p5mqKx5X
-	 ydNZLHiIkMZx2md72mvHDuJ+N11wVkDTR2Ibr+imN2FoQ7919wDL3opKeKOxW++jC+
-	 9uyCM773KsLEAnuUDnypg/MMJoQYzwriVUjPQdlk=
+	b=Wiq9wf3B8c+4hlM0jWuDvMbNWRXR6STdl1PD1hLiGsBE1macCplY20FBZxcr5XAWj
+	 Di4B7wpk1WwuWRzDgYAk6GJjPkbMbcWOMn5g0tNRahnZTl8/BFJQ1L9zOoKuLKYNS4
+	 tJMr373rtrH4WSmP0UVBiifCuA6Y/iC9FuAk/LJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgHQHNG (ORCPT
+        id S1726220AbgHQHM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbgHQHLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:11:45 -0400
+        id S1726867AbgHQHLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:11:41 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F7BC22E00;
+        by mail.kernel.org (Postfix) with ESMTPSA id 507E522D71;
         Mon, 17 Aug 2020 07:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597648278;
-        bh=oTXbf1K0JfaqbK6sjMAlt2QAMJ8ewI4Je+6AHT1jcvk=;
+        bh=rtpZd4CzicwKfG2N+/esSbmfEn6gndlbOTXOwshb8U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHQLInwcM6jAPEC/eV7JIZUVF51YJiQYwWlPl9l/M0NUWsmbHpbKwX+w436SD5gq/
-         YC5st/KAXGXhbx2sT2W47i+E0qNAEERy2gthcfOsT+39COLtf6XV3XVQ4sWxjMOQZS
-         PggsJDpW1CGCLq9trDQXh3KW8cQHnoKi1N/HVSMY=
+        b=DuvhNhk3rYC8285zkDOXymCUTZLpLXivzWn7eh9qseI/FdBlfN+8vjTiIz41lG3jF
+         jtwWzOZHCDugoT6IyW4KrZPmG9VSr4Xdx5iv6LH8cB/oe02Go+Spy5TGZOMDyx3XCB
+         x84m44ZRieEav/vSEdiJd3Vwp6+wc3oQKa+y8tYo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIa-00BdlD-LS; Mon, 17 Aug 2020 09:11:16 +0200
+        id 1k7ZIa-00Bdku-FJ; Mon, 17 Aug 2020 09:11:16 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 42/44] MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
-Date:   Mon, 17 Aug 2020 09:11:01 +0200
-Message-Id: <60a2766c2e64dc6957480231a4e9ad9e6b00ab40.1597647359.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH v3 36/44] staging: regulator: hi6421v600-regulator: initialize ramp_delay
+Date:   Mon, 17 Aug 2020 09:10:55 +0200
+Message-Id: <67df5456e4f23c88ab4fd9331eb8202c3952e5c5.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
@@ -61,31 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for the SPMI, MFD and PMIC parts of the
-HiSilicon 6421v600 support.
+Without that, the regulator's core complains with:
+
+       ldo17: ramp_delay not set
+
+For now, use the enable time, as we don't have any datasheets from
+this device.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/staging/hikey9xx/hi6421v600-regulator.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 956ecd5ba426..e2de0b2119fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7824,6 +7824,12 @@ F:	drivers/crypto/hisilicon/sec2/sec_crypto.c
- F:	drivers/crypto/hisilicon/sec2/sec_crypto.h
- F:	drivers/crypto/hisilicon/sec2/sec_main.c
+diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+index 5ddaf7f8cacc..21467fce9980 100644
+--- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
++++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+@@ -267,6 +267,9 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+ 		return ret;
+ 	}
  
-+HISILICON STAGING DRIVERS FOR HIKEY 960/970
-+M:	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/staging/hikey9xx/
++	/* FIXME: are there a better value for this? */
++	rdesc->ramp_delay = rdesc->enable_time;
 +
- HISILICON TRUE RANDOM NUMBER GENERATOR V2 SUPPORT
- M:	Zaibo Xu <xuzaibo@huawei.com>
- S:	Maintained
+ 	/* parse .eco_uA */
+ 	ret = of_property_read_u32(np, "eco-microamp",
+ 				   &sreg->eco_uA);
 -- 
 2.26.2
 
