@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28079C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB5FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC78204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6B6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692374;
-	bh=xeh9T8JERy3JaJe/sLMbQFbJa+SDWbryQuHVj8vr7xA=;
+	s=default; t=1597692377;
+	bh=e9Rxt8dGvwp9PMOOJfLvDUzKt3V8QEgABawfLsCWcbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhLXkItMAHh7axx/aYWuG9GlIySCjFG1jyBPIpvrgCbWFzH9XCIhazHliNKDBKa/d
-	 y23U9RxsdCRqw3pvd2Tjr8Rlx5W0T6im3vpBwALbUnp8Qbd8Tn2xKZDHOGG2sMlcx7
-	 5TL825ISUnP6Fg38BH8UnOPwhvGTfDrOrAePFnpk=
+	b=hO115ISHRtA3yZ0Dm+BC0OKBapNsbyPsISU2a1VPsAccuF1xpct50RhvnfsSiz27T
+	 hRpfhJf7Ne7+vVgHfqAdZKwKpDKNC6uTFliAeD6qQ1kSrBWg5RmwHmtUkgWfesWyhd
+	 4FfWdNO9IJCf/2EldJht2yKWLatUWr6DczSKt050=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbgHQT0M (ORCPT
+        id S1730406AbgHQPdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbgHQPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:34:00 -0400
+        id S1729668AbgHQP3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA73C22E02;
-        Mon, 17 Aug 2020 15:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C00B82054F;
+        Mon, 17 Aug 2020 15:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678439;
-        bh=xeh9T8JERy3JaJe/sLMbQFbJa+SDWbryQuHVj8vr7xA=;
+        s=default; t=1597678192;
+        bh=e9Rxt8dGvwp9PMOOJfLvDUzKt3V8QEgABawfLsCWcbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rOMSCPBSQibHI/6ISOb/6qubbD5tR4bQJTxIYhEFluRqMEtjZuLy7PwRw0ELhWbBT
-         kkdLNpRsqh8bzPYnrkq/meqMdrq3xOtls7ejs6jBYAA2C2CDiXOFFHg182DakJUWcZ
-         43s3Yt4dnOc7C6ac6KTv+sgqw+6FCspV4sbOAxQI=
+        b=bnWiDwv6XyZ3Z8uctrCVzNiVqKFhxARykav3oY5cTo/1ITgSpZAPYPwZe4POs0uHv
+         a+cnMcqevQ2TCSjPPEg8If18DCSiMnsxV9b8K0g171l209+S4mkSSTf5Z3OxqjROEP
+         zUg+ioIOcGcBZkXHuteOMShCC7npzf3jFHgBBvlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Crunchtime <jerry.c.t@web.de>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 335/464] libbpf: Fix register in PT_REGS MIPS macros
-Date:   Mon, 17 Aug 2020 17:14:48 +0200
-Message-Id: <20200817143849.835060785@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
+Subject: [PATCH 5.8 248/464] go7007: add sanity checking for endpoints
+Date:   Mon, 17 Aug 2020 17:13:21 +0200
+Message-Id: <20200817143845.675703715@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,46 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Crunchtime <jerry.c.t@web.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 1acf8f90ea7ee59006d0474275922145ac291331 ]
+[ Upstream commit 137641287eb40260783a4413847a0aef06023a6c ]
 
-The o32, n32 and n64 calling conventions require the return
-value to be stored in $v0 which maps to $2 register, i.e.,
-the register 2.
+A malicious USB device may lack endpoints the driver assumes to exist
+Accessing them leads to NULL pointer accesses. This patch introduces
+sanity checking.
 
-Fixes: c1932cd ("bpf: Add MIPS support to samples/bpf.")
-Signed-off-by: Jerry Crunchtime <jerry.c.t@web.de>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/43707d31-0210-e8f0-9226-1af140907641@web.de
+Reported-and-tested-by: syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: 866b8695d67e8 ("Staging: add the go7007 video driver")
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf_tracing.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/go7007/go7007-usb.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/bpf_tracing.h b/tools/lib/bpf/bpf_tracing.h
-index 58eceb884df33..eebf020cbe3e9 100644
---- a/tools/lib/bpf/bpf_tracing.h
-+++ b/tools/lib/bpf/bpf_tracing.h
-@@ -215,7 +215,7 @@ struct pt_regs;
- #define PT_REGS_PARM5(x) ((x)->regs[8])
- #define PT_REGS_RET(x) ((x)->regs[31])
- #define PT_REGS_FP(x) ((x)->regs[30]) /* Works only with CONFIG_FRAME_POINTER */
--#define PT_REGS_RC(x) ((x)->regs[1])
-+#define PT_REGS_RC(x) ((x)->regs[2])
- #define PT_REGS_SP(x) ((x)->regs[29])
- #define PT_REGS_IP(x) ((x)->cp0_epc)
+diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go7007/go7007-usb.c
+index f889c9d740cd1..dbf0455d5d50d 100644
+--- a/drivers/media/usb/go7007/go7007-usb.c
++++ b/drivers/media/usb/go7007/go7007-usb.c
+@@ -1132,6 +1132,10 @@ static int go7007_usb_probe(struct usb_interface *intf,
+ 		go->hpi_ops = &go7007_usb_onboard_hpi_ops;
+ 	go->hpi_context = usb;
  
-@@ -226,7 +226,7 @@ struct pt_regs;
- #define PT_REGS_PARM5_CORE(x) BPF_CORE_READ((x), regs[8])
- #define PT_REGS_RET_CORE(x) BPF_CORE_READ((x), regs[31])
- #define PT_REGS_FP_CORE(x) BPF_CORE_READ((x), regs[30])
--#define PT_REGS_RC_CORE(x) BPF_CORE_READ((x), regs[1])
-+#define PT_REGS_RC_CORE(x) BPF_CORE_READ((x), regs[2])
- #define PT_REGS_SP_CORE(x) BPF_CORE_READ((x), regs[29])
- #define PT_REGS_IP_CORE(x) BPF_CORE_READ((x), cp0_epc)
++	ep = usb->usbdev->ep_in[4];
++	if (!ep)
++		return -ENODEV;
++
+ 	/* Allocate the URB and buffer for receiving incoming interrupts */
+ 	usb->intr_urb = usb_alloc_urb(0, GFP_KERNEL);
+ 	if (usb->intr_urb == NULL)
+@@ -1141,7 +1145,6 @@ static int go7007_usb_probe(struct usb_interface *intf,
+ 	if (usb->intr_urb->transfer_buffer == NULL)
+ 		goto allocfail;
  
+-	ep = usb->usbdev->ep_in[4];
+ 	if (usb_endpoint_type(&ep->desc) == USB_ENDPOINT_XFER_BULK)
+ 		usb_fill_bulk_urb(usb->intr_urb, usb->usbdev,
+ 			usb_rcvbulkpipe(usb->usbdev, 4),
+@@ -1263,9 +1266,13 @@ static int go7007_usb_probe(struct usb_interface *intf,
+ 
+ 	/* Allocate the URBs and buffers for receiving the video stream */
+ 	if (board->flags & GO7007_USB_EZUSB) {
++		if (!usb->usbdev->ep_in[6])
++			goto allocfail;
+ 		v_urb_len = 1024;
+ 		video_pipe = usb_rcvbulkpipe(usb->usbdev, 6);
+ 	} else {
++		if (!usb->usbdev->ep_in[1])
++			goto allocfail;
+ 		v_urb_len = 512;
+ 		video_pipe = usb_rcvbulkpipe(usb->usbdev, 1);
+ 	}
+@@ -1285,6 +1292,8 @@ static int go7007_usb_probe(struct usb_interface *intf,
+ 	/* Allocate the URBs and buffers for receiving the audio stream */
+ 	if ((board->flags & GO7007_USB_EZUSB) &&
+ 	    (board->main_info.flags & GO7007_BOARD_HAS_AUDIO)) {
++		if (!usb->usbdev->ep_in[8])
++			goto allocfail;
+ 		for (i = 0; i < 8; ++i) {
+ 			usb->audio_urbs[i] = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (usb->audio_urbs[i] == NULL)
 -- 
 2.25.1
 
