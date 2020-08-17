@@ -2,111 +2,94 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BF7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21A720758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmPMU5wR"
+	by mail.kernel.org (Postfix) with ESMTP id 572F320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685079;
+	bh=XmC5Gbza5UeU7Kf72z5M/6CooUNadr7oFKBfdMzI/hI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F3qXb9SX8vL4T1/S7XoOohxWDodbQ2ZT0+UbruPPsj0naC6+jBr96RV8iED90ssDj
+	 eALu2/OfV9YJirXaBM0XlV7nQoCH+Qb2DkaeKfI2nPpxWMoXuApkycYDc+jwJfYIrJ
+	 uImLi+oLmTEChvRFb7bhuQIsg7HXmWMaaeROTDn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389739AbgHQRY0 (ORCPT
+        id S2389981AbgHQRY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389329AbgHQRIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:08:18 -0400
-Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EDEC061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:08:12 -0700 (PDT)
-Received: by mail-ed1-x549.google.com with SMTP id q18so1854679edg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=+mx9UxHE8cqJm7GTmmUZEZc8F7xX2W2IqrfBBB9QOjA=;
-        b=OmPMU5wRtJr+HOk95BLGxFsNz4Cn3KmNyYv+uJZ+XR/MdMjBb59LsNutLnfizNc3vY
-         i4y5vMl2ZW3v4GtYM+f6YW2TNsLwkAG28WvG+fHwEkI5wwFSBoSyx2CYSTJq1BsNOZRP
-         w/rIfsUFhj/RjkiSGfCnMOEenaZbyXoaR/72XgYoOYUA0nmxTgC/a6nAwVMDmsTdrWy8
-         IapaImnbz2PzIHNUup3aCaZcrLoAzk5FwU3YHglWobL75Y/Q4Dc2l1BvE6I+oIenfoB+
-         qY3mijGoVdpWQgd2BOL5+mbYkqU1ibOwbdc09vKwMajczltIvd61yViW6/iX6Oq06vfS
-         5nHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=+mx9UxHE8cqJm7GTmmUZEZc8F7xX2W2IqrfBBB9QOjA=;
-        b=sidr4ZEdtzndDc1Ko6ZmiNGva0YWHfNaMUkdJbQxhv8IUoPuugUySOacEqttwf3GZd
-         FHPXSFG5VoEYtWC0YB8l0gjLl8Oy0GIVYCHth6a4HnjbiOaHCFG6OXUVN4SfkDAPpVs5
-         wFXwVPyieWguzqLDFpGWyQcTy1UZmjTEacavwbv0teWGZ8zVB6vcNv5TKNRLxvvbGR0a
-         uf2PY+ReGMCTF3hV0oznn7hN7iswta2pGBMTwzi7cflXZQqUxtV6kQ+Q+3mGky7dGxcY
-         LhLL9Giv/YXfuH73UdxsbUJZMAYPuwMpyyUBMpuIM1EQYZer+dlJnIc3mn3oGcCMCLsZ
-         ztwA==
-X-Gm-Message-State: AOAM5317bieIau/kOPXxaI5FtK22r21Jp9CtKMgxz6QEdipDBabN7d3v
-        KhDEmQA/dlSga44gEa59yM8i4BwSYA==
-X-Google-Smtp-Source: ABdhPJxjAsuqao+UCz19iDD3cRE1iqvUGgTUQRad5H4MDtyJjPX7rpcmAKVbSQMgky/6d8On1nKk8jFgug==
-X-Received: by 2002:a05:6402:22d9:: with SMTP id dm25mr15617460edb.2.1597684089211;
- Mon, 17 Aug 2020 10:08:09 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 19:07:11 +0200
-Message-Id: <20200817170729.2605279-1-tweek@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH v3 0/3] selinux: add detailed tracepoint on audited events
-From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Aug 2020 13:24:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389374AbgHQRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:09:46 -0400
+Received: from C02YQ0RWLVCF.internal.digitalocean.com (c-73-181-34-237.hsd1.co.comcast.net [73.181.34.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B112067C;
+        Mon, 17 Aug 2020 17:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597684186;
+        bh=XmC5Gbza5UeU7Kf72z5M/6CooUNadr7oFKBfdMzI/hI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XkUjBtMbVva/OY7CzF1LahcEjL8C890OUAu71IqHsKw1n2JQK/0OElj9Omb497+58
+         6Ir8EmgDXmpnk2c6zTXhg4S+33hc/vEUE1sp8wgMsmQosxaxSSpfOjw40z8pT8f2PH
+         VfAuUuRjdyPm8PZzNm7/DL/p4QsPWb7wmciBORRA=
+From:   David Ahern <dsahern@kernel.org>
+To:     acme@kernel.org
+Cc:     namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, David Ahern <dsahern@kernel.org>
+Subject: [PATCH v2] perf sched timehist: Fix use of CPU list with summary option
+Date:   Mon, 17 Aug 2020 11:09:42 -0600
+Message-Id: <20200817170943.1486-1-dsahern@kernel.org>
+X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audit data currently captures which process and which target
-is responsible for a denial. There is no data on where exactly in the
-process that call occurred. Debugging can be made easier by adding a
-trace point when an event is audited.
+Do not update thread stats or show idle summary unless CPU is in
+the list of interest.
 
-This series of patch defines this new trace point and extra attributes
-to easily match the tracepoint event with the audit event. It is also
-possible to filter the events based on these attributes.
+Fixes: c30d630d1bcf ("perf sched timehist: Add support for filtering on CPU")
+Signed-off-by: David Ahern <dsahern@kernel.org>
+---
+v2
+- check that cpu_list is set before checking cpu_bitmap in timehist_print_summary
+ 
+ tools/perf/builtin-sched.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes since v2
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-- Add patch to include decoded permissions.
-- Remove ssid and tsid from attributes list.
-- Update commit log with more context.
-
-Peter Enderborg (2):
-  selinux: add basic filtering for audit trace events
-  selinux: add permission names to trace event
-
-Thi=C3=A9baud Weksteen (1):
-  selinux: add tracepoint on denials
-
- MAINTAINERS                |  1 +
- include/trace/events/avc.h | 60 ++++++++++++++++++++++++++++++++++++++
- security/selinux/avc.c     | 59 ++++++++++++++++++++++++++++++++-----
- 3 files changed, 113 insertions(+), 7 deletions(-)
- create mode 100644 include/trace/events/avc.h
-
---=20
-2.28.0.220.ged08abb693-goog
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 0c7d599fa555..e6fc297cee91 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2584,7 +2584,8 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 	}
+ 
+ 	if (!sched->idle_hist || thread->tid == 0) {
+-		timehist_update_runtime_stats(tr, t, tprev);
++		if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
++			timehist_update_runtime_stats(tr, t, tprev);
+ 
+ 		if (sched->idle_hist) {
+ 			struct idle_thread_runtime *itr = (void *)tr;
+@@ -2857,6 +2858,9 @@ static void timehist_print_summary(struct perf_sched *sched,
+ 
+ 	printf("\nIdle stats:\n");
+ 	for (i = 0; i < idle_max_cpu; ++i) {
++		if (cpu_list && !test_bit(i, cpu_bitmap))
++			continue;
++
+ 		t = idle_threads[i];
+ 		if (!t)
+ 			continue;
+-- 
+2.17.1
 
