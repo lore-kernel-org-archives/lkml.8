@@ -2,90 +2,88 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCF9207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478A1207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgHQLbn (ORCPT
+        id S1728538AbgHQLbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:31:43 -0400
-Received: from elvis.franken.de ([193.175.24.41]:49797 "EHLO elvis.franken.de"
+        Mon, 17 Aug 2020 07:31:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:53558 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgHQLbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:31:24 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k7dMD-0003tH-02; Mon, 17 Aug 2020 13:31:17 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 6598EC0D74; Mon, 17 Aug 2020 13:22:10 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 13:22:10 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v2] MIPS: Loongson: Use default CONFIG_FRAME_WARN as 2048
- for Loongson64 to fix build warnings
-Message-ID: <20200817112210.GC11725@alpha.franken.de>
-References: <1597401090-4314-1-git-send-email-yangtiezhu@loongson.cn>
+        id S1728281AbgHQLaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:30:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A2D031B;
+        Mon, 17 Aug 2020 04:30:29 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 25CE73F66B;
+        Mon, 17 Aug 2020 04:30:28 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        Quentin Perret <qperret@google.com>
+Subject: [PATCH v6 11/17] sched/topology: Mark SD_PREFER_SIBLING as SDF_NEEDS_GROUPS
+Date:   Mon, 17 Aug 2020 12:29:57 +0100
+Message-Id: <20200817113003.20802-12-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200817113003.20802-1-valentin.schneider@arm.com>
+References: <20200817113003.20802-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597401090-4314-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 06:31:30PM +0800, Tiezhu Yang wrote:
-> After commit 70b838292bef ("MIPS: Update default config file for
-> Loongson-3"), CONFIG_VHOST_SCSI and CONFIG_VHOST are set when use
-> loongson3_defconfig, and then there exists the following two build
-> warnings related with these two configs:
-> 
->   CC [M]  drivers/vhost/scsi.o
-> drivers/vhost/scsi.c: In function ‘vhost_scsi_flush’:
-> drivers/vhost/scsi.c:1374:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
->  }
->  ^
->   LD [M]  drivers/vhost/vhost_scsi.o
->   CC [M]  drivers/vhost/vsock.o
->   LD [M]  drivers/vhost/vhost_vsock.o
->   CC [M]  drivers/vhost/vhost.o
-> drivers/vhost/vhost.c: In function ‘log_used’:
-> drivers/vhost/vhost.c:1896:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
->  }
->  ^
-> 
-> CONFIG_FRAME_WARN=2048 can fix it, since the default CONFIG_FRAME_WARN
-> for 64BIT is 2048, just delete the CONFIG_FRAME_WARN line in defconfig.
-> 
-> config FRAME_WARN
->         int "Warn for stack frames larger than"
->         range 0 8192
->         default 2048 if GCC_PLUGIN_LATENT_ENTROPY
->         default 1280 if (!64BIT && PARISC)
->         default 1024 if (!64BIT && !PARISC)
->         default 2048 if 64BIT
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/mips/configs/loongson3_defconfig | 1 -
->  1 file changed, 1 deletion(-)
+SD_PREFER_SIBLING is currently considered in sd_parent_degenerate() but not
+in sd_degenerate(). It too hinges on load balancing, and thus won't have
+any effect when set on a domain with a single group. Add it to
+SD_DEGENERATE_GROUPS_MASK.
 
-applied to mips-next.
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ include/linux/sched/sd_flags.h | 4 +++-
+ kernel/sched/topology.c        | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Thomas.
-
+diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
+index 4f07b405564e..75c9749a6e2d 100644
+--- a/include/linux/sched/sd_flags.h
++++ b/include/linux/sched/sd_flags.h
+@@ -131,8 +131,10 @@ SD_FLAG(SD_ASYM_PACKING, SDF_SHARED_CHILD)
+  *
+  * Set up until domains start spanning NUMA nodes. Close to being a SHARED_CHILD
+  * flag, but cleared below domains with SD_ASYM_CPUCAPACITY.
++ *
++ * NEEDS_GROUPS: Load balancing flag.
+  */
+-SD_FLAG(SD_PREFER_SIBLING, 0)
++SD_FLAG(SD_PREFER_SIBLING, SDF_NEEDS_GROUPS)
+ 
+ /*
+  * sched_groups of this level overlap
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 02fd8db747b2..8064f495641b 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -184,7 +184,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+ 
+ 	/* Flags needing groups don't count if only 1 group in parent */
+ 	if (parent->groups == parent->groups->next)
+-		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
++		pflags &= ~SD_DEGENERATE_GROUPS_MASK;
+ 
+ 	if (~cflags & pflags)
+ 		return 0;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.27.0
+
