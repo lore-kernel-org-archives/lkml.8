@@ -2,94 +2,215 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29775C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572F320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685079;
-	bh=XmC5Gbza5UeU7Kf72z5M/6CooUNadr7oFKBfdMzI/hI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F3qXb9SX8vL4T1/S7XoOohxWDodbQ2ZT0+UbruPPsj0naC6+jBr96RV8iED90ssDj
-	 eALu2/OfV9YJirXaBM0XlV7nQoCH+Qb2DkaeKfI2nPpxWMoXuApkycYDc+jwJfYIrJ
-	 uImLi+oLmTEChvRFb7bhuQIsg7HXmWMaaeROTDn0=
+	by mail.kernel.org (Postfix) with ESMTP id E760520789
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmB2whkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389981AbgHQRY1 (ORCPT
+        id S2389991AbgHQRYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389374AbgHQRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:09:46 -0400
-Received: from C02YQ0RWLVCF.internal.digitalocean.com (c-73-181-34-237.hsd1.co.comcast.net [73.181.34.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B112067C;
-        Mon, 17 Aug 2020 17:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597684186;
-        bh=XmC5Gbza5UeU7Kf72z5M/6CooUNadr7oFKBfdMzI/hI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XkUjBtMbVva/OY7CzF1LahcEjL8C890OUAu71IqHsKw1n2JQK/0OElj9Omb497+58
-         6Ir8EmgDXmpnk2c6zTXhg4S+33hc/vEUE1sp8wgMsmQosxaxSSpfOjw40z8pT8f2PH
-         VfAuUuRjdyPm8PZzNm7/DL/p4QsPWb7wmciBORRA=
-From:   David Ahern <dsahern@kernel.org>
-To:     acme@kernel.org
-Cc:     namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, David Ahern <dsahern@kernel.org>
-Subject: [PATCH v2] perf sched timehist: Fix use of CPU list with summary option
-Date:   Mon, 17 Aug 2020 11:09:42 -0600
-Message-Id: <20200817170943.1486-1-dsahern@kernel.org>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Aug 2020 13:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389192AbgHQRKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:10:19 -0400
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B1C061347
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:09:00 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id i23so5769230ejx.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=WC3qwxqXOlSZ7jnjgYv3zuH5IVQQXftskmacAfSf8Yw=;
+        b=qmB2whkq1uymJPwNU/dDDT6gtA/BtcTHWj8k0C5guxkVqvJZ5JF9mHavC6v7+R7mDf
+         G8Fr+tSFgNpb6Sv7ozrK+Wle5+N1EXGfrR+vr0QfX0cqIKQ6vCOV9x2p2Ri+EPjZfbRq
+         QE54d3Sq4JZHH4lkmMFWDhxtnaN0l2T6BTOe7Yo2GQQBZmdW1kpBpZrcbkJU8iRQlt8s
+         D2SpbNF7gUuVIsjXMOKKpJe0ubhjI6cc7jVHbkG5IQQjnOu4Bx8oYVMIHUoptEN0JnZB
+         OL5i19HZ5bl7yLF3kbLpyEt8SSLnPj/rfic6DqR3n03NK1Cmo6GqM/GHRtzIPyEsCg4s
+         JHqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=WC3qwxqXOlSZ7jnjgYv3zuH5IVQQXftskmacAfSf8Yw=;
+        b=He5cOlf3Rnv4hsMjMvm3DGhDguCldXNqIL9a9hyWaPmD1xIE2eeuXgDBhe+ZmxJNHN
+         vyJBAQzbqO5/4IpyXBHJykWbw1UP9Cqkdd9VIGqBxpAX6KMYJgwwIuz7Eg+KspFG+n98
+         MWTt3T0Cw0l4CjBijZvusxY8xRZ+4gBcJthRqZzQumACUdYXPJA8nQxkw71veF+cGv+p
+         yFEg/39FBRq86wTw6s1j/8KUNSN3aH/X2dH+cOQO83WVcZzHULSU4WoADzfi+EHqME4q
+         33kNR5WvNhyjM7XXn8EO3YZRQVBBJ3cAIAtpOJ+n4tUR2B6ZktdJ1O7+AtJ2IVbNn5ax
+         tB+A==
+X-Gm-Message-State: AOAM530ZpIUhT2dYaPaP7BPu5PmIGVRYBUPr85Nx2fatFoQYe/zcQFVQ
+        i/n8wvusHAPjQWq/0hd/NAFomir05Q==
+X-Google-Smtp-Source: ABdhPJz7JK/4hALFPPtoFqZ5PnvZtUHs3KrjtksrheYnNRpGzoaAxixQEyGO565iJ4PqgGlDWXo2/lKFCQ==
+X-Received: by 2002:aa7:d410:: with SMTP id z16mr15548395edq.287.1597684139613;
+ Mon, 17 Aug 2020 10:08:59 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 19:07:14 +0200
+In-Reply-To: <20200817170729.2605279-1-tweek@google.com>
+Message-Id: <20200817170729.2605279-4-tweek@google.com>
+Mime-Version: 1.0
+References: <20200817170729.2605279-1-tweek@google.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH v3 3/3] selinux: add permission names to trace event
+From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not update thread stats or show idle summary unless CPU is in
-the list of interest.
+From: Peter Enderborg <peter.enderborg@sony.com>
 
-Fixes: c30d630d1bcf ("perf sched timehist: Add support for filtering on CPU")
-Signed-off-by: David Ahern <dsahern@kernel.org>
+In the print out add permissions, it will look like:
+    <...>-1042  [007] ....   201.965142: selinux_audited:
+    requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
+    result=3D-13
+    scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
+    tcontext=3Dsystem_u:object_r:bin_t:s0
+    tclass=3Dfile permissions=3D{ !entrypoint }
+
+This patch is adding the "permissions=3D{ !entrypoint }".
+The permissions preceded by "!" have been denied and the permissions
+without have been accepted.
+
+Note that permission filtering is done on the audited, denied or
+requested attributes.
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
 ---
-v2
-- check that cpu_list is set before checking cpu_bitmap in timehist_print_summary
- 
- tools/perf/builtin-sched.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/trace/events/avc.h | 11 +++++++++--
+ security/selinux/avc.c     | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 0c7d599fa555..e6fc297cee91 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2584,7 +2584,8 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 	}
- 
- 	if (!sched->idle_hist || thread->tid == 0) {
--		timehist_update_runtime_stats(tr, t, tprev);
-+		if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
-+			timehist_update_runtime_stats(tr, t, tprev);
- 
- 		if (sched->idle_hist) {
- 			struct idle_thread_runtime *itr = (void *)tr;
-@@ -2857,6 +2858,9 @@ static void timehist_print_summary(struct perf_sched *sched,
- 
- 	printf("\nIdle stats:\n");
- 	for (i = 0; i < idle_max_cpu; ++i) {
-+		if (cpu_list && !test_bit(i, cpu_bitmap))
-+			continue;
+diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
+index b55fda2e0773..94bca8bef8d2 100644
+--- a/include/trace/events/avc.h
++++ b/include/trace/events/avc.h
+@@ -10,6 +10,10 @@
+ #define _TRACE_SELINUX_H
+=20
+ #include <linux/tracepoint.h>
++#include <linux/trace_seq.h>
 +
- 		t = idle_threads[i];
- 		if (!t)
- 			continue;
--- 
-2.17.1
++extern const char *avc_trace_perm_to_name(struct trace_seq *p, u16 class, =
+u32 audited, u32 denied);
++#define __perm_to_name(class, audited, denied) avc_trace_perm_to_name(p, c=
+lass, audited, denied)
+=20
+ TRACE_EVENT(selinux_audited,
+=20
+@@ -29,6 +33,7 @@ TRACE_EVENT(selinux_audited,
+ 		__string(scontext, scontext)
+ 		__string(tcontext, tcontext)
+ 		__string(tclass, tclass)
++		__field(u16, utclass)
+ 	),
+=20
+ 	TP_fast_assign(
+@@ -36,14 +41,16 @@ TRACE_EVENT(selinux_audited,
+ 		__entry->denied		=3D sad->denied;
+ 		__entry->audited	=3D sad->audited;
+ 		__entry->result		=3D sad->result;
++		__entry->utclass	=3D sad->tclass;
+ 		__assign_str(tcontext, tcontext);
+ 		__assign_str(scontext, scontext);
+ 		__assign_str(tclass, tclass);
+ 	),
+=20
+-	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d scon=
+text=3D%s tcontext=3D%s tclass=3D%s",
++	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d scon=
+text=3D%s tcontext=3D%s tclass=3D%s permissions=3D{%s }",
+ 		__entry->requested, __entry->denied, __entry->audited, __entry->result,
+-		__get_str(scontext), __get_str(tcontext), __get_str(tclass)
++		__get_str(scontext), __get_str(tcontext), __get_str(tclass),
++		__perm_to_name(__entry->utclass, __entry->audited, __entry->denied)
+ 	)
+ );
+=20
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 7de5cc5169af..d585b68c2a50 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -695,6 +695,7 @@ static void avc_audit_pre_callback(struct audit_buffer =
+*ab, void *a)
+ 	audit_log_format(ab, " } for ");
+ }
+=20
++
+ /**
+  * avc_audit_post_callback - SELinux specific information
+  * will be called by generic audit code
+@@ -991,6 +992,41 @@ int avc_ss_reset(struct selinux_avc *avc, u32 seqno)
+ 	return rc;
+ }
+=20
++/**
++ * avc_trace_perm_to_name - SELinux help function for trace
++ * @p pointer to output storage
++ * @tclass tclass for the event
++ * @av access vector
++ * @avdenied denied permissions in av format
++ */
++const char *avc_trace_perm_to_name(struct trace_seq *p, u16 tclass, u32 av=
+, u32 avdenied)
++{
++	const char *ret =3D trace_seq_buffer_ptr(p);
++	int i, perm;
++	const char **perms;
++
++	if (WARN_ON(!tclass || tclass >=3D ARRAY_SIZE(secclass_map)))
++		return NULL;
++
++	perms =3D secclass_map[tclass-1].perms;
++
++	i =3D 0;
++	perm =3D 1;
++	while (i < (sizeof(av) * 8)) {
++		if ((perm & av)  && perms[i]) {
++			if (!(perm & avdenied))
++				trace_seq_printf(p, " %s", perms[i]);
++			else
++				trace_seq_printf(p, " !%s", perms[i]);
++			av &=3D ~perm;
++		}
++		i++;
++		perm <<=3D 1;
++	}
++
++	return ret;
++}
++
+ /*
+  * Slow-path helper function for avc_has_perm_noaudit,
+  * when the avc_node lookup fails. We get called with
+--=20
+2.28.0.220.ged08abb693-goog
 
