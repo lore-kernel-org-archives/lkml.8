@@ -2,78 +2,125 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9F3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E142C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0F320829
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679BE20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCo9FRKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgHQIWS (ORCPT
+        id S1728298AbgHQIW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:22:18 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:60032 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgHQIWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:22:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id ED0F3FB03;
-        Mon, 17 Aug 2020 10:22:06 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vsj6xPO_wWQO; Mon, 17 Aug 2020 10:22:05 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 683F14576F; Mon, 17 Aug 2020 10:22:05 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 10:22:05 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Modernize rocktech,jh057n00900 bindings a bit
-Message-ID: <20200817082205.GA31233@bogon.m.sigxcpu.org>
-References: <cover.1597561897.git.agx@sigxcpu.org>
- <20200816152534.GB1394979@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200816152534.GB1394979@ravnborg.org>
+        Mon, 17 Aug 2020 04:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgHQIWN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:22:13 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCF1C061388;
+        Mon, 17 Aug 2020 01:22:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a79so7856928pfa.8;
+        Mon, 17 Aug 2020 01:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HqFQaMaVlN4v+XRE6EAAx4lkt2C6k9NLYs6BovvOyBc=;
+        b=XCo9FRKJqzxD9YIFVBEkvWvIE6d8IhdAaiDCtzQO7t4uXgFaRRScmAvp0jzrkTU4HN
+         c8T4cfAHELvaWoAq4xMW2JM0VEedndfRcDWLW92Tk7hKPiOJWScPnhSp11JUzjxwj5Wc
+         tiJdQ8nOdN/Z7aW1egi2EdY1Omzr3UvEyyneLR1hEUAsPju2N1nHj6d3e15q3oaZiyvP
+         bXMiI5e4811zae96GuOOUkWztczj4bgmH/joFr4ApZ0qxChUW0b1UqRRBKaSgxhomiJG
+         p2k9h60UtRATSv4JkakeSpHpSRDExkbbgmjWcH6nbiz2/9WZIAfKL5178CUcItTg9tbK
+         Bu+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=HqFQaMaVlN4v+XRE6EAAx4lkt2C6k9NLYs6BovvOyBc=;
+        b=tDbTI0FpbXx2OLyuDUoPYh0q7UnwV/7FgAewA1XGaMfPQ140D0HeoYAPMOJe2mRS95
+         BjfAFNf+kvCCqrdUl3Ih/85WtMmSs2tag8hmqoV/hL1ziP6joWTJXSWazqGS/Gcu/5yr
+         Elea7SskphaoCIB4YVe5GA1WZvfOOF3G4VbdrCLWLQesQNFdOoZ3No0cfFj0Mr0xIPL7
+         iaKvoFv1KcOP1uQPMnGJlazOpmaFuAKLCt4HhIk0UD9sZCG/i8vN5Zwwyz75pLpDKJxH
+         tgPAyJRc4fcKOEBfRhGUdks8i175OKgvA721+M79w4/VMDrQVSdP+MNIHrJRgZc1B0Ux
+         aM6w==
+X-Gm-Message-State: AOAM531ykYtEDSfFeW2q/otmmkxg3DVqCiuW2E7vU78d7nHlXEsOzYtX
+        3xkJ7udNerIUi2YlxNFc0gc=
+X-Google-Smtp-Source: ABdhPJyPMSt/qjmwIlaM5eY0uLHA/f/qnk1WbIgQl1cjJGvqnctrPF7J892OqBSbDL22FjnEZivrnw==
+X-Received: by 2002:a62:8cd4:: with SMTP id m203mr10376894pfd.74.1597652532712;
+        Mon, 17 Aug 2020 01:22:12 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:22:12 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, baohua@kernel.org, mripard@kernel.org,
+        wens@csie.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        michal.simek@xilinx.com, matthias.bgg@gmail.com
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 27/35] dma: tegra20: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:47:18 +0530
+Message-Id: <20200817081726.20213-28-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817081726.20213-1-allen.lkml@gmail.com>
+References: <20200817081726.20213-1-allen.lkml@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Sun, Aug 16, 2020 at 05:25:34PM +0200, Sam Ravnborg wrote:
-> Hi Guido.
-> 
-> On Sun, Aug 16, 2020 at 09:13:41AM +0200, Guido Günther wrote:
-> > This was prompted by Sam's review in
-> > https://lore.kernel.org/dri-devel/20200815210802.GA1242831@ravnborg.org/
-> > and yamllint. I also added myself as maintainer, hope that's o.k.
-> > 
-> > Guido Günther (2):
-> >   dt-bindings: panel: rocktech,jh057n00900: Modernize
-> >   dt-bindings: panel: rocktech,jh057n00900: Add myself as maintainer
-> 
-> Thanks for this nice clean-up, and always good with an extra person
-> caring for something.
-> Applied to drm-misc-next
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
-Thanks!
- -- Guido
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/dma/tegra20-apb-dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> 
-> 	Sam
-> 
-> > 
-> >  .../display/panel/rocktech,jh057n00900.yaml   | 40 +++++++++----------
-> >  1 file changed, 19 insertions(+), 21 deletions(-)
-> > 
-> > -- 
-> > 2.26.2
-> 
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 55fc7400f717..71827d9b0aa1 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -644,9 +644,9 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+ 	}
+ }
+ 
+-static void tegra_dma_tasklet(unsigned long data)
++static void tegra_dma_tasklet(struct tasklet_struct *t)
+ {
+-	struct tegra_dma_channel *tdc = (struct tegra_dma_channel *)data;
++	struct tegra_dma_channel *tdc = from_tasklet(tdc, t, tasklet);
+ 	struct dmaengine_desc_callback cb;
+ 	struct tegra_dma_desc *dma_desc;
+ 	unsigned int cb_count;
+@@ -1523,8 +1523,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		tdc->id = i;
+ 		tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
+ 
+-		tasklet_init(&tdc->tasklet, tegra_dma_tasklet,
+-			     (unsigned long)tdc);
++		tasklet_setup(&tdc->tasklet, tegra_dma_tasklet);
+ 		spin_lock_init(&tdc->lock);
+ 		init_waitqueue_head(&tdc->wq);
+ 
+-- 
+2.17.1
+
