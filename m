@@ -2,182 +2,164 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92478C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B56152065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0752065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="y5obTZsj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ny8BZq6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgHQXkw (ORCPT
+        id S1726583AbgHQXk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:40:52 -0400
-Received: from gateway36.websitewelcome.com ([192.185.186.5]:30589 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726272AbgHQXkr (ORCPT
+        Mon, 17 Aug 2020 19:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgHQXku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:40:47 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 21781404F3620
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:05:15 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7ok9kzH68dbRz7ok9kuh88; Mon, 17 Aug 2020 18:40:45 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+M1K/obiXRJz+UfXXnjT0T/KoVlQ+falhng8CYsAloc=; b=y5obTZsjukOYF22mytJldCc1oF
-        lUWzvbpTKfSR5mjoNHI1UaskTYigl7Ty+zTV5R5u0vexq0yM0eKum1WBbM1bYZ+oe+qsSlPIUTDnx
-        3frM1XW7IzPooZ7Xb9jaLyqXaE8Cky2ym4eRb4220G/WgRBF3OABeZINGiOleC7Nh2RZBnzim2A50
-        uteUqWWR0ZUCn6ktwLSmQmtL+3LE0D0hpcKX1DlJ89R3two4DbmvN0wmPLjH0HY4OiI7RR0QEqaSW
-        /ht4aMrYS8TtkIg6nxbGUx7daCaCwkSP13Td55hsYidiqb9Wt20McDIG4vZlcydYqDUhgdwU8s11i
-        QLozJpCA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:47366 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1k7ok8-002Mal-Uu; Mon, 17 Aug 2020 18:40:44 -0500
-Subject: Re: linux-next: build failure after merge of the kspp-gustavo tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200818093419.5362379c@canb.auug.org.au>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <951ad363-cac4-967e-10fd-bce8640d6d10@embeddedor.com>
-Date:   Mon, 17 Aug 2020 18:46:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 19:40:50 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15094C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:40:49 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n129so16668678qkd.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:40:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fFBXtjI3/hzI2hgPpxdJ2tm96dP3ml1hqzh/s9s0fd8=;
+        b=Ny8BZq6B0GQ5Y1SMUstA3Q3uYRnSfU7mDA9a4cXHO0ZA6SbwhqkFC8guF5MDYnBrGl
+         syeMn2BTesoeozEmGF/g0WDnelImEv5nigxRobc5d1cULae6hl/5FWQHGlAoyjQYIRG7
+         7Z4PetGYzG8Ep2vRHvO+GoJTogRCx9m/lkRG5j7NCqtQUBausrTVSKwE8P6ctyTmUpXT
+         mz76CmmOahNUwu3knXU4Ya/1xvF/LyFzs+1ESoTmVU4YBv6TDzJl2J1jCBWRPMsHuWfq
+         KGoZAXOLGlMtgcIQxaz7x6rh1XKajMqG4wyPLd07rFk8fZbQw5ontFkBddG8WF0+qWdQ
+         UiSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fFBXtjI3/hzI2hgPpxdJ2tm96dP3ml1hqzh/s9s0fd8=;
+        b=izXf4v11A+pmDUg0cglfeiQjxlLg4kMzBNhvTu+SAkKjAImFd9NCb/1Io1kklpKiNY
+         D5+erj/+yAOevH5d9Bc1gDHKkcdMFi+BfUEgC/8F/fCoejI9LWsgvADgXMXJjIpTphb0
+         kJ4UfhYMzFRncRJzMspKMmDstyTJYUhI/2TqoJ+BfX99Z8eyjZqVEi2H1wOncMajg0DQ
+         dISmmypzLBSszX86qJgQbkONBPlJajOgObSCG3wnj98zGeTQoDHw0FGIuPdnsDZiyKTm
+         N62qYvVnQN+zj+7Bjhwoc3XUKdA64fLw40+4PjSOJsE4PXvcTK5BXZn/YHuFjpIDTIFG
+         Hvmw==
+X-Gm-Message-State: AOAM531X5RqKHO0M1rAhq/vrRvXGu5aIb+W7w7CGu9q9rcgnWYkKPYuu
+        b/UXeDnI0GHqkF9Pb/pUKeY=
+X-Google-Smtp-Source: ABdhPJziCgHzOhIlJrk334eUlRMphxcwuzbPBxYrUwoefr7lKRJcIsOSSAXzV2Go0bNbfNlJKvKyGg==
+X-Received: by 2002:a05:620a:98a:: with SMTP id x10mr14484410qkx.375.1597707649040;
+        Mon, 17 Aug 2020 16:40:49 -0700 (PDT)
+Received: from LeoBras.ibmuc.com ([177.35.193.93])
+        by smtp.gmail.com with ESMTPSA id w58sm22342868qth.95.2020.08.17.16.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 16:40:48 -0700 (PDT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 00/10] DDW indirect mapping
+Date:   Mon, 17 Aug 2020 20:40:23 -0300
+Message-Id: <20200817234033.442511-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200818093419.5362379c@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1k7ok8-002Mal-Uu
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:47366
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+This patchset must be applied on top of:
+http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=194179&state=%2A&archive=both
 
-On 8/17/20 18:34, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the kspp-gustavo tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> In file included from include/linux/compiler_types.h:65,
->                  from <command-line>:
-> arch/powerpc/net/bpf_jit_comp64.c: In function 'bpf_jit_build_body':
-> include/linux/compiler_attributes.h:214:41: error: attribute 'fallthrough' not preceding a case label or default label [-Werror]
->   214 | # define fallthrough                    __attribute__((__fallthrough__))
->       |                                         ^~~~~~~~~~~~~
-> arch/powerpc/net/bpf_jit_comp64.c:847:4: note: in expansion of macro 'fallthrough'
->   847 |    fallthrough;
->       |    ^~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   02b894b985cb ("treewide: Use fallthrough pseudo-keyword")
-> 
-> I have added the following patch for today.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 18 Aug 2020 09:26:47 +1000
-> Subject: [PATCH] revert part of "treewide: Use fallthrough pseudo-keyword"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  arch/powerpc/net/bpf_jit_comp64.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
-> index 57412af338fb..022103c6a201 100644
-> --- a/arch/powerpc/net/bpf_jit_comp64.c
-> +++ b/arch/powerpc/net/bpf_jit_comp64.c
-> @@ -844,7 +844,7 @@ static int bpf_jit_build_body(struct bpf_prog *fp, u32 *image,
->  		case BPF_JMP32 | BPF_JSET | BPF_K:
->  		case BPF_JMP32 | BPF_JSET | BPF_X:
->  			true_cond = COND_NE;
-> -			fallthrough;
-> +			/* Fall through */
->  
->  cond_branch:
->  			switch (code) {
-> 
+As of today, if the biggest DDW that can be created can't map the whole
+partition, it's creation is skipped and the default DMA window
+ibm,dma-window" is used instead.
 
-Thanks a lot for the patch. I will fix this up in my -next tree for
-tomorrow's linux-next. :)
+Usually, the available DDW will be 16x bigger than the default DMA window,
+as it keep the same page count and raise the page size from 4k to 64k.
+Besides the increased window size, it performs better on allocations
+bigger than 4k, so it would be nice to use it instead.
 
---
-Gustavo
+Patch #1 replaces hard-coded 4K page size with a variable containing the
+correct page size for the window.
+
+Patch #2 makes sure alignment is correct in iommu_*_coherent().
+
+Patch #3 let small allocations use largepool if there is no more space
+left in the other pools, thus allowing the whole DMA window to be used by
+smaller allocations.
+
+Patch #4 introduces iommu_table_in_use(), and replace manual bit-field
+checking where it's used. It will be used for aborting enable_ddw() if
+there is any current iommu allocation and we are trying single window
+indirect mapping.
+
+Patch #5 introduces iommu_pseries_alloc_table() that will be helpful
+when indirect mapping needs to replace the iommu_table.
+
+Patch #6 adds helpers for adding and removing DDWs in the list.
+
+Patch #7 refactors enable_ddw() so it returns if direct mapping is
+possible, instead of DMA offset. It helps for next patches on
+indirect DMA mapping and also allows DMA windows starting at 0x00.
+
+Patch #8 bring new helper to simplify enable_ddw(), allowing
+some reorganization for introducing indirect mapping DDW.
+
+Patch #9:
+Instead of destroying the created DDW if it doesn't map the whole
+partition, make use of it instead of the default DMA window as it improves
+performance. Also, update the iommu_table and re-generate the pools.
+
+Patch #10:
+Does some renaming of 'direct window' to 'dma window', given the DDW
+created can now be also used in indirect mapping if direct mapping is not
+available.
+
+All patches were tested into an LPAR with an Ethernet VF:
+4005:01:00.0 Ethernet controller: Mellanox Technologies MT27700 Family
+[ConnectX-4 Virtual Function]
+
+Patchset was tested with a 64GB DDW which did not map the whole
+partition (128G).
+
+Leonardo Bras (10):
+  powerpc/pseries/iommu: Replace hard-coded page shift
+  powerpc/kernel/iommu: Align size for IOMMU_PAGE_SIZE on
+    iommu_*_coherent()
+  powerpc/kernel/iommu: Use largepool as a last resort when !largealloc
+  powerpc/kernel/iommu: Add new iommu_table_in_use() helper
+  powerpc/pseries/iommu: Add iommu_pseries_alloc_table() helper
+  powerpc/pseries/iommu: Add ddw_list_add() helper
+  powerpc/pseries/iommu: Allow DDW windows starting at 0x00
+  powerpc/pseries/iommu: Add ddw_property_create() and refactor
+    enable_ddw()
+  powerpc/pseries/iommu: Make use of DDW even if it does not map the
+    partition
+  powerpc/pseries/iommu: Rename "direct window" to "dma window"
+
+ arch/powerpc/include/asm/iommu.h       |   1 +
+ arch/powerpc/include/asm/tce.h         |  10 +-
+ arch/powerpc/kernel/iommu.c            |  88 +++---
+ arch/powerpc/platforms/pseries/iommu.c | 394 ++++++++++++++++---------
+ 4 files changed, 305 insertions(+), 188 deletions(-)
+
+-- 
+2.25.4
+
