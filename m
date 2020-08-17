@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA27C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21EE420578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F6C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689460;
-	bh=bG8t/xepkdf4mxiEc3Yj/rM9RKATeDbJ8MdTAc8pIqU=;
+	s=default; t=1597689465;
+	bh=ByAeZXgSX5nVfoT6yQBL7wdtmibzsry1Xb5cMb35vhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBN32MWtobwRGxKMg4uQJWdzeDMEkWgo/9b/tSFa9dI8+McqALffmuxbApgU+TFSu
-	 fEwJPqhSntF0p0+/OLgsigx4CUdpFcRWJFX3LOTG0Kf+fv52eF+5+IopqP0EgP+HIs
-	 UXIgXJnU2dSiwA3nZeS8Mbw8rNKfbYlC7tpJ8sm8=
+	b=HeglaNY+15BHZFndGAKRhapQRPjhchPK/FciK2nIPdYlTVcKX6cON8lVractQYJrD
+	 ZuW8CfLQdz0W9KIi/3c/VUz5dIMUTGNkwz7zWgzX3k32kIUHu/hU8mZOrlqmxD/Wfs
+	 rnRHE7tAQYnByQhOfq4oqtOm9UqTKLULD5nSoa7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbgHQShj (ORCPT
+        id S2388918AbgHQShl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730945AbgHQP7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:03 -0400
+        id S1730464AbgHQP6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27920206FA;
-        Mon, 17 Aug 2020 15:58:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7AB520729;
+        Mon, 17 Aug 2020 15:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679940;
-        bh=bG8t/xepkdf4mxiEc3Yj/rM9RKATeDbJ8MdTAc8pIqU=;
+        s=default; t=1597679932;
+        bh=ByAeZXgSX5nVfoT6yQBL7wdtmibzsry1Xb5cMb35vhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=af/XlmM/TAUvgHJLkHlp1FowPdXDp+9D+NGgKiy94JAUBEDhecy4icxyOwHhsKAhN
-         ORWMEOX1iIOFD6k6I/VC5xJzBHIShY7+MwmuV9oQxhLwwlEVa9Ncp/xoRfSbJHGnwm
-         K/629xnoCuN5gTUIOgSt6k+rSicfI1c+6v5AbMNI=
+        b=r7nc9dKIw8VDnFVCXIlDPTv9rMpAYQ0HTPYxv63BiK6Avm2qyySiupifrmpmiAsPR
+         4CrP36hy6JCjak+5dDGPwKQBATTavioGBHeIHTvDs68OlTlgOr46Z6O4pcS3joo4pv
+         bGry6rPdxYikyAlZv8jM+KJs8U1RFrrTYmbuvbg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef <josef.grieb@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 356/393] io_uring: use TWA_SIGNAL for task_work uncondtionally
-Date:   Mon, 17 Aug 2020 17:16:46 +0200
-Message-Id: <20200817143836.867157350@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.7 382/393] xen/balloon: make the balloon wait interruptible
+Date:   Mon, 17 Aug 2020 17:17:12 +0200
+Message-Id: <20200817143838.137678535@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,64 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-commit 0ba9c9edcd152158a0e321a4c13ac1dfc571ff3d upstream.
+commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
 
-An earlier commit:
+So it can be killed, or else processes can get hung indefinitely
+waiting for balloon pages.
 
-b7db41c9e03b ("io_uring: fix regression with always ignoring signals in io_cqring_wait()")
-
-ensured that we didn't get stuck waiting for eventfd reads when it's
-registered with the io_uring ring for event notification, but we still
-have cases where the task can be waiting on other events in the kernel and
-need a bigger nudge to make forward progress. Or the task could be in the
-kernel and running, but on its way to blocking.
-
-This means that TWA_RESUME cannot reliably be used to ensure we make
-progress. Use TWA_SIGNAL unconditionally.
-
-Cc: stable@vger.kernel.org # v5.7+
-Reported-by: Josef <josef.grieb@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/xen/balloon.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4161,22 +4161,22 @@ static int io_req_task_work_add(struct i
- {
- 	struct task_struct *tsk = req->task;
- 	struct io_ring_ctx *ctx = req->ctx;
--	int ret, notify = TWA_RESUME;
-+	int ret, notify;
- 
- 	/*
--	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
--	 * If we're not using an eventfd, then TWA_RESUME is always fine,
--	 * as we won't have dependencies between request completions for
--	 * other kernel wait conditions.
-+	 * SQPOLL kernel thread doesn't need notification, just a wakeup. For
-+	 * all other cases, use TWA_SIGNAL unconditionally to ensure we're
-+	 * processing task_work. There's no reliable way to tell if TWA_RESUME
-+	 * will do the job.
- 	 */
--	if (ctx->flags & IORING_SETUP_SQPOLL)
--		notify = 0;
--	else if (ctx->cq_ev_fd)
-+	notify = 0;
-+	if (!(ctx->flags & IORING_SETUP_SQPOLL))
- 		notify = TWA_SIGNAL;
- 
- 	ret = task_work_add(tsk, cb, notify);
- 	if (!ret)
- 		wake_up_process(tsk);
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -569,11 +569,13 @@ static int add_ballooned_pages(int nr_pa
+ 	if (xen_hotplug_unpopulated) {
+ 		st = reserve_additional_memory();
+ 		if (st != BP_ECANCELED) {
++			int rc;
 +
- 	return ret;
- }
+ 			mutex_unlock(&balloon_mutex);
+-			wait_event(balloon_wq,
++			rc = wait_event_interruptible(balloon_wq,
+ 				   !list_empty(&ballooned_pages));
+ 			mutex_lock(&balloon_mutex);
+-			return 0;
++			return rc ? -ENOMEM : 0;
+ 		}
+ 	}
  
 
 
