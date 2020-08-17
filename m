@@ -2,97 +2,103 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66604C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E96F20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689139;
-	bh=uDNuu8ieTtvwevvvZ3UxB8Nzo72p4ml8UDOezEUj0u4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVKHmoxl5gQLY2kHAb7pzzA+/zE4oqXc1AnUpy9YzK8tT0b5JpSrGNsBijExlybci
-	 WBtJC4wL1lxTmd/DFqSzoEVot3fSsDhtdp30gRGsQBnSKOamNrMpNY2nbyiTdRLj70
-	 cmE+GhbwwtA+v0kktixuZsm987MWs2Rpe+hRvpOU=
+	by mail.kernel.org (Postfix) with ESMTP id 7B6502063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FFGxBcVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391126AbgHQScQ (ORCPT
+        id S2391134AbgHQScW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbgHQQAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:00:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD7FB20729;
-        Mon, 17 Aug 2020 16:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680053;
-        bh=uDNuu8ieTtvwevvvZ3UxB8Nzo72p4ml8UDOezEUj0u4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDTu6lBQpfGprNSQEWDkXd+ybP7+DIf8a1hoSclyUOEraFKx1TWr9APfUa38HECD8
-         Mwa/kAyHKr+uYkgA5XYhAhMHh6uJNzKik7ti9OVsMNiyCa6LnujfngRzafeRfsjlAz
-         Y8eW09K27biemx0AjLZ1z9oHHM52OKtpgE34OF2A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/270] ARM: dts: gose: Fix ports node name for adv7612
-Date:   Mon, 17 Aug 2020 17:13:48 +0200
-Message-Id: <20200817143757.130363981@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391099AbgHQSbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:31:48 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D483C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:31:48 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id u24so14523608oic.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9vrg7EhUgrz2VdstxenWZe+fFP5TU9hDojaa4QJfF8Q=;
+        b=FFGxBcVrsCK3kZxxpp0xdbyTLkr38HtMmdBLK6Bw4YRVzpqNO82/hFuBoxcvyxUFWL
+         6AgYs3ky0EsBljZ7rvG89bUG/fOWnA0vXF8WkH6jEpDZ0Hq+fSTU7ESMK6lggbTIYDKb
+         jToXVINrc4na3UGH7Lp+1DgbaGlQDt1w129MV+rhEpPGxFEb7AX1+BxD3a7hO+9XRvxt
+         A1P4ettWmugiQ/XRpRmCgvuAAr3nnVmLE6tBBEeapp5DNcnZS5cOA54vCkrD4v5WSVxS
+         uU4tJcM2FILVMcFe9rsnraa22lzhbidvk93iA30mVdhW7Lt+Un4BRuG3YvqR/QkSSLi7
+         oelg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9vrg7EhUgrz2VdstxenWZe+fFP5TU9hDojaa4QJfF8Q=;
+        b=GJpnqgTUD9Xc9ymXAhyBh/uZcqSu+KQQIwZsmBXb5GkwNbqnft7PcFUyhMORVEsUIc
+         7Ry8F3RnL0uLrZylzYWMlib35b/mSMEjaJij/NMNNgdswm04MjgG1w7384ER7g5BpNwz
+         CMJwFOol+gshDe4r36b/E1HKeRFZ5CfIbz9n1v1rx4P8oom4QTl3XGEuqoYtjhvxHiyu
+         m2pS2q/qy9RpVmEu9knUVnqXCdbcaMGD68KKaYGuzFvNWCOX/OAcxwoyYDP9Bm+JblJE
+         Of+AzrGQsdjxs5oYQZWh9PYoh/f3TOv/aVhSi98ADb7fs43/XXVpTGPPbtCGT/CZA0kU
+         TCPQ==
+X-Gm-Message-State: AOAM530xuEQQ9IUALOEamqV6KnvPKWvGmVtmdetdCkxk6iaYKHN8xOrN
+        LLQqFNZCpDC5kcAEQAdi/FbAlVDAEn+UDbzR5gVj9g==
+X-Google-Smtp-Source: ABdhPJzRGE0rsOwGqhxO5Txn/GqpQrCcaK3fAH7lCRwMJgEYHd/TDNlGN8e9TKdGBSmDI6Sc9mVjt7HYkQK5W9W0egE=
+X-Received: by 2002:aca:d4d5:: with SMTP id l204mr10539438oig.70.1597689107235;
+ Mon, 17 Aug 2020 11:31:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200807160627.GA1420741@elver.google.com> <CAOJsxLGikg5OsM6v6nHsQbktvWKsy7ccA99OcknLWJpSqH0+pg@mail.gmail.com>
+ <20200807171849.GA1467156@elver.google.com> <CAOJsxLEJtXdCNtouqNTFxYtm5j_nnFQHpMfTOsUL2+WrLbR39g@mail.gmail.com>
+In-Reply-To: <CAOJsxLEJtXdCNtouqNTFxYtm5j_nnFQHpMfTOsUL2+WrLbR39g@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 17 Aug 2020 20:31:35 +0200
+Message-ID: <CANpmjNNhG4VuGq2_kocsTD3CnCv-Y4Kvnz7_VuvZ9Eug+-T=Eg@mail.gmail.com>
+Subject: Re: Odd-sized kmem_cache_alloc and slub_debug=Z
+To:     Pekka Enberg <penberg@gmail.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+On Fri, 7 Aug 2020 at 21:06, Pekka Enberg <penberg@gmail.com> wrote:
+...
+> Yeah, it reproduces with defconfig too, as long as you remember to
+> pass "slub_debug=Z"... :-/
+>
+> The following seems to be the culprit:
+>
+> commit 3202fa62fb43087387c65bfa9c100feffac74aa6
+> Author: Kees Cook <keescook@chromium.org>
+> Date:   Wed Apr 1 21:04:27 2020 -0700
+>
+>     slub: relocate freelist pointer to middle of object
+>
+> Reverting this commit and one of it's follow up fixes from Kees from
+> v5.8 makes the issue go away for me. Btw, please note that caches with
+> size 24 and larger do not trigger this bug, so the issue is that with
+> small enough object size, we're stomping on allocator metadata (I
+> assume part of the freelist).
 
-[ Upstream commit 59692ac5a7bb8c97ff440fc8917828083fbc38d6 ]
+Was there a patch to fix this? Checking, just in case I missed it.
 
-When adding the adv7612 device node the ports node was misspelled as
-port, fix this.
-
-Fixes: bc63cd87f3ce924f ("ARM: dts: gose: add HDMI input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200713111016.523189-1-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index dc435ac95d23a..9f507393c3752 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -399,7 +399,7 @@ hdmi-in@4c {
- 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 			default-input = <0>;
- 
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--- 
-2.25.1
-
-
-
+Thanks,
+-- Marco
