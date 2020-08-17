@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9997C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6EA2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C27A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691681;
-	bh=tUyQ7JpyxQCiTaMfaKNXuEnfPYLvnXB2tbmFxJwSzBg=;
+	s=default; t=1597691702;
+	bh=BFM0aHLr6cc0jtGytIfnjTesWK9Evh4IARFIdsrE21A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BynvEh85bz/4VUvCzinwvH/jfCon6g0kxI7r3y/Txs+V4FFxVpIb9Di+zhJUMaNQo
-	 KtTaO439/8iiJIcXWWQOH/kqKm+87fmwSyVFRATNIYF4BQB/0T1i5lrvnd6O8+fskw
-	 DRNQOqwUNOxurTriPtGkOtHVI51qHY6msFCK+RyM=
+	b=SIhC+N4Z02brJFV/0ITNvUXd0epWX9fJHpOB7glX4INDitMbfRnUvxSHmIm0Vjzr0
+	 oJUeIXmI7Ggch00sND25dTEQyNbvlWHc1+NPPCwgPCOdVMDn8jZonUQRAscHQxoyGm
+	 RdlF0ThuPJ0fjVZoH2A70NIxhgoIea6ZVDRWIu0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392154AbgHQTOi (ORCPT
+        id S2404020AbgHQTPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387472AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387465AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62A423121;
-        Mon, 17 Aug 2020 15:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0237422C9F;
+        Mon, 17 Aug 2020 15:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678798;
-        bh=tUyQ7JpyxQCiTaMfaKNXuEnfPYLvnXB2tbmFxJwSzBg=;
+        s=default; t=1597678792;
+        bh=BFM0aHLr6cc0jtGytIfnjTesWK9Evh4IARFIdsrE21A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhQQrwaP/hfWguynCa25WNPv5Q+NSqTzz+m4Ka+g17mh5sbekCGVNQPEOsTHEBmtZ
-         1NVe7rlao1y5zf76OEp0eKCOi/UQNpVeEq1PgTXENILrd/aHQnwSQyFcxGbMCfizSI
-         Y/3nkVt1dKM7IicOpj/c7O1IQiAZUrUKryQd7xj0=
+        b=QZ9LX1xz7xWX5uC3yt7JRcahS1UoMGUJcb1LquL4en/eHzbmh4ekIaF2SXa5osj0K
+         h7tdwAb6JSceOCzlFOWqSPmUI+H7Z0150/V7kr/7DRLjMbiWpJLqJcO6L8mJ9H42PN
+         3RQo9baAQE/HX/ZezqGsGIppbYRTja3e1cvfkfX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elliot Berman <eberman@codeaurora.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.8 450/464] firmware: qcom_scm: Fix legacy convention SCM accessors
-Date:   Mon, 17 Aug 2020 17:16:43 +0200
-Message-Id: <20200817143855.321195613@linuxfoundation.org>
+        stable@vger.kernel.org, Josef <josef.grieb@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 425/464] io_uring: use TWA_SIGNAL for task_work uncondtionally
+Date:   Mon, 17 Aug 2020 17:16:18 +0200
+Message-Id: <20200817143854.133460948@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,61 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan McDowell <noodles@earth.li>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit b88c28280c3f7097546db93824686db1e7dceee1 upstream.
+commit 0ba9c9edcd152158a0e321a4c13ac1dfc571ff3d upstream.
 
-The move to a combined driver for the QCOM SCM hardware changed the
-io_writel and io_readl helpers to use non-atomic calls, despite the
-commit message saying that atomic was a better option. This breaks these
-helpers on hardware that uses the old legacy convention (access fails
-with a -95 return code). Switch back to using the atomic calls.
+An earlier commit:
 
-Observed as a failure routing GPIO interrupts to the Apps processor on
-an IPQ8064; fix is confirmed as correctly allowing the interrupts to be
-routed and observed.
+b7db41c9e03b ("io_uring: fix regression with always ignoring signals in io_cqring_wait()")
 
-Reviewed-by: Elliot Berman <eberman@codeaurora.org>
-Fixes: 57d3b816718c ("firmware: qcom_scm: Remove thin wrappers")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
-Link: https://lore.kernel.org/r/20200704172334.GA759@earth.li
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ensured that we didn't get stuck waiting for eventfd reads when it's
+registered with the io_uring ring for event notification, but we still
+have cases where the task can be waiting on other events in the kernel and
+need a bigger nudge to make forward progress. Or the task could be in the
+kernel and running, but on its way to blocking.
+
+This means that TWA_RESUME cannot reliably be used to ensure we make
+progress. Use TWA_SIGNAL unconditionally.
+
+Cc: stable@vger.kernel.org # v5.7+
+Reported-by: Josef <josef.grieb@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/qcom_scm.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/io_uring.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -391,7 +391,7 @@ static int __qcom_scm_set_dload_mode(str
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4100,22 +4100,22 @@ static int io_req_task_work_add(struct i
+ {
+ 	struct task_struct *tsk = req->task;
+ 	struct io_ring_ctx *ctx = req->ctx;
+-	int ret, notify = TWA_RESUME;
++	int ret, notify;
  
- 	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+ 	/*
+-	 * SQPOLL kernel thread doesn't need notification, just a wakeup.
+-	 * If we're not using an eventfd, then TWA_RESUME is always fine,
+-	 * as we won't have dependencies between request completions for
+-	 * other kernel wait conditions.
++	 * SQPOLL kernel thread doesn't need notification, just a wakeup. For
++	 * all other cases, use TWA_SIGNAL unconditionally to ensure we're
++	 * processing task_work. There's no reliable way to tell if TWA_RESUME
++	 * will do the job.
+ 	 */
+-	if (ctx->flags & IORING_SETUP_SQPOLL)
+-		notify = 0;
+-	else if (ctx->cq_ev_fd)
++	notify = 0;
++	if (!(ctx->flags & IORING_SETUP_SQPOLL))
+ 		notify = TWA_SIGNAL;
  
--	return qcom_scm_call(__scm->dev, &desc, NULL);
-+	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+ 	ret = task_work_add(tsk, cb, notify);
+ 	if (!ret)
+ 		wake_up_process(tsk);
++
+ 	return ret;
  }
- 
- static void qcom_scm_set_download_mode(bool enable)
-@@ -650,7 +650,7 @@ int qcom_scm_io_readl(phys_addr_t addr,
- 	int ret;
- 
- 
--	ret = qcom_scm_call(__scm->dev, &desc, &res);
-+	ret = qcom_scm_call_atomic(__scm->dev, &desc, &res);
- 	if (ret >= 0)
- 		*val = res.result[0];
- 
-@@ -669,8 +669,7 @@ int qcom_scm_io_writel(phys_addr_t addr,
- 		.owner = ARM_SMCCC_OWNER_SIP,
- 	};
- 
--
--	return qcom_scm_call(__scm->dev, &desc, NULL);
-+	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
- }
- EXPORT_SYMBOL(qcom_scm_io_writel);
  
 
 
