@@ -2,114 +2,106 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 121CF207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597669212;
-	bh=RMvr6YO+zDnQv57z11+kDa9qwJd5VGOLgh5RiQrKqsI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MFM2VuNyuEYskcR/8jwS32ykNUTGVXvtRdAeifRQmIYQ6Y6YiUHv5O/BSq1y0LPp3
-	 EfuFJHMXJswuuQqLmE2tEyzgKvauVpCkeJaTKNDN1zkoHpqUS85ZRsvWfdso3NVNxx
-	 HEOIhnFJM6C0i+w5NDV6s/8mydzfoufA9T0dd04c=
+	by mail.kernel.org (Postfix) with ESMTP id DC996205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q5mAjvwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgHQNAL (ORCPT
+        id S1728549AbgHQNAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 09:00:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:29505 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbgHQNAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:00:06 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728510AbgHQNAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:00:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597669220; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=EPNl9HJgep9wWTGfsP2AiKKlUSHnaYCKHEIDUjeMiqk=; b=Q5mAjvwJAbUc6+LTT2pAfaxykAtGxL2/izkokfFFcBmtsbqdrYduE7CNI/VUifCdGMGojggy
+ rESGAG+dAyHaBE2lNvP7pZpKs8ZTIcZp1BmAy5FkfHKXQUSkF5MOBi0ORQizf1p9VERO2d/q
+ BPObLb7rqb1M7rG5fEkTyTs3GwU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f3a7f4aba4c2cd3671651bb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 12:59:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 46AF5C4339C; Mon, 17 Aug 2020 12:59:53 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E5D2078D;
-        Mon, 17 Aug 2020 13:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597669205;
-        bh=RMvr6YO+zDnQv57z11+kDa9qwJd5VGOLgh5RiQrKqsI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gPXeMUZxrJsLtySD17uBZEOxp386qqqH8HtblHyMvvRmLlQ+UkDeeyEhQdZcdfB97
-         FBkVqam4y4xLCJrsGAoko0b432FgsPjIWgQaDUPoUzGo5geqetxVCcfYn+MAkJQPY5
-         maQqiHjlc+8v41pE68NCBKjL7hqED2RSYwcSr/Hs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 726CC3522CAE; Mon, 17 Aug 2020 06:00:05 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 06:00:05 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, will@kernel.org, hch@lst.de,
-        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
-        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [RFC][PATCH 1/9] irq_work: Cleanup
-Message-ID: <20200817130005.GC23602@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200722150149.525408253@infradead.org>
- <20200722153017.024407984@infradead.org>
- <20200723161411.GA23103@paulmck-ThinkPad-P72>
- <20200817090325.GK2674@hirez.programming.kicks-ass.net>
- <20200817091633.GL35926@hirez.programming.kicks-ass.net>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AAF0C433C6;
+        Mon, 17 Aug 2020 12:59:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AAF0C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 08/30] net: wireless: ath: carl9170: Mark 'ar9170_qmap' as __maybe_unused
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <20200814113933.1903438-9-lee.jones@linaro.org>
+        <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
+        <9776eb47-6b83-a891-f057-dd34d14ea16e@rasmusvillemoes.dk>
+Date:   Mon, 17 Aug 2020 15:59:47 +0300
+In-Reply-To: <9776eb47-6b83-a891-f057-dd34d14ea16e@rasmusvillemoes.dk> (Rasmus
+        Villemoes's message of "Mon, 17 Aug 2020 10:26:16 +0200")
+Message-ID: <87eeo5mnr0.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817091633.GL35926@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:16:33AM +0200, peterz@infradead.org wrote:
-> On Mon, Aug 17, 2020 at 11:03:25AM +0200, peterz@infradead.org wrote:
-> > On Thu, Jul 23, 2020 at 09:14:11AM -0700, Paul E. McKenney wrote:
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -1287,8 +1287,6 @@ static int rcu_implicit_dynticks_qs(stru
-> > > >  		if (IS_ENABLED(CONFIG_IRQ_WORK) &&
-> > > >  		    !rdp->rcu_iw_pending && rdp->rcu_iw_gp_seq != rnp->gp_seq &&
-> > > >  		    (rnp->ffmask & rdp->grpmask)) {
-> > > > -			init_irq_work(&rdp->rcu_iw, rcu_iw_handler);
-> > > 
-> > > We are actually better off with the IRQ_WORK_INIT_HARD() here rather
-> > > than unconditionally at boot.
-> > 
-> > Ah, but there isn't an init_irq_work() variant that does the HARD thing.
-> 
-> Ah you meant doing:
-> 
-> 		rdp->rcu_iw = IRQ_WORK_INIT_HARD(rcu_iw_handler)
-> 
-> But then it is non-obvious how that doesn't trample state. I suppose
-> that rcu_iw_pending thing ensures that... I'll think about it.
+Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
 
-Yes, this is what I had in mind.  And you are right, the point of the
-!rdp->rcu_iw_pending check is to prevent initialization while still
-in use.
+> On 14/08/2020 17.14, Christian Lamparter wrote:
+>> On 2020-08-14 13:39, Lee Jones wrote:
+>>> 'ar9170_qmap' is used in some source files which include carl9170.h,
+>>> but not all of them.=C2=A0 Mark it as __maybe_unused to show that this =
+is
+>>> not only okay, it's expected.
+>>>
+>>> Fixes the following W=3D1 kernel build warning(s)
+>>=20
+>> Is this W=3D1 really a "must" requirement? I find it strange having
+>> __maybe_unused in header files as this "suggests" that the
+>> definition is redundant.
+>
+> In this case it seems one could replace the table lookup with a
+>
+> static inline u8 ar9170_qmap(u8 idx) { return 3 - idx; }
+>
+> gcc doesn't warn about unused static inline functions (or one would have
+> a million warnings to deal with). Just my $0.02.
 
-> > > The reason for this is that we get here only if a single grace
-> > > period extends beyond 10.5 seconds (mainline) or beyond 30 seconds
-> > > (many distribution kernels).  Which almost never happens.  And yes,
-> > > rcutree_prepare_cpu() is also invoked as each CPU that comes online,
-> > > not that this is all that common outside of rcutorture and boot time.  ;-)
-> > 
-> > What do you mean 'also' ? Afaict this is CPU bringup only code (initial
-> > and hotplug). We really don't care about code there. It's the slowest
-> > possible path we have in the kernel.
+Yeah, this is much better.
 
-The "also" was acknowledging that a workload with lots of CPU hotplug
-would also needlessly invoke IRQ_WORK_INIT_HARD() multiple times.
+And I think that static variables should not even be in the header
+files. Doesn't it mean that there's a local copy of the variable
+everytime the .h file is included? Sure, in this case the overhead is
+small (4 bytes per include) but still it's wrong. Having a static inline
+function would solve that problem as well the compiler warning.
 
-							Thanx, Paul
-
-> > > > -			atomic_set(&rdp->rcu_iw.flags, IRQ_WORK_HARD_IRQ);
-> > > >  			rdp->rcu_iw_pending = true;
-> > > >  			rdp->rcu_iw_gp_seq = rnp->gp_seq;
-> > > >  			irq_work_queue_on(&rdp->rcu_iw, rdp->cpu);
-> > 
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
