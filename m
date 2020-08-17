@@ -2,81 +2,126 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC81C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B5E2065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAC42065C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="e0vOwyRU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N6XSJ/lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHQXpi (ORCPT
+        id S1726736AbgHQXsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:45:38 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:35252 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgHQXph (ORCPT
+        Mon, 17 Aug 2020 19:48:35 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:11713 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgHQXsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:45:37 -0400
-Received: from [192.168.86.21] (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 34CB320B4908;
-        Mon, 17 Aug 2020 16:45:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 34CB320B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597707936;
-        bh=ODLtHxuph/xu3RT5nAzZUsfuC4XcphwPvbtr8zOIZzg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e0vOwyRUKbxX3Qa2qnnDFomljqdWRcOMXJPHRiWMnZTHllxiWh7XdZHsR51MPESsz
-         8HUgrN9PAhKC8Yj5RJtVtgv7vnWHio9/5Ue4vDH5+fbyQVHwIwmf8p+ehE7g0DYOXT
-         R4YjmXC7WNa68PrUnwHBKoiWNHEZBHEiDOdB6Bj8=
-Subject: Re: [PATCH 2/3] IMA: add policy to support measuring critical data
- from kernel components
-To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        nramas@linux.microsoft.com
-References: <20200812193102.18636-1-tusharsu@linux.microsoft.com>
- <20200812193102.18636-3-tusharsu@linux.microsoft.com>
- <591b5f09c7df8ef0378866eaf3afde7a7cb4e82f.camel@linux.ibm.com>
- <5275268e-2ce8-0129-b11d-8419ac384262@linux.microsoft.com>
- <97d25609b6a87f104cc88a2ff8ae52d3f2e4e387.camel@linux.ibm.com>
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Message-ID: <0d3a1cbc-9c11-37f3-6316-01f5b43909c1@linux.microsoft.com>
-Date:   Mon, 17 Aug 2020 16:45:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 19:48:33 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200817234829epoutp036e4ff30774fc6ffe67a1205e64b715eb~sMw9uecjf0559205592epoutp039
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 23:48:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200817234829epoutp036e4ff30774fc6ffe67a1205e64b715eb~sMw9uecjf0559205592epoutp039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597708109;
+        bh=coaDJpz0qObfEcnP97LLKt/rW37q6622OVtDy661qM0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=N6XSJ/lf388V7Qg2Cjh6sThEqBEMWAm8v6bj6Ba094PxELOh+veygO5pfDyg9W6nB
+         rDX7MnfTB/iDLdkC7SH+yfRzC6yVg//iKLYeLnGzJU6858aT6+ZCLVVNhClXO04m6s
+         QMQ58Cn7pYHuggYRqsa0D3JU+NayHLfQ654T/iyE=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200817234828epcas1p10722c6189e525e1f0958445fafbac762~sMw9Kk9XM0820808208epcas1p1c;
+        Mon, 17 Aug 2020 23:48:28 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BVrMv6h48zMqYkZ; Mon, 17 Aug
+        2020 23:48:27 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        36.69.18978.B471B3F5; Tue, 18 Aug 2020 08:48:27 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200817234827epcas1p293567bbefc75379991a8a9d8f04c9877~sMw8NbXU00802908029epcas1p2E;
+        Mon, 17 Aug 2020 23:48:27 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200817234827epsmtrp1d95abad216a68f15fd63d85befdfcd00~sMw8K-CxK0624906249epsmtrp1J;
+        Mon, 17 Aug 2020 23:48:27 +0000 (GMT)
+X-AuditID: b6c32a35-603ff70000004a22-f9-5f3b174b64f0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.55.08382.B471B3F5; Tue, 18 Aug 2020 08:48:27 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200817234827epsmtip2cbc694a8099e36a5f3d936cfaeb90ea3~sMw79btCp2991929919epsmtip2O;
+        Mon, 17 Aug 2020 23:48:27 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Xianting Tian'" <tian.xianting@h3c.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sj1557.seo@samsung.com>
+In-Reply-To: <20200815105707.19701-1-tian.xianting@h3c.com>
+Subject: RE: [PATCH] exfat: use i_blocksize() to get blocksize
+Date:   Tue, 18 Aug 2020 08:48:27 +0900
+Message-ID: <003001d674f0$e724f3e0$b56edba0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <97d25609b6a87f104cc88a2ff8ae52d3f2e4e387.camel@linux.ibm.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: ko
+Thread-Index: AQIE7cLKDaMD7jW+aef5YDrAJSgpzQLX3ndMqMlGxeA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmga63uHW8wZPLphZ79p5ksbi8aw6b
+        xZZ/R1gtrh7dyOjA4tF7dzuLR9+WVYwenzfJBTBH5dhkpCampBYppOYl56dk5qXbKnkHxzvH
+        m5oZGOoaWlqYKynkJeam2iq5+AToumXmAG1TUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gq
+        pRak5BQYGhToFSfmFpfmpesl5+daGRoYGJkCVSbkZPT3nGMp2MNY8eDZYbYGxpmMXYycHBIC
+        JhLt1yewdzFycQgJ7GCUWPlsKzOE84lRYv3EU6wQzjdGidmt3ewwLe+n7mSCSOxllPiz+ikj
+        hPOSUeL2j5esIFVsAroS//7sZwOxRYDs1yf2gMWZBeIlFu84DhbnFLCWuDNjOROILSxgJ7F1
+        2lywGhYBVYmHZ1eCbeMVsJTo2dDMAmELSpyc+YQFYo68xPa3c5ghLlKQ+Pl0GdR8EYnZnW3M
+        EHutJN787GIDOU5C4CO7xM0z21kgGlwklnUeg3pHWOLV8S1QtpTEy/42IJsDyK6W+Lgfan4H
+        o8SL77YQtrHEzfUbWEFKmAU0Jdbv0ocIK0rs/D2XEeIEPol3X3tYIabwSnS0CUGUqEr0XTrM
+        BGFLS3S1f2CfwKg0C8ljs5A8NgvJM7MQli1gZFnFKJZaUJybnlpsWGCIHNmbGMEpUct0B+PE
+        tx/0DjEycTAeYpTgYFYS4U06YR4vxJuSWFmVWpQfX1Sak1p8iNEUGNQTmaVEk/OBSTmvJN7Q
+        1MjY2NjCxMzczNRYSZz34S2FeCGB9MSS1OzU1ILUIpg+Jg5OqQYm++2teqJnohkCzm++K9dT
+        bjgzZQqrsH2i9pRrFyTc8/+GVBtphtutX2ebGqd3dKvXt/lPatI57vfpy2/tmrXiykXPG7FJ
+        vntSTXaw3bq3LJhP449G5qtbprsMDi8y3+Osd/kZx9kLnqkSnCqL3se4q/al3A1ZObmqqK/L
+        c6GS8ZoZrOb+py93T+jIXLm84Kd20+cYyR2v1z4wK5f61pLo/2+JipO99NTKwg5m1+3vRRdu
+        q7OZGVMVLr1WcmOPb/bEVA7ruL7exqvP4qeXfeZYv6tUUlvtAYPpvMu9keEbrv653D919RSJ
+        dB/PSal1Zeyfzkg8+M/L+mryxT11pkddgjd59M/h528+aTbHYqUSS3FGoqEWc1FxIgDnpOWY
+        EgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSvK63uHW8waYdkhZ79p5ksbi8aw6b
+        xZZ/R1gtrh7dyOjA4tF7dzuLR9+WVYwenzfJBTBHcdmkpOZklqUW6dslcGX095xjKdjDWPHg
+        2WG2BsaZjF2MnBwSAiYS76fuZOpi5OIQEtjNKDHp0zaohLTEsRNnmLsYOYBsYYnDh4shap4z
+        Snzeuhmshk1AV+Lfn/1sILYIkP36xB5WEJtZIFHizJI2VoiGHkaJJxMPMYEkOAWsJe7MWA5m
+        CwvYSWydNhesgUVAVeLh2ZXsIDavgKVEz4ZmFghbUOLkzCcsEEP1JNavn8MIYctLbH87hxni
+        UAWJn0+XQS0WkZjd2cYMcZCVxJufXWwTGIVnIRk1C8moWUhGzULSvoCRZRWjZGpBcW56brFh
+        gWFearlecWJucWleul5yfu4mRnB0aGnuYNy+6oPeIUYmDsZDjBIczEoivEknzOOFeFMSK6tS
+        i/Lji0pzUosPMUpzsCiJ894oXBgnJJCeWJKanZpakFoEk2Xi4JRqYApbsVRK7nR9bGbltFdR
+        2xpuLZyfJLU68kbTibqdy1gsNNvv/xBWP/5n9gKFlSZbKgS+e/f6V62QVru+XGPrGhZ7f+c9
+        yxe0TeWran6adnTq1Odc36WLJ+5JCJr5YektxoDJNhl3mqUNHx7hlp2488Ezbp38TduDfT2M
+        b174arnh5QLNIy8OVc7ZF3X2UvLLha3zQqxmGlglVT6s2bCHb0mXya4Cl6TNJ2dzOZnYPls0
+        59MZndOvA8Rs315hzRHzdW54INoToOdQzsU53WrLr6Du0J+HXvZxy+p8sf6/3mi7xT/1ULfa
+        2IILS7QDebwt1AOCxZ/w8ghXcyrF/byW8Pt2AgPz6rkNnEHJxcarliqxFGckGmoxFxUnAgAE
+        E4f1/QIAAA==
+X-CMS-MailID: 20200817234827epcas1p293567bbefc75379991a8a9d8f04c9877
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200815110400epcas1p409bc3055e7c3d7443b5fbf5409a43332
+References: <CGME20200815110400epcas1p409bc3055e7c3d7443b5fbf5409a43332@epcas1p4.samsung.com>
+        <20200815105707.19701-1-tian.xianting@h3c.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> We alreday has the interface i_blocksize() to get blocksize, so use it.
+> 
+> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+Pushed it into exfat #dev. Thanks for your patch!
 
-
-On 2020-08-17 4:43 p.m., Mimi Zohar wrote:
-> On Mon, 2020-08-17 at 15:27 -0700, Tushar Sugandhi wrote:
-> 
->>> scripts/Lindent isn't as prevalent as it used to be, but it's still
->>> included in Documentation/process/coding-style.rst.  Use it as a guide.
->> Thanks for the pointer. We'll use scripts/Lindent going forward
-> 
-> Please don't change existing code to conform to it.  Use it as a
-> guide/suggestion for new code.
-> 
-> Mimi
-> 
-> 
-Will do.
-Again, appreciate your feedback.
