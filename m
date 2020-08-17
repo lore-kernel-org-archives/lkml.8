@@ -2,144 +2,127 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A56C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C73C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48EA5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692352;
-	bh=zJJf9ufwWpUpsbzGQo2GcLdzmv5cztp9mfuTvLC4nV4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmHPxcKhIqKn9FcpI0D4iwpXyh1wy8LledXJp77ZSat0r6CC32XlfJ/Wm1Sgv3H0K
-	 T5Xy3eARQNDKEnIVkHb5OotMAt4ctOTMPgJnBuZJR34hjvvRNLCH1Ea5Ead+ZZ+XbS
-	 C8sDva0H53rNnkQIJ8uhZx0GDRnE6gLo9kohzsgI=
+	by mail.kernel.org (Postfix) with ESMTP id B14DA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sef5NOnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbgHQTZo (ORCPT
+        id S1732093AbgHQTZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbgHQPeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:34:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616282173E;
-        Mon, 17 Aug 2020 15:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678441;
-        bh=zJJf9ufwWpUpsbzGQo2GcLdzmv5cztp9mfuTvLC4nV4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XE7znOgmx2AHjD4YDb9XEbxMrayEuvGO1ScUwC1pxT2UkPDnQnqPJRRbs6FGCpLrx
-         iS78ufaO8TTMkZ5q8wQlSwHtnl2so4XUZCDOdUPwMDcGAgcsLYL6B/Y5wtZrDTxwpx
-         OGlxjgjpfJi7+0Ti9eoztcFhBDc5183ePg+I++sU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Harish <harish@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 318/464] selftests/powerpc: Fix CPU affinity for child process
-Date:   Mon, 17 Aug 2020 17:14:31 +0200
-Message-Id: <20200817143849.028895428@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 15:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732083AbgHQTZm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:25:42 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3FEC061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id i20so1822920qkk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/kXuaN4AISusMlSkk2TTILtf5athEb7HHTj/BXfUUMU=;
+        b=sef5NOnEMc5nMqLQAehSTQDhfZ46QOtS1oW9CJlK4AXP5+gkrMhCAMBEtPbqvVzKr0
+         yAjODdfU4JSnB5BKF062O+zy171oc4LMeifmp7mPMhAyJc0ylBp3d+TEKBmHRMxQari4
+         szVpFMjye/T+BFept4uUfaYCo+Hmg44nsfyBxrIA8R3yloM0ejE6Q5JtCPSwvJ1b2aLC
+         pKBFRTtOYokNbXXiKPv4yP5068Go4iUiwMTxXTcVmPoSZ5AfIi64/BdoMxmbFqHL3p5g
+         NcX2J40IBF8QKAMIcwzICyWcRYeRQ8TqkrXYO9jpCKWw9Ap5euwpwVptWMJFxzge4ndT
+         bzzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/kXuaN4AISusMlSkk2TTILtf5athEb7HHTj/BXfUUMU=;
+        b=OaKzRw2GHQlSxo4Il7rLxZ+iSHzYUpcX4NAGMjUpSZodjUhqOi7wvICphGkXcHzYvK
+         rRUeFtQoFf68uVJnZRVFX6OhLmN9K2LvPLd0sSs1sT3Wu7eVo9HPviuTqmIcyUDb9OY8
+         OPwAaQQtFYVZBQ9di+b0DYl0vE7P58WWQGOgzrOrC0sUGcAjG3AuKd8pl+MZD00M7PI+
+         MT7vHcW4k5IGlkagDC2EToY18XvgulpTANm2MeTCEyexldPXxOyy6YY/ak4hl/y5Tbf5
+         fPQWQJptGB6pBNOaljrjPX4hhBm//7utHnRhhgmW6U+byMqD7tUMp6uNTL1cicXTeZlA
+         oPtA==
+X-Gm-Message-State: AOAM533b+r33GA1RU/CgqltQWpBBgwHWnibl150GLuzBHz1GZKEs4gxQ
+        5RaXS1j9Dqt67RgjtX/zOOT7vXAQvobP4dbYZjmSnA==
+X-Google-Smtp-Source: ABdhPJx655WoWSZf8sKCtbQuqerBJWhb5d5rkooksrvYXLljTd0tdKuq/bKTr3OTKpoHtxRX1s5CYeo/ddHv+O/tjjo=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr14451570qke.330.1597692341063;
+ Mon, 17 Aug 2020 12:25:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200814030257.135463-1-warthog618@gmail.com> <CAMpxmJUCwXVv6U9sE=8isRMoNd8QvM9XLu4PU2Rr454wt_FTUw@mail.gmail.com>
+ <20200817184018.GV1891694@smile.fi.intel.com>
+In-Reply-To: <20200817184018.GV1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 17 Aug 2020 21:25:30 +0200
+Message-ID: <CAMpxmJV6k=mQaYsH_abTHhyXis+hLJkJX+M9jAtciUB=0uoEUA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/20] gpio: cdev: add uAPI v2
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harish <harish@linux.ibm.com>
+On Mon, Aug 17, 2020 at 8:40 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Aug 17, 2020 at 08:24:24PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Aug 14, 2020 at 5:03 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > This patchset defines and implements adds a new version of the
+> > > GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+> > > support for debounce, event sequence numbers, and allowing for requested
+> > > lines with different configurations.
+> > > It provides some future proofing by adding optional configuration fields
+> > > and padding reserved for future use.
+> > >
+> > > The series can be partitioned into two sets; the first eleven
+> > > contain the v2 uAPI implementation, and the final seven port
+> > > the GPIO tools to the v2 uAPI and extend them to use new uAPI features.
+> > >
+> > > The more complicated patches include their own commentary where
+> > > appropriate.
+>
+> > The series looks quite good to me and I think we're on track to get it
+> > in for v5.10. I'd love to have Andy (Cc'd) take a look as well. There
+> > are some nits here and there but as long as we get the ABI right, any
+> > implementation details can be ironed out later.
+> >
+> > I need to think about some details a bit more but I really like the
+> > current state of the patches.
+>
+> First of all, I apologize for being silent, I'm quite busy with internal
+> development / work.
+>
+> Second, I didn't hear further why we can't fix current ABI as proposed by Arnd
+> and see what we will have afterwards?
+>
 
-[ Upstream commit 854eb5022be04f81e318765f089f41a57c8e5d83 ]
+Sure we can get back to fixing it but it will only address a single
+bug and still not allow us to add new features and simplifications. Do
+you mind rebasing your old patch on top of v5.9-rc1?
 
-On systems with large number of cpus, test fails trying to set
-affinity by calling sched_setaffinity() with smaller size for affinity
-mask. This patch fixes it by making sure that the size of allocated
-affinity mask is dependent on the number of CPUs as reported by
-get_nprocs().
+> Third, I'm not satisfied with the approach of wasting some memory for padding
+> and I think the proper solution for the ABI is to have versioning inside the
+> structures.
+>
+> What do you think?
+>
 
-Fixes: 00b7ec5c9cf3 ("selftests/powerpc: Import Anton's context_switch2 benchmark")
-Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Harish <harish@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Reviewed-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200609081423.529664-1-harish@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../powerpc/benchmarks/context_switch.c       | 21 ++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+Wasting a bit of memory is fine with me. As long as we're not copying
+more than a page-worth of memory between the kernel and user-space,
+the overhead is insignificant.
 
-diff --git a/tools/testing/selftests/powerpc/benchmarks/context_switch.c b/tools/testing/selftests/powerpc/benchmarks/context_switch.c
-index a2e8c9da7fa53..d50cc05df4952 100644
---- a/tools/testing/selftests/powerpc/benchmarks/context_switch.c
-+++ b/tools/testing/selftests/powerpc/benchmarks/context_switch.c
-@@ -19,6 +19,7 @@
- #include <limits.h>
- #include <sys/time.h>
- #include <sys/syscall.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
- #include <sys/shm.h>
- #include <linux/futex.h>
-@@ -104,8 +105,9 @@ static void start_thread_on(void *(*fn)(void *), void *arg, unsigned long cpu)
- 
- static void start_process_on(void *(*fn)(void *), void *arg, unsigned long cpu)
- {
--	int pid;
--	cpu_set_t cpuset;
-+	int pid, ncpus;
-+	cpu_set_t *cpuset;
-+	size_t size;
- 
- 	pid = fork();
- 	if (pid == -1) {
-@@ -116,14 +118,23 @@ static void start_process_on(void *(*fn)(void *), void *arg, unsigned long cpu)
- 	if (pid)
- 		return;
- 
--	CPU_ZERO(&cpuset);
--	CPU_SET(cpu, &cpuset);
-+	ncpus = get_nprocs();
-+	size = CPU_ALLOC_SIZE(ncpus);
-+	cpuset = CPU_ALLOC(ncpus);
-+	if (!cpuset) {
-+		perror("malloc");
-+		exit(1);
-+	}
-+	CPU_ZERO_S(size, cpuset);
-+	CPU_SET_S(cpu, size, cpuset);
- 
--	if (sched_setaffinity(0, sizeof(cpuset), &cpuset)) {
-+	if (sched_setaffinity(0, size, cpuset)) {
- 		perror("sched_setaffinity");
-+		CPU_FREE(cpuset);
- 		exit(1);
- 	}
- 
-+	CPU_FREE(cpuset);
- 	fn(arg);
- 
- 	exit(0);
--- 
-2.25.1
+I prefer to make structs extensible over adding new versions in the future.
 
-
-
+Bart
