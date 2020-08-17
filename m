@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B034C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80395C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E619E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BEE20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692163;
-	bh=QQAU1ikOIrDs5aF2Kgt4xXf0KPkLOjsnmxxrhoi6nYc=;
+	s=default; t=1597692167;
+	bh=ilVP2zDgCfWYPQb1pjx+InS0w4m33liq/LJCyFZzyzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znJjxmE4GgP9V46R6FBKfG+LUldHx8VbbVz8cMY1jjFqAPYJGvpT+8xDtQy++e893
-	 Q66R0a6vkIb+arqtpHoOjtdHKI7w80xoCjoVnD0rrxqkSYz9ov+qoQ2FQOStnC0FxB
-	 ZTr3zX3ODIz1IabMEA1Of1kRxJSL8oUgSFF0Venc=
+	b=kr2oP7MLDpg4aVF7k7sPaRKu11YmpHfbklm02+YYvJzVrjG/LO6IZ3Mq/iya1cVdz
+	 Z3Rm5bqAdfM07T8Edb5pfJ/KerJxt+nwYe4hMdha3YSWH3imAMeITri5UCUPTf+9AU
+	 Wz5o9sJAXHgw8DFmORppXDEjOXhK/e2EhcG09XN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbgHQTWl (ORCPT
+        id S1730490AbgHQTWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42560 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbgHQPfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:35:40 -0400
+        id S1730243AbgHQPfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:35:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA73D20789;
-        Mon, 17 Aug 2020 15:35:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03BBD20855;
+        Mon, 17 Aug 2020 15:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678539;
-        bh=QQAU1ikOIrDs5aF2Kgt4xXf0KPkLOjsnmxxrhoi6nYc=;
+        s=default; t=1597678536;
+        bh=ilVP2zDgCfWYPQb1pjx+InS0w4m33liq/LJCyFZzyzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n9etYjBIEw8ucXM/MCxiBZOYXYeiZ1GRmknFkY1NQQbPng5qyWppWlSjfNrB+xuym
-         VXfw1qV0jWYSbTVtkRuUfSpUx0CpAne2AEYKM2MU7cMl8PyY360cCY9Zv91OkdLtLB
-         5azV12+KVXw25iLbsAdj2N3757lOOCftpqrbb+6Q=
+        b=XrmP0PqVgBT0uhNZ2/vVb0X+LyffV2Ruj2hcoAKFXVZy3t30vj0H5hwkCz90MEuu8
+         96ffXPfAh21w5T5uAzC+Anp+6vjNae+LN+j1YE+89k4vz8XjkOGZEDRwCyzggrkZFP
+         FWHcTWHxoOQYw/CRzLrZoqR7RiLxLh5G2okCh+xs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, "Shah, Ashish N" <ashish.n.shah@intel.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 352/464] net/mlx5: DR, Change push vlan action sequence
-Date:   Mon, 17 Aug 2020 17:15:05 +0200
-Message-Id: <20200817143850.630208221@linuxfoundation.org>
+Subject: [PATCH 5.8 369/464] hv_netvsc: do not use VF device if link is down
+Date:   Mon, 17 Aug 2020 17:15:22 +0200
+Message-Id: <20200817143851.448426733@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,89 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Vesker <valex@mellanox.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit b206490940216542c68563699b279eed3c55107c ]
+[ Upstream commit 7c9864bbccc23e1812ac82966555d68c13ea4006 ]
 
-The DR TX state machine supports the following order:
-modify header, push vlan and encapsulation.
-Instead fs_dr would pass:
-push vlan, modify header and encapsulation.
+If the accelerated networking SRIOV VF device has lost carrier
+use the synthetic network device which is available as backup
+path. This is a rare case since if VF link goes down, normally
+the VMBus device will also loose external connectivity as well.
+But if the communication is between two VM's on the same host
+the VMBus device will still work.
 
-The above caused the rule creation to fail on invalid action
-sequence provided error.
-
-Fixes: 6a48faeeca10 ("net/mlx5: Add direct rule fs_cmd implementation")
-Signed-off-by: Alex Vesker <valex@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: "Shah, Ashish N" <ashish.n.shah@intel.com>
+Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
+Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../mellanox/mlx5/core/steering/fs_dr.c       | 42 +++++++++----------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c
-index 8887b2440c7d5..9b08eb557a311 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/fs_dr.c
-@@ -279,29 +279,9 @@ static int mlx5_cmd_dr_create_fte(struct mlx5_flow_root_namespace *ns,
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 6267f706e8ee6..0d779bba1b019 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -532,12 +532,13 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
+ 	u32 hash;
+ 	struct hv_page_buffer pb[MAX_PAGE_BUFFER_COUNT];
  
- 	/* The order of the actions are must to be keep, only the following
- 	 * order is supported by SW steering:
--	 * TX: push vlan -> modify header -> encap
-+	 * TX: modify header -> push vlan -> encap
- 	 * RX: decap -> pop vlan -> modify header
+-	/* if VF is present and up then redirect packets
+-	 * already called with rcu_read_lock_bh
++	/* If VF is present and up then redirect packets to it.
++	 * Skip the VF if it is marked down or has no carrier.
++	 * If netpoll is in uses, then VF can not be used either.
  	 */
--	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH) {
--		tmp_action = create_action_push_vlan(domain, &fte->action.vlan[0]);
--		if (!tmp_action) {
--			err = -ENOMEM;
--			goto free_actions;
--		}
--		fs_dr_actions[fs_dr_num_actions++] = tmp_action;
--		actions[num_actions++] = tmp_action;
--	}
--
--	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH_2) {
--		tmp_action = create_action_push_vlan(domain, &fte->action.vlan[1]);
--		if (!tmp_action) {
--			err = -ENOMEM;
--			goto free_actions;
--		}
--		fs_dr_actions[fs_dr_num_actions++] = tmp_action;
--		actions[num_actions++] = tmp_action;
--	}
--
- 	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_DECAP) {
- 		enum mlx5dr_action_reformat_type decap_type =
- 			DR_ACTION_REFORMAT_TYP_TNL_L2_TO_L2;
-@@ -354,6 +334,26 @@ static int mlx5_cmd_dr_create_fte(struct mlx5_flow_root_namespace *ns,
- 		actions[num_actions++] =
- 			fte->action.modify_hdr->action.dr_action;
+ 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
+ 	if (vf_netdev && netif_running(vf_netdev) &&
+-	    !netpoll_tx_running(net))
++	    netif_carrier_ok(vf_netdev) && !netpoll_tx_running(net))
+ 		return netvsc_vf_xmit(net, vf_netdev, skb);
  
-+	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH) {
-+		tmp_action = create_action_push_vlan(domain, &fte->action.vlan[0]);
-+		if (!tmp_action) {
-+			err = -ENOMEM;
-+			goto free_actions;
-+		}
-+		fs_dr_actions[fs_dr_num_actions++] = tmp_action;
-+		actions[num_actions++] = tmp_action;
-+	}
-+
-+	if (fte->action.action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH_2) {
-+		tmp_action = create_action_push_vlan(domain, &fte->action.vlan[1]);
-+		if (!tmp_action) {
-+			err = -ENOMEM;
-+			goto free_actions;
-+		}
-+		fs_dr_actions[fs_dr_num_actions++] = tmp_action;
-+		actions[num_actions++] = tmp_action;
-+	}
-+
- 	if (delay_encap_set)
- 		actions[num_actions++] =
- 			fte->action.pkt_reformat->action.dr_action;
+ 	/* We will atmost need two pages to describe the rndis
 -- 
 2.25.1
 
