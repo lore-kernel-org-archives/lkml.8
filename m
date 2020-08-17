@@ -2,127 +2,153 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D34C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A182CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A89206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F6B2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUpe3lkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgHQJKM (ORCPT
+        id S1728120AbgHQJKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:10:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49688 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728352AbgHQJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:10:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C3C82B67A;
-        Mon, 17 Aug 2020 09:10:23 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 82A9BDA6EF; Mon, 17 Aug 2020 11:08:54 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 11:08:54 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v2] overflow: Add __must_check attribute to check_*()
- helpers
-Message-ID: <20200817090854.GA2026@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-References: <202008151007.EF679DF@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008151007.EF679DF@keescook>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+        Mon, 17 Aug 2020 05:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgHQJHl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 05:07:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77BB9C061389;
+        Mon, 17 Aug 2020 02:07:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y10so5622143plr.11;
+        Mon, 17 Aug 2020 02:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2IBGDTRlqNvahuHmxcRRXVtAp4AqF0ucZxlKJk+dn2M=;
+        b=bUpe3lkHHiWeE9fypq5FMRZVDtUY8VoTccue34JGh/9p2k4OhRzS6BjyY4Bd9qTRiD
+         HcbcBOCidPnkUlckjG0pQpPr3SBnPnm+On29sqxfzZdLsl8FQ7OvWGY8atHAg53TIKUP
+         Nhm3LAImHY0LceA50ndVDTenrCowNHDuP0rucbFJFtN5rJxnQgq+F+Qtc3cYgh8nXF4H
+         hKgi+3LEO2QPnAJoz2HAsTmDwJrUArE1nTbsBra+um9cAwBjBM9gv4zgoaVU4haxTTFW
+         SyDjDgB7rO++ebAZ/h9uwZDeZuM5jI4l1DhA2tmsoxy4eKcodtYoitoHwHh61f9+CApm
+         x/aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2IBGDTRlqNvahuHmxcRRXVtAp4AqF0ucZxlKJk+dn2M=;
+        b=ulOpr+TJEwOi8bVZH9JpQH39kUxgQfQq5sSk/a9Sa4zVladYWAjwFGD8RaRC9jY12P
+         LLs8R0E/tP3JDTbTEEw2a/GZKcL2MYwpJYCp1WIg8p8A81N90m8RIzmvm2gfJZE1hMym
+         L02UewghV+IBcTr/a+X/UxLHh7caNn5NeOzEF/eL710g5+KUnrrKX045aTC6fNW7jQlt
+         HZG9krh4wOHUCNRv4gfoQCFbAhnsFqRSI2pIiCUmrqJVmyl+E5LuTG82cdF1jwU0Jv44
+         fQErh6ffWSFH40bPcLabNw/fAlfvlOf87arE6/aah6kc5rwptSYrBxyTCb9fbUqCg17n
+         bxpw==
+X-Gm-Message-State: AOAM533AvG+0NLBTmBsRuHlPmiUwvaBM5++ShhgFegRKnP4kykvfCm6q
+        O4mLUI1/yeVWDIgeoOa5JN0=
+X-Google-Smtp-Source: ABdhPJzNy7hxGHuoAT9Ds/zo0r/p3Xdwvw7xt6TvMKktGn938rhVPwowpw50RfYo/4rBLuS0/Azjfg==
+X-Received: by 2002:a17:902:c111:: with SMTP id 17mr9611024pli.46.1597655260971;
+        Mon, 17 Aug 2020 02:07:40 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id t14sm16616237pgb.51.2020.08.17.02.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 02:07:40 -0700 (PDT)
+From:   Allen Pais <allen.cryptic@gmail.com>
+To:     kvalo@codeaurora.org, kuba@kernel.org, jirislaby@kernel.org,
+        mickflemm@gmail.com, mcgrof@kernel.org, chunkeey@googlemail.com,
+        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
+        helmut.schaa@googlemail.com, pkshih@realtek.com,
+        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de
+Cc:     keescook@chromium.org, ath11k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 06/16] wireless: b43legacy: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:36:27 +0530
+Message-Id: <20200817090637.26887-7-allen.cryptic@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817090637.26887-1-allen.cryptic@gmail.com>
+References: <20200817090637.26887-1-allen.cryptic@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 10:09:24AM -0700, Kees Cook wrote:
-> Since the destination variable of the check_*_overflow() helpers will
-> contain a wrapped value on failure, it would be best to make sure callers
-> really did check the return result of the helper. Adjust the macros to use
-> a bool-wrapping static inline that is marked with __must_check. This means
-> the macros can continue to have their type-agnostic behavior while gaining
-> the function attribute (that cannot be applied directly to macros).
-> 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2:
-> - de-generalized __must_check_overflow() from being named "bool" (willy)
-> - fix comment typos (rasmus)
-> v1: https://lore.kernel.org/lkml/202008121450.405E4A3@keescook
-> ---
->  include/linux/overflow.h | 39 ++++++++++++++++++++++++---------------
->  1 file changed, 24 insertions(+), 15 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 93fcef105061..f1c4e7b56bd9 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -43,6 +43,16 @@
->  #define is_non_negative(a) ((a) > 0 || (a) == 0)
->  #define is_negative(a) (!(is_non_negative(a)))
->  
-> +/*
-> + * Allows for effectively applying __must_check to a macro so we can have
-> + * both the type-agnostic benefits of the macros while also being able to
-> + * enforce that the return value is, in fact, checked.
-> + */
-> +static inline bool __must_check __must_check_overflow(bool overflow)
-> +{
-> +	return unlikely(overflow);
+From: Allen Pais <allen.lkml@gmail.com>
 
-How does the 'unlikely' hint propagate through return? It is in a static
-inline so compiler has complete information in order to use it, but I'm
-curious if it actually does.
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
-> +}
-> +
->  #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
->  /*
->   * For simplicity and code hygiene, the fallback code below insists on
-> @@ -52,32 +62,32 @@
->   * alias for __builtin_add_overflow, but add type checks similar to
->   * below.
->   */
-> -#define check_add_overflow(a, b, d) ({		\
-> +#define check_add_overflow(a, b, d) __must_check_overflow(({	\
->  	typeof(a) __a = (a);			\
->  	typeof(b) __b = (b);			\
->  	typeof(d) __d = (d);			\
->  	(void) (&__a == &__b);			\
->  	(void) (&__a == __d);			\
->  	__builtin_add_overflow(__a, __b, __d);	\
-> -})
-> +}))
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/net/wireless/broadcom/b43legacy/main.c | 8 +++-----
+ drivers/net/wireless/broadcom/b43legacy/pio.c  | 7 +++----
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
-In case the hint gets dropped, the fix would probably be
+diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
+index 2eaf481f03f1..15d592cf056c 100644
+--- a/drivers/net/wireless/broadcom/b43legacy/main.c
++++ b/drivers/net/wireless/broadcom/b43legacy/main.c
+@@ -1275,9 +1275,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+ }
+ 
+ /* Interrupt handler bottom-half */
+-static void b43legacy_interrupt_tasklet(unsigned long data)
++static void b43legacy_interrupt_tasklet(struct tasklet_struct *t)
+ {
+-	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
++	struct b43legacy_wldev *dev = from_tasklet(dev, t, isr_tasklet);
+ 	u32 reason;
+ 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
+ 	u32 merged_dma_reason = 0;
+@@ -3741,9 +3741,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
+ 	wldev->wl = wl;
+ 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
+ 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
+-	tasklet_init(&wldev->isr_tasklet,
+-		     b43legacy_interrupt_tasklet,
+-		     (unsigned long)wldev);
++	tasklet_setup(&wldev->isr_tasklet, b43legacy_interrupt_tasklet);
+ 	if (modparam_pio)
+ 		wldev->__using_pio = true;
+ 	INIT_LIST_HEAD(&wldev->list);
+diff --git a/drivers/net/wireless/broadcom/b43legacy/pio.c b/drivers/net/wireless/broadcom/b43legacy/pio.c
+index cbb761378619..aac413d0f629 100644
+--- a/drivers/net/wireless/broadcom/b43legacy/pio.c
++++ b/drivers/net/wireless/broadcom/b43legacy/pio.c
+@@ -264,9 +264,9 @@ static int pio_tx_packet(struct b43legacy_pio_txpacket *packet)
+ 	return 0;
+ }
+ 
+-static void tx_tasklet(unsigned long d)
++static void tx_tasklet(struct tasklet_struct *t)
+ {
+-	struct b43legacy_pioqueue *queue = (struct b43legacy_pioqueue *)d;
++	struct b43legacy_pioqueue *queue = from_tasklet(queue, t, txtask);
+ 	struct b43legacy_wldev *dev = queue->dev;
+ 	unsigned long flags;
+ 	struct b43legacy_pio_txpacket *packet, *tmp_packet;
+@@ -331,8 +331,7 @@ struct b43legacy_pioqueue *b43legacy_setup_pioqueue(struct b43legacy_wldev *dev,
+ 	INIT_LIST_HEAD(&queue->txfree);
+ 	INIT_LIST_HEAD(&queue->txqueue);
+ 	INIT_LIST_HEAD(&queue->txrunning);
+-	tasklet_init(&queue->txtask, tx_tasklet,
+-		     (unsigned long)queue);
++	tasklet_setup(&queue->txtask, tx_tasklet);
+ 
+ 	value = b43legacy_read32(dev, B43legacy_MMIO_MACCTL);
+ 	value &= ~B43legacy_MACCTL_BE;
+-- 
+2.17.1
 
-#define check_add_overflow(a, b, d) unlikely(__must_check_overflow(({	\
- 	typeof(a) __a = (a);			\
- 	typeof(b) __b = (b);			\
- 	typeof(d) __d = (d);			\
- 	(void) (&__a == &__b);			\
- 	(void) (&__a == __d);			\
- 	__builtin_add_overflow(__a, __b, __d);	\
-})))
