@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4428C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A737E20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F7420885
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677699;
-	bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
+	s=default; t=1597677717;
+	bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZK0USdxJDPGJKuB0M58cY9QG1aKAwl+9nlxuebHRJ37UoFHo0Phn58FFD44zOOd1C
-	 LxDrP38wkGoDamnqTI7BfYYkOqiS3u6nmhNFjkL/zVyF/JhFork9UMlcb25fDuvq7L
-	 kqaNb5RLCUXiTssdhvSH6FUb2kveHaQMME3bcymo=
+	b=q5c5W3NaZsXaOyEznbULtkehs2m+XZTIZJrkF8dC4Xnz/KWzesIzV6ScAX22fTh8J
+	 N1Py5V6/u2QPhHkpdK8+Q3tV4DBaYoCS4G3c1MqviM6KWkiFdKGobBlrJo1SJKAnpj
+	 4J2VOZgTw/X5LfilqY4+B4i4ISHPjASVnqspAVbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgHQPVf (ORCPT
+        id S1729396AbgHQPVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgHQPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:58 -0400
+        id S1729341AbgHQPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD6D2065C;
-        Mon, 17 Aug 2020 15:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23553206FA;
+        Mon, 17 Aug 2020 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677657;
-        bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
+        s=default; t=1597677678;
+        bh=x2EdT82fe7GeAYl9x+JFtiof54LVZjz/+2qJUuXzK6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rB0zAR1IS7hc6vXyZDuurCgvKJAJHgPqfq85AktSmEtvAgTCDwEnjOoR4dvumv3dO
-         DJMp37Lpa8Nrty42ecaH4m6DdwvIe6x971TptmUt+8FBxGQv97yJY5kD5ILoFT0c2N
-         JT4iDKM5HgMwpFBRwBeG0k2kfLcOwBvEFH5k7gdE=
+        b=hJFBn8izYTxYjk1I+lwF21DzDv9eW3A5h5MBvGLA7XbPE8BJVSX8ZbruFJOLLNc4a
+         RG//lj9ZniANkpwrMZpHpgeONcGi4OGwSKulitEgtPKfCWG3xEzAdGOdyX1c5F9Tee
+         5QPUXw4H4TrwH3e6mXFR9lZyZfZlWZROaIIZL6Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 062/464] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Mon, 17 Aug 2020 17:10:15 +0200
-Message-Id: <20200817143836.734203816@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 069/464] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
+Date:   Mon, 17 Aug 2020 17:10:22 +0200
+Message-Id: <20200817143837.072632766@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,52 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
+[ Upstream commit 9808357ff2e5bfe1e0dcafef5e78cc5b617a7078 ]
 
-Pointer mddev is being dereferenced with a test_bit call before mddev
-is being null checked, this may cause a null pointer dereference. Fix
-this by moving the null pointer checks to sanity check mddev before
-it is dereferenced.
+cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
+UP configuration, the boot CPU is 0.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200724184157.29150-1-f.fainelli@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f567f536b529b..90756450b9588 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -470,17 +470,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
- 	struct mddev *mddev = bio->bi_disk->private_data;
- 	unsigned int sectors;
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fd7c537fb42ac..4127eeab10af1 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
+ 	u32 val;
  
--	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
-+	if (mddev == NULL || mddev->pers == NULL) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
- 	}
+ 	/* Wakeup interrupt should only come from the boot cpu */
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
  
--	blk_queue_split(q, &bio);
--
--	if (mddev == NULL || mddev->pers == NULL) {
-+	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
- 	}
-+
-+	blk_queue_split(q, &bio);
-+
- 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
- 		if (bio_sectors(bio) != 0)
- 			bio->bi_status = BLK_STS_IOERR;
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
+@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
+ 	struct bcm7038_l1_chip *intc;
+ 	int boot_cpu, word;
+ 
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
+ 
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
 -- 
 2.25.1
 
