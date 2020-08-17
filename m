@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4848FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEEF320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB0C20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693137;
-	bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+	s=default; t=1597693159;
+	bh=LbUYP1IQLhtmeYiSftNfPFlg4bh7sn+HM28H+KDvsSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrszJRXPKP0V+c5tvdb4LMkgaIov+ZnurIHIrOON66K2a9lsBiuNZAYGU6BIsgH3e
-	 Vv7NIeyJIfd/zanWnRG0/M2jIlWWPMvJtKqTCX2MGnNOaXl5avE2pQ03Fhx0CTmonB
-	 2ROnIIXljCiE3LV9+cGbXyOZsi42Xbb1T15cj120=
+	b=II0uDiR4xVuqYsT4e0jGiWFljErI3y34zgMfzBbeVYdHJ59+5Tly1XTSmRcTaD+Mi
+	 4eUP6CuI9RDw6DP8iUkxXTUehodM8ddi3JCWHHYYkGigULdKyLJP3XGoukYNAMAK5O
+	 EEFAyh5GOHdrwUfRFj/uNPT4Tb0gExhuVF2dq1I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbgHQTiz (ORCPT
+        id S1730282AbgHQTjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:38:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729851AbgHQP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:55 -0400
+        id S1729277AbgHQP0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C800023B1C;
-        Mon, 17 Aug 2020 15:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029A52078D;
+        Mon, 17 Aug 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678015;
-        bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+        s=default; t=1597678000;
+        bh=LbUYP1IQLhtmeYiSftNfPFlg4bh7sn+HM28H+KDvsSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmRQdnZG8PkFXqGzrqbmCC65UvDXDijcrrRVYR9LJYqyZL73fWe1OKI4RMPuShavB
-         lMA4sJ082PUWlmI7yW5T7z+Qoo1y3QHVFHHP0rR0fY6GmJniiE+m7/komga3Beuxit
-         e67wEouHhjnCWAjusV2v8Wvd7qWxn6GACUx7LwgU=
+        b=RtKlUihoAiLrW+zfiDg/D31yNfT6LMQvum2HlL9mFYAz5ndZ5OG0EExBj/NrCDSF9
+         QtnaD643SD9EBOquvrnyPaygxl7n/DHM3pQLsfi+C6bkOIW4FY5wscrHGHAwKd+PZ3
+         96lS4iGxEeLQrlYWOuL3vTErGSqiykOKYWk0RP94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 159/464] iio: improve IIO_CONCENTRATION channel type description
-Date:   Mon, 17 Aug 2020 17:11:52 +0200
-Message-Id: <20200817143841.424261451@linuxfoundation.org>
+Subject: [PATCH 5.8 183/464] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
+Date:   Mon, 17 Aug 2020 17:12:16 +0200
+Message-Id: <20200817143842.586674004@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
+[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
 
-IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
-raw concentrations of pollutants. Raw value should be meaningless
-before being properly scaled. Because of that description shouldn't
-mention raw value unit whatsoever.
+The dev_id used in request_irq() and free_irq() should match.  Use 'info'
+in both cases.
 
-Fix this by rephrasing existing description so it follows conventions
-used throughout IIO ABI docs.
-
-Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/arm/cumana_2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index d3e53a6d8331b..5c62bfb0f3f57 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1569,7 +1569,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
- KernelVersion:	4.3
- Contact:	linux-iio@vger.kernel.org
- Description:
--		Raw (unscaled no offset etc.) percentage reading of a substance.
-+		Raw (unscaled no offset etc.) reading of a substance. Units
-+		after application of scale and offset are percents.
+diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
+index 65691c21f133d..29294f0ef8a9a 100644
+--- a/drivers/scsi/arm/cumana_2.c
++++ b/drivers/scsi/arm/cumana_2.c
+@@ -450,7 +450,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
  
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_release:
+ 	fas216_release(host);
 -- 
 2.25.1
 
