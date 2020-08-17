@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2603C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43189204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9CE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690168;
-	bh=qwmtcEJWzec+yfxtt+Irjpf9GYAZv4tTy6m8cR9ZZtU=;
+	s=default; t=1597690173;
+	bh=mHp6ZsqzH9SBdhzTJtoNllssucJjMrlq2tRy/eT2H7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ek//w67x0UhdMEZ4FlfS0AL2zq2SAnWVLZFq6vBrpK4OMghb2HlIJ8AFEw/H31zFT
-	 X6YbvFPnS54TKYpagy+PCgzZnsdgM+Yk97iqjCGIHHlqrnRU1ZLFRZrPh2a5WykesG
-	 fwY1ZxoJb2Tp/w/irSdagCCm+19QbjXUHPV/6sqM=
+	b=hAL3Rma6sswFA1088k/SIVubbdkMI32ka3uUxxbAuoedYrXoW/UKgAnlX7gcMKxiS
+	 ly2y0x5RYrV2/r4ZZBqQ72gTXwyR3a0iA4u62YNuZla4/2O91rGRz6+UZlH+B9baoa
+	 2ZFULOK1C/MFyh7rU/VVhz339+dANS/wPP0GG0lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403857AbgHQStA (ORCPT
+        id S2391691AbgHQStc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387729AbgHQPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:44 -0400
+        id S2387984AbgHQPyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208BB20885;
-        Mon, 17 Aug 2020 15:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871272063A;
+        Mon, 17 Aug 2020 15:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679680;
-        bh=qwmtcEJWzec+yfxtt+Irjpf9GYAZv4tTy6m8cR9ZZtU=;
+        s=default; t=1597679663;
+        bh=mHp6ZsqzH9SBdhzTJtoNllssucJjMrlq2tRy/eT2H7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kx5sQBs5omp4fcFA1nA5BjdIw76BQS+eOVO83P79gZJCGq3KnGkNtGw+d05ZkMMdE
-         FOcpI+zH4vONPqqqbfP67V4w9/2EjffY76H1g2eh5ObfFnORu7y212xmJ14AXD01gQ
-         b22rw80TS5MwUzjPUDb1I7+66FR3AARxlWTTgyfc=
+        b=wXquvG7VIFDTPb1FXASjbbZafN+YkW7xDlaCtWpiiogpeZyd+0aHUvGTiVu8Hw0yY
+         L6NKgiiboQba+A6ZaQ1b2WBmEHQ4sdA9Xb0OVjfA1n2nqBt4xkxdfB6HQ1UCm63DkJ
+         jnryGHLqZxSAvSteNBwd1fU4QbiCiztUahyWxypA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 298/393] net: sgi: ioc3-eth: Fix the size used in some dma_free_coherent() calls
-Date:   Mon, 17 Aug 2020 17:15:48 +0200
-Message-Id: <20200817143834.073228978@linuxfoundation.org>
+Subject: [PATCH 5.7 260/393] Bluetooth: hci_qca: Stop collecting memdump again for command timeout during SSR
+Date:   Mon, 17 Aug 2020 17:15:10 +0200
+Message-Id: <20200817143832.222977492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,43 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 
-[ Upstream commit edab74e9cb1d073c70add0f9b75e17aebf0598ff ]
+[ Upstream commit 58789a1990c1a849a461ac912e72a698a771951a ]
 
-Update the size used in 'dma_free_coherent()' in order to match the one
-used in the corresponding 'dma_alloc_coherent()'.
+Setting memdump state to idle prior to setting of callback function
+pointer for command timeout to NULL,causing the issue.Now moved the
+initialisation of memdump state to qca_setup().
 
-Fixes: 369a782af0f1 ("net: sgi: ioc3-eth: ensure tx ring is 16k aligned.")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
+Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_qca.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index 6646eba9f57fe..6eef0f45b133b 100644
---- a/drivers/net/ethernet/sgi/ioc3-eth.c
-+++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -951,7 +951,7 @@ static int ioc3eth_probe(struct platform_device *pdev)
- 		dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr,
- 				  ip->rxr_dma);
- 	if (ip->tx_ring)
--		dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->tx_ring,
-+		dma_free_coherent(ip->dma_dev, TX_RING_SIZE + SZ_16K - 1, ip->tx_ring,
- 				  ip->txr_dma);
- out_free:
- 	free_netdev(dev);
-@@ -964,7 +964,7 @@ static int ioc3eth_remove(struct platform_device *pdev)
- 	struct ioc3_private *ip = netdev_priv(dev);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 9869ae0f7b71e..6a3c80e1b19cd 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1633,6 +1633,8 @@ static int qca_setup(struct hci_uart *hu)
+ 	bt_dev_info(hdev, "setting up %s",
+ 		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME");
  
- 	dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr, ip->rxr_dma);
--	dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->tx_ring, ip->txr_dma);
-+	dma_free_coherent(ip->dma_dev, TX_RING_SIZE + SZ_16K - 1, ip->tx_ring, ip->txr_dma);
++	qca->memdump_state = QCA_MEMDUMP_IDLE;
++
+ retry:
+ 	ret = qca_power_on(hdev);
+ 	if (ret)
+@@ -1776,9 +1778,6 @@ static void qca_power_shutdown(struct hci_uart *hu)
+ 	qca_flush(hu);
+ 	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
  
- 	unregister_netdev(dev);
- 	del_timer_sync(&ip->ioc3_timer);
+-	hu->hdev->hw_error = NULL;
+-	hu->hdev->cmd_timeout = NULL;
+-
+ 	/* Non-serdev device usually is powered by external power
+ 	 * and don't need additional action in driver for power down
+ 	 */
+@@ -1800,6 +1799,9 @@ static int qca_power_off(struct hci_dev *hdev)
+ 	struct qca_data *qca = hu->priv;
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+ 
++	hu->hdev->hw_error = NULL;
++	hu->hdev->cmd_timeout = NULL;
++
+ 	/* Stop sending shutdown command if soc crashes. */
+ 	if (qca_is_wcn399x(soc_type)
+ 		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
+@@ -1807,7 +1809,6 @@ static int qca_power_off(struct hci_dev *hdev)
+ 		usleep_range(8000, 10000);
+ 	}
+ 
+-	qca->memdump_state = QCA_MEMDUMP_IDLE;
+ 	qca_power_shutdown(hu);
+ 	return 0;
+ }
 -- 
 2.25.1
 
