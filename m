@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B546BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15362C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8901A20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E282720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688428;
-	bh=mzu6KQnkyfXFvQANCw8RTz1QWa6WdlP9S5RQo0khREU=;
+	s=default; t=1597688432;
+	bh=dJ/oRwwx+jniJMh75Sm69hzzChkf4XowTV+cbAgN2Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g373jK3vZGjrxMA7ODGsINf3nQaboXRESFK3GtO2hKv+Tc/zfSRFoUwQem0b2rOv/
-	 irkHE2D4DpQLDcvkSzXZ2fHroOZLSJboLzS3slLVyLrziknLdgcP5PGIU8Y04kKkvg
-	 0sGAvTYtD8qWN04o1J53c3bg0OPekjnpoKpA6prY=
+	b=GvkwU54GOB8EHYjTiZczTN5KJFF3UTINgxj8lqzvCyGSj4g3KNVJNoSxwSjNkM4Z0
+	 J5PyW77mW8lRQCmvl/JIOcexwmnYTQw3TtrtUN+jrW2MZdf7OrbUi2A7Dotj55czWL
+	 E7tVM0j9UeJ4xyazGbLVnjfHTt9Q2/eX2aEkEHQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390820AbgHQSU1 (ORCPT
+        id S2388346AbgHQSUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:20:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388346AbgHQQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:50 -0400
+        id S2388335AbgHQQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6A220729;
-        Mon, 17 Aug 2020 16:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A31D20748;
+        Mon, 17 Aug 2020 16:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680290;
-        bh=mzu6KQnkyfXFvQANCw8RTz1QWa6WdlP9S5RQo0khREU=;
+        s=default; t=1597680279;
+        bh=dJ/oRwwx+jniJMh75Sm69hzzChkf4XowTV+cbAgN2Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgM+qdvjhokQ4xF5NsGvgJwBombPuy/vzIYYeF+Z0ba2FaGXjG6d9XWaDhDqpCEOo
-         kkxnFIwVaId6+uJG3ovKcSBz42uxjD2dLKir8AkV4phwEYaT7C726IbZhLvVUuTxDu
-         Kd+5t9cDUs5YU7tMDpk+73Bu9A24nA9DFVMN33VQ=
+        b=lLPn8JiDYl4XZjjTX8IJgzc4SVQo7r9klvCUfQums7WcrIZty2wQtYVStY8pwArW0
+         kfTjt78NAlY+Z2j8IMd2mIny5Hpc+HbUsahxBKElLWo1tdcf9IJhfqQsamMMFUKkkQ
+         lcJYnyFgQjgFhEwCjDXfZEKA5ULcIIY2YUVMvc7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/270] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
-Date:   Mon, 17 Aug 2020 17:14:58 +0200
-Message-Id: <20200817143800.607540863@linuxfoundation.org>
+Subject: [PATCH 5.4 122/270] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
+Date:   Mon, 17 Aug 2020 17:15:23 +0200
+Message-Id: <20200817143801.839063942@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -64,40 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
+[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
 
-the sfb->fb->screen_base is not save the value get by iounmap() when
-the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
-is not right.
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
+Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/arm/eesox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 207d0add684b5..2466814145779 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- static void smtc_unmap_smem(struct smtcfb_info *sfb)
- {
- 	if (sfb && sfb->fb->screen_base) {
-+		if (sfb->chip_id == 0x720)
-+			sfb->fb->screen_base -= 0x00200000;
- 		iounmap(sfb->fb->screen_base);
- 		sfb->fb->screen_base = NULL;
- 	}
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index 134f040d58e26..f441ec8eb93df 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -571,7 +571,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_remove:
+ 	fas216_remove(host);
 -- 
 2.25.1
 
