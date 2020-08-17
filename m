@@ -2,97 +2,131 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72414C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F94B20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686221;
-	bh=nLLYUBUWCRpFXe2Wu7VJ/KUG5pyqVVVZ2tDy6TkbfxI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jI8f/wph7o1ks6JsstsPpLHJF5wO++9iRwpmICYW4etgVPCpQEFtXQQcJsbIElqpR
-	 BSaikodstMZp3E0G8n29B4dUEdB7hrMv0LID9mDOhj9nEnLNOsedlruKbAmsDV3dQv
-	 mF6FGaRA8/IRqax2EtEwN+jMuNkRcgi7qoq0bWFk=
+	by mail.kernel.org (Postfix) with ESMTP id 5880820716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388813AbgHQRnj (ORCPT
+        id S2389038AbgHQRnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54410 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:43:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15588 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbgHQQP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7E0204FD;
-        Mon, 17 Aug 2020 16:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680929;
-        bh=nLLYUBUWCRpFXe2Wu7VJ/KUG5pyqVVVZ2tDy6TkbfxI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ji77f3RxK3rUo0nMq4kc+pPmgUcz41Gdb2WI8NwNkU3ELmwdyazrtFURYxm51ENDN
-         v66QdnNjwkYQeND5j0QiGEYrQZXz/DhvgyASoHYezgiOtrw1oL1Jsni0BMadKZ/7Aw
-         k1us5x3raFgv583OyePSAo2T4EbQqmFX0w3TnOk4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/168] wl1251: fix always return 0 error
-Date:   Mon, 17 Aug 2020 17:17:26 +0200
-Message-Id: <20200817143739.430856546@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2389020AbgHQRng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:43:36 -0400
+IronPort-SDR: 7qTGAf6WCxdsON/v/hgHw5/Ruc4bSQc7PZ9i29PEWvrfqNz+I8Kkgi/dNKxVCo72h9xmm4CruZ
+ 6ckFsnnnbj4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152171570"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="152171570"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 10:43:35 -0700
+IronPort-SDR: EsGJDlG2Elfx4PTVo5feMiTZDFCT7ABc4DH894/gUpMct7O9/tuNSP2eKBlobYUnIYJDzVDwcx
+ ONdxB+GKxpZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="326478021"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 10:43:32 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k7j6C-009TgH-Dv; Mon, 17 Aug 2020 20:39:08 +0300
+Date:   Mon, 17 Aug 2020 20:39:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
+Message-ID: <20200817173908.GS1891694@smile.fi.intel.com>
+References: <20200817170535.17041-1-brgl@bgdev.pl>
+ <20200817170535.17041-2-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817170535.17041-2-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Implement the managed variant of krealloc(). This function works with
+> all memory allocated by devm_kmalloc() (or devres functions using it
+> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> 
+> Managed realloc'ed chunks can be manually released with devm_kfree().
 
-[ Upstream commit 20e6421344b5bc2f97b8e2db47b6994368417904 ]
+Thanks for an update! My comments / questions below.
 
-wl1251_event_ps_report() should not always return 0 because
-wl1251_ps_set_mode() may fail. Change it to return 'ret'.
+...
 
-Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200730073939.33704-1-wanghai38@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ti/wl1251/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static struct devres *to_devres(void *data)
+> +{
+> +	return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
+> +						    ARCH_KMALLOC_MINALIGN));
 
-diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
-index f5acd24d0e2b1..988abb49771f9 100644
---- a/drivers/net/wireless/ti/wl1251/event.c
-+++ b/drivers/net/wireless/ti/wl1251/event.c
-@@ -84,7 +84,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
- 		break;
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
+Do you really need both explicit castings?
+
+> +}
+
+...
+
+> +	total_old_size = ksize(to_devres(ptr));
+
+But how you can guarantee this pointer:
+ - belongs to devres,
+ - hasn't gone while you run a ksize()?
+
+...
+
+> +	new_dr = alloc_dr(devm_kmalloc_release,
+> +			  total_new_size, gfp, dev_to_node(dev));
+
+Can you move some parameters to the previous line?
+
+> +	if (!new_dr)
+> +		return NULL;
+
+...
+
+> +	spin_lock_irqsave(&dev->devres_lock, flags);
+> +
+> +	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+> +	if (!old_dr) {
+> +		spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +		devres_free(new_dr);
+> +		WARN(1, "Memory chunk not managed or managed by a different device.");
+> +		return NULL;
+> +	}
+> +
+> +	replace_dr(dev, &old_dr->node, &new_dr->node);
+> +
+> +	spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +
+> +	memcpy(new_dr->data, old_dr->data, devres_data_size(total_old_size));
+
+But new_dr may concurrently gone at this point, no? It means memcpy() should be
+under spin lock.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
 
 
