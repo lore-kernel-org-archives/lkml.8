@@ -2,133 +2,175 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D06820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF95020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bSu3s1sb"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="OM4mVNdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389798AbgHQRWY (ORCPT
+        id S2389804AbgHQRW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18298 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388881AbgHQQjN (ORCPT
+        Mon, 17 Aug 2020 13:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388014AbgHQQjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:39:13 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07HGWh4W042775;
-        Mon, 17 Aug 2020 12:39:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=0BmdVngHH8Y+Vo7jZZrI2s5rUEGFM9MpKOvaz49g28o=;
- b=bSu3s1sb2L3utLcDs5Eax1krHKUC/DLBTHq94cvPAXhWmE+ZdS7T7YDoTssBFOpS0MdV
- RzsFTIDdM9Ng23LpXiX8VyLBaFoCk3VPn6vqrXAKCl9g1EJMgoAdYeQPGg9phKY+Au8i
- 1KooFNSrskgYL3muOrwGel7GQnxpRpCc68x2MTYM5MgQDBOIaeuZ5Y3fbNxbPUoZ55Xr
- Iv2g6H6YVUza2GbAVsLiSZolRZ1aTK3MXxwlAvqCKVHpiCWbAL5H2eAt7LRAv0psiKkN
- 8hBFzAKw+J006F9uD3uTw88nFUFlGGlOIbgxSXh37jucnP9sVtgFDYjpYQReOI7NfZba iQ== 
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32y64dqr70-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Aug 2020 12:39:07 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07HGQAGi029357;
-        Mon, 17 Aug 2020 16:39:06 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 32yaeqpx2y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Aug 2020 16:39:06 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07HGd5sW44106058
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 16:39:05 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0246A6A047;
-        Mon, 17 Aug 2020 16:39:05 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8953E6A051;
-        Mon, 17 Aug 2020 16:39:04 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Aug 2020 16:39:04 +0000 (GMT)
-Subject: Re: [PATCH v2] docs: update trusted-encrypted.rst
-To:     Coly Li <colyli@suse.de>, keyrings@vger.kernel.org,
+        Mon, 17 Aug 2020 12:39:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0FE5C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:39:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id p14so13778914wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8FMpxQy0XpZh5qIz+hqunbKOx8M3EEAQ3BzT6q0ExMo=;
+        b=OM4mVNdcFimDjL6Aeqf44YgKR1Uf9xpPwIHJfBzxrqNLfV7VrGaKPLwSD/3XY/AtAQ
+         Zxfl0UJ/Qo3svd2FOY9sRJc/15/es/6wZeZQeooEo1bhWi6296CWq9tfqUzSTC40N1Cc
+         WL1Jn5p7zm6UQbUPO8GGQtGp3VN14nSSTizvrhi1tUR0ipTj7X3lHSRLaIQTc6R0ICyQ
+         zxo57e+2hYRyTwpzbshLzCJGUkjWAWcRzZQkoIQ604x6IXvZxCZBfqlzDMj6DPmm/kOF
+         FofURcWy0QNuFCXpWhIs9gQ6q//l+cPiLnqFqP/LAJBD2xsBzS9N3o5WjEIEFfDgN/5a
+         vN0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8FMpxQy0XpZh5qIz+hqunbKOx8M3EEAQ3BzT6q0ExMo=;
+        b=DZ7bYBzilrobIZ58RomK0Zvcutc+irPZerUP5RccehzAxDIFQhM1oBjARQhGRWE1FF
+         iTnDdxziH9J8n9tbflntiYmmhqvWMmV6KcEeGe7DJq3EsFj17rju0XgUKhJjr1e5daF/
+         JKxfFkkz1tWo8aL7H2nRc7oNUPYkJ2erzIwqxkR23nvJchw5y0iHq9gg1RNHoiDM5wP8
+         /MS1s9ZUQODpreGq6xYyBtUR9QQOuZAxg4Drd5jSGzW50eqGD9CCBBfHGZZvCZXtWX8G
+         5ZnokzlbTbfymn//eoJ+sxQTE3pzj2jdwvAGhuj1NBmF47Q8/9C3Kq2P38duw6rlBvFu
+         FMxw==
+X-Gm-Message-State: AOAM531C3dAkER4/Cmf+5Kq3qF4JAQdS4FktqkRxYZ5hjR8YPEF1Cvn6
+        nTjoOy2v8QVwoCRjRho+6X3TLg==
+X-Google-Smtp-Source: ABdhPJzBpVacu/sjEsIXpASeL4pnndDe9A1NIzmgcZKW570+kbWLIt+clVFKzu8eRq0W8iYNgi/1Ig==
+X-Received: by 2002:a7b:cc95:: with SMTP id p21mr14738601wma.167.1597682374676;
+        Mon, 17 Aug 2020 09:39:34 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id x82sm30524182wmb.30.2020.08.17.09.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 09:39:34 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 18:39:33 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-References: <20200817142837.5224-1-colyli@suse.de>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <576928af-7e3f-3651-4125-75b4507b0115@linux.ibm.com>
-Date:   Mon, 17 Aug 2020 12:39:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Subject: Re: [PATCH net-next RFC v2 13/13] devlink: Add
+ Documentation/networking/devlink/devlink-reload.rst
+Message-ID: <20200817163933.GB2627@nanopsycho>
+References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+ <1597657072-3130-14-git-send-email-moshe@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817142837.5224-1-colyli@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-17_13:2020-08-17,2020-08-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008170120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597657072-3130-14-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 10:28 AM, Coly Li wrote:
-> The parameters in tmp2 commands are outdated, people are not able to
-> create trusted key by the example commands.
+Mon, Aug 17, 2020 at 11:37:52AM CEST, moshe@mellanox.com wrote:
+>Add devlink reload rst documentation file.
+>Update index file to include it.
 >
-> This patch updates the paramerters of tpm2 commands, they are verified
-> by tpm2-tools-4.1 with Linux v5.8 kernel.
+>Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+>---
+>- Instead of reload levels driver,fw_reset,fw_live_patch have reload
+>  actions driver_reinit,fw_activate,fw_live_patch
+>---
+> .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
+> Documentation/networking/devlink/index.rst    |  1 +
+> 2 files changed, 55 insertions(+)
+> create mode 100644 Documentation/networking/devlink/devlink-reload.rst
 >
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: James Bottomley <jejb@linux.ibm.com>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Stefan Berger <stefanb@linux.ibm.com>
-> ---
-> Changelog:
-> v2: remove the change of trusted key related operation.
-> v1: initial version.
->
->   Documentation/security/keys/trusted-encrypted.rst | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
-> index 9483a7425ad5..1da879a68640 100644
-> --- a/Documentation/security/keys/trusted-encrypted.rst
-> +++ b/Documentation/security/keys/trusted-encrypted.rst
-> @@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
->   
->   Or with the Intel TSS 2 stack::
->   
-> -  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
-> +  #> tpm2_createprimary --hierarchy o -G rsa2048 -c key.ctxt
->     [...]
-> -  handle: 0x800000FF
-> -  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
-> +  #> tpm2_evictcontrol -c key.ctxt 0x81000001
->     persistentHandle: 0x81000001
->   
->   Usage::
+>diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
+>new file mode 100644
+>index 000000000000..9846ea727f3b
+>--- /dev/null
+>+++ b/Documentation/networking/devlink/devlink-reload.rst
+>@@ -0,0 +1,54 @@
+>+.. SPDX-License-Identifier: GPL-2.0
+>+
+>+==============
+>+Devlink Reload
+>+==============
+>+
+>+``devlink-reload`` provides mechanism to either reload driver entities,
+>+applying ``devlink-params`` and ``devlink-resources`` new values or firmware
+>+activation depends on reload action selected.
+>+
+>+Reload actions
+>+=============
+>+
+>+User may select a reload action.
+>+By default ``driver_reinit`` action is done.
+>+
+>+.. list-table:: Possible reload actions
+>+   :widths: 5 90
+>+
+>+   * - Name
+>+     - Description
+>+   * - ``driver-reinit``
+>+     - Driver entities re-initialization, including applying
+>+       new values to devlink entities which are used during driver
+>+       load such as ``devlink-params`` in configuration mode
+>+       ``driverinit`` or ``devlink-resources``
+>+   * - ``fw_activate``
+>+     - Firmware activate. Can be used for firmware reload or firmware
+>+       upgrade if new firmware is stored and driver supports such
+>+       firmware upgrade.
 
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Does this do the same as "driver-reinit" + fw activation? If yes, it
+should be written here. If no, it should be written here as well.
 
 
+>+   * - ``fw_live_patch``
+>+     - Firmware live patch, applies firmware changes without reset.
+>+
+>+Change namespace
+>+================
+>+
+>+All devlink instances are created in init_net and stay there for a
+>+lifetime. Allow user to be able to move devlink instances into
+>+namespaces during devlink reload operation. That ensures proper
+>+re-instantiation of driver objects, including netdevices.
+>+
+>+example usage
+>+-------------
+>+
+>+.. code:: shell
+>+
+>+    $ devlink dev reload help
+>+    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
+>+
+>+    # Run reload command for devlink driver entities re-initialization:
+>+    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
+>+
+>+    # Run reload command to activate firmware:
+>+    $ devlink dev reload pci/0000:82:00.0 action fw_activate
+>diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
+>index 7684ae5c4a4a..d82874760ae2 100644
+>--- a/Documentation/networking/devlink/index.rst
+>+++ b/Documentation/networking/devlink/index.rst
+>@@ -20,6 +20,7 @@ general.
+>    devlink-params
+>    devlink-region
+>    devlink-resource
+>+   devlink-reload
+>    devlink-trap
+> 
+> Driver-specific documentation
+>-- 
+>2.17.1
+>
