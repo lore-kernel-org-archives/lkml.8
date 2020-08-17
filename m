@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278C0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9112072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F149520758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648306;
-	bh=YA6rDvPkB9plySCOtoMtymWrTx+8xxcc3Q+JZYeOX3A=;
+	s=default; t=1597648314;
+	bh=hkulLYVHVROMf/Xty0tsOpIzgHS5/4Fr796lhzDXDlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yNS5xFjLpPBTVkFyaZDPGnoX8m8qkEnKknagf4IiUY3bE0QelHAdt7cLncRJhDiuw
-	 iPDhOKyju6YUyYNqdZqS12+LG8YbqdXm16YrmC92i+zVDsEkq08ZdjL+NiWpGYZnex
-	 +E6BfKxqZsqJFLYutnEe9zkwq/INW1nssn82Rr2g=
+	b=gWBhL0aDS1U0AkiRzzk/cnpnNeuhYbtekg/iHcK7Gb8hgOU+Z1Y4rO7h2WfAG9ila
+	 j4WXJO73OFmJgNr5QObzUcYuFVGRb4QNPB0ZphrRDzPVl6TmkKIIUu89BKczirRLo5
+	 uYr1VAT6zAT1zwnHzC44XJqQihtyhv8R0qSNprrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHQHLn (ORCPT
+        id S1726905AbgHQHLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57226 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbgHQHLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:11:17 -0400
+        id S1726496AbgHQHLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:11:19 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4DD7207FF;
+        by mail.kernel.org (Postfix) with ESMTPSA id E53A820888;
         Mon, 17 Aug 2020 07:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597648276;
-        bh=YA6rDvPkB9plySCOtoMtymWrTx+8xxcc3Q+JZYeOX3A=;
+        s=default; t=1597648277;
+        bh=hkulLYVHVROMf/Xty0tsOpIzgHS5/4Fr796lhzDXDlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WRA2KQ8t6JSXfPt1V+0QIAtxAM4Q5oMe0pNwLn11invLvttXRshhHVF3nz3+MVBoo
-         Pu3ns7vkWyleFX9oSGbOm4m8Z25WiWxshbH8SKT8OYhKvCvrcHq9mJpRcMbzQVgETA
-         cdJRzs5bocr14BbzLqwVmiAgFEV5e3BmDq+wAcK8=
+        b=tzEUQmKRPvP60HqFUBacQrNI3CIUDk8VZz47eGQBJ2LiWIN7YUQTGupJIJi+Rvjw/
+         LtQ7PNvxbPhJXzo6Te+pQDvVYtG31mtv3R6rwG1fCQhFaWPeKfbAfgtPvHRzTqu1nH
+         GSW0eqh/fT2qb7+hAYvJ3L+FjZYWUaMyybcU6sjw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIY-00BdjN-UW; Mon, 17 Aug 2020 09:11:14 +0200
+        id 1k7ZIZ-00Bdjb-3U; Mon, 17 Aug 2020 09:11:15 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH v3 05/44] staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
-Date:   Mon, 17 Aug 2020 09:10:24 +0200
-Message-Id: <4a3799b40379dbc3abcbd08827977247ccc26dcb.1597647359.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 09/44] staging: spmi: hisi-spmi-controller: add it to the building system
+Date:   Mon, 17 Aug 2020 09:10:28 +0200
+Message-Id: <5315331cf048cc72844080e5e8668c0dbac48f1f.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
@@ -60,90 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some defines are not aligned with tab=8, which is the
-style defined on Linux. Adjust them.
+Now that the driver was ported to upstream, add it as a
+SPMI controller.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/hisi-spmi-controller.c   | 26 ++++++++++---------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/staging/Kconfig           |  2 ++
+ drivers/staging/Makefile          |  1 +
+ drivers/staging/hikey9xx/Kconfig  | 10 ++++++++++
+ drivers/staging/hikey9xx/Makefile |  3 +++
+ 4 files changed, 16 insertions(+)
+ create mode 100644 drivers/staging/hikey9xx/Kconfig
+ create mode 100644 drivers/staging/hikey9xx/Makefile
 
-diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-index 99cf757d76fe..7fae267a6062 100644
---- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-+++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -18,10 +18,10 @@
- /*
-  * SPMI register addr
-  */
--#define SPMI_CHANNEL_OFFSET					0x0300
--#define SPMI_SLAVE_OFFSET						0x20
-+#define SPMI_CHANNEL_OFFSET				0x0300
-+#define SPMI_SLAVE_OFFSET				0x20
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 4ec5528f89fa..dfce8e39dbc3 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -120,4 +120,6 @@ source "drivers/staging/qlge/Kconfig"
  
--#define SPMI_APB_SPMI_CMD_BASE_ADDR				0x0100
-+#define SPMI_APB_SPMI_CMD_BASE_ADDR			0x0100
+ source "drivers/staging/wfx/Kconfig"
  
- #define SPMI_APB_SPMI_WDATA0_BASE_ADDR			0x0104
- #define SPMI_APB_SPMI_WDATA1_BASE_ADDR			0x0108
-@@ -35,21 +35,21 @@
- #define SPMI_APB_SPMI_RDATA2_BASE_ADDR			0x020c
- #define SPMI_APB_SPMI_RDATA3_BASE_ADDR			0x0210
- 
--#define SPMI_PER_DATAREG_BYTE					4
-+#define SPMI_PER_DATAREG_BYTE				4
- /*
-  * SPMI cmd register
-  */
--#define SPMI_APB_SPMI_CMD_EN						BIT(31)
-+#define SPMI_APB_SPMI_CMD_EN				BIT(31)
- #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
- #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
--#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET			16
--#define SPMI_APB_SPMI_CMD_ADDR_OFFSET				0
- 
- #define bswap_32(X)   \
-     ((((u32)(X) & 0xff000000) >> 24) | \
-      (((u32)(X) & 0x00ff0000) >> 8) | \
-      (((u32)(X) & 0x0000ff00) << 8) | \
-      (((u32)(X) & 0x000000ff) << 24))
-+#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
-+#define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
- 
- /* Command Opcodes */
- 
-@@ -70,15 +70,15 @@ enum spmi_controller_cmd_op_code {
- /*
-  * SPMI status register
-  */
--#define SPMI_APB_TRANS_DONE						BIT(0)
--#define SPMI_APB_TRANS_FAIL						BIT(2)
-+#define SPMI_APB_TRANS_DONE			BIT(0)
-+#define SPMI_APB_TRANS_FAIL			BIT(2)
- 
- /* Command register fields */
- #define SPMI_CONTROLLER_CMD_MAX_BYTE_COUNT	16
- 
- /* Maximum number of support PMIC peripherals */
- #define SPMI_CONTROLLER_TIMEOUT_US		1000
--#define SPMI_CONTROLLER_MAX_TRANS_BYTES	(16)
-+#define SPMI_CONTROLLER_MAX_TRANS_BYTES		16
- 
- /*
-  * @base base address of the PMIC Arbiter core registers.
-@@ -114,8 +114,10 @@ static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
- {
- 	u32 status = 0;
- 	u32 timeout = SPMI_CONTROLLER_TIMEOUT_US;
--	u32 offset = SPMI_APB_SPMI_STATUS_BASE_ADDR + SPMI_CHANNEL_OFFSET * ctrl_dev->channel
--		+ SPMI_SLAVE_OFFSET * sid;
-+	u32 offset;
++source "drivers/staging/hikey9xx/Kconfig"
 +
-+	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
-+	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
- 
- 	while (timeout--) {
- 		status = readl(base + offset);
+ endif # STAGING
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 4d34198151b3..e369a4f5e14a 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -50,3 +50,4 @@ obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
+ obj-$(CONFIG_KPC2000)		+= kpc2000/
+ obj-$(CONFIG_QLGE)		+= qlge/
+ obj-$(CONFIG_WFX)		+= wfx/
++obj-y				+= hikey9xx/
+diff --git a/drivers/staging/hikey9xx/Kconfig b/drivers/staging/hikey9xx/Kconfig
+new file mode 100644
+index 000000000000..31eb01b5ef2b
+--- /dev/null
++++ b/drivers/staging/hikey9xx/Kconfig
+@@ -0,0 +1,10 @@
++# SPDX-License-Identifier: GPL-2.0
++
++config SPMI_HISI3670
++	tristate "Hisilicon 3670 SPMI Controller"
++	select IRQ_DOMAIN_HIERARCHY
++	depends on HAS_IOMEM
++	help
++	  If you say yes to this option, support will be included for the
++	  built-in SPMI PMIC Arbiter interface on Hisilicon 3670
++	  processors.
+diff --git a/drivers/staging/hikey9xx/Makefile b/drivers/staging/hikey9xx/Makefile
+new file mode 100644
+index 000000000000..e8085abce444
+--- /dev/null
++++ b/drivers/staging/hikey9xx/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_SPMI_HISI3670) += hisi-spmi-controller.o
 -- 
 2.26.2
 
