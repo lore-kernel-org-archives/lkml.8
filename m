@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3049C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E812072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5748E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690917;
-	bh=TMQK9uOZoj6tbB77XQ2uVp/0+/Y91TXINTGPzdp7Gp4=;
+	s=default; t=1597690923;
+	bh=2l1aXrljkjYFuI4PbaHOVTIBQO+WIICFSgJ/wbYeAwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZZ57mku0pHHgokAXU3M/dt0KjmDWlXN43+lwRddNYPe04lIzjp1jv7pkpR+fH8Qr
-	 ioyMmzf8TiRYPPirEfTR3Jybk9mC1NRqwy5Jr7q9zEqMDLg1PZlh06oVseGr+6+s5O
-	 Q51Z2xK1WF0cmBnM6ZIEQSXp4/TF4GYYJ0AzxOzk=
+	b=fzU/XQ/wi4vtvBbVebNst7vVsczR0SsVIDg1xdoSmleRhc7TQ1tSIBg5DYSwKBLFJ
+	 65lscuW6lMVx8Ja1mzbFDByq0+GfMBnllGM7bzffavDrbKegge4LWnYFYYU/Q/PIWz
+	 +k7prVYtaKMnaci9+VIPukXpUAqMmtT7koK4T9AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404028AbgHQTBz (ORCPT
+        id S1731783AbgHQTCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730824AbgHQPrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:35 -0400
+        id S1729827AbgHQPrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549D72065D;
-        Mon, 17 Aug 2020 15:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68F862245C;
+        Mon, 17 Aug 2020 15:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679254;
-        bh=TMQK9uOZoj6tbB77XQ2uVp/0+/Y91TXINTGPzdp7Gp4=;
+        s=default; t=1597679252;
+        bh=2l1aXrljkjYFuI4PbaHOVTIBQO+WIICFSgJ/wbYeAwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLY+0QpuX9s2Vh4NBiFh4rkc1EiAerv1cxS3DYaiFsMsToJK75SF9ODIxf7gVG4+U
-         gV7VLcKVZxd7zt1CsAy0rh+VSJXZzG45Npa8fCt95++sW9/7UmO9BC+GJYxcqDDYr5
-         CMPJAPS5bHd43rKfjENHHW7W8eBn57owgUiJM3Zw=
+        b=gnNbIh2g3SM1AqGXNQxo/Hqdli2rXm4V8xT8bcoF3DldqX6OtnM+9Y5mfuaNmLrMa
+         qxExwi4DrEpqCpOuoCwwh/E+A69Ugh0ml2pX9uOHnDjoLyE5vh+KiahR4meYB02wLW
+         Af+jpTD8f0pQ492R4vg8xw47/XPuQEeKlnFYUJ7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 148/393] powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k
-Date:   Mon, 17 Aug 2020 17:13:18 +0200
-Message-Id: <20200817143826.792021886@linuxfoundation.org>
+Subject: [PATCH 5.7 147/393] powerpc/mm: Fix typo in IS_ENABLED()
+Date:   Mon, 17 Aug 2020 17:13:17 +0200
+Message-Id: <20200817143826.743412477@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,59 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Joe Perches <joe@perches.com>
 
-[ Upstream commit 03fd42d458fb9cb69e712600bd69ff77ff3a45a8 ]
+[ Upstream commit 55bd9ac468397c4f12a33b7ec714b5d0362c3aa2 ]
 
-FIX_EARLY_DEBUG_BASE reserves a 128k area for debuging.
+IS_ENABLED() matches names exactly, so the missing "CONFIG_" prefix
+means this code would never be built.
 
-When page size is 256k, the calculation results in a 0 number of
-pages, leading to the following failure:
+Also fixes a missing newline in pr_warn().
 
-  CC      arch/powerpc/kernel/asm-offsets.s
-In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:77:0,
-                 from ./arch/powerpc/include/asm/nohash/pgtable.h:8,
-                 from ./arch/powerpc/include/asm/pgtable.h:20,
-                 from ./include/linux/pgtable.h:6,
-                 from ./arch/powerpc/include/asm/kup.h:42,
-                 from ./arch/powerpc/include/asm/uaccess.h:9,
-                 from ./include/linux/uaccess.h:11,
-                 from ./include/linux/crypto.h:21,
-                 from ./include/crypto/hash.h:11,
-                 from ./include/linux/uio.h:10,
-                 from ./include/linux/socket.h:8,
-                 from ./include/linux/compat.h:15,
-                 from arch/powerpc/kernel/asm-offsets.c:14:
-./arch/powerpc/include/asm/fixmap.h:75:2: error: overflow in enumeration values
-  __end_of_permanent_fixed_addresses,
-  ^
-make[2]: *** [arch/powerpc/kernel/asm-offsets.s] Error 1
-
-Ensure the debug area is at least one page.
-
-Fixes: b8e8efaa8639 ("powerpc: reserve fixmap entries for early debug")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Fixes: 970d54f99cea ("powerpc/book3s64/hash: Disable 16M linear mapping size if not aligned")
+Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/ca8c9f8249f523b1fab873e67b81b11989d46553.1592207216.git.christophe.leroy@csgroup.eu
+Link: https://lore.kernel.org/r/202006050717.A2F9809E@keescook
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/fixmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 2ef155a3c8214..77ab25a199740 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -52,7 +52,7 @@ enum fixed_addresses {
- 	FIX_HOLE,
- 	/* reserve the top 128K for early debugging purposes */
- 	FIX_EARLY_DEBUG_TOP = FIX_HOLE,
--	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+((128*1024)/PAGE_SIZE)-1,
-+	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128, PAGE_SIZE)/PAGE_SIZE)-1,
- #ifdef CONFIG_HIGHMEM
- 	FIX_KMAP_BEGIN,	/* reserved pte's for temporary kernel mappings */
- 	FIX_KMAP_END = FIX_KMAP_BEGIN+(KM_TYPE_NR*NR_CPUS)-1,
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 8ed2411c3f395..cf2e1b06e5d48 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
+ 		 * Pick a size for the linear mapping. Currently, we only
+ 		 * support 16M, 1M and 4K which is the default
+ 		 */
+-		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
++		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
+ 		    (unsigned long)_stext % 0x1000000) {
+ 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
+-				pr_warn("Kernel not 16M aligned, "
+-					"disabling 16M linear map alignment");
++				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
+ 			aligned = false;
+ 		}
+ 
 -- 
 2.25.1
 
