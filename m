@@ -2,56 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C9CC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3198C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D473206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A8F206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682938;
-	bh=4p3nu2oPiPE8Vo2908t2ftK8TP2JOed8GPvSMAzGE+c=;
+	s=default; t=1597682956;
+	bh=trsbv18sZij5C6eCKcRLPAJdsHTWBIM4Mjh7do4AeiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7b995ARDr0hS2Oc/NKgPJXsYa43+bYsQVlM8Lg4KIIjt9ybRGFcQbJlOFweY+xg3
-	 j2qjgH842Ffkpyezc7F6OorgfR7BBnDmVT5zwGIEmklfTt2qSSo1Djo64pPhbLPr2I
-	 wx0W8aqkoJPdoiWhZ/zvBEcu6B5cpcyASY9STUZM=
+	b=nRSSCxf5b/Xp1YM7/BFDMIgbzqHAYOKhVFpittmBdHsxWN1rr1w4TC2Bbrf9sCY4/
+	 wgtNZ33N/fn/0QY+294V7+X3/kjWnRRcDI9dhYXA1SRzDXX6ZZtdPemM4EHyWiEzih
+	 nog+/uIZk2xtpSnBxYc8q+C6+z2tyBpeaYhVBf3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbgHQQsy (ORCPT
+        id S2388978AbgHQQtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbgHQQBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:01:47 -0400
+        id S2388177AbgHQQCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F21207FF;
-        Mon, 17 Aug 2020 16:01:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 079AA20829;
+        Mon, 17 Aug 2020 16:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680103;
-        bh=4p3nu2oPiPE8Vo2908t2ftK8TP2JOed8GPvSMAzGE+c=;
+        s=default; t=1597680126;
+        bh=trsbv18sZij5C6eCKcRLPAJdsHTWBIM4Mjh7do4AeiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSHqay2OIySf0+SJJ8bpxlnw99WUCniOzyknIOetpR6RHyMgJpTyp7DKxWhIF3PyJ
-         YzjsqPSmm2pLq8lmf8oQzPEV4upM4n52MuthurNCEF84alkQF38rb4/OrjJlLIxxEi
-         iPKq7taK7YmjiteYxia8jlU9/2Jc1qwvzVanL5JQ=
+        b=hUeJS3FAYRVmSpng0pOjh8yisf9B8jhpAl5F3UUs20weNNOlSd1WkWYg//HJ6ZTO7
+         bvjPFarf+lzE6m5hG5QEnvuo3EC8K1dtnHaSsdwfV6G+GMHu7ps/IW+zFpqi+9S0Oh
+         fk+2myqvKYY1eHfQJ035xAID268gmzBKvLK7Ronk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Craig Topper <craig.topper@intel.com>,
-        Craig Topper <craig.topper@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/270] crypto: aesni - Fix build with LLVM_IAS=1
-Date:   Mon, 17 Aug 2020 17:14:14 +0200
-Message-Id: <20200817143758.423332394@linuxfoundation.org>
+Subject: [PATCH 5.4 032/270] tpm: Require that all digests are present in TCG_PCR_EVENT2 structures
+Date:   Mon, 17 Aug 2020 17:13:53 +0200
+Message-Id: <20200817143757.393743960@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -64,107 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sedat Dilek <sedat.dilek@gmail.com>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
+[ Upstream commit 7f3d176f5f7e3f0477bf82df0f600fcddcdcc4e4 ]
 
-When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
-from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
-I see the following breakage in Debian/testing AMD64:
+Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+TCG_PCClientPCREvent event log header. Also require that
+TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
 
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
- arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
- GCM_ENC_DEC dec
- ^
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
-arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
- GCM_ENC_DEC enc
+The TCG PC Client Platform Firmware Profile Specification section 9.1
+(Family "2.0", Level 00 Revision 1.04) states:
 
-Craig Topper suggested me in ClangBuiltLinux issue #1050:
+ For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+ there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+ Note: This includes EV_NO_ACTION events which do not extend the PCR.
 
-> I think the "too many positional arguments" is because the parser isn't able
-> to handle the trailing commas.
->
-> The "unknown use of instruction mnemonic" is because the macro was named
-> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
-> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
-> macro instantiation, but llvm doesn't.
+Section 9.4.5.1 provides this description of
+TCG_EfiSpecIdEvent.numberOfAlgorithms:
 
-First, I removed the trailing comma in the PRECOMPUTE line.
+ The number of Hash algorithms in the digestSizes field. This field MUST
+ be set to a value of 0x01 or greater.
 
-Second, I substituted:
-1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
-2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
+Enforce these restrictions, as required by the above specification, in
+order to better identify and ignore invalid sequences of bytes at the
+end of an otherwise valid TPM2 event log. Firmware doesn't always have
+the means necessary to inform the kernel of the actual event log size so
+the kernel's event log parsing code should be stringent when parsing the
+event log for resiliency against firmware bugs. This is true, for
+example, when firmware passes the event log to the kernel via a reserved
+memory region described in device tree.
 
-With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
+POWER and some ARM systems use the "linux,sml-base" and "linux,sml-size"
+device tree properties to describe the memory region used to pass the
+event log from firmware to the kernel. Unfortunately, the
+"linux,sml-size" property describes the size of the entire reserved
+memory region rather than the size of the event long within the memory
+region and the event log format does not include information describing
+the size of the event log.
 
-I confirmed that this works with Linux-kernel v5.7.5 final.
+tpm_read_log_of(), in drivers/char/tpm/eventlog/of.c, is where the
+"linux,sml-size" property is used. At the end of that function,
+log->bios_event_log_end is pointing at the end of the reserved memory
+region. That's typically 0x10000 bytes offset from "linux,sml-base",
+depending on what's defined in the device tree source.
 
-NOTE: This patch is on top of Linux v5.7 final.
+The firmware event log only fills a portion of those 0x10000 bytes and
+the rest of the memory region should be zeroed out by firmware. Even in
+the case of a properly zeroed bytes in the remainder of the memory
+region, the only thing allowing the kernel's event log parser to detect
+the end of the event log is the following conditional in
+__calc_tpm2_event_size():
 
-Thanks to Craig and especially Nick for double-checking and his comments.
+        if (event_type == 0 && event_field->event_size == 0)
+                size = 0;
 
-Suggested-by: Craig Topper <craig.topper@intel.com>
-Suggested-by: Craig Topper <craig.topper@gmail.com>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1050
-Link: https://bugs.llvm.org/show_bug.cgi?id=24494
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+If that wasn't there, __calc_tpm2_event_size() would think that a 16
+byte sequence of zeroes, following an otherwise valid event log, was
+a valid event.
+
+However, problems can occur if a single bit is set in the offset
+corresponding to either the TCG_PCR_EVENT2.eventType or
+TCG_PCR_EVENT2.eventSize fields, after the last valid event log entry.
+This could confuse the parser into thinking that an additional entry is
+present in the event log and exposing this invalid entry to userspace in
+the /sys/kernel/security/tpm0/binary_bios_measurements file. Such
+problems have been seen if firmware does not fully zero the memory
+region upon a warm reboot.
+
+This patch significantly raises the bar on how difficult it is for
+stale/invalid memory to confuse the kernel's event log parser but
+there's still, ultimately, a reliance on firmware to properly initialize
+the remainder of the memory region reserved for the event log as the
+parser cannot be expected to detect a stale but otherwise properly
+formatted firmware event log entry.
+
+Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aesni-intel_asm.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/tpm_eventlog.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index e40bdf024ba76..9afeb58c910eb 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -266,7 +266,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
- 	PSHUFB_XMM %xmm2, %xmm0
- 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index eccfd3a4e4c85..f3caeeb7a0d03 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -211,9 +211,16 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
  
--	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-+	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
- 	movdqu HashKey(%arg2), %xmm13
+ 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
  
- 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
-@@ -978,7 +978,7 @@ _initial_blocks_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
- 
- 	movdqa	  \XMM1, \XMM5
-@@ -1186,7 +1186,7 @@ aes_loop_par_enc_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
- 
- 	movdqa	  \XMM1, \XMM5
+-	/* Check if event is malformed. */
++	/*
++	 * Perform validation of the event in order to identify malformed
++	 * events. This function may be asked to parse arbitrary byte sequences
++	 * immediately following a valid event log. The caller expects this
++	 * function to recognize that the byte sequence is not a valid event
++	 * and to return an event size of 0.
++	 */
+ 	if (memcmp(efispecid->signature, TCG_SPECID_SIG,
+-		   sizeof(TCG_SPECID_SIG)) || count > efispecid->num_algs) {
++		   sizeof(TCG_SPECID_SIG)) ||
++	    !efispecid->num_algs || count != efispecid->num_algs) {
+ 		size = 0;
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
