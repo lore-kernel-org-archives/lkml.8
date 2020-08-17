@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A12C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD32920709
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A38F20855
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678564;
-	bh=37MMSSoL6oqEcfaGDD2YYEbR6qmbWEcwABOL7QfqCbM=;
+	s=default; t=1597678578;
+	bh=ZebZqfa4CbDT7jXcsMVa+Nj/+qCStPKrWCWUJDF7bJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+uF615IB5H+U/Z8IFKO6Osc+H2Cw0JQodZcCluVVxQYQ36SE8T70C/JDqK+jZj7s
-	 8n90zLnTu/U5l9nsBKtkO0pmu0lN84HctcGdiH+yo0p6TxcFVmWhhiy1Kw3xcqfDv2
-	 +2EmVaDzqAN3GiH4RNDpabDjJOVPQkBsVeD1xLAc=
+	b=g56DJja8JBRCd2PIcp+qVPiOv6YvGcHqSj3ZEujZ9h/gcLASGvaEl+m1yb78Sphbz
+	 SPamlfBdzdE8NfKBWr9mrQKKaBk051e2OHvv1NzoUvyzZGmIzlS9PE/VCJmDvVJS9V
+	 N0MAV+OK837yYBl4uhd1IurV/F2WxlLn9S14mt28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgHQPf4 (ORCPT
+        id S1730321AbgHQPgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:35:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52220 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:36:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730185AbgHQPae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:30:34 -0400
+        id S1729877AbgHQPah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:30:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 356B62075B;
-        Mon, 17 Aug 2020 15:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4C023132;
+        Mon, 17 Aug 2020 15:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678233;
-        bh=37MMSSoL6oqEcfaGDD2YYEbR6qmbWEcwABOL7QfqCbM=;
+        s=default; t=1597678236;
+        bh=ZebZqfa4CbDT7jXcsMVa+Nj/+qCStPKrWCWUJDF7bJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKlmD898T3R7c5A7cD/YjVWdQdNvY2XtOeG0i/4jS8DyCzTYbuG9Hh+fw2HxFE5+U
-         iehO3hW/ZiEjpPY3BJjIOkm7qUY9VggRFDxLXN/rA1VHF1dDOp/Ch7q+AeHUo2t2OX
-         pNo/PtRghFkIHlY/E/d5syWAduclJkTwa6Mz0F/I=
+        b=aEQKWonuUEEwPt4gW+OuVVbCYdxegyy7dQURK0vmAngSp/JY7n8IyUmw62jqzFQFy
+         1v9PD8kd3Zs7IWQN4ShJkfLCN7GZlNyXzxLEUtHaNvDW15giufSIEhyEzIPipQIeyc
+         9Q7ZeJJ/fA+D32u8C1VNcj7jsYKfsx4ZIvcTNmk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        stable@vger.kernel.org,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 264/464] coresight: tmc: Fix TMC mode read in tmc_read_unprepare_etb()
-Date:   Mon, 17 Aug 2020 17:13:37 +0200
-Message-Id: <20200817143846.434796758@linuxfoundation.org>
+Subject: [PATCH 5.8 265/464] coresight: etm4x: Fix save/restore during cpu idle
+Date:   Mon, 17 Aug 2020 17:13:38 +0200
+Message-Id: <20200817143846.482976503@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,78 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit d021f5c5ff679432c5e9faee0fd7350db2efb97c ]
+[ Upstream commit 342c8a1d1d9e418d32fa02d635cf96989f9a986e ]
 
-Reading TMC mode register without proper coresight power
-management can lead to exceptions like the one in the call
-trace below in tmc_read_unprepare_etb() when the trace data
-is read after the sink is disabled. So fix this by having
-a check for coresight sysfs mode before reading TMC mode
-management register in tmc_read_unprepare_etb() similar to
-tmc_read_prepare_etb().
+The ETM state save/restore incorrectly reads/writes some of the 64bit
+registers (e.g, address comparators, vmid/cid comparators etc.) using
+32bit accesses. Ensure we use the appropriate width accessors for
+the registers.
 
-  SError Interrupt on CPU6, code 0xbe000411 -- SError
-  pstate: 80400089 (Nzcv daIf +PAN -UAO)
-  pc : tmc_read_unprepare_etb+0x74/0x108
-  lr : tmc_read_unprepare_etb+0x54/0x108
-  sp : ffffff80d9507c30
-  x29: ffffff80d9507c30 x28: ffffff80b3569a0c
-  x27: 0000000000000000 x26: 00000000000a0001
-  x25: ffffff80cbae9550 x24: 0000000000000010
-  x23: ffffffd07296b0f0 x22: ffffffd0109ee028
-  x21: 0000000000000000 x20: ffffff80d19e70e0
-  x19: ffffff80d19e7080 x18: 0000000000000000
-  x17: 0000000000000000 x16: 0000000000000000
-  x15: 0000000000000000 x14: 0000000000000000
-  x13: 0000000000000000 x12: 0000000000000000
-  x11: 0000000000000000 x10: dfffffd000000001
-  x9 : 0000000000000000 x8 : 0000000000000002
-  x7 : ffffffd071d0fe78 x6 : 0000000000000000
-  x5 : 0000000000000080 x4 : 0000000000000001
-  x3 : ffffffd071d0fe98 x2 : 0000000000000000
-  x1 : 0000000000000004 x0 : 0000000000000001
-  Kernel panic - not syncing: Asynchronous SError Interrupt
-
-Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-Reported-by: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
+Fixes: f188b5e76aae ("coresight: etm4x: Save/restore state across CPU low power states")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200716175746.3338735-14-mathieu.poirier@linaro.org
+Link: https://lore.kernel.org/r/20200716175746.3338735-18-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 16 ++++++++--------
+ drivers/hwtracing/coresight/coresight-etm4x.h |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 36cce2bfb7449..6375504ba8b00 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -639,15 +639,14 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 007d7c6e91f48..6089c481f8f19 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -1202,8 +1202,8 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+ 	}
  
- 	spin_lock_irqsave(&drvdata->spinlock, flags);
+ 	for (i = 0; i < drvdata->nr_addr_cmp * 2; i++) {
+-		state->trcacvr[i] = readl(drvdata->base + TRCACVRn(i));
+-		state->trcacatr[i] = readl(drvdata->base + TRCACATRn(i));
++		state->trcacvr[i] = readq(drvdata->base + TRCACVRn(i));
++		state->trcacatr[i] = readq(drvdata->base + TRCACATRn(i));
+ 	}
  
--	/* There is no point in reading a TMC in HW FIFO mode */
--	mode = readl_relaxed(drvdata->base + TMC_MODE);
--	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
--		spin_unlock_irqrestore(&drvdata->spinlock, flags);
--		return -EINVAL;
--	}
--
- 	/* Re-enable the TMC if need be */
- 	if (drvdata->mode == CS_MODE_SYSFS) {
-+		/* There is no point in reading a TMC in HW FIFO mode */
-+		mode = readl_relaxed(drvdata->base + TMC_MODE);
-+		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-+			spin_unlock_irqrestore(&drvdata->spinlock, flags);
-+			return -EINVAL;
-+		}
- 		/*
- 		 * The trace run will continue with the same allocated trace
- 		 * buffer. As such zero-out the buffer so that we don't end
+ 	/*
+@@ -1214,10 +1214,10 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+ 	 */
+ 
+ 	for (i = 0; i < drvdata->numcidc; i++)
+-		state->trccidcvr[i] = readl(drvdata->base + TRCCIDCVRn(i));
++		state->trccidcvr[i] = readq(drvdata->base + TRCCIDCVRn(i));
+ 
+ 	for (i = 0; i < drvdata->numvmidc; i++)
+-		state->trcvmidcvr[i] = readl(drvdata->base + TRCVMIDCVRn(i));
++		state->trcvmidcvr[i] = readq(drvdata->base + TRCVMIDCVRn(i));
+ 
+ 	state->trccidcctlr0 = readl(drvdata->base + TRCCIDCCTLR0);
+ 	state->trccidcctlr1 = readl(drvdata->base + TRCCIDCCTLR1);
+@@ -1315,18 +1315,18 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+ 	}
+ 
+ 	for (i = 0; i < drvdata->nr_addr_cmp * 2; i++) {
+-		writel_relaxed(state->trcacvr[i],
++		writeq_relaxed(state->trcacvr[i],
+ 			       drvdata->base + TRCACVRn(i));
+-		writel_relaxed(state->trcacatr[i],
++		writeq_relaxed(state->trcacatr[i],
+ 			       drvdata->base + TRCACATRn(i));
+ 	}
+ 
+ 	for (i = 0; i < drvdata->numcidc; i++)
+-		writel_relaxed(state->trccidcvr[i],
++		writeq_relaxed(state->trccidcvr[i],
+ 			       drvdata->base + TRCCIDCVRn(i));
+ 
+ 	for (i = 0; i < drvdata->numvmidc; i++)
+-		writel_relaxed(state->trcvmidcvr[i],
++		writeq_relaxed(state->trcvmidcvr[i],
+ 			       drvdata->base + TRCVMIDCVRn(i));
+ 
+ 	writel_relaxed(state->trccidcctlr0, drvdata->base + TRCCIDCCTLR0);
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
+index b0d633daf7162..47729e04aac72 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.h
++++ b/drivers/hwtracing/coresight/coresight-etm4x.h
+@@ -334,7 +334,7 @@ struct etmv4_save_state {
+ 	u64	trcacvr[ETM_MAX_SINGLE_ADDR_CMP];
+ 	u64	trcacatr[ETM_MAX_SINGLE_ADDR_CMP];
+ 	u64	trccidcvr[ETMv4_MAX_CTXID_CMP];
+-	u32	trcvmidcvr[ETM_MAX_VMID_CMP];
++	u64	trcvmidcvr[ETM_MAX_VMID_CMP];
+ 	u32	trccidcctlr0;
+ 	u32	trccidcctlr1;
+ 	u32	trcvmidcctlr0;
 -- 
 2.25.1
 
