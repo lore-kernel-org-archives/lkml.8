@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F7C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38644C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110AF20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171BD206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682888;
-	bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
+	s=default; t=1597682893;
+	bh=M7z37lMIBKjuXXT6srfcnRegDtH5UGdVUmG4jh/8MfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwSdSqJi+gHFtQOKCPVT9srtQ8ULTJ4ksu5jKNH6EBTbd815GLpdKJ9INt/VrjE9F
-	 paQsAl2kz8XRMMC8l6loPTchYOUnXll3ahO6E/H2ZveOo3okf84sB25LEpCUUqOy3x
-	 JKf+Nbj87w/6uCDCQX9a0JyGh7tQQgvacHh+jGSE=
+	b=rwgxQiGjEhFMVApFJco3V9hx/adifyhMlD8PVxF4lL8dcOUmDUhZo8YzLfYFyrB7b
+	 Au1cwHvnDaIn4rx1Llv0TfO9fLgj7OctH2niaVi5HV1qS7jn+/YnpXduBOhvh2uqlT
+	 bFk0s+ijSvadrPv8Te8EVImB0nyCPMhGVF0D4pf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388924AbgHQQsE (ORCPT
+        id S2388852AbgHQQrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:47:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388144AbgHQQBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:01:23 -0400
+        id S2387972AbgHQQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:01:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00266207FF;
-        Mon, 17 Aug 2020 16:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B4520885;
+        Mon, 17 Aug 2020 16:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680082;
-        bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
+        s=default; t=1597680077;
+        bh=M7z37lMIBKjuXXT6srfcnRegDtH5UGdVUmG4jh/8MfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pb8xE5GxI2DIVnNTlramjBsCwuk1e6s7/d5LpShRPd5ztPoK8VUAUgviMKnkOtne5
-         kIDRbWWRI3DNJR79qbFyz9N0VajCs7zc8iw1IcFzDT2x3P8N52UuzNLgrFqREj1OOD
-         8BaEfqN8kD5aJ2shXV3KmjsyntP0NuGLbOlnUlpo=
+        b=liK7GI8okQd6n5cD51Pb4Y1L9hqCzKjCMYbXEIq1zJ4vRcu1EFZS2yj6gt4/OtlGQ
+         1u79dSmqrMhvL5aJ/Eoen2sj/3bynG6oTEHercqY354Hh94X+yST6k5cHNYymLf3//
+         YbAigWsagOMWjGi/xo/QnoK/tmc321T4Uj0L4beU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/270] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Mon, 17 Aug 2020 17:13:49 +0200
-Message-Id: <20200817143757.177939759@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 044/270] nvme-multipath: fix logic for non-optimized paths
+Date:   Mon, 17 Aug 2020 17:14:05 +0200
+Message-Id: <20200817143757.995482423@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,62 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 3f6e3246db0e6f92e784965d9d0edb8abe6c6b74 ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+Handle the special case where we have exactly one optimized path,
+which we should keep using in this case.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
+Signed off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 52665f30d236d..6bc3000deb86e 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 5433aa2f76017..38d25d7c6bca3 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -249,6 +249,12 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
+ 			fallback = ns;
  	}
  
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
- 
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
- 
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
-+
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
- }
- 
- static bool __init at91_is_pm_mode_active(int pm_mode)
++	/* No optimized path found, re-check the current path */
++	if (!nvme_path_is_disabled(old) &&
++	    old->ana_state == NVME_ANA_OPTIMIZED) {
++		found = old;
++		goto out;
++	}
+ 	if (!fallback)
+ 		return NULL;
+ 	found = fallback;
 -- 
 2.25.1
 
