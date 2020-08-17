@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF150C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7394C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 807A120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5CE20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689468;
-	bh=cXb3Y5smLW5QBd7bhkE4c6NgmedioV81GoTjsOk/Jzc=;
+	s=default; t=1597689470;
+	bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lbAKI/3MY4KgeKFkiaKtJtX7Vcxa7gPgZR34W4+Cw5ZcMDwzcTeQwjLQwcfjZH5n8
-	 1bvVBYZpCL1NKN0+Aak4/HBWFeoq7RQmAvIJiCqjJ8GmTsYxh1p/Duc3laz0z6XHLd
-	 ASvB7Ywo/XZS0Varl+pspEcD0dEKzniXZbpj08tw=
+	b=LKiAtcV4gAAEN5ptM5zQvqtB+7gw6Bm0kUYi4t4Wqzr2cUu+E9Y76x31NOXl+1xh+
+	 V+uylzsia5l2WCrDXIQKuwgAazHg1q1vGdqPbYzllekTW+v2I4562bj/H9f4tvTDha
+	 VrP7tz9/+Ccb/XvOYYHG1278+W/WcOnSnbtQDuOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbgHQShg (ORCPT
+        id S1730933AbgHQP6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:37:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbgHQP7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:59:03 -0400
+        id S2387546AbgHQPm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 713732072E;
-        Mon, 17 Aug 2020 15:58:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D267F20825;
+        Mon, 17 Aug 2020 15:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679938;
-        bh=cXb3Y5smLW5QBd7bhkE4c6NgmedioV81GoTjsOk/Jzc=;
+        s=default; t=1597678948;
+        bh=lc7hxZLB0QegXEzX7NqRavm14GKELH629t/S1CVA/tI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0cuE9ISFCnXGPDDroC4j4TXCUO50x9oN8lX/SOJBIB5/wy4nxMbarWSrj+nPXCDU7
-         0grLbqgMN4Dxm7qWk4Z9rJSiFogrNNvk8QP+NDCrTw2X8tXH0gEAmOm/jPO6usBTu2
-         MDMcEDZide5rbUGYzmXZLjE3lJ6HNoIvgdHeIuuw=
+        b=QIhKSzXgCWFnytsTtq1xJagzHL5oC9AhE5z3TR1CXCvuahKrixGKXhK2Ec7YSZcBD
+         p9K7fbUWitij80zFMnXwQwm5UZ3UklCD781Xcc7/do7oA+6wBm3mTS5z5ZnjNhq0P5
+         xTOGcWikrzzuJOgCzJOT0zGXdU5rhkGoJlZmSzo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.7 384/393] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
-Date:   Mon, 17 Aug 2020 17:17:14 +0200
-Message-Id: <20200817143838.228903172@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 044/393] regulator: fix memory leak on error path of regulator_register()
+Date:   Mon, 17 Aug 2020 17:11:34 +0200
+Message-Id: <20200817143821.738366081@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,107 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-commit 14dee058610446aa464254fc5c8e88c7535195e0 upstream.
+[ Upstream commit 9177514ce34902b3adb2abd490b6ad05d1cfcb43 ]
 
-The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
-display frontend" from Apr 3, 2018, leads to the following static
-checker warning:
+The change corrects registration and deregistration on error path
+of a regulator, the problem was manifested by a reported memory
+leak on deferred probe:
 
-	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
-	warn: passing zero to 'ERR_CAST'
+    as3722-regulator as3722-regulator: regulator 13 register failed -517
 
-drivers/gpu/drm/xen/xen_drm_front_gem.c
-   133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
-   134                                                  size_t size)
-   135  {
-   136          struct xen_gem_object *xen_obj;
-   137
-   138          xen_obj = gem_create(dev, size);
-   139          if (IS_ERR_OR_NULL(xen_obj))
-   140                  return ERR_CAST(xen_obj);
+    # cat /sys/kernel/debug/kmemleak
+    unreferenced object 0xecc43740 (size 64):
+      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
+      hex dump (first 32 bytes):
+        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
+        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
+      backtrace:
+        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
+        [<40c0ad48>] kvasprintf+0x64/0xd4
+        [<109abd29>] kvasprintf_const+0x70/0x84
+        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
+        [<62282ea2>] dev_set_name+0x40/0x64
+        [<a39b6757>] regulator_register+0x3a4/0x1344
+        [<16a9543f>] devm_regulator_register+0x4c/0x84
+        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
+        ...
 
-Fix this and the rest of misused places with IS_ERR_OR_NULL in the
-driver.
+The memory leak problem was introduced as a side ef another fix in
+regulator_register() error path, I believe that the proper fix is
+to decouple device_register() function into its two compounds and
+initialize a struct device before assigning any values to its fields
+and then using it before actual registration of a device happens.
 
-Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
+This lets to call put_device() safely after initialization, and, since
+now a release callback is called, kfree(rdev->constraints) shall be
+removed to exclude a double free condition.
 
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200813062113.11030-3-andr2000@gmail.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20200724005013.23278-1-vz@mleia.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xen/xen_drm_front.c     |    4 ++--
- drivers/gpu/drm/xen/xen_drm_front_gem.c |    8 ++++----
- drivers/gpu/drm/xen/xen_drm_front_kms.c |    2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/regulator/core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/xen/xen_drm_front.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front.c
-@@ -400,8 +400,8 @@ static int xen_drm_drv_dumb_create(struc
- 	args->size = args->pitch * args->height;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 7486f6e4e613c..0cb99bb090ef8 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5005,7 +5005,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	struct regulator_dev *rdev;
+ 	bool dangling_cfg_gpiod = false;
+ 	bool dangling_of_gpiod = false;
+-	bool reg_device_fail = false;
+ 	struct device *dev;
+ 	int ret, i;
  
- 	obj = xen_drm_front_gem_create(dev, args->size);
--	if (IS_ERR_OR_NULL(obj)) {
--		ret = PTR_ERR_OR_ZERO(obj);
-+	if (IS_ERR(obj)) {
-+		ret = PTR_ERR(obj);
- 		goto fail;
+@@ -5134,10 +5133,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
  	}
  
---- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-@@ -83,7 +83,7 @@ static struct xen_gem_object *gem_create
+ 	/* register with sysfs */
++	device_initialize(&rdev->dev);
+ 	rdev->dev.class = &regulator_class;
+ 	rdev->dev.parent = dev;
+ 	dev_set_name(&rdev->dev, "regulator.%lu",
+ 		    (unsigned long) atomic_inc_return(&regulator_no));
++	dev_set_drvdata(&rdev->dev, rdev);
  
- 	size = round_up(size, PAGE_SIZE);
- 	xen_obj = gem_create_obj(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return xen_obj;
+ 	/* set regulator constraints */
+ 	if (init_data)
+@@ -5188,12 +5189,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	    !rdev->desc->fixed_uV)
+ 		rdev->is_switch = true;
  
- 	if (drm_info->front_info->cfg.be_alloc) {
-@@ -117,7 +117,7 @@ static struct xen_gem_object *gem_create
- 	 */
- 	xen_obj->num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
- 	xen_obj->pages = drm_gem_get_pages(&xen_obj->base);
--	if (IS_ERR_OR_NULL(xen_obj->pages)) {
-+	if (IS_ERR(xen_obj->pages)) {
- 		ret = PTR_ERR(xen_obj->pages);
- 		xen_obj->pages = NULL;
- 		goto fail;
-@@ -136,7 +136,7 @@ struct drm_gem_object *xen_drm_front_gem
- 	struct xen_gem_object *xen_obj;
+-	dev_set_drvdata(&rdev->dev, rdev);
+-	ret = device_register(&rdev->dev);
+-	if (ret != 0) {
+-		reg_device_fail = true;
++	ret = device_add(&rdev->dev);
++	if (ret != 0)
+ 		goto unset_supplies;
+-	}
  
- 	xen_obj = gem_create(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return ERR_CAST(xen_obj);
+ 	rdev_init_debugfs(rdev);
  
- 	return &xen_obj->base;
-@@ -194,7 +194,7 @@ xen_drm_front_gem_import_sg_table(struct
- 
- 	size = attach->dmabuf->size;
- 	xen_obj = gem_create_obj(dev, size);
--	if (IS_ERR_OR_NULL(xen_obj))
-+	if (IS_ERR(xen_obj))
- 		return ERR_CAST(xen_obj);
- 
- 	ret = gem_alloc_pages_array(xen_obj, size);
---- a/drivers/gpu/drm/xen/xen_drm_front_kms.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_kms.c
-@@ -60,7 +60,7 @@ fb_create(struct drm_device *dev, struct
- 	int ret;
- 
- 	fb = drm_gem_fb_create_with_funcs(dev, filp, mode_cmd, &fb_funcs);
--	if (IS_ERR_OR_NULL(fb))
-+	if (IS_ERR(fb))
- 		return fb;
- 
- 	gem_obj = fb->obj[0];
+@@ -5215,17 +5213,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	mutex_unlock(&regulator_list_mutex);
+ wash:
+ 	kfree(rdev->coupling_desc.coupled_rdevs);
+-	kfree(rdev->constraints);
+ 	mutex_lock(&regulator_list_mutex);
+ 	regulator_ena_gpio_free(rdev);
+ 	mutex_unlock(&regulator_list_mutex);
++	put_device(&rdev->dev);
++	rdev = NULL;
+ clean:
+ 	if (dangling_of_gpiod)
+ 		gpiod_put(config->ena_gpiod);
+-	if (reg_device_fail)
+-		put_device(&rdev->dev);
+-	else
+-		kfree(rdev);
++	kfree(rdev);
+ 	kfree(config);
+ rinse:
+ 	if (dangling_cfg_gpiod)
+-- 
+2.25.1
+
 
 
