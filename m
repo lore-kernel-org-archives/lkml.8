@@ -2,164 +2,89 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B719C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD5220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA420709
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HeTPrkfo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rrxm18qI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHQXU1 (ORCPT
+        id S1726421AbgHQXWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:20:27 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60590 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgHQXU1 (ORCPT
+        Mon, 17 Aug 2020 19:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgHQXW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:20:27 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8422020B4908;
-        Mon, 17 Aug 2020 16:20:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8422020B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597706425;
-        bh=A+zf61jOkHNDiHT7zD/PpNx0R2iUw1Lg8D+5Srdt20k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HeTPrkfo2JeC1OZcPHHMnV8MGL8cu0d1d5OOXT4L9DHQiG8T1Dgn3c7LTfgWTEZZd
-         n4Uq67TxTcTfoMKnRYkUQ+g4beV4ftHzQMXyGGcbHtjlrnPOn0lfF5OQ2Q2el9kMP/
-         lzlBfI0f+p1Ix+KNyiMLVzg0ZWN+/fUIXlFzdDs8=
-Subject: Re: [PATCH 2/2] SELinux: Measure state and hash of policy using IMA
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        tusharsu@linux.microsoft.com, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        paul Moore <paul@paul-moore.com>
-References: <20200813170707.2659-1-nramas@linux.microsoft.com>
- <20200813170707.2659-3-nramas@linux.microsoft.com>
- <5f738fd8-fe28-5358-b3d8-b671b45caa7f@gmail.com>
- <7315b7e8-2c53-2555-bc2e-aae42e16aaa2@linux.microsoft.com>
- <CAEjxPJ6sZdm2w=bbkL0uJyEkHw0gCT_y812WQBZPtLCJzO6r3A@mail.gmail.com>
- <e935c06f-09e2-a2f7-f97f-768bc017f477@linux.microsoft.com>
- <CAEjxPJ7uWee5jjALtQ3azMvKRMk8pxFiYByWmYVhjgJiMNZ8ww@mail.gmail.com>
- <3679df359c35561f5bf6608911f96cc0292c7854.camel@linux.ibm.com>
- <57f972a7-26f1-3ac7-4001-54c0bc7e12a8@schaufler-ca.com>
- <089ca24d-863b-ca84-4859-d2d6e4f09b4c@linux.microsoft.com>
- <082a4311cd9211475df4c694f310f652d51e5d64.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <a5b9e465-bcb5-e56a-513b-6c9094b8fa81@linux.microsoft.com>
-Date:   Mon, 17 Aug 2020 16:20:24 -0700
+        Mon, 17 Aug 2020 19:22:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E75C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=tIkEgB+fwOAFOaf/drqEAz6ed9qOY9fx/AstJdlgNn8=; b=rrxm18qIu8NdWfouL+ehSetkl5
+        FF39KTB+dxivXDkfkPpGw8wyQEZFLg/t237j1WMdVvt35Uq9TEbWSSLDNg44gcjT5F1Dr2lucTjUL
+        bzri83NZuQUXhE2Ck9K8lTWEmUGi+Wcr/olCtaFKfUlHVaSUkd6QXk4HOHcE2GkPsJO45LQWVmMCo
+        mCrpd1DFFSVTW0Vw5PK+/nx9D0bV0UsV6i90OZusjNR8MUgYZKlivAJfxTM3xgoOobreQtd2y11mW
+        ZlCaZL41ZRs4jMB9bKpXZICj3OIcJ0wKDsAx67nAon3lLQNfJL5rt+XDCo0lZpkZCZGYAJJ8OiUty
+        bAPozAdg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7oSP-0007ci-Pu; Mon, 17 Aug 2020 23:22:26 +0000
+Subject: Re: .config file attached for your perusal..build stopped... Linux
+ 5.9-rc1
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAHk-=wiwfkKp93C+yLqKWAU0ChBdeBDUhgOk09_=UQ8gOKbV3w@mail.gmail.com>
+ <20200816225822.GA3222@debian>
+ <CAHk-=wgOaEmFGYhnx7XLe8AbQKYpgMAzyuHuS8dYZoB2hS3C=A@mail.gmail.com>
+ <20200817212519.GA11141@debian>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <35fc1d2a-aff5-42d4-bd4b-6cabaa67fe8e@infradead.org>
+Date:   Mon, 17 Aug 2020 16:22:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <082a4311cd9211475df4c694f310f652d51e5d64.camel@linux.ibm.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
+In-Reply-To: <20200817212519.GA11141@debian>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 4:11 PM, Mimi Zohar wrote:
-> On Mon, 2020-08-17 at 15:33 -0700, Lakshmi Ramasubramanian wrote:
->> On 8/17/20 3:00 PM, Casey Schaufler wrote:
->>> On 8/17/2020 2:31 PM, Mimi Zohar wrote:
->>>> On Thu, 2020-08-13 at 14:13 -0400, Stephen Smalley wrote:
->>>>> On Thu, Aug 13, 2020 at 2:03 PM Lakshmi Ramasubramanian
->>>>> <nramas@linux.microsoft.com> wrote:
->>>>>> On 8/13/20 10:58 AM, Stephen Smalley wrote:
->>>>>>> On Thu, Aug 13, 2020 at 1:52 PM Lakshmi Ramasubramanian
->>>>>>> <nramas@linux.microsoft.com> wrote:
->>>>>>>> On 8/13/20 10:42 AM, Stephen Smalley wrote:
->>>>>>>>
->>>>>>>>>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 000000000000..f21b7de4e2ae
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/security/selinux/measure.c
->>>>>>>>>> @@ -0,0 +1,204 @@
->>>>>>>>>> +static int selinux_hash_buffer(void *buf, size_t buf_len,
->>>>>>>>>> +                   void **buf_hash, int *buf_hash_len)
->>>>>>>>>> +{
->>>>>>>>>> +    struct crypto_shash *tfm;
->>>>>>>>>> +    struct shash_desc *desc = NULL;
->>>>>>>>>> +    void *digest = NULL;
->>>>>>>>>> +    int desc_size;
->>>>>>>>>> +    int digest_size;
->>>>>>>>>> +    int ret = 0;
->>>>>>>>>> +
->>>>>>>>>> +    tfm = crypto_alloc_shash("sha256", 0, 0);
->>>>>>>>>> +    if (IS_ERR(tfm))
->>>>>>>>>> +        return PTR_ERR(tfm);
->>>>>>>>> Can we make the algorithm selectable via kernel parameter and/or writing
->>>>>>>>> to a new selinuxfs node?
->>>>>>>> I can add a kernel parameter to select this hash algorithm.
->>>>>>> Also can we provide a Kconfig option for the default value like IMA does?
->>>>>>>
->>>>>> Would we need both - Kconfig and kernel param?
->>>>>>
->>>>>> The other option is to provide an IMA function to return the current
->>>>>> hash algorithm used for measurement. That way a consistent hash
->>>>>> algorithm can be employed by both IMA and the callers. Would that be better?
->>>>> This is why I preferred just passing the serialized policy buffer to
->>>>> IMA and letting it handle the hashing.  But apparently that approach
->>>>> wouldn't fly.  IMA appears to support both a Kconfig option for
->>>>> selecting a default algorithm and a kernel parameter for overriding
->>>>> it.  I assume the idea is that the distros can pick a reasonable
->>>>> default and then the end users can override that if they have specific
->>>>> requirements.  I'd want the same for SELinux.  If IMA is willing to
->>>>> export its hash algorithm to external components, then I'm willing to
->>>>> reuse that but not sure if that's a layering violation.
->>>> With the new ima_measure_critical_data() hook, I agree with you and
->>>> Casey it doesn't make sense for each caller to have to write their own
->>>> function.  Casey suggested exporting IMA's hash function or defining a
->>>> new common hash function.   There's nothing specific to IMA.
+On 8/17/20 2:25 PM, Bhaskar Chowdhury wrote:
+> On 09:44 Mon 17 Aug 2020, Linus Torvalds wrote:
+>> On Sun, Aug 16, 2020 at 3:58 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
 >>>
->>> Except that no one is going to use the function unless they're
->>> doing an IMA operation.
+>>> I am scared that I might have missed something very obvious ...am I?? And the build abort...take a peek..
+>>>
+>>> ./arch/x86/include/asm/io.h:292:2: error: implicit declaration of function ‘slow_down_io’ [-Werror=implicit-function-declaration]
 >>
->> Can we do the following instead:
+>> I'm not seeing how that would happen with a pristine codebase, but
+>> send me your config just in case.
 >>
->> In ima_measure_critical_data() IMA hook, we can add another param for
->> the caller to indicate whether
+>> slow_down_io() is declared not that much further up in that file (or
+>> in paravirt.h that gets included before for the CONFIG_PARAVIRT case).
 >>
->>    => The contents of "buf" needs to be measured
->>       OR
->>    => Hash of the contents of "buf" needs to be measured.
->>
->> This way IMA doesn't need to export any new function to meet the hashing
->> requirement.
+>>             Linus
 > 
-> I'm not sure overloading the parameters is a good idea, but extending
-> ima_measure_critical_data() to calculate a simple buffer hash should be
-> fine.
-> 
+> Thanks, Linus ...I have attached the .config file with this mail for your
+> perusal.
 
-Sorry I wasn't clear - I didn't mean to say overload existing 
-parameters, but extending the IMA hook to calculate the hash of the 
-buffer - like the following:
+Hi--
+I don't see any build errors with your config file.
 
-int ima_measure_critical_data(const char *event_name,
-                               const char *event_data_source,
-                               const void *buf, int buf_len,
-                               bool measure_buf_hash);
-
-If measure_buf_hash is true, IMA will calculate the hash of contents of 
-"buf" and measure the hash.
-Else, IMA will measure the contents of "buf".
-
-  -lakshmi
-
+-- 
+~Randy
 
