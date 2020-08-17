@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E404C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512C320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4452220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688095;
-	bh=IaLP333B9bUyOTZm2TjtmGodcRi/lRz9ANbFcszLXm0=;
+	s=default; t=1597688103;
+	bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jpd+ZMunpXX2f62iLtoPOdWgcLJQdNPHjQQxBaOLBvKmsTzNgSlSD5nTWc3IC/Bvf
-	 0G0WaRU5mYg3Y9vS4tY/P8IJ+MTrOKNI4B/3YdQQA+dEXl/YvnmAbRILa9ucTXK4ij
-	 zpPAVO2Ct5fgdDcrfv3m6Bnu89HJRZiFXMRA7Siw=
+	b=TDegFU/Zvhc8YGC5WL8EIyZ0NNgnbIQvqRBemC1JJ0Uxo576m6KPOMs+7sM2dI7xi
+	 c7MrZutNZmGjlBlzj/a43negJsXvpjKyeKMLCKF4k6ZUNGFXSoMH4EB21ZawY6Pe6m
+	 PsSRc04A34ZPoSS8dMC9YhSJuU7tQP2NG+siuwR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390629AbgHQSOk (ORCPT
+        id S2390654AbgHQSPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:14:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388245AbgHQQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:06:26 -0400
+        id S1731052AbgHQQGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:06:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855BB20760;
-        Mon, 17 Aug 2020 16:06:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D8A2063A;
+        Mon, 17 Aug 2020 16:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680381;
-        bh=IaLP333B9bUyOTZm2TjtmGodcRi/lRz9ANbFcszLXm0=;
+        s=default; t=1597680371;
+        bh=kw06jVtb/jIPSntCZK3WXF6KXsRzue6VWinIXA0xhaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d206rEsVgOqyWg3zBFat6pbwKryy6zK06GWVBuo0qrGPVERaUutEgFjAdX+t3LooF
-         7srqKZwj8zO/RjTutT6OLljKt1eKJV0twzI9nK5e9JUddFwxxU0sdQ+QlCR8wrd4Po
-         NtVXKceAif8wXjLnWlJSrWyCPFrxgj8MxSdP+GbU=
+        b=ZrelS+3IGmFZm/PLrTsQm7IVasR+9s8ig51bfFJgf3OyLMsePTCuMy0Mq+P5z+bo0
+         lrhVHb+H7+s3z0vj/t3PMkQyLbNbBLUajG4V3n8lcygogjDMQC2lsUDYXmAFo4xi4R
+         EwC+gVC7j7ryMGpfLlImk4lZw6L7YTtZFgITdfTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/270] leds: core: Flush scheduled work for system suspend
-Date:   Mon, 17 Aug 2020 17:15:35 +0200
-Message-Id: <20200817143802.462443400@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 130/270] RDMA/rxe: Skip dgid check in loopback mode
+Date:   Mon, 17 Aug 2020 17:15:31 +0200
+Message-Id: <20200817143802.262314210@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,40 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-[ Upstream commit 302a085c20194bfa7df52e0fe684ee0c41da02e6 ]
+[ Upstream commit 5c99274be8864519328aa74bc550ba410095bc1c ]
 
-Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
-system suspend.
+In the loopback tests, the following call trace occurs.
 
-led_set_brightness_nopm() uses schedule_work() to set LED brightness.
-However, there's no guarantee that the scheduled work gets executed
-because no one flushes the work.
+ Call Trace:
+  __rxe_do_task+0x1a/0x30 [rdma_rxe]
+  rxe_qp_destroy+0x61/0xa0 [rdma_rxe]
+  rxe_destroy_qp+0x20/0x60 [rdma_rxe]
+  ib_destroy_qp_user+0xcc/0x220 [ib_core]
+  uverbs_free_qp+0x3c/0xc0 [ib_uverbs]
+  destroy_hw_idr_uobject+0x24/0x70 [ib_uverbs]
+  uverbs_destroy_uobject+0x43/0x1b0 [ib_uverbs]
+  uobj_destroy+0x41/0x70 [ib_uverbs]
+  __uobj_get_destroy+0x39/0x70 [ib_uverbs]
+  ib_uverbs_destroy_qp+0x88/0xc0 [ib_uverbs]
+  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xb9/0xf0 [ib_uverbs]
+  ib_uverbs_cmd_verbs+0xb16/0xc30 [ib_uverbs]
 
-So flush the scheduled work to make sure LED gets turned off.
+The root cause is that the actual RDMA connection is not created in the
+loopback tests and the rxe_match_dgid will fail randomly.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Fixes: 81fe8e5b73e3 ("leds: core: Add led_set_brightness_nosleep{nopm} functions")
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+To fix this call trace which appear in the loopback tests, skip check of
+the dgid.
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Link: https://lore.kernel.org/r/20200630123605.446959-1-leon@kernel.org
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-class.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/sw/rxe/rxe_recv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index d3e83c33783e5..0a4823d9797ae 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -172,6 +172,7 @@ void led_classdev_suspend(struct led_classdev *led_cdev)
- {
- 	led_cdev->flags |= LED_SUSPENDED;
- 	led_set_brightness_nopm(led_cdev, 0);
-+	flush_work(&led_cdev->set_brightness_work);
- }
- EXPORT_SYMBOL_GPL(led_classdev_suspend);
+diff --git a/drivers/infiniband/sw/rxe/rxe_recv.c b/drivers/infiniband/sw/rxe/rxe_recv.c
+index 831ad578a7b29..46e111c218fd4 100644
+--- a/drivers/infiniband/sw/rxe/rxe_recv.c
++++ b/drivers/infiniband/sw/rxe/rxe_recv.c
+@@ -330,10 +330,14 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
  
+ static int rxe_match_dgid(struct rxe_dev *rxe, struct sk_buff *skb)
+ {
++	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
+ 	const struct ib_gid_attr *gid_attr;
+ 	union ib_gid dgid;
+ 	union ib_gid *pdgid;
+ 
++	if (pkt->mask & RXE_LOOPBACK_MASK)
++		return 0;
++
+ 	if (skb->protocol == htons(ETH_P_IP)) {
+ 		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
+ 				       (struct in6_addr *)&dgid);
+@@ -366,7 +370,7 @@ void rxe_rcv(struct sk_buff *skb)
+ 	if (unlikely(skb->len < pkt->offset + RXE_BTH_BYTES))
+ 		goto drop;
+ 
+-	if (unlikely(rxe_match_dgid(rxe, skb) < 0)) {
++	if (rxe_match_dgid(rxe, skb) < 0) {
+ 		pr_warn_ratelimited("failed matching dgid\n");
+ 		goto drop;
+ 	}
 -- 
 2.25.1
 
