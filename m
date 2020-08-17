@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB950C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C71C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2AD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12EE2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687691;
-	bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+	s=default; t=1597687707;
+	bh=3Vmt7elrrY0Kx0wt65LnXkA3Dxd0dWGwpRqdwHSx8QU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gGiOB2pWzG4Yijy5qHO/cSB5oMCLN3PeQKGbJIoiAvdt2p4OR/HKGLcvD6zmK4HAl
-	 JaEhh8rnzMHtaBv26oocYyHH8tCSvyAuI4YUTCX4bmabOk/Wu3zxeCKSazQnMDST1K
-	 2h/L3Qr1QbsgsNOpJWGieDYWLCyln+JiZsYg+Wq4=
+	b=jVaLMNXrW8Ob9utbzViwtacGadRTPqqwcYGQgmI66i325cw2+aL7vfD+6+Gvgd2MN
+	 VmJAuVNP/0eZ765+CnRM2/NTjVWq2Jsq3T38PHOUyJCr0mvS7MpJTjJ5d81eqXCNJr
+	 PS82KEjV0eYN6WFjq+4Qvc+NT222JsVStecmDiUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388456AbgHQQIX (ORCPT
+        id S2390231AbgHQSIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387727AbgHQPpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:49 -0400
+        id S2388357AbgHQQI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA43E2053B;
-        Mon, 17 Aug 2020 15:45:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEFB620658;
+        Mon, 17 Aug 2020 16:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679148;
-        bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+        s=default; t=1597680508;
+        bh=3Vmt7elrrY0Kx0wt65LnXkA3Dxd0dWGwpRqdwHSx8QU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HXoz2BUoW0Rz9PkFJdZfjqc4bCG3ktl09nRBA3mFkyy8tmExGkvBFweLSdi7J0KiT
-         PwTz4m4sEkPplKKKCglskXlVVy66geHiRpGVL240Ult8oXG9zJtsynVeMjb+JMFH4P
-         PZaZxtfPBPoMKUWtygX6vl+m0XRgIBofzkV/KW0U=
+        b=FRlMKKh3njc5+yWIDG8GD9b5X8Bo/AeujltM5eQIOUHK7vZgB+VkKWj0KsQMtQCUf
+         KeG53jCfZhBgXXlIM10Lu4djpOnU7tzsVmFVuDTjeKZNwKWfbyoImD5xfAXjOlr2Z1
+         O8wf4i1icPyPfOy7AzSu4wa6qpKAgyBdncUk5oAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Danesh Petigara <danesh.petigara@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Pierre Sauter <pierre.sauter@stwm.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 112/393] usb: bdc: Halt controller on suspend
-Date:   Mon, 17 Aug 2020 17:12:42 +0200
-Message-Id: <20200817143825.048580290@linuxfoundation.org>
+Subject: [PATCH 5.4 214/270] SUNRPC: Fix ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+Date:   Mon, 17 Aug 2020 17:16:55 +0200
+Message-Id: <20200817143806.437599061@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,49 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danesh Petigara <danesh.petigara@broadcom.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
+[ Upstream commit 986a4b63d3bc5f2c0eb4083b05aff2bf883b7b2f ]
 
-GISB bus error kernel panics have been observed during S2 transition
-tests on the 7271t platform. The errors are a result of the BDC
-interrupt handler trying to access BDC register space after the
-system's suspend callbacks have completed.
+Braino when converting "buf->len -=" to "buf->len = len -".
 
-Adding a suspend hook to the BDC driver that halts the controller before
-S2 entry thus preventing unwanted access to the BDC register space during
-this transition.
+The result is under-estimation of the ralign and rslack values. On
+krb5p mounts, this has caused READDIR to fail with EIO, and KASAN
+splats when decoding READLINK replies.
 
-Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+As a result of fixing this oversight, the gss_unwrap method now
+returns a buf->len that can be shorter than priv_len for small
+RPC messages. The additional adjustment done in unwrap_priv_data()
+can underflow buf->len. This causes the nfsd_request_too_large
+check to fail during some NFSv3 operations.
+
+Reported-by: Marian Rainer-Harbach
+Reported-by: Pierre Sauter <pierre.sauter@stwm.de>
+BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1886277
+Fixes: 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()")
+Reviewed-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sunrpc/auth_gss/gss_krb5_wrap.c | 2 +-
+ net/sunrpc/auth_gss/svcauth_gss.c   | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 5fde5a8b065c1..2dca11f0a7444 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -603,9 +603,14 @@ static int bdc_remove(struct platform_device *pdev)
- static int bdc_suspend(struct device *dev)
- {
- 	struct bdc *bdc = dev_get_drvdata(dev);
-+	int ret;
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index 683755d950758..78ad416569969 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -584,7 +584,7 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
+ 							buf->head[0].iov_len);
+ 	memmove(ptr, ptr + GSS_KRB5_TOK_HDR_LEN + headskip, movelen);
+ 	buf->head[0].iov_len -= GSS_KRB5_TOK_HDR_LEN + headskip;
+-	buf->len = len - GSS_KRB5_TOK_HDR_LEN + headskip;
++	buf->len = len - (GSS_KRB5_TOK_HDR_LEN + headskip);
  
--	clk_disable_unprepare(bdc->clk);
--	return 0;
-+	/* Halt the controller */
-+	ret = bdc_stop(bdc);
-+	if (!ret)
-+		clk_disable_unprepare(bdc->clk);
-+
-+	return ret;
- }
+ 	/* Trim off the trailing "extra count" and checksum blob */
+ 	xdr_buf_trim(buf, ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index fd91274e834d6..3645cd241d3ea 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -949,7 +949,6 @@ unwrap_priv_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct gs
  
- static int bdc_resume(struct device *dev)
+ 	maj_stat = gss_unwrap(ctx, 0, priv_len, buf);
+ 	pad = priv_len - buf->len;
+-	buf->len -= pad;
+ 	/* The upper layers assume the buffer is aligned on 4-byte boundaries.
+ 	 * In the krb5p case, at least, the data ends up offset, so we need to
+ 	 * move it around. */
 -- 
 2.25.1
 
