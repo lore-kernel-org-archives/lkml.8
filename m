@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18EEC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A9CC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81BE220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD003206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682807;
-	bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
+	s=default; t=1597682833;
+	bh=XGLUHC3M004uJQzADNk1uMu20Yuq/+igbT74y7M+Xf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJFIPmmrTurR7qM15NQMJqz9hGqEooS5LVcOZBOM6m35Q7Nd/UL2qoB+ODYNk1P/m
-	 dcAnz3LMwD5GRyfpcXXzZ+k0WvUJG+jzS2b2pavcOzX6B3SU1cJCnsKXZN/x0p8hVL
-	 ia1O2MZ+pUk9p2faUO2ATX3fH6o8gOTMYIGNh40I=
+	b=nTv1XKwj5idoA8WCkS3fo8rEZHm0QhFaLaaY0VRu1/HCnOAblSfc+52FR2u2eMIkV
+	 Ms4s/GT2NR1nbroooN4bXKdUxGods8KeT8RvAoMjVBYdF0zsbvFA135bazCLEczF+U
+	 jj9u/fqoXh1sEkfuQs6Uik+2q8O90NlSOKrX4XUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgHQQqV (ORCPT
+        id S1731378AbgHQQq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47470 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731000AbgHQQAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:00:07 -0400
+        id S1731023AbgHQQAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:00:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DB520825;
-        Mon, 17 Aug 2020 16:00:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D649020729;
+        Mon, 17 Aug 2020 16:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680006;
-        bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
+        s=default; t=1597680035;
+        bh=XGLUHC3M004uJQzADNk1uMu20Yuq/+igbT74y7M+Xf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQO/3PZdFqVKr+iNr/Ng+tB8iRc3cfhJYxiT9DnBm6rnehWO9m9mXSQ2eZ14g6I6I
-         MQ+hZcWhPTSQD9kgrX4PxEH4QlNu/KEwqYmFeKmqUZPGs6zTS18x9+R4LbcqXGImrj
-         jbFuJMbLLsW0dan3VdhZOIr3/7HFoaLH8tvxinOM=
+        b=hZBfzWeYO9gjrjmtZWeRcP5ACngXaLTg1aaEFYowLIE8JCm/bbFYfbEjawhA8izuN
+         OcaqnxW+mzMNmp2hTpp+g61vJIzGhl+zKgK8BYmDETAW71KvstN5668qCVhaCaq3hm
+         GJdfbQellgUTsZhhJJc0uoPDZozWLRuKhN/e+2Zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Liu Yong <pkfxxxing@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/270] ARM: exynos: MCPM: Restore big.LITTLE cpuidle support
-Date:   Mon, 17 Aug 2020 17:13:38 +0200
-Message-Id: <20200817143756.652529501@linuxfoundation.org>
+Subject: [PATCH 5.4 004/270] fs/io_uring.c: Fix uninitialized variable is referenced in io_submit_sqe
+Date:   Mon, 17 Aug 2020 17:13:25 +0200
+Message-Id: <20200817143756.029696893@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,70 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Liu Yong <pkfxxxing@gmail.com>
 
-[ Upstream commit ea9dd8f61c8a890843f68e8dc0062ce78365aab8 ]
+the commit <a4d61e66ee4a> ("<io_uring: prevent re-read of sqe->opcode>")
+caused another vulnerability. After io_get_req(), the sqe_submit struct
+in req is not initialized, but the following code defaults that
+req->submit.opcode is available.
 
-Call exynos_cpu_power_up(cpunr) unconditionally. This is needed by the
-big.LITTLE cpuidle driver and has no side-effects on other code paths.
-
-The additional soft-reset call during little core power up has been added
-to properly boot all cores on the Exynos5422-based boards with secure
-firmware (like Odroid XU3/XU4 family). This however broke big.LITTLE
-CPUidle driver, which worked only on boards without secure firmware (like
-Peach-Pit/Pi Chromebooks). Apply the workaround only when board is
-running under secure firmware.
-
-Fixes: 833b5794e330 ("ARM: EXYNOS: reset Little cores when cpu is up")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Liu Yong <pkfxxxing@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-exynos/mcpm-exynos.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-index 9a681b421ae11..cd861c57d5adf 100644
---- a/arch/arm/mach-exynos/mcpm-exynos.c
-+++ b/arch/arm/mach-exynos/mcpm-exynos.c
-@@ -26,6 +26,7 @@
- #define EXYNOS5420_USE_L2_COMMON_UP_STATE	BIT(30)
- 
- static void __iomem *ns_sram_base_addr __ro_after_init;
-+static bool secure_firmware __ro_after_init;
- 
- /*
-  * The common v7_exit_coherency_flush API could not be used because of the
-@@ -58,15 +59,16 @@ static void __iomem *ns_sram_base_addr __ro_after_init;
- static int exynos_cpu_powerup(unsigned int cpu, unsigned int cluster)
- {
- 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
-+	bool state;
- 
- 	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
- 	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
- 		cluster >= EXYNOS5420_NR_CLUSTERS)
- 		return -EINVAL;
- 
--	if (!exynos_cpu_power_state(cpunr)) {
--		exynos_cpu_power_up(cpunr);
--
-+	state = exynos_cpu_power_state(cpunr);
-+	exynos_cpu_power_up(cpunr);
-+	if (!state && secure_firmware) {
- 		/*
- 		 * This assumes the cluster number of the big cores(Cortex A15)
- 		 * is 0 and the Little cores(Cortex A7) is 1.
-@@ -258,6 +260,8 @@ static int __init exynos_mcpm_init(void)
- 		return -ENOMEM;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index be3d595a607f4..c1aaee061dae5 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2559,6 +2559,7 @@ static void io_submit_sqe(struct io_ring_ctx *ctx, struct sqe_submit *s,
+ 		goto err;
  	}
  
-+	secure_firmware = exynos_secure_firmware_available();
-+
- 	/*
- 	 * To increase the stability of KFC reset we need to program
- 	 * the PMU SPARE3 register
++	memcpy(&req->submit, s, sizeof(*s));
+ 	ret = io_req_set_file(ctx, s, state, req);
+ 	if (unlikely(ret)) {
+ err_req:
 -- 
 2.25.1
 
