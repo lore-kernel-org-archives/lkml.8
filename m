@@ -2,193 +2,104 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47F120786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAC020789
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzldr36Y"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LPV8zIH7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XrcVTgUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgHQNmG (ORCPT
+        id S1728752AbgHQNmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
+        Mon, 17 Aug 2020 09:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgHQNlp (ORCPT
+        with ESMTP id S1728687AbgHQNlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 09:41:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182B4C061350
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 06:41:03 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 185so17484564ljj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 06:41:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LEzfLtgpOaMr9BZOKDE9VwILcSfLxB9dYWDMk9PYE6E=;
-        b=wzldr36YfCFHnuJj0eZdAQh7O82da8ru2uwlm5Jztd0+/UQs5kmiuX4RN8qXZ5ISfA
-         OQJ7aJsfp+2qxF/LDingmfanbPvvRYdHYoiYR2eUWB9mdzhEjYuBknkwlntG+J+JLheq
-         Fk58ihnKe1E2CuK0R2KbS8jPdO7XbxOqsucW5OpJEvYAPpVoVRdGx/zj0ipaC/IcF2Oc
-         AnWEFcQkaDxJFA9wuTxPtBBz+ZShzLC3p3Fj3wxx7Jpnw921A9GnIvAmwHITMmxfZ4I9
-         jOmFxS1drNKYn+YBEdcVHMNNihKbIGPLVBgK+43UadKeZEqbCP3lPcIlaHJqinKez9fA
-         evbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LEzfLtgpOaMr9BZOKDE9VwILcSfLxB9dYWDMk9PYE6E=;
-        b=gzObeV3u9zS5s73oak1ma9CGvhrzmyYMIDGdprYqUGtCom0ypOWCDaEyL2ZnGfmjuH
-         cIY8LOk6IDLwcBgluUP/7Jg/qxG2gAh/Sp2RLylEiy3uikA52NIqld5Udj1nfEui+hCN
-         PoPIjDaBbC052u5xX8rfHUrvfSUtyhXT/GRIUTmvuUfwugZMNovNqfdv4Zmlt8D5AnR/
-         rN3g7gKmrg+vo7BOEl+apiA5TWM5CRz4R1rBYjRGTkEBhwquGjttV0QpqlTKSEBLrsxa
-         SH5DtzAG65WwAi1FpPr7n9j+wHlGKOiQw5tqB2ZQvG0RrVPRDq8KlvGZ9uaAZZsDUR0+
-         Iq+g==
-X-Gm-Message-State: AOAM530bwuqmcyW0rTAy9LD2YYa/av0lSwSJuq89kRIq1EUpRn0uFqWG
-        ndk5kszml6o47ZMD7uZzLjI6Ig==
-X-Google-Smtp-Source: ABdhPJwTN8X9mU+NpaHzd414/e/35u+5H0aSg0yjp7vVPcmFhJd2JxCxJFOKKx4mVQ2nXmufiFPUkw==
-X-Received: by 2002:a2e:7813:: with SMTP id t19mr6874572ljc.255.1597671657357;
-        Mon, 17 Aug 2020 06:40:57 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id g22sm3443791lja.29.2020.08.17.06.40.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Aug 2020 06:40:56 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        praneeth@ti.com
-Subject: [PATCH v5 3/5] irqchip/irq-pruss-intc: Add logic for handling reserved interrupts
-Date:   Mon, 17 Aug 2020 15:40:11 +0200
-Message-Id: <1597671613-20879-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597671613-20879-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1597671613-20879-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786BDC061359;
+        Mon, 17 Aug 2020 06:41:15 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 15:41:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597671670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3bPb+Be6pafKwEQBFvSpZWJceorkqDy/T/jpI/cYYc=;
+        b=LPV8zIH7ojDEvlwh4FItD/FhOn+ITBTQl8BS00MO2pmoWjvhq0HeIXJD27igEfDhRA0gU6
+        tYcJYLc2S8tKvAVPJORsH7FCdoIKK735/G7ZDMgTbfYRtJpMKVLwkixVv8lqd8eBEzRrRU
+        UfG6ZB1eq1rBUQQrblKC/sCNWWKTfwPAaiI7omBgFKdZmasVVqLdRT/3c+m7snLtBKwZeA
+        UoaMbgwUSqZt471hfrY+uS0si9kdSqcZAEYT27PM7VxBWuBP0k/58R+7LgL3Zjz1IHB0Hi
+        mRWYiGeixmjgNN8uNvGDpFdsqWBeHiu6PZ/BqhM3QZN7GyBJg68zvw5OC7KxmQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597671670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3bPb+Be6pafKwEQBFvSpZWJceorkqDy/T/jpI/cYYc=;
+        b=XrcVTgUcnRvwNtPs8ZqOYuE3QRHNg1fW3dkB11UwWhMm4+8DFZKdQW6KcfCyYVlilzupQq
+        MtOkhNpeHlmJyHAw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: Re: Question on 5.4.55 merge into 5.4-rt
+Message-ID: <20200817134109.hu73gjafbdb2n3rz@linutronix.de>
+References: <20200814185421.74b1ddc8@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200814185421.74b1ddc8@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+On 2020-08-14 18:54:21 [-0400], Steven Rostedt wrote:
+>=20
+> When merging 5.4.55 into 5.4-rt I hit the following conflict:
+=E2=80=A6
+>=20
+> Where we are doing something slightly different. Placing the skb on the
+> sd->tofree_queue and raising NET_RX_SOFTIQ instead.
+>=20
+> Now that the vanilla stable 5.4 kernel doesn't call kfree_skb() from
+> irqs_disabled, can I safely revert this entire change?
 
-The PRUSS INTC has a fixed number of output interrupt lines that are
-connected to a number of processors or other PRUSS instances or other
-devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-are usually connected to the main Arm host processor and are referred
-to as host interrupts 0 through 7 from ARM/MPU perspective.
+Not if you mean dropping skbufhead-raw-lock.patch.
 
-All of these 8 host interrupts are not always exclusively connected
-to the Arm interrupt controller. Some SoCs have some interrupt lines
-not connected to the Arm interrupt controller at all, while a few others
-have the interrupt lines connected to multiple processors in which they
-need to be partitioned as per SoC integration needs. For example, AM437x
-and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
-connected to the other PRUSS, while AM335x has host interrupt 0 shared
-between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
-a DMA controller.
+We can drop `tofree_queue' and everything related to it. We need to
+keep the `raw_lock' and the `rps_lock()' hunks for
+`sd->input_pkt_queue'. The other queue, `sd->process_queue', is
+protected by local_bh_disable() so these hunks can be dropped in the
+more recent RT versions with the re-written softirq code
+(v5.0.19-rt10+).
 
-Add logic to the PRUSS INTC driver to ignore both these shared and
-invalid interrupts.
+> Is it safe to call kfree_skb() from local_bh_disable()?
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
----
-v4->v5:
-- Rename: s/invalid_intr/irqs_reserved/
-v3->v4:
-- Due to changes in DT bindings which converts irqs-reserved
-  property from uint8-array to bitmask requested by Rob introduce
-  relevant changes in the driver.
-- Merge the irqs-reserved and irqs-shared to one property since they
-  can be handled by one logic (relevant change was introduced to DT
-  binding).
-- Update commit message.
-v2->v3:
-- Extra checks for (intc->irqs[i]) in error/remove path was moved from
-  "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
-  interrupts" to this patch
-v1->v2:
-- https://patchwork.kernel.org/patch/11069757/
----
- drivers/irqchip/irq-pruss-intc.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+of course it is.
 
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index 461e81e..1a72591 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -477,7 +477,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	struct pruss_intc *intc;
- 	struct pruss_host_irq_data *host_data[MAX_NUM_HOST_IRQS] = { NULL };
- 	int i, irq, ret;
--	u8 max_system_events;
-+	u8 max_system_events, irqs_reserved = 0;
- 
- 	data = of_device_get_match_data(dev);
- 	if (!data)
-@@ -497,6 +497,16 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	if (IS_ERR(intc->base))
- 		return PTR_ERR(intc->base);
- 
-+	ret = of_property_read_u8(dev->of_node, "ti,irqs-reserved",
-+				  &irqs_reserved);
-+
-+	/*
-+	 * The irqs-reserved is used only for some SoC's therefore not having
-+	 * this property is still valid
-+	 */
-+	if (ret < 0 && ret != -EINVAL)
-+		return ret;
-+
- 	pruss_intc_init(intc);
- 
- 	mutex_init(&intc->lock);
-@@ -507,6 +517,9 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-+		if (irqs_reserved & BIT(i))
-+			continue;
-+
- 		irq = platform_get_irq_byname(pdev, irq_names[i]);
- 		if (irq <= 0) {
- 			ret = (irq == 0) ? -EINVAL : irq;
-@@ -532,8 +545,11 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	return 0;
- 
- fail_irq:
--	while (--i >= 0)
--		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-+	while (--i >= 0) {
-+		if (intc->irqs[i])
-+			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-+							 NULL);
-+	}
- 
- 	irq_domain_remove(intc->domain);
- 
-@@ -547,8 +563,11 @@ static int pruss_intc_remove(struct platform_device *pdev)
- 	unsigned int hwirq;
- 	int i;
- 
--	for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
--		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-+	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-+		if (intc->irqs[i])
-+			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-+							 NULL);
-+	}
- 
- 	for (hwirq = 0; hwirq < max_system_events; hwirq++)
- 		irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
--- 
-2.7.4
+> I'm assuming it is, but just want to clarify. I'll be continuing
+> merging latest stable (with this revert), but please yell if you think
+> it will break?
+>
+> Thanks!
+>=20
+> -- Steve
 
+Sebastian
