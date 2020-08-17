@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D70C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77B8204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32FA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692011;
-	bh=aD0VJ2hek/6giczS2XRZSjOIniMLgWhsJr0SHpGkQQo=;
+	s=default; t=1597692014;
+	bh=pa7M8dBoZwbrpDy4ZMTrCKWCazaSlXNnYetm23sZ98o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GO/cnkfZLpiGJdblb4tTYLzEfUuneM9TcIRZISkvc2XazYlzPHXlCl/pZUicmgCQ6
-	 wBd6KcJuAfR6KzGwt19NU8M7hDKWfZ3IATAReC/RECG7P02JfdMKOqm1p31bnv5s5b
-	 qU29LL3KzridlcVFvoI/RlEtHCt3BMxSH6PJVgq8=
+	b=2iARGjgnNJFB53h60wPpnc6KodCbHzQZF6WkJ/Nc6bPrhQXN1kXv8vsrrmqDzoiHH
+	 t9mPEI79vz16gETtq7JeK/D8Vb+lWVgJ3SlElmMXyKRAkIIeHz03DcDpL0w/H1TSM9
+	 I7I3QmKq0ZhHxUo4asMxTSSx7iSw6ILq1iMqWkCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbgHQTUK (ORCPT
+        id S1730806AbgHQTT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44480 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgHQPgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:36:55 -0400
+        id S1730526AbgHQPhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94AF2208E4;
-        Mon, 17 Aug 2020 15:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F2F23121;
+        Mon, 17 Aug 2020 15:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678615;
-        bh=aD0VJ2hek/6giczS2XRZSjOIniMLgWhsJr0SHpGkQQo=;
+        s=default; t=1597678627;
+        bh=pa7M8dBoZwbrpDy4ZMTrCKWCazaSlXNnYetm23sZ98o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/5BiirO6zMWe78iLENdq/nQw2uYmYra21yFCf15GnUgWuPk09903KnJR+v1zUzdH
-         FWLY6xGnF5Qj8cwiJHV5Bf0hfWlrwctsmlb2EiEtVfNyjl5yCkQ3xhDA7NgU1Nmtvi
-         0SV+l2M8oRjp7deACn4bA1m8/FYxFcQSOrk9INu8=
+        b=fq04HTUf2YMThPKFFpcD/Ub6ysssvSyra0F8H719KI5ypN1YDkeSRj+f78lvlrer+
+         z+QO1c6WP/oEhfG1U1u1r7dAxitIPEMMy2WKC6aBXfmVJUKTaltnINb4OFmCWVA4OO
+         HEpYzzB8Hi09mllB3kltChkLLe8OWDL2/RiMk3rQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, EJ Hsu <ejh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 396/464] r8152: Use MAC address from correct device tree node
-Date:   Mon, 17 Aug 2020 17:15:49 +0200
-Message-Id: <20200817143852.747892430@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Jun Miao <jun.miao@windriver.com>,
+        Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.8 400/464] iommu/vt-d: Skip TE disabling on quirky gfx dedicated iommu
+Date:   Mon, 17 Aug 2020 17:15:53 +0200
+Message-Id: <20200817143852.945678875@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,39 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit b9b40ee4db6cb186341b97bca4f0d7aa2a042a66 ]
+commit b1012ca8dc4f9b1a1fe8e2cb1590dd6d43ea3849 upstream.
 
-Query the USB device's device tree node when looking for a MAC address.
-The struct device embedded into the struct net_device does not have a
-device tree node attached at all.
+The VT-d spec requires (10.4.4 Global Command Register, TE field) that:
 
-The reason why this went unnoticed is because the system where this was
-tested was one of the few development units that had its OTP programmed,
-as opposed to production systems where the MAC address is stored in a
-separate EEPROM and is passed via device tree by the firmware.
+Hardware implementations supporting DMA draining must drain any in-flight
+DMA read/write requests queued within the Root-Complex before completing
+the translation enable command and reflecting the status of the command
+through the TES field in the Global Status register.
 
-Reported-by: EJ Hsu <ejh@nvidia.com>
-Fixes: acb6d3771a03 ("r8152: Use MAC address from device tree if available")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: EJ Hsu <ejh@nvidia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Unfortunately, some integrated graphic devices fail to do so after some
+kind of power state transition. As the result, the system might stuck in
+iommu_disable_translation(), waiting for the completion of TE transition.
+
+This provides a quirk list for those devices and skips TE disabling if
+the qurik hits.
+
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=208363
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=206571
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Tested-by: Koba Ko <koba.ko@canonical.com>
+Tested-by: Jun Miao <jun.miao@windriver.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200723013437.2268-1-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/r8152.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -1504,7 +1504,7 @@ static int determine_ethernet_addr(struc
+---
+ drivers/iommu/intel/dmar.c  |    1 +
+ drivers/iommu/intel/iommu.c |   27 +++++++++++++++++++++++++++
+ include/linux/dmar.h        |    1 +
+ include/linux/intel-iommu.h |    2 ++
+ 4 files changed, 31 insertions(+)
+
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1102,6 +1102,7 @@ static int alloc_iommu(struct dmar_drhd_
+ 	}
  
- 	sa->sa_family = dev->type;
+ 	drhd->iommu = iommu;
++	iommu->drhd = drhd;
  
--	ret = eth_platform_get_mac_address(&dev->dev, sa->sa_data);
-+	ret = eth_platform_get_mac_address(&tp->udev->dev, sa->sa_data);
- 	if (ret < 0) {
- 		if (tp->version == RTL_VER_01) {
- 			ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
+ 	return 0;
+ 
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -356,6 +356,7 @@ static int intel_iommu_strict;
+ static int intel_iommu_superpage = 1;
+ static int iommu_identity_mapping;
+ static int intel_no_bounce;
++static int iommu_skip_te_disable;
+ 
+ #define IDENTMAP_GFX		2
+ #define IDENTMAP_AZALIA		4
+@@ -1629,6 +1630,10 @@ static void iommu_disable_translation(st
+ 	u32 sts;
+ 	unsigned long flag;
+ 
++	if (iommu_skip_te_disable && iommu->drhd->gfx_dedicated &&
++	    (cap_read_drain(iommu->cap) || cap_write_drain(iommu->cap)))
++		return;
++
+ 	raw_spin_lock_irqsave(&iommu->register_lock, flag);
+ 	iommu->gcmd &= ~DMA_GCMD_TE;
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+@@ -4039,6 +4044,7 @@ static void __init init_no_remapping_dev
+ 
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
++		drhd->gfx_dedicated = 1;
+ 		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+@@ -6182,6 +6188,27 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0062, quirk_calpella_no_shadow_gtt);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x006a, quirk_calpella_no_shadow_gtt);
+ 
++static void quirk_igfx_skip_te_disable(struct pci_dev *dev)
++{
++	unsigned short ver;
++
++	if (!IS_GFX_DEVICE(dev))
++		return;
++
++	ver = (dev->device >> 8) & 0xff;
++	if (ver != 0x45 && ver != 0x46 && ver != 0x4c &&
++	    ver != 0x4e && ver != 0x8a && ver != 0x98 &&
++	    ver != 0x9a)
++		return;
++
++	if (risky_device(dev))
++		return;
++
++	pci_info(dev, "Skip IOMMU disabling for graphics\n");
++	iommu_skip_te_disable = 1;
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_ANY_ID, quirk_igfx_skip_te_disable);
++
+ /* On Tylersburg chipsets, some BIOSes have been known to enable the
+    ISOCH DMAR unit for the Azalia sound device, but not give it any
+    TLB entries, which causes it to deadlock. Check for that.  We do
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -48,6 +48,7 @@ struct dmar_drhd_unit {
+ 	u16	segment;		/* PCI domain		*/
+ 	u8	ignored:1; 		/* ignore drhd		*/
+ 	u8	include_all:1;
++	u8	gfx_dedicated:1;	/* graphic dedicated	*/
+ 	struct intel_iommu *iommu;
+ };
+ 
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -600,6 +600,8 @@ struct intel_iommu {
+ 	struct iommu_device iommu;  /* IOMMU core code handle */
+ 	int		node;
+ 	u32		flags;      /* Software defined flags */
++
++	struct dmar_drhd_unit *drhd;
+ };
+ 
+ /* PCI domain-device relationship */
 
 
