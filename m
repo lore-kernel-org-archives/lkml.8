@@ -2,100 +2,134 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FC420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:13:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IdnzvL6w"
+	by mail.kernel.org (Postfix) with ESMTP id 68B3A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597663212;
+	bh=1BxYmKlHGAYGgAGwfjEYuulG0rJG5NczRt9Xyo1ZNJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N8Om6/8tKuJCbltSDed2JB8LHE3Wu1eEQZrWF+3DmT07goRL+tAD2kQoYKkRKa/wd
+	 DYFIY81j/RNb/sBfcVJ27J5Ws0Kj5uNpjkBYYDXVmYU0P4P6O6nyR63zmfDohdsTT1
+	 hYkB0PxvPLHTyIv7WlJaKzJXvHvDWwNlvO6Q1dCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHQLNH (ORCPT
+        id S1727022AbgHQLTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:13:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726385AbgHQLMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:12:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597662771;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ojqM6VDGywhYof5vQ0rOPdeZdR7vkZBO7fWbPCxSWII=;
-        b=IdnzvL6wNbgMddYRdZWXF5gqHMHWMmT0mxJS1TC7efxBSg4ND+AjP0qqY8jsk5gmqXuQmX
-        Xg4gnd6hw2rTE30HFXSyEVXUmUp9a+AclRiMppxzKJyAKFuHrTeYGsCuKl7x3dfltEiyQq
-        HhqTq6I+G4AjaWN//ryNSee6UwmWP10=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-AxrCrgTLPfKBA1qS5-fhAQ-1; Mon, 17 Aug 2020 07:12:44 -0400
-X-MC-Unique: AxrCrgTLPfKBA1qS5-fhAQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 17 Aug 2020 07:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgHQLT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:19:28 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 184321DDE5;
-        Mon, 17 Aug 2020 11:12:42 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91FD01002393;
-        Mon, 17 Aug 2020 11:12:35 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 6A0F29D8F; Mon, 17 Aug 2020 13:12:34 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 13:12:34 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org,
-        alex.williamson@redhat.com
-Subject: Re: [virtio-dev] Re: [PATCH v5 0/3] Support virtio cross-device
- resources
-Message-ID: <20200817111234.i7pqtnnk2ciw4rqb@sirius.home.kraxel.org>
-References: <20200609012518.198908-1-stevensd@chromium.org>
- <20200609055021-mutt-send-email-mst@kernel.org>
- <CAD=HUj7wJfoKj_K44Cs9eEmh=OQHZ1+qz7ZHxoscHjYgOMXvZQ@mail.gmail.com>
- <20200817105008.mi3ukh6kxgi37gjs@sirius.home.kraxel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F742072D;
+        Mon, 17 Aug 2020 11:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597663168;
+        bh=1BxYmKlHGAYGgAGwfjEYuulG0rJG5NczRt9Xyo1ZNJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=orlAfBXKzkdMjfZHKw8cKc2q8t0149ohjtuqqBWyQZlTURSTXhO2uMXf408ANifDa
+         Vr5XIM50eYgzDpgpvUiX0yq9JZjSwEy0xHVfZ2OEQYoPAG1mj4VEensYL0M91HNWXx
+         kCykOPPbx4fhzDqaEHzrJd9OpzJ1EyPl/dre9bOo=
+Date:   Mon, 17 Aug 2020 16:49:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 03/13] soundwire: intel: reset pm_runtime status during
+ system resume
+Message-ID: <20200817111924.GO2639@vkoul-mobl>
+References: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+ <20200721203723.18305-4-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817105008.mi3ukh6kxgi37gjs@sirius.home.kraxel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200721203723.18305-4-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:50:08PM +0200, Gerd Hoffmann wrote:
-> On Tue, Jun 23, 2020 at 10:31:28AM +0900, David Stevens wrote:
-> > Unless there are any remaining objections to these patches, what are
-> > the next steps towards getting these merged? Sorry, I'm not familiar
-> > with the workflow for contributing patches to Linux.
+On 22-07-20, 04:37, Bard Liao wrote:
+> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > 
-> Sorry, just have been busy and not paying as much attention to drm
-> patches as usual.  Playing catch-up now.  Queued for drm-misc-next,
-> unless something goes wrong in my testing the patches should land
-> in linux-next soon and be merged upstream in the next merge window.
+> The system resume does the entire bus re-initialization and brings it
+> to full-power. If the device was pm_runtime suspended, there is no
+> need to run the pm_runtime resume sequence after the system runtime.
+> 
+> Follow the documentation from runtime_pm.rst, and conditionally
+> disable, set_active and re-enable the device on system resume.
+> 
+> Note that pm_runtime_suspended() is used instead of
+> pm_runtime_status_suspended() so that we can deal with the case where
+> pm_runtime is disabled.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index ed7163ae5f7a..284e5c9d240a 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -1433,6 +1433,14 @@ static int intel_suspend(struct device *dev)
+>  		return 0;
+>  	}
+>  
+> +	if (pm_runtime_suspended(dev)) {
+> +		dev_dbg(dev,
+> +			"%s: pm_runtime status: suspended\n",
+> +			__func__);
 
-Oh, spoke too soon.  scripts/checkpatch.pl has a bunch of codestyle
-warnings.  Can you fix them and resend?
+first, can we have this in a single line, or better drop it
+second why would this be called when device is suspended
 
-thanks,
-  Gerd
+> +
+> +		return 0;
+> +	}
+> +
+>  	ret = sdw_cdns_enable_interrupt(cdns, false);
+>  	if (ret < 0) {
+>  		dev_err(dev, "cannot disable interrupts on suspend\n");
+> @@ -1493,6 +1501,18 @@ static int intel_resume(struct device *dev)
+>  		return 0;
+>  	}
+>  
+> +	if (pm_runtime_suspended(dev)) {
+> +		dev_dbg(dev,
+> +			"%s: pm_runtime status was suspended, forcing active\n",
+> +			__func__);
 
+this one also could look better in a single line
+
+> +
+> +		/* follow required sequence from runtime_pm.rst */
+> +		pm_runtime_disable(dev);
+> +		pm_runtime_set_active(dev);
+> +		pm_runtime_mark_last_busy(dev);
+> +		pm_runtime_enable(dev);
+> +	}
+> +
+>  	ret = intel_init(sdw);
+>  	if (ret) {
+>  		dev_err(dev, "%s failed: %d", __func__, ret);
+> -- 
+> 2.17.1
+
+-- 
+~Vinod
