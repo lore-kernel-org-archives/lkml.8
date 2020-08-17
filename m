@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB8BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F429C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12AD02075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625C72072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691592;
-	bh=tEM0h2Eeq0xk2+/KRcSElEjI+YzKG8o5jvvzr5kp4tU=;
+	s=default; t=1597691596;
+	bh=aQSlBRsUA1PERo/Pgm2mffOuEjX7nKGOuhxHV4FL+NI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDz7CxoaScV1FvC982jV2EbnzPQh0C6aZSyYAYaYmuZPbCaN/8rdF6+g/uwvInRbh
-	 Gho/eXw+dYujBecMbpqL9VkASX04EG7JJjXfSUfRJURI6xWJaEihXcm1C1PLoG5sox
-	 wKHKSur1xlqTOtl+ekzAXd2zSB3DxFYyTtUVlfRI=
+	b=cu5lRY8iESC3Bbr5YeAshc3Y9PdGfEv3v44upvN0vp9JzkijY0TfSDmncJC54ChTl
+	 4ykJ6PDgYuBB41QVB6a5hcI7L3eJ5nWA+KeDT4gaULZ4ho2VutCiujpuGji4EtoIxo
+	 hZiXlO2QhWxceb/FB13Yty4P2TQljYYhSGBQzC9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392142AbgHQTNK (ORCPT
+        id S2392152AbgHQTNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbgHQPk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:29 -0400
+        id S1730532AbgHQPk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5A020760;
-        Mon, 17 Aug 2020 15:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B25092075B;
+        Mon, 17 Aug 2020 15:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678829;
-        bh=tEM0h2Eeq0xk2+/KRcSElEjI+YzKG8o5jvvzr5kp4tU=;
+        s=default; t=1597678827;
+        bh=aQSlBRsUA1PERo/Pgm2mffOuEjX7nKGOuhxHV4FL+NI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/B21mjsG7s7rqvzQJ7pDFidC8FWKn20dis7Bd+gxzx4YDZQBoJksEAKXW2de62VK
-         Q1uheGmuKsEMDP+cEMeelQ6/BmKPawY4PR9TZxi4Ig4Ub7VGdRMrIF3qOrPPD1fVlG
-         UvCY6k+zAC4xRt9BGh+F9rimxJssvk+BSR+qlcI4=
+        b=W/MaxoWFHBPLRBU5dVA2ZlhPXDU1b8nv/s3/Wvdb2H1WgKEtXIjT4OeTwDXmETLP7
+         oEejRoYs2EbLEB2yJNxa4LZxX2lqIjRvt0r0/8SXQtPkEUCX1K4EKsdda/H+p95Isk
+         AZHYPFxk/jmVeVXWIltpeijD/BUjMDH7UPBTYU3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
         Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.8 455/464] xen/gntdev: Fix dmabuf import with non-zero sgt offset
-Date:   Mon, 17 Aug 2020 17:16:48 +0200
-Message-Id: <20200817143855.571323313@linuxfoundation.org>
+Subject: [PATCH 5.8 454/464] xen/balloon: make the balloon wait interruptible
+Date:   Mon, 17 Aug 2020 17:16:47 +0200
+Message-Id: <20200817143855.523768446@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-commit 5fa4e6f1c2d8c9a4e47e1931b42893172d388f2b upstream.
+commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
 
-It is possible that the scatter-gather table during dmabuf import has
-non-zero offset of the data, but user-space doesn't expect that.
-Fix this by failing the import, so user-space doesn't access wrong data.
+So it can be killed, or else processes can get hung indefinitely
+waiting for balloon pages.
 
-Fixes: bf8dc55b1358 ("xen/gntdev: Implement dma-buf import functionality")
-
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Acked-by: Juergen Gross <jgross@suse.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200813062113.11030-2-andr2000@gmail.com
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
 Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/gntdev-dmabuf.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/xen/balloon.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -613,6 +613,14 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_
- 		goto fail_detach;
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -568,11 +568,13 @@ static int add_ballooned_pages(int nr_pa
+ 	if (xen_hotplug_unpopulated) {
+ 		st = reserve_additional_memory();
+ 		if (st != BP_ECANCELED) {
++			int rc;
++
+ 			mutex_unlock(&balloon_mutex);
+-			wait_event(balloon_wq,
++			rc = wait_event_interruptible(balloon_wq,
+ 				   !list_empty(&ballooned_pages));
+ 			mutex_lock(&balloon_mutex);
+-			return 0;
++			return rc ? -ENOMEM : 0;
+ 		}
  	}
  
-+	/* Check that we have zero offset. */
-+	if (sgt->sgl->offset) {
-+		ret = ERR_PTR(-EINVAL);
-+		pr_debug("DMA buffer has %d bytes offset, user-space expects 0\n",
-+			 sgt->sgl->offset);
-+		goto fail_unmap;
-+	}
-+
- 	/* Check number of pages that imported buffer has. */
- 	if (attach->dmabuf->size != gntdev_dmabuf->nr_pages << PAGE_SHIFT) {
- 		ret = ERR_PTR(-EINVAL);
 
 
