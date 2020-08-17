@@ -2,56 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180DEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31D12063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF572067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686405;
-	bh=KeUbCMX13VC4pFeKZ0ZZ76whNysTnBQIFf+bEc0PV08=;
+	s=default; t=1597686409;
+	bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1+flGyorGg/x+GPut5vLE013Fu1s2gm0cVJwKxKcSudXbj8887HT2+lFN/nT/RKs
-	 TkjVikYCuz2dJg5zwxwdUwSMHCUrotLtwI7vOEyC5+X5GeOt5uonHjJo+BjQY0iYPT
-	 2wKRYKy3kn7C5/RbiEpmAVFnlp+oEGD/DZOVyUoc=
+	b=BvtJb8/wxCKgWYoRIsUSjzPcCvBPFfRLkXRhbKFKnlKOrimdOFlUykS/n/miXgPdP
+	 omYQcApajoyeMh+P1nJoTkhnD7PTOocCbMk0VUnzF2H/wQbYYeLnp8GrBbGaWXTWFA
+	 qqRiLHrF2MT3NJpuy6oJjgDIv7+Kl3cQRLnyaND8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbgHQRqo (ORCPT
+        id S2389920AbgHQRqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388764AbgHQQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388761AbgHQQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:13:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5431922B47;
-        Mon, 17 Aug 2020 16:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9F1022B40;
+        Mon, 17 Aug 2020 16:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680825;
-        bh=KeUbCMX13VC4pFeKZ0ZZ76whNysTnBQIFf+bEc0PV08=;
+        s=default; t=1597680823;
+        bh=UvyLGOZAXxTrvvSw24b2SeCrhm6Zmcnzhh3c+8qLyNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuF/1xJ1LFLpRnfYb/0TDmijdP/ymmG6kuCLE+xhG1ne4WjF5nTs9LNau7OrHVwr9
-         wPfi8nALl8fwB50TqZICLxCZQBLufXLMFMIz94k0LIBGdxuSw3zeIOP/73Hw//+nWb
-         XDWOgGXN8yuW1kL+U0Ld1GuHi0+ZD/Eu1/xW6T0o=
+        b=vdHeS5pBpYjsfsUmAIHawPzwXwUb6RkdKTHi/Y5zqa/wo4jVcEG83cAxwJMvQPAco
+         QsrHrjqkDM0ftZN+J+6zyt2XwALF0hO11ptBLUMgR2kLNeFCe+FZomzNb+6b/BR0l/
+         oxEYZb+1tmeHYUqAv4FoTGm6oOkBPvnqhCit2GZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Craig Topper <craig.topper@intel.com>,
-        Craig Topper <craig.topper@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/168] crypto: aesni - Fix build with LLVM_IAS=1
-Date:   Mon, 17 Aug 2020 17:16:03 +0200
-Message-Id: <20200817143735.363498293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 041/168] irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
+Date:   Mon, 17 Aug 2020 17:16:12 +0200
+Message-Id: <20200817143735.813125406@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -64,107 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sedat Dilek <sedat.dilek@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
+[ Upstream commit 6eeb997ab5075e770a002c51351fa4ec2c6b5c39 ]
 
-When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
-from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
-I see the following breakage in Debian/testing AMD64:
+This driver may take a regular spinlock when a raw spinlock
+(irq_desc->lock) is already taken which results in the following
+lockdep splat:
 
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
- arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
- GCM_ENC_DEC dec
- ^
-<instantiation>:15:74: error: too many positional arguments
- PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-                                                                         ^
-arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
- GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
- ^
-<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
- GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
- ^
-arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
- GCM_ENC_DEC enc
+=============================
+[ BUG: Invalid wait context ]
+5.7.0-rc7 #1 Not tainted
+-----------------------------
+swapper/0/0 is trying to lock:
+ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
+other info that might help us debug this:
+context-{5:5}
+2 locks held by swapper/0/0:
+ #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
+ #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
+stack backtrace:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
+Hardware name: Pumpkin MT8516 (DT)
+Call trace:
+ dump_backtrace+0x0/0x180
+ show_stack+0x14/0x20
+ dump_stack+0xd0/0x118
+ __lock_acquire+0x8c8/0x2270
+ lock_acquire+0xf8/0x470
+ _raw_spin_lock_irqsave+0x50/0x78
+ mtk_sysirq_set_type+0x48/0xc0
+ __irq_set_trigger+0x58/0x170
+ __setup_irq+0x420/0x8a0
+ request_threaded_irq+0xd8/0x190
+ timer_of_init+0x1e8/0x2c4
+ mtk_gpt_init+0x5c/0x1dc
+ timer_probe+0x74/0xf4
+ time_init+0x14/0x44
+ start_kernel+0x394/0x4f0
 
-Craig Topper suggested me in ClangBuiltLinux issue #1050:
+Replace the spinlock_t with raw_spinlock_t to avoid this warning.
 
-> I think the "too many positional arguments" is because the parser isn't able
-> to handle the trailing commas.
->
-> The "unknown use of instruction mnemonic" is because the macro was named
-> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
-> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
-> macro instantiation, but llvm doesn't.
-
-First, I removed the trailing comma in the PRECOMPUTE line.
-
-Second, I substituted:
-1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
-2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
-
-With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
-
-I confirmed that this works with Linux-kernel v5.7.5 final.
-
-NOTE: This patch is on top of Linux v5.7 final.
-
-Thanks to Craig and especially Nick for double-checking and his comments.
-
-Suggested-by: Craig Topper <craig.topper@intel.com>
-Suggested-by: Craig Topper <craig.topper@gmail.com>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1050
-Link: https://bugs.llvm.org/show_bug.cgi?id=24494
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200615074445.3579-1-brgl@bgdev.pl
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aesni-intel_asm.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index cb2deb61c5d96..29b27f9a6e1ee 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -270,7 +270,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
- 	PSHUFB_XMM %xmm2, %xmm0
- 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
+diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+index 90aaf190157f7..42455f31b0611 100644
+--- a/drivers/irqchip/irq-mtk-sysirq.c
++++ b/drivers/irqchip/irq-mtk-sysirq.c
+@@ -23,7 +23,7 @@
+ #include <linux/spinlock.h>
  
--	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
-+	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
- 	movdqu HashKey(%arg2), %xmm13
+ struct mtk_sysirq_chip_data {
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ 	u32 nr_intpol_bases;
+ 	void __iomem **intpol_bases;
+ 	u32 *intpol_words;
+@@ -45,7 +45,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+ 	reg_index = chip_data->which_word[hwirq];
+ 	offset = hwirq & 0x1f;
  
- 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
-@@ -982,7 +982,7 @@ _initial_blocks_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+-	spin_lock_irqsave(&chip_data->lock, flags);
++	raw_spin_lock_irqsave(&chip_data->lock, flags);
+ 	value = readl_relaxed(base + reg_index * 4);
+ 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+ 		if (type == IRQ_TYPE_LEVEL_LOW)
+@@ -61,7 +61,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
  
- 	movdqa	  \XMM1, \XMM5
-@@ -1190,7 +1190,7 @@ aes_loop_par_enc_done\@:
- * arg1, %arg3, %arg4 are used as pointers only, not modified
- * %r11 is the data offset value
- */
--.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
-+.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
- TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 	data = data->parent_data;
+ 	ret = data->chip->irq_set_type(data, type);
+-	spin_unlock_irqrestore(&chip_data->lock, flags);
++	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
+ 	return ret;
+ }
  
- 	movdqa	  \XMM1, \XMM5
+@@ -220,7 +220,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+ 		ret = -ENOMEM;
+ 		goto out_free_which_word;
+ 	}
+-	spin_lock_init(&chip_data->lock);
++	raw_spin_lock_init(&chip_data->lock);
+ 
+ 	return 0;
+ 
 -- 
 2.25.1
 
