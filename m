@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F76BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ECEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD8820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688086;
-	bh=i8IA/7eMak21kEfbh371Ez3qa987IvxjDxAcvdOsJVc=;
+	s=default; t=1597688089;
+	bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qicK+1tprVxCX8sNwB0zkm3wkaRQLYOzNTm0zOqOuvR8j7TSSCtggOFAsHlH8p3aC
-	 jfYhG+KH35QoTIcj5WlQ6ngBR9c2k9bOb8OCr/c/SGG2NppzBSOs1Tekkq9eseC2er
-	 DUEDQHUI9O1eqtchxvjruZS/H9a8jlCj/zslkmB8=
+	b=0eNBpov/4pu7OZ0AyN/QyMsjM15anUUtUuMS1cxni0F5RMGnFcObZR+LyBUizjV/v
+	 KSD0BOvQssp9f2qMsf4sMn3lVHjWQXYsRNYbjCPJ9z8wxyfYzoPKCUWzWiDU1nvyBd
+	 UohFAUmHfZAwSK0F4HfpGG8bvYdKMAGXmxEXH2CI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390644AbgHQSOp (ORCPT
+        id S2390649AbgHQSOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53300 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388231AbgHQQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388394AbgHQQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:06:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAD9520729;
-        Mon, 17 Aug 2020 16:06:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4859A207FB;
+        Mon, 17 Aug 2020 16:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680376;
-        bh=i8IA/7eMak21kEfbh371Ez3qa987IvxjDxAcvdOsJVc=;
+        s=default; t=1597680384;
+        bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gryMVdy4dWOB1MV19b0ijpmo3x5gFAwmcuB8isSqsvUSJ8WXzuoNcDp/4xzu306ue
-         qbsZp8/Bkp98Zv9UxWP5/gzPgmKGitJotwdIfuovnBcMHQImq2e4HDx13TQHFvDNXE
-         Kh6ZXK8Op/RGOIX2gNU3C4yHcLOhNSLT15Miw7f4=
+        b=tLHI0p5x24ZyiFwsZgCORw2cmfn5ai7Yk7i+KKaXQjnyTlDtgU6Hflot8pfLL5pBG
+         x1sNmJadFq12XgbKfZWZ4phWww10RfELrzmXmYNIa5rwhkAgAf3fuwOFii/sDfZ7kX
+         heZqTEWPr022i145jwAR/bcpkelKeWKVIEECH33U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 132/270] drm/stm: repair runtime power management
-Date:   Mon, 17 Aug 2020 17:15:33 +0200
-Message-Id: <20200817143802.365269820@linuxfoundation.org>
+Subject: [PATCH 5.4 125/270] media: exynos4-is: Add missed check for pinctrl_lookup_state()
+Date:   Mon, 17 Aug 2020 17:15:26 +0200
+Message-Id: <20200817143801.999748521@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -68,56 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit ebd267b2e3c25d5f93a08528b47c036569eb8744 ]
+[ Upstream commit 18ffec750578f7447c288647d7282c7d12b1d969 ]
 
-Add missing pm_runtime_get_sync() into ltdc_crtc_atomic_enable() to
-match pm_runtime_put_sync() in ltdc_crtc_atomic_disable(), otherwise
-the LTDC might suspend via runtime PM, disable clock, and then fail
-to resume later on.
+fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+Add the missed check to fix it.
 
-The test which triggers it is roughly -- run qt5 application which
-uses eglfs platform and etnaviv, stop the application, sleep for 15
-minutes, run the application again. This leads to a timeout waiting
-for vsync, because the LTDC has suspended, but did not resume.
-
-Fixes: 35ab6cfbf211 ("drm/stm: support runtime power management")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Yannick Fertré <yannick.fertre@st.com>
-Cc: Philippe Cornu <philippe.cornu@st.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Vincent Abriou <vincent.abriou@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Acked-by: Philippe Cornu <philippe.cornu@st.com>
-Tested-by: Yannick Fertre <yannick.fertre@st.com>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200229221649.90813-1-marex@denx.de
+Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/stm/ltdc.c | 3 +++
+ drivers/media/platform/exynos4-is/media-dev.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 3ab4fbf8eb0d1..51571f7246abf 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -424,9 +424,12 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
- 				    struct drm_crtc_state *old_state)
- {
- 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
-+	struct drm_device *ddev = crtc->dev;
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d50..9c31d950cddf7 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
  
- 	DRM_DEBUG_DRIVER("\n");
- 
-+	pm_runtime_get_sync(ddev->dev);
+ 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+ 					PINCTRL_STATE_IDLE);
++	if (IS_ERR(pctl->state_idle))
++		return PTR_ERR(pctl->state_idle);
 +
- 	/* Sets the background color value */
- 	reg_write(ldev->regs, LTDC_BCCR, BCCR_BCBLACK);
+ 	return 0;
+ }
  
 -- 
 2.25.1
