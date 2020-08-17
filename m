@@ -2,102 +2,103 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CC220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEF320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693137;
+	bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OrszJRXPKP0V+c5tvdb4LMkgaIov+ZnurIHIrOON66K2a9lsBiuNZAYGU6BIsgH3e
+	 Vv7NIeyJIfd/zanWnRG0/M2jIlWWPMvJtKqTCX2MGnNOaXl5avE2pQ03Fhx0CTmonB
+	 2ROnIIXljCiE3LV9+cGbXyOZsi42Xbb1T15cj120=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgHQTiv (ORCPT
+        id S1732490AbgHQTiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:38:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39618 "EHLO mx2.suse.de"
+        Mon, 17 Aug 2020 15:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbgHQP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AE32BAC24;
-        Mon, 17 Aug 2020 15:27:21 +0000 (UTC)
-Date:   Mon, 17 Aug 2020 17:26:55 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-Message-ID: <20200817152655.GE28270@dhcp22.suse.cz>
-References: <20200817140831.30260-1-longman@redhat.com>
+        id S1729851AbgHQP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C800023B1C;
+        Mon, 17 Aug 2020 15:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678015;
+        bh=yXQOpAs4ndvdbKpfDxoRQL3kvSO841IDlA/qnlsWcOY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PmRQdnZG8PkFXqGzrqbmCC65UvDXDijcrrRVYR9LJYqyZL73fWe1OKI4RMPuShavB
+         lMA4sJ082PUWlmI7yW5T7z+Qoo1y3QHVFHHP0rR0fY6GmJniiE+m7/komga3Beuxit
+         e67wEouHhjnCWAjusV2v8Wvd7qWxn6GACUx7LwgU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 159/464] iio: improve IIO_CONCENTRATION channel type description
+Date:   Mon, 17 Aug 2020 17:11:52 +0200
+Message-Id: <20200817143841.424261451@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817140831.30260-1-longman@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 17-08-20 10:08:23, Waiman Long wrote:
-> Memory controller can be used to control and limit the amount of
-> physical memory used by a task. When a limit is set in "memory.high" in
-> a v2 non-root memory cgroup, the memory controller will try to reclaim
-> memory if the limit has been exceeded. Normally, that will be enough
-> to keep the physical memory consumption of tasks in the memory cgroup
-> to be around or below the "memory.high" limit.
-> 
-> Sometimes, memory reclaim may not be able to recover memory in a rate
-> that can catch up to the physical memory allocation rate. In this case,
-> the physical memory consumption will keep on increasing.  When it reaches
-> "memory.max" for memory cgroup v2 or when the system is running out of
-> free memory, the OOM killer will be invoked to kill some tasks to free
-> up additional memory. However, one has little control of which tasks
-> are going to be killed by an OOM killer. Killing tasks that hold some
-> important resources without freeing them first can create other system
-> problems down the road.
-> 
-> Users who do not want the OOM killer to be invoked to kill random
-> tasks in an out-of-memory situation can use the memory control
-> facility provided by this new patchset via prctl(2) to better manage
-> the mitigation action that needs to be performed to various tasks when
-> the specified memory limit is exceeded with memory cgroup v2 being used.
-> 
-> The currently supported mitigation actions include the followings:
-> 
->  1) Return ENOMEM for some syscalls that allocate or handle memory
->  2) Slow down the process for memory reclaim to catch up
->  3) Send a specific signal to the task
->  4) Kill the task
-> 
-> The users that want better memory control for their applicatons can
-> either modify their applications to call the prctl(2) syscall directly
-> with the new memory control command code or write the desired action to
-> the newly provided memctl procfs files of their applications provided
-> that those applications run in a non-root v2 memory cgroup.
+From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 
-prctl is fundamentally about per-process control while cgroup (not only
-memcg) is about group of processes interface. How do those two interact
-together? In other words what is the semantic when different processes
-have a different views on the same underlying memcg event?
+[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
 
-Also the above description doesn't really describe any usecase which
-struggles with the existing interface. We already do allow slow down and
-along with PSI also provide user space control over close to OOM
-situation.
+IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
+raw concentrations of pollutants. Raw value should be meaningless
+before being properly scaled. Because of that description shouldn't
+mention raw value unit whatsoever.
 
+Fix this by rephrasing existing description so it follows conventions
+used throughout IIO ABI docs.
+
+Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index d3e53a6d8331b..5c62bfb0f3f57 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1569,7 +1569,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+ KernelVersion:	4.3
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		Raw (unscaled no offset etc.) percentage reading of a substance.
++		Raw (unscaled no offset etc.) reading of a substance. Units
++		after application of scale and offset are percents.
+ 
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
+
+
