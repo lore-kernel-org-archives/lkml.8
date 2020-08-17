@@ -2,107 +2,203 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8393DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7ED207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B2D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCpD/3JX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgHQInY (ORCPT
+        id S1727998AbgHQIn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:43:24 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47376 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726544AbgHQInX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:43:23 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B2129354BE937E759B8A;
-        Mon, 17 Aug 2020 16:43:20 +0800 (CST)
-Received: from [10.174.187.22] (10.174.187.22) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 17 Aug 2020 16:43:14 +0800
-Subject: Re: [PATCH 2/3] KVM: uapi: Remove KVM_DEV_TYPE_ARM_PV_TIME in
- kvm_device_type
-To:     Marc Zyngier <maz@kernel.org>
-References: <20200817033729.10848-1-zhukeqian1@huawei.com>
- <20200817033729.10848-3-zhukeqian1@huawei.com>
- <f97633b4a39c301f916bb76030dcabf0@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Steven Price" <steven.price@arm.com>, <wanghaibin.wang@huawei.com>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <4cd543a2-4d5b-882c-38d6-f5055512f0dc@huawei.com>
-Date:   Mon, 17 Aug 2020 16:43:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 17 Aug 2020 04:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgHQInx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:43:53 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D88CCC061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:43:52 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id p14so12554762wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=D1UjIIuxlByyuNbDhVDjp8frAQhVC4jXQISXzhYCeyY=;
+        b=pCpD/3JXsVs5IP+p+ECYZCn74rRmRLfvblZjANzhSXMrphOOrXPQddul+iuWq/PzxU
+         KtoPNFawOpX4lVcn/zJMKoWN6dKFtIEHFChWG3oJapMcMB+3M1Exgp+1utBPrZ2ItdGI
+         8iKJxvt3AL8zxcQPcvmfQ5ZYEFfVtj84EUiP1d6saNS/W/WuQmLdTjZD7kSDseJeimoZ
+         KV23YUYbit3ZSGP4sna9htwJvRueZrgvM+kbJJ+f4NFliUSg7BXkUs+l0jtaDoXMLqZ+
+         nS8YZVrZhg0d8ilpLoBOtY+R9Liq9wN9FPAunz3UZ6DIoR9awpRW6Kh5076jYiRH6r7m
+         CaHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=D1UjIIuxlByyuNbDhVDjp8frAQhVC4jXQISXzhYCeyY=;
+        b=kzU60NFLjUBi3AMoFtpW3j1gr1yMvsbBl/j+YByi/CKJivUwmM7vYxU1ES046Qd3iJ
+         jZpYq1UGrMxgYh/NANzfdsCo3M+dchLPhKsXlvkzNlGTq3xDLdMaBStUuX2Gyg3gc1Vr
+         FgcTT7jYjVuecP583JbBL1qWy/05rFdVoUJY5qgrCE35bTJ6S2vtGmEAF87sG+pdP/u8
+         1JvqHhzfJ8nNHPBKNvDAp3VB61Z7kL7aktdMpMuJnshubtZvGz5tdwkBFSwSUzPwdw6F
+         HMPrk+KLlWlHs2UrITmFKoxwJS68PBm3RDEwPfAluZ3BYyiSUOGYHtm5fRHOkae15S89
+         1sow==
+X-Gm-Message-State: AOAM53149oZU5gxaswGH6vhBHd29stYbjrRiFdU/y0xWAWrbhg383nDD
+        H/zreLzv7u8PPYrLNeyUkJwTmw==
+X-Google-Smtp-Source: ABdhPJyFMeTzYrQ25C/SOkBGds8oWQIcltw8DNk0rq7lyOF6TjCsCEwFGHehTztaqxs4yqkU9K5XMA==
+X-Received: by 2002:a1c:770c:: with SMTP id t12mr14515197wmi.65.1597653831551;
+        Mon, 17 Aug 2020 01:43:51 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id r11sm29259984wrw.78.2020.08.17.01.43.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:43:50 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 09:43:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 08/30] net: wireless: ath: carl9170: Mark 'ar9170_qmap'
+ as __maybe_unused
+Message-ID: <20200817084349.GS4354@dell>
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+ <20200814113933.1903438-9-lee.jones@linaro.org>
+ <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
+ <20200814164046.GO4354@dell>
+ <0a144311-2085-60b5-ea36-554c6efbf7e9@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f97633b4a39c301f916bb76030dcabf0@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.187.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0a144311-2085-60b5-ea36-554c6efbf7e9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Fri, 14 Aug 2020, Christian Lamparter wrote:
 
-On 2020/8/17 15:39, Marc Zyngier wrote:
-> On 2020-08-17 04:37, Keqian Zhu wrote:
->> ARM64 PV-time ST is configured by userspace through vCPU attribute,
->> and KVM_DEV_TYPE_ARM_PV_TIME is unused.
->>
->> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
->> ---
->>  include/uapi/linux/kvm.h       | 2 --
->>  tools/include/uapi/linux/kvm.h | 2 --
->>  2 files changed, 4 deletions(-)
->>
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index 4fdf303..9a6b97e 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -1258,8 +1258,6 @@ enum kvm_device_type {
->>  #define KVM_DEV_TYPE_ARM_VGIC_ITS    KVM_DEV_TYPE_ARM_VGIC_ITS
->>      KVM_DEV_TYPE_XIVE,
->>  #define KVM_DEV_TYPE_XIVE        KVM_DEV_TYPE_XIVE
->> -    KVM_DEV_TYPE_ARM_PV_TIME,
->> -#define KVM_DEV_TYPE_ARM_PV_TIME    KVM_DEV_TYPE_ARM_PV_TIME
->>      KVM_DEV_TYPE_MAX,
->>  };
->>
->> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
->> index 4fdf303..9a6b97e 100644
->> --- a/tools/include/uapi/linux/kvm.h
->> +++ b/tools/include/uapi/linux/kvm.h
->> @@ -1258,8 +1258,6 @@ enum kvm_device_type {
->>  #define KVM_DEV_TYPE_ARM_VGIC_ITS    KVM_DEV_TYPE_ARM_VGIC_ITS
->>      KVM_DEV_TYPE_XIVE,
->>  #define KVM_DEV_TYPE_XIVE        KVM_DEV_TYPE_XIVE
->> -    KVM_DEV_TYPE_ARM_PV_TIME,
->> -#define KVM_DEV_TYPE_ARM_PV_TIME    KVM_DEV_TYPE_ARM_PV_TIME
->>      KVM_DEV_TYPE_MAX,
->>  };
-> 
-> No. You can't drop anything from UAPI, used or not. Doing so will
-> break the compilation of any userspace that, for any reason, references
-> this value. We cannot reuse this value in the future either, as it would
-> create a we wouldn't know which device to create.
-> 
-> It is pretty unfortunate that PV time has turned into such a train wreck,
-> but that's what we have now, and it has to stay.
-Well, I see. It is a sad thing indeed.
+> On 2020-08-14 18:40, Lee Jones wrote:
+> > On Fri, 14 Aug 2020, Christian Lamparter wrote:
+> > 
+> > > On 2020-08-14 13:39, Lee Jones wrote:
+> > > > 'ar9170_qmap' is used in some source files which include carl9170.h,
+> > > > but not all of them.  Mark it as __maybe_unused to show that this is
+> > > > not only okay, it's expected.
+> > > > 
+> > > > Fixes the following W=1 kernel build warning(s)
+> > > 
+> > > Is this W=1 really a "must" requirement? I find it strange having
+> > 
+> > Clean W=1 warnings is the dream, yes.
+> But is it a requirement?
 
-Thanks,
-Keqian
+Depends how you define a requirement.
+
+This is required to successfully and usefully enable W=1 warnings in
+our testing builds without being overloaded with current issues.
+Something I know a great number of maintainers have been either trying
+to do, or at least wanting to do for a long time.
+
+Being able to enable W=1 builds at the subsystem level is extremely
+helpful in order to keep the kernel clean(er).  As most subsystems
+don't (can't) have them enabled presently (due to being overwhelmed)
+they will likely creep/increase.
+
+So far, the following subsystems have been on-board with this (and are
+now clean, or very nearly clean, as a result):
+
+ ASoC
+ backlight
+ cpufreq
+ dmaengine
+ gpio
+ hwmon
+ iio
+ mfd
+ misc
+ mmc
+ pinctrl
+ pwm
+ regulator
+ remoteproc
+ scsi
+ spi
+ usb
+ video
+
+> > I would have thought most Maintainers would be on-board with this.
+> From what I know: It's no changes For changes' sake. Because otherwise this
+> would be pretty broken for maintainers. They could just write and revert the
+> same code over and over to prob up their LOC and commit counter. Wouldn't
+> you agree there?
+
+I don't agree at all.  Why would anyone revert a fix?  That act would
+be intentionally add a warning?  A fools errand I think.
+
+> > The ones I've worked with thus far have certainly been thankful.  Many
+> > had this on their own TODO lists.
+> Question is, do you really want to be just the cleanup crew there? Since
+> semantic patches came along and a lot of this has been automated.
+
+I'm happy to put in the work.  Most people have been very grateful.
+
+If this work can be automated, than that would be wonderful.  However,
+18000 warnings (now down to 15000) tell me that this can not be the
+case.
+
+> I'm of course after something else. Like: "Isn't there a better way than
+> manually slapping __maybe_unused there to suppress the warning and call it a
+> day?" If you already went down these avenues and can confirm that there's no
+> alternative than this, then "fine". But if there is a better
+> method of doing this, then "let's go with that!".
+
+So for these kinds of issues we have a choice.
+
+In order of preference:
+
+ 1. Genuinely unused; remove it
+ 2. Used in a single location; move it to that location
+ 3. Used in multiple, but not all locations:
+    a. Mark as __maybe_unused
+    b. Locate or create a special header file between users
+    b. Duplicate it and place it in all used locations
+
+I went for 3a here, as 1 and 2 aren't valid.
+
+> > > __maybe_unused in header files as this "suggests" that the
+> > > definition is redundant.
+> > 
+> > Not true.
+> > 
+> > If it were redundant then we would remove the line entirely.
+> So, why adding __maybe_unused then? I find it not very helpful to
+> tell the compiler to "shut up" when you want it's opinion...
+> This was the vibe I got from gcc's attribute unused help text.
+
+Effectively, you're telling the compiler that it's not correct in
+certain circumstances, like this one.  Here the variable is being
+used, but not by all users who share the header file.  In other valid
+cases of its use the variable may only be used when a given CONFIG_*
+is enabled.
+
+__always_unused however does just tell the compiler to shut-up. :)
+
+If you have any better solutions, other than to let the compiler spout
+useless warnings which taint the build log and hide other, more
+important issues, then I'd be happy to hear them.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
