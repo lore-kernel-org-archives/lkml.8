@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC747C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D7020729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B3F20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680443;
-	bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
+	s=default; t=1597680460;
+	bh=KOJL2c+I4mdDAdRYWnBoY+tYmEj3vH857XWtspWJIuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3DmbeBB6OnZRWvoQEC6qezjjsDOhttcFDKa1hP0mx9dWgKDZJ2TxxlD39yBycF/n
-	 gPE9M363pA7xfgnBqyMEVaW3zJTz6Dgs8uqXtOgG66gJDM1ni1y7G1njhdGq8gvm8i
-	 Eql1XvFG0o+4eOYU72pc6/28WHT08ejSw+Zfd89M=
+	b=OrgG3nYQs+cuHgMIDthOWipltgsjyg2cIHYcofPWP8HpFhNZ50+UvLI40MvfUdDOR
+	 84i1P6CcYk56nX+CDqpaviS1MjoAcOmTjgmDLlEde6+3Xy5oVb7SVAco3fEAdCvyQp
+	 hQ7B0F47cFGaKiHWBTWyPiOOsyeyn5cPFJZpJXpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388398AbgHQQGa (ORCPT
+        id S2388400AbgHQQHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56026 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgHQPo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:59 -0400
+        id S1730586AbgHQPpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:45:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1476C20760;
-        Mon, 17 Aug 2020 15:44:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E6C20760;
+        Mon, 17 Aug 2020 15:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679098;
-        bh=r4elqKQnb6YYUYMvbfF91hB7MJxprC0syNxNYhmkhQo=;
+        s=default; t=1597679110;
+        bh=KOJL2c+I4mdDAdRYWnBoY+tYmEj3vH857XWtspWJIuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tSXLYkeTKvjT79jXfwZ3x31Y3csPYYHwKjTWwYm6oTsnXu0gLbfLXnk7z5cH1dY9P
-         kXFCVnVc+35HkZYqUtD92lc/I3mdvSwhXV8hqNiy+G9fjY2GYul8slbybIjzHB9WHR
-         Wb55h6rpHliYD26Twu/+Q2svsicm8wISfAixp7ow=
+        b=KNjZcpRNQx86sdZJ0wtBXwgzVCj7v2IU4IPJP/DbZyxCwRUCRkpebGgILk1RgDxMG
+         pAa/Kt2QuUpW/R3URVubu2bZEtN/8Q0gx6ai4masxWO1wprgI1WrDVsWwyFt+gDnuB
+         Z26aimNPdDXlJYT7+pO4XgDotWDqjNT9fJ+ipdJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Akhil P Oommen <akhilpo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Wright Feng <wright.feng@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 088/393] drm/msm: Fix a null pointer access in msm_gem_shrinker_count()
-Date:   Mon, 17 Aug 2020 17:12:18 +0200
-Message-Id: <20200817143823.900137772@linuxfoundation.org>
+Subject: [PATCH 5.7 100/393] brcmfmac: keep SDIO watchdog running when console_interval is non-zero
+Date:   Mon, 17 Aug 2020 17:12:30 +0200
+Message-Id: <20200817143824.466688819@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,171 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akhil P Oommen <akhilpo@codeaurora.org>
+From: Wright Feng <wright.feng@cypress.com>
 
-[ Upstream commit 3cbdc8d8b7f39a7af3ea7b8dfa75caaebfda4e56 ]
+[ Upstream commit eccbf46b15bb3e35d004148f7c3a8fa8e9b26c1e ]
 
-Adding an msm_gem_object object to the inactive_list before completing
-its initialization is a bad idea because shrinker may pick it up from the
-inactive_list. Fix this by making sure that the initialization is complete
-before moving the msm_obj object to the inactive list.
+brcmfmac host driver makes SDIO bus sleep and stops SDIO watchdog if no
+pending event or data. As a result, host driver does not poll firmware
+console buffer before buffer overflow, which leads to missing firmware
+logs. We should not stop SDIO watchdog if console_interval is non-zero
+in debug build.
 
-This patch fixes the below error:
-[10027.553044] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
-[10027.573305] Mem abort info:
-[10027.590160]   ESR = 0x96000006
-[10027.597905]   EC = 0x25: DABT (current EL), IL = 32 bits
-[10027.614430]   SET = 0, FnV = 0
-[10027.624427]   EA = 0, S1PTW = 0
-[10027.632722] Data abort info:
-[10027.638039]   ISV = 0, ISS = 0x00000006
-[10027.647459]   CM = 0, WnR = 0
-[10027.654345] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001e3a6a000
-[10027.672681] [0000000000000068] pgd=0000000198c31003, pud=0000000198c31003, pmd=0000000000000000
-[10027.693900] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[10027.738261] CPU: 3 PID: 214 Comm: kswapd0 Tainted: G S                5.4.40 #1
-[10027.745766] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-[10027.752472] pstate: 80c00009 (Nzcv daif +PAN +UAO)
-[10027.757409] pc : mutex_is_locked+0x14/0x2c
-[10027.761626] lr : msm_gem_shrinker_count+0x70/0xec
-[10027.766454] sp : ffffffc011323ad0
-[10027.769867] x29: ffffffc011323ad0 x28: ffffffe677e4b878
-[10027.775324] x27: 0000000000000cc0 x26: 0000000000000000
-[10027.780783] x25: ffffff817114a708 x24: 0000000000000008
-[10027.786242] x23: ffffff8023ab7170 x22: 0000000000000001
-[10027.791701] x21: ffffff817114a080 x20: 0000000000000119
-[10027.797160] x19: 0000000000000068 x18: 00000000000003bc
-[10027.802621] x17: 0000000004a34210 x16: 00000000000000c0
-[10027.808083] x15: 0000000000000000 x14: 0000000000000000
-[10027.813542] x13: ffffffe677e0a3c0 x12: 0000000000000000
-[10027.819000] x11: 0000000000000000 x10: ffffff8174b94340
-[10027.824461] x9 : 0000000000000000 x8 : 0000000000000000
-[10027.829919] x7 : 00000000000001fc x6 : ffffffc011323c88
-[10027.835373] x5 : 0000000000000001 x4 : ffffffc011323d80
-[10027.840832] x3 : ffffffff0477b348 x2 : 0000000000000000
-[10027.846290] x1 : ffffffc011323b68 x0 : 0000000000000068
-[10027.851748] Call trace:
-[10027.854264]  mutex_is_locked+0x14/0x2c
-[10027.858121]  msm_gem_shrinker_count+0x70/0xec
-[10027.862603]  shrink_slab+0xc0/0x4b4
-[10027.866187]  shrink_node+0x4a8/0x818
-[10027.869860]  kswapd+0x624/0x890
-[10027.873097]  kthread+0x11c/0x12c
-[10027.876424]  ret_from_fork+0x10/0x18
-[10027.880102] Code: f9000bf3 910003fd aa0003f3 d503201f (f9400268)
-[10027.886362] ---[ end trace df5849a1a3543251 ]---
-[10027.891518] Kernel panic - not syncing: Fatal exception
-
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-4-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 36 ++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 5a6a79fbc9d6e..d92a0ffe2a767 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -977,10 +977,8 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
- 
- static int msm_gem_new_impl(struct drm_device *dev,
- 		uint32_t size, uint32_t flags,
--		struct drm_gem_object **obj,
--		bool struct_mutex_locked)
-+		struct drm_gem_object **obj)
- {
--	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 
- 	switch (flags & MSM_BO_CACHE_MASK) {
-@@ -1006,15 +1004,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
- 	INIT_LIST_HEAD(&msm_obj->submit_entry);
- 	INIT_LIST_HEAD(&msm_obj->vmas);
- 
--	if (struct_mutex_locked) {
--		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--	} else {
--		mutex_lock(&dev->struct_mutex);
--		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
--		mutex_unlock(&dev->struct_mutex);
--	}
--
- 	*obj = &msm_obj->base;
- 
- 	return 0;
-@@ -1024,6 +1013,7 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		uint32_t size, uint32_t flags, bool struct_mutex_locked)
- {
- 	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj = NULL;
- 	bool use_vram = false;
- 	int ret;
-@@ -1044,14 +1034,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 	if (size == 0)
- 		return ERR_PTR(-EINVAL);
- 
--	ret = msm_gem_new_impl(dev, size, flags, &obj, struct_mutex_locked);
-+	ret = msm_gem_new_impl(dev, size, flags, &obj);
- 	if (ret)
- 		goto fail;
- 
-+	msm_obj = to_msm_bo(obj);
-+
- 	if (use_vram) {
- 		struct msm_gem_vma *vma;
- 		struct page **pages;
--		struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 
- 		mutex_lock(&msm_obj->lock);
- 
-@@ -1086,6 +1077,15 @@ static struct drm_gem_object *_msm_gem_new(struct drm_device *dev,
- 		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
- 	}
- 
-+	if (struct_mutex_locked) {
-+		WARN_ON(!mutex_is_locked(&dev->struct_mutex));
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	} else {
-+		mutex_lock(&dev->struct_mutex);
-+		list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+		mutex_unlock(&dev->struct_mutex);
-+	}
-+
- 	return obj;
- 
- fail:
-@@ -1108,6 +1108,7 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev,
- struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 		struct dma_buf *dmabuf, struct sg_table *sgt)
- {
-+	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj;
- 	uint32_t size;
-@@ -1121,7 +1122,7 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 
- 	size = PAGE_ALIGN(dmabuf->size);
- 
--	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj, false);
-+	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
- 	if (ret)
- 		goto fail;
- 
-@@ -1146,6 +1147,11 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 	}
- 
- 	mutex_unlock(&msm_obj->lock);
-+
-+	mutex_lock(&dev->struct_mutex);
-+	list_add_tail(&msm_obj->mm_list, &priv->inactive_list);
-+	mutex_unlock(&dev->struct_mutex);
-+
- 	return obj;
- 
- fail:
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 3a08252f1a53f..0dbbb467c2291 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -3689,7 +3689,11 @@ static void brcmf_sdio_bus_watchdog(struct brcmf_sdio *bus)
+ 			if (bus->idlecount > bus->idletime) {
+ 				brcmf_dbg(SDIO, "idle\n");
+ 				sdio_claim_host(bus->sdiodev->func1);
+-				brcmf_sdio_wd_timer(bus, false);
++#ifdef DEBUG
++				if (!BRCMF_FWCON_ON() ||
++				    bus->console_interval == 0)
++#endif
++					brcmf_sdio_wd_timer(bus, false);
+ 				bus->idlecount = 0;
+ 				brcmf_sdio_bus_sleep(bus, true, false);
+ 				sdio_release_host(bus->sdiodev->func1);
 -- 
 2.25.1
 
