@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C6C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF63C433DF
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14AFA2067C
+	by mail.kernel.org (Postfix) with ESMTP id BBEB023B1B
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597678188;
-	bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+	bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/wVumHcnk2zmAk1h1MT4mKlI/3B4uEVb3JIFUbNc0RwmT1+EneGJJH97cROv2Ex7
-	 CV6roVqyk0iGRhXj5nBRbuWU/SD88u4CSJDXvZNKoKEXuOxQPVyKhktBvHndFGz7lr
-	 6P2w0dzksWTLS5ioqrh3WyiCxGBPmnV0sHGRKRHg=
+	b=q/Hsc9UIMPM17L6b/xnU2Vud20M5EWkAqD+v90YTbfSgJptNmTOToAw8CwHZ8JO72
+	 wDW7ckGO3igupIJOprSGC/xlMSPhoy+KIxl2YXfR7NID8OPWBeucaJGHlJdTlfM1iP
+	 vC8xC4jpVycDKiEI0jXp5FtDc4Cjt60Fewkq3DT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgHQP3n (ORCPT
+        id S1730134AbgHQP3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbgHQP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:36 -0400
+        id S1729735AbgHQP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8D8233CF;
-        Mon, 17 Aug 2020 15:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F06C23444;
+        Mon, 17 Aug 2020 15:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678056;
-        bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
+        s=default; t=1597678059;
+        bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qAW545Eoe/ytO6yawRJ0VqgiKpQoRXZsOtoR2TJBwapVg4A42UjmpptV64C5ItZOm
-         9JL2OK8ezNft2ImdGbplp865XGqOjfi/y1sl7dn4O79mkuGy+AESDWSObxPZTYBjh2
-         gdo38SVG4irfSm5p+d7b3cCRbZiZS98OR7hl67Fc=
+        b=mTTvxKXgUjw8k4S2ZvvKWefoWl+Jc/5+B5/EL0QdKtUl1/1mD4IvJfgM+7wphhTka
+         kM6vr9KUaAdf56t77Z2tGgrCa35tGsmWvAfmp6d+TLQweWWND/jQ667DK6h9m7CpIh
+         1iuV3+4AWE58cJZGNHD1ozrw/1c4BiDGdHon06mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 186/464] cxl: Fix kobject memleak
-Date:   Mon, 17 Aug 2020 17:12:19 +0200
-Message-Id: <20200817143842.731796077@linuxfoundation.org>
+Subject: [PATCH 5.8 204/464] media: firewire: Using uninitialized values in node_probe()
+Date:   Mon, 17 Aug 2020 17:12:37 +0200
+Message-Id: <20200817143843.588911288@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,42 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
+[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
+then the "strlen(model_names[i]) <= name_len" is true because strlen()
+is unsigned and -ENOENT is type promoted to a very high positive value.
+Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
+data because "name" is uninitialized.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
-
-Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/cxl/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/firewire/firedtv-fw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
-index f0263d1a1fdf2..d97a243ad30c0 100644
---- a/drivers/misc/cxl/sysfs.c
-+++ b/drivers/misc/cxl/sysfs.c
-@@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
- 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
- 				  &afu->dev.kobj, "cr%i", cr->cr);
- 	if (rc)
--		goto err;
-+		goto err1;
+diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
+index 97144734eb052..3f1ca40b9b987 100644
+--- a/drivers/media/firewire/firedtv-fw.c
++++ b/drivers/media/firewire/firedtv-fw.c
+@@ -272,6 +272,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
  
- 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
- 	if (rc)
+ 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
+ 				 name, sizeof(name));
++	if (name_len < 0)
++		return name_len;
+ 	for (i = ARRAY_SIZE(model_names); --i; )
+ 		if (strlen(model_names[i]) <= name_len &&
+ 		    strncmp(name, model_names[i], name_len) == 0)
 -- 
 2.25.1
 
