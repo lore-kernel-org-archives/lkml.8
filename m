@@ -2,104 +2,110 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82FCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C7120758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:15:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S/hC8jiE"
+	by mail.kernel.org (Postfix) with ESMTP id B139A2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgHQKP6 (ORCPT
+        id S1726303AbgHQKRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgHQKPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:15:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1193AC061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:15:52 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id m7so14418124qki.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 03:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xFMCooV+srfeUmENnqHRgCmMMf+HreBw4sTYYL9L8Po=;
-        b=S/hC8jiE66W4lYiSJD+JBpmqCQ1NfvjXLtgAW2YghalM2AGd/ropK2OJ5QJdgEzxiH
-         0VfSgSO/lBId1OsA+uu31pNhCaZrO04XKj3BVoYxMGceI8XB18gQx328saMF4eRJuhpi
-         wqLu1eOZmjesm4ayKqK7XFDelEm81dqVyV/68=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xFMCooV+srfeUmENnqHRgCmMMf+HreBw4sTYYL9L8Po=;
-        b=MqBNI6oX61a31S38E4U4CIzb4s+PDb7Iqwe8GOnqsXOsAH5zamQ6tPfAY8RG65TbLQ
-         xFEpoQJdY4Kz4+NYfIiCM0xoPimipy+MkkalHQSE044017VxqP+NRDQLoUlHPpyfC0Gm
-         hLeE7LPFaFWpDz7TCEUhWa07FdqC4/bTwUFOy0cZ6P/ZcBQJksGhktB2zEpQRdsEWDzF
-         asfYtbM8Wd9c+6C0lEfqogk+0Bo2oywz2semF8HkezwGqKc6bQmwhaA2MruEw/rxJqJy
-         4RsOPPE5LsWBrPRXsBIE5yNoWGzdz6BGow2vd2aJsDvbYyNk6h8Pt1ibYewq9iRtB83L
-         R0dw==
-X-Gm-Message-State: AOAM532wEb8ZJwltk5y+tCO1tWyRGXp5FvTW+wdtPjRTiXaJMeGMyyAh
-        Y2Pfyu5D/06gxxKyX60n3qZrMg==
-X-Google-Smtp-Source: ABdhPJyPDevAynADokoTMbQeVLyLhvINF5Maw120EPlX6HsYIVPaRj7K4bCyVzLV+ICE4a16V6aJTw==
-X-Received: by 2002:a05:620a:15b0:: with SMTP id f16mr12024373qkk.191.1597659344690;
-        Mon, 17 Aug 2020 03:15:44 -0700 (PDT)
-Received: from [10.230.34.187] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id k5sm17317588qke.18.2020.08.17.03.15.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 03:15:44 -0700 (PDT)
-Subject: Re: [PATCH 07/16] wireless: brcm80211: convert tasklets to use new
- tasklet_setup() API
-To:     Allen Pais <allen.cryptic@gmail.com>, kvalo@codeaurora.org,
-        kuba@kernel.org, jirislaby@kernel.org, mickflemm@gmail.com,
-        mcgrof@kernel.org, chunkeey@googlemail.com,
-        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
-        helmut.schaa@googlemail.com, pkshih@realtek.com,
-        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de
-Cc:     keescook@chromium.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-References: <20200817090637.26887-1-allen.cryptic@gmail.com>
- <20200817090637.26887-8-allen.cryptic@gmail.com>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <5080db28-3112-7d0a-ec7c-f437f670cfa3@broadcom.com>
-Date:   Mon, 17 Aug 2020 12:15:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 17 Aug 2020 06:17:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:39462 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgHQKRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:17:46 -0400
+IronPort-SDR: 73o/qQj0o8JQg1Yl0jCuUU8Cnzlts16jNm7dmfxQeLr7SUzIV5IA6eDDNYJX3QG/REjOHqK/9c
+ 34mz1EP4JOag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="154648037"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="154648037"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 03:17:46 -0700
+IronPort-SDR: CoYmT4vadO1YRsuKPGQNgqbHL2QoBwuuBnEmdEhmN4D2w6Rf93xKC2LYYk5ryOz2nq6A5VtH1w
+ NFRCdT2QDv/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="326368963"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 03:17:43 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1k7bw6-009Hfg-BU; Mon, 17 Aug 2020 13:00:14 +0300
+Date:   Mon, 17 Aug 2020 13:00:14 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        linux-kernel@vger.kernel.org,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+Message-ID: <20200817100014.GG1891694@smile.fi.intel.com>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+ <20200803215147.GA3201744@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200817090637.26887-8-allen.cryptic@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803215147.GA3201744@bogus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/2020 11:06 AM, Allen Pais wrote:
-> From: Allen Pais <allen.lkml@gmail.com>
+On Mon, Aug 03, 2020 at 03:51:47PM -0600, Rob Herring wrote:
+> On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> > Each DW DMA controller channel can be synthesized with different
+> > parameters like maximum burst-length, multi-block support, maximum data
+> > width, etc. Most of these parameters determine the DW DMAC channels
+> > performance in its own aspect. On the other hand these parameters can
+> > be implicitly responsible for the channels performance degradation
+> > (for instance multi-block support is a very useful feature, but having
+> > it disabled during the DW DMAC synthesize will provide a more optimized
+> > core). Since DMA slave devices may have critical dependency on the DMA
+> > engine performance, let's provide a way for the slave devices to have
+> > the DMA-channels allocated from a pool of the channels, which according
+> > to the system engineer fulfill their performance requirements.
+> > 
+> > The pool is determined by a mask optionally specified in the fifth
+> > DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> > phandle arguments or the mask is zero, then the allocation will be
+> > performed from a set of all channels provided by the DMA controller.
 > 
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> ---
->   .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c  | 6 +++---
->   .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.h  | 2 +-
->   2 files changed, 4 insertions(+), 4 deletions(-)
+Rob, I have a question to clarify (it's not directly related to the series,
+but to this schema and property names).
+
+We have two drivers for DMA controllers from Synopsys (they are different)
+where properties with the same semantics (like block_size or data-width) have
+different pattern of naming (okay, block_size for older driver even has _
+instead of -), i.e. block_size vs. snps,block-size and data-width vs.
+snps,data-width.
+
+I would like to unify them (*) in both drivers and would like to know which
+naming pattern is preferred in such case?
+
+*) Yes, we have to leave support for deprecated properties in this case in
+   the code.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
