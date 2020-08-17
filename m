@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586C1C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B53C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D14204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292ED204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgHQLcP (ORCPT
+        id S1728439AbgHQLcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:32:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:53506 "EHLO foss.arm.com"
+        Mon, 17 Aug 2020 07:32:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:53486 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbgHQLaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:30:24 -0400
+        id S1727924AbgHQLaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:30:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FB91106F;
-        Mon, 17 Aug 2020 04:30:23 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5AC4E3F66B;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 242851396;
         Mon, 17 Aug 2020 04:30:22 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E3D7C3F66B;
+        Mon, 17 Aug 2020 04:30:20 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@kernel.org,
-        vincent.guittot@linaro.org, morten.rasmussen@arm.com,
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
         Quentin Perret <qperret@google.com>
-Subject: [PATCH v6 07/17] sched/topology: Introduce SD metaflag for flags needing > 1 groups
-Date:   Mon, 17 Aug 2020 12:29:53 +0100
-Message-Id: <20200817113003.20802-8-valentin.schneider@arm.com>
+Subject: [PATCH v6 06/17] sched/debug: Output SD flag names rather than their values
+Date:   Mon, 17 Aug 2020 12:29:52 +0100
+Message-Id: <20200817113003.20802-7-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200817113003.20802-1-valentin.schneider@arm.com>
 References: <20200817113003.20802-1-valentin.schneider@arm.com>
@@ -45,134 +44,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation of cleaning up the sd_degenerate*() functions, mark flags
-used in sd_degenerate() with the new SDF_NEEDS_GROUPS flag. With this,
-build a compile-time mask of those SD flags.
+Decoding the output of /proc/sys/kernel/sched_domain/cpu*/domain*/flags has
+always been somewhat annoying, as one needs to go fetch the bit -> name
+mapping from the source code itself. This encoding can be saved in a script
+somewhere, but that isn't safe from flags being added, removed or even
+shuffled around.
 
-Note that sd_parent_degenerate() uses an extra flag in its mask,
-SD_PREFER_SIBLING, which remains singled out for now.
+What matters for debugging purposes is to get *which* flags are set in a
+given domain, their associated value is pretty much meaningless.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Make the sd flags debug file output flag names.
+
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- include/linux/sched/sd_flags.h | 39 ++++++++++++++++++++++++----------
- include/linux/sched/topology.h |  7 ++++++
- 2 files changed, 35 insertions(+), 11 deletions(-)
+ kernel/sched/debug.c | 56 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index ea0ec1a33da4..21a43ad6f26a 100644
---- a/include/linux/sched/sd_flags.h
-+++ b/include/linux/sched/sd_flags.h
-@@ -8,7 +8,7 @@
- #endif
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 36c54265bb2b..0655524700d2 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -245,6 +245,60 @@ set_table_entry(struct ctl_table *entry,
+ 	entry->proc_handler = proc_handler;
+ }
  
- /*
-- * Expected flag uses
-+ * Hierarchical metaflags
-  *
-  * SHARED_CHILD: These flags are meant to be set from the base domain upwards.
-  * If a domain has this flag set, all of its children should have it set. This
-@@ -29,29 +29,42 @@
-  * certain level (e.g. domain starts spanning CPUs outside of the base CPU's
-  * socket).
-  */
--#define SDF_SHARED_CHILD 0x1
--#define SDF_SHARED_PARENT 0x2
-+#define SDF_SHARED_CHILD       0x1
-+#define SDF_SHARED_PARENT      0x2
++static int sd_ctl_doflags(struct ctl_table *table, int write,
++			  void *buffer, size_t *lenp, loff_t *ppos)
++{
++	unsigned long flags = *(unsigned long *)table->data;
++	size_t data_size = 0;
++	size_t len = 0;
++	char *tmp;
++	int idx;
 +
-+/*
-+ * Behavioural metaflags
-+ *
-+ * NEEDS_GROUPS: These flags are only relevant if the domain they are set on has
-+ * more than one group. This is usually for balancing flags (load balancing
-+ * involves equalizing a metric between groups), or for flags describing some
-+ * shared resource (which would be shared between groups).
-+ */
-+#define SDF_NEEDS_GROUPS       0x4
- 
- /*
-  * Balance when about to become idle
-  *
-  * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_NEWIDLE, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_NEWIDLE, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on exec
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_EXEC, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_EXEC, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on fork, clone
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_FORK, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_FORK, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on wakeup
-@@ -69,24 +82,28 @@ SD_FLAG(SD_WAKE_AFFINE, SDF_SHARED_CHILD)
- 
- /*
-  * Domain members have different CPU capacities
-+ *
-+ * NEEDS_GROUPS: Per-CPU capacity is asymmetric between groups.
-  */
--SD_FLAG(SD_ASYM_CPUCAPACITY, 0)
-+SD_FLAG(SD_ASYM_CPUCAPACITY, SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU capacity (i.e. SMT)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * CPU capacity.
-+ *               CPU capacity.
-+ * NEEDS_GROUPS: Capacity is shared between groups.
-  */
--SD_FLAG(SD_SHARE_CPUCAPACITY, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_CPUCAPACITY, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU package resources (i.e. caches)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * the same cache(s).
-+ *               the same cache(s).
-+ * NEEDS_GROUPS: Caches are shared between groups.
-  */
--SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Only a single load balancing instance
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 32f602ff37a0..2d59ca77103e 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -25,6 +25,13 @@ enum {
- };
- #undef SD_FLAG
- 
-+/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
-+#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
-+static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-+#include <linux/sched/sd_flags.h>
-+0;
-+#undef SD_FLAG
++	if (write)
++		return 0;
 +
- #ifdef CONFIG_SCHED_DEBUG
- #define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
- static const struct {
++	for_each_set_bit(idx, &flags, __SD_FLAG_CNT) {
++		char *name = sd_flag_debug[idx].name;
++
++		/* Name plus whitespace */
++		data_size += strlen(name) + 1;
++	}
++
++	if (*ppos > data_size) {
++		*lenp = 0;
++		return 0;
++	}
++
++	tmp = kcalloc(data_size + 1, sizeof(*tmp), GFP_KERNEL);
++	if (!tmp)
++		return -ENOMEM;
++
++	for_each_set_bit(idx, &flags, __SD_FLAG_CNT) {
++		char *name = sd_flag_debug[idx].name;
++
++		len += snprintf(tmp + len, strlen(name) + 2, "%s ", name);
++	}
++
++	tmp += *ppos;
++	len -= *ppos;
++
++	if (len > *lenp)
++		len = *lenp;
++	if (len)
++		memcpy(buffer, tmp, len);
++	if (len < *lenp) {
++		((char *)buffer)[len] = '\n';
++		len++;
++	}
++
++	*lenp = len;
++	*ppos += len;
++
++	kfree(tmp);
++
++	return 0;
++}
++
+ static struct ctl_table *
+ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ {
+@@ -258,7 +312,7 @@ sd_alloc_ctl_domain_table(struct sched_domain *sd)
+ 	set_table_entry(&table[2], "busy_factor",	  &sd->busy_factor,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[3], "imbalance_pct",	  &sd->imbalance_pct,	    sizeof(int),  0644, proc_dointvec_minmax);
+ 	set_table_entry(&table[4], "cache_nice_tries",	  &sd->cache_nice_tries,    sizeof(int),  0644, proc_dointvec_minmax);
+-	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, proc_dointvec_minmax);
++	set_table_entry(&table[5], "flags",		  &sd->flags,		    sizeof(int),  0444, sd_ctl_doflags);
+ 	set_table_entry(&table[6], "max_newidle_lb_cost", &sd->max_newidle_lb_cost, sizeof(long), 0644, proc_doulongvec_minmax);
+ 	set_table_entry(&table[7], "name",		  sd->name,	       CORENAME_MAX_SIZE, 0444, proc_dostring);
+ 	/* &table[8] is terminator */
 -- 
 2.27.0
 
