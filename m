@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD502067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98102063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686420;
-	bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
+	s=default; t=1597686422;
+	bh=S9sr35SapIea/QfuCO5/tRlFpqSo9BlddiMPpbSQt7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTanUbbJJ8xUy0vNW4X86DMU4CEhbbdc9pPVwiCuQ5Png+dIvCEhXP3UnifRQ7dVA
-	 gvA+jMrYp1nXDz3UWTPXJuAcXs1FQvbF6i0Jf5YEOpGiOUM+QUjXXW0/Gx/rdKZRgr
-	 bedtMVVNRAM9kg51LlfWMojwbHKaoFW3YMZ1Y01I=
+	b=MWAGKpCYsa4uE7fJRkxsiSP/ZO7vj/7M0gz9k4bu83+ehOSy+Uk/0eNWc4uxkEvub
+	 INaQeCF2e8Nl0qAiA2PqkRjlCFNTUQpXb4DaKQw4fSE7Sqm7f9mhKwPsoptuJMZrnw
+	 tJIiK63YO9VpTfR35eBDY3kY872kGBT6hA1sL/DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389979AbgHQRq4 (ORCPT
+        id S2390001AbgHQRrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388758AbgHQQNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:41 -0400
+        id S2388751AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFFA207FB;
-        Mon, 17 Aug 2020 16:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F061520657;
+        Mon, 17 Aug 2020 16:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680820;
-        bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
+        s=default; t=1597680808;
+        bh=S9sr35SapIea/QfuCO5/tRlFpqSo9BlddiMPpbSQt7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZGyXM+gWHzkcqWtW4N8WhW13fVNVb/6gFFpi24GD38dkDtTaqG4Cvvr4omwoebQ+
-         bDG7p1jQGuz/DMbqW0D8/fqaMqXn+kBv3JFLk+nynTkyYvDhTOe5MDwtl7UVso0d8F
-         EwTMuqYyeNHOn8ujQp2biud6W8Zh92rKON1L/Gi0=
+        b=Cf/gN5y7P+lvaINARS3O1pUUWxKdzQEQ7dSa5wj1YxyTOOmCr0MgaGZVpkvCA71uZ
+         VEKJCAi6T/4+Dkbopi113SXeFiXLS6+LmypPhUBEYzOwxd5HsVErbmV0FWHqHcoWJ0
+         aGnURmtU8/RqbmbndjDZ7W6h7WntOa3lPITYoKi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/168] drm/radeon: disable AGP by default
-Date:   Mon, 17 Aug 2020 17:16:11 +0200
-Message-Id: <20200817143735.768643197@linuxfoundation.org>
+Subject: [PATCH 4.19 064/168] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
+Date:   Mon, 17 Aug 2020 17:16:35 +0200
+Message-Id: <20200817143736.937489136@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,39 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
+[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
 
-Always use the PCI GART instead. We just have to many cases
-where AGP still causes problems. This means a performance
-regression for some GPUs, but also a bug fix for some others.
+preview_init_entities() does not call v4l2_ctrl_handler_free() when
+it fails.
+Add the missed function to fix it.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/media/platform/omap3isp/isppreview.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 54729acd0d4af..0cd33289c2b63 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -168,12 +168,7 @@ int radeon_no_wb;
- int radeon_modeset = -1;
- int radeon_dynclks = -1;
- int radeon_r4xx_atom = 0;
--#ifdef __powerpc__
--/* Default to PCI on PowerPC (fdo #95017) */
- int radeon_agpmode = -1;
--#else
--int radeon_agpmode = 0;
--#endif
- int radeon_vram_limit = 0;
- int radeon_gart_size = -1; /* auto */
- int radeon_benchmarking = 0;
+diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
+index 591c6de498f89..20857ae42a77f 100644
+--- a/drivers/media/platform/omap3isp/isppreview.c
++++ b/drivers/media/platform/omap3isp/isppreview.c
+@@ -2290,7 +2290,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	me->ops = &preview_media_ops;
+ 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
+ 	if (ret < 0)
+-		return ret;
++		goto error_handler_free;
+ 
+ 	preview_init_formats(sd, NULL);
+ 
+@@ -2323,6 +2323,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	omap3isp_video_cleanup(&prev->video_in);
+ error_video_in:
+ 	media_entity_cleanup(&prev->subdev.entity);
++error_handler_free:
++	v4l2_ctrl_handler_free(&prev->ctrls);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
