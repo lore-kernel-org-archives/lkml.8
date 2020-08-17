@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D15820748
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A737E20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677689;
-	bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
+	s=default; t=1597677699;
+	bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lrxjjbIDHjxiKAPqO0hkFVRT5aBKMiD3f3ct054kzgNrKrE8JmXAK0LYMLG4WrqC+
-	 TlVyq8IGp6oMim/gcFGIweFo1/YX3G8WjWtYP2YssqpzuK99KiPjKNjXVrBVsTflLw
-	 MM7mVHM85L0hon80t6h3Ux3U7lC5dgWpK35IFrcE=
+	b=ZK0USdxJDPGJKuB0M58cY9QG1aKAwl+9nlxuebHRJ37UoFHo0Phn58FFD44zOOd1C
+	 LxDrP38wkGoDamnqTI7BfYYkOqiS3u6nmhNFjkL/zVyF/JhFork9UMlcb25fDuvq7L
+	 kqaNb5RLCUXiTssdhvSH6FUb2kveHaQMME3bcymo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbgHQPVY (ORCPT
+        id S1729369AbgHQPVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbgHQPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:19:53 -0400
+        id S1729306AbgHQPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4751420786;
-        Mon, 17 Aug 2020 15:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BD6D2065C;
+        Mon, 17 Aug 2020 15:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677592;
-        bh=K1Ma8cAdRm4cq5FiYwAP+gpk459mF5A3ggKalD13s7U=;
+        s=default; t=1597677657;
+        bh=AiOlWcS4Nc4rzG2Flyr2zCMjKAcNKrD8KD3GG6vV3I8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+/pWSf33n4AVvmZYS/pOcAM2bRfOQBLDb36gM5Z7F4hv2vbpL2FNL/Hfcsyal0Hm
-         4XwKAGvHIy7+aJfYI4WGD2t6UFX/DldgviQ8hozxe8idAy/LtBfBCzQPz56AwSwOAE
-         7zeM7khfhJ6eNrIuahBIoe18tHHUVvwc5p1G7Awk=
+        b=rB0zAR1IS7hc6vXyZDuurCgvKJAJHgPqfq85AktSmEtvAgTCDwEnjOoR4dvumv3dO
+         DJMp37Lpa8Nrty42ecaH4m6DdwvIe6x971TptmUt+8FBxGQv97yJY5kD5ILoFT0c2N
+         JT4iDKM5HgMwpFBRwBeG0k2kfLcOwBvEFH5k7gdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 020/464] memory: tegra: Fix an error handling path in tegra186_emc_probe()
-Date:   Mon, 17 Aug 2020 17:09:33 +0200
-Message-Id: <20200817143834.725434432@linuxfoundation.org>
+Subject: [PATCH 5.8 062/464] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Mon, 17 Aug 2020 17:10:15 +0200
+Message-Id: <20200817143836.734203816@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,79 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c3d4eb3bf6ad32466555b31094f33a299444f795 ]
+[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
 
-The call to tegra_bpmp_get() must be balanced by a call to
-tegra_bpmp_put() in case of error, as already done in the remove
-function.
+Pointer mddev is being dereferenced with a test_bit call before mddev
+is being null checked, this may cause a null pointer dereference. Fix
+this by moving the null pointer checks to sanity check mddev before
+it is dereferenced.
 
-Add an error handling path and corresponding goto.
-
-Fixes: 52d15dd23f0b ("memory: tegra: Support DVFS on Tegra186 and later")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/tegra186-emc.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/md/md.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
-index 97f26bc77ad41..c900948881d5b 100644
---- a/drivers/memory/tegra/tegra186-emc.c
-+++ b/drivers/memory/tegra/tegra186-emc.c
-@@ -185,7 +185,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
- 	if (IS_ERR(emc->clk)) {
- 		err = PTR_ERR(emc->clk);
- 		dev_err(&pdev->dev, "failed to get EMC clock: %d\n", err);
--		return err;
-+		goto put_bpmp;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index f567f536b529b..90756450b9588 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -470,17 +470,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
+ 	struct mddev *mddev = bio->bi_disk->private_data;
+ 	unsigned int sectors;
+ 
+-	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
++	if (mddev == NULL || mddev->pers == NULL) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
  	}
  
- 	platform_set_drvdata(pdev, emc);
-@@ -201,7 +201,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
- 	err = tegra_bpmp_transfer(emc->bpmp, &msg);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to EMC DVFS pairs: %d\n", err);
--		return err;
-+		goto put_bpmp;
+-	blk_queue_split(q, &bio);
+-
+-	if (mddev == NULL || mddev->pers == NULL) {
++	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
  	}
- 
- 	emc->debugfs.min_rate = ULONG_MAX;
-@@ -211,8 +211,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
- 
- 	emc->dvfs = devm_kmalloc_array(&pdev->dev, emc->num_dvfs,
- 				       sizeof(*emc->dvfs), GFP_KERNEL);
--	if (!emc->dvfs)
--		return -ENOMEM;
-+	if (!emc->dvfs) {
-+		err = -ENOMEM;
-+		goto put_bpmp;
-+	}
- 
- 	dev_dbg(&pdev->dev, "%u DVFS pairs:\n", emc->num_dvfs);
- 
-@@ -237,7 +239,7 @@ static int tegra186_emc_probe(struct platform_device *pdev)
- 			"failed to set rate range [%lu-%lu] for %pC\n",
- 			emc->debugfs.min_rate, emc->debugfs.max_rate,
- 			emc->clk);
--		return err;
-+		goto put_bpmp;
- 	}
- 
- 	emc->debugfs.root = debugfs_create_dir("emc", NULL);
-@@ -254,6 +256,10 @@ static int tegra186_emc_probe(struct platform_device *pdev)
- 			    emc, &tegra186_emc_debug_max_rate_fops);
- 
- 	return 0;
 +
-+put_bpmp:
-+	tegra_bpmp_put(emc->bpmp);
-+	return err;
- }
- 
- static int tegra186_emc_remove(struct platform_device *pdev)
++	blk_queue_split(q, &bio);
++
+ 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
+ 		if (bio_sectors(bio) != 0)
+ 			bio->bi_status = BLK_STS_IOERR;
 -- 
 2.25.1
 
