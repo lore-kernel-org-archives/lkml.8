@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F169CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF7020758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D567120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691318;
-	bh=D/f7KeSvbnpfeuO5AHy05pktd39Vhn5bLwVvks2iLkM=;
+	s=default; t=1597691324;
+	bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SgJCMQeu9FaJgRqqDxxntwFOvJTw2613cTrzT2GXkAdpPU1fVLCrF9M166ymOye39
-	 SNw4+7C6S0ApDUKAaox/UVm9PLEEk2pBSaSfGu3tUHekJTDQdLDKrp3p7XqraoIF8K
-	 intJhXJlRr3LV8C0OxV+2Qgt9u8BJaaDhQgyapO8=
+	b=mgdqvSftIrMTElTCN5xgwbd1pSq37tzt6YmL1O6rjrEcmotYR24mNkzqkkdmYryrO
+	 27B4oSWLrbyiqhZseLYSYHaBs//fi8avBQFQeSQlWxGDIQSifQE5KisBQDJBd06B5m
+	 A3PxFwUjxyM5cFVtsKZZ6N8IB6sxRWTrlmbM4UHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403975AbgHQTIS (ORCPT
+        id S2392049AbgHQTIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbgHQPnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:43:12 -0400
+        id S2387610AbgHQPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBAC2075B;
-        Mon, 17 Aug 2020 15:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F11F2075B;
+        Mon, 17 Aug 2020 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678987;
-        bh=D/f7KeSvbnpfeuO5AHy05pktd39Vhn5bLwVvks2iLkM=;
+        s=default; t=1597678980;
+        bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjY6txAX1dNQiY3vmlnIiddMCNkv/iQVaZ7g2w1i6Yfrt8USegGflsJ95otgPQuch
-         gqjNpoNhU3x7fBMDg15syK3obAPaHA5ZuQaer13c2XCNXHmxKCdDGQmD4anjgD+IEI
-         sQQBZBGzSuPj/AmyBM2r/y1jsOWNApOll7uv3DcE=
+        b=ky5N4VEM79STvbmFvCvPSI7PRnu2X5mnyQtPUszya1Bz6v0R98JUQ/kU8A77anYar
+         00lwOV440xStVL78p4kZQmSk58gO3Xl89Olt+BV74ikVpLmpidf8nC5up0lvLU4g16
+         qD/D3aGDg3925I6YQW3hD74lX2+ElMc43LD/Z4v4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 027/393] crypto: qat - allow xts requests not multiple of block
-Date:   Mon, 17 Aug 2020 17:11:17 +0200
-Message-Id: <20200817143820.925882563@linuxfoundation.org>
+Subject: [PATCH 5.7 025/393] arm64: dts: exynos: Fix silent hang after boot on Espresso
+Date:   Mon, 17 Aug 2020 17:11:15 +0200
+Message-Id: <20200817143820.823156924@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,79 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit 528f776df67c440361b2847b4da400d8754bf030 ]
+[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
 
-Allow AES-XTS requests that are not multiple of the block size.
-If a request is smaller than the block size, return -EINVAL.
+Once regulators are disabled after kernel boot, on Espresso board silent
+hang observed because of LDO7 being disabled.  LDO7 actually provide
+power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
+always-on to fix this hang.
 
-This fixes the following issue reported by the crypto testmgr self-test:
-
-  alg: skcipher: qat_aes_xts encryption failed on test vector "random: len=116 klen=64"; expected_error=0, actual_error=-22, cfg="random: inplace may_sleep use_finup src_divs=[<reimport>45.85%@+4077, <flush>54.15%@alignmask+18]"
-
-Fixes: 96ee111a659e ("crypto: qat - return error for block...")
-Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/qat/qat_common/qat_algs.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/crypto/qat/qat_common/qat_algs.c b/drivers/crypto/qat/qat_common/qat_algs.c
-index e14d3dd291f09..1b050391c0c90 100644
---- a/drivers/crypto/qat/qat_common/qat_algs.c
-+++ b/drivers/crypto/qat/qat_common/qat_algs.c
-@@ -55,6 +55,7 @@
- #include <crypto/hmac.h>
- #include <crypto/algapi.h>
- #include <crypto/authenc.h>
-+#include <crypto/xts.h>
- #include <linux/dma-mapping.h>
- #include "adf_accel_devices.h"
- #include "adf_transport.h"
-@@ -1102,6 +1103,14 @@ static int qat_alg_skcipher_blk_encrypt(struct skcipher_request *req)
- 	return qat_alg_skcipher_encrypt(req);
- }
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 7af288fa9475f..a9412805c1d6a 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1150000>;
+ 				regulator-enable-ramp-delay = <125>;
++				regulator-always-on;
+ 			};
  
-+static int qat_alg_skcipher_xts_encrypt(struct skcipher_request *req)
-+{
-+	if (req->cryptlen < XTS_BLOCK_SIZE)
-+		return -EINVAL;
-+
-+	return qat_alg_skcipher_encrypt(req);
-+}
-+
- static int qat_alg_skcipher_decrypt(struct skcipher_request *req)
- {
- 	struct crypto_skcipher *stfm = crypto_skcipher_reqtfm(req);
-@@ -1161,6 +1170,15 @@ static int qat_alg_skcipher_blk_decrypt(struct skcipher_request *req)
- 
- 	return qat_alg_skcipher_decrypt(req);
- }
-+
-+static int qat_alg_skcipher_xts_decrypt(struct skcipher_request *req)
-+{
-+	if (req->cryptlen < XTS_BLOCK_SIZE)
-+		return -EINVAL;
-+
-+	return qat_alg_skcipher_decrypt(req);
-+}
-+
- static int qat_alg_aead_init(struct crypto_aead *tfm,
- 			     enum icp_qat_hw_auth_algo hash,
- 			     const char *hash_name)
-@@ -1354,8 +1372,8 @@ static struct skcipher_alg qat_skciphers[] = { {
- 	.init = qat_alg_skcipher_init_tfm,
- 	.exit = qat_alg_skcipher_exit_tfm,
- 	.setkey = qat_alg_skcipher_xts_setkey,
--	.decrypt = qat_alg_skcipher_blk_decrypt,
--	.encrypt = qat_alg_skcipher_blk_encrypt,
-+	.decrypt = qat_alg_skcipher_xts_decrypt,
-+	.encrypt = qat_alg_skcipher_xts_encrypt,
- 	.min_keysize = 2 * AES_MIN_KEY_SIZE,
- 	.max_keysize = 2 * AES_MAX_KEY_SIZE,
- 	.ivsize = AES_BLOCK_SIZE,
+ 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
