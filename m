@@ -2,132 +2,67 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D100C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04222078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597669013;
-	bh=ERpMAdayk233Labrw+Lu7muZTEwuPknh19NdvGNHSMI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZVxy0yfssqvgKPBc8M3Pt1e3W4ofUbze+VeU4O/vHCxkW1FmloR59F1XSmPc5sBNi
-	 Rb1yahejuf/Ch4tr0GDoaVvn1szl1PBhoCFMNaDKYdc0YhtRwkfKk0bH9UhusdBzCm
-	 ZWW/q95sV4tZgLsRSnlO+PE9LOr4LxNkEQqfgDY0=
+	by mail.kernel.org (Postfix) with ESMTP id 894212078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgHQM4v (ORCPT
+        id S1728424AbgHQM7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 08:59:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59708 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbgHQM4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:56:50 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADC552072E;
-        Mon, 17 Aug 2020 12:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597669009;
-        bh=ERpMAdayk233Labrw+Lu7muZTEwuPknh19NdvGNHSMI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q5my1Mwo8/rP50v751943fs0FGAFtFae1A+Dz+biD7l+GcRGAiMRNkn8qGgI7zspP
-         cEpukEBSMsw3z7ejoG8++F6AGY8JyrdeuevwPlIHFlvr6yP17ft7SPLeS6htKMEAqd
-         XXVaERjnM8M8XvIYIw2P3xjXzpyt9obh8PR2A21U=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k7egy-003ZLe-9G; Mon, 17 Aug 2020 13:56:48 +0100
+        id S1726265AbgHQM7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:59:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9FBAAAAB0;
+        Mon, 17 Aug 2020 12:59:35 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 14:59:08 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>,
+        Joerg Roedel <joro@8bytes.org>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+Message-ID: <20200817125908.GB4167@suse.de>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+ <20200817082106.GA16296@infradead.org>
+ <20200817112725.26f1b7d6@coco.lan>
+ <20200817093703.GA2258686@kroah.com>
+ <20200817124617.303bb4a9@coco.lan>
+ <20200817105345.GA3483231@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 13:56:48 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Keqian Zhu <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steven Price <steven.price@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH 2/2] clocksource: arm_arch_timer: Correct fault
- programming of CNTKCTL_EL1.EVNTI
-In-Reply-To: <20200817122415.6568-3-zhukeqian1@huawei.com>
-References: <20200817122415.6568-1-zhukeqian1@huawei.com>
- <20200817122415.6568-3-zhukeqian1@huawei.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <b37f6cf6a660f51690f0689509650eed@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, steven.price@arm.com, drjones@redhat.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817105345.GA3483231@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 13:24, Keqian Zhu wrote:
-> ARM virtual counter supports event stream, it can only trigger an event
-> when the trigger bit (the value of CNTKCTL_EL1.EVNTI) of CNTVCT_EL0 
-> changes,
-> so the actual period of event stream is 2^(cntkctl_evnti + 1). For 
-> example,
-> when the trigger bit is 0, then virtual counter trigger an event for 
-> every
-> two cycles.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+On Mon, Aug 17, 2020 at 12:53:45PM +0200, Greg Kroah-Hartman wrote:
+> You can always do this just fine, as one single patch.  You do know
+> about the co-developed-by: line, right?
 
-I have never given you this tag, you are making it up. Please read
-Documentation/process/submitting-patches.rst to understand what
-tag you can put by yourself.
-
-At best, put "Suggested-by" tag, as this is different from what
-I posted anyway.
+Agreed. Please keep the main iommu driver in one patch and use
+co-developed-by. This makes it easier for me to review it and provide
+feedback. And please Cc me on the whole patch-set for v2.
 
 Thanks,
 
-         M.
-
-> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-> ---
->  drivers/clocksource/arm_arch_timer.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clocksource/arm_arch_timer.c
-> b/drivers/clocksource/arm_arch_timer.c
-> index 6e11c60..4140a37 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -794,10 +794,14 @@ static void arch_timer_configure_evtstream(void)
->  {
->  	int evt_stream_div, pos;
-> 
-> -	/* Find the closest power of two to the divisor */
-> -	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
-> +	/*
-> +	 * Find the closest power of two to the divisor. As the event
-> +	 * stream can at most be generated at half the frequency of the
-> +	 * counter, use half the frequency when computing the divider.
-> +	 */
-> +	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ / 2;
->  	pos = fls(evt_stream_div);
-> -	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
-> +	if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
->  		pos--;
->  	/* enable event stream */
->  	arch_timer_evtstrm_enable(min(pos, 15));
-
--- 
-Jazz is not dead. It just smells funny...
+	Joerg
