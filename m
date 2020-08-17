@@ -2,98 +2,110 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A92EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5157C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07812086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597668737;
-	bh=LCkDhp0yrQ1H4GBGLsPDHG1MxDxVdl9KXyWjwLTvWPI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DzT9MdWO9M3HPOg/yHPZwHV5curmM7pEdv7cZkbOHyvpCAewEMX2VOq57tRtwV642
-	 Lafe1W6aNssy27IG8/ZN7SxYgvFKpa0/wHC7PNdcUvMWSjGU1r1fpD+fQFwCKXBsLi
-	 fsIh4wxQ1NtiO1RPCfZZ2df6XcRAhVQagkiYzi/o=
+	by mail.kernel.org (Postfix) with ESMTP id 9AD2A20789
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RluLe+Sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgHQMwQ (ORCPT
+        id S1728515AbgHQMwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:52:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 08:52:45 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:45980 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbgHQMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:52:13 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726265AbgHQMwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:52:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597668762; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JGVe9PW+tTDsQAAqGjQ8ritTdegK9mneovtsPPAvGdU=; b=RluLe+SmuQH1y41/KBqJt+nn02DGm+Oz+Q6ZCfmZvuRFJW6IRQ4jtJLtrt1YP46eDYPbveTd
+ efplYXQwLruG5ue+vGQUOKDywtqSdOaPwkoGPACLVatPEP71z6FvkED7gPnh5E4+Xsoyx9Xn
+ WmdKYmKZqaWHVH10qCjdfLUFaDk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f3a7d6eba4c2cd36711cb35 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 12:51:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DAD9BC43387; Mon, 17 Aug 2020 12:51:57 +0000 (UTC)
+Received: from [192.168.1.7] (unknown [117.217.239.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA53020789;
-        Mon, 17 Aug 2020 12:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597668732;
-        bh=LCkDhp0yrQ1H4GBGLsPDHG1MxDxVdl9KXyWjwLTvWPI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pUHLfV+s8fddXGPPQLHHqlb1z8AbfUZG7NYwsP6qnq5K2IVfcprGJsRrncpdFA9ra
-         0yWmrmbHicohobmmQJY+O/OkOVFL+9FwbcCNn8IymvQarItwreniFbq0rqYpjzwCEx
-         WpS6O+f+OLhmp7XvP9Rx93u16E0rFw/5ea5eTJsA=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k7ecV-003ZH0-B9; Mon, 17 Aug 2020 13:52:11 +0100
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3ABC4C433CA;
+        Mon, 17 Aug 2020 12:51:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3ABC4C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+Subject: Re: [RESEND PATCH] drm/msm/a6xx: fix frequency not always being
+ restored on GMU resume
+To:     Jonathan Marek <jonathan@marek.ca>, freedreno@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sean Paul <sean@poorly.run>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200813185450.19387-1-jonathan@marek.ca>
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+Message-ID: <270c4efd-8524-c389-3347-2f9c4e246b6d@codeaurora.org>
+Date:   Mon, 17 Aug 2020 18:21:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200813185450.19387-1-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 13:52:11 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Keqian Zhu <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steven Price <steven.price@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH 1/2] clocksource: arm_arch_timer: Simplify and fix count
- reader code logic
-In-Reply-To: <20200817122415.6568-2-zhukeqian1@huawei.com>
-References: <20200817122415.6568-1-zhukeqian1@huawei.com>
- <20200817122415.6568-2-zhukeqian1@huawei.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <267c5f9151c39fd2dcd0ce0b09d96545@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, steven.price@arm.com, drjones@redhat.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 13:24, Keqian Zhu wrote:
-> In commit 0ea415390cd3 (clocksource/arm_arch_timer: Use 
-> arch_timer_read_counter
-> to access stable counters), we separate stable and normal count reader. 
-> Actually
-> the stable reader can correctly lead us to normal reader if we has no
-> workaround.
+Why don't we move the early return in a6xx_gmu_set_freq() to 
+msm_devfreq_target() instead?
 
-Resulting in an unnecessary overhead on non-broken systems that can run
-without CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND. Not happening.
+-Akhil.
 
-> Besides, in erratum_set_next_event_tval_generic(), we use normal 
-> reader, it is
-> obviously wrong, so just revert this commit to solve this problem by 
-> the way.
+On 8/14/2020 12:24 AM, Jonathan Marek wrote:
+> The patch reorganizing the set_freq function made it so the gmu resume
+> doesn't always set the frequency, because a6xx_gmu_set_freq() exits early
+> when the frequency hasn't been changed. Note this always happens when
+> resuming GMU after recovering from a hang.
+> 
+> Use a simple workaround to prevent this from happening.
+> 
+> Fixes: 1f60d11423db ("drm: msm: a6xx: send opp instead of a frequency")
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index b67b38c8fadf..bbbd00020f92 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -845,6 +845,7 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
+>   	if (IS_ERR_OR_NULL(gpu_opp))
+>   		return;
+>   
+> +	gmu->freq = 0; /* so a6xx_gmu_set_freq() doesn't exit early */
+>   	a6xx_gmu_set_freq(gpu, gpu_opp);
+>   	dev_pm_opp_put(gpu_opp);
+>   }
+> 
 
-If you want to fix something, post a patch that does exactly that.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
