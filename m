@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE08C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED6E82065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFD620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692688;
-	bh=A9I3Y0ifFr5e1wqS1dyd2VKj/8QcHjUtO1jMJS1N00U=;
+	s=default; t=1597692694;
+	bh=LP/ESwE5uXSLHnZg76uKNJaf8JA4zFy3qEkEfQyv0Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZtWy6Ehh5Z2a59eFQXYCJbbbRC5Lga2V8eZ0K54+Wyn72X02uUdauML9lrvqcf99
-	 G5hoJsygauXKYlxiLnP/jQ2acsCbJbGMWXoY2mRRFMDHz889k0/VSSnbKnYysJtut6
-	 ncvs0N6zcU9EJQeO/xcN96R5N+fw889t9Cw64R3A=
+	b=0fuoyh4OzvqqlV7SmEh1NIKjr8PoKhlGRb471nzLfwMk8acSusvOm9WbMqbBmEwaU
+	 lNaUYLgZ28Oxu+VI90s9sC5oQkkPkFWU/SJ5DbcfFYmhlu2shrcY8Vv8uci4NZYQY7
+	 jiBpZd72quG+e87ZRFRh8hE/mZX1LhX6PBkQgKKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbgHQTb0 (ORCPT
+        id S2404168AbgHQTbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730297AbgHQPb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:31:59 -0400
+        id S1730047AbgHQPby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2236C23120;
-        Mon, 17 Aug 2020 15:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D7832075B;
+        Mon, 17 Aug 2020 15:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678318;
-        bh=A9I3Y0ifFr5e1wqS1dyd2VKj/8QcHjUtO1jMJS1N00U=;
+        s=default; t=1597678313;
+        bh=LP/ESwE5uXSLHnZg76uKNJaf8JA4zFy3qEkEfQyv0Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPn8JXIV6Y/EGoVPm9JVkJ/0Mp+B/7wXBxXW/Y2IfuIkoYHzxYbDrN+becZJaWNrm
-         8TAcaftBnV3PJyCg/PP0XffNqgdPc6gQ+gyJNmm84rfTUE3tD8wbWd1ITzHWol1ZCr
-         g7fRj8fjzG94h0sKD6Z3Hv5Xdqurb0qt+xEbgBu0=
+        b=LOpC8wYJDITdXnQfwlEPbjtK03F9xyhBxuv7Znc9hmb86gUqkWXXBGzqWrCZFuP5s
+         BOqeku/FIsbhRTIPUglTk569tw/vVTQe23pxlLPr4XLq4GQeaEFRs1d65RnUyj6NTM
+         h2mdyosSbh1KKN3ze7FUxW7bgEf0ePky+lzUflQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 293/464] powerpc/watchpoint: Fix 512 byte boundary limit
-Date:   Mon, 17 Aug 2020 17:14:06 +0200
-Message-Id: <20200817143847.790438471@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 250/464] phy: renesas: rcar-gen3-usb2: move irq registration to init
+Date:   Mon, 17 Aug 2020 17:13:23 +0200
+Message-Id: <20200817143845.771345671@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,45 +62,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 3190ecbfeeb2ab17778887ce3fa964615d6460fd ]
+[ Upstream commit 08b0ad375ca66181faee725b1b358bcae8d592ee ]
 
-Milton Miller reported that we are aligning start and end address to
-wrong size SZ_512M. It should be SZ_512. Fix that.
+If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
+correctly. If we appended "earlycon keep_bootcon" to the kernel
+command like, we could get kernel log like below.
 
-While doing this change I also found a case where ALIGN() comparison
-fails. Within a given aligned range, ALIGN() of two addresses does not
-match when start address is pointing to the first byte and end address
-is pointing to any other byte except the first one. But that's not true
-for ALIGN_DOWN(). ALIGN_DOWN() of any two addresses within that range
-will always point to the first byte. So use ALIGN_DOWN() instead of
-ALIGN().
+    SError Interrupt on CPU0, code 0xbf000002 -- SError
+    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+    pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
+    pc : rcar_gen3_phy_usb2_irq+0x14/0x54
+    lr : free_irq+0xf4/0x27c
 
-Fixes: e68ef121c1f4 ("powerpc/watchpoint: Use builtin ALIGN*() macros")
-Reported-by: Milton Miller <miltonm@us.ibm.com>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Tested-by: Jordan Niethe <jniethe5@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200723090813.303838-2-ravi.bangoria@linux.ibm.com
+This means free_irq() calls the interrupt handler while PM runtime
+is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
+failed. To fix the issue, move the irq registration place to
+rcar_gen3_phy_usb2_init() which is ready to handle the interrupts.
+
+Note that after the commit 549b6b55b005 ("phy: renesas: rcar-gen3-usb2:
+enable/disable independent irqs") which is merged into v5.2, since this
+driver creates multiple phy instances, needs to check whether one of
+phy instances is initialized. However, if we backport this patch to v5.1
+or less, we don't need to check it because such kernel have single
+phy instance.
+
+Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1594986297-12434-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/hw_breakpoint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 61 +++++++++++++-----------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 0000daf0e1dae..031e6defc08e6 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -419,7 +419,7 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
- 	if (dawr_enabled()) {
- 		max_len = DAWR_MAX_LEN;
- 		/* DAWR region can't cross 512 bytes boundary */
--		if (ALIGN(start_addr, SZ_512M) != ALIGN(end_addr - 1, SZ_512M))
-+		if (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512))
- 			return -EINVAL;
- 	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
- 		/* 8xx can setup a range without limitation */
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index bfb22f868857f..5087b7c44d55b 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -111,6 +111,7 @@ struct rcar_gen3_chan {
+ 	struct work_struct work;
+ 	struct mutex lock;	/* protects rphys[...].powered */
+ 	enum usb_dr_mode dr_mode;
++	int irq;
+ 	bool extcon_host;
+ 	bool is_otg_channel;
+ 	bool uses_otg_pins;
+@@ -389,12 +390,38 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ 	rcar_gen3_device_recognition(ch);
+ }
+ 
++static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
++{
++	struct rcar_gen3_chan *ch = _ch;
++	void __iomem *usb2_base = ch->base;
++	u32 status = readl(usb2_base + USB2_OBINTSTA);
++	irqreturn_t ret = IRQ_NONE;
++
++	if (status & USB2_OBINT_BITS) {
++		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
++		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
++		rcar_gen3_device_recognition(ch);
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
++}
++
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
+ 	struct rcar_gen3_chan *channel = rphy->ch;
+ 	void __iomem *usb2_base = channel->base;
+ 	u32 val;
++	int ret;
++
++	if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
++		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
++		ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
++				  IRQF_SHARED, dev_name(channel->dev), channel);
++		if (ret < 0)
++			dev_err(channel->dev, "No irq handler (%d)\n", channel->irq);
++	}
+ 
+ 	/* Initialize USB2 part */
+ 	val = readl(usb2_base + USB2_INT_ENABLE);
+@@ -433,6 +460,9 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ 		val &= ~USB2_INT_ENABLE_UCOM_INTEN;
+ 	writel(val, usb2_base + USB2_INT_ENABLE);
+ 
++	if (channel->irq >= 0 && !rcar_gen3_is_any_rphy_initialized(channel))
++		free_irq(channel->irq, channel);
++
+ 	return 0;
+ }
+ 
+@@ -503,23 +533,6 @@ static const struct phy_ops rz_g1c_phy_usb2_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+-{
+-	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->base;
+-	u32 status = readl(usb2_base + USB2_OBINTSTA);
+-	irqreturn_t ret = IRQ_NONE;
+-
+-	if (status & USB2_OBINT_BITS) {
+-		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+-		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+-		rcar_gen3_device_recognition(ch);
+-		ret = IRQ_HANDLED;
+-	}
+-
+-	return ret;
+-}
+-
+ static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+ 	{
+ 		.compatible = "renesas,usb2-phy-r8a77470",
+@@ -598,7 +611,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	struct phy_provider *provider;
+ 	struct resource *res;
+ 	const struct phy_ops *phy_usb2_ops;
+-	int irq, ret = 0, i;
++	int ret = 0, i;
+ 
+ 	if (!dev->of_node) {
+ 		dev_err(dev, "This driver needs device tree\n");
+@@ -614,16 +627,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	if (IS_ERR(channel->base))
+ 		return PTR_ERR(channel->base);
+ 
+-	/* call request_irq for OTG */
+-	irq = platform_get_irq_optional(pdev, 0);
+-	if (irq >= 0) {
+-		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+-		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
+-				       IRQF_SHARED, dev_name(dev), channel);
+-		if (irq < 0)
+-			dev_err(dev, "No irq handler (%d)\n", irq);
+-	}
+-
++	/* get irq number here and request_irq for OTG in phy_init */
++	channel->irq = platform_get_irq_optional(pdev, 0);
+ 	channel->dr_mode = rcar_gen3_get_dr_mode(dev->of_node);
+ 	if (channel->dr_mode != USB_DR_MODE_UNKNOWN) {
+ 		int ret;
 -- 
 2.25.1
 
