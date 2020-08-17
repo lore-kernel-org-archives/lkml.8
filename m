@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE94DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFDAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AABE220658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8062072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693853;
-	bh=vc8NGM3wB9EpgjxwZ28okfuV02spWivhd7Nv1uL4HzE=;
+	s=default; t=1597693856;
+	bh=2q+FXrg/9QdRjh2msUUDlUOpPof9RzO6120MvHd8tJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUXnQCOf/jUO7U3wWV11K0Qv2C7Xvzxw4xPNvn6dR/8etIsi4gG9Jw7hSOBseFoVC
-	 GN3aFyFoBs5zcGtGGrrmmY+r+NTui2+cC1J9qXCwe9ZUeeR/3Fcc/rmJqqJas47GPb
-	 OsCydLZCPvTGYJB5SuFkc6ZJTE8F/ZmbCqpR06B8=
+	b=2XioBj1S3lVrSgPO58QyRouEN+R63bs/KdwSnObMHbkoP815Lt3ZX5TF9POKUpgFr
+	 hrqKL9OGt3HunXY2f45wJc6/j7X3+ubI5D+UxUq1h+hHCScoSplIkrjDB/pGoMET+h
+	 N9H8KgytVMp8PnPX2klKzFkhUoK1JyF1CDv/yMMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404448AbgHQTuv (ORCPT
+        id S2391224AbgHQTuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40866 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbgHQPTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:19:23 -0400
+        id S1729212AbgHQPTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A82BC2075B;
-        Mon, 17 Aug 2020 15:19:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F6D720748;
+        Mon, 17 Aug 2020 15:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677562;
-        bh=vc8NGM3wB9EpgjxwZ28okfuV02spWivhd7Nv1uL4HzE=;
+        s=default; t=1597677556;
+        bh=2q+FXrg/9QdRjh2msUUDlUOpPof9RzO6120MvHd8tJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvPbDF8uumN0CrvXVzmrBGIwTYZg4lk0TnrTJBxp3cv+3UevzloIHmizgw4o+cDAW
-         9UYkiA1oqWE1wUXYp0/j91oa03GuJpRs+iArmcOXVlpSdeevBKO+PU37JvUuCuKd6f
-         +TKcYFXlwlCFE8gy+nEPdH0sEDOJ0OZ0ESsoC7+s=
+        b=PINgS7J2dbXGJ0DFbG56XpiX9wwGtSFKTW5Ko4P7GlWXe0Ec6AJ3axSUG82S2p8nc
+         bkBQ8wo+uUcVt5qXYu9R+KODzhg++mke/xhH7JiEjm3YlJj6seeUc9Q3x4DIDmAxbd
+         Q6vzQY8vh1OpaLwalx2j5jj+0eWBMH1mPiBW0kK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 019/464] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
-Date:   Mon, 17 Aug 2020 17:09:32 +0200
-Message-Id: <20200817143834.677465860@linuxfoundation.org>
+Subject: [PATCH 5.8 009/464] x86, sched: check for counters overflow in frequency invariant accounting
+Date:   Mon, 17 Aug 2020 17:09:22 +0200
+Message-Id: <20200817143834.199060300@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,79 +61,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Giovanni Gherdovich <ggherdovich@suse.cz>
 
-[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
+[ Upstream commit e2b0d619b400ae326f954a018a1d65d736c237c5 ]
 
-msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
-pin configurations. This was likely copied from the qcom kernel fork
-where the same property was used for these audio pins.
+The product mcnt * arch_max_freq_ratio can overflows u64.
 
-However, "bias-pull-none" actually does not exist at all - not in
-mainline and not in downstream. I can only guess that the original
-intention was to configure "no pull", i.e. bias-disable.
+For context, a large value for arch_max_freq_ratio would be 5000,
+corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
+1500-2000). A large increment frequency for the MPERF counter would be 5GHz
+(the base clock of all CPUs on the market today is less than that). With
+these figures, a CPU would need to go without a scheduler tick for around 8
+days for the u64 overflow to happen. It is unlikely, but the check is
+warranted.
 
-Change it to that instead.
+Under similar conditions, the difference acnt of two consecutive APERF
+readings can overflow as well.
 
-Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+In these circumstances is appropriate to disable frequency invariant
+accounting: the feature relies on measures of the clock frequency done at
+every scheduler tick, which need to be "fresh" to be at all meaningful.
+
+A note on i386: prior to version 5.1, the GCC compiler didn't have the
+builtin function __builtin_mul_overflow. In these GCC versions the macro
+check_mul_overflow needs __udivdi3() to do (u64)a/b, which the kernel
+doesn't provide. For this reason this change fails to build on i386 if
+GCC<5.1, and we protect the entire frequency invariant code behind
+CONFIG_X86_64 (special thanks to "kbuild test robot" <lkp@intel.com>).
+
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-2-ggherdovich@suse.cz
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/topology.h |  2 +-
+ arch/x86/kernel/smpboot.c       | 33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index e9c00367f7fd0..5785bf0a807ce 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -556,7 +556,7 @@ pinconf {
- 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
- 				       "gpio67", "gpio68";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		cdc_pdm_lines_sus: pdm-lines-off {
-@@ -585,7 +585,7 @@ pinconf {
- 				pins = "gpio113", "gpio114", "gpio115",
- 				       "gpio116";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 79d8d54963303..f4234575f3fdb 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -193,7 +193,7 @@ static inline void sched_clear_itmt_support(void)
+ }
+ #endif /* CONFIG_SCHED_MC_PRIO */
  
-@@ -613,7 +613,7 @@ pinmux {
- 			pinconf {
- 				pins = "gpio110";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
+-#ifdef CONFIG_SMP
++#if defined(CONFIG_SMP) && defined(CONFIG_X86_64)
+ #include <asm/cpufeature.h>
  
-@@ -639,7 +639,7 @@ pinmux {
- 			pinconf {
- 				pins = "gpio116";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		ext_mclk_tlmm_lines_sus: mclk-lines-off {
-@@ -667,7 +667,7 @@ pinconf {
- 				pins = "gpio112", "gpio117", "gpio118",
- 					"gpio119";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		ext_sec_tlmm_lines_sus: tlmm-lines-off {
+ DECLARE_STATIC_KEY_FALSE(arch_scale_freq_key);
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index ffbd9a3d78d84..18d292fc466cb 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -56,6 +56,7 @@
+ #include <linux/cpuidle.h>
+ #include <linux/numa.h>
+ #include <linux/pgtable.h>
++#include <linux/overflow.h>
+ 
+ #include <asm/acpi.h>
+ #include <asm/desc.h>
+@@ -1777,6 +1778,7 @@ void native_play_dead(void)
+ 
+ #endif
+ 
++#ifdef CONFIG_X86_64
+ /*
+  * APERF/MPERF frequency ratio computation.
+  *
+@@ -2048,11 +2050,19 @@ static void init_freq_invariance(bool secondary)
+ 	}
+ }
+ 
++static void disable_freq_invariance_workfn(struct work_struct *work)
++{
++	static_branch_disable(&arch_scale_freq_key);
++}
++
++static DECLARE_WORK(disable_freq_invariance_work,
++		    disable_freq_invariance_workfn);
++
+ DEFINE_PER_CPU(unsigned long, arch_freq_scale) = SCHED_CAPACITY_SCALE;
+ 
+ void arch_scale_freq_tick(void)
+ {
+-	u64 freq_scale;
++	u64 freq_scale = SCHED_CAPACITY_SCALE;
+ 	u64 aperf, mperf;
+ 	u64 acnt, mcnt;
+ 
+@@ -2064,19 +2074,32 @@ void arch_scale_freq_tick(void)
+ 
+ 	acnt = aperf - this_cpu_read(arch_prev_aperf);
+ 	mcnt = mperf - this_cpu_read(arch_prev_mperf);
+-	if (!mcnt)
+-		return;
+ 
+ 	this_cpu_write(arch_prev_aperf, aperf);
+ 	this_cpu_write(arch_prev_mperf, mperf);
+ 
+-	acnt <<= 2*SCHED_CAPACITY_SHIFT;
+-	mcnt *= arch_max_freq_ratio;
++	if (check_shl_overflow(acnt, 2*SCHED_CAPACITY_SHIFT, &acnt))
++		goto error;
++
++	if (check_mul_overflow(mcnt, arch_max_freq_ratio, &mcnt) || !mcnt)
++		goto error;
+ 
+ 	freq_scale = div64_u64(acnt, mcnt);
++	if (!freq_scale)
++		goto error;
+ 
+ 	if (freq_scale > SCHED_CAPACITY_SCALE)
+ 		freq_scale = SCHED_CAPACITY_SCALE;
+ 
+ 	this_cpu_write(arch_freq_scale, freq_scale);
++	return;
++
++error:
++	pr_warn("Scheduler frequency invariance went wobbly, disabling!\n");
++	schedule_work(&disable_freq_invariance_work);
++}
++#else
++static inline void init_freq_invariance(bool secondary)
++{
+ }
++#endif /* CONFIG_X86_64 */
 -- 
 2.25.1
 
