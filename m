@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE18C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9251EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4452310F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677A32310F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677887;
-	bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
+	s=default; t=1597677892;
+	bh=xVNJuHkAildX0xCTS4AHRtF9UgkFpucBy56ZAeDRSXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pvlZAvXKXgDlr/TEFu3cYhHb16U8euKBrkfhcTJF3CgFXssq/93ztqeoueSc0vlt2
-	 5cY6ZzKOVHlAOoD+IzEi4e+WG198BFbAyj4g0dlcG1HQ4KXTwh0zP2Nlvz3vWE+lkL
-	 6qXBfQIn+MoOBLLHEHy08QDBoamD2BR590bae454=
+	b=ESjKdsLGJ5NGc/lQWCxuHhMiHAJ1gnWyGP8vVe+HPu5Kh0RthmutDHyTtvS2wMbog
+	 Mvu8xhoeE3xdK9yZ+8ACauvntapSi2ty1DkYBE4v/TScpOhl5ga7wn0Mwwkoct8DmZ
+	 HYklbxJsxG+fJ6hxFF0fY8yJcjzubTvMtwHu3PZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgHQPYq (ORCPT
+        id S1729693AbgHQPYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50522 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgHQPXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:23 -0400
+        id S1729546AbgHQPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC14422E03;
-        Mon, 17 Aug 2020 15:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B680A22B49;
+        Mon, 17 Aug 2020 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677803;
-        bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
+        s=default; t=1597677809;
+        bh=xVNJuHkAildX0xCTS4AHRtF9UgkFpucBy56ZAeDRSXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KV+eUaWQETMI4jUWgGRALiu4A4VLVebojnMKBpoSNkRMHU8RTcABb2AWsiLstnbjo
-         PkAMGnr45/s71LIqwhrvwERNh5yYmyF/KxU2TeLYx7qyijnnh6bonMppeVV7mf9J97
-         FPyu7k5dNdhNI5AlKYP1m0Vn+Hl8A0WkOUKq6z30=
+        b=1Ss6BqiOG45/kZ+RK6eIGtqpT8VzVDcut9ObzSEkLxRwMjci5wfnCtLN/Xi9PPPn3
+         sej2Rrc+/YsFcfe5Cs1a28EgeFQqM9QCEX35yYnxmAQtKzaBX0nYw+Br2CwZXpUQ9Z
+         td6rNogd2njs/ql2I3xMRxh4CCaAACdffOSh+SVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 113/464] drm/amdgpu/display: properly guard the calls to swSMU functions
-Date:   Mon, 17 Aug 2020 17:11:06 +0200
-Message-Id: <20200817143839.220765202@linuxfoundation.org>
+Subject: [PATCH 5.8 088/464] video: fbdev: savage: fix memory leak on error handling path in probe
+Date:   Mon, 17 Aug 2020 17:10:41 +0200
+Message-Id: <20200817143838.003929210@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,43 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 4072327a2622af8688b88f5cd0a472136d3bf33d ]
+[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
 
-It's only applicable on newer asics.  We could end up here when
-using DC on older asics like SI or KV.
+savagefb_probe() calls savage_init_fb_info() that can successfully
+allocate memory for info->pixmap.addr but then fail when
+fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
+does not free allocated memory. It is not valid to go to label
+failed_mmio since savage_init_fb_info() can fail during memory
+allocation as well. So, the patch free allocated memory on the error
+handling path in savage_init_fb_info() itself.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Antonino Daplas <adaplas@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-index 7cee8070cb113..5c6a6ae48d396 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -106,7 +106,7 @@ bool dm_pp_apply_display_requirements(
- 			adev->powerplay.pp_funcs->display_configuration_change(
- 				adev->powerplay.pp_handle,
- 				&adev->pm.pm_display_cfg);
--		else
-+		else if (adev->smu.ppt_funcs)
- 			smu_display_configuration_change(smu,
- 							 &adev->pm.pm_display_cfg);
- 
-@@ -592,7 +592,7 @@ void pp_rv_set_wm_ranges(struct pp_smu *pp,
- 	if (pp_funcs && pp_funcs->set_watermarks_for_clocks_ranges)
- 		pp_funcs->set_watermarks_for_clocks_ranges(pp_handle,
- 							   &wm_with_clock_ranges);
--	else
-+	else if (adev->smu.ppt_funcs)
- 		smu_set_watermarks_for_clock_ranges(&adev->smu,
- 				&wm_with_clock_ranges);
- }
+diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
+index 3c8ae87f0ea7d..3fd87aeb6c798 100644
+--- a/drivers/video/fbdev/savage/savagefb_driver.c
++++ b/drivers/video/fbdev/savage/savagefb_driver.c
+@@ -2157,6 +2157,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
+ 			info->flags |= FBINFO_HWACCEL_COPYAREA |
+ 				       FBINFO_HWACCEL_FILLRECT |
+ 				       FBINFO_HWACCEL_IMAGEBLIT;
++		else
++			kfree(info->pixmap.addr);
+ 	}
+ #endif
+ 	return err;
 -- 
 2.25.1
 
