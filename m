@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF31C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29FD42054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6814A2395B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678199;
-	bh=k2Y/wdQBPBwdqVEJvQH4Trnk31ZgtBleldriB3usG08=;
+	s=default; t=1597678208;
+	bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJIAENytBIm7AVx3pVWn/GaJqpg0Ap6/Gh6Xi1og7FXbiciM5jBJz4XUBfrobaMIm
-	 pXULh14Q5vVbdC3RxzkyF4BJ+YwFA92Jn6znNeaoJOvuTTy9SsQbV4HBZJPUhH/K+k
-	 kjDvXwNMVZlM9SU+ZLM4co8GxDm8OJ4hMDfXAfyY=
+	b=sZ29pSIV/msWBoS1zKU0gG06zOeRinjtzk0OPB82PxLfSUgp1DA7Y0h0gC1DGadRh
+	 Pa4xXbES6AcNEQaUbBaR9SU7U8fPkUMmjGOhE4BFsgn3cKfQCkOT/dG5BPSl+LqS1K
+	 tnR3QqZ1igUkMR5aPHSc/0j4Je6Uw245HwpMLKyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbgHQP3z (ORCPT
+        id S1730159AbgHQPaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40982 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729979AbgHQP15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:57 -0400
+        id S1729977AbgHQP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE40923B54;
-        Mon, 17 Aug 2020 15:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C07F23B29;
+        Mon, 17 Aug 2020 15:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678076;
-        bh=k2Y/wdQBPBwdqVEJvQH4Trnk31ZgtBleldriB3usG08=;
+        s=default; t=1597678074;
+        bh=C8r8mALl/7ZEMq5jWAreO2rJacfW0xTMtM7RPgVBCDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZMh1mq6555IRosI6DLOIDUwgGj9CKQn/C7R9kbhfg8wzfEEcdv+vqWJWoop8DhOk
-         fqwfzfdxz4OI5j1914BsuSA037XxA2T9S0ndhmNnu/bsUg0qTRKK0GdWQwXa5mVuqT
-         F3abRg99vT7fAYsK2eI0i64kSnCgwcIypvc0yC1c=
+        b=KdF8tRhUZOARJBysnLA7oH5l1gLxqNX4fT204s8h2dDeN8sXYz+VakdEzxG5SrjZL
+         yLxXWLQv5F5VTpGgp9iBeSmTWh7xplRkxDuWcWAaOvLNhO4EShlaUKnSzqOPnXE/TF
+         C1DlhZLjWc5HNuWOSqqZHgqeWl0Ni/6BreqtvJ9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dariusz Marcinkiewicz <darekm@google.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 210/464] media: cros-ec-cec: do not bail on device_init_wakeup failure
-Date:   Mon, 17 Aug 2020 17:12:43 +0200
-Message-Id: <20200817143843.870989130@linuxfoundation.org>
+Subject: [PATCH 5.8 209/464] media: exynos4-is: Add missed check for pinctrl_lookup_state()
+Date:   Mon, 17 Aug 2020 17:12:42 +0200
+Message-Id: <20200817143843.826599488@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 6f01dfb760c027d5dd6199d91ee9599f2676b5c6 ]
+[ Upstream commit 18ffec750578f7447c288647d7282c7d12b1d969 ]
 
-Do not fail probing when device_init_wakeup fails.
+fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+Add the missed check to fix it.
 
-device_init_wakeup fails when the device is already enabled as wakeup
-device. Hence, the driver fails to probe the device if:
-- The device has already been enabled for wakeup (by e.g. sysfs)
-- The driver has been unloaded and is being loaded again.
-
-This goal of the patch is to fix the above cases.
-
-Overwhelming majority of the drivers do not check device_init_wakeup
-return code.
-
-Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/media/platform/exynos4-is/media-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-index 0e7e2772f08f9..2d95e16cd2489 100644
---- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-+++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
-@@ -277,11 +277,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cros_ec_cec);
- 	cros_ec_cec->cros_ec = cros_ec;
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d50..9c31d950cddf7 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
  
--	ret = device_init_wakeup(&pdev->dev, 1);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to initialize wakeup\n");
--		return ret;
--	}
-+	device_init_wakeup(&pdev->dev, 1);
+ 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+ 					PINCTRL_STATE_IDLE);
++	if (IS_ERR(pctl->state_idle))
++		return PTR_ERR(pctl->state_idle);
++
+ 	return 0;
+ }
  
- 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
- 						 DRV_NAME,
 -- 
 2.25.1
 
