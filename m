@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE597C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9502063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD502067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686415;
-	bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+	s=default; t=1597686420;
+	bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bkqaev64npGme1U0MMEabCxSD8IzM81Avt/LAhcnSRAJA3IC36e3DULZiAq3EpjMQ
-	 Zo1At6o0o2+icJV5xROrhj2/lI5hZzwKibIsqP9aKnT/7f0FfdfJbwMAeno/GvUMkj
-	 CIQoB7JQTjp/KfGPPdBpFi1V4efgpKSsSXxvbEjg=
+	b=HTanUbbJJ8xUy0vNW4X86DMU4CEhbbdc9pPVwiCuQ5Png+dIvCEhXP3UnifRQ7dVA
+	 gvA+jMrYp1nXDz3UWTPXJuAcXs1FQvbF6i0Jf5YEOpGiOUM+QUjXXW0/Gx/rdKZRgr
+	 bedtMVVNRAM9kg51LlfWMojwbHKaoFW3YMZ1Y01I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388718AbgHQRqu (ORCPT
+        id S2389979AbgHQRq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388765AbgHQQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:49 -0400
+        id S2388758AbgHQQNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951B620748;
-        Mon, 17 Aug 2020 16:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFFA207FB;
+        Mon, 17 Aug 2020 16:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680828;
-        bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+        s=default; t=1597680820;
+        bh=gGyiXxopYlQbJ6AbtM9O7utJiQiofQ+CDLgnBBOTWdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=okvXGwxgSgm8HSmjVWMOrTCZhutifmcCHVRUqu45H0GRS+y3Ei2cRsf2fJwISC912
-         eACyetGwq6VUeDxgIaquPuLLJEhK5glMgM9WidoAuLAhRMH3bPaKHTF0Ic4zx+5uij
-         ottpRJD/aq9QqVjGWiqYX4dk1H4AjY7n7D8JVKKc=
+        b=OZGyXM+gWHzkcqWtW4N8WhW13fVNVb/6gFFpi24GD38dkDtTaqG4Cvvr4omwoebQ+
+         bDG7p1jQGuz/DMbqW0D8/fqaMqXn+kBv3JFLk+nynTkyYvDhTOe5MDwtl7UVso0d8F
+         EwTMuqYyeNHOn8ujQp2biud6W8Zh92rKON1L/Gi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/168] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
-Date:   Mon, 17 Aug 2020 17:16:37 +0200
-Message-Id: <20200817143737.027458197@linuxfoundation.org>
+Subject: [PATCH 4.19 040/168] drm/radeon: disable AGP by default
+Date:   Mon, 17 Aug 2020 17:16:11 +0200
+Message-Id: <20200817143735.768643197@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
+[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
 
-The dev_id used in request_irq() and free_irq() should match.  Use 'info'
-in both cases.
+Always use the PCI GART instead. We just have to many cases
+where AGP still causes problems. This means a performance
+regression for some GPUs, but also a bug fix for some others.
 
-Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/cumana_2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
-index edce5f3cfdba0..93ba83e3148eb 100644
---- a/drivers/scsi/arm/cumana_2.c
-+++ b/drivers/scsi/arm/cumana_2.c
-@@ -454,7 +454,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
- 
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
- 
-  out_release:
- 	fas216_release(host);
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 54729acd0d4af..0cd33289c2b63 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -168,12 +168,7 @@ int radeon_no_wb;
+ int radeon_modeset = -1;
+ int radeon_dynclks = -1;
+ int radeon_r4xx_atom = 0;
+-#ifdef __powerpc__
+-/* Default to PCI on PowerPC (fdo #95017) */
+ int radeon_agpmode = -1;
+-#else
+-int radeon_agpmode = 0;
+-#endif
+ int radeon_vram_limit = 0;
+ int radeon_gart_size = -1; /* auto */
+ int radeon_benchmarking = 0;
 -- 
 2.25.1
 
