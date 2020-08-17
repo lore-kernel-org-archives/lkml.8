@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B94C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D246C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EE720578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1085A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689913;
-	bh=N1gT3kAw/UBcFA7s49rB6JKME29zU0dtcQUV78S0TKI=;
+	s=default; t=1597689918;
+	bh=U7t52tCIkx+MGwL/KjQUEtIkOleMcbC9f4pswlQt8HY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3LGuQNwKeGuah8I3YgmLjinRWthkkjU4scUDhTq875hwx7WwPlD7wab6zJtsdy4T
-	 l+5i0dDezd82Ysulz8ESbcU3xMTSxfaPJTSRg2HMGs6121lPh6XOpkNKNJYUDKfLIB
-	 f9o9EBhnYOA87jo+1/7/MiY1VaTa6TfVeMEtQ250=
+	b=qmDv5Yor5Grd8pb2g+0yNJpYLi0tH330G9SqEb1SfW8oL/vjMszkjuBObiZqsgngy
+	 OabyX6pilZkcWk4kC6dSyu8X2haOWY0O2UuYkHKbnGzERpteMwQsPH8MjIsrgBIHDk
+	 KkWarufBUe+WD9iAHX3ZXLOPtAs0WqE/bLEX6gHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403796AbgHQSpM (ORCPT
+        id S2391549AbgHQSpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388064AbgHQP4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:07 -0400
+        id S2388066AbgHQP4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191AC20888;
-        Mon, 17 Aug 2020 15:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E082053B;
+        Mon, 17 Aug 2020 15:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679762;
-        bh=N1gT3kAw/UBcFA7s49rB6JKME29zU0dtcQUV78S0TKI=;
+        s=default; t=1597679765;
+        bh=U7t52tCIkx+MGwL/KjQUEtIkOleMcbC9f4pswlQt8HY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHqZXr5eEMECi5V4dvYJrWvAvEcFQLQ5ze6YeQvRnV3UQxts5a+fRHcISV9tIV6Jj
-         Rvy0GIvzXxdHbt0hoMa+sm1jqomhinYE04NKT0WagWCuJt5mtR2csf6Dy3WjdcnL1+
-         fQpgjgj6b9JWrksSpW/A7PSaJWk4ZM/ZxYBzE27Q=
+        b=alTg6zl0oc/zKn8gef1K/DkLVIXLKT8bicXgJnDCnC3k07yzTsvmCInN3Bc90qtSo
+         qI9VOTUdvBUVK2iTERjv9jiJ/HhxSeB/0ZQeiNCsERtUK93hb4kFUrjfNb9bd7e8++
+         MgHQxMBTdYX5c+8rYTM4xWc5KEYYC44osUBOIv1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Tsang-Shian Lin <thlin@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 295/393] ftrace: Fix ftrace_trace_task return value
-Date:   Mon, 17 Aug 2020 17:15:45 +0200
-Message-Id: <20200817143833.927717439@linuxfoundation.org>
+Subject: [PATCH 5.7 286/393] rtw88: fix LDPC field for RA info
+Date:   Mon, 17 Aug 2020 17:15:36 +0200
+Message-Id: <20200817143833.495557234@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,69 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Tsang-Shian Lin <thlin@realtek.com>
 
-[ Upstream commit c58b6b0372de0d4cd0536d6585addd1b36b151ae ]
+[ Upstream commit ae44fa993e8e6c1a1d22e5ca03d9eadd53b2745b ]
 
-I was attempting to use pid filtering with function_graph, but it wasn't
-allowing anything to make it through.  Turns out ftrace_trace_task
-returns false if ftrace_ignore_pid is not-empty, which isn't correct
-anymore.  We're now setting it to FTRACE_PID_IGNORE if we need to ignore
-that pid, otherwise it's set to the pid (which is weird considering the
-name) or to FTRACE_PID_TRACE.  Fix the check to check for !=
-FTRACE_PID_IGNORE.  With this we can now use function_graph with pid
-filtering.
+Convert the type of LDPC field to boolen because
+LDPC field of RA info H2C command to firmware
+is only one bit.
 
-Link: https://lkml.kernel.org/r/20200725005048.1790-1-josef@toxicpanda.com
-
-Fixes: 717e3f5ebc82 ("ftrace: Make function trace pid filtering a bit more exact")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Tsang-Shian Lin <thlin@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200717064937.27966-2-yhchuang@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 3 ---
- kernel/trace/trace.h  | 7 ++++++-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw88/fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index bd030b1b95148..baa7c050dc7bc 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -139,9 +139,6 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
- #endif
- }
- 
--#define FTRACE_PID_IGNORE	-1
--#define FTRACE_PID_TRACE	-2
--
- static void ftrace_pid_func(unsigned long ip, unsigned long parent_ip,
- 			    struct ftrace_ops *op, struct pt_regs *regs)
- {
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 09298ce5f805b..6b9acbf95cbc9 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1103,6 +1103,10 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
- extern struct list_head ftrace_pids;
- 
- #ifdef CONFIG_FUNCTION_TRACER
-+
-+#define FTRACE_PID_IGNORE	-1
-+#define FTRACE_PID_TRACE	-2
-+
- struct ftrace_func_command {
- 	struct list_head	list;
- 	char			*name;
-@@ -1114,7 +1118,8 @@ struct ftrace_func_command {
- extern bool ftrace_filter_param __initdata;
- static inline int ftrace_trace_task(struct trace_array *tr)
- {
--	return !this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid);
-+	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
-+		FTRACE_PID_IGNORE;
- }
- extern int ftrace_is_dead(void);
- int ftrace_create_function_files(struct trace_array *tr,
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index 05c430b3489cb..917decdbfb729 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -444,7 +444,7 @@ void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 	SET_RA_INFO_INIT_RA_LVL(h2c_pkt, si->init_ra_lv);
+ 	SET_RA_INFO_SGI_EN(h2c_pkt, si->sgi_enable);
+ 	SET_RA_INFO_BW_MODE(h2c_pkt, si->bw_mode);
+-	SET_RA_INFO_LDPC(h2c_pkt, si->ldpc_en);
++	SET_RA_INFO_LDPC(h2c_pkt, !!si->ldpc_en);
+ 	SET_RA_INFO_NO_UPDATE(h2c_pkt, no_update);
+ 	SET_RA_INFO_VHT_EN(h2c_pkt, si->vht_enable);
+ 	SET_RA_INFO_DIS_PT(h2c_pkt, disable_pt);
 -- 
 2.25.1
 
