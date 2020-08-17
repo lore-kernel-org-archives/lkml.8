@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FDF20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797BB20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681543;
-	bh=LQsR3dnBfeULtjAcQHnXV69le54pY/011/AqbEmrMsw=;
+	s=default; t=1597681548;
+	bh=LP/ESwE5uXSLHnZg76uKNJaf8JA4zFy3qEkEfQyv0Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8ZAFLQBU2E2ZItdDjIvPcyKwQPm07XVIUmpuQry/sCr4L3bV5GWnAXcgGdgVkSWw
-	 CeaSQrt91oW58Q2Z2z8VfJ1kU1YaDYEKbR+tMxeWPHZ3HhUk2sUB2mCPR5j4HpwuCp
-	 w1KckddSh5L4o9Gw8tGuNEF/ON1csVPxHdLkga0k=
+	b=oCEi6Uc1CPU8KqInH9JIsOOhGVGjZqyCVSjj07EE3k7cLPy6W9IpC7LOq+kH3qQ3N
+	 MBJE9atlJ/RE3ckvMGUKxLoq5nO61zZgjd4f6p9/fJz+26x9CKfHVmJUk8JDrYhGr3
+	 mCk9tH+5XROSlQOU1Xfqs67ZGoUUP2Sd3p6EEwQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbgHQQZm (ORCPT
+        id S2388121AbgHQQZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35996 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730905AbgHQPvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:03 -0400
+        id S1730834AbgHQPvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8252F20882;
-        Mon, 17 Aug 2020 15:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27372072E;
+        Mon, 17 Aug 2020 15:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679463;
-        bh=LQsR3dnBfeULtjAcQHnXV69le54pY/011/AqbEmrMsw=;
+        s=default; t=1597679460;
+        bh=LP/ESwE5uXSLHnZg76uKNJaf8JA4zFy3qEkEfQyv0Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQRGb8eFneSOVQiD2aiummKQqqWujnX3CseKLI1zFjpoIM3BNOXpu7jxs87gmltqK
-         R0VxJi/hRegcdMarjjYpAvHDmk1p6GtOmt5kNaIE6w6bnHkIqEce1NMgYLmbp5qbhH
-         McDM1je5oxSaBAtdE+FxoPZwC0YAdiOxgEOy3OnE=
+        b=UUyBz0RdmxE/KOny3FtFvQTNNKFhFfsH05y8jH+3ktm99sC2eDFKlK8BOC8dG3Qv3
+         m2k1ww0XOHkua0vNGXa0jq6NHQ5GkW3WiNuguLl7rNDQYP6GgrpI9hHG/4wg8I28a+
+         2iX2soKo0mmMXOQThPhUBNuonRCEAN2slvgWZs6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Xiang Zheng <zhengxiang9@huawei.com>,
-        Heyi Guo <guoheyi@huawei.com>,
-        Biaoxiang Ye <yebiaoxiang@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 190/393] PCI: Fix pci_cfg_wait queue locking problem
-Date:   Mon, 17 Aug 2020 17:14:00 +0200
-Message-Id: <20200817143828.838186964@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 218/393] phy: renesas: rcar-gen3-usb2: move irq registration to init
+Date:   Mon, 17 Aug 2020 17:14:28 +0200
+Message-Id: <20200817143830.199525631@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,70 +62,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 2a7e32d0547f41c5ce244f84cf5d6ca7fccee7eb ]
+[ Upstream commit 08b0ad375ca66181faee725b1b358bcae8d592ee ]
 
-The pci_cfg_wait queue is used to prevent user-space config accesses to
-devices while they are recovering from reset.
+If CONFIG_DEBUG_SHIRQ was enabled, r8a77951-salvator-xs could boot
+correctly. If we appended "earlycon keep_bootcon" to the kernel
+command like, we could get kernel log like below.
 
-Previously we used these operations on pci_cfg_wait:
+    SError Interrupt on CPU0, code 0xbf000002 -- SError
+    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-salvator-x-00505-g6c843129e6faaf01 #785
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+    pstate: 60400085 (nZCv daIf +PAN -UAO BTYPE=--)
+    pc : rcar_gen3_phy_usb2_irq+0x14/0x54
+    lr : free_irq+0xf4/0x27c
 
-  __add_wait_queue(&pci_cfg_wait, ...)
-  __remove_wait_queue(&pci_cfg_wait, ...)
-  wake_up_all(&pci_cfg_wait)
+This means free_irq() calls the interrupt handler while PM runtime
+is not getting if DEBUG_SHIRQ is enabled and rcar_gen3_phy_usb2_probe()
+failed. To fix the issue, move the irq registration place to
+rcar_gen3_phy_usb2_init() which is ready to handle the interrupts.
 
-The wake_up acquires the wait queue lock, but the add and remove do not.
+Note that after the commit 549b6b55b005 ("phy: renesas: rcar-gen3-usb2:
+enable/disable independent irqs") which is merged into v5.2, since this
+driver creates multiple phy instances, needs to check whether one of
+phy instances is initialized. However, if we backport this patch to v5.1
+or less, we don't need to check it because such kernel have single
+phy instance.
 
-Originally these were all protected by the pci_lock, but cdcb33f98244
-("PCI: Avoid possible deadlock on pci_lock and p->pi_lock"), moved
-wake_up_all() outside pci_lock, so it could race with add/remove
-operations, which caused occasional kernel panics, e.g., during vfio-pci
-hotplug/unplug testing:
-
-  Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-
-Resolve this by using wait_event() instead of __add_wait_queue() and
-__remove_wait_queue().  The wait queue lock is held by both wait_event()
-and wake_up_all(), so it provides mutual exclusion.
-
-Fixes: cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and p->pi_lock")
-Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/T/#u
-Based-on: https://lore.kernel.org/linux-pci/20191210031527.40136-1-zhengxiang9@huawei.com/
-Based-on-patch-by: Xiang Zheng <zhengxiang9@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
+Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 9f391c574efc ("phy: rcar-gen3-usb2: add runtime ID/VBUS pin detection")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1594986297-12434-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/access.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 61 +++++++++++++-----------
+ 1 file changed, 33 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 79c4a2ef269a7..9793f17fa1843 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -204,17 +204,13 @@ EXPORT_SYMBOL(pci_bus_set_ops);
- static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
- 
- static noinline void pci_wait_cfg(struct pci_dev *dev)
-+	__must_hold(&pci_lock)
- {
--	DECLARE_WAITQUEUE(wait, current);
--
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
--		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
--		schedule();
-+		wait_event(pci_cfg_wait, !dev->block_cfg_access);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index bfb22f868857f..5087b7c44d55b 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -111,6 +111,7 @@ struct rcar_gen3_chan {
+ 	struct work_struct work;
+ 	struct mutex lock;	/* protects rphys[...].powered */
+ 	enum usb_dr_mode dr_mode;
++	int irq;
+ 	bool extcon_host;
+ 	bool is_otg_channel;
+ 	bool uses_otg_pins;
+@@ -389,12 +390,38 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ 	rcar_gen3_device_recognition(ch);
  }
  
- /* Returns 0 on success, negative values indicate error. */
++static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
++{
++	struct rcar_gen3_chan *ch = _ch;
++	void __iomem *usb2_base = ch->base;
++	u32 status = readl(usb2_base + USB2_OBINTSTA);
++	irqreturn_t ret = IRQ_NONE;
++
++	if (status & USB2_OBINT_BITS) {
++		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
++		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
++		rcar_gen3_device_recognition(ch);
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
++}
++
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_phy *rphy = phy_get_drvdata(p);
+ 	struct rcar_gen3_chan *channel = rphy->ch;
+ 	void __iomem *usb2_base = channel->base;
+ 	u32 val;
++	int ret;
++
++	if (!rcar_gen3_is_any_rphy_initialized(channel) && channel->irq >= 0) {
++		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
++		ret = request_irq(channel->irq, rcar_gen3_phy_usb2_irq,
++				  IRQF_SHARED, dev_name(channel->dev), channel);
++		if (ret < 0)
++			dev_err(channel->dev, "No irq handler (%d)\n", channel->irq);
++	}
+ 
+ 	/* Initialize USB2 part */
+ 	val = readl(usb2_base + USB2_INT_ENABLE);
+@@ -433,6 +460,9 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ 		val &= ~USB2_INT_ENABLE_UCOM_INTEN;
+ 	writel(val, usb2_base + USB2_INT_ENABLE);
+ 
++	if (channel->irq >= 0 && !rcar_gen3_is_any_rphy_initialized(channel))
++		free_irq(channel->irq, channel);
++
+ 	return 0;
+ }
+ 
+@@ -503,23 +533,6 @@ static const struct phy_ops rz_g1c_phy_usb2_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+-{
+-	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->base;
+-	u32 status = readl(usb2_base + USB2_OBINTSTA);
+-	irqreturn_t ret = IRQ_NONE;
+-
+-	if (status & USB2_OBINT_BITS) {
+-		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
+-		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+-		rcar_gen3_device_recognition(ch);
+-		ret = IRQ_HANDLED;
+-	}
+-
+-	return ret;
+-}
+-
+ static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+ 	{
+ 		.compatible = "renesas,usb2-phy-r8a77470",
+@@ -598,7 +611,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	struct phy_provider *provider;
+ 	struct resource *res;
+ 	const struct phy_ops *phy_usb2_ops;
+-	int irq, ret = 0, i;
++	int ret = 0, i;
+ 
+ 	if (!dev->of_node) {
+ 		dev_err(dev, "This driver needs device tree\n");
+@@ -614,16 +627,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	if (IS_ERR(channel->base))
+ 		return PTR_ERR(channel->base);
+ 
+-	/* call request_irq for OTG */
+-	irq = platform_get_irq_optional(pdev, 0);
+-	if (irq >= 0) {
+-		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+-		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
+-				       IRQF_SHARED, dev_name(dev), channel);
+-		if (irq < 0)
+-			dev_err(dev, "No irq handler (%d)\n", irq);
+-	}
+-
++	/* get irq number here and request_irq for OTG in phy_init */
++	channel->irq = platform_get_irq_optional(pdev, 0);
+ 	channel->dr_mode = rcar_gen3_get_dr_mode(dev->of_node);
+ 	if (channel->dr_mode != USB_DR_MODE_UNKNOWN) {
+ 		int ret;
 -- 
 2.25.1
 
