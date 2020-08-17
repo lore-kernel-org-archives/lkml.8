@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B3C433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D90C433DF
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D470F20738
+	by mail.kernel.org (Postfix) with ESMTP id A578C204EC
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597691961;
-	bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
+	bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVDTEG5WWrd4GUVumbEMHQCrVBhfEO0zjG0RryMGAPbyoQakjghxuDS6kpG4e1biH
-	 J3ggIOhmELXIZqIbiSwElgHna618FgNbRY0mK1otVZcZ+JjjhtYQ9A9X381Qda7E5T
-	 U+oUS5PAxPVo8+WVABtyYjzIsO2tXJGuR5y94cSU=
+	b=djCiB7FsEa8eBI3jtLzQbSRSf+7EhkM/FVaDxZ1VZa0ghoDvLWrYXhBCra54AY1NW
+	 gfDLbGe7ja3tgRTIA5cFwAZdQTLGK+LhyksP+OV/rOnwi1vqvkqSFTRPVMW2YMtn3F
+	 /0HVFlxSGZ6jkHCKeRqRaWoJx8Dz0H/07cEytSJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392291AbgHQTTO (ORCPT
+        id S2404186AbgHQTTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:19:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730571AbgHQPh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:58 -0400
+        id S1730568AbgHQPhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7009C22DD6;
-        Mon, 17 Aug 2020 15:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0BC8208E4;
+        Mon, 17 Aug 2020 15:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678675;
-        bh=9lydp8hjxOFrZPhNQnlx2zjaziqBxM76PYiRf3Woj4k=;
+        s=default; t=1597678665;
+        bh=05ebuUc09f862f7GfK6svroTc1ljzoi3btmGR8atQdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NY+5+Cl1MoP/8Sq7HFPh82P3LQH98VpMXfo4mUJvnNYlTWHlNdIg9pvjGJXic9gLx
-         qmzU00TzHq7R/LEPyUeLkqxrYH2DEWyEcCP5JQmT42Gng8r0P2PEMvqNz//kWcW2S9
-         jqTtuGhXf6ydnT7T/jbGmJWjt9mbtccIm/zGBlAo=
+        b=kYGtRHnjYDDF3EcoggoKFs0pj/qA0VdQWlvYCvRtwA0H0LA43YhdqYvJvDOoH2P6y
+         zIKceOF1PNxD5OYJ9cseWCCUVQRiQkc5JH6QKREzoEQPjmSv1nitd0fh8YzBEoYC/n
+         wLbI83h3QDuCDuTvc/34w0oz+BWlotEdU2ctxnAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>,
-        Frederic Weisbecker <frederic@kernel.org>, stable@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.8 414/464] tick/nohz: Narrow down noise while setting current tasks tick dependency
-Date:   Mon, 17 Aug 2020 17:16:07 +0200
-Message-Id: <20200817143853.611231346@linuxfoundation.org>
+        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.8 412/464] crypto: ccp - Fix use of merged scatterlists
+Date:   Mon, 17 Aug 2020 17:16:05 +0200
+Message-Id: <20200817143853.516540055@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,79 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: John Allen <john.allen@amd.com>
 
-commit 3c8920e2dbd1a55f72dc14d656df9d0097cf5c72 upstream.
+commit 8a302808c60d441d9884cb00ea7f2b534f2e3ca5 upstream.
 
-Setting a tick dependency on any task, including the case where a task
-sets that dependency on itself, triggers an IPI to all CPUs.  That is
-of course suboptimal but it had previously not been an issue because it
-was only used by POSIX CPU timers on nohz_full, which apparently never
-occurs in latency-sensitive workloads in production.  (Or users of such
-systems are suffering in silence on the one hand or venting their ire
-on the wrong people on the other.)
+Running the crypto manager self tests with
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
+when using the ccp-crypto driver:
 
-But RCU now sets a task tick dependency on the current task in order
-to fix stall issues that can occur during RCU callback processing.
-Thus, RCU callback processing triggers frequent system-wide IPIs from
-nohz_full CPUs.  This is quite counter-productive, after all, avoiding
-IPIs is what nohz_full is supposed to be all about.
+alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
 
-This commit therefore optimizes tasks' self-setting of a task tick
-dependency by using tick_nohz_full_kick() to avoid the system-wide IPI.
-Instead, only the execution of the one task is disturbed, which is
-acceptable given that this disturbance is well down into the noise
-compared to the degree to which the RCU callback processing itself
-disturbs execution.
+alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
 
-Fixes: 6a949b7af82d (rcu: Force on tick when invoking lots of callbacks)
-Reported-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: stable@kernel.org
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
+
+These errors are the result of improper processing of scatterlists mapped
+for DMA.
+
+Given a scatterlist in which entries are merged as part of mapping the
+scatterlist for DMA, the DMA length of a merged entry will reflect the
+combined length of the entries that were merged. The subsequent
+scatterlist entry will contain DMA information for the scatterlist entry
+after the last merged entry, but the non-DMA information will be that of
+the first merged entry.
+
+The ccp driver does not take this scatterlist merging into account. To
+address this, add a second scatterlist pointer to track the current
+position in the DMA mapped representation of the scatterlist. Both the DMA
+representation and the original representation of the scatterlist must be
+tracked as while most of the driver can use just the DMA representation,
+scatterlist_map_and_copy() must use the original representation and
+expects the scatterlist pointer to be accurate to the original
+representation.
+
+In order to properly walk the original scatterlist, the scatterlist must
+be walked until the combined lengths of the entries seen is equal to the
+DMA length of the current entry being processed in the DMA mapped
+representation.
+
+Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
+Signed-off-by: John Allen <john.allen@amd.com>
+Cc: stable@vger.kernel.org
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/tick-sched.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/crypto/ccp/ccp-dev.h |    1 +
+ drivers/crypto/ccp/ccp-ops.c |   37 ++++++++++++++++++++++++++-----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -351,16 +351,24 @@ void tick_nohz_dep_clear_cpu(int cpu, en
- EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -469,6 +469,7 @@ struct ccp_sg_workarea {
+ 	unsigned int sg_used;
  
- /*
-- * Set a per-task tick dependency. Posix CPU timers need this in order to elapse
-- * per task timers.
-+ * Set a per-task tick dependency. RCU need this. Also posix CPU timers
-+ * in order to elapse per task timers.
-  */
- void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
+ 	struct scatterlist *dma_sg;
++	struct scatterlist *dma_sg_head;
+ 	struct device *dma_dev;
+ 	unsigned int dma_count;
+ 	enum dma_data_direction dma_dir;
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -63,7 +63,7 @@ static u32 ccp_gen_jobid(struct ccp_devi
+ static void ccp_sg_free(struct ccp_sg_workarea *wa)
  {
--	/*
--	 * We could optimize this with just kicking the target running the task
--	 * if that noise matters for nohz full users.
--	 */
--	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
-+	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
-+		if (tsk == current) {
-+			preempt_disable();
-+			tick_nohz_full_kick();
-+			preempt_enable();
-+		} else {
-+			/*
-+			 * Some future tick_nohz_full_kick_task()
-+			 * should optimize this.
-+			 */
-+			tick_nohz_full_kick_all();
-+		}
-+	}
- }
- EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
+ 	if (wa->dma_count)
+-		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
++		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
  
+ 	wa->dma_count = 0;
+ }
+@@ -92,6 +92,7 @@ static int ccp_init_sg_workarea(struct c
+ 		return 0;
+ 
+ 	wa->dma_sg = sg;
++	wa->dma_sg_head = sg;
+ 	wa->dma_dev = dev;
+ 	wa->dma_dir = dma_dir;
+ 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
+@@ -104,14 +105,28 @@ static int ccp_init_sg_workarea(struct c
+ static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
+ {
+ 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
++	unsigned int sg_combined_len = 0;
+ 
+ 	if (!wa->sg)
+ 		return;
+ 
+ 	wa->sg_used += nbytes;
+ 	wa->bytes_left -= nbytes;
+-	if (wa->sg_used == wa->sg->length) {
+-		wa->sg = sg_next(wa->sg);
++	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
++		/* Advance to the next DMA scatterlist entry */
++		wa->dma_sg = sg_next(wa->dma_sg);
++
++		/* In the case that the DMA mapped scatterlist has entries
++		 * that have been merged, the non-DMA mapped scatterlist
++		 * must be advanced multiple times for each merged entry.
++		 * This ensures that the current non-DMA mapped entry
++		 * corresponds to the current DMA mapped entry.
++		 */
++		do {
++			sg_combined_len += wa->sg->length;
++			wa->sg = sg_next(wa->sg);
++		} while (wa->sg_used > sg_combined_len);
++
+ 		wa->sg_used = 0;
+ 	}
+ }
+@@ -299,7 +314,7 @@ static unsigned int ccp_queue_buf(struct
+ 	/* Update the structures and generate the count */
+ 	buf_count = 0;
+ 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
+-		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
++		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
+ 			     dm_wa->length - buf_count);
+ 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
+ 
+@@ -331,11 +346,11 @@ static void ccp_prepare_data(struct ccp_
+ 	 * and destination. The resulting len values will always be <= UINT_MAX
+ 	 * because the dma length is an unsigned int.
+ 	 */
+-	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
++	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
+ 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
+ 
+ 	if (dst) {
+-		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
++		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
+ 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
+ 		op_len = min(sg_src_len, sg_dst_len);
+ 	} else {
+@@ -365,7 +380,7 @@ static void ccp_prepare_data(struct ccp_
+ 		/* Enough data in the sg element, but we need to
+ 		 * adjust for any previously copied data
+ 		 */
+-		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
++		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
+ 		op->src.u.dma.offset = src->sg_wa.sg_used;
+ 		op->src.u.dma.length = op_len & ~(block_size - 1);
+ 
+@@ -386,7 +401,7 @@ static void ccp_prepare_data(struct ccp_
+ 			/* Enough room in the sg element, but we need to
+ 			 * adjust for any previously used area
+ 			 */
+-			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
++			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
+ 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
+ 			op->dst.u.dma.length = op->src.u.dma.length;
+ 		}
+@@ -2028,7 +2043,7 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 	dst.sg_wa.sg_used = 0;
+ 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
+ 		if (!dst.sg_wa.sg ||
+-		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
++		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
+ 			ret = -EINVAL;
+ 			goto e_dst;
+ 		}
+@@ -2054,8 +2069,8 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 			goto e_dst;
+ 		}
+ 
+-		dst.sg_wa.sg_used += src.sg_wa.sg->length;
+-		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
++		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
++		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
+ 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
+ 			dst.sg_wa.sg_used = 0;
+ 		}
 
 
