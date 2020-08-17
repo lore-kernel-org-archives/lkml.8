@@ -2,202 +2,148 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBD4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7D1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797D82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AD72072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="X1ehmlg/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1WuDpCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHQVBE (ORCPT
+        id S1727108AbgHQVBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
+        Mon, 17 Aug 2020 17:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgHQVA6 (ORCPT
+        with ESMTP id S1726804AbgHQVBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:00:58 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88E7C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:00:57 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m71so8849427pfd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:00:57 -0700 (PDT)
+        Mon, 17 Aug 2020 17:01:12 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D665CC061343
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:01:11 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id a65so14533522otc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g3b17tpQsxeSrpEJMNS65bCpVzCghTE72IhZ2F4sGm8=;
-        b=X1ehmlg/aGEGwU8TlqB+7kJoeA7pGAjwOZUvoxZgjsb9cYUBO53eVjUbxfMC95XFPL
-         Q8KTcz9XTCWFgfS2tP8/KtjBKQPS068kT06iwABH7hw+JoPmc92WjyUnCMMIOG3y3dVW
-         8Q/jbqfphqosT0z/JKfeFL8aItaLAym4bVWP7q0TSCm4m0ToVhuJ35Ap7r2ZPap6h069
-         bBTcdGkCwAwiKRLgIDJ19J8Tm4ve5mEQYQSNx8/ncgRMWb+p/t2HqFZdgrG5YRevMlXg
-         JWZl6E+oOmLw2z+QC7yOGH/x/ODm219KdBiBikoMblD5i0+ahzg7NSv3BQ7zeySsdG5t
-         oYPQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=li7/F1QxAHMT3HlXtBKHPKuGkDNlHShRldK1/b2ptEE=;
+        b=p1WuDpCoxMkf/1Src7GUIJVwp95M+yStBX9RyIIDTXVnnhPXquUBytkGYr7U5k192s
+         Sa/fAAj3vZNZUzntUuHugq4fjEYYBGO1Xbphqfs2WSqzrQrB20TqrV6ulWrPMBvc1h5S
+         eacUQLpPVURfdKEGOa3mIwNneS0bOHJsbejOA1D6h/HQt63O2AreYeCnxztJPYV2n4cd
+         vb7zqR8mvZagwYWzK4NrbSVqi/06Unl4fx+2GuFZ58kWjz+1RBmyYGKVIQmA+Av3hUQS
+         DifBysU4gdtYAjFaDSIxuCcUsZ/yAUT54lnhHy5efkSEsVu1LG30YZeCRoiLBGJM8HGt
+         lGZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g3b17tpQsxeSrpEJMNS65bCpVzCghTE72IhZ2F4sGm8=;
-        b=XheM6Da5GsAvD5o8lb/2+xuXzpX8lnoEMwhzCYStg8rzm+KHvS6Zxy21pCjgg5tAbP
-         fcYOqPmCaNkuJbqdF5Jn4iAWp2QJdWSKy/qhlQqMZNrXs2hfKwb6LzUszdWjbhGJlIyw
-         3ypOiq9b5EtLgTDMX/rhXhWt65F8NLnwjNMwL+NZp01VGwwYUwpNaI05VNcNgxfJvf/M
-         1ERSb2DU/RQlHHS8SzlCaPosTEFDcHsFx4DUZoJtbuuWFDvXrqH9vPGZMPuspAwYIgDj
-         jM3re6QOwMyCX3GudffDx/Qv1iSTOhnLvvGMvPjQRLCxM1mZlzfnxDMKh5dbe4KFejvb
-         JF+w==
-X-Gm-Message-State: AOAM530QzTVFp8j+Ii3nHipbl8O3/NiE661w2ehME2rGg/fuLrVTtcfd
-        O62bQFDyCqTtzLsSuEza3m3I3Q==
-X-Google-Smtp-Source: ABdhPJxZlziJHTCHPvQS4XhFGDrR51ylltOsuD3KwPoc2QE6wRzaZSRbXWvH7K1WQcYlUvdGvfnT7w==
-X-Received: by 2002:aa7:9468:: with SMTP id t8mr12312380pfq.182.1597698056896;
-        Mon, 17 Aug 2020 14:00:56 -0700 (PDT)
-Received: from localhost.localdomain (S0106ac17c8c0ce82.vc.shawcable.net. [24.87.214.6])
-        by smtp.googlemail.com with ESMTPSA id b20sm21158263pfo.88.2020.08.17.14.00.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 14:00:56 -0700 (PDT)
-From:   Tom Murphy <murphyt7@tcd.ie>
-To:     iommu@lists.linux-foundation.org
-Cc:     person@a.com, Tom Murphy <murphyt7@tcd.ie>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Yong Wu <yong.wu@mediatek.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Rename iommu_tlb_* functions to iommu_iotlb_*
-Date:   Mon, 17 Aug 2020 22:00:49 +0100
-Message-Id: <20200817210051.13546-1-murphyt7@tcd.ie>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=li7/F1QxAHMT3HlXtBKHPKuGkDNlHShRldK1/b2ptEE=;
+        b=aL5OROWxYYLrGG99LoTyS2yHeKR7V6X3v+mKzlKL3WIctFY2NVQR4KRLVzd4F9iIYh
+         TBdR2nA8WWKDVLRs7tujI8IgDrlUgIGZwkjLBPkDkFI8h6G+olXFhXUFdzMHjx1tnS9j
+         KHdxv66k6W5uomn/lbwTEFkguC++BZgq/qDNd64s7cdJN0EvdTURF7Iu+CFZqM5oMQG0
+         bB25HupQq/UU1/tnvoue+F8PjaytXF0qMEFgbpI2+ASP6n1qNvvZKDleqoOa0Q7nMWjy
+         vp0AdEHKP48Jn5PgKDPstnzz1P2sd0Y/KF5NmP7vmMy1y75TzQFidBCezJIfGqonXmkr
+         qP/Q==
+X-Gm-Message-State: AOAM5323fxdPMyEBThqN1RKkUHiGmJiE8fTqQhiWYa8XyN3VNVsYdH0E
+        AAPSI1aqTg0mzTzZ/Nu7foJei15svu/9yJxr3HZ34Q==
+X-Google-Smtp-Source: ABdhPJw6RaFO/BQHfKJyZcB4TOw93cJ1X820d/Plez6lRk2tja6UMbKLfbMSUvyu2PkFUacStPL6ZdWluVdvfaxxFO4=
+X-Received: by 2002:a05:6830:614:: with SMTP id w20mr13272524oti.283.1597698069848;
+ Mon, 17 Aug 2020 14:01:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200814205527.1833459-1-urielguajardojr@gmail.com>
+ <20200815083029.GA2430016@gmail.com> <20200815084443.GO3982@worktop.programming.kicks-ass.net>
+ <20200815091721.GC2444151@gmail.com>
+In-Reply-To: <20200815091721.GC2444151@gmail.com>
+From:   Uriel Guajardo <urielguajardo@google.com>
+Date:   Mon, 17 Aug 2020 16:00:59 -0500
+Message-ID: <CAG30EecDS+yaW0k62Wu2sHoe2+amTe-=U4NAVHJcCfD2US+Enw@mail.gmail.com>
+Subject: Re: [PATCH v3] kunit: added lockdep support
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Uriel Guajardo <urielguajardojr@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>, mingo@redhat.com,
+        will@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To keep naming consistent we should stick with *iotlb*. This patch
-renames a few remaining functions.
+On Sat, Aug 15, 2020 at 4:17 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > On Sat, Aug 15, 2020 at 10:30:29AM +0200, Ingo Molnar wrote:
+> > >
+> > > * Uriel Guajardo <urielguajardojr@gmail.com> wrote:
+> > >
+> > > > From: Uriel Guajardo <urielguajardo@google.com>
+> > > >
+> > > > KUnit will fail tests upon observing a lockdep failure. Because lockdep
+> > > > turns itself off after its first failure, only fail the first test and
+> > > > warn users to not expect any future failures from lockdep.
+> > > >
+> > > > Similar to lib/locking-selftest [1], we check if the status of
+> > > > debug_locks has changed after the execution of a test case. However, we
+> > > > do not reset lockdep afterwards.
+> > > >
+> > > > Like the locking selftests, we also fix possible preemption count
+> > > > corruption from lock bugs.
+> > >
+> > > > --- a/lib/kunit/Makefile
+> > > > +++ b/lib/kunit/Makefile
+> > >
+> > > > +void kunit_check_lockdep(struct kunit *test, struct kunit_lockdep *lockdep) {
+> > > > + int saved_preempt_count = lockdep->preempt_count;
+> > > > + bool saved_debug_locks = lockdep->debug_locks;
+> > > > +
+> > > > + if (DEBUG_LOCKS_WARN_ON(preempt_count() != saved_preempt_count))
+> > > > +         preempt_count_set(saved_preempt_count);
+> > > > +
+> > > > +#ifdef CONFIG_TRACE_IRQFLAGS
+> > > > + if (softirq_count())
+> > > > +         current->softirqs_enabled = 0;
+> > > > + else
+> > > > +         current->softirqs_enabled = 1;
+> > > > +#endif
+> > > > +
+> > > > + if (saved_debug_locks && !debug_locks) {
+> > > > +         kunit_set_failure(test);
+> > > > +         kunit_warn(test, "Dynamic analysis tool failure from LOCKDEP.");
+> > > > +         kunit_warn(test, "Further tests will have LOCKDEP disabled.");
+> > > > + }
+> > >
+> > >
+> > > So this basically duplicates what the boot-time locking self-tests do,
+> > > in a poor fashion?
+> >
+> > No, it makes sure that any kunit based self-test fails when it messes up
+> > it's locking.
+>
+> We have a flag for whether lockdep is running though, so is this
+> basically a very complicated way to parse /proc/lockdep_debug? :-)
+>
 
-Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
----
- drivers/iommu/dma-iommu.c       |  2 +-
- drivers/iommu/iommu.c           |  4 ++--
- drivers/vfio/vfio_iommu_type1.c |  2 +-
- include/linux/io-pgtable.h      |  2 +-
- include/linux/iommu.h           | 10 +++++-----
- 5 files changed, 10 insertions(+), 10 deletions(-)
+I may be missing something here, but what would be the advantage of
+using another flag or using other means to find lockdep's status?
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 79e6d8d799a3..59adb1a0aefc 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -503,7 +503,7 @@ static void __iommu_dma_unmap(struct device *dev, dma_addr_t dma_addr,
- 			domain->ops->flush_iotlb_range(domain, dma_addr, size,
- 					freelist);
- 		else
--			iommu_tlb_sync(domain, &iotlb_gather);
-+			iommu_iotlb_sync(domain, &iotlb_gather);
- 	}
- 
- 	iommu_dma_free_iova(cookie, dma_addr, size, freelist);
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 9065127d7e9c..70a85f41876f 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -762,7 +762,7 @@ static int iommu_create_device_direct_mappings(struct iommu_group *group,
- 
- 	}
- 
--	iommu_flush_tlb_all(domain);
-+	iommu_flush_iotlb_all(domain);
- 
- out:
- 	iommu_put_resv_regions(dev, &mappings);
-@@ -2317,7 +2317,7 @@ size_t iommu_unmap(struct iommu_domain *domain,
- 	if (ops->flush_iotlb_range)
- 		ops->flush_iotlb_range(domain, iova, ret, freelist);
- 	else
--		iommu_tlb_sync(domain, &iotlb_gather);
-+		iommu_iotlb_sync(domain, &iotlb_gather);
- 
- 	return ret;
- }
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 570ebf878fea..d550ceb7b2aa 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -774,7 +774,7 @@ static long vfio_sync_unpin(struct vfio_dma *dma, struct vfio_domain *domain,
- 	long unlocked = 0;
- 	struct vfio_regions *entry, *next;
- 
--	iommu_tlb_sync(domain->domain, iotlb_gather);
-+	iommu_iotlb_sync(domain->domain, iotlb_gather);
- 
- 	list_for_each_entry_safe(entry, next, regions, list) {
- 		unlocked += vfio_unpin_pages_remote(dma,
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index 53d53c6c2be9..d3f2bd4a3ac4 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -31,7 +31,7 @@ enum io_pgtable_fmt {
-  *                  single page.  IOMMUs that cannot batch TLB invalidation
-  *                  operations efficiently will typically issue them here, but
-  *                  others may decide to update the iommu_iotlb_gather structure
-- *                  and defer the invalidation until iommu_tlb_sync() instead.
-+ *                  and defer the invalidation until iommu_iotlb_sync() instead.
-  *
-  * Note that these can all be called in atomic context and must therefore
-  * not block.
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 77e773d03f22..7b363f24bf99 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -542,7 +542,7 @@ extern void iommu_domain_window_disable(struct iommu_domain *domain, u32 wnd_nr)
- extern int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
- 			      unsigned long iova, int flags);
- 
--static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
-+static inline void iommu_flush_iotlb_all(struct iommu_domain *domain)
- {
- 	if (domain->ops->flush_iotlb_all)
- 		domain->ops->flush_iotlb_all(domain);
-@@ -556,7 +556,7 @@ static inline void flush_iotlb_range(struct iommu_domain *domain,
- 		domain->ops->flush_iotlb_range(domain, iova, size, freelist);
- }
- 
--static inline void iommu_tlb_sync(struct iommu_domain *domain,
-+static inline void iommu_iotlb_sync(struct iommu_domain *domain,
- 				  struct iommu_iotlb_gather *iotlb_gather)
- {
- 	if (domain->ops->iotlb_sync)
-@@ -579,7 +579,7 @@ static inline void iommu_iotlb_gather_add_page(struct iommu_domain *domain,
- 	if (gather->pgsize != size ||
- 	    end < gather->start || start > gather->end) {
- 		if (gather->pgsize)
--			iommu_tlb_sync(domain, gather);
-+			iommu_iotlb_sync(domain, gather);
- 		gather->pgsize = size;
- 	}
- 
-@@ -762,11 +762,11 @@ static inline size_t iommu_map_sg_atomic(struct iommu_domain *domain,
- 	return 0;
- }
- 
--static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
-+static inline void iommu_flush_iotlb_all(struct iommu_domain *domain)
- {
- }
- 
--static inline void iommu_tlb_sync(struct iommu_domain *domain,
-+static inline void iommu_iotlb_sync(struct iommu_domain *domain,
- 				  struct iommu_iotlb_gather *iotlb_gather)
- {
- }
--- 
-2.20.1
+This patch is basically checking if debug_locks has changed after a
+KUnit test case has executed. It's not sufficient to only check if
+debug_locks is off, since it could have already been off many test
+cases ago.
 
+I imagine the only difference would be replacing "debug_locks" with
+another flag or code checking lockdep's status, and I don't see that
+as being any less complicated.
