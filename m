@@ -2,101 +2,323 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E8C2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148242067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgHQMD3 (ORCPT
+        id S1727850AbgHQMFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:03:29 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3064 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726135AbgHQMDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:03:25 -0400
-Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id ADE95C4E4428103920DA;
-        Mon, 17 Aug 2020 20:03:21 +0800 (CST)
-Received: from [10.174.186.8] (10.174.186.8) by dggeme755-chm.china.huawei.com
- (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Mon, 17
- Aug 2020 20:03:21 +0800
-Subject: Re: [RFC][PATCH 0/4] arm64:kvm: teach guest sched that VCPUs can be
- preempted
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>
-References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
- <20200817020310.GA1210848@jagdpanzerIV.localdomain>
-CC:     <joelaf@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <suleiman@google.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>,
-        <yezengruan@huawei.com>
-From:   yezengruan <yezengruan@huawei.com>
-Message-ID: <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
-Date:   Mon, 17 Aug 2020 20:03:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200817020310.GA1210848@jagdpanzerIV.localdomain>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.186.8]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
+        Mon, 17 Aug 2020 08:05:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:54120 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726457AbgHQMFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:05:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FEE630E;
+        Mon, 17 Aug 2020 05:05:07 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.65.199])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E05E53F66B;
+        Mon, 17 Aug 2020 05:05:03 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        will@kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3] arm64/cpuinfo: Define HWCAP name arrays per their actual bit definitions
+Date:   Mon, 17 Aug 2020 17:34:23 +0530
+Message-Id: <1597665863-564-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/17 10:03, Sergey Senozhatsky wrote:
-> On (20/07/21 13:17), Sergey Senozhatsky wrote:
->> Hello,
->>
->> 	RFC
->>
->> 	We noticed that in a number of cases when we wake_up_process()
->> on arm64 guest we end up enqueuing that task on a preempted VCPU. The culprit
->> appears to be the fact that arm64 guests are not aware of VCPU preemption
->> as such, so when sched picks up an idle VCPU it always assumes that VCPU
->> is available:
->>
->>       wake_up_process()
->>        try_to_wake_up()
->>         select_task_rq_fair()
->>          available_idle_cpu()
->>           vcpu_is_preempted()    // return false;
->>
->> Which is, obviously, not the case.
->>
->> This RFC patch set adds a simple vcpu_is_preempted() implementation so
->> that scheduler can make better decisions when it search for the idle
->> (v)CPU.
-> Hi,
->
-> A gentle ping.
->
-> 	-ss
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
-> .
+HWCAP name arrays (hwcap_str, compat_hwcap_str, compat_hwcap2_str) that are
+scanned for /proc/cpuinfo are detached from their bit definitions making it
+vulnerable and difficult to correlate. It is also bit problematic because
+during /proc/cpuinfo dump these arrays get traversed sequentially assuming
+they reflect and match actual HWCAP bit sequence, to test various features
+for a given CPU. This redefines name arrays per their HWCAP bit definitions
+. It also warns after detecting any feature which is not expected on arm64.
 
-Hi Sergey,
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This applies on 5.9-rc1
 
-I have a set of patches similar to yours.
+Mark, since the patch has changed I have dropped your Acked-by: tag. Are you
+happy to give a new one ?
 
-https://lore.kernel.org/lkml/20191226135833.1052-1-yezengruan@huawei.com/
+Changes in V3:
+
+- Moved name arrays to (arch/arm64/kernel/cpuinfo.c) to prevent a build warning
+- Replaced string values with NULL for all compat features not possible on arm64
+- Changed compat_hwcap_str[] iteration on size as some NULL values are expected
+- Warn once after detecting any feature on arm64 that is not expected
+
+Changes in V2: (https://patchwork.kernel.org/patch/11533755/)
+
+- Defined COMPAT_KERNEL_HWCAP[2] and updated the name arrays per Mark
+- Updated the commit message as required
+
+Changes in V1: (https://patchwork.kernel.org/patch/11532945/)
+
+ arch/arm64/include/asm/hwcap.h |   9 +++
+ arch/arm64/kernel/cpuinfo.c    | 172 ++++++++++++++++++++++-------------------
+ 2 files changed, 100 insertions(+), 81 deletions(-)
+
+diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
+index 22f73fe..6493a4c 100644
+--- a/arch/arm64/include/asm/hwcap.h
++++ b/arch/arm64/include/asm/hwcap.h
+@@ -8,18 +8,27 @@
+ #include <uapi/asm/hwcap.h>
+ #include <asm/cpufeature.h>
+ 
++#define COMPAT_HWCAP_SWP	(1 << 0)
+ #define COMPAT_HWCAP_HALF	(1 << 1)
+ #define COMPAT_HWCAP_THUMB	(1 << 2)
++#define COMPAT_HWCAP_26BIT	(1 << 3)
+ #define COMPAT_HWCAP_FAST_MULT	(1 << 4)
++#define COMPAT_HWCAP_FPA	(1 << 5)
+ #define COMPAT_HWCAP_VFP	(1 << 6)
+ #define COMPAT_HWCAP_EDSP	(1 << 7)
++#define COMPAT_HWCAP_JAVA	(1 << 8)
++#define COMPAT_HWCAP_IWMMXT	(1 << 9)
++#define COMPAT_HWCAP_CRUNCH	(1 << 10)
++#define COMPAT_HWCAP_THUMBEE	(1 << 11)
+ #define COMPAT_HWCAP_NEON	(1 << 12)
+ #define COMPAT_HWCAP_VFPv3	(1 << 13)
++#define COMPAT_HWCAP_VFPV3D16	(1 << 14)
+ #define COMPAT_HWCAP_TLS	(1 << 15)
+ #define COMPAT_HWCAP_VFPv4	(1 << 16)
+ #define COMPAT_HWCAP_IDIVA	(1 << 17)
+ #define COMPAT_HWCAP_IDIVT	(1 << 18)
+ #define COMPAT_HWCAP_IDIV	(COMPAT_HWCAP_IDIVA|COMPAT_HWCAP_IDIVT)
++#define COMPAT_HWCAP_VFPD32	(1 << 19)
+ #define COMPAT_HWCAP_LPAE	(1 << 20)
+ #define COMPAT_HWCAP_EVTSTRM	(1 << 21)
+ 
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 393c6fb..382cb4c 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -43,94 +43,95 @@ static const char *icache_policy_str[] = {
+ unsigned long __icache_flags;
+ 
+ static const char *const hwcap_str[] = {
+-	"fp",
+-	"asimd",
+-	"evtstrm",
+-	"aes",
+-	"pmull",
+-	"sha1",
+-	"sha2",
+-	"crc32",
+-	"atomics",
+-	"fphp",
+-	"asimdhp",
+-	"cpuid",
+-	"asimdrdm",
+-	"jscvt",
+-	"fcma",
+-	"lrcpc",
+-	"dcpop",
+-	"sha3",
+-	"sm3",
+-	"sm4",
+-	"asimddp",
+-	"sha512",
+-	"sve",
+-	"asimdfhm",
+-	"dit",
+-	"uscat",
+-	"ilrcpc",
+-	"flagm",
+-	"ssbs",
+-	"sb",
+-	"paca",
+-	"pacg",
+-	"dcpodp",
+-	"sve2",
+-	"sveaes",
+-	"svepmull",
+-	"svebitperm",
+-	"svesha3",
+-	"svesm4",
+-	"flagm2",
+-	"frint",
+-	"svei8mm",
+-	"svef32mm",
+-	"svef64mm",
+-	"svebf16",
+-	"i8mm",
+-	"bf16",
+-	"dgh",
+-	"rng",
+-	"bti",
++	[KERNEL_HWCAP_FP]		= "fp",
++	[KERNEL_HWCAP_ASIMD]		= "asimd",
++	[KERNEL_HWCAP_EVTSTRM]		= "evtstrm",
++	[KERNEL_HWCAP_AES]		= "aes",
++	[KERNEL_HWCAP_PMULL]		= "pmull",
++	[KERNEL_HWCAP_SHA1]		= "sha1",
++	[KERNEL_HWCAP_SHA2]		= "sha2",
++	[KERNEL_HWCAP_CRC32]		= "crc32",
++	[KERNEL_HWCAP_ATOMICS]		= "atomics",
++	[KERNEL_HWCAP_FPHP]		= "fphp",
++	[KERNEL_HWCAP_ASIMDHP]		= "asimdhp",
++	[KERNEL_HWCAP_CPUID]		= "cpuid",
++	[KERNEL_HWCAP_ASIMDRDM]		= "asimdrdm",
++	[KERNEL_HWCAP_JSCVT]		= "jscvt",
++	[KERNEL_HWCAP_FCMA]		= "fcma",
++	[KERNEL_HWCAP_LRCPC]		= "lrcpc",
++	[KERNEL_HWCAP_DCPOP]		= "dcpop",
++	[KERNEL_HWCAP_SHA3]		= "sha3",
++	[KERNEL_HWCAP_SM3]		= "sm3",
++	[KERNEL_HWCAP_SM4]		= "sm4",
++	[KERNEL_HWCAP_ASIMDDP]		= "asimddp",
++	[KERNEL_HWCAP_SHA512]		= "sha512",
++	[KERNEL_HWCAP_SVE]		= "sve",
++	[KERNEL_HWCAP_ASIMDFHM]		= "asimdfhm",
++	[KERNEL_HWCAP_DIT]		= "dit",
++	[KERNEL_HWCAP_USCAT]		= "uscat",
++	[KERNEL_HWCAP_ILRCPC]		= "ilrcpc",
++	[KERNEL_HWCAP_FLAGM]		= "flagm",
++	[KERNEL_HWCAP_SSBS]		= "ssbs",
++	[KERNEL_HWCAP_SB]		= "sb",
++	[KERNEL_HWCAP_PACA]		= "paca",
++	[KERNEL_HWCAP_PACG]		= "pacg",
++	[KERNEL_HWCAP_DCPODP]		= "dcpodp",
++	[KERNEL_HWCAP_SVE2]		= "sve2",
++	[KERNEL_HWCAP_SVEAES]		= "sveaes",
++	[KERNEL_HWCAP_SVEPMULL]		= "svepmull",
++	[KERNEL_HWCAP_SVEBITPERM]	= "svebitperm",
++	[KERNEL_HWCAP_SVESHA3]		= "svesha3",
++	[KERNEL_HWCAP_SVESM4]		= "svesm4",
++	[KERNEL_HWCAP_FLAGM2]		= "flagm2",
++	[KERNEL_HWCAP_FRINT]		= "frint",
++	[KERNEL_HWCAP_SVEI8MM]		= "svei8mm",
++	[KERNEL_HWCAP_SVEF32MM]		= "svef32mm",
++	[KERNEL_HWCAP_SVEF64MM]		= "svef64mm",
++	[KERNEL_HWCAP_SVEBF16]		= "svebf16",
++	[KERNEL_HWCAP_I8MM]		= "i8mm",
++	[KERNEL_HWCAP_BF16]		= "bf16",
++	[KERNEL_HWCAP_DGH]		= "dgh",
++	[KERNEL_HWCAP_RNG]		= "rng",
++	[KERNEL_HWCAP_BTI]		= "bti",
+ 	/* reserved for "mte" */
+ 	NULL
+ };
+ 
+ #ifdef CONFIG_COMPAT
++#define COMPAT_KERNEL_HWCAP(x)	const_ilog2(COMPAT_HWCAP_ ## x)
+ static const char *const compat_hwcap_str[] = {
+-	"swp",
+-	"half",
+-	"thumb",
+-	"26bit",
+-	"fastmult",
+-	"fpa",
+-	"vfp",
+-	"edsp",
+-	"java",
+-	"iwmmxt",
+-	"crunch",
+-	"thumbee",
+-	"neon",
+-	"vfpv3",
+-	"vfpv3d16",
+-	"tls",
+-	"vfpv4",
+-	"idiva",
+-	"idivt",
+-	"vfpd32",
+-	"lpae",
+-	"evtstrm",
+-	NULL
++	[COMPAT_KERNEL_HWCAP(SWP)]	= "swp",
++	[COMPAT_KERNEL_HWCAP(HALF)]	= "half",
++	[COMPAT_KERNEL_HWCAP(THUMB)]	= "thumb",
++	[COMPAT_KERNEL_HWCAP(26BIT)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(FAST_MULT)] = "fastmult",
++	[COMPAT_KERNEL_HWCAP(FPA)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(VFP)]	= "vfp",
++	[COMPAT_KERNEL_HWCAP(EDSP)]	= "edsp",
++	[COMPAT_KERNEL_HWCAP(JAVA)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(IWMMXT)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(CRUNCH)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(THUMBEE)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(NEON)]	= "neon",
++	[COMPAT_KERNEL_HWCAP(VFPv3)]	= "vfpv3",
++	[COMPAT_KERNEL_HWCAP(VFPV3D16)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(TLS)]	= "tls",
++	[COMPAT_KERNEL_HWCAP(VFPv4)]	= "vfpv4",
++	[COMPAT_KERNEL_HWCAP(IDIVA)]	= "idiva",
++	[COMPAT_KERNEL_HWCAP(IDIVT)]	= "idivt",
++	[COMPAT_KERNEL_HWCAP(VFPD32)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(LPAE)]	= "lpae",
++	[COMPAT_KERNEL_HWCAP(EVTSTRM)]	= "evtstrm",
+ };
+ 
++#define COMPAT_KERNEL_HWCAP2(x)	const_ilog2(COMPAT_HWCAP2_ ## x)
+ static const char *const compat_hwcap2_str[] = {
+-	"aes",
+-	"pmull",
+-	"sha1",
+-	"sha2",
+-	"crc32",
+-	NULL
++	[COMPAT_KERNEL_HWCAP2(AES)]	= "aes",
++	[COMPAT_KERNEL_HWCAP2(PMULL)]	= "pmull",
++	[COMPAT_KERNEL_HWCAP2(SHA1)]	= "sha1",
++	[COMPAT_KERNEL_HWCAP2(SHA2)]	= "sha2",
++	[COMPAT_KERNEL_HWCAP2(CRC32)]	= "crc32",
++	NULL,
+ };
+ #endif /* CONFIG_COMPAT */
+ 
+@@ -166,9 +167,18 @@ static int c_show(struct seq_file *m, void *v)
+ 		seq_puts(m, "Features\t:");
+ 		if (compat) {
+ #ifdef CONFIG_COMPAT
+-			for (j = 0; compat_hwcap_str[j]; j++)
+-				if (compat_elf_hwcap & (1 << j))
++			for (j = 0; j < ARRAY_SIZE(compat_hwcap_str); j++) {
++				if (compat_elf_hwcap & (1 << j)) {
++					/*
++					 * Warn once if any feature should not
++					 * have been present on arm64 platform.
++					 */
++					if (WARN_ON_ONCE(!compat_hwcap_str[j]))
++						continue;
++
+ 					seq_printf(m, " %s", compat_hwcap_str[j]);
++				}
++			}
+ 
+ 			for (j = 0; compat_hwcap2_str[j]; j++)
+ 				if (compat_elf_hwcap2 & (1 << j))
+-- 
+2.7.4
 
