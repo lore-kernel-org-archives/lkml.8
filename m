@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F610C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BECC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45895204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8990120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690347;
-	bh=Ar7kK0gZYboYHmO0ZUtFQqioKQErTM9E5o/LnTWvF60=;
+	s=default; t=1597690350;
+	bh=FUZwdoJcDyZhXonX3b0z2SZLVlmKS7j3/PGP0+6wo7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FZdh7YSnRLa0vmfZWckozqjbJAWy0RDaXnOTyDiAXJvRdqY8C+ZSXwjaUculJBt+a
-	 xGMvjYpfETiSmDWJPOVAcgRDh5e2t40MSrTlZgm9eHbpW0Sstc2aHeIu3ixWupltBA
-	 3PEYCqOVD+V/Ss9WroL7zR6wpAMUAZP691DivmBE=
+	b=tPVTYafII7TE9udJF+epn0vuns4L73gThGwY3wZ5T2xFNSKohraXpPOch6WuSFb9+
+	 5AZmRwgHOSMOpwLZEHZT7vvn1UTaspZSNHenOD+f5JSUt4XZZUkMr1fAnlIWhAuKUm
+	 cYO4HqeVVIdbpQnzPNu9U8bR7QlE/GXF4/2Qd3ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403933AbgHQSwY (ORCPT
+        id S2403940AbgHQSw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38190 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:52:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387836AbgHQPwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:52:16 -0400
+        id S2387835AbgHQPwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98FF42072E;
-        Mon, 17 Aug 2020 15:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04AF42063A;
+        Mon, 17 Aug 2020 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679536;
-        bh=Ar7kK0gZYboYHmO0ZUtFQqioKQErTM9E5o/LnTWvF60=;
+        s=default; t=1597679533;
+        bh=FUZwdoJcDyZhXonX3b0z2SZLVlmKS7j3/PGP0+6wo7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tyf2p2jfJyRCyJzMb8QO9F4SQeSkDaLW6RDnVulReUkF9/EaN4VM988NTO5YNJyUK
-         AQu6ImHoMPg0BsBqlnvXUC+lEzJrF07h8Ran4sii979DebUFwPBa91a0Wb/vf2QRI3
-         +DbBwUIpF7DCP4ZvFMKuXpaB1u5dS7ohQ6bGoWm0=
+        b=ccIhn2Y/YV18f0mCj6YVRG50UVq8AVqdo9ZULNP3+jVqbaMvxFVvOCLWhBKDZRqqJ
+         Ql/F40k4jaJg7Ppg9K4lmQdvoiqUD4lFGslELvuhR6LEeuNiWTbPCf2gvAflRQ8/fo
+         6+RdKasDSefOPX0KGbJvkGQnotd+lHswyln4BQr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Tomas Henzl <thenzl@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 246/393] scsi: megaraid_sas: Clear affinity hint
-Date:   Mon, 17 Aug 2020 17:14:56 +0200
-Message-Id: <20200817143831.554415421@linuxfoundation.org>
+Subject: [PATCH 5.7 245/393] usb: gadget: f_uac2: fix AC Interface Header Descriptor wTotalLength
+Date:   Mon, 17 Aug 2020 17:14:55 +0200
+Message-Id: <20200817143831.504352104@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,51 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Henzl <thenzl@redhat.com>
+From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
 
-[ Upstream commit 1eb81df5c53b1e785fdef298d533feab991381e4 ]
+[ Upstream commit a9cf8715180b18c62addbfe6f6267b8101903119 ]
 
-To avoid a warning in free_irq, clear the affinity hint.
+As per UAC2 spec (ch. 4.7.2), wTotalLength of AC Interface
+Header Descriptor "includes the combined length of this
+descriptor header and all Clock Source, Unit and Terminal
+descriptors."
 
-Link: https://lore.kernel.org/r/20200709133144.8363-1-thenzl@redhat.com
-Fixes: f0b9e7bdc309 ("scsi: megaraid_sas: Set affinity for high IOPS reply queues")
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Tomas Henzl <thenzl@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Thus add its size to its wTotalLength.
+
+Also after recent changes wTotalLength is calculated
+dynamically, update static definition of uac2_ac_header_descriptor
+accordingly
+
+Fixes: 132fcb460839 ("usb: gadget: Add Audio Class 2.0 Driver")
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_uac2.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index babe85d7b537a..5a95c56ff7c26 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5602,9 +5602,13 @@ megasas_setup_irqs_msix(struct megasas_instance *instance, u8 is_probe)
- 			&instance->irq_context[i])) {
- 			dev_err(&instance->pdev->dev,
- 				"Failed to register IRQ for vector %d.\n", i);
--			for (j = 0; j < i; j++)
-+			for (j = 0; j < i; j++) {
-+				if (j < instance->low_latency_index_start)
-+					irq_set_affinity_hint(
-+						pci_irq_vector(pdev, j), NULL);
- 				free_irq(pci_irq_vector(pdev, j),
- 					 &instance->irq_context[j]);
-+			}
- 			/* Retry irq register for IO_APIC*/
- 			instance->msix_vectors = 0;
- 			instance->msix_load_balance = false;
-@@ -5642,6 +5646,9 @@ megasas_destroy_irqs(struct megasas_instance *instance) {
+diff --git a/drivers/usb/gadget/function/f_uac2.c b/drivers/usb/gadget/function/f_uac2.c
+index db2d4980cb354..3633df6d7610f 100644
+--- a/drivers/usb/gadget/function/f_uac2.c
++++ b/drivers/usb/gadget/function/f_uac2.c
+@@ -215,10 +215,7 @@ static struct uac2_ac_header_descriptor ac_hdr_desc = {
+ 	.bDescriptorSubtype = UAC_MS_HEADER,
+ 	.bcdADC = cpu_to_le16(0x200),
+ 	.bCategory = UAC2_FUNCTION_IO_BOX,
+-	.wTotalLength = cpu_to_le16(sizeof in_clk_src_desc
+-			+ sizeof out_clk_src_desc + sizeof usb_out_it_desc
+-			+ sizeof io_in_it_desc + sizeof usb_in_ot_desc
+-			+ sizeof io_out_ot_desc),
++	/* .wTotalLength = DYNAMIC */
+ 	.bmControls = 0,
+ };
  
- 	if (instance->msix_vectors)
- 		for (i = 0; i < instance->msix_vectors; i++) {
-+			if (i < instance->low_latency_index_start)
-+				irq_set_affinity_hint(
-+				    pci_irq_vector(instance->pdev, i), NULL);
- 			free_irq(pci_irq_vector(instance->pdev, i),
- 				 &instance->irq_context[i]);
- 		}
+@@ -501,7 +498,7 @@ static void setup_descriptor(struct f_uac2_opts *opts)
+ 	as_in_hdr_desc.bTerminalLink = usb_in_ot_desc.bTerminalID;
+ 
+ 	iad_desc.bInterfaceCount = 1;
+-	ac_hdr_desc.wTotalLength = 0;
++	ac_hdr_desc.wTotalLength = cpu_to_le16(sizeof(ac_hdr_desc));
+ 
+ 	if (EPIN_EN(opts)) {
+ 		u16 len = le16_to_cpu(ac_hdr_desc.wTotalLength);
 -- 
 2.25.1
 
