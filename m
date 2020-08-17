@@ -2,134 +2,95 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4498FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 04:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 04:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20BF320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 04:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1438020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 04:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FKrS86B9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J25x8Kw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgHQECt (ORCPT
+        id S1726591AbgHQEFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 00:02:49 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22945 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725765AbgHQECs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 00:02:48 -0400
-X-UUID: 388c34d1e23c4b7e8cf9e40e9b2d1a37-20200817
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pACLi6wbKi9AORYpzxtaOBRDENoBN/knrxeP2OFFLTY=;
-        b=FKrS86B9fgmvYv0bjbxQBjEROkx4buduqT262mBjdAthGuhVBZ2kIRRPihjQ7hvv83gXmVtfjtWiPKO5dRYxVqW5s8M7RdpYIEhY/AzGvAzlVUQQKlrryrpI7gaqS2Y70nkSdnfuFdrnVJT7c6FWG49amjDE/YkC32AC8t5fo3s=;
-X-UUID: 388c34d1e23c4b7e8cf9e40e9b2d1a37-20200817
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 917943585; Mon, 17 Aug 2020 12:02:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 17 Aug 2020 12:02:32 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 17 Aug 2020 12:02:33 +0800
-Message-ID: <1597636953.3394.7.camel@mtkswgap22>
-Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 17 Aug 2020 12:02:33 +0800
-In-Reply-To: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
-References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com>
-         <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 17 Aug 2020 00:05:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51949 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgHQEFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 00:05:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597637102; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=3tzJwPgMhmWp2g1x0sfXafqBb2LcavWpjSfQTLWoul0=; b=J25x8Kw8v5NPunGhscy2mZZhDy5mlD6H++gPHpC77KJirYIbUkXqEk/Ltil/CiMx/KWteyOv
+ p0u3Xiw1jHGSUxyMnk9vhAcOK3xaXQwfnAMcH9E5ZMVYpYgQEWRE6MW1C0Q6eQR0Mq0UhrJc
+ pX6Gq5Nk4hOqIDLPA3k+atkrpRY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f3a01d4247ccc308ca2d856 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 04:04:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A60DC43391; Mon, 17 Aug 2020 04:04:35 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33428C433CA;
+        Mon, 17 Aug 2020 04:04:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33428C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+Date:   Mon, 17 Aug 2020 09:34:17 +0530
+Message-Id: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gU2F0LCAyMDIwLTA4LTE1IGF0IDExOjAzICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0OOaciDEz5pelIOmAseWbmyDkuIrljYgxMTozM+Wvq+mB
-k++8mg0KPiA+DQo+ID4gTWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2Vj
-dXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMg
-ZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4gPiBUaGUg
-c2VjdXJpdHkgdmlvbGF0aW9uIGlzIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZv
-cg0KPiA+IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+DQo+ID4gQW55
-IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFuIGludGVycnVw
-dCwgYW5kDQo+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZhcGMgZHJpdmVyLiBUaGUg
-dmlvbGF0aW9uDQo+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRlciB0byBmaW5kIHRo
-ZSBtdXJkZXJlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKy8qDQo+ID4gKyAq
-IGRldmFwY192aW9sYXRpb25faXJxIC0gdGhlIGRldmFwYyBJbnRlcnJ1cHQgU2VydmljZSBSb3V0
-aW5lIChJU1IpIHdpbGwgZHVtcA0KPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIHZpb2xh
-dGlvbiBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgd2hpY2ggbWFzdGVyIHZpb2xhdGVzDQo+ID4gKyAq
-ICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ICsgKi8NCj4gPiArc3Rh
-dGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX2RldmFw
-Y19jb250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiBN
-YXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBjbGVhcmluZyB2aW8gc3RhdHVzLg0KPiA+ICsgICAgICAg
-ICogTXVzdCBkbyBpdCB0byBhdm9pZCBuZXN0ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50DQo+ID4g
-KyAgICAgICAgKiB1bmV4cGVjdGVkIGJlaGF2aW9yLg0KPiA+ICsgICAgICAgICovDQo+ID4gKyAg
-ICAgICBtYXNrX21vZHVsZV9pcnEoY3R4LCB0cnVlKTsNCj4gDQo+IEkgc3RpbGwgZG9uJ3QgdW5k
-ZXJzdGFuZCB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4uIElmIHR3byBDUFUNCj4gcHJvY2Vz
-cyBkaWZmZXJlbnQgZGV2YXBjIGludGVycnVwdCBhdCB0aGUgc2FtZSB0aW1lLCBtYXNrIGludGVy
-cnVwdA0KPiBjb3VsZCBub3QgcHJldmVudCB0aGVzZSB0d28gQ1BVIHRvIHN5bmMgdmlvIGRiZyBh
-dCB0aGUgc2FtZSB0aW1lLiBBcyBJDQo+IGtub3csIGluIEFSTSBDUFUsIG9ubHkgQ1BVMCBwcm9j
-ZXNzIGlycSBoYW5kbGVyLCBhbmQgYWxsIGRldmFwYw0KPiBpbnRlcnJ1cHQgaGFzIHRoZSBzYW1l
-IHByaW9yaXR5LCBzbyB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4/IENvdWxkDQo+IHlvdSBl
-eHBsYWluIG1vcmUgZGV0YWlsIGFib3V0IGhvdyBuZXN0ZWQgaW50ZXJydXB0IGhhcHBlbj8NCg0K
-SWYgdGhlcmUgaXMgYW5vdGhlciB2aW9sYXRpb24gaGFwcGVuZWQgYmVmb3JlIHByZXZpb3VzIHZp
-b2xhdGlvbiBpcw0KZnVsbHkgaGFuZGxlZCwgbmVzdGVkIGludGVycnVwdCB3b3VsZCBoYXBwZW4u
-DQoNCkxldCdzIG1lIHRha2UgYW4gZXhhbXBsZToNCnZpbyBBIGhhcHBlbg0KZW50ZXIgQSBJU1IN
-Ci4uLgkJdmlvIEIgaGFwcGVuDQpmaW5pc2ggQSBJU1IJZW50ZXIgQiBJU1INCgkJLi4uDQoJCWZp
-bmlzaCBCIElTUg0KDQpXZSBtYXNrIGFsbCBtb2R1bGUncyBpcnEgdG8gYXZvaWQgbmVzdGVkIGlu
-dGVycnVwdC4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICB3aGlsZSAoZGV2YXBjX3N5bmNfdmlv
-X2RiZyhjdHgpKQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKGN0
-eCk7DQo+ID4gKw0KPiA+ICsgICAgICAgLyoNCj4gPiArICAgICAgICAqIEVuc3VyZSB0aGF0IHZp
-b2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuDQo+ID4gKyAgICAgICAgKiBiZWZvcmUgZnVydGhlciBv
-cGVyYXRpb25zDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIHNtcF9tYigpOw0KPiA+ICsN
-Cj4gPiArICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoY3R4KTsNCj4gPiArICAgICAgIG1hc2tfbW9k
-dWxlX2lycShjdHgsIGZhbHNlKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gSVJRX0hBTkRM
-RUQ7DQo+ID4gK30NCj4gPiArDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKw0KPiA+ICtzdGF0aWMg
-aW50IG10a19kZXZhcGNfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
-K3sNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCA9IHBsYXRmb3Jt
-X2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArICAgICAgIHN0b3BfZGV2YXBjKGN0eCk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGN0eC0+aW5mcmFfY2xrKQ0KPiANCj4gVGhpcyBhbHdh
-eXMgdHJ1ZS4NCg0KRG9lcyBpdCBtZWFuIHRoYXQgcmVtb3ZlIGZ1bmN0aW9uIHdvdWxkIGJlIGNh
-bGxlZCBvbmx5IGlmIHByb2JlIGZ1bmN0aW9uDQppcyByZXR1cm5lZCBzdWNjZXNzZnVsbHk/DQpJ
-cyB0aGVyZSBhbnkgY2hhbmNlIHRoaXMgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVkIGRpcmVjdGx5
-Pw0KDQo+IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPiArICAgICAgICAgICAg
-ICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGN0eC0+aW5mcmFfY2xrKTsNCj4gPiArDQo+ID4gKyAg
-ICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9y
-bV9kcml2ZXIgbXRrX2RldmFwY19kcml2ZXIgPSB7DQo+ID4gKyAgICAgICAucHJvYmUgPSBtdGtf
-ZGV2YXBjX3Byb2JlLA0KPiA+ICsgICAgICAgLnJlbW92ZSA9IG10a19kZXZhcGNfcmVtb3ZlLA0K
-PiA+ICsgICAgICAgLmRyaXZlciA9IHsNCj4gPiArICAgICAgICAgICAgICAgLm5hbWUgPSBLQlVJ
-TERfTU9ETkFNRSwNCj4gPiArICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gbXRrX2Rl
-dmFwY19kdF9tYXRjaCwNCj4gPiArICAgICAgIH0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICttb2R1
-bGVfcGxhdGZvcm1fZHJpdmVyKG10a19kZXZhcGNfZHJpdmVyKTsNCj4gPiArDQo+ID4gK01PRFVM
-RV9ERVNDUklQVElPTigiTWVkaWF0ZWsgRGV2aWNlIEFQQyBEcml2ZXIiKTsNCj4gPiArTU9EVUxF
-X0FVVEhPUigiTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4iKTsNCj4gPiArTU9EVUxF
-X0xJQ0VOU0UoIkdQTCIpOw0KPiA+IC0tDQo+ID4gMS43LjkuNQ0KPiA+IF9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gTGludXgtbWVkaWF0ZWsgbWFp
-bGluZyBsaXN0DQo+ID4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+IGh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsN
-Cg0K
+There is only one LLCC logical bank on SC7180 SoC of size
+0x50000(320KB) not 2MB, so correct the size and fix copy
+paste mistake from SDM845 which had 4 logical banks.
+
+Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
+Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache controller node")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b3833e52f..e875f6c3b663 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2618,7 +2618,7 @@ dc_noc: interconnect@9160000 {
+ 
+ 		system-cache-controller@9200000 {
+ 			compatible = "qcom,sc7180-llcc";
+-			reg = <0 0x09200000 0 0x200000>, <0 0x09600000 0 0x50000>;
++			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
+ 			reg-names = "llcc_base", "llcc_broadcast_base";
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
