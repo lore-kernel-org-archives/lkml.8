@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF63C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8602AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBEB023B1B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54335238E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678188;
-	bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+	s=default; t=1597678192;
+	bh=Be9bnFR/qhCB1VOcb3WJyzG81zm0wVIlrCEePGk53wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/Hsc9UIMPM17L6b/xnU2Vud20M5EWkAqD+v90YTbfSgJptNmTOToAw8CwHZ8JO72
-	 wDW7ckGO3igupIJOprSGC/xlMSPhoy+KIxl2YXfR7NID8OPWBeucaJGHlJdTlfM1iP
-	 vC8xC4jpVycDKiEI0jXp5FtDc4Cjt60Fewkq3DT0=
+	b=qtYUJVXzUZ0RSQpWnzGB20H7Cc73eIjzZWTQgJjLjm7uC8Ydssj9GueHGI+s0vy/J
+	 BsZSNuCTAuZOD7n9OwLeiJgHkuTEEwMAPsOQBcbwI+/WOc1JrkakZTSgyQ4DOYPnO/
+	 0FTiUqFtPfS6xA+XyraRsxa8wNiU6Ve1Z5U4dZPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgHQP3q (ORCPT
+        id S1729420AbgHQP3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729735AbgHQP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:39 -0400
+        id S1729942AbgHQP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F06C23444;
-        Mon, 17 Aug 2020 15:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B48012395A;
+        Mon, 17 Aug 2020 15:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678059;
-        bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+        s=default; t=1597678062;
+        bh=Be9bnFR/qhCB1VOcb3WJyzG81zm0wVIlrCEePGk53wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTTvxKXgUjw8k4S2ZvvKWefoWl+Jc/5+B5/EL0QdKtUl1/1mD4IvJfgM+7wphhTka
-         kM6vr9KUaAdf56t77Z2tGgrCa35tGsmWvAfmp6d+TLQweWWND/jQ667DK6h9m7CpIh
-         1iuV3+4AWE58cJZGNHD1ozrw/1c4BiDGdHon06mc=
+        b=uJGGHDrHTcEVB0uCZJSvPQBsZyhpg7tGvnERrTwPGYAMwbL2Pu7l0usSyRiCb9rB9
+         7kb37VhI42w3uXInOjKjIf0zSm11AirYqHoah7/DY6QUMQAyM9YAv43adD9tgq+cpi
+         GVqzs12s/okjS8DI6ilEPRJtzSZQTP2SoBRSbkUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 204/464] media: firewire: Using uninitialized values in node_probe()
-Date:   Mon, 17 Aug 2020 17:12:37 +0200
-Message-Id: <20200817143843.588911288@linuxfoundation.org>
+Subject: [PATCH 5.8 205/464] media: allegro: Fix some NULL vs IS_ERR() checks in probe
+Date:   Mon, 17 Aug 2020 17:12:38 +0200
+Message-Id: <20200817143843.634712149@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,36 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
+[ Upstream commit d93d45ab716e4107056be54969c8c70e50a8346d ]
 
-If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
-then the "strlen(model_names[i]) <= name_len" is true because strlen()
-is unsigned and -ENOENT is type promoted to a very high positive value.
-Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
-data because "name" is uninitialized.
+The devm_ioremap() function doesn't return error pointers, it returns
+NULL on error.
 
-Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
+Fixes: f20387dfd065 ("media: allegro: add Allegro DVT video IP core driver")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/firewire/firedtv-fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/allegro-dvt/allegro-core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
-index 97144734eb052..3f1ca40b9b987 100644
---- a/drivers/media/firewire/firedtv-fw.c
-+++ b/drivers/media/firewire/firedtv-fw.c
-@@ -272,6 +272,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
- 
- 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
- 				 name, sizeof(name));
-+	if (name_len < 0)
-+		return name_len;
- 	for (i = ARRAY_SIZE(model_names); --i; )
- 		if (strlen(model_names[i]) <= name_len &&
- 		    strncmp(name, model_names[i], name_len) == 0)
+diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+index 70f133a842ddf..3ed66aae741d5 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@ -3065,9 +3065,9 @@ static int allegro_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 	regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+-	if (IS_ERR(regs)) {
++	if (!regs) {
+ 		dev_err(&pdev->dev, "failed to map registers\n");
+-		return PTR_ERR(regs);
++		return -ENOMEM;
+ 	}
+ 	dev->regmap = devm_regmap_init_mmio(&pdev->dev, regs,
+ 					    &allegro_regmap_config);
+@@ -3085,9 +3085,9 @@ static int allegro_probe(struct platform_device *pdev)
+ 	sram_regs = devm_ioremap(&pdev->dev,
+ 				 sram_res->start,
+ 				 resource_size(sram_res));
+-	if (IS_ERR(sram_regs)) {
++	if (!sram_regs) {
+ 		dev_err(&pdev->dev, "failed to map sram\n");
+-		return PTR_ERR(sram_regs);
++		return -ENOMEM;
+ 	}
+ 	dev->sram = devm_regmap_init_mmio(&pdev->dev, sram_regs,
+ 					  &allegro_sram_config);
 -- 
 2.25.1
 
