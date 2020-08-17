@@ -2,160 +2,176 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64277C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311C82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597694512;
-	bh=v/fyguDJgngMm4D7i8RenkD4TNEW+1PlLNlPWyhPCMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=blPjBeXSFnHcjXH7Zu8msCcbwrHfYd+p+/UqHEN24+rGpHgUMdUaCupOPgwSx7LMF
-	 cQLlo55iYu37Pvt4gHLRvMwxmX5QuMlJl1Ok0ko92oM7KBGRjvRAYMue/5Qzy7tMJn
-	 JOvb57h6+I6qyG3wnW26MzS8UwxlfKqvc6j1YAQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 915EA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UHRcBPsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgHQUBv (ORCPT
+        id S1729378AbgHQUCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgHQUBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:01:50 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBB4204EC;
-        Mon, 17 Aug 2020 20:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597694509;
-        bh=v/fyguDJgngMm4D7i8RenkD4TNEW+1PlLNlPWyhPCMA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HgNGlfQuhDucmukwOltDYSq8Cr51/e0tYsvwbQaCFdB4G0jwq8kyxoudqo7kV+erE
-         A/ROK83tkaAUJUlxhOby0oA0wkIpLg4i0JGJom9ho0BSX93an/0/JxJYL/ces7lhXx
-         XNNOqkKDDT98Jj7RnoFIMnFOzMvpI4Bm3laiUvZQ=
-Date:   Mon, 17 Aug 2020 15:01:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] PCI: Drop pcibios_pm_ops from the PCI subsystem
-Message-ID: <20200817200147.GA1438651@bjorn-Precision-5520>
+        Mon, 17 Aug 2020 16:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729317AbgHQUCR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 16:02:17 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C406C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 13:02:17 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id r13so11206887iln.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 13:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=42EHKaiZokDYEpY04AQEHHdjVaoqLPYqnG7cOPFCkVo=;
+        b=UHRcBPsnuwQhn3lAwxUnaMePKdIl5grFxltDU8PhTR6WLHfWFDbi2EKC+nzAhXFKsk
+         Kj26U6KLk9VROr9Zvg9QT+0ePSN5fZsV5DJBIov3SJk+OVUohgcEBBDoYt/AdOFb3VId
+         ntKhlpjtfnSoZfherw1s1yh05Ozxy1lNa20PIXZN4EYEu7T8EEsf4PWtydabRxXHX8fx
+         lqd/l6hGDUi/rFf9nKBX1AKe0Vo3ohnAoa2gM4PZ/3byBobTwWlN+6PmI9PFlph0wyDG
+         BoG6ayyGj/c0QIyGXj91qlxT7SaGZrldW0BhTH39V4+UPxdEJMrqCbBFSFf0+VUc9MHf
+         OTGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=42EHKaiZokDYEpY04AQEHHdjVaoqLPYqnG7cOPFCkVo=;
+        b=ZWb/GHRbJyuk0UN5IKnSuhvXlXwrlXJOpyjGo7IemyMuBGfWkz54d129xU2l/Q4whv
+         d+jQ9IzOO0y/YM2Dh0lB6s58zg7hf5bdaPVj0VKbU8N8YzLVwl5GqjWVlFj9QR2VPIpc
+         0wrYmX65irIXcWA5Yyukus06gNhPX/XOk+xdfO/QzR6hNXydK1JtznOAuW3n2WG3y9Li
+         Q4rH4U/Ks8U/mymOkC92tXGilcO30eBW+AQyBzku5nO3sC05lYAukCPsBohbymqYVVY3
+         SujnARXDBw7+YkFSTW4QoNlmBl4rhmDgXrNDIhvhJjQtDVGnYFGCJsyCfyaR4UjjkWEU
+         rX8g==
+X-Gm-Message-State: AOAM533BQb6FclcoYG2RPR3nh1GUxSjoBsh8NlH3lroxGXYKEQfLZrca
+        0bsRwvSnWT7CUQk2EVE3di70Sn8nBTLRTy3a+80s7A==
+X-Google-Smtp-Source: ABdhPJz7+/cSad+TqEVktg+PR5xxDaQJGXqAXQEodbtGBY1kqiUkr3yUdwTHkmeHwjQMPc5WO3+3DORBrxf8XAicLVM=
+X-Received: by 2002:a92:a157:: with SMTP id v84mr14515417ili.189.1597694536738;
+ Mon, 17 Aug 2020 13:02:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730194416.1029509-1-vaibhavgupta40@gmail.com>
+References: <20200817170535.17041-1-brgl@bgdev.pl> <20200817170535.17041-2-brgl@bgdev.pl>
+ <20200817173908.GS1891694@smile.fi.intel.com>
+In-Reply-To: <20200817173908.GS1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 17 Aug 2020 22:02:05 +0200
+Message-ID: <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 01:14:16AM +0530, Vaibhav Gupta wrote:
-> The "struct dev_pm_ops pcibios_pm_ops", declared in include/linux/pci.h and
-> defined in drivers/pci/pci-driver.c, provided arch-specific hooks when a
-> PCI device was doing a hibernate transisiton.
-> 
-> Although it lost its last usage after
-> 394216275c7d ("s390: remove broken hibernate / power management support")
-> patch.
-> 
-> After that, instances of it are found only in drivers/pci/pci-driver.c and
-> include/linux/pci.h, which are now unnecessary. Thus it is safe and
-> reasonable to remove even that.
-> 
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Implement the managed variant of krealloc(). This function works with
+> > all memory allocated by devm_kmalloc() (or devres functions using it
+> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> >
+> > Managed realloc'ed chunks can be manually released with devm_kfree().
+>
+> Thanks for an update! My comments / questions below.
+>
+> ...
+>
+> > +static struct devres *to_devres(void *data)
+> > +{
+> > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
+> > +                                                 ARCH_KMALLOC_MINALIGN));
+>
+> Do you really need both explicit castings?
+>
 
-Applied to pci/pm for v5.10, thanks!
+Yeah, we can probably drop the (struct devres *) here.
 
-> ---
->  drivers/pci/pci-driver.c | 24 ------------------------
->  include/linux/pci.h      |  4 ----
->  2 files changed, 28 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index da6510af1221..0bebbdf85be8 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -966,12 +966,6 @@ static int pci_pm_resume(struct device *dev)
->  
->  #ifdef CONFIG_HIBERNATE_CALLBACKS
->  
-> -/*
-> - * pcibios_pm_ops - provide arch-specific hooks when a PCI device is doing
-> - * a hibernate transition
-> - */
-> -struct dev_pm_ops __weak pcibios_pm_ops;
-> -
->  static int pci_pm_freeze(struct device *dev)
->  {
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
-> @@ -1030,9 +1024,6 @@ static int pci_pm_freeze_noirq(struct device *dev)
->  
->  	pci_pm_set_unknown_state(pci_dev);
->  
-> -	if (pcibios_pm_ops.freeze_noirq)
-> -		return pcibios_pm_ops.freeze_noirq(dev);
-> -
->  	return 0;
->  }
->  
-> @@ -1042,12 +1033,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  	int error;
->  
-> -	if (pcibios_pm_ops.thaw_noirq) {
-> -		error = pcibios_pm_ops.thaw_noirq(dev);
-> -		if (error)
-> -			return error;
-> -	}
-> -
->  	/*
->  	 * The pm->thaw_noirq() callback assumes the device has been
->  	 * returned to D0 and its config state has been restored.
-> @@ -1171,9 +1156,6 @@ static int pci_pm_poweroff_noirq(struct device *dev)
->  
->  	pci_fixup_device(pci_fixup_suspend_late, pci_dev);
->  
-> -	if (pcibios_pm_ops.poweroff_noirq)
-> -		return pcibios_pm_ops.poweroff_noirq(dev);
-> -
->  	return 0;
->  }
->  
-> @@ -1183,12 +1165,6 @@ static int pci_pm_restore_noirq(struct device *dev)
->  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
->  	int error;
->  
-> -	if (pcibios_pm_ops.restore_noirq) {
-> -		error = pcibios_pm_ops.restore_noirq(dev);
-> -		if (error)
-> -			return error;
-> -	}
-> -
->  	pci_pm_default_resume_early(pci_dev);
->  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 34c1c4f45288..c4900975041c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2034,10 +2034,6 @@ int pcibios_alloc_irq(struct pci_dev *dev);
->  void pcibios_free_irq(struct pci_dev *dev);
->  resource_size_t pcibios_default_alignment(void);
->  
-> -#ifdef CONFIG_HIBERNATE_CALLBACKS
-> -extern struct dev_pm_ops pcibios_pm_ops;
-> -#endif
-> -
->  #if defined(CONFIG_PCI_MMCONFIG) || defined(CONFIG_ACPI_MCFG)
->  void __init pci_mmcfg_early_init(void);
->  void __init pci_mmcfg_late_init(void);
-> -- 
-> 2.27.0
-> 
+> > +}
+>
+> ...
+>
+> > +     total_old_size = ksize(to_devres(ptr));
+>
+> But how you can guarantee this pointer:
+>  - belongs to devres,
+
+We can only check if a chunk is dynamically allocated with ksize() -
+it will return 0 if it isn't and I'll add a check for that in the next
+iteration. We check whether it's a managed chunk later after taking
+the lock.
+
+>  - hasn't gone while you run a ksize()?
+>
+
+At some point you need to draw a line. In the end: how do you
+guarantee a devres buffer hasn't been freed when you're using it? In
+my comment to the previous version of this patch I clarified that we
+need to protect all modifications of the devres linked list - we must
+not realloc a chunk that contains the links without taking the
+spinlock but also we must not call alloc() funcs with GFP_KERNEL with
+spinlock taken. The issue we could run into is: someone modifies the
+linked list by adding/removing other managed resources, not modifying
+this one.
+
+The way this function works now guarantees it but other than that:
+it's up to the users to not free memory they're actively using.
+
+> ...
+>
+> > +     new_dr = alloc_dr(devm_kmalloc_release,
+> > +                       total_new_size, gfp, dev_to_node(dev));
+>
+> Can you move some parameters to the previous line?
+>
+
+Why though? It's fine this way.
+
+> > +     if (!new_dr)
+> > +             return NULL;
+>
+> ...
+>
+> > +     spin_lock_irqsave(&dev->devres_lock, flags);
+> > +
+> > +     old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+> > +     if (!old_dr) {
+> > +             spin_unlock_irqrestore(&dev->devres_lock, flags);
+> > +             devres_free(new_dr);
+> > +             WARN(1, "Memory chunk not managed or managed by a different device.");
+> > +             return NULL;
+> > +     }
+> > +
+> > +     replace_dr(dev, &old_dr->node, &new_dr->node);
+> > +
+> > +     spin_unlock_irqrestore(&dev->devres_lock, flags);
+> > +
+> > +     memcpy(new_dr->data, old_dr->data, devres_data_size(total_old_size));
+>
+> But new_dr may concurrently gone at this point, no? It means memcpy() should be
+> under spin lock.
+>
+
+Just as I explained above: we're protecting the linked list, not the
+resource itself.
+
+Bartosz
