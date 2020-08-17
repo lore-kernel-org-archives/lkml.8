@@ -2,193 +2,152 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15078C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD00C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01666204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9A2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597690678;
+	bh=AyElFQfZQUnxk1g4iE2ZhsheYmXTadXTMfApX3KRBB8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xavfoLbG21iKF5IjoU95+XWTzvcqBgCgC/pOZ6UoDR+focN80QyuzYiripNa/Sgab
+	 dOsRLzj5UaEKcGGAZxSGfVAyh0CHPEojh6au0bTyu0u5yVry9OpZS8o+irnbbntRsP
+	 RPLsQlM085AssN+hGxO1pK8zc7Nr/bPV3uiaSGgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391706AbgHQS5u (ORCPT
+        id S2388632AbgHQS55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:57:50 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:48822 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729615AbgHQS53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:57:29 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7kJw-004byo-At; Mon, 17 Aug 2020 12:57:24 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7kJv-00016M-CE; Mon, 17 Aug 2020 12:57:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrei Vagin <avagin@gmail.com>, adobriyan@gmail.com,
-        viro@zeniv.linux.org.uk, davem@davemloft.net,
-        akpm@linux-foundation.org, areber@redhat.com, serge@hallyn.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        <linux-api@vger.kernel.org>
-References: <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
-        <20200810173431.GA68662@gmail.com>
-        <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
-        <20200812175338.GA596568@gmail.com>
-        <8f3c9414-9efc-cc01-fb2a-4d83266e96b2@virtuozzo.com>
-        <20200814011649.GA611947@gmail.com>
-        <0af3f2fa-f2c3-fb7d-b57e-9c41fe94ca58@virtuozzo.com>
-        <20200814192102.GA786465@gmail.com>
-        <56ed1fb9-4f1f-3528-3f09-78478b9dfcf2@virtuozzo.com>
-        <87d03pb7f2.fsf@x220.int.ebiederm.org>
-        <20200817174745.jssxjdcwoqxeg5pu@wittgenstein>
-Date:   Mon, 17 Aug 2020 13:53:52 -0500
-In-Reply-To: <20200817174745.jssxjdcwoqxeg5pu@wittgenstein> (Christian
-        Brauner's message of "Mon, 17 Aug 2020 19:47:45 +0200")
-Message-ID: <87eeo59k8v.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 17 Aug 2020 14:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730628AbgHQPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 672F522BEF;
+        Mon, 17 Aug 2020 15:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679401;
+        bh=AyElFQfZQUnxk1g4iE2ZhsheYmXTadXTMfApX3KRBB8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k5ob+beCvJq7rMkmwDT+UQs5wvBssyHelq5D+0gjgmPjgAdi/NcOWqIre0hSri2nb
+         mNb1TAOm1tuSKMujDHssU+NAwcVD5J3O71IVvosMytuJEDhrxyOSK6PIv8Caqrbh5l
+         PBvafqQOW5hTvJr4wRKeAFvAfKUlLEJ9BkPx/ihQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 199/393] scsi: scsi_debug: Add check for sdebug_max_queue during module init
+Date:   Mon, 17 Aug 2020 17:14:09 +0200
+Message-Id: <20200817143829.276260876@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k7kJv-00016M-CE;;;mid=<87eeo59k8v.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/+FTGrE5+KQ689zTUzL/8oNHjtoktJJPc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to expose namespaces lineary
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
+From: John Garry <john.garry@huawei.com>
 
-> On Mon, Aug 17, 2020 at 10:48:01AM -0500, Eric W. Biederman wrote:
->> 
->> Creating names in the kernel for namespaces is very difficult and
->> problematic.  I have not seen anything that looks like  all of the
->> problems have been solved with restoring these new names.
->> 
->> When your filter for your list of namespaces is user namespace creating
->> a new directory in proc is highly questionable.
->> 
->> As everyone uses proc placing this functionality in proc also amplifies
->> the problem of creating names.
->> 
->> 
->> Rather than proc having a way to mount a namespace filesystem filter by
->> the user namespace of the mounter likely to have many many fewer
->> problems.  Especially as we are limiting/not allow new non-process
->> things and ideally finding a way to remove the non-process things.
->> 
->> 
->> Kirill you have a good point that taking the case where a pid namespace
->> does not exist in a user namespace is likely quite unrealistic.
->> 
->> Kirill mentioned upthread that the list of namespaces are the list that
->> can appear in a container.  Except by discipline in creating containers
->> it is not possible to know which namespaces may appear in attached to a
->> process.  It is possible to be very creative with setns, and violate any
->> constraint you may have.  Which means your filtered list of namespaces
->> may not contain all of the namespaces used by a set of processes.  This
->
-> Indeed. We use setns() quite creatively when intercepting syscalls and
-> when attaching to a container.
->
->> further argues that attaching the list of namespaces to proc does not
->> make sense.
->> 
->> Andrei has a good point that placing the names in a hierarchy by
->> user namespace has the potential to create more freedom when
->> assigning names to namespaces, as it means the names for namespaces
->> do not need to be globally unique, and while still allowing the names
->> to stay the same.
->> 
->> 
->> To recap the possibilities for names for namespaces that I have seen
->> mentioned in this thread are:
->>   - Names per mount
->>   - Names per user namespace
->> 
->> I personally suspect that names per mount are likely to be so flexibly
->> they are confusing, while names per user namespace are likely to be
->> rigid, possibly too rigid to use.
->> 
->> It all depends upon how everything is used.  I have yet to see a
->> complete story of how these names will be generated and used.  So I can
->> not really judge.
->
-> So I haven't fully understood either what the motivation for this
-> patchset is.
-> I can just speak to the use-case I had when I started prototyping
-> something similar: We needed a way to get a view on all namespaces
-> that exist on the system because we wanted a way to do namespace
-> debugging on a live system. This interface could've easily lived in
-> debugfs. The main point was that it should contain all namespaces.
-> Note, that it wasn't supposed to be a hierarchical format it was only
-> mean to list all namespaces and accessible to real root.
-> The interface here is way more flexible/complex and I haven't yet
-> figured out what exactly it is supposed to be used for.
->
->> 
->> 
->> Let me add another take on this idea that might give this work a path
->> forward. If I were solving this I would explore giving nsfs directories
->> per user namespace, and a way to mount it that exposed the directory of
->> the mounters current user namespace (something like btrfs snapshots).
->> 
->> Hmm.  For the user namespace directory I think I would give it a file
->> "ns" that can be opened to get a file handle on the user namespace.
->> Plus a set of subdirectories "cgroup", "ipc", "mnt", "net", "pid",
->> "user", "uts") for each type of namespace.  In each directory I think
->> I would just have a 64bit counter and each new entry I would assign the
->> next number from that counter.
->> 
->> The restore could either have the ability to rename files or simply the
->> ability to bump the counter (like we do with pids) so the names of the
->> namespaces can be restored.
->> 
->> That winds up making a user namespace the namespace of namespaces, so
->> I am not 100% about the idea. 
->
-> I think you're right that we need to understand better what the use-case
-> is. If I understand your suggestion correctly it wouldn't allow to show
-> nested user namespaces if the nsfs mount is per-user namespace.
+[ Upstream commit c87bf24cfb60bce27b4d2c7e56ebfd86fb9d16bb ]
 
-So what I was thinking is that we have the user namespace directories
-and that the mount code would perform a bind mount such that the
-directory that matches the mounters user namespace is the root
-directory.
+sdebug_max_queue should not exceed SDEBUG_CANQUEUE, otherwise crashes like
+this can be triggered by passing an out-of-range value:
 
-> Let me throw in a crazy idea: couldn't we just make the ioctl_ns() walk
-> a namespace hierarchy? For example, you could pass in a user namespace
-> fd and then you'd get back a struct with handles for fds for the
-> namespaces owned by that user namespace and then you could use
-> NS_GET_USERNS/NS_GET_PARENT to walk upwards from the user namespace fd
-> passed in initially and so on? Or something similar/simpler. This would
-> also decouple this from procfs somewhat.
+Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+ pstate: 20400009 (nzCv daif +PAN -UAO BTYPE=--)
+ pc : schedule_resp+0x2a4/0xa70 [scsi_debug]
+ lr : schedule_resp+0x52c/0xa70 [scsi_debug]
+ sp : ffff800022ab36f0
+ x29: ffff800022ab36f0 x28: ffff0023a935a610
+ x27: ffff800008e0a648 x26: 0000000000000003
+ x25: ffff0023e84f3200 x24: 00000000003d0900
+ x23: 0000000000000000 x22: 0000000000000000
+ x21: ffff0023be60a320 x20: ffff0023be60b538
+ x19: ffff800008e13000 x18: 0000000000000000
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000000
+ x13: 0000000000000000 x12: 0000000000000000
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : 0000000000000000
+ x7 : 0000000000000000 x6 : 00000000000000c1
+ x5 : 0000020000200000 x4 : dead0000000000ff
+ x3 : 0000000000000200 x2 : 0000000000000200
+ x1 : ffff800008e13d88 x0 : 0000000000000000
+ Call trace:
+schedule_resp+0x2a4/0xa70 [scsi_debug]
+scsi_debug_queuecommand+0x2c4/0x9e0 [scsi_debug]
+scsi_queue_rq+0x698/0x840
+__blk_mq_try_issue_directly+0x108/0x228
+blk_mq_request_issue_directly+0x58/0x98
+blk_mq_try_issue_list_directly+0x5c/0xf0
+blk_mq_sched_insert_requests+0x18c/0x200
+blk_mq_flush_plug_list+0x11c/0x190
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x38/0x210
+blkdev_direct_IO+0x450/0x4d8
+generic_file_read_iter+0x84/0x180
+blkdev_read_iter+0x3c/0x50
+aio_read+0xc0/0x170
+io_submit_one+0x5c8/0xc98
+__arm64_sys_io_submit+0x1b0/0x258
+el0_svc_common.constprop.3+0x68/0x170
+do_el0_svc+0x24/0x90
+el0_sync_handler+0x13c/0x1a8
+el0_sync+0x158/0x180
+ Code: 528847e0 72a001e0 6b00003f 540018cd (3941c340)
 
-Hmm.
+In addition, it should not be less than 1.
 
-That would remove the need to have names.  We could just keep a list
-of the namespaces in creation order.  Hopefully the CRIU folks could
-preserve that create order without too much trouble.
+So add checks for these, and fail the module init for those cases.
 
-Say with an ioctl NS_NEXT_CREATION which takes two fds, and returns
-a new file descriptor.  The arguments would be the user namespace
-and -1 or the file descriptor last returned fro NS_NEXT_CREATION.
+[mkp: changed if condition to match error message]
+
+Link: https://lore.kernel.org/r/1594297400-24756-2-git-send-email-john.garry@huawei.com
+Fixes: c483739430f1 ("scsi_debug: add multiple queue support")
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/scsi_debug.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 4c6c448dc2df6..c17ff74164e86 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -5297,6 +5297,12 @@ static int __init scsi_debug_init(void)
+ 		pr_err("submit_queues must be 1 or more\n");
+ 		return -EINVAL;
+ 	}
++
++	if ((sdebug_max_queue > SDEBUG_CANQUEUE) || (sdebug_max_queue < 1)) {
++		pr_err("max_queue must be in range [1, %d]\n", SDEBUG_CANQUEUE);
++		return -EINVAL;
++	}
++
+ 	sdebug_q_arr = kcalloc(submit_queues, sizeof(struct sdebug_queue),
+ 			       GFP_KERNEL);
+ 	if (sdebug_q_arr == NULL)
+-- 
+2.25.1
 
 
-Assuming that is not difficult for CRIU to restore that would be a very
-simple patch.
-
-Eric
 
