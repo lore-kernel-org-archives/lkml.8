@@ -2,82 +2,126 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CD0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C03DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C402E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6867220758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vJKwxIRw"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ED64gzeg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgHQJbz (ORCPT
+        id S1727018AbgHQJdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34954 "EHLO
+        Mon, 17 Aug 2020 05:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgHQJby (ORCPT
+        with ESMTP id S1726617AbgHQJdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:31:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B25C061389;
-        Mon, 17 Aug 2020 02:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+Mwzdd5TmWK436GJyXFCq0eX/F+xGzHfq7QX6jo+m2U=; b=vJKwxIRw343oq9qZRi0kzGe4Qu
-        HBUYrr3bBRrN5xeRPLrsHf3I0ASm9oaBh9OSM3AaYprIySLCLkYY0MQOyXW+dqVi1RWM79M0b6ge0
-        06aid+RM0YK64s7IkRC6+0NxbOiDRFe7IYqpi2CeVMZghgSNOdwuJl4ChM2BAR7xaBs7wYmEENtKq
-        Lv02UzXmgYmi24EleG4we86LcRfVtN5+PJooB4eRZxqyml19UNk6255TOUCPub5DLJP05AwBYwDgf
-        WUjUVq9ankXrJGQrOunw+MlkyIEFlQ0xIKZrQYPveJkHVld7RPDUa0ceDapXJ1njxF4IShH1hJ70S
-        V+nIYjkQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7bUM-00035D-Ni; Mon, 17 Aug 2020 09:31:34 +0000
-Date:   Mon, 17 Aug 2020 10:31:34 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org,
-        Chenfeng <puck.chen@hisilicon.com>, devel@driverdev.osuosl.org,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-Message-ID: <20200817093134.GA11250@infradead.org>
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
- <20200817082106.GA16296@infradead.org>
- <20200817112725.26f1b7d6@coco.lan>
+        Mon, 17 Aug 2020 05:33:15 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60241C06138A
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 02:33:15 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c10so11727138edk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 02:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=1xQYs0Te2rfMJwjhbxsaCOgB/6GQdcnFRY7QjfAiQ3o=;
+        b=ED64gzeg/M7EX+2k74ana8HeT9sotJMGEusKfdaM4E/ytYYzZ+v/Fol3t27iW5w8yC
+         OsBfBZ3whC3TmnmJ2xz1oAkRx4zHI7FI3qxEs0pI58H6KD+RT3lzjA92C8sJz05/um2u
+         i3rngDwyuqpTswvMcJIR3ZpfxudIAwLmfKLks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1xQYs0Te2rfMJwjhbxsaCOgB/6GQdcnFRY7QjfAiQ3o=;
+        b=dyHIrNOX5Fgw90WvMOHhCPfYrKmsZrWR9ZdIn48ks94QAHecTIGWcfgcB0nwM3z8H0
+         WQIfJxGgBfBgHcbAXE/sT7lvIrsnAVfJ1boSAl85Chmm+sEvXI3YvSO2TWqLQppcAfNy
+         a3x/+JVlvRKul+aW8/plBqo0SxK4gmm4xX8L4dNgvSCau3OBLvWcO1Tc2N26r8wWj5hw
+         yYB2ho1GBRV/UnCoo+KZjpeAzPA/iqHnd79cUyNQm0sD30UGrDR0Nfjj8XRLUmcHspoN
+         HAXAfULuOqdZkfCvOcr18cxx5tHHDSO9f2xHhs0ScUPHHQZyJpaVfg1V0DPZE4z3u2pa
+         M/yQ==
+X-Gm-Message-State: AOAM533jCGiCvZct3ocFo4nrnN13SVjwqGFALn5vTnWRu/cmpQ67XEU0
+        aeCDbzEg5cc5/PrPJp33zIpaIA==
+X-Google-Smtp-Source: ABdhPJxf00b006Rln3mYlmymeUaXVm7P/IAFcx4EI3zWi9TVRNkruBZ044jZhMqhfnV70FZ5TW4BLw==
+X-Received: by 2002:aa7:c259:: with SMTP id y25mr13745873edo.130.1597656793769;
+        Mon, 17 Aug 2020 02:33:13 -0700 (PDT)
+Received: from [172.16.11.132] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id s21sm14030677ejc.16.2020.08.17.02.33.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 02:33:13 -0700 (PDT)
+Subject: Re: [PATCH v2] overflow: Add __must_check attribute to check_*()
+ helpers
+To:     dsterba@suse.cz, Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+References: <202008151007.EF679DF@keescook>
+ <20200817090854.GA2026@twin.jikos.cz>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <5da1506d-1627-a882-724d-057641791ccb@rasmusvillemoes.dk>
+Date:   Mon, 17 Aug 2020 11:33:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817112725.26f1b7d6@coco.lan>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200817090854.GA2026@twin.jikos.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:27:25AM +0200, Mauro Carvalho Chehab wrote:
-> I need to start from the original patch in order to preserve its
-> authorship.
+On 17/08/2020 11.08, David Sterba wrote:
+> On Sat, Aug 15, 2020 at 10:09:24AM -0700, Kees Cook wrote:
+>>  
+>> +/*
+>> + * Allows for effectively applying __must_check to a macro so we can have
+>> + * both the type-agnostic benefits of the macros while also being able to
+>> + * enforce that the return value is, in fact, checked.
+>> + */
+>> +static inline bool __must_check __must_check_overflow(bool overflow)
+>> +{
+>> +	return unlikely(overflow);
+> 
+> How does the 'unlikely' hint propagate through return? It is in a static
+> inline so compiler has complete information in order to use it, but I'm
+> curious if it actually does.
 
-Nom you don't.  We have plenty of example where people submit code
-written by other, especially when it is significantly reworked,
+I wondered the same thing, but as I noted in a reply in the v1 thread,
+that pattern is used in kernel/sched/, and the scheduler is a far more
+critical path than anywhere these might be used, so if it's good enough
+for kernel/sched/, it should be good enough here. I have no idea how one
+could write a piece of non-trivial code to see if the hint actually
+makes a difference.
 
-> My plan is to work with the iommu subsystem maintainers after
-> have this (and another pending patch series for DRM) merged.
+> 
+> In case the hint gets dropped, the fix would probably be
+> 
+> #define check_add_overflow(a, b, d) unlikely(__must_check_overflow(({	\
+>  	typeof(a) __a = (a);			\
+>  	typeof(b) __b = (b);			\
+>  	typeof(d) __d = (d);			\
+>  	(void) (&__a == &__b);			\
+>  	(void) (&__a == __d);			\
+>  	__builtin_add_overflow(__a, __b, __d);	\
+> })))
+> 
 
-Please submit it to the iommu list directly.  Seriously - you did not
-even cc the relevant list, and you don't even have a comment from
-the maintainers.  Don't do this kind of crap.
+Well, maybe, but I'd be a little worried that the !! that unlikely()
+slabs on its argument may count as a use of that argument, hence
+nullifying the __must_check which is the main point - the unlikely just
+being something we can add for free while touching this code. Haven't
+tested it, though.
+
+Rasmus
