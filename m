@@ -2,75 +2,99 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9009C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED95C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08AF2076E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413912053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597688910;
+	bh=v2OMfKFCgf6E9GjrAHGZn7aVSe17HMAe+d9TeVSkkk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2pBhR4lwfxIK3/0V3VGJXOySZ/WiIHqvajOJuSC9NGyTZ1MNgC9/S6Ex7wujVKlrn
+	 r5xHrjBztaynwDrqzzafV45FS5cL7FFJJw8+jnImJ57rwXwNcFYmFbhysT1OvKP67x
+	 E3fdmIYvt1u9gEOdDIZwu87b6fOBhAgEOoFHYwWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390998AbgHQS2I (ORCPT
+        id S2390733AbgHQS2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:28:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21849 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390642AbgHQS1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:27:10 -0400
-IronPort-SDR: HR4LeV7N2BZCj/1r30c9YwXFs8saOLgnKCcrstdw0MsNCEmSjamLyDQVFPMAxDPRsLTUhxukeC
- SQQCkqQlBPjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154744676"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="154744676"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:27:09 -0700
-IronPort-SDR: weHynqd/VG1QF6VPIaZSV5YF62aHFuJbljqBhoSY7cr8H+o7c3KFXfUy1ayq/zlJIOEzztHXBP
- nwQcAtnMiC4w==
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="328711882"
-Received: from jbrandeb-mobl3.amr.corp.intel.com (HELO localhost) ([10.212.155.99])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:27:08 -0700
-Date:   Mon, 17 Aug 2020 11:27:06 -0700
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        "Fabrice Bellet" <fabrice@bellet.info>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Ondrej Zary <linux@rainbow-software.org>
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of
- coding style issues
-Message-ID: <20200817112706.000000f2@intel.com>
-In-Reply-To: <87a6ytmmhm.fsf@codeaurora.org>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
-        <20200814113933.1903438-13-lee.jones@linaro.org>
-        <87r1s9l0mc.fsf@codeaurora.org>
-        <20200814163831.GN4354@dell>
-        <87a6ytmmhm.fsf@codeaurora.org>
-X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
+        Mon, 17 Aug 2020 14:28:21 -0400
+Received: from mail-ej1-f42.google.com ([209.85.218.42]:46672 "EHLO
+        mail-ej1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390989AbgHQS1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:27:43 -0400
+Received: by mail-ej1-f42.google.com with SMTP id p24so18905820ejf.13;
+        Mon, 17 Aug 2020 11:27:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=In/lRzRecPXlJCsCXOUKVII8Zjza+KgDgAZ3qlg6NBY=;
+        b=BiNY0ojzti9yNUev2nTtLyzk6JZBBxmgIw+89KBTyFJPtrX4kouSN9kpSTK7LkIxw2
+         j9Pz/Kg8ccOg85UkfG1JklsNWKqwEDcH9s8+uPDlQJOZHK167K1pIqFzxB2EIaHNnu/7
+         Izz4hP5YEr1K9D+smmSYDxyTr1LGSLPOCTNxeCT0GSo8fk8BhNySaDqd11UjPliaEV+W
+         W4NvxcEExhA5BhevjU8msrwXKn20Fqx8SARrPe//BecWqABRKi3H5j+Dru1/PmLoX+kN
+         dSYZGIbBYfxJJYyNJPxhrShNpqExYZzTAA/3lu70IktG29rcgmR3OSnN9XkFPUqMdKKr
+         xmxg==
+X-Gm-Message-State: AOAM530o9Q1Rio42tofLoq3ofktyTaDx9pf01Fb89irFHehNi0hx584A
+        lUqKIcjqFLpdj7UPrbvfa+g=
+X-Google-Smtp-Source: ABdhPJzlp7hrM7e8yK6q4U5Xo1UPtQg4hALTTyDbMtxYuqmsunf77TyReaLSnblPdWrAoapQvk48kw==
+X-Received: by 2002:a17:906:54d3:: with SMTP id c19mr17313272ejp.408.1597688861304;
+        Mon, 17 Aug 2020 11:27:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id p12sm13037482edt.27.2020.08.17.11.27.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Aug 2020 11:27:40 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 20:27:36 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT v2 01/29] memory: omap-gpmc: Remove unneeded
+ asm/mach-types.h inclusion
+Message-ID: <20200817182736.GA3464@kozik-lap>
+References: <20200724074038.5597-1-krzk@kernel.org>
+ <20200724074038.5597-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200724074038.5597-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 16:27:01 +0300
-Kalle Valo <kvalo@codeaurora.org> wrote:
+On Fri, Jul 24, 2020 at 09:40:10AM +0200, Krzysztof Kozlowski wrote:
+> The driver does not use macros from asm/mach-types.h (neither MACH_TYPE
+> nor machine_is_xxx()).  Removal of this include allows compile testing
+> on non-ARM architectures which lack this header.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/memory/omap-gpmc.c | 2 --
 
-> I was surprised to see that someone was using this driver in 2015, so
-> I'm not sure anymore what to do. Of course we could still just remove
-> it and later revert if someone steps up and claims the driver is still
-> usable. Hmm. Does anyone any users of this driver?
+Applied to drivers/memory tree.
 
-What about moving the driver over into staging, which is generally the
-way I understood to move a driver slowly out of the kernel?
+Best regards,
+Krzysztof
 
