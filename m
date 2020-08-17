@@ -2,97 +2,89 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F5AC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED097C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB16207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBEF207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mK1/oXp6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNKStXXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgHQHc6 (ORCPT
+        id S1727023AbgHQHdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44298 "EHLO
+        Mon, 17 Aug 2020 03:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgHQHcf (ORCPT
+        with ESMTP id S1726854AbgHQHca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:32:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABA6C061346;
-        Mon, 17 Aug 2020 00:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=3qEOF4AeMzDrBPiTnGe1Fi7T4ulUxh9tT2b5Llhhj24=; b=mK1/oXp62aR0yay7hI5rxF1rAO
-        oIsweDRzAybAXvXwihafnDeOYhrE2n+0bZlTynkTLCeN2Dft2OWptTFcZ0c+Ljmzou4BBptsQZ+cE
-        0WcSunosxHVcotlNa/rI3b318DLQXHBoYZZegd9x5Yis9biXRTIjkMLxPL3Usu9AkBvWYJ3qmMQf1
-        l6wqXqzOVXQI/CO1e536dwgXJwAxJPt8DWi26u63Db+xcZ7fBk6a4uIvosgZsLEb9gJZhTvzW+Ta5
-        YxOkXrxmW78qeAsfMYFzC1ir41mo1Ahv1Nsz4QILF/04RjFQMvKx+/88wZzYfZLpGewiWy9mnrHqC
-        +/UpGE0w==;
-Received: from [2001:4bb8:188:3918:4550:cdf7:3d45:afb9] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7Zd8-0000x5-1X; Mon, 17 Aug 2020 07:32:30 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 10/11] powerpc: use non-set_fs based maccess routines
-Date:   Mon, 17 Aug 2020 09:32:11 +0200
-Message-Id: <20200817073212.830069-11-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817073212.830069-1-hch@lst.de>
-References: <20200817073212.830069-1-hch@lst.de>
+        Mon, 17 Aug 2020 03:32:30 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB81C061344
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 00:32:29 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g19so16657497ioh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 00:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=coRFPJbKc7ywpJ/3lZow7TORgJ25yZLIlsHXIN7jxzI=;
+        b=tNKStXXBprrwJHyJVh8NMGU+XD/0G/4WKH47mbhpwKE5Z6rUlmgshyAEzqbJncPpcU
+         rcC87eSlhXpk+Z2a5TSf8ZcQXN8a5uCph2e7RrhB7fIE4V83bm7yahnQ+xyeUVvrUyM4
+         lykuFoQpx6RtkQKUW664Zfrx9e63X4S5cxa2kRaMjc4MNWWTPc5c9qOBg7tW+qCx0PNI
+         IUkErl6rHI/4UhdfAst2zcAWE4GiNkjw+V40iQLu44pN5lNZQIZ7Atzk9qYEMmkEwl2b
+         y9OiDJtGUpzZM6gjZyfua6XC2nvhby0JbCsJx8qg1u/l9qnWHZmPZ5+fjbgsz9E1LTuC
+         lgHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=coRFPJbKc7ywpJ/3lZow7TORgJ25yZLIlsHXIN7jxzI=;
+        b=LctchFDvO5uUxUagZHDtfvxW7HO5f7EVnSxJJZXuxyfMtOEUHF9UYqBl44EsMCZy3W
+         1ywutX/t0Op6bF2ye2nan6nnJ2gjS4atYjBCFcb9yEKM4tPw/Dl98i/ZZXx365bZupNZ
+         T81ocJ7JA6hfcEO8xzIHEYtkZAvUIEI/sktRF3vGlbVr8oGuHitRrMgMCCXtd+JmfDBv
+         1Rj/rHcBwNtjq6KDBlqz32uRjTDiSqAbAOLJiCZVj2axy+/M/oDJOiYq+xFdYKA8AyNY
+         4yA8leIfVz47s0TsRrns+JDdMpqnHNW7C91QvQ4z6vd5kQi8rhH1MvMvp6o2Pls7LEL5
+         TAVA==
+X-Gm-Message-State: AOAM533nkjXCyAz0ovQthCBGJxBtYVut2ivRdmExRUKLG1mQ37wenNKO
+        hXQTBy9Y6gdYDp7/GYpLQQcRDuyCKaiqgs6bPJ/V4A==
+X-Google-Smtp-Source: ABdhPJyiQfEySyRQED1xZDsTrTIji8ZHp7mV/pCtyczHBll+qmrXXvVx94yMgeUGA+HSb+ucUVNCLkMo9+g8Mg+yu04=
+X-Received: by 2002:a5d:8cce:: with SMTP id k14mr11326563iot.13.1597649547058;
+ Mon, 17 Aug 2020 00:32:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <1597644455-8216-1-git-send-email-jiaxin.yu@mediatek.com> <1597644455-8216-2-git-send-email-jiaxin.yu@mediatek.com>
+In-Reply-To: <1597644455-8216-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Mon, 17 Aug 2020 15:32:15 +0800
+Message-ID: <CA+Px+wVFKNLYhYpchR-zmNkxaj2_fVYM_xUt7w73pp+KcNkR3A@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] ASoC: mediatek: mt6359: add codec driver
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, howie.huang@mediatek.com,
+        eason.yen@mediatek.com, shane.chien@mediatek.com,
+        bicycle.tsai@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide __get_kernel_nofault and __put_kernel_nofault routines to
-implement the maccess routines without messing with set_fs and without
-opening up access to user space.
+On Mon, Aug 17, 2020 at 2:08 PM Jiaxin Yu <jiaxin.yu@mediatek.com> wrote:
+>
+> Add the mt6359 codec driver.
+>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/powerpc/include/asm/uaccess.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
 
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 00699903f1efca..a31de40ac00b62 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -623,4 +623,20 @@ do {									\
- 		__put_user_goto(*(u8*)(_src + _i), (u8 __user *)(_dst + _i), e);\
- } while (0)
- 
-+#define HAVE_GET_KERNEL_NOFAULT
-+
-+#define __get_kernel_nofault(dst, src, type, err_label)			\
-+do {									\
-+	int __kr_err;							\
-+									\
-+	__get_user_size(*((type *)(dst)), (__force type __user *)(src),	\
-+			sizeof(type), __kr_err);			\
-+	if (unlikely(__kr_err))						\
-+		goto err_label;						\
-+} while (0)
-+
-+#define __put_kernel_nofault(dst, src, type, err_label)			\
-+	__put_user_size_goto(*((type *)(src)),				\
-+		(__force type __user *)(dst), sizeof(type), err_label)
-+
- #endif	/* _ARCH_POWERPC_UACCESS_H */
--- 
-2.28.0
-
+LGTM, thanks.
