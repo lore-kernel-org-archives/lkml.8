@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE02C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E12C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CE32063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8242080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHKlQ5E6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8e7p5A+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgHQJCx (ORCPT
+        id S1728663AbgHQJC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58554 "EHLO
+        Mon, 17 Aug 2020 05:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgHQJCo (ORCPT
+        with ESMTP id S1728482AbgHQJCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:02:44 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD1AC061342;
-        Mon, 17 Aug 2020 02:02:44 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so7797700pgi.9;
-        Mon, 17 Aug 2020 02:02:44 -0700 (PDT)
+        Mon, 17 Aug 2020 05:02:54 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0081EC061389;
+        Mon, 17 Aug 2020 02:02:53 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x25so7919257pff.4;
+        Mon, 17 Aug 2020 02:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nd35gBts6NgtKlgN2lcrX3AbyIcMYWPkE6/ISk0jZVU=;
-        b=qHKlQ5E6ehfBA/hV/XlchuGk9r9+52SaKrqq5Ok0Yd97+uobN4Zyvw7O82ta5goNeL
-         xBfom1nx+gYLXtn94ddvCCxxNFbRp5+n7BpIbqScWc5Sw0JoTpemM2JOk0zZIl1vphfd
-         vYSLMUNFAFB3b/MT+bML4I3ZeMpmF1WsGeUJTD1Qd+02T1Nw/mtUIm+qp3t4ePJJ4B6u
-         BJAPaA5NLPV9itEiWAesNfBSHQtLtJW1M2iXdCwhwUujS7+WjX1iUWUQhsph56doS1MV
-         lLrQ4xwvaLW6IgaxGpHG6qJpY+tYETB2W+EgCO3Y0Xub6NR4XrYDos5cc6O5jw3X9fuN
-         WqmA==
+        bh=9gjqpRS8olyjc/G08W3tsbKuo7w0JyAKTnFiPDwOnLs=;
+        b=Y8e7p5A+U70fs8zMCX99v4qWd6fhAwzqCgzVw6MybAu0YKzv985Gzz88KVzjlO00kH
+         ZAjoOPBR7uVDqzY14l50NCRxWKxebE4hCuLp3K82NcoayY1F4MmINy2f5odh9eHAndnu
+         C2NiQKq3ADK50JyGQPJa+npJ4re/v4TtPyhWg9Ji4D+RO3dxkLFyhA1P0wFFg7kTBxd1
+         b7RqHitiCauEPujt1dsnfyTsWUKed/bl9Yh7l8IX1Jvl2G6n9K6la8snK/umY1tdQSgW
+         KDOIL8eRZTWF6bSt4eI8gJuznMohjSDQ+jTZsbLhNXvtsfB7P7kVvBJ+6WNyPH7oaPwN
+         8b6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nd35gBts6NgtKlgN2lcrX3AbyIcMYWPkE6/ISk0jZVU=;
-        b=p2/GszVrjNrWNuEwN6kD+Fh767gwE9HWIrkDYTxp9RBCQYYKVrwzeLSN9wz6B4///W
-         Mj9KdFLhKGplUjeWE3WCk3XrGtW9BuAgNL+uyrFFiRBL9TqsuLsSto8fvJ5jvyQ+oUC4
-         57HeMK/fVozCAiKIgijOk1TcDAziqz+sGsvjO2bvYg8wyUKqiINET/KS51bxYt/D3yRy
-         d07SdGjd1FvQqvLy65uWr9huL1hnJQXxsL42jGVhZDPdbpVQJ8MsUxba/Aj3YINORX4b
-         PrAzObjsPoaQX9C026yHvdnIixUEnx9wwRHNH7zILkYBwC+Yx02KUG4QuO8YxewsohwG
-         9A9Q==
-X-Gm-Message-State: AOAM531FetSPXlO4fwrEjX5WIn2IeqpK+fi3rKWkc821oHZ9TDC0ahwe
-        237so6KbfLxYdo8rz/Ru8S4=
-X-Google-Smtp-Source: ABdhPJzf4Yw256WODaILrOgLYx1TniHaJ4JHn/KjTEA/sb3iaSQaoGjAR+GXmFwEKiXhf2N63ukVKQ==
-X-Received: by 2002:a63:6b01:: with SMTP id g1mr8932278pgc.192.1597654964140;
-        Mon, 17 Aug 2020 02:02:44 -0700 (PDT)
+        bh=9gjqpRS8olyjc/G08W3tsbKuo7w0JyAKTnFiPDwOnLs=;
+        b=hu76dRLqQQQ7cYCNjUxDfwUB5IQzLxrTDCuG/dBZcI8lZp73S4AR4UqYKtvukn9UxK
+         8o2y+9DhdDYVs18/jxQqf6AMCfKQXQE7xZllI9RHdID4t3sBKB8H99jgAxzdTQ9xkd2G
+         7RTZ/v4TeRg9b67NNx8T7pNYavRvaYV8sI9wwzs35yx/NMsU4OFIE2PNq/5ITKl87PFB
+         3ZiEBV4Lzbsh/33wdnOjvYcF8Sy5WcJK6Y/OC1ntv0gOwkP4GgTaD6/kwKStqgejKMUx
+         sCiA5Fg/3CuM+cXTa3s/hJV4IAbK1gROeqiG1dk3nbinQIT4qKyYUJhZhWicC/RPAXq+
+         iF5g==
+X-Gm-Message-State: AOAM530RHXIQZN3/MXNHf4N3XKEDXFqAYRokY+n/YebSvjWtjLhBvh4Y
+        lgp02Uyj4ZYxWTTybSvngp4=
+X-Google-Smtp-Source: ABdhPJwCbYSaFDUdxe1jOJYWD7q8rFdA3Zk4x0wFc5VcGkSDok1smRFfy3wXDtC7EEtu4HiZJA6q+w==
+X-Received: by 2002:aa7:9ecd:: with SMTP id r13mr7291913pfq.317.1597654973506;
+        Mon, 17 Aug 2020 02:02:53 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id f3sm19488238pfj.206.2020.08.17.02.02.39
+        by smtp.gmail.com with ESMTPSA id f3sm19488238pfj.206.2020.08.17.02.02.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 02:02:43 -0700 (PDT)
+        Mon, 17 Aug 2020 02:02:52 -0700 (PDT)
 From:   Allen Pais <allen.cryptic@gmail.com>
 To:     duncan.sands@free.fr, gregkh@linuxfoundation.org,
         jacmet@sunsite.dk, balbi@kernel.org, leoyang.li@nxp.com,
@@ -67,9 +67,9 @@ Cc:     keescook@chromium.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 4/7] usb/gadget: f_midi: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:32:06 +0530
-Message-Id: <20200817090209.26351-5-allen.cryptic@gmail.com>
+Subject: [PATCH 6/7] usb: xhci: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:32:08 +0530
+Message-Id: <20200817090209.26351-7-allen.cryptic@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817090209.26351-1-allen.cryptic@gmail.com>
 References: <20200817090209.26351-1-allen.cryptic@gmail.com>
@@ -88,34 +88,39 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/usb/gadget/function/f_midi.c | 6 +++---
+ drivers/usb/host/xhci-dbgtty.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
-index 46af0aa07e2e..85cb15734aa8 100644
---- a/drivers/usb/gadget/function/f_midi.c
-+++ b/drivers/usb/gadget/function/f_midi.c
-@@ -698,9 +698,9 @@ static void f_midi_transmit(struct f_midi *midi)
- 	f_midi_drop_out_substreams(midi);
- }
+diff --git a/drivers/usb/host/xhci-dbgtty.c b/drivers/usb/host/xhci-dbgtty.c
+index b8918f73a432..ae4e4ab638b5 100644
+--- a/drivers/usb/host/xhci-dbgtty.c
++++ b/drivers/usb/host/xhci-dbgtty.c
+@@ -288,14 +288,14 @@ static const struct tty_operations dbc_tty_ops = {
+ 	.unthrottle		= dbc_tty_unthrottle,
+ };
  
--static void f_midi_in_tasklet(unsigned long data)
-+static void f_midi_in_tasklet(struct tasklet_struct *t)
+-static void dbc_rx_push(unsigned long _port)
++static void dbc_rx_push(struct tasklet_struct *t)
  {
--	struct f_midi *midi = (struct f_midi *) data;
-+	struct f_midi *midi = from_tasklet(midi, t, tasklet);
- 	f_midi_transmit(midi);
- }
+ 	struct dbc_request	*req;
+ 	struct tty_struct	*tty;
+ 	unsigned long		flags;
+ 	bool			do_push = false;
+ 	bool			disconnect = false;
+-	struct dbc_port		*port = (void *)_port;
++	struct dbc_port		*port = from_tasklet(port, t, push);
+ 	struct list_head	*queue = &port->read_queue;
  
-@@ -875,7 +875,7 @@ static int f_midi_bind(struct usb_configuration *c, struct usb_function *f)
- 	int status, n, jack = 1, i = 0, endpoint_descriptor_index = 0;
- 
- 	midi->gadget = cdev->gadget;
--	tasklet_init(&midi->tasklet, f_midi_in_tasklet, (unsigned long) midi);
-+	tasklet_setup(&midi->tasklet, f_midi_in_tasklet);
- 	status = f_midi_register_card(midi);
- 	if (status < 0)
- 		goto fail_register;
+ 	spin_lock_irqsave(&port->port_lock, flags);
+@@ -382,7 +382,7 @@ xhci_dbc_tty_init_port(struct xhci_dbc *dbc, struct dbc_port *port)
+ {
+ 	tty_port_init(&port->port);
+ 	spin_lock_init(&port->port_lock);
+-	tasklet_init(&port->push, dbc_rx_push, (unsigned long)port);
++	tasklet_setup(&port->push, dbc_rx_push);
+ 	INIT_LIST_HEAD(&port->read_pool);
+ 	INIT_LIST_HEAD(&port->read_queue);
+ 	INIT_LIST_HEAD(&port->write_pool);
 -- 
 2.17.1
 
