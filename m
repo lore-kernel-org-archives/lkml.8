@@ -6,93 +6,89 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B704FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A04DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D582054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E014020772
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHQFqr (ORCPT
+        id S1726790AbgHQFqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:46:47 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:2279 "EHLO pegase1.c-s.fr"
+        Mon, 17 Aug 2020 01:46:53 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:50735 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgHQFqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:46:44 -0400
+        id S1726728AbgHQFqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:46:46 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BVNMb4NNFz9tytm;
-        Mon, 17 Aug 2020 07:46:35 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BVNMf4NxZz9tytl;
+        Mon, 17 Aug 2020 07:46:38 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id BF9zu5YcO0s8; Mon, 17 Aug 2020 07:46:35 +0200 (CEST)
+        with ESMTP id ZrDGUPrwf_gL; Mon, 17 Aug 2020 07:46:38 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVNMb30Ryz9tytl;
-        Mon, 17 Aug 2020 07:46:35 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVNMf3Z9Vz9tydp;
+        Mon, 17 Aug 2020 07:46:38 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3DA2C8B772;
-        Mon, 17 Aug 2020 07:46:40 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 425108B772;
+        Mon, 17 Aug 2020 07:46:43 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id H2O5bNNzOIr4; Mon, 17 Aug 2020 07:46:40 +0200 (CEST)
+        with ESMTP id QqRp2YYzzIB9; Mon, 17 Aug 2020 07:46:43 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1F1498B75B;
-        Mon, 17 Aug 2020 07:46:40 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 240E88B75B;
+        Mon, 17 Aug 2020 07:46:43 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0451D65CDD; Mon, 17 Aug 2020 05:46:39 +0000 (UTC)
-Message-Id: <9d11143d4e27ba8274369a926968756917584868.1597643153.git.christophe.leroy@csgroup.eu>
+        id 220F665CDD; Mon, 17 Aug 2020 05:46:43 +0000 (UTC)
+Message-Id: <a1b6ef3d657c8f249193442f56868fc358ea5b6c.1597643160.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1] powerpc/process: Remove unnecessary #ifdef
- CONFIG_FUNCTION_GRAPH_TRACER
+Subject: [PATCH v1] powerpc/process: Replace an #if defined(CONFIG_4xx) ||
+ defined(CONFIG_BOOKE) by IS_ENABLED()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 17 Aug 2020 05:46:39 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 05:46:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ftrace_graph_ret_addr() is always defined and returns 'ip' when
-CONFIG_FUNCTION GRAPH_TRACER is not set.
+The #if defined(CONFIG_4xx) || defined(CONFIG_BOOKE) encloses some
+printk which can be compiled in all cases.
 
-So the #ifdef is not needed, remove it.
+Replace by IS_ENABLED().
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/process.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/powerpc/kernel/process.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index ffbe79960c73..e86e28c28259 100644
+index fd3e11663613..087711aa0126 100644
 --- a/arch/powerpc/kernel/process.c
 +++ b/arch/powerpc/kernel/process.c
-@@ -2096,10 +2096,8 @@ void show_stack(struct task_struct *tsk, unsigned long *stack,
- 	unsigned long sp, ip, lr, newsp;
- 	int count = 0;
- 	int firstframe = 1;
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	unsigned long ret_addr;
- 	int ftrace_idx = 0;
+@@ -1446,12 +1446,13 @@ void show_regs(struct pt_regs * regs)
+ 	trap = TRAP(regs);
+ 	if (!trap_is_syscall(regs) && cpu_has_feature(CPU_FTR_CFAR))
+ 		pr_cont("CFAR: "REG" ", regs->orig_gpr3);
+-	if (trap == 0x200 || trap == 0x300 || trap == 0x600)
+-#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
+-		pr_cont("DEAR: "REG" ESR: "REG" ", regs->dar, regs->dsisr);
+-#else
+-		pr_cont("DAR: "REG" DSISR: %08lx ", regs->dar, regs->dsisr);
 -#endif
- 
- 	if (tsk == NULL)
- 		tsk = current;
-@@ -2127,12 +2125,10 @@ void show_stack(struct task_struct *tsk, unsigned long *stack,
- 		if (!firstframe || ip != lr) {
- 			printk("%s["REG"] ["REG"] %pS",
- 				loglvl, sp, ip, (void *)ip);
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 			ret_addr = ftrace_graph_ret_addr(current,
- 						&ftrace_idx, ip, stack);
- 			if (ret_addr != ip)
- 				pr_cont(" (%pS)", (void *)ret_addr);
--#endif
- 			if (firstframe)
- 				pr_cont(" (unreliable)");
- 			pr_cont("\n");
++	if (trap == 0x200 || trap == 0x300 || trap == 0x600) {
++		if (IS_ENABLED(CONFIG_4xx) || IS_ENABLED(CONFIG_BOOKE))
++			pr_cont("DEAR: "REG" ESR: "REG" ", regs->dar, regs->dsisr);
++		else
++			pr_cont("DAR: "REG" DSISR: %08lx ", regs->dar, regs->dsisr);
++	}
++
+ #ifdef CONFIG_PPC64
+ 	pr_cont("IRQMASK: %lx ", regs->softe);
+ #endif
 -- 
 2.25.0
 
