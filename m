@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC652067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8532067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684450;
-	bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
+	s=default; t=1597684467;
+	bh=5jqvCiKRJBHM6wCakwUncmndmrLuQZ6BD/yNkVWmES0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5pB4dz5Ew73tMsmm3fFR/LNcQJfVF/Kvh5kduh5jobeItteWEl5ZSfHkwGYMjYvS
-	 FVmH0SiBYUYLlgSKUoyg+clWQNJWNoIjG2RKYNiQkJPFMwiOLaG04O4So1WBZs9sEL
-	 FnH0NaJmuKCij9X8oOYrme3aKa/j3fNTrnTJ5cIg=
+	b=VI2MuM4krX9hhSz2m8D+NrSOM1kiTh+Xbk/gIrl47vthyStuU13fyrC9MkApzxS2Q
+	 CfCVZL95oj+HrKljQp5Qb2jVuLfAlH5oIuvcq2VFmYYylPgCwtWh5nCRo5cGxPeXNy
+	 B8rfVEP2FuKqEpy7ysg4GXDfTwpVaiagheZnVoUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388811AbgHQRN6 (ORCPT
+        id S2389406AbgHQROZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388674AbgHQQMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:12:15 -0400
+        id S2388701AbgHQQMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78AB22DBF;
-        Mon, 17 Aug 2020 16:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5769207FF;
+        Mon, 17 Aug 2020 16:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680734;
-        bh=B9FMDVvr3fPuFO0rvt9cDBfcrTv/H4aJ3IcGv2fBJSs=;
+        s=default; t=1597680754;
+        bh=5jqvCiKRJBHM6wCakwUncmndmrLuQZ6BD/yNkVWmES0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aZ4JbVj6OZ1BOIHYy4ImXLLDmbgTjvedu0HRgymq8ceR6TqejuX2Idj5VZOmfUKGs
-         prVe6MWzT3o538xgFx7pjtNg17qiLyt4+GM5dAwwPbT++H3dvrEIazLhDWKHux4Uo1
-         BUu7/h4rLERMNxEBHKrb46JhlQZOoaGxpJlbW9i4=
+        b=nA4lcnB9A7hb7UfPzZXGHd5RAco8frDSqD9ile0yIy8hARrevfs2UiOrJ2NdEo1aU
+         EJTcA1CjfwurVL1f1FrEE3t7KzgQi4090aNG8up0FFnMsIi8s4nM6Om0xQSjRSbU38
+         UrqLLbBfnuIKF19527xx34KJdKjJR7EGU+5NL8NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        stable@vger.kernel.org,
+        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/168] sched: correct SD_flags returned by tl->sd_flags()
-Date:   Mon, 17 Aug 2020 17:15:37 +0200
-Message-Id: <20200817143734.031941558@linuxfoundation.org>
+Subject: [PATCH 4.19 044/168] brcmfmac: To fix Bss Info flag definition Bug
+Date:   Mon, 17 Aug 2020 17:16:15 +0200
+Message-Id: <20200817143735.960272076@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,38 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Liu <iwtbavbm@gmail.com>
+From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
 
-[ Upstream commit 9b1b234bb86bcdcdb142e900d39b599185465dbb ]
+[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
 
-During sched domain init, we check whether non-topological SD_flags are
-returned by tl->sd_flags(), if found, fire a waning and correct the
-violation, but the code failed to correct the violation. Correct this.
+Bss info flag definition need to be fixed from 0x2 to 0x4
+This flag is for rssi info received on channel.
+All Firmware branches defined as 0x4 and this is bug in brcmfmac.
 
-Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
+Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 2 +-
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 74b694392f2fd..f58efa5cc6474 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1098,7 +1098,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 		sd_flags = (*tl->sd_flags)();
- 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
- 			"wrong sd_flags in topology description\n"))
--		sd_flags &= ~TOPOLOGY_SD_FLAGS;
-+		sd_flags &= TOPOLOGY_SD_FLAGS;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index d5bb81e887624..9d2367133c7c6 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -30,7 +30,7 @@
+ #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
  
- 	*sd = (struct sched_domain){
- 		.min_interval		= sd_weight,
+ #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
+-#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
++#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
+ 
+ #define BRCMF_STA_BRCM			0x00000001	/* Running a Broadcom driver */
+ #define BRCMF_STA_WME			0x00000002	/* WMM association */
 -- 
 2.25.1
 
