@@ -2,215 +2,170 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29775C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E760520789
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmB2whkq"
+	by mail.kernel.org (Postfix) with ESMTP id 5A15F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597685091;
+	bh=BFKmMwm3OgowIDbWwU9+GxfmhcLKDlOgozUQDhUzMwE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fIrnp8l+O/CCuPmElehHCF1+yljmgnzBHsJkbmAQGWbjVRuxKBx1GNwCxjzM/xeuD
+	 VJ2emu705qXEf7dcsuX1RD2wQKeOga4CNlNjdlXWZflftzZK9yh1d2w06s4zRqhtQC
+	 4p+vkiYkThxM1DytVZP2t5v8vvpBFw+PfvWrjt/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389991AbgHQRYn (ORCPT
+        id S2389997AbgHQRYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:24:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389192AbgHQRKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:10:19 -0400
-Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B1C061347
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:09:00 -0700 (PDT)
-Received: by mail-ej1-x64a.google.com with SMTP id i23so5769230ejx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=WC3qwxqXOlSZ7jnjgYv3zuH5IVQQXftskmacAfSf8Yw=;
-        b=qmB2whkq1uymJPwNU/dDDT6gtA/BtcTHWj8k0C5guxkVqvJZ5JF9mHavC6v7+R7mDf
-         G8Fr+tSFgNpb6Sv7ozrK+Wle5+N1EXGfrR+vr0QfX0cqIKQ6vCOV9x2p2Ri+EPjZfbRq
-         QE54d3Sq4JZHH4lkmMFWDhxtnaN0l2T6BTOe7Yo2GQQBZmdW1kpBpZrcbkJU8iRQlt8s
-         D2SpbNF7gUuVIsjXMOKKpJe0ubhjI6cc7jVHbkG5IQQjnOu4Bx8oYVMIHUoptEN0JnZB
-         OL5i19HZ5bl7yLF3kbLpyEt8SSLnPj/rfic6DqR3n03NK1Cmo6GqM/GHRtzIPyEsCg4s
-         JHqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=WC3qwxqXOlSZ7jnjgYv3zuH5IVQQXftskmacAfSf8Yw=;
-        b=He5cOlf3Rnv4hsMjMvm3DGhDguCldXNqIL9a9hyWaPmD1xIE2eeuXgDBhe+ZmxJNHN
-         vyJBAQzbqO5/4IpyXBHJykWbw1UP9Cqkdd9VIGqBxpAX6KMYJgwwIuz7Eg+KspFG+n98
-         MWTt3T0Cw0l4CjBijZvusxY8xRZ+4gBcJthRqZzQumACUdYXPJA8nQxkw71veF+cGv+p
-         yFEg/39FBRq86wTw6s1j/8KUNSN3aH/X2dH+cOQO83WVcZzHULSU4WoADzfi+EHqME4q
-         33kNR5WvNhyjM7XXn8EO3YZRQVBBJ3cAIAtpOJ+n4tUR2B6ZktdJ1O7+AtJ2IVbNn5ax
-         tB+A==
-X-Gm-Message-State: AOAM530ZpIUhT2dYaPaP7BPu5PmIGVRYBUPr85Nx2fatFoQYe/zcQFVQ
-        i/n8wvusHAPjQWq/0hd/NAFomir05Q==
-X-Google-Smtp-Source: ABdhPJz7JK/4hALFPPtoFqZ5PnvZtUHs3KrjtksrheYnNRpGzoaAxixQEyGO565iJ4PqgGlDWXo2/lKFCQ==
-X-Received: by 2002:aa7:d410:: with SMTP id z16mr15548395edq.287.1597684139613;
- Mon, 17 Aug 2020 10:08:59 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 19:07:14 +0200
-In-Reply-To: <20200817170729.2605279-1-tweek@google.com>
-Message-Id: <20200817170729.2605279-4-tweek@google.com>
-Mime-Version: 1.0
-References: <20200817170729.2605279-1-tweek@google.com>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH v3 3/3] selinux: add permission names to trace event
-From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Aug 2020 13:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389308AbgHQRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:12:01 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C44AF2067C;
+        Mon, 17 Aug 2020 17:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597684321;
+        bh=BFKmMwm3OgowIDbWwU9+GxfmhcLKDlOgozUQDhUzMwE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=I0l69/eVcqo9XoM5DNTMT2IHtJeSrEZ38TqHPaQ/MVg8ogXat9uYkR7vEL1h7hC/z
+         4cLCk8F86byzwpWkE5mzd9DLMcDhX/pCeCX3FeDhyRFWxlZX5zhabrxqFjID+r4yxO
+         t824qZlf+pcCGkc+eCBMReSoEY+74OYfzcbpY05c=
+Date:   Mon, 17 Aug 2020 12:11:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        christoffer.dall@arm.com, maz@kernel.org,
+        Robert Richter <rrichter@marvell.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH  v1 1/3] arm64: allow de-selection of ThunderX PCI
+ controllers
+Message-ID: <20200817171159.GA1426023@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804124417.27102-2-alex.bennee@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Enderborg <peter.enderborg@sony.com>
+On Tue, Aug 04, 2020 at 01:44:15PM +0100, Alex Bennée wrote:
+> For a pure VirtIO guest bringing in all the PCI quirk handling adds a
+> significant amount of bloat to kernel we don't need. Solve this by
+> adding a CONFIG symbol for the ThunderX PCI devices and allowing it to
+> be turned off. Saving over 300k from the uncompressed vmlinux:
 
-In the print out add permissions, it will look like:
-    <...>-1042  [007] ....   201.965142: selinux_audited:
-    requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
-    result=3D-13
-    scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
-    tcontext=3Dsystem_u:object_r:bin_t:s0
-    tclass=3Dfile permissions=3D{ !entrypoint }
+It *looks* like just turning off CONFIG_PCI_QUIRKS should be
+sufficient because pci-thunder-ecam.c and pci-thunder-pem.c are
+wrapped with:
 
-This patch is adding the "permissions=3D{ !entrypoint }".
-The permissions preceded by "!" have been denied and the permissions
-without have been accepted.
+  #if defined(CONFIG_PCI_HOST_THUNDER_PEM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
 
-Note that permission filtering is done on the audited, denied or
-requested attributes.
+so if you turn off CONFIG_PCI_HOST_THUNDER_ECAM,
+CONFIG_PCI_HOST_THUNDER_PEM, and CONFIG_PCI_QUIRKS that should omit
+pci-thunder-ecam.o and pci-thunder-pem.o.  But I must be missing
+something.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
- include/trace/events/avc.h | 11 +++++++++--
- security/selinux/avc.c     | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 2 deletions(-)
+>   -rwxr-xr-x 1 alex alex  85652472 Aug  3 16:48 vmlinux*
+>   -rwxr-xr-x 1 alex alex  86033880 Aug  3 16:39 vmlinux.orig*
+> 
+> Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
+> Cc: Robert Richter <rrichter@marvell.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm64/Kconfig.platforms    | 2 ++
+>  arch/arm64/configs/defconfig    | 1 +
+>  drivers/pci/controller/Kconfig  | 7 +++++++
+>  drivers/pci/controller/Makefile | 4 ++--
+>  4 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 8dd05b2a925c..a328eebdaa59 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -253,12 +253,14 @@ config ARCH_SPRD
+>  
+>  config ARCH_THUNDER
+>  	bool "Cavium Inc. Thunder SoC Family"
+> +        select PCI_THUNDER
+>  	help
+>  	  This enables support for Cavium's Thunder Family of SoCs.
+>  
+>  config ARCH_THUNDER2
+>  	bool "Cavium ThunderX2 Server Processors"
+>  	select GPIOLIB
+> +        select PCI_THUNDER
 
-diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
-index b55fda2e0773..94bca8bef8d2 100644
---- a/include/trace/events/avc.h
-+++ b/include/trace/events/avc.h
-@@ -10,6 +10,10 @@
- #define _TRACE_SELINUX_H
-=20
- #include <linux/tracepoint.h>
-+#include <linux/trace_seq.h>
-+
-+extern const char *avc_trace_perm_to_name(struct trace_seq *p, u16 class, =
-u32 audited, u32 denied);
-+#define __perm_to_name(class, audited, denied) avc_trace_perm_to_name(p, c=
-lass, audited, denied)
-=20
- TRACE_EVENT(selinux_audited,
-=20
-@@ -29,6 +33,7 @@ TRACE_EVENT(selinux_audited,
- 		__string(scontext, scontext)
- 		__string(tcontext, tcontext)
- 		__string(tclass, tclass)
-+		__field(u16, utclass)
- 	),
-=20
- 	TP_fast_assign(
-@@ -36,14 +41,16 @@ TRACE_EVENT(selinux_audited,
- 		__entry->denied		=3D sad->denied;
- 		__entry->audited	=3D sad->audited;
- 		__entry->result		=3D sad->result;
-+		__entry->utclass	=3D sad->tclass;
- 		__assign_str(tcontext, tcontext);
- 		__assign_str(scontext, scontext);
- 		__assign_str(tclass, tclass);
- 	),
-=20
--	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d scon=
-text=3D%s tcontext=3D%s tclass=3D%s",
-+	TP_printk("requested=3D0x%x denied=3D0x%x audited=3D0x%x result=3D%d scon=
-text=3D%s tcontext=3D%s tclass=3D%s permissions=3D{%s }",
- 		__entry->requested, __entry->denied, __entry->audited, __entry->result,
--		__get_str(scontext), __get_str(tcontext), __get_str(tclass)
-+		__get_str(scontext), __get_str(tcontext), __get_str(tclass),
-+		__perm_to_name(__entry->utclass, __entry->audited, __entry->denied)
- 	)
- );
-=20
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 7de5cc5169af..d585b68c2a50 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -695,6 +695,7 @@ static void avc_audit_pre_callback(struct audit_buffer =
-*ab, void *a)
- 	audit_log_format(ab, " } for ");
- }
-=20
-+
- /**
-  * avc_audit_post_callback - SELinux specific information
-  * will be called by generic audit code
-@@ -991,6 +992,41 @@ int avc_ss_reset(struct selinux_avc *avc, u32 seqno)
- 	return rc;
- }
-=20
-+/**
-+ * avc_trace_perm_to_name - SELinux help function for trace
-+ * @p pointer to output storage
-+ * @tclass tclass for the event
-+ * @av access vector
-+ * @avdenied denied permissions in av format
-+ */
-+const char *avc_trace_perm_to_name(struct trace_seq *p, u16 tclass, u32 av=
-, u32 avdenied)
-+{
-+	const char *ret =3D trace_seq_buffer_ptr(p);
-+	int i, perm;
-+	const char **perms;
-+
-+	if (WARN_ON(!tclass || tclass >=3D ARRAY_SIZE(secclass_map)))
-+		return NULL;
-+
-+	perms =3D secclass_map[tclass-1].perms;
-+
-+	i =3D 0;
-+	perm =3D 1;
-+	while (i < (sizeof(av) * 8)) {
-+		if ((perm & av)  && perms[i]) {
-+			if (!(perm & avdenied))
-+				trace_seq_printf(p, " %s", perms[i]);
-+			else
-+				trace_seq_printf(p, " !%s", perms[i]);
-+			av &=3D ~perm;
-+		}
-+		i++;
-+		perm <<=3D 1;
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * Slow-path helper function for avc_has_perm_noaudit,
-  * when the avc_node lookup fails. We get called with
---=20
-2.28.0.220.ged08abb693-goog
+Indent these with tabs, not spaces, to be consistent with other
+whitespace usage in this file.
 
+>  	help
+>  	  This enables support for Cavium's ThunderX2 CN99XX family of
+>  	  server processors.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 2ca7ba69c318..d840cba99941 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -199,6 +199,7 @@ CONFIG_PCI_HOST_GENERIC=y
+>  CONFIG_PCI_XGENE=y
+>  CONFIG_PCIE_ALTERA=y
+>  CONFIG_PCIE_ALTERA_MSI=y
+> +CONFIG_PCI_THUNDER=y
+>  CONFIG_PCI_HOST_THUNDER_PEM=y
+>  CONFIG_PCI_HOST_THUNDER_ECAM=y
+>  CONFIG_PCIE_ROCKCHIP_HOST=m
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index adddf21fa381..28335ffa5d48 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -286,6 +286,13 @@ config PCI_LOONGSON
+>  	  Say Y here if you want to enable PCI controller support on
+>  	  Loongson systems.
+>  
+> +config PCI_THUNDER
+> +       bool "Thunder X PCIE controllers"
+> +       depends on ARM64
+> +       select PCI_QUIRKS
+> +       help
+> +          Say Y here to enable ThunderX ECAM and PEM PCI controllers.
+
+Indent with tabs, not spaces.
+
+The existing Kconfig help text refers to simply "Thunder", not
+"Thunder X", so both of these references should probably follow suit.
+
+s/PCIE controllers/PCIe controllers/
+
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  source "drivers/pci/controller/mobiveil/Kconfig"
+>  source "drivers/pci/controller/cadence/Kconfig"
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index efd9733ead26..8fad4781a5d3 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -45,8 +45,8 @@ obj-y				+= mobiveil/
+>  # ARM64 and use internal ifdefs to only build the pieces we need
+>  # depending on whether ACPI, the DT driver, or both are enabled.
+>  
+> +obj-$(CONFIG_PCI_THUNDER) += pci-thunder-ecam.o
+> +obj-$(CONFIG_PCI_THUNDER) += pci-thunder-pem.o
+>  ifdef CONFIG_PCI
+> -obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+> -obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+>  obj-$(CONFIG_ARM64) += pci-xgene.o
+>  endif
+> -- 
+> 2.20.1
+> 
