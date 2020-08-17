@@ -4,80 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4095C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE98520674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DE520716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692942;
-	bh=ZR/3Xg4ei8Mp2hzeIeLrWX/F4kbxmqO6zPHu4ugSDJ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pQkcWXvQWWBDNMRaH4UylENt3uUREcaOXi7Jl1jd9WNLorqRI5gYnhhQHX2lXvlYF
-	 ORMUe8uASSPdNMDWPhtWkpKg5Le+NFap77rsZIOx3Hl+AGFed3TSw+q/pT/bhY/bek
-	 XJkR8yUn3tzz9+LJLSmiA8nyONAcDa2MMHih/gPQ=
+	s=default; t=1597692949;
+	bh=/KvwqAUSHWzgBWBZkg0o5e4o2nzy6/qz61tCsI3y8dY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=evqw4Jpo96uhle4751j9SI3/E2ecIUsb0NpfgGYwvmic8zEoq4oIgG4zKafScwAEu
+	 Mn/k5QSnfQPW6reZXiFRuXX73EWOucSQC/ZGWeN0F9T1JuqBwWTOTzaCljPmW+rLin
+	 BOM8qCzebsKCEq/wFQbGFyVBZiXiptUaVLByUbNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgHQTfd (ORCPT
+        id S2390528AbgHQTfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:35:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbgHQP3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:25 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0514623B80;
-        Mon, 17 Aug 2020 15:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678165;
-        bh=ZR/3Xg4ei8Mp2hzeIeLrWX/F4kbxmqO6zPHu4ugSDJ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=R5VeWDKm1b0ZZn5KRGEmRUgmEZTIvlxHYP5nYj8NiJ+KHqb4H94KEeggJ19IYPcoL
-         uSBTBizhmYJA0no1lqy9JrzTnyKhv/x7wsOCOaW6YnkupgWyQx9+ACz5JbOKgGsqwk
-         1LvwZ6WpuyF+s/SecPztnl1Cg+qzZMDvyySA8ORY=
-Date:   Mon, 17 Aug 2020 08:29:23 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Necip Fazil Yildiran <fazilyildiran@gmail.com>
-Cc:     davem@davemloft.net, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dvyukov@google.com, elver@google.com, andreyknvl@google.com,
-        glider@google.com, necip@google.com,
-        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2] net: qrtr: fix usage of idr in port assignment to
- socket
-Message-ID: <20200817082923.60131b6c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200817073900.3085391-1-fazilyildiran@gmail.com>
-References: <20200817073900.3085391-1-fazilyildiran@gmail.com>
+        Mon, 17 Aug 2020 15:35:47 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37259 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730068AbgHQTfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:35:39 -0400
+Received: by mail-il1-f194.google.com with SMTP id p13so15570268ilh.4;
+        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iAgp3OtOJ2V/PDJ3pq372B1DRl70fIx00JIpk/BWygU=;
+        b=WD83jij1Rbas2aoH26bst4Wd2IAZsamOy69COePEP242UJVeliasG91aV7xS3fMGP7
+         zo0EoAACW4gJMuGLQzG8bVBwVR75yBOePYP0SdltQxjm0HZkGHZR8aOSkPGvxKNa47Ov
+         67WYEd3wShUexT/2jx7D0To8LCDs2sv6/L36akxJOoPvrKhGD258NT9JrZt539EEvH8c
+         F4V/SNEdalpsxdxOU9aJFXJN6IuS9lE4g91WF7jYaKUWy4eXK0xZqs5EALbR8Li1TPMj
+         VuEkuMB3qYv/moOZrGCJKKnlGpZQ/4/zcBSl97xhiHoBFpoDEX349nnSYl9XZYGaegQk
+         z12g==
+X-Gm-Message-State: AOAM530uBiw0LBvTLOCtcWudQw+5XmKkSmjJA6DAU44h66T4K+AAA6Hl
+        n9rK+N2iCKHFwhrM9tbbfw==
+X-Google-Smtp-Source: ABdhPJwXOJDDDq8HeKQf/PZk3gaBEkSGQVXO8CPg+FvLgAC1GUzXTU3b3o6z9o/yPeoBt4dX6qCiJw==
+X-Received: by 2002:a92:d4cc:: with SMTP id o12mr14429800ilm.90.1597692938320;
+        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id f132sm9555787ioa.45.2020.08.17.12.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:35:37 -0700 (PDT)
+Received: (nullmailer pid 1415017 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:35:35 -0000
+Date:   Mon, 17 Aug 2020 13:35:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3] dt-bindings: at25: convert the binding document to
+ yaml
+Message-ID: <20200817193535.GA1414886@bogus>
+References: <20200812200602.GA2612803@bogus>
+ <20200813085959.15946-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813085959.15946-1-ceggers@arri.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 07:39:01 +0000 Necip Fazil Yildiran wrote:
-> From: Necip Fazil Yildiran <necip@google.com>
+On Thu, 13 Aug 2020 10:59:59 +0200, Christian Eggers wrote:
+> Convert the binding document for at25 EEPROMs from txt to yaml.
 > 
-> Passing large uint32 sockaddr_qrtr.port numbers for port allocation
-> triggers a warning within idr_alloc() since the port number is cast
-> to int, and thus interpreted as a negative number. This leads to
-> the rejection of such valid port numbers in qrtr_port_assign() as
-> idr_alloc() fails.
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> ---
+> On Wednesday, 12 August 2020, 22:06:02 CEST, Rob Herring wrote:
+> > > +This file has been moved to at25.yaml.
+> >
+> > We only do this to save updating a bunch of references and there aren't
+> > any, so just remove the file.
+> file removed.
 > 
-> To avoid the problem, switch to idr_alloc_u32() instead.
+> > I'd just fix it up, but this wouldn't apply for me on Linus' current
+> > master. Please rebase and resend (You can want til rc1 if you want
+> > because that's what I'll ultimately apply it too).
+> This was my fault. I forgot to revert my previous patch ("dt-bindings: at25: fix
+> syntax error in example code"). So v2 was created from a wrong base.
 > 
-> Fixes: bdabad3e36 ("net: Add Qualcomm IPC router")
-> Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
-> Signed-off-by: Necip Fazil Yildiran <necip@google.com>
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> I'll be unavailable until August, 23.
+> 
+> regards
+> Christian
+> 
+>  .../devicetree/bindings/eeprom/at25.txt       |  45 ------
+>  .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
+>  2 files changed, 129 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/eeprom/at25.txt
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
+> 
 
-Fixes tag: Fixes: bdabad3e36 ("net: Add Qualcomm IPC router")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
+Applied, thanks!
