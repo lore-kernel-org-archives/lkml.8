@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B41920578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CD320578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689570;
-	bh=uNGWZjCsg64ckoUhe0XxFhNdO/u7Unjei4kpB/FWVdQ=;
+	s=default; t=1597689593;
+	bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lXnFy7nmxPH1z+elqOYl4LN8eNGhljUX6C5SImnKY2s+DDLVecDH6j2Tc9FnMCQr7
-	 Nw4TEXFUIMFD1hHy3Dc50pnkv1xc44PlsOEEXuhP8Dd3uigL8ZyfizQz9Mb7iNq6Uo
-	 ESf6dIFnx3kaAICnxwuh7E6bnb+7QIFFTTKscMwo=
+	b=PafGV58AH6PhXp0k2SxVdiptK2sp7mRB/36YO7LjqlLDHfqwoQYmbPoJtiPS0rtD+
+	 FVSi+CqyhnLO9Rmc5TycOIGwTAqA962kYCMccvaRoy5D2FDrodZiOPOXxMR8ckh8o0
+	 8mrRuWsfqbQjiOe39X0bqA/oo5NguxeLmH7EGrLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388130AbgHQSj0 (ORCPT
+        id S2391330AbgHQSjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45818 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388131AbgHQP63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:58:29 -0400
+        id S2388117AbgHQP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1244320729;
-        Mon, 17 Aug 2020 15:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8313520882;
+        Mon, 17 Aug 2020 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679908;
-        bh=uNGWZjCsg64ckoUhe0XxFhNdO/u7Unjei4kpB/FWVdQ=;
+        s=default; t=1597679897;
+        bh=Z7uuX6jONzBmCL1BMhZ1gplvGythd9IoiXwr1HTKKvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLGkMIkQTL/9a3/zIkkk/VXfEVO1xoOJSu0iiTmDXvWpltHnROoZICfz/xhV+axWP
-         7VrnSvFltItNuaNwscYHUSzHNZq9hz9PM20wpCe2ErUgacVlgMoBZtMFGRRUU3miK8
-         dQ7SXvIpGxLofRkS0AXJoeL8iI++N4ZcaifVzeDI=
+        b=FNeT7lgbCetppitiDrA1T1lYCnmOPQ8uV+ZTyBwNlAo+Viemb600b5CzNGK44YCIn
+         ELT79jRwEhiG6hrZhDhkUhcNMnnnIV+CLV85TYYSRu5t7iCxCfk3mMdgnmpmaw/Ik8
+         WFWRPibT/kH+WHuFzynlmZhYa5gUatpttWILiL/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.7 375/393] parisc: mask out enable and reserved bits from sba imask
-Date:   Mon, 17 Aug 2020 17:17:05 +0200
-Message-Id: <20200817143837.799280264@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 5.7 354/393] drm/ttm/nouveau: dont call tt destroy callback on alloc failure.
+Date:   Mon, 17 Aug 2020 17:16:44 +0200
+Message-Id: <20200817143836.774634072@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,33 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@stackframe.org>
+From: Dave Airlie <airlied@redhat.com>
 
-commit 5b24993c21cbf2de11aff077a48c5cb0505a0450 upstream.
+commit 5de5b6ecf97a021f29403aa272cb4e03318ef586 upstream.
 
-When using kexec the SBA IOMMU IBASE might still have the RE
-bit set. This triggers a WARN_ON when trying to write back the
-IBASE register later, and it also makes some mask calculations fail.
+This is confusing, and from my reading of all the drivers only
+nouveau got this right.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sven Schnelle <svens@stackframe.org>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Just make the API act under driver control of it's own allocation
+failing, and don't call destroy, if the page table fails to
+create there is nothing to cleanup here.
+
+(I'm willing to believe I've missed something here, so please
+review deeply).
+
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200728041736.20689-1-airlied@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/sba_iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_sgdma.c |    9 +++------
+ drivers/gpu/drm/ttm/ttm_tt.c            |    3 ---
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -1270,7 +1270,7 @@ sba_ioc_init_pluto(struct parisc_device
- 	** (one that doesn't overlap memory or LMMIO space) in the
- 	** IBASE and IMASK registers.
- 	*/
--	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE);
-+	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE) & ~0x1fffffULL;
- 	iova_space_size = ~(READ_REG(ioc->ioc_hpa + IOC_IMASK) & 0xFFFFFFFFUL) + 1;
+--- a/drivers/gpu/drm/nouveau/nouveau_sgdma.c
++++ b/drivers/gpu/drm/nouveau/nouveau_sgdma.c
+@@ -96,12 +96,9 @@ nouveau_sgdma_create_ttm(struct ttm_buff
+ 	else
+ 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
  
- 	if ((ioc->ibase < 0xfed00000UL) && ((ioc->ibase + iova_space_size) > 0xfee00000UL)) {
+-	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
+-		/*
+-		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
+-		 * and thus our nouveau_sgdma_destroy() hook, so we don't need
+-		 * to free nvbe here.
+-		 */
++	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
++		kfree(nvbe);
+ 		return NULL;
++	}
+ 	return &nvbe->ttm.ttm;
+ }
+--- a/drivers/gpu/drm/ttm/ttm_tt.c
++++ b/drivers/gpu/drm/ttm/ttm_tt.c
+@@ -242,7 +242,6 @@ int ttm_tt_init(struct ttm_tt *ttm, stru
+ 	ttm_tt_init_fields(ttm, bo, page_flags);
+ 
+ 	if (ttm_tt_alloc_page_directory(ttm)) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
+@@ -266,7 +265,6 @@ int ttm_dma_tt_init(struct ttm_dma_tt *t
+ 
+ 	INIT_LIST_HEAD(&ttm_dma->pages_list);
+ 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
+@@ -288,7 +286,6 @@ int ttm_sg_tt_init(struct ttm_dma_tt *tt
+ 	else
+ 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
+ 	if (ret) {
+-		ttm_tt_destroy(ttm);
+ 		pr_err("Failed allocating page table\n");
+ 		return -ENOMEM;
+ 	}
 
 
