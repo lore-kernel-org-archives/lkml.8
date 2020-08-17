@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E943FC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F7C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB1D206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110AF20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682864;
-	bh=hfr9moCv5LFZxDv9mwifW1WstSEc8YVF2V+Cs72hg3s=;
+	s=default; t=1597682888;
+	bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Am/rUPyEwoa4bi0hkKggaw4wg0g472XQfEw0RoxpTS4JSrtd/Me9xt/2g6mTf8n88
-	 xpoMopyT5KUg6FvK8GhZYWHGlBDDIeiHCkErOgSjsm3fv8pelkqLklIug2x7/aRU9g
-	 nZ590v2mCzi71drviOARKI8eKQIN1l34GGjAVSVU=
+	b=PwSdSqJi+gHFtQOKCPVT9srtQ8ULTJ4ksu5jKNH6EBTbd815GLpdKJ9INt/VrjE9F
+	 paQsAl2kz8XRMMC8l6loPTchYOUnXll3ahO6E/H2ZveOo3okf84sB25LEpCUUqOy3x
+	 JKf+Nbj87w/6uCDCQX9a0JyGh7tQQgvacHh+jGSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388271AbgHQQr3 (ORCPT
+        id S2388924AbgHQQsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48520 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:48:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387884AbgHQQBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:01:04 -0400
+        id S2388144AbgHQQBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:01:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85882206FA;
-        Mon, 17 Aug 2020 16:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00266207FF;
+        Mon, 17 Aug 2020 16:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680064;
-        bh=hfr9moCv5LFZxDv9mwifW1WstSEc8YVF2V+Cs72hg3s=;
+        s=default; t=1597680082;
+        bh=sF5VfJy25+hafkXHOrfSJKp4kxFC0hlEVXFCa6eqSVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKB55dak6UOTOPE4rYUkfFoqNRM3xZlGul9RHOgbkzBX5anP5XAQQheoi+kBB1Lhu
-         3G26+7RD+cDcjR+CLPTOEM6jSLXc7k2VJuZZht+pN7eqcikw6cQ/eOw1hTqaw1zGv6
-         qckHcox+Rv6sksS06eZVwKAoRoij+3ABMICOAk68=
+        b=pb8xE5GxI2DIVnNTlramjBsCwuk1e6s7/d5LpShRPd5ztPoK8VUAUgviMKnkOtne5
+         kIDRbWWRI3DNJR79qbFyz9N0VajCs7zc8iw1IcFzDT2x3P8N52UuzNLgrFqREj1OOD
+         8BaEfqN8kD5aJ2shXV3KmjsyntP0NuGLbOlnUlpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/270] irqchip/ti-sci-inta: Fix return value about devm_ioremap_resource()
-Date:   Mon, 17 Aug 2020 17:14:00 +0200
-Message-Id: <20200817143757.754291180@linuxfoundation.org>
+Subject: [PATCH 5.4 028/270] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
+Date:   Mon, 17 Aug 2020 17:13:49 +0200
+Message-Id: <20200817143757.177939759@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,36 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 4b127a14cb1385dd355c7673d975258d5d668922 ]
+[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
 
-When call function devm_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
+a corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Link: https://lore.kernel.org/r/1591437017-5295-2-git-send-email-yangtiezhu@loongson.cn
+Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-ti-sci-inta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-at91/pm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index fa7488863bd0a..0a35499c46728 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -571,7 +571,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	inta->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(inta->base))
--		return -ENODEV;
-+		return PTR_ERR(inta->base);
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 52665f30d236d..6bc3000deb86e 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -592,13 +592,13 @@ static void __init at91_pm_sram_init(void)
+ 	sram_pool = gen_pool_get(&pdev->dev, NULL);
+ 	if (!sram_pool) {
+ 		pr_warn("%s: sram pool unavailable!\n", __func__);
+-		return;
++		goto out_put_device;
+ 	}
  
- 	domain = irq_domain_add_linear(dev_of_node(dev),
- 				       ti_sci_get_num_resources(inta->vint),
+ 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
+ 	if (!sram_base) {
+ 		pr_warn("%s: unable to alloc sram!\n", __func__);
+-		return;
++		goto out_put_device;
+ 	}
+ 
+ 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
+@@ -606,12 +606,17 @@ static void __init at91_pm_sram_init(void)
+ 					at91_pm_suspend_in_sram_sz, false);
+ 	if (!at91_suspend_sram_fn) {
+ 		pr_warn("SRAM: Could not map\n");
+-		return;
++		goto out_put_device;
+ 	}
+ 
+ 	/* Copy the pm suspend handler to SRAM */
+ 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
+ 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
++	return;
++
++out_put_device:
++	put_device(&pdev->dev);
++	return;
+ }
+ 
+ static bool __init at91_is_pm_mode_active(int pm_mode)
 -- 
 2.25.1
 
