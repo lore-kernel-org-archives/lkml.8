@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 854E02053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC752053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688731;
-	bh=xnrS1ql8mTJfZuXx7vS6OCxPj+h1Ygx9v8nHW/GzhqE=;
+	s=default; t=1597688735;
+	bh=Dvl4wZjTh9kZL21GzFmX/cOdrfrYvQ6it6+kPYs6ALY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eq7sAs5GtusZO1tGblIRIEgpAa4ikvsQ5ayY+hKFgdyD8402UN5eIiORTAM1cVnd9
-	 h14220H12LzHJ9L5QAmF63CFaBJr/Z41KtNAcleVCjCXyggOBPoUaU+HA56adN6CPT
-	 prja5dLrF1+5OFJddkrnkx/ktcU1/QolG8RUN9Ok=
+	b=hfu/KuQ2dFMyEPVzbb3TeMlIVFw5dS/tv6PBF0zoK1NG93rGWX6JV++xpxgUgnO58
+	 O9RkdLGkWsdLczPAB6G40n5qDML1c398+ETtxB0hDJfGwuEIwDJcpQytbiGlcrdA0A
+	 /LJ2qUCjlFFMxGSvm1la97WmRsLpVHbUzu5B3zv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbgHQQCm (ORCPT
+        id S1731562AbgHQSZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387616AbgHQPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:43:27 -0400
+        id S2388225AbgHQQCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:02:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B610922D02;
-        Mon, 17 Aug 2020 15:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E335020748;
+        Mon, 17 Aug 2020 16:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679007;
-        bh=xnrS1ql8mTJfZuXx7vS6OCxPj+h1Ygx9v8nHW/GzhqE=;
+        s=default; t=1597680170;
+        bh=Dvl4wZjTh9kZL21GzFmX/cOdrfrYvQ6it6+kPYs6ALY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5HKuMmwNSkUhEm0doDrh1lW0twdOz2wANzoVMDmiMbP/rxYRyqSHmB516ZYaPocX
-         2MId48h7Nqa+2h4kwgwCwbN+WMZadUIixLmi1TRFkllARpqe4hz8pC5Y8ufDYKLuPD
-         Dlmv0qZkxKBDvGjcmqYjdJuMUTU3ufndmNQ2DVW8=
+        b=ta+EWwlxBeMdljp1uIDpR+BcaZ7n6sWyk6VJ60hjfHq4zy0A6M23x/xbAUc+AIqgb
+         BSy0PZUJY+3nJs/ZNolMd8v47VtzAPBK+KSlkOdZrVuzDv5Dt9YQZhbYJ9seDfdM4U
+         6V2Izxng+RILuwIJNbq48/riTt88jmMMG3eW4wuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
+        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 065/393] net: mscc: ocelot: fix encoding destination ports into multicast IPv4 address
-Date:   Mon, 17 Aug 2020 17:11:55 +0200
-Message-Id: <20200817143822.783450813@linuxfoundation.org>
+Subject: [PATCH 5.4 079/270] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Mon, 17 Aug 2020 17:14:40 +0200
+Message-Id: <20200817143759.700820288@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,115 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 0897ecf7532577bda3dbcb043ce046a96948889d ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-The ocelot hardware designers have made some hacks to support multicast
-IPv4 and IPv6 addresses. Normally, the MAC table matches on MAC
-addresses and the destination ports are selected through the DEST_IDX
-field of the respective MAC table entry. The DEST_IDX points to a Port
-Group ID (PGID) which contains the bit mask of ports that frames should
-be forwarded to. But there aren't a lot of PGIDs (only 80 or so) and
-there are clearly many more IP multicast addresses than that, so it
-doesn't scale to use this PGID mechanism, so something else was done.
-Since the first portion of the MAC address is known, the hack they did
-was to use a single PGID for _flooding_ unknown IPv4 multicast
-(PGID_MCIPV4 == 62), but for known IP multicast, embed the destination
-ports into the first 3 bytes of the MAC address recorded in the MAC
-table.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-The VSC7514 datasheet explains it like this:
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
 
-    3.9.1.5 IPv4 Multicast Entries
+Check the return value of pcie_capability_read_dword() to ensure success.
 
-    MAC table entries with the ENTRY_TYPE = 2 settings are interpreted
-    as IPv4 multicast entries.
-    IPv4 multicasts entries match IPv4 frames, which are classified to
-    the specified VID, and which have DMAC = 0x01005Exxxxxx, where
-    xxxxxx is the lower 24 bits of the MAC address in the entry.
-    Instead of a lookup in the destination mask table (PGID), the
-    destination set is programmed as part of the entry MAC address. This
-    is shown in the following table.
-
-    Table 78: IPv4 Multicast Destination Mask
-
-        Destination Ports            Record Bit Field
-        ---------------------------------------------
-        Ports 10-0                   MAC[34-24]
-
-    Example: All IPv4 multicast frames in VLAN 12 with MAC 01005E112233 are
-    to be forwarded to ports 3, 8, and 9. This is done by inserting the
-    following entry in the MAC table entry:
-    VALID = 1
-    VID = 12
-    MAC = 0x000308112233
-    ENTRY_TYPE = 2
-    DEST_IDX = 0
-
-But this procedure is not at all what's going on in the driver. In fact,
-the code that embeds the ports into the MAC address looks like it hasn't
-actually been tested. This patch applies the procedure described in the
-datasheet.
-
-Since there are many other fixes to be made around multicast forwarding
-until it works properly, there is no real reason for this patch to be
-backported to stable trees, or considered a real fix of something that
-should have worked.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 76dbf9ac8ad50..1eaefc0ff87e6 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -1599,14 +1599,14 @@ static int ocelot_port_obj_add_mdb(struct net_device *dev,
- 	addr[0] = 0;
- 
- 	if (!new) {
--		addr[2] = mc->ports << 0;
--		addr[1] = mc->ports << 8;
-+		addr[1] = mc->ports >> 8;
-+		addr[2] = mc->ports & 0xff;
- 		ocelot_mact_forget(ocelot, addr, vid);
- 	}
- 
- 	mc->ports |= BIT(port);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
-@@ -1630,9 +1630,9 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return -ENOENT;
- 
- 	memcpy(addr, mc->addr, ETH_ALEN);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
- 	addr[0] = 0;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 	ocelot_mact_forget(ocelot, addr, vid);
- 
- 	mc->ports &= ~BIT(port);
-@@ -1642,8 +1642,8 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return 0;
- 	}
- 
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 746749f379964..1107b96a8a880 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4286,8 +4286,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
