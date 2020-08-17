@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0573C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9236EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAC8206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4B5206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683319;
-	bh=dDHCttxOlMfqErKZolfL4n9zuGTiz1whoW+rGBbmAR8=;
+	s=default; t=1597683332;
+	bh=U7cUe149+oKVFDMQFypevGk4UfBFfRVuFM0ffKU6T4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uygDBdIGc2BnVXzxbHFATtpGKDOjXEHNrplc/4B48k0hFiTxKP/OJNGcxUCdeu+Bm
-	 JmJB92upV9R7jwGlWCPzRSDKxDl2fDW3avvEmtK+c8Pnw1rLZl7WmMhZYZL7bQuyFt
-	 rj2Hb0pYq87psYSlF0k13meyyyGgOMeaAxGey1kY=
+	b=dvbcNufvBinrMf4E5PyyqHn8Vbe1HMUX+WNu9+F+H7dxLZh1v4Wpy/qHmGvKbe3kF
+	 HycRqvLuh7DoD7wMEBwLNZvvzoAhYF9H9+IZtQU6F1mSBCK/2TLbtH3me9sq0V2sTZ
+	 O37A8o6w2zElPrFMYmSnToD7NjS6YWn6osWT54zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389177AbgHQQzP (ORCPT
+        id S2389181AbgHQQzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51518 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388260AbgHQQDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:48 -0400
+        id S2388265AbgHQQDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE50B20748;
-        Mon, 17 Aug 2020 16:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926B52053B;
+        Mon, 17 Aug 2020 16:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680228;
-        bh=dDHCttxOlMfqErKZolfL4n9zuGTiz1whoW+rGBbmAR8=;
+        s=default; t=1597680231;
+        bh=U7cUe149+oKVFDMQFypevGk4UfBFfRVuFM0ffKU6T4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlT3TlqsmFFzgIFVxgy1dajNwQOq/A0qHCBPU5rupZc1+OwGH0DXl2bAUMWULZmpO
-         kz5F5O27X5LvwGrJyCmAQGwJDxh++LMEgdg3Tsf2689ANOqu1r5pYewK71P+hRTxxf
-         bFEL1kYTqasGtsOew5ImzKS3BXhY78pH1vBaQBm8=
+        b=JRSUU7JjgwEUXOnlu6yzQFQOl6o8mIULwMcrFT52upumA7S5MeZAkhtJ5MuosSXfP
+         /+df1i0Jary6xQEXmHLMeEmVMkHjqJVf9OcaPqn2tiJP81hvHHBdjDwPIJkEkQkEW7
+         N1ZP3HI/SAPx2J+Qe3d34wJAs1LD0vOZEsKt4ihY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 103/270] drm/arm: fix unintentional integer overflow on left shift
-Date:   Mon, 17 Aug 2020 17:15:04 +0200
-Message-Id: <20200817143800.911478782@linuxfoundation.org>
+Subject: [PATCH 5.4 104/270] clk: bcm63xx-gate: fix last clock availability
+Date:   Mon, 17 Aug 2020 17:15:05 +0200
+Message-Id: <20200817143800.963796057@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,39 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Álvaro Fernández Rojas <noltari@gmail.com>
 
-[ Upstream commit 5f368ddea6fec519bdb93b5368f6a844b6ea27a6 ]
+[ Upstream commit cf8030d7035bd3e89c9e66f7193a7fc8057a9b9a ]
 
-Shifting the integer value 1 is evaluated using 32-bit arithmetic
-and then used in an expression that expects a long value leads to
-a potential integer overflow. Fix this by using the BIT macro to
-perform the shift to avoid the overflow.
+In order to make the last clock available, maxbit has to be set to the
+highest bit value plus 1.
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processors")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200618100400.11464-1-colin.king@canonical.com
+Fixes: 1c099779c1e2 ("clk: add BCM63XX gated clock controller driver")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Link: https://lore.kernel.org/r/20200609110846.4029620-1-noltari@gmail.com
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/arm/malidp_planes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/bcm/clk-bcm63xx-gate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-index 3c70a53813bf2..0b2bb485d9be3 100644
---- a/drivers/gpu/drm/arm/malidp_planes.c
-+++ b/drivers/gpu/drm/arm/malidp_planes.c
-@@ -928,7 +928,7 @@ int malidp_de_planes_init(struct drm_device *drm)
- 	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
- 	struct malidp_plane *plane = NULL;
- 	enum drm_plane_type plane_type;
--	unsigned long crtcs = 1 << drm->mode_config.num_crtc;
-+	unsigned long crtcs = BIT(drm->mode_config.num_crtc);
- 	unsigned long flags = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | DRM_MODE_ROTATE_180 |
- 			      DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y;
- 	unsigned int blend_caps = BIT(DRM_MODE_BLEND_PIXEL_NONE) |
+diff --git a/drivers/clk/bcm/clk-bcm63xx-gate.c b/drivers/clk/bcm/clk-bcm63xx-gate.c
+index 98e884957db87..911a29bd744ef 100644
+--- a/drivers/clk/bcm/clk-bcm63xx-gate.c
++++ b/drivers/clk/bcm/clk-bcm63xx-gate.c
+@@ -155,6 +155,7 @@ static int clk_bcm63xx_probe(struct platform_device *pdev)
+ 
+ 	for (entry = table; entry->name; entry++)
+ 		maxbit = max_t(u8, maxbit, entry->bit);
++	maxbit++;
+ 
+ 	hw = devm_kzalloc(&pdev->dev, struct_size(hw, data.hws, maxbit),
+ 			  GFP_KERNEL);
 -- 
 2.25.1
 
