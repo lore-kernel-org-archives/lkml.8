@@ -2,206 +2,103 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A788BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8766C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFB2207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684984;
-	bh=kzRDwZLFfJe7R8z59qXdL7m6vBqsZL47jFQyxYNoDY8=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=VYmKXfR9sisKHKSYuw3SkJYVvuwggtoMpKT/l1HWi4TRrTG38ExDFEytzedHX0eAf
-	 7W5ussWJL3IyQbufltBfPCZdwKtxeJvGg38VdFkGN6maKKeAP8u6DlznFZw+oXKFDT
-	 kpE55y9n014F1R+0uJpV4wb6x0RPxjYduLpHlPq4=
+	by mail.kernel.org (Postfix) with ESMTP id BDFE220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+ZIROl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389870AbgHQRXC (ORCPT
+        id S2389878AbgHQRXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:23:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388161AbgHQQsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:48:45 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59BF620674;
-        Mon, 17 Aug 2020 16:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597682923;
-        bh=kzRDwZLFfJe7R8z59qXdL7m6vBqsZL47jFQyxYNoDY8=;
-        h=From:To:Subject:Date:From;
-        b=KH5zsm/HeL0NnlC4K5/H1gpleYkvKb469BWoVzKEX5TNadOF4GBPDm8VJg4DPTPLR
-         j3JyAsaYpRvR6OqHNyitpIxU9OwhkuLUWv33SOnUBOdRuNsyrqCzqnFAZ9N3f8x8q5
-         ipCMYThuGWIWlwwS/zJitngSs+7QUaM6+0NI7Y6w=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <sylvester.nawrocki@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v3] ARM: s3c24xx: drop s3c-camif setup platform code
-Date:   Mon, 17 Aug 2020 18:48:36 +0200
-Message-Id: <20200817164836.4613-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Aug 2020 13:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389057AbgHQQvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:51:07 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321ACC061389;
+        Mon, 17 Aug 2020 09:51:07 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dd12so8112800qvb.0;
+        Mon, 17 Aug 2020 09:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eNLxkZZ4kNlkkfstMBWaM/B0SrPnIi7HLhzFmB2YAkU=;
+        b=a+ZIROl3Fjw/ldgZVncfaWRYFAT8bbLXKl+DHoAezhEjri56MetuSlYgI+ag9Ivjit
+         TtCN+YO10hlG5+Z8GvsKat/gX0kvaN1Xf1+CH2DFA8uNl3FkobzkjFYWGQNedTr6BcUA
+         QDCSS8kfy4w/lpgla4e4TOpCuyod/6eDv7Jl9AYe3RYT5cRJQYPxTPu0QAeIZuWVIqS8
+         YNSeNeeq/V330G37iOZ3UelzvpC904fFboDa9j+JXgtoz0Htdg9268jfabZtQPZoN6Hp
+         8TTxi/6S5QUlqZ+t3wjFgg3OfoqavjqEaAXhcx5VSCcGcC3GwJSPh8M3K+15WMgsA9/+
+         lUOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eNLxkZZ4kNlkkfstMBWaM/B0SrPnIi7HLhzFmB2YAkU=;
+        b=Que84m64/V2QvlrYa8sdWHWJ6n8DTYjmHcurVdMORLY6Ic66dcMkRtfS3UbJ5uoF0V
+         aiKiX0pXsIWM+kR6hCUFtB8LmGUhC4d9T17Qzq4XhYvtGyHDBtGuVic1gsf7wCCRii2D
+         k2ghKnWgoDHhFcdovDPjo481D7EDN5enSf1t+/J0UkyvS3gZjcnV8jFInKC7kFdycNhp
+         cg8mjdKziEBh1SW09GqbUtbQPrv4l9rwKLPnbko1dN08q+f6PVlXP7fcUJY2114M172M
+         cWthdOMwtdJuuK9LhvOxhhVnJJzdBGuWxIdvL9LETWeTHA+1cC/4xdLTHlIZFvXW7gJH
+         7CsQ==
+X-Gm-Message-State: AOAM532jMS9q4lEkW5OFSyrhb8lVV+yiZNmIU83+9NgT+3q8W5Ms9jrp
+        JUgRbiJG5N9HJulzY9mkCuE=
+X-Google-Smtp-Source: ABdhPJwMEEBBlrZkRNL1EpD8Lp+J5CO9SyxDWyv0hhkU5ooGPiOOA+7cHhy0Sw0r4QOp12OlFhzu2Q==
+X-Received: by 2002:ad4:4a27:: with SMTP id n7mr15493029qvz.184.1597683066435;
+        Mon, 17 Aug 2020 09:51:06 -0700 (PDT)
+Received: from tong-desktop.local ([2601:5c0:c100:b9d:c66:53f8:5dc7:25fa])
+        by smtp.googlemail.com with ESMTPSA id x137sm18167779qkb.47.2020.08.17.09.51.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 09:51:05 -0700 (PDT)
+From:   Tong Zhang <ztong0001@gmail.com>
+To:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     ztong0001@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] tty: serial: fix earlycon dependency
+Date:   Mon, 17 Aug 2020 12:50:59 -0400
+Message-Id: <20200817165059.957748-1-ztong0001@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The s3c-camif driver setup platform code does not have any users so it
-can be safely removed.
+parse_options() in drivers/tty/serial/earlycon.c calls
+uart_parse_earlycon() in drivers/tty/serial/serial_core.c
+therefore selecting SERIAL_EARLYCON should automatically
+select SERIAL_CORE, otherwise will result in symbol not
+found error during linking if SERIAL_CORE is not configured
+as builtin
 
-Along with the code W=1 compile warnings go away:
-
-    arch/arm/mach-s3c24xx/setup-camif.c:28:5: warning: no previous prototype for 's3c_camif_gpio_get' [-Wmissing-prototypes]
-    arch/arm/mach-s3c24xx/setup-camif.c:56:6: warning: no previous prototype for 's3c_camif_gpio_put' [-Wmissing-prototypes]
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
 ---
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Continuation of v2 here:
-https://patchwork.kernel.org/patch/11700881/
-
-Changes since v2:
-1. Drop setup-camif.
-
-Changes since v1:
-1. New patch.
----
- arch/arm/mach-s3c24xx/Kconfig       |  6 ---
- arch/arm/mach-s3c24xx/Makefile      |  1 -
- arch/arm/mach-s3c24xx/setup-camif.c | 67 -----------------------------
- include/media/drv-intf/s3c_camif.h  |  4 --
- 4 files changed, 78 deletions(-)
- delete mode 100644 arch/arm/mach-s3c24xx/setup-camif.c
-
-diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
-index 7673dde9671a..eaea567fcbfe 100644
---- a/arch/arm/mach-s3c24xx/Kconfig
-+++ b/arch/arm/mach-s3c24xx/Kconfig
-@@ -123,11 +123,6 @@ config S3C24XX_PLL
- 	  This also means that the PLL tables for the selected CPU(s) will
- 	  be built which may increase the size of the kernel image.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 8a0352eb337c..42e844314cbb 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -8,6 +8,7 @@ menu "Serial drivers"
  
--config S3C_SETUP_CAMIF
--	bool
--	help
--	  Compile in common setup code for S3C CAMIF devices
--
- # cpu frequency items common between s3c2410 and s3c2440/s3c2442
- 
- config S3C2410_IOTIMING
-@@ -468,7 +463,6 @@ config MACH_MINI2440
- 	select NEW_LEDS
- 	select S3C_DEV_NAND
- 	select S3C_DEV_USB_HOST
--	select S3C_SETUP_CAMIF
+ config SERIAL_EARLYCON
+ 	bool
++	select SERIAL_CORE
  	help
- 	  Say Y here to select support for the MINI2440. Is a 10cm x 10cm board
- 	  available via various sources. It can come with a 3.5" or 7" touch LCD.
-diff --git a/arch/arm/mach-s3c24xx/Makefile b/arch/arm/mach-s3c24xx/Makefile
-index 6692f2de71b2..fbebc5f775e7 100644
---- a/arch/arm/mach-s3c24xx/Makefile
-+++ b/arch/arm/mach-s3c24xx/Makefile
-@@ -97,4 +97,3 @@ obj-$(CONFIG_S3C2416_SETUP_SDHCI_GPIO)	+= setup-sdhci-gpio.o
- obj-$(CONFIG_S3C2443_SETUP_SPI)		+= setup-spi.o
- obj-$(CONFIG_ARCH_S3C24XX)		+= setup-i2c.o
- obj-$(CONFIG_S3C24XX_SETUP_TS)		+= setup-ts.o
--obj-$(CONFIG_S3C_SETUP_CAMIF)		+= setup-camif.o
-diff --git a/arch/arm/mach-s3c24xx/setup-camif.c b/arch/arm/mach-s3c24xx/setup-camif.c
-deleted file mode 100644
-index 2b262fae3f61..000000000000
---- a/arch/arm/mach-s3c24xx/setup-camif.c
-+++ /dev/null
-@@ -1,67 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--//
--// Copyright (C) 2012 Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
--//
--// Helper functions for S3C24XX/S3C64XX SoC series CAMIF driver
--
--#include <linux/gpio.h>
--#include <plat/gpio-cfg.h>
--#include <mach/gpio-samsung.h>
--
--/* Number of camera port pins, without FIELD */
--#define S3C_CAMIF_NUM_GPIOS	13
--
--/* Default camera port configuration helpers. */
--
--static void camif_get_gpios(int *gpio_start, int *gpio_reset)
--{
--#ifdef CONFIG_ARCH_S3C24XX
--	*gpio_start = S3C2410_GPJ(0);
--	*gpio_reset = S3C2410_GPJ(12);
--#else
--	/* s3c64xx */
--	*gpio_start = S3C64XX_GPF(0);
--	*gpio_reset = S3C64XX_GPF(3);
--#endif
--}
--
--int s3c_camif_gpio_get(void)
--{
--	int gpio_start, gpio_reset;
--	int ret, i;
--
--	camif_get_gpios(&gpio_start, &gpio_reset);
--
--	for (i = 0; i < S3C_CAMIF_NUM_GPIOS; i++) {
--		int gpio = gpio_start + i;
--
--		if (gpio == gpio_reset)
--			continue;
--
--		ret = gpio_request(gpio, "camif");
--		if (!ret)
--			ret = s3c_gpio_cfgpin(gpio, S3C_GPIO_SFN(2));
--		if (ret) {
--			pr_err("failed to configure GPIO %d\n", gpio);
--			for (--i; i >= 0; i--)
--				gpio_free(gpio--);
--			return ret;
--		}
--		s3c_gpio_setpull(gpio, S3C_GPIO_PULL_NONE);
--	}
--
--	return 0;
--}
--
--void s3c_camif_gpio_put(void)
--{
--	int i, gpio_start, gpio_reset;
--
--	camif_get_gpios(&gpio_start, &gpio_reset);
--
--	for (i = 0; i < S3C_CAMIF_NUM_GPIOS; i++) {
--		int gpio = gpio_start + i;
--		if (gpio != gpio_reset)
--			gpio_free(gpio);
--	}
--}
-diff --git a/include/media/drv-intf/s3c_camif.h b/include/media/drv-intf/s3c_camif.h
-index d1200b40f53a..f746851a5ce6 100644
---- a/include/media/drv-intf/s3c_camif.h
-+++ b/include/media/drv-intf/s3c_camif.h
-@@ -35,8 +35,4 @@ struct s3c_camif_plat_data {
- 	int (*gpio_put)(void);
- };
- 
--/* Platform default helper functions */
--int s3c_camif_gpio_get(void);
--int s3c_camif_gpio_put(void);
--
- #endif /* MEDIA_S3C_CAMIF_ */
+ 	  Support for early consoles with the earlycon parameter. This enables
+ 	  the console before standard serial driver is probed. The console is
 -- 
-2.17.1
+2.25.1
 
