@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3180C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92724C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B763239ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6750C23110
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677913;
-	bh=IrAB639UAKx9IYrqPN6bRvJi7xgcjbmhHNB/MD8pKFQ=;
+	s=default; t=1597677922;
+	bh=OXG6lde0xlK5QBw+e52bLhB7Zjqw0VD/6DAOhjeBn3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qv+7oQLlH6WoZGGl4n886xa6Pmc1uEXMXwVwfAA5hkkWWqTrvoayqnQ8AI50RNBi/
-	 L3HVVR031Mza5F1XR6F9T5ZJKiWcDJ4FkDl8aAQtkLaCXj09TSMNMdqjmLzF4Ld+g5
-	 eidzhIueS8NfekwDFkVYiV0wsmGuPubw0HU69fJM=
+	b=tVl47tFcxjTfIXhc1oZMfIjBHxKbmaUp8JQII0BOqBx9bCyMb6b6p8cSQAWJOWcTV
+	 kAx89hwwl0uNx27bVCjqlaG3vriAvhzKLiDhlEX8gRFEhvFKEeE7IRcW5kv1l1PbRC
+	 xfVX0YbVfGjFYCVO1sPyl/QrZA65Xj+2tVjEOgTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgHQPZE (ORCPT
+        id S1729724AbgHQPZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgHQPXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:40 -0400
+        id S1729557AbgHQPXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 321AA20760;
-        Mon, 17 Aug 2020 15:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68B4E233EA;
+        Mon, 17 Aug 2020 15:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677819;
-        bh=IrAB639UAKx9IYrqPN6bRvJi7xgcjbmhHNB/MD8pKFQ=;
+        s=default; t=1597677825;
+        bh=OXG6lde0xlK5QBw+e52bLhB7Zjqw0VD/6DAOhjeBn3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4IWLZm5UulINgCJn+JMW+k15wU87GC9FhBWQd2cvIHq57qGTQZyNWPJjAIyXRQDT
-         d/rz1NJsrCWr2QDM2NeUS+YxJAY7dAsKJ8LZ4gR32EqJcD4qdXVNAuJH5vLWUQLj85
-         5SZqsEgxj3LjIvgxLC+fnUN/O/DEbwjJ8pDmReZM=
+        b=QhR/u0fd6y7f+fDSu1IdwWLeMHq2tAD7OhYiugTQnoie7mIdMvMLkpFWvEVP2t9xX
+         c7As91EwbfTkSsHx2s9pVzi+GkHZoPqVY3Wu7odo8RR5m/QWuHbQ4DDyD881XqvWX2
+         CvhrGoLBLoiRyU8NvagdvIqTqyL68xQgE6qKu8Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Zhao Heming <heming.zhao@suse.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 089/464] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Mon, 17 Aug 2020 17:10:42 +0200
-Message-Id: <20200817143838.054446871@linuxfoundation.org>
+Subject: [PATCH 5.8 091/464] md-cluster: fix wild pointer of unlock_all_bitmaps()
+Date:   Mon, 17 Aug 2020 17:10:44 +0200
+Message-Id: <20200817143838.148739285@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -64,44 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Zhao Heming <heming.zhao@suse.com>
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+[ Upstream commit 60f80d6f2d07a6d8aee485a1d1252327eeee0c81 ]
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
+reproduction steps:
+```
+node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+/dev/sdb
+node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb
+node1 # mdadm -G /dev/md0 -b none
+mdadm: failed to remove clustered bitmap.
+node1 # mdadm -S --scan
+^C  <==== mdadm hung & kernel crash
+```
 
-Found by Linux Driver Verification project (linuxtesting.org).
+kernel stack:
+```
+[  335.230657] general protection fault: 0000 [#1] SMP NOPTI
+[...]
+[  335.230848] Call Trace:
+[  335.230873]  ? unlock_all_bitmaps+0x5/0x70 [md_cluster]
+[  335.230886]  unlock_all_bitmaps+0x3d/0x70 [md_cluster]
+[  335.230899]  leave+0x10f/0x190 [md_cluster]
+[  335.230932]  ? md_super_wait+0x93/0xa0 [md_mod]
+[  335.230947]  ? leave+0x5/0x190 [md_cluster]
+[  335.230973]  md_cluster_stop+0x1a/0x30 [md_mod]
+[  335.230999]  md_bitmap_free+0x142/0x150 [md_mod]
+[  335.231013]  ? _cond_resched+0x15/0x40
+[  335.231025]  ? mutex_lock+0xe/0x30
+[  335.231056]  __md_stop+0x1c/0xa0 [md_mod]
+[  335.231083]  do_md_stop+0x160/0x580 [md_mod]
+[  335.231119]  ? 0xffffffffc05fb078
+[  335.231148]  md_ioctl+0xa04/0x1930 [md_mod]
+[  335.231165]  ? filename_lookup+0xf2/0x190
+[  335.231179]  blkdev_ioctl+0x93c/0xa10
+[  335.231205]  ? _cond_resched+0x15/0x40
+[  335.231214]  ? __check_object_size+0xd4/0x1a0
+[  335.231224]  block_ioctl+0x39/0x40
+[  335.231243]  do_vfs_ioctl+0xa0/0x680
+[  335.231253]  ksys_ioctl+0x70/0x80
+[  335.231261]  __x64_sys_ioctl+0x16/0x20
+[  335.231271]  do_syscall_64+0x65/0x1f0
+[  335.231278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+```
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/neofb.c | 1 +
+ drivers/md/md-cluster.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index f5a676bfd67ad..09a20d4ab35f2 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1819,6 +1819,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index 813a99ffa86f8..73fd50e779754 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1518,6 +1518,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
+ 			}
+ 		}
+ 		kfree(cinfo->other_bitmap_lockres);
++		cinfo->other_bitmap_lockres = NULL;
+ 	}
+ }
+ 
 -- 
 2.25.1
 
