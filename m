@@ -2,57 +2,56 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0897C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D856AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79302072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E5A2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691578;
-	bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+	s=default; t=1597691590;
+	bh=cXb3Y5smLW5QBd7bhkE4c6NgmedioV81GoTjsOk/Jzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKu7Zafove58t4wFXw1wGAUgLyGkv/UJe0JZw95v/EPzi8GaE8QQCRc6Zof+e0wih
-	 IJRM1Hpm+n9r4mhxJoTIEywvWENokvX6eWNQu4QOBc/I1jKigX2sn+i9ohWemzFJa0
-	 TVZ5Q/AHem8HNeAhHkPS+lu6MoYFYuyBdfgOgSUU=
+	b=kX6bEol5HEUzK+p2Wt/0fxoO3TLWq7UDhOEMvlX6W+V6daJglz9NCfQfgCnYf6Zsk
+	 d+Mob0XPLDK43QDub4pF+DhMRgn/NS7JoVk1tdGXlwWSrn12dyvyMMr3whXERphp+l
+	 vZ7zOEtPmHFMiqxZis9fI8B1vIoyS+J9QkRu1R6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbgHQTMr (ORCPT
+        id S2392064AbgHQTNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730384AbgHQPkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:46 -0400
+        id S1730367AbgHQPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA26E20760;
-        Mon, 17 Aug 2020 15:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F30720825;
+        Mon, 17 Aug 2020 15:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678845;
-        bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
+        s=default; t=1597678832;
+        bh=cXb3Y5smLW5QBd7bhkE4c6NgmedioV81GoTjsOk/Jzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHkpE/owcQ85ZLpFEYRNJNPhKFlvV4nO9I14Zzkb5+QrsKT0L+u6oKfbbfeeqlsww
-         c4LJPRtMYdelRUESmWBgrukccYTUTsQ1zhGMEttaSZ+WtIaufl99KXgDgU2qXRU+X9
-         oLYJlG2Uu7A0MJhpQJJeHb8oIEz9RjCprYizro78=
+        b=KrAiZMvyGKx/1WtmUHM8G3mFPnvea9SQOnnJfMkxnXLc7xuB04wSPjBrnSiZce5K1
+         X4WKEKBMNxhA9EtnwqJ15pDAU5RULsH+TGD8bmykTZwQ+yl9sua4HTX6Yu+3xN8POW
+         A7BOdEbntokr7LESg/KCFRiMTV+Sx6EWU9oTn8ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 010/393] sched/fair: Fix NOHZ next idle balance
-Date:   Mon, 17 Aug 2020 17:11:00 +0200
-Message-Id: <20200817143820.097729241@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.8 456/464] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+Date:   Mon, 17 Aug 2020 17:16:49 +0200
+Message-Id: <20200817143855.618953208@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
-References: <20200817143819.579311991@linuxfoundation.org>
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,86 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
+commit 14dee058610446aa464254fc5c8e88c7535195e0 upstream.
 
-With commit:
-  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
-rebalance_domains of the local cfs_rq happens before others idle cpus have
-updated nohz.next_balance and its value is overwritten.
+The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
+display frontend" from Apr 3, 2018, leads to the following static
+checker warning:
 
-Move the update of nohz.next_balance for other idles cpus before balancing
-and updating the next_balance of local cfs_rq.
+	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
+	warn: passing zero to 'ERR_CAST'
 
-Also, the nohz.next_balance is now updated only if all idle cpus got a
-chance to rebalance their domains and the idle balance has not been aborted
-because of new activities on the CPU. In case of need_resched, the idle
-load balance will be kick the next jiffie in order to address remaining
-ilb.
+drivers/gpu/drm/xen/xen_drm_front_gem.c
+   133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+   134                                                  size_t size)
+   135  {
+   136          struct xen_gem_object *xen_obj;
+   137
+   138          xen_obj = gem_create(dev, size);
+   139          if (IS_ERR_OR_NULL(xen_obj))
+   140                  return ERR_CAST(xen_obj);
 
-Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
-Reported-by: Peng Liu <iwtbavbm@gmail.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Acked-by: Mel Gorman <mgorman@suse.de>
-Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this and the rest of misused places with IS_ERR_OR_NULL in the
+driver.
+
+Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
+
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200813062113.11030-3-andr2000@gmail.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sched/fair.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/xen/xen_drm_front.c     |    4 ++--
+ drivers/gpu/drm/xen/xen_drm_front_gem.c |    8 ++++----
+ drivers/gpu/drm/xen/xen_drm_front_kms.c |    2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5c31875a7d9dc..e44332b829b4d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10033,7 +10033,12 @@ static void kick_ilb(unsigned int flags)
- {
- 	int ilb_cpu;
+--- a/drivers/gpu/drm/xen/xen_drm_front.c
++++ b/drivers/gpu/drm/xen/xen_drm_front.c
+@@ -400,8 +400,8 @@ static int xen_drm_drv_dumb_create(struc
+ 	args->size = args->pitch * args->height;
  
--	nohz.next_balance++;
-+	/*
-+	 * Increase nohz.next_balance only when if full ilb is triggered but
-+	 * not if we only update stats.
-+	 */
-+	if (flags & NOHZ_BALANCE_KICK)
-+		nohz.next_balance = jiffies+1;
- 
- 	ilb_cpu = find_new_ilb();
- 
-@@ -10351,6 +10356,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 		}
+ 	obj = xen_drm_front_gem_create(dev, args->size);
+-	if (IS_ERR_OR_NULL(obj)) {
+-		ret = PTR_ERR_OR_ZERO(obj);
++	if (IS_ERR(obj)) {
++		ret = PTR_ERR(obj);
+ 		goto fail;
  	}
  
-+	/*
-+	 * next_balance will be updated only when there is a need.
-+	 * When the CPU is attached to null domain for ex, it will not be
-+	 * updated.
-+	 */
-+	if (likely(update_next_balance))
-+		nohz.next_balance = next_balance;
-+
- 	/* Newly idle CPU doesn't need an update */
- 	if (idle != CPU_NEWLY_IDLE) {
- 		update_blocked_averages(this_cpu);
-@@ -10371,14 +10384,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
- 	if (has_blocked_load)
- 		WRITE_ONCE(nohz.has_blocked, 1);
+--- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+@@ -83,7 +83,7 @@ static struct xen_gem_object *gem_create
  
--	/*
--	 * next_balance will be updated only when there is a need.
--	 * When the CPU is attached to null domain for ex, it will not be
--	 * updated.
--	 */
--	if (likely(update_next_balance))
--		nohz.next_balance = next_balance;
--
- 	return ret;
- }
+ 	size = round_up(size, PAGE_SIZE);
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return xen_obj;
  
--- 
-2.25.1
-
+ 	if (drm_info->front_info->cfg.be_alloc) {
+@@ -117,7 +117,7 @@ static struct xen_gem_object *gem_create
+ 	 */
+ 	xen_obj->num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
+ 	xen_obj->pages = drm_gem_get_pages(&xen_obj->base);
+-	if (IS_ERR_OR_NULL(xen_obj->pages)) {
++	if (IS_ERR(xen_obj->pages)) {
+ 		ret = PTR_ERR(xen_obj->pages);
+ 		xen_obj->pages = NULL;
+ 		goto fail;
+@@ -136,7 +136,7 @@ struct drm_gem_object *xen_drm_front_gem
+ 	struct xen_gem_object *xen_obj;
+ 
+ 	xen_obj = gem_create(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
+ 
+ 	return &xen_obj->base;
+@@ -194,7 +194,7 @@ xen_drm_front_gem_import_sg_table(struct
+ 
+ 	size = attach->dmabuf->size;
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
+ 
+ 	ret = gem_alloc_pages_array(xen_obj, size);
+--- a/drivers/gpu/drm/xen/xen_drm_front_kms.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_kms.c
+@@ -60,7 +60,7 @@ fb_create(struct drm_device *dev, struct
+ 	int ret;
+ 
+ 	fb = drm_gem_fb_create_with_funcs(dev, filp, mode_cmd, &fb_funcs);
+-	if (IS_ERR_OR_NULL(fb))
++	if (IS_ERR(fb))
+ 		return fb;
+ 
+ 	gem_obj = fb->obj[0];
 
 
