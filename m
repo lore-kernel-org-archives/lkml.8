@@ -2,120 +2,124 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F64C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA90F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA02520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh1hzjpl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBz6GJYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbgHQR0S (ORCPT
+        id S2390028AbgHQRZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:26:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390039AbgHQRZd (ORCPT
+        Mon, 17 Aug 2020 13:25:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56759 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731459AbgHQRUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:25:33 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C57C061389;
-        Mon, 17 Aug 2020 10:25:33 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id j9so15174824ilc.11;
-        Mon, 17 Aug 2020 10:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rKtlLroQpL/sWAJgH4qxybWU48/NnHnKlgQrlvvNczw=;
-        b=Zh1hzjplnO00QpCm/On/zjcaMBwW9TTlmZ3xHT74iBDu8raplF54GVXb0JGtIgCZus
-         owaf1p2obJm9WFiiMARI3u+MFRo5MmOf9c7bohL5PGxygj+7g4S84OYpeJZjl8nqciz5
-         oyQMYuBWu0tVZk8SjeAIf5qw9l1gCM8140nr9wB94lJ2DPlnh+lfMGsMkRB7HLHqGTCp
-         XAlCYEsYhJxcGSMUwpYpUfW5QY2vIyb2c/KexMWq0kiIvnJ5d7X+eKomPKtiL4AE4mEn
-         66gUW7Gam9grdox6zUK0Zc+8vW/kn7wePWxt1b0rVRqi4TUPmBD54TmRiuO7RVRPmNZ9
-         h9MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rKtlLroQpL/sWAJgH4qxybWU48/NnHnKlgQrlvvNczw=;
-        b=SXyWyjuCYocXFNWET8nJpmJI3nZrRzJ47hbpF8mdYsdvC8IFsYNO5H5+nUez8Y/sD6
-         B2Zd+I8ZfEu5BZuy49s6QI3oJT+FgWK13z8MfzPzEojB0cLKIFb4k4o//JvoruRePsK7
-         rmSlYK8yRmC7DCoGX3jr+E1Z+weF+v6qZZgkFnllMCVpcw+WktV/zLw4HOL+4VzMfSS5
-         RbLQNEtO9XqFzy6a2pbmzo1P++SA5c6WpzxOe1aTBjaYUmIapsDLHhb/P5NIpp36iNsR
-         c0lRhWY9Jc1R5uZmAZWQR30iEQy1hW/ikvm/F0g2Zenaqmpu1Nx++AlmUVTXuFJZ88RH
-         quMQ==
-X-Gm-Message-State: AOAM530snq+ugm27TwAszEj7PpEkbxeRFlTiaLNtanTsM7d8h2sIlzNc
-        QTBdi6dbvZErnIVfFb0gGKMcCx9ZBdMesh0OxHeYG0EYgw81gQ==
-X-Google-Smtp-Source: ABdhPJxKJV7ZDUifvV2jxONW1h9vnjrTDiPV21b4WSI1cQ36QytJWfdjPUr/+UXcj5suUkTUs5Ql6OXn0KmK/xxxrB0=
-X-Received: by 2002:a92:2901:: with SMTP id l1mr9877131ilg.306.1597685132897;
- Mon, 17 Aug 2020 10:25:32 -0700 (PDT)
+        Mon, 17 Aug 2020 13:20:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597684844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2KOxcTzA4HjXLrbc8Kis3OZr0Jk9r2f94fOWh6B2JtI=;
+        b=XBz6GJYEGBFwPmHH9FcPApxgQWy607NhqWJ50zudkV1ZW2b/WPsK+2jZLbLmWVJrV0i49W
+        8FO62cvmZMJ9tYkxyX5utEcPgosJ68WGLMpAh5erkbnnf0PhQbFt86/p/JyD/RVowVZ5Gp
+        71ICP6jY2xG4l341S1wXKOE6FjTYnnI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-VJjp-ljEPnex_p-WPMyJ0g-1; Mon, 17 Aug 2020 13:20:39 -0400
+X-MC-Unique: VJjp-ljEPnex_p-WPMyJ0g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 223CF81F001;
+        Mon, 17 Aug 2020 17:20:38 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B33FD5D9D2;
+        Mon, 17 Aug 2020 17:20:34 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Yang Weijiang <weijiang.yang@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] selftests: kvm: Use a shorter encoding to clear RAX
+Date:   Mon, 17 Aug 2020 13:20:34 -0400
+Message-Id: <20200817172034.26673-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20200817165059.957748-1-ztong0001@gmail.com> <20200817170038.GA725471@kroah.com>
-In-Reply-To: <20200817170038.GA725471@kroah.com>
-From:   Tong Zhang <ztong0001@gmail.com>
-Date:   Mon, 17 Aug 2020 13:25:22 -0400
-Message-ID: <CAA5qM4AH7rLCve8YjZ50No02BY524nPbSOJVa+8_e3dXKmpuJw@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: fix earlycon dependency
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jirislaby@kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 1:00 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> We can handle lines 72 characters long :)
-OK, thanks, I was not aware of that, I will reformat the text in the
-next version
+From: Yang Weijiang <weijiang.yang@intel.com>
 
-> > Signed-off-by: Tong Zhang <ztong0001@gmail.com>
->
-> What broke to cause this to be needed?
+If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
+by the assembler:
 
-newbie here, please don't laugh at me,
-I just followed what people were doing after read some articles from
-the internet
+asm volatile("ss_start: "
+             "xor %%rax,%%rax\n\t"
+             "cpuid\n\t"
+             "movl $0x1a0,%%ecx\n\t"
+             "rdmsr\n\t"
+             : : : "rax", "ecx");
 
-> Can you provide a "Fixes:" tag for this?
-sure, thanks for the suggestion
+is translated to :
 
->
-> > ---
-> >  drivers/tty/serial/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> > index 8a0352eb337c..42e844314cbb 100644
-> > --- a/drivers/tty/serial/Kconfig
-> > +++ b/drivers/tty/serial/Kconfig
-> > @@ -8,6 +8,7 @@ menu "Serial drivers"
-> >
-> >  config SERIAL_EARLYCON
-> >       bool
-> > +     select SERIAL_CORE
->
-> Are you _sure_ about this?  This feels odd...
+  000000000040194e <ss_start>:
+  40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
+  401950:       0f a2                   cpuid
+  401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
+  401957:       0f 32                   rdmsr
 
-Yeah.. that also seems odd to me -- this bug can be triggered under
-some corner cases
-which I haven't figured out why --
-I can encounter this problem when doing allmodconfig followed by some random
-select/deselect in menuconfig. -- It seems that menuconfig is not
-doing some dependency
-check correctly, i.e. when SERIAL_CORE is not builtin, SERIAL_EARLYCON
-should not
-be selected either.
-What do you suggest?
+As you can see rax is replaced with eax in target binary code.
+This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
+and makes the hard-coded instruction length check fail:
 
-> thanks,
-Thank you.
+        /* Instruction lengths starting at ss_start */
+        int ss_size[4] = {
+                3,              /* xor */   <-------- 2 or 3?
+                2,              /* cpuid */
+                5,              /* mov */
+                2,              /* rdmsr */
+        };
 
-> greg k-h
+Encode the shorter version directly and, while at it, fix the "clobbers"
+of the asm.
+
+Reported-by: Yang Weijiang <weijiang.yang@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ tools/testing/selftests/kvm/x86_64/debug_regs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+index 8162c58a1234..b8d14f9db5f9 100644
+--- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
++++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+@@ -40,11 +40,11 @@ static void guest_code(void)
+ 
+ 	/* Single step test, covers 2 basic instructions and 2 emulated */
+ 	asm volatile("ss_start: "
+-		     "xor %%rax,%%rax\n\t"
++		     "xor %%eax,%%eax\n\t"
+ 		     "cpuid\n\t"
+ 		     "movl $0x1a0,%%ecx\n\t"
+ 		     "rdmsr\n\t"
+-		     : : : "rax", "ecx");
++		     : : : "eax", "ebx", "ecx", "edx");
+ 
+ 	/* DR6.BD test */
+ 	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
+-- 
+2.26.2
+
