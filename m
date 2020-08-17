@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10366C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D2D20855
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9A220885
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679251;
-	bh=tUg0ufDbgldg0Nz5MOqtxis8bznVshMzTik0MI4PymY=;
+	s=default; t=1597679272;
+	bh=Awa9szfVnyfHhZXV0EKIVyiunFy+LWKFXGUkDfuCRVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiPhFcoeFO4TrrSawRfDgxxyxP4v2SyeQIHPmok+Q68jGzKvmgOgJ0e+4qjEYOH3b
-	 n2hInTJXUajVN0Js2TUxLFlxpoCiRgJ5agJW/3115ny+MzrN0J30CEwU9sbZNiPllg
-	 OtEt2TFfv9Bl3dLIYYbmzcxwRGszqFRRIq2A/1FE=
+	b=eLecGADvcoMFNaEdEU5dAHG4n8B02d77hDao+ZCk/Hlx4JkFH2rNqcMFaBXexgRRu
+	 MUqIkqC4T4wz0+AzWoBwTSJA22y6Br9HpLtwCwG35jMQ3/b6zhWOaVmukry1LUBsUt
+	 x/El2eDVCOcj33HzLzFy3qlhMnSX5Fkd6d5Cq/kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbgHQPqv (ORCPT
+        id S1730192AbgHQPrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:46:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46794 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbgHQPik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:40 -0400
+        id S1730609AbgHQPih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C5622C9F;
-        Mon, 17 Aug 2020 15:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CAC9208E4;
+        Mon, 17 Aug 2020 15:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678719;
-        bh=tUg0ufDbgldg0Nz5MOqtxis8bznVshMzTik0MI4PymY=;
+        s=default; t=1597678716;
+        bh=Awa9szfVnyfHhZXV0EKIVyiunFy+LWKFXGUkDfuCRVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQUTkzeuXF2qanupwFryL1p9+CE2fNNDQTPWdjEd/U6aunqBaAUPDdKmE/vhkHznB
-         lbyqu79UPvyvfO1BT1xy6uYMlJelTzRpfBQpG+C+wZyNIoTi2CNbyjJ97vFprYXzrr
-         1BxlL1ilujEbpQzjeaEtGz3cP1ja6PL0SVC68huo=
+        b=WBm2jQiy2fUXfy8WhFwbQOVYHWWCn6odLDwy6n6Q3CbRLWdvpG3k0z0y+HOdxdPrc
+         tIlGosLVGrks5KSPUJ3sOzJ+cca8FYRSVMQAWfT2Lj43Fx+JMCas7I4/m5HjQmlgDI
+         xbK+Egce6iJq7NR5n/GzavbEyIVyH6umTsg2WwNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 5.8 431/464] cpufreq: dt: fix oops on armada37xx
-Date:   Mon, 17 Aug 2020 17:16:24 +0200
-Message-Id: <20200817143854.426668767@linuxfoundation.org>
+        stable@vger.kernel.org, Quentin Perret <qperret@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.8 430/464] cpufreq: Fix locking issues with governors
+Date:   Mon, 17 Aug 2020 17:16:23 +0200
+Message-Id: <20200817143854.378982144@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,48 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 10470dec3decaf5ed3c596f85debd7c42777ae12 upstream.
+commit 8cc46ae565c393f77417cb9530b1265eb50f5d2e upstream.
 
-Commit 0c868627e617e43a295d8 (cpufreq: dt: Allow platform specific
-intermediate callbacks) added two function pointers to the
-struct cpufreq_dt_platform_data. However, armada37xx_cpufreq_driver_init()
-has this struct (pdata) located on the stack and uses only "suspend"
-and "resume" fields. So these newly added "get_intermediate" and
-"target_intermediate" pointers are uninitialized and contain arbitrary
-non-null values, causing all kinds of trouble.
+The locking around governors handling isn't adequate currently.
 
-For instance, here is an oops on espressobin after an attempt to change
-the cpefreq governor:
+The list of governors should never be traversed without the locking
+in place. Also governor modules must not be removed while the code
+in them is still in use.
 
-[   29.174554] Unable to handle kernel execute from non-executable memory at virtual address ffff00003f87bdc0
-...
-[   29.269373] pc : 0xffff00003f87bdc0
-[   29.272957] lr : __cpufreq_driver_target+0x138/0x580
-...
-
-Fixed by zeroing out pdata before use.
-
-Cc: <stable@vger.kernel.org> # v5.7+
-Signed-off-by: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reported-by: Quentin Perret <qperret@google.com>
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: All applicable <stable@vger.kernel.org>
+[ rjw: Changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/armada-37xx-cpufreq.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/cpufreq.c |   58 +++++++++++++++++++++++++++-------------------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
 
---- a/drivers/cpufreq/armada-37xx-cpufreq.c
-+++ b/drivers/cpufreq/armada-37xx-cpufreq.c
-@@ -456,6 +456,7 @@ static int __init armada37xx_cpufreq_dri
- 	/* Now that everything is setup, enable the DVFS at hardware level */
- 	armada37xx_cpufreq_enable_dvfs(nb_pm_base);
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -621,6 +621,24 @@ static struct cpufreq_governor *find_gov
+ 	return NULL;
+ }
  
-+	memset(&pdata, 0, sizeof(pdata));
- 	pdata.suspend = armada37xx_cpufreq_suspend;
- 	pdata.resume = armada37xx_cpufreq_resume;
++static struct cpufreq_governor *get_governor(const char *str_governor)
++{
++	struct cpufreq_governor *t;
++
++	mutex_lock(&cpufreq_governor_mutex);
++	t = find_governor(str_governor);
++	if (!t)
++		goto unlock;
++
++	if (!try_module_get(t->owner))
++		t = NULL;
++
++unlock:
++	mutex_unlock(&cpufreq_governor_mutex);
++
++	return t;
++}
++
+ static unsigned int cpufreq_parse_policy(char *str_governor)
+ {
+ 	if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
+@@ -640,28 +658,14 @@ static struct cpufreq_governor *cpufreq_
+ {
+ 	struct cpufreq_governor *t;
  
+-	mutex_lock(&cpufreq_governor_mutex);
+-
+-	t = find_governor(str_governor);
+-	if (!t) {
+-		int ret;
++	t = get_governor(str_governor);
++	if (t)
++		return t;
+ 
+-		mutex_unlock(&cpufreq_governor_mutex);
++	if (request_module("cpufreq_%s", str_governor))
++		return NULL;
+ 
+-		ret = request_module("cpufreq_%s", str_governor);
+-		if (ret)
+-			return NULL;
+-
+-		mutex_lock(&cpufreq_governor_mutex);
+-
+-		t = find_governor(str_governor);
+-	}
+-	if (t && !try_module_get(t->owner))
+-		t = NULL;
+-
+-	mutex_unlock(&cpufreq_governor_mutex);
+-
+-	return t;
++	return get_governor(str_governor);
+ }
+ 
+ /**
+@@ -815,12 +819,14 @@ static ssize_t show_scaling_available_go
+ 		goto out;
+ 	}
+ 
++	mutex_lock(&cpufreq_governor_mutex);
+ 	for_each_governor(t) {
+ 		if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
+ 		    - (CPUFREQ_NAME_LEN + 2)))
+-			goto out;
++			break;
+ 		i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
+ 	}
++	mutex_unlock(&cpufreq_governor_mutex);
+ out:
+ 	i += sprintf(&buf[i], "\n");
+ 	return i;
+@@ -1058,15 +1064,17 @@ static int cpufreq_init_policy(struct cp
+ 	struct cpufreq_governor *def_gov = cpufreq_default_governor();
+ 	struct cpufreq_governor *gov = NULL;
+ 	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
++	int ret;
+ 
+ 	if (has_target()) {
+ 		/* Update policy governor to the one used before hotplug. */
+-		gov = find_governor(policy->last_governor);
++		gov = get_governor(policy->last_governor);
+ 		if (gov) {
+ 			pr_debug("Restoring governor %s for cpu %d\n",
+ 				 policy->governor->name, policy->cpu);
+ 		} else if (def_gov) {
+ 			gov = def_gov;
++			__module_get(gov->owner);
+ 		} else {
+ 			return -ENODATA;
+ 		}
+@@ -1089,7 +1097,11 @@ static int cpufreq_init_policy(struct cp
+ 			return -ENODATA;
+ 	}
+ 
+-	return cpufreq_set_policy(policy, gov, pol);
++	ret = cpufreq_set_policy(policy, gov, pol);
++	if (gov)
++		module_put(gov->owner);
++
++	return ret;
+ }
+ 
+ static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
 
 
