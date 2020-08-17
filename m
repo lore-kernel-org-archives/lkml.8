@@ -2,102 +2,138 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA89BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F339CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9462065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7382072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKcokAzC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ba0QocY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgHQXvK (ORCPT
+        id S1726482AbgHQXyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
+        Mon, 17 Aug 2020 19:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgHQXvJ (ORCPT
+        with ESMTP id S1726135AbgHQXyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:51:09 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A12C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:51:08 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y2so10392487ljc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:51:08 -0700 (PDT)
+        Mon, 17 Aug 2020 19:54:53 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328BCC061389;
+        Mon, 17 Aug 2020 16:54:53 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w14so19411839ljj.4;
+        Mon, 17 Aug 2020 16:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SPW2LJTAlWqhtQcTdPRilBhn2+hGuuzRK5hGsS5a3Jc=;
-        b=OKcokAzCr/ZNeiCuxO21SZILLIMu2s5cJiQzCY6at0CrIXZIz9ODJq/iL+SIgSaiGn
-         fviQM/QhH9/2a57xpfXytVA4dwYKCyT5d4ADpys6V26EQ8uCOMDmmm9QcyFaH+uSBT0w
-         XiAO8qu1iiSaINDZdX0QT5ne0tzOzSsoS4WOf+fI0HKzq0CaYnpKU6LtdK1WFeSKbKn2
-         nctsLgmsE9HTP19tH1DTrZutcWIdSNF2hFJ31AWX108Ooeo4fHooi+ayhnowjyGdRvGo
-         IJjKfLmaMJPe780xcpTmjezu73FZMx6DBqJes1ZUcGnacKBoefmUDOXKFXjGNFc2J5nG
-         8AJg==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=B9j2rJAHaH9GTstMqd8/V24VpPo4i+kvnYjj1zy9ZbI=;
+        b=Ba0QocY5V2Cd3RBKfnPOqKJ4d72b31eSRlJVZOdcE9KUxaSrswBjhU2oeUhrMwR+6k
+         8y+dWmCcIeoK6bNopJIritd5RhYLiqo+89fLH6w+BDRXaMskbTTmxV0W2bZjdsBYI0a/
+         mSO2sYx0ZSa6oT/yuCBpA/qjLzEOXHrP6NNYOxduO5dW8FxN9Oqv/ayMrmwYWjOLtgpW
+         5L2JuBe/UDmRMeEASOb7fsbsPKNpohZGnMF8XcR2o11vG7igCRo158mnNXm06HbkTtpn
+         /nHHzDC2mdyeZ7NOViIfnmSe1rY9eFb62PC++Q385GTAt8jxvLp/7CeF12jXCB7JLepF
+         DxPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SPW2LJTAlWqhtQcTdPRilBhn2+hGuuzRK5hGsS5a3Jc=;
-        b=FXPZWEF7rMRx19OD0GpnpGwyZ3TPNiFE96TMB3VYaMnnCQHXpBs6SRNoKYsCRpk052
-         ASl+L9kNTzcxIylsdMzx/d4suZe+psV79BmnolbBtNU3d5ZS94TI7hlJvpKnihieiM9a
-         7io5llz4Kr7+ZY4cZ5+/djX5kG90rOn4i9pEIeq0WnJnfQ188+yJ6WCNrIgViPHAFG/M
-         xfPmBSr4alUKL/mF4UA1gJoXqoUpDv8S1W5mFpt+ppeQ7ZZ9h1y/2UP8R9IcP4LWlJKo
-         qdmZ+W4FQgyl6WosKpo8g4sEJ9RnNlwsQPxkp4fxj0d8Y5AYLDopD89a+tbmzepuMaIj
-         osGw==
-X-Gm-Message-State: AOAM532ZTVGXAq0ROIv9Bo2VZmQxNK+693Mp+GKNWUwwHAH6dupuZSlR
-        t7rQLo4C6dnEO+zqfdlUpUJS+/oVmF8=
-X-Google-Smtp-Source: ABdhPJwM/OYmtmEDcj6/hnzgLs2BKgcJYxJvZxSLo83fZtiWA8Qa1ezbICIyomdn2AydMJ/rL5pPAA==
-X-Received: by 2002:a2e:b009:: with SMTP id y9mr7842316ljk.119.1597708267275;
-        Mon, 17 Aug 2020 16:51:07 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id h6sm5368826ljg.86.2020.08.17.16.51.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 16:51:06 -0700 (PDT)
+        bh=B9j2rJAHaH9GTstMqd8/V24VpPo4i+kvnYjj1zy9ZbI=;
+        b=RslBCGgz1HpMrlI4L88Gs/Va9sdLHSO2FxxT4z2RAp1Rd69QbMlzDxM0+E0Eu3/srL
+         yD3AW6NMHv85lseJEMV4zYsUsWHe0la/rsHZDLCVzMzC0uwViPaZpBnuXd+gMoP/j3KM
+         SIDV6VjN1hw1NbKvBT5aBPyKhhxTvcor/syKyB9fn/2tjpc+rlcD0z0v1xFW37C1j246
+         xr1sQHsm5VFC10+hw2+jtw7zDIp5frhtVid4KcRDegyut3WKVcmn7WHgPjrW5FeH/W0G
+         U23pvupSrszHqoTPaqJUUvS2hDmegONol09+MF+5ckrD71gtphklpB4anPHi72UVpWRN
+         lJSg==
+X-Gm-Message-State: AOAM5321n8J3+AFr2gFzFJXzqyCXjWvRGVIPdO2IfGM5SOQMncoz3gai
+        nrwncgPmQXTHjQgCPU93jGRO4x+Vtq8=
+X-Google-Smtp-Source: ABdhPJyMEB4dK3y0hsRbrHMeMEPHnBoUtbd2/FAQY/4ShbzfhGpwv0eXn2rhIPoUcrK5lhbuV5putg==
+X-Received: by 2002:a2e:9908:: with SMTP id v8mr8455202lji.410.1597708491489;
+        Mon, 17 Aug 2020 16:54:51 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id j6sm5920963lfp.44.2020.08.17.16.54.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 16:54:50 -0700 (PDT)
+Subject: Re: [PATCH v1] thermal: core: Fix use-after-free in
+ thermal_zone_device_unregister()
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v1] mfd: core: Fix double-free in mfd_remove_devices_fn()
-Date:   Tue, 18 Aug 2020 02:50:48 +0300
-Message-Id: <20200817235048.24577-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200817234833.23954-1-digetx@gmail.com>
+Message-ID: <60ffd8e3-ca65-d0ff-4a7a-067923fc5ddd@gmail.com>
+Date:   Tue, 18 Aug 2020 02:54:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200817234833.23954-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pdev.mfd_cell is released by platform_device_release(), which is
-invoked by platform_device_unregister(). Hence mfd_remove_devices_fn()
-shouldn't release the cell variable. The double-free bug is reported KASAN
-during of MFD driver module removal.
+18.08.2020 02:48, Dmitry Osipenko пишет:
+> The user-after-free bug in thermal_zone_device_unregister() is reported by
+> KASAN. It happens because struct thermal_zone_device is released during of
+> device_unregister() invocation, and hence the "tz" variable shouldn't be
+> touched by thermal_notify_tz_delete(tz->id).
+> 
+> Fixes: 55cdf0a283b8 ("thermal: core: Add notifications call in the framework")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/thermal/thermal_core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 72bf159bcecc..56c355f684df 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -1516,7 +1516,7 @@ EXPORT_SYMBOL_GPL(thermal_zone_device_register);
+>   */
+>  void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+>  {
+> -	int i;
+> +	int i, tz_id;
+>  	const struct thermal_zone_params *tzp;
+>  	struct thermal_cooling_device *cdev;
+>  	struct thermal_zone_device *pos = NULL;
+> @@ -1525,6 +1525,7 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+>  		return;
+>  
+>  	tzp = tz->tzp;
+> +	tz_id = tz->id;
+>  
+>  	mutex_lock(&thermal_list_lock);
+>  	list_for_each_entry(pos, &thermal_tz_list, node)
+> @@ -1560,14 +1561,13 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+>  	cancel_delayed_work_sync(&tz->poll_queue);
+>  
+>  	thermal_set_governor(tz, NULL);
+> -
 
-Fixes: 466a62d7642f ("mfd: core: Make a best effort attempt to match devices with the correct of_nodes")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/mfd/mfd-core.c | 2 --
- 1 file changed, 2 deletions(-)
+Woops, this line wasn't intended to be removed. Let me send a v2.
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index c3651f06684f..c50718e3db58 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -370,8 +370,6 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
- 					       cell->num_parent_supplies);
- 
--	kfree(cell);
--
- 	platform_device_unregister(pdev);
- 	return 0;
- }
--- 
-2.27.0
+>  	thermal_remove_hwmon_sysfs(tz);
+>  	ida_simple_remove(&thermal_tz_ida, tz->id);
+>  	ida_destroy(&tz->ida);
+>  	mutex_destroy(&tz->lock);
+>  	device_unregister(&tz->device);
+>  
+> -	thermal_notify_tz_delete(tz->id);
+> +	thermal_notify_tz_delete(tz_id);
+>  }
+>  EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
+>  
+> 
 
