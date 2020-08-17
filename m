@@ -2,98 +2,78 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41EDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB75C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BA9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81367204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692560;
-	bh=0qMyAw59C0MWjKRZoXdZUm+02FzsbsnESMZtyqFa69k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJQpJF6fShxHVIPGiS1I9c2NUq0JbdjH8NQelGyPIWhrxi42MTDQ1fngeghLfOvui
-	 vjNqgKcQYjFEVoFPS8fwNPow9Qh1SR/LmBVd/f9UHW40fhwuQ2UAgFXhOXljxCNv99
-	 WhGMqDSpFqeCyApRCBY0Z+7w5QlM/tzMjAcho830=
+	s=default; t=1597692570;
+	bh=2c4Yh95xvolsVljCfBjOgUgBnpWZevsxHtYN4hwUUuQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FXOhDZBMM8H7DlfYY9R1z1bH3y4VUC+x87IfwsUI+1y6ui1QLFGQHt3Dc2j2Omg/m
+	 F0ktwFmld+yez/foR7iBMcY855rnHUKTRkDHJVfTY2HJBKRiHZwNLH40gIHHDvwcQl
+	 cdkJWvIXR3toQJbxYOgsFtptMCNyIDbg/MqosK4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgHQT3T (ORCPT
+        id S1732258AbgHQT32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:29:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729978AbgHQPcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730315AbgHQPcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:19 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C7B20709;
-        Mon, 17 Aug 2020 15:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC03B207FF;
+        Mon, 17 Aug 2020 15:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678341;
-        bh=0qMyAw59C0MWjKRZoXdZUm+02FzsbsnESMZtyqFa69k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b08kuQSuQAqlE8MfuhMG3e0Y2pCfEI5Lryr8fg3iyhs3iYBwYVQmLGiuJvYX+Vpp9
-         NzeaQNjfvSZ3h5EBZnAoECiinchOctDbRml04eNAzr/5uhBNa4xTuP2HZ7TR81JDmz
-         enz54dx/kzS9f0R/MJ0x5F/HN8UWP17qWPW86eyw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Li Heng <liheng40@huawei.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 301/464] RDMA/core: Fix return error value in _ib_modify_qp() to negative
-Date:   Mon, 17 Aug 2020 17:14:14 +0200
-Message-Id: <20200817143848.227319625@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1597678339;
+        bh=2c4Yh95xvolsVljCfBjOgUgBnpWZevsxHtYN4hwUUuQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PqJ4AUhNCRXS/VC9OkD2uAmeo4aNAyZFhtAwYnKIWQMQg4HzuxJiPNeQAvPUunzxL
+         vszsyooQh67yVwKcN2epBRLBbjuWuZCRBZX1do/00btQNQEi18MWMihYss83LaZXfH
+         JZrLi1BvTDV+8rUaibFK/+EgCNKN/gzQ0u1Bd7vo=
+Date:   Mon, 17 Aug 2020 08:32:16 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Allen Pais <allen.lkml@gmail.com>
+Cc:     jes@trained-monkey.org, davem@davemloft.net, kda@linux-powerpc.org,
+        dougmill@linux.ibm.com, cooldavid@cooldavid.org,
+        mlindner@marvell.com, borisp@mellanox.com, keescook@chromium.org,
+        linux-acenic@sunsite.dk, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH 06/20] ethernet: chelsio: convert tasklets to use new
+ tasklet_setup() API
+Message-ID: <20200817083216.5367f56a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200817082434.21176-8-allen.lkml@gmail.com>
+References: <20200817082434.21176-1-allen.lkml@gmail.com>
+        <20200817082434.21176-8-allen.lkml@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Heng <liheng40@huawei.com>
+On Mon, 17 Aug 2020 13:54:20 +0530 Allen Pais wrote:
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 
-[ Upstream commit 47fda651d5af2506deac57d54887cf55ce26e244 ]
+You need to adjust kdoc when you change functions:
 
-The error codes in _ib_modify_qp() are supposed to be negative errno.
-
-Fixes: 7a5c938b9ed0 ("IB/core: Check for rdma_protocol_ib only after validating port_num")
-Link: https://lore.kernel.org/r/1595645787-20375-1-git-send-email-liheng40@huawei.com
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Li Heng <liheng40@huawei.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-index 53d6505c0c7b6..f369f0a19e851 100644
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -1712,7 +1712,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct ib_qp_attr *attr,
- 		if (!(rdma_protocol_ib(qp->device,
- 				       attr->alt_ah_attr.port_num) &&
- 		      rdma_protocol_ib(qp->device, port))) {
--			ret = EINVAL;
-+			ret = -EINVAL;
- 			goto out;
- 		}
- 	}
--- 
-2.25.1
-
-
-
+drivers/net/ethernet/chelsio/cxgb4/sge.c:2664: warning: Function parameter or member 't' not described in 'restart_ctrlq'
+drivers/net/ethernet/chelsio/cxgb4/sge.c:2664: warning: Excess function parameter 'data' description in 'restart_ctrlq'
+drivers/net/ethernet/chelsio/cxgb4/sge.c:2965: warning: Function parameter or member 't' not described in 'restart_ofldq'
+drivers/net/ethernet/chelsio/cxgb4/sge.c:2965: warning: Excess function parameter 'data' description in 'restart_ofldq'
