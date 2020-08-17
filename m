@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAADBC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD81FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4BF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC04204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689823;
-	bh=xdUZ6JmuAWxPCP7ksF1xp3Pn0z3uNevBMXyZq8yKP4Y=;
+	s=default; t=1597689827;
+	bh=S7IDOuSAt3Vf7G3wy1Q4EP0Obdmq8ti/LHttpaBl6qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mezvCYZUhmUsXdAt1/QFbpYfcbgYkADrK7IMqsfuX6gJrxR8NjUftSx+Yx2aAqYqb
-	 b+mMQIdbCCLbzA5mnTwogy9HyZBYf1TdnABVxSwtYqBk94/OuOGi4doqdNrZ8Eq//R
-	 8eaRkxo3TvK9rzaKSYVLIjszkIsk5Z0KXKuvBYDQ=
+	b=f1nxNlTz/jMTFDRYw+qcqCk06SVY4H2VbW+6HczzT11Juyiv48M9dgVFnVRQ1NeuZ
+	 Cm0LyRy7cB6n18jBheVBvrDYgat8L02Ef6gzT+0wZo2H1Juw4nyQ1pZdlu1M83ysLa
+	 G0tX5p2vqbj+M0WyExemUxoJBg2/TyOmmsCXDP4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391496AbgHQSnm (ORCPT
+        id S2391503AbgHQSnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388086AbgHQP4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:48 -0400
+        id S2387748AbgHQP4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 809BF2053B;
-        Mon, 17 Aug 2020 15:56:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0035C20729;
+        Mon, 17 Aug 2020 15:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679806;
-        bh=xdUZ6JmuAWxPCP7ksF1xp3Pn0z3uNevBMXyZq8yKP4Y=;
+        s=default; t=1597679797;
+        bh=S7IDOuSAt3Vf7G3wy1Q4EP0Obdmq8ti/LHttpaBl6qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZ5M4gIIwRCKCldptEtqgEJosW3r3rVuxJfxpwFjq5at9bCb/me/jjguXVW0TgMka
-         o0pJLY58kC1X9Z6ItdDLpdybUgB9DP0caSf93CgoTt0SZG+jH+8/CKDcsbquL8QS3m
-         Ujvw5T9zfuW2Yo9hREk7bKnxA5RXxMUbGj0O0RYQ=
+        b=lhHZbduysBSMde5a9OeDbtmaokqHiUEpXaa0z8DpgFfxKFADWQJge/CvDq4Id2k8w
+         ofalDYxhpmIZo88TUbChiW5L6NvrvZzT9Q+zSXa1LsIBvkshrFIt0SVgoPBP4i5btX
+         mkrdbj7iuITQgRKuW/byOGVoNR0Y8mm9DjrkuatI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.7 340/393] pstore: Fix linking when crypto API disabled
-Date:   Mon, 17 Aug 2020 17:16:30 +0200
-Message-Id: <20200817143836.089435992@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 338/393] ALSA: usb-audio: add quirk for Pioneer DDJ-RB
+Date:   Mon, 17 Aug 2020 17:16:28 +0200
+Message-Id: <20200817143835.993048984@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,53 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@linux.microsoft.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit fd49e03280e596e54edb93a91bc96170f8e97e4a upstream.
+commit 6e8596172ee1cd46ec0bfd5adcf4ff86371478b6 upstream.
 
-When building a kernel with CONFIG_PSTORE=y and CONFIG_CRYPTO not set,
-a build error happens:
+This is just another Pioneer device with fixed endpoints. Input is dummy
+but used as feedback (it always returns silence).
 
-    ld: fs/pstore/platform.o: in function `pstore_dump':
-    platform.c:(.text+0x3f9): undefined reference to `crypto_comp_compress'
-    ld: fs/pstore/platform.o: in function `pstore_get_backend_records':
-    platform.c:(.text+0x784): undefined reference to `crypto_comp_decompress'
-
-This because some pstore code uses crypto_comp_(de)compress regardless
-of the CONFIG_CRYPTO status. Fix it by wrapping the (de)compress usage
-by IS_ENABLED(CONFIG_PSTORE_COMPRESS)
-
-Signed-off-by: Matteo Croce <mcroce@linux.microsoft.com>
-Link: https://lore.kernel.org/lkml/20200706234045.9516-1-mcroce@linux.microsoft.com
-Fixes: cb3bee0369bc ("pstore: Use crypto compress API")
 Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082502.225979-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/platform.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/usb/quirks-table.h |   56 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -275,6 +275,9 @@ static int pstore_compress(const void *i
- {
- 	int ret;
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3570,6 +3570,62 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ 		}
+ 	}
+ },
++{
++	/*
++	 * PIONEER DJ DDJ-RB
++	 * PCM is 4 channels out, 2 dummy channels in @ 44.1 fixed
++	 * The feedback for the output is the dummy input.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x000e),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 4,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						   USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 2,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x82,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						 USB_ENDPOINT_SYNC_ASYNC|
++						 USB_ENDPOINT_USAGE_IMPLICIT_FB,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
  
-+	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION))
-+		return -EINVAL;
-+
- 	ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
- 	if (ret) {
- 		pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
-@@ -661,7 +664,7 @@ static void decompress_record(struct pst
- 	int unzipped_len;
- 	char *unzipped, *workspace;
- 
--	if (!record->compressed)
-+	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESSION) || !record->compressed)
- 		return;
- 
- 	/* Only PSTORE_TYPE_DMESG support compression. */
+ #define ALC1220_VB_DESKTOP(vend, prod) { \
+ 	USB_DEVICE(vend, prod),	\
 
 
