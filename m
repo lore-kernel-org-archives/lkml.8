@@ -2,124 +2,77 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F64C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA02520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBz6GJYE"
+	by mail.kernel.org (Postfix) with ESMTP id C7C9320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390028AbgHQRZb (ORCPT
+        id S2389925AbgHQRXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:25:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56759 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731459AbgHQRUp (ORCPT
+        Mon, 17 Aug 2020 13:23:32 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33525 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388425AbgHQQ74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:20:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597684844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2KOxcTzA4HjXLrbc8Kis3OZr0Jk9r2f94fOWh6B2JtI=;
-        b=XBz6GJYEGBFwPmHH9FcPApxgQWy607NhqWJ50zudkV1ZW2b/WPsK+2jZLbLmWVJrV0i49W
-        8FO62cvmZMJ9tYkxyX5utEcPgosJ68WGLMpAh5erkbnnf0PhQbFt86/p/JyD/RVowVZ5Gp
-        71ICP6jY2xG4l341S1wXKOE6FjTYnnI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-VJjp-ljEPnex_p-WPMyJ0g-1; Mon, 17 Aug 2020 13:20:39 -0400
-X-MC-Unique: VJjp-ljEPnex_p-WPMyJ0g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 223CF81F001;
-        Mon, 17 Aug 2020 17:20:38 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B33FD5D9D2;
-        Mon, 17 Aug 2020 17:20:34 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        peterx@redhat.com, Yang Weijiang <weijiang.yang@intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] selftests: kvm: Use a shorter encoding to clear RAX
-Date:   Mon, 17 Aug 2020 13:20:34 -0400
-Message-Id: <20200817172034.26673-1-pbonzini@redhat.com>
+        Mon, 17 Aug 2020 12:59:56 -0400
+Received: from [78.134.86.56] (port=44766 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1k7iTk-00015j-3a; Mon, 17 Aug 2020 18:59:24 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-fpga@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 1/3] fpga manager: xilinx-spi: remove stray comment
+Date:   Mon, 17 Aug 2020 18:59:09 +0200
+Message-Id: <20200817165911.32589-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+Remove comment committed by mistake.
 
-If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
-by the assembler:
-
-asm volatile("ss_start: "
-             "xor %%rax,%%rax\n\t"
-             "cpuid\n\t"
-             "movl $0x1a0,%%ecx\n\t"
-             "rdmsr\n\t"
-             : : : "rax", "ecx");
-
-is translated to :
-
-  000000000040194e <ss_start>:
-  40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
-  401950:       0f a2                   cpuid
-  401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
-  401957:       0f 32                   rdmsr
-
-As you can see rax is replaced with eax in target binary code.
-This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
-and makes the hard-coded instruction length check fail:
-
-        /* Instruction lengths starting at ss_start */
-        int ss_size[4] = {
-                3,              /* xor */   <-------- 2 or 3?
-                2,              /* cpuid */
-                5,              /* mov */
-                2,              /* rdmsr */
-        };
-
-Encode the shorter version directly and, while at it, fix the "clobbers"
-of the asm.
-
-Reported-by: Yang Weijiang <weijiang.yang@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 ---
- tools/testing/selftests/kvm/x86_64/debug_regs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/fpga/xilinx-spi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-index 8162c58a1234..b8d14f9db5f9 100644
---- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-+++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-@@ -40,11 +40,11 @@ static void guest_code(void)
+diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+index 2967aa2a74e2..502fae0d1d85 100644
+--- a/drivers/fpga/xilinx-spi.c
++++ b/drivers/fpga/xilinx-spi.c
+@@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
  
- 	/* Single step test, covers 2 basic instructions and 2 emulated */
- 	asm volatile("ss_start: "
--		     "xor %%rax,%%rax\n\t"
-+		     "xor %%eax,%%eax\n\t"
- 		     "cpuid\n\t"
- 		     "movl $0x1a0,%%ecx\n\t"
- 		     "rdmsr\n\t"
--		     : : : "rax", "ecx");
-+		     : : : "eax", "ebx", "ecx", "edx");
- 
- 	/* DR6.BD test */
- 	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
+ 	if (conf->init_b) {
+ 		while (time_before(jiffies, timeout)) {
+-			/* dump_state(conf, "wait for init_d .."); */
+ 			if (gpiod_get_value(conf->init_b) == value)
+ 				return 0;
+ 			usleep_range(100, 400);
 -- 
-2.26.2
+2.28.0
 
