@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A2C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8B620748
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4488120772
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680143;
-	bh=5FS1bRYbhh3iZG9BJtPW8I/Q7cLQiRbWaIwY811DndM=;
+	s=default; t=1597680158;
+	bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DVdxYBvEG3q61jEXE9yyoCiXN5vRas3YlL1XW8q9yl++/m4NTtPc+khGUkv6guLLu
-	 fnu8O0zQofrlQ3YEc+vs6ynQX9V3Akrb66xjKkPPnWJkoPmSRA4RHkgUAwHtjq21Cp
-	 II8tVA/lQyE4lj0FDh34KdoInvsngTcXeW/NbGtY=
+	b=a9KKaTkRFXaZ2M8uo4ELbxmloznSZS1eN5/qA4/ZqQVZW1XUBI7cwVS2+Na3nvs5K
+	 BSMC00LAMBJqeKZnQ9+4kmcZ9+ebSZdQpIiPz+QPd6FiVpobrGNjBpXeb3YG5enIYz
+	 MOwqAqNrTdXs01rMod9QkHz0PNlx3D5Pvd3h+Tug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388186AbgHQQCT (ORCPT
+        id S2388204AbgHQQCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbgHQPnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:43:12 -0400
+        id S2387633AbgHQPnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF7122D74;
-        Mon, 17 Aug 2020 15:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EA322CAD;
+        Mon, 17 Aug 2020 15:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678989;
-        bh=5FS1bRYbhh3iZG9BJtPW8I/Q7cLQiRbWaIwY811DndM=;
+        s=default; t=1597678998;
+        bh=drw5bpymsEmzse0AQE94EHwiijtRpGBgXRZNsFvsyBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nnGNccX344tbtl4VPDPRHnKE2H86xgP7M0kfsbnWnPEl0qCkJFTndxQADzyT1uwvV
-         jAEsHInawi5Fk/qCLQgfmVa1tnwad0kLaitaRO69MyVIZCn15Zar+bXIHnTisylbiZ
-         ZM12IwqFbkienaE88ih2GrkcKRQYDKg15q60NQgw=
+        b=RQTgC8D+5BfcEjvPEtQhQGCo94WoI66iufiKH7AoqOTypFkXiHiuLactVa9Ev3ZJE
+         lJY0J3cXmXL1mGg4ILVyc+aEGp4dAPYFjz4lsRBM6LanyOwpqTdgFwS2m8kb3W2lqR
+         xpkTncWNrc8+e6KN4F85NBDaPJaGP0cq75Wfc/Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Dien Pham <dien.pham.ry@renesas.com>
-Subject: [PATCH 5.7 028/393] clk: scmi: Fix min and max rate when registering clocks with discrete rates
-Date:   Mon, 17 Aug 2020 17:11:18 +0200
-Message-Id: <20200817143820.974286859@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 021/393] ARM: exynos: MCPM: Restore big.LITTLE cpuidle support
+Date:   Mon, 17 Aug 2020 17:11:11 +0200
+Message-Id: <20200817143820.622086517@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,68 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit fcd2e0deae50bce48450f14c8fc5611b08d7438c ]
+[ Upstream commit ea9dd8f61c8a890843f68e8dc0062ce78365aab8 ]
 
-Currently we are not initializing the scmi clock with discrete rates
-correctly. We fetch the min_rate and max_rate value only for clocks with
-ranges and ignore the ones with discrete rates. This will lead to wrong
-initialization of rate range when clock supports discrete rate.
+Call exynos_cpu_power_up(cpunr) unconditionally. This is needed by the
+big.LITTLE cpuidle driver and has no side-effects on other code paths.
 
-Fix this by using the first and the last rate in the sorted list of the
-discrete clock rates while registering the clock.
+The additional soft-reset call during little core power up has been added
+to properly boot all cores on the Exynos5422-based boards with secure
+firmware (like Odroid XU3/XU4 family). This however broke big.LITTLE
+CPUidle driver, which worked only on boards without secure firmware (like
+Peach-Pit/Pi Chromebooks). Apply the workaround only when board is
+running under secure firmware.
 
-Link: https://lore.kernel.org/r/20200709081705.46084-2-sudeep.holla@arm.com
-Fixes: 6d6a1d82eaef7 ("clk: add support for clocks provided by SCMI")
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reported-and-tested-by: Dien Pham <dien.pham.ry@renesas.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 833b5794e330 ("ARM: EXYNOS: reset Little cores when cpu is up")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-scmi.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ arch/arm/mach-exynos/mcpm-exynos.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-index c491f5de0f3f4..c754dfbb73fd4 100644
---- a/drivers/clk/clk-scmi.c
-+++ b/drivers/clk/clk-scmi.c
-@@ -103,6 +103,8 @@ static const struct clk_ops scmi_clk_ops = {
- static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+index 9a681b421ae11..cd861c57d5adf 100644
+--- a/arch/arm/mach-exynos/mcpm-exynos.c
++++ b/arch/arm/mach-exynos/mcpm-exynos.c
+@@ -26,6 +26,7 @@
+ #define EXYNOS5420_USE_L2_COMMON_UP_STATE	BIT(30)
+ 
+ static void __iomem *ns_sram_base_addr __ro_after_init;
++static bool secure_firmware __ro_after_init;
+ 
+ /*
+  * The common v7_exit_coherency_flush API could not be used because of the
+@@ -58,15 +59,16 @@ static void __iomem *ns_sram_base_addr __ro_after_init;
+ static int exynos_cpu_powerup(unsigned int cpu, unsigned int cluster)
  {
- 	int ret;
-+	unsigned long min_rate, max_rate;
-+
- 	struct clk_init_data init = {
- 		.flags = CLK_GET_RATE_NOCACHE,
- 		.num_parents = 0,
-@@ -112,9 +114,23 @@ static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
+ 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
++	bool state;
  
- 	sclk->hw.init = &init;
- 	ret = devm_clk_hw_register(dev, &sclk->hw);
--	if (!ret)
--		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
--				      sclk->info->range.max_rate);
-+	if (ret)
-+		return ret;
-+
-+	if (sclk->info->rate_discrete) {
-+		int num_rates = sclk->info->list.num_rates;
-+
-+		if (num_rates <= 0)
-+			return -EINVAL;
-+
-+		min_rate = sclk->info->list.rates[0];
-+		max_rate = sclk->info->list.rates[num_rates - 1];
-+	} else {
-+		min_rate = sclk->info->range.min_rate;
-+		max_rate = sclk->info->range.max_rate;
-+	}
-+
-+	clk_hw_set_rate_range(&sclk->hw, min_rate, max_rate);
- 	return ret;
- }
+ 	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+ 	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+ 		cluster >= EXYNOS5420_NR_CLUSTERS)
+ 		return -EINVAL;
  
+-	if (!exynos_cpu_power_state(cpunr)) {
+-		exynos_cpu_power_up(cpunr);
+-
++	state = exynos_cpu_power_state(cpunr);
++	exynos_cpu_power_up(cpunr);
++	if (!state && secure_firmware) {
+ 		/*
+ 		 * This assumes the cluster number of the big cores(Cortex A15)
+ 		 * is 0 and the Little cores(Cortex A7) is 1.
+@@ -258,6 +260,8 @@ static int __init exynos_mcpm_init(void)
+ 		return -ENOMEM;
+ 	}
+ 
++	secure_firmware = exynos_secure_firmware_available();
++
+ 	/*
+ 	 * To increase the stability of KFC reset we need to program
+ 	 * the PMU SPARE3 register
 -- 
 2.25.1
 
