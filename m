@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34421C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8077C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF8D2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766542072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693837;
-	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+	s=default; t=1597693840;
+	bh=o1hp91tWbFC0JPymhREMXQpAYm591TzRF4KoNiOC+jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ov2Itf06iLPipBwmtLOSXnMVEHSBy3iIRqZVqZK2QLlD8/HD4nyEP9+zrfMqFAdDi
-	 MowFq9fkzLAf0W0Yy3nKhZPn6WcB6W1LdW4sCyM4lJGO14OG3eqXkhEgWkNgPf4Rcs
-	 xWFIvdVwOvbKbC0SnG/Oq3UT9/GHiLqXJw8t0Wr0=
+	b=syX2f0sGY3Tb1hlYppcWC6KNry+wjKG4+RRFp1EAGHCxF4oxvAWgVB7jWU+5Sd4t9
+	 aOtCj1JD5Lmo+Uq300wWlvXlIB9siFMdPgGRf3eEY/KenOEQOAeYBq9d9AzUmHIciZ
+	 HILgmRIsHJKARdOhQfy+10hVzFnqkx9qF7I895is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732783AbgHQTsv (ORCPT
+        id S2404436AbgHQTua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:50:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729252AbgHQPUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:11 -0400
+        id S1729225AbgHQPT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF3820716;
-        Mon, 17 Aug 2020 15:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495352076E;
+        Mon, 17 Aug 2020 15:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677611;
-        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+        s=default; t=1597677567;
+        bh=o1hp91tWbFC0JPymhREMXQpAYm591TzRF4KoNiOC+jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LUxvVenSSotBWVrmeugukEL/e9dL952yChRQO+g5jTSxc+MGZkQ1W3BZyek3pDVcs
-         PXJqiBppFqX0CUG8+shQqevvzaVsWzHU739cANlv/MUr4f5cqnP3NXVDCMQQx+rcQW
-         DkVBcNSqIPkPF5pb0jfp1JV3PAmXuyAiyWw8L5Go=
+        b=w74iwkooCq1tABzvT4GiCcXlAV5KOrd80zLS2qiVvXCFhqhYQPToOqPXg4JTGf4u5
+         DTpsAXdBOJ5FuZQWBM7W4buetsgFAkSyESKl6IcpXQp6tKcAu0Sf9P3AVH2OMvdatv
+         6bw5YhrroDng9+dPu+IRlj9/1UU3BP405N1U+lJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 044/464] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
-Date:   Mon, 17 Aug 2020 17:09:57 +0200
-Message-Id: <20200817143835.867776292@linuxfoundation.org>
+Subject: [PATCH 5.8 029/464] sched/uclamp: Fix initialization of struct uclamp_rq
+Date:   Mon, 17 Aug 2020 17:09:42 +0200
+Message-Id: <20200817143835.152292709@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,47 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
+[ Upstream commit d81ae8aac85ca2e307d273f6dc7863a721bf054e ]
 
-The Bananapi M2+ uses a GPIO line to change the effective resistance of
-the CPU supply regulator's feedback resistor network. The voltages
-described in the device tree were given directly by the vendor. This
-turns out to be slightly off compared to the real values.
+struct uclamp_rq was zeroed out entirely in assumption that in the first
+call to uclamp_rq_inc() they'd be initialized correctly in accordance to
+default settings.
 
-The updated voltages are based on calculations of the feedback resistor
-network, and verified down to three decimal places with a multi-meter.
+But when next patch introduces a static key to skip
+uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
+will fail to perform any frequency changes because the
+rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
+means all rqs are capped to 0 by default.
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
+Fix it by making sure we do proper initialization at init without
+relying on uclamp_rq_inc() doing it later.
+
+Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+Link: https://lkml.kernel.org/r/20200630112123.12076-2-qais.yousef@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/core.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index a628b5ee72b65..235994a4a2ebb 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
- 		regulator-type = "voltage";
- 		regulator-boot-on;
- 		regulator-always-on;
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1300000>;
-+		regulator-min-microvolt = <1108475>;
-+		regulator-max-microvolt = <1308475>;
- 		regulator-ramp-delay = <50>; /* 4ms */
- 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
- 		gpios-states = <0x1>;
--		states = <1100000 0>, <1300000 1>;
-+		states = <1108475 0>, <1308475 1>;
- 	};
- };
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2142c67676826..c3cbdc436e2e4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1237,6 +1237,20 @@ static void uclamp_fork(struct task_struct *p)
+ 	}
+ }
  
++static void __init init_uclamp_rq(struct rq *rq)
++{
++	enum uclamp_id clamp_id;
++	struct uclamp_rq *uc_rq = rq->uclamp;
++
++	for_each_clamp_id(clamp_id) {
++		uc_rq[clamp_id] = (struct uclamp_rq) {
++			.value = uclamp_none(clamp_id)
++		};
++	}
++
++	rq->uclamp_flags = 0;
++}
++
+ static void __init init_uclamp(void)
+ {
+ 	struct uclamp_se uc_max = {};
+@@ -1245,11 +1259,8 @@ static void __init init_uclamp(void)
+ 
+ 	mutex_init(&uclamp_mutex);
+ 
+-	for_each_possible_cpu(cpu) {
+-		memset(&cpu_rq(cpu)->uclamp, 0,
+-				sizeof(struct uclamp_rq)*UCLAMP_CNT);
+-		cpu_rq(cpu)->uclamp_flags = 0;
+-	}
++	for_each_possible_cpu(cpu)
++		init_uclamp_rq(cpu_rq(cpu));
+ 
+ 	for_each_clamp_id(clamp_id) {
+ 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
 -- 
 2.25.1
 
