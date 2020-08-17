@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ACAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4D320578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAC7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690775;
-	bh=SOZN3vB8b/e9xXVr3NCnRkVcHjwE78Nhys0Nf+rGu6E=;
+	s=default; t=1597690778;
+	bh=deTRSKqym2ESqM59ZVGraolv/F1PUNmemVxpu0kvG+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AX24pzc8a7sJykCGoL/CNcQsW7BFIGrk7tugRl09KBuIIDT2AJUBYo30771qQWk1t
-	 p3W+OdxK2yEVok7DXCGxpXT/C8zXVufSoS6PAu0zYqZi3PVFJNew/Wr+in2N78IWjY
-	 HuhFmQStxCSatsQnPifVhnAKkkmZB/BEGYsYsbzI=
+	b=xoPnT9cZFkjru0bWpkUETgzJ+EZFKGHbzPJU/+DqOJ6ka7WARxnOosYzBnmqJbS1Q
+	 9vmJIRENiirt6ubX3DCdtoUVU1Wy4Trz7Zw0kkB67+0iOmtUu7aZDLiKkOh/DSjgdR
+	 5Sxvvicj+t5dTwWUgdFt0Cl1RYAJR0jcPZfnw5Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgHQS7d (ORCPT
+        id S2391858AbgHQS7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59920 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730855AbgHQPsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:48:32 -0400
+        id S1729273AbgHQPs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:48:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CA62067C;
-        Mon, 17 Aug 2020 15:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC6BC221E2;
+        Mon, 17 Aug 2020 15:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679310;
-        bh=SOZN3vB8b/e9xXVr3NCnRkVcHjwE78Nhys0Nf+rGu6E=;
+        s=default; t=1597679307;
+        bh=deTRSKqym2ESqM59ZVGraolv/F1PUNmemVxpu0kvG+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqhDwspYfQ+NgN7RlEBUlc56Np/+rsiVmWSyn6mJGVdTP4anChlndV4gSIiGk7zXF
-         Jrm1LtLMS+rbJwL6/DqTDelsQN2iwwwTXbfKdL1Gg7OJUNSvepkiMNSHaO/QGht3lz
-         N2AOih6PP0nmUNVQ1P8BeIUagE5WGFpp6FQFJbB0=
+        b=NIQT6/GZ483//dAfhsbd6sZ7BHEsqiLWngSe2pXPeqA3jA4jtawvDL121Tl1dM9pw
+         d7spue8JZfI+kq3DX7r4b8RgaBC07Yc/C3fCHFaHRrXnqjwJPzHCIdrk4iIy8nL0Pc
+         /gWu/1nhW8kdB/GklHod+hvmFwqvnwQHQEP18gh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 168/393] net: ethernet: ti: am65-cpsw-nuss: restore vlan configuration while down/up
-Date:   Mon, 17 Aug 2020 17:13:38 +0200
-Message-Id: <20200817143827.769585713@linuxfoundation.org>
+Subject: [PATCH 5.7 167/393] lkdtm: Make arch-specific tests always available
+Date:   Mon, 17 Aug 2020 17:13:37 +0200
+Message-Id: <20200817143827.721129529@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,78 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 7bcffde02152dd3cb180f6f3aef27e8586b2a905 ]
+[ Upstream commit ae56942c14740c2963222efdc36c667ab19555ef ]
 
-The vlan configuration is not restored after interface down/up sequence.
+I'd like arch-specific tests to XFAIL when on a mismatched architecture
+so that we can more easily compare test coverage across all systems.
+Lacking kernel configs or CPU features count as a FAIL, not an XFAIL.
 
-Steps to check:
- # ip link add link eth0 name eth0.100 type vlan id 100
- # ifconfig eth0 down
- # ifconfig eth0 up
+Additionally fixes a build failure under 32-bit UML.
 
-This patch fixes it, restoring vlan ALE entries on .ndo_open().
-
-Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
+Fixes: cea23efb4de2 ("lkdtm/bugs: Make double-fault test always available")
+Fixes: 6cb6982f42cb ("lkdtm: arm64: test kernel pointer authentication")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200625203704.317097-5-keescook@chromium.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/misc/lkdtm/bugs.c               | 38 ++++++++++++++-----------
+ drivers/misc/lkdtm/lkdtm.h              |  2 --
+ tools/testing/selftests/lkdtm/tests.txt |  1 +
+ 3 files changed, 22 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 3e4388e6b5fa1..61b59a3b277ec 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -217,6 +217,9 @@ static int am65_cpsw_nuss_ndo_slave_add_vid(struct net_device *ndev,
- 	u32 port_mask, unreg_mcast = 0;
- 	int ret;
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index e1b43f6155496..7913c9ff216c9 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -13,7 +13,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
  
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
-+
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -240,6 +243,9 @@ static int am65_cpsw_nuss_ndo_slave_kill_vid(struct net_device *ndev,
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
- 	int ret;
+-#ifdef CONFIG_X86_32
++#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
+ #include <asm/desc.h>
+ #endif
  
-+	if (!netif_running(ndev) || !vid)
-+		return 0;
-+
- 	ret = pm_runtime_get_sync(common->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(common->dev);
-@@ -565,6 +571,16 @@ static int am65_cpsw_nuss_ndo_slave_stop(struct net_device *ndev)
- 	return 0;
+@@ -418,7 +418,7 @@ void lkdtm_UNSET_SMEP(void)
+ 
+ void lkdtm_DOUBLE_FAULT(void)
+ {
+-#ifdef CONFIG_X86_32
++#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
+ 	/*
+ 	 * Trigger #DF by setting the stack limit to zero.  This clobbers
+ 	 * a GDT TLS slot, which is okay because the current task will die
+@@ -453,38 +453,42 @@ void lkdtm_DOUBLE_FAULT(void)
+ #endif
  }
  
-+static int cpsw_restore_vlans(struct net_device *vdev, int vid, void *arg)
-+{
-+	struct am65_cpsw_port *port = arg;
-+
-+	if (!vdev)
-+		return 0;
-+
-+	return am65_cpsw_nuss_ndo_slave_add_vid(port->ndev, 0, vid);
-+}
-+
- static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
+-#ifdef CONFIG_ARM64_PTR_AUTH
++#ifdef CONFIG_ARM64
+ static noinline void change_pac_parameters(void)
  {
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-@@ -638,6 +654,9 @@ static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
- 		}
+-	/* Reset the keys of current task */
+-	ptrauth_thread_init_kernel(current);
+-	ptrauth_thread_switch_kernel(current);
++	if (IS_ENABLED(CONFIG_ARM64_PTR_AUTH)) {
++		/* Reset the keys of current task */
++		ptrauth_thread_init_kernel(current);
++		ptrauth_thread_switch_kernel(current);
++	}
+ }
++#endif
+ 
+-#define CORRUPT_PAC_ITERATE	10
+ noinline void lkdtm_CORRUPT_PAC(void)
+ {
++#ifdef CONFIG_ARM64
++#define CORRUPT_PAC_ITERATE	10
+ 	int i;
+ 
++	if (!IS_ENABLED(CONFIG_ARM64_PTR_AUTH))
++		pr_err("FAIL: kernel not built with CONFIG_ARM64_PTR_AUTH\n");
++
+ 	if (!system_supports_address_auth()) {
+-		pr_err("FAIL: arm64 pointer authentication feature not present\n");
++		pr_err("FAIL: CPU lacks pointer authentication feature\n");
+ 		return;
  	}
  
-+	/* restore vlan configurations */
-+	vlan_for_each(ndev, cpsw_restore_vlans, port);
-+
- 	phy_attached_info(port->slave.phy);
- 	phy_start(port->slave.phy);
+-	pr_info("Change the PAC parameters to force function return failure\n");
++	pr_info("changing PAC parameters to force function return failure...\n");
+ 	/*
+-	 * Pac is a hash value computed from input keys, return address and
++	 * PAC is a hash value computed from input keys, return address and
+ 	 * stack pointer. As pac has fewer bits so there is a chance of
+ 	 * collision, so iterate few times to reduce the collision probability.
+ 	 */
+ 	for (i = 0; i < CORRUPT_PAC_ITERATE; i++)
+ 		change_pac_parameters();
  
+-	pr_err("FAIL: %s test failed. Kernel may be unstable from here\n", __func__);
+-}
+-#else /* !CONFIG_ARM64_PTR_AUTH */
+-noinline void lkdtm_CORRUPT_PAC(void)
+-{
+-	pr_err("FAIL: arm64 pointer authentication config disabled\n");
+-}
++	pr_err("FAIL: survived PAC changes! Kernel may be unstable from here\n");
++#else
++	pr_err("XFAIL: this test is arm64-only\n");
+ #endif
++}
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 601a2156a0d48..8878538b2c132 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -31,9 +31,7 @@ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
+ void lkdtm_UNSET_SMEP(void);
+-#ifdef CONFIG_X86_32
+ void lkdtm_DOUBLE_FAULT(void);
+-#endif
+ void lkdtm_CORRUPT_PAC(void);
+ 
+ /* lkdtm_heap.c */
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 92ca32143ae5f..9d266e79c6a27 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -14,6 +14,7 @@ STACK_GUARD_PAGE_LEADING
+ STACK_GUARD_PAGE_TRAILING
+ UNSET_SMEP CR4 bits went missing
+ DOUBLE_FAULT
++CORRUPT_PAC
+ UNALIGNED_LOAD_STORE_WRITE
+ #OVERWRITE_ALLOCATION Corrupts memory on failure
+ #WRITE_AFTER_FREE Corrupts memory on failure
 -- 
 2.25.1
 
