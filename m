@@ -2,83 +2,101 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6962072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HaEXaxSU"
+	by mail.kernel.org (Postfix) with ESMTP id CCC5620658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693879;
+	bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NXE+BqZ7X+AK6VGwjgyQIYN5pbkjlnvBxSlWv4xnZvS7YpmUWp9tQn8hxZ6quBHqV
+	 JgY5mWfC1/HXMRfSbfVfc6lOLUfpePGTWh4N/5pwMqeuIwGqqMtDFOBMhJuYpkNucM
+	 79KS0rba0+C7c0Jq+1EYaMMJ9MyENwtIUYWRQbgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732666AbgHQTvI (ORCPT
+        id S1732831AbgHQTvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbgHQPSz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:18:55 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6036C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hCefh1Pahxh4o69rSCAzBH1nyvhBAQVuzTSUa//BjSc=; b=HaEXaxSUJfaZR9PXaX/Iw51Eee
-        elL+G4+Z0IVSwtAc6bT/0YEsJEkalKG5vrOMm5/rtjyWrJd3/fg02hrWL0dJeG6cbT8loU6hksGb7
-        IISbwMJ8MRVgs9dkHtyKR1EH5ZWCgzQsUQ3/JLE69pmR+OX39TcneUy0WjQEk8TlgpZWVRyWf5Uaa
-        G83hpf7YzODX1DoI0omB7nDAXvtsUukDyCpl/EqUIAoVF/399K4rPTRF5AS9S3gybD7t+O1FR/O9y
-        AEKY3MEBNrz181r9nD8GThs5H4bBcLCR47AFsL6TGRlBHTSe3gs8YPHiSKNYY39mOLAVbPDwuM98R
-        VLzGYg2w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7guR-0008L3-Fu; Mon, 17 Aug 2020 15:18:51 +0000
-Date:   Mon, 17 Aug 2020 16:18:51 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bean Huo <huobean@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Bean Huo <beanhuo@micron.com>
-Subject: Re: [PATCH] mm: change prev_offset type to unsigned long
-Message-ID: <20200817151851.GK17456@casper.infradead.org>
-References: <20200817150637.4244-1-huobean@gmail.com>
+        Mon, 17 Aug 2020 15:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729188AbgHQPSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:18:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 827DE206FA;
+        Mon, 17 Aug 2020 15:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677526;
+        bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bKOjZ3sG1TBYEUE2a/gc5U/qrBwoV5erPHPEZCcZyQP5/YbYeKkAFOulcuPMn1Sh8
+         hs2pSAOBo15Ea60rHOKV5Jv0HOMYEo1UDbsPsFP0A7VQ37hYvq7AO9wrYYKqEa6+Lp
+         906mTXRsoIOc1ftqLG8192lXeqmOxOMGjhdPp3BM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 015/464] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
+Date:   Mon, 17 Aug 2020 17:09:28 +0200
+Message-Id: <20200817143834.486624183@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817150637.4244-1-huobean@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:06:37PM +0200, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-There's no description.  Please explain why this patch is needed.
+[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  mm/filemap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index cf4bdf7803b6..d736c7a4b826 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2025,7 +2025,7 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
->  	pgoff_t last_index;
->  	pgoff_t prev_index;
->  	unsigned long offset;      /* offset into pagecache page */
-> -	unsigned int prev_offset;
-> +	unsigned long prev_offset;
->  	int error = 0;
->  
->  	if (unlikely(*ppos >= inode->i_sb->s_maxbytes))
-> -- 
-> 2.17.1
-> 
-> 
+The puma vcc5v0_host regulator node currently uses opposite active-values
+for the enable pin. The gpio-declaration uses active-high while the
+separate enable-active-low property marks the pin as active low.
+
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
+
+So bring this in line and make both properties match, similar to the
+gmac fix.
+
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 07694b196fdbe..063f59a420b65 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+ 
+ 	vcc5v0_host: vcc5v0-host-regulator {
+ 		compatible = "regulator-fixed";
+-		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
+ 		enable-active-low;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&vcc5v0_host_en>;
+-- 
+2.25.1
+
+
+
