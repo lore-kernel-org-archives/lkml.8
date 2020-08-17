@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F64C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6583CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 821BE2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B24C20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681354;
-	bh=EGmXluOUHO25U06vCs4b8FJqku0OIik3wXzBz25SqUo=;
+	s=default; t=1597681363;
+	bh=L7Fuv2KHVQPkEGZguNm9DpboBBFZMLvBILGXeFQ+vY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUXCZgmpmRc469iUTOABBSwWVbR7XB2G/s4Thp4SV01B4bfNXWqpUCtF/SwqimHEH
-	 dvHbJNrP/dHQf103wY4t9jJBqJ3yWqYJvgWmFes66PHIzA6sS7b251fzKvr4yUi4Zq
-	 GHRqRtW7/J82Sc3TK2rFzk0PuhV3mhRyCEwyKgYg=
+	b=DpQgZfWyJjNMtRmPoI2UU1fa27o9Ordu38yi+LCz3+GWnN3uSsvSQfr5oCnFUbFb8
+	 2GtUrUxGdejsMY3iBMf0u6TuE/HmBVHQ2fkVYCh34FGRc9nYi39dij7XoN7sOS1Z8C
+	 82Ew2gfh4w3kAikQyQfe/p2UFmkgUFMwtgkFFnIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbgHQQWc (ORCPT
+        id S2388473AbgHQQWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:22:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730773AbgHQPuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:06 -0400
+        id S1730879AbgHQPub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C75112245C;
-        Mon, 17 Aug 2020 15:49:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 382E42063A;
+        Mon, 17 Aug 2020 15:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679398;
-        bh=EGmXluOUHO25U06vCs4b8FJqku0OIik3wXzBz25SqUo=;
+        s=default; t=1597679430;
+        bh=L7Fuv2KHVQPkEGZguNm9DpboBBFZMLvBILGXeFQ+vY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMnGfXpOOgOpGwU40FzmhZR34XKatGyPj0hwZnYFX9YQzdqZea44PIcdJCQNpbCX1
-         xcFWce0NFocW3pK+1jVfPTDQB/8y+hL76Zv5aTIDV7ujdqHKwMu55u54lj9R7fuZkQ
-         loUMfma34vx2qGJ57Y1u4HPw8xoDeIu/3gbha9jI=
+        b=gOZoue80LPQrKYASACPlcg6SO+KczSlwtV1JPRtwJVMlu3FNbQGvWbEIqGNNKFkVE
+         nK7wJnYDTIi5QBV8QiA/5wm8tYVmRL2clTP0CXNf9t6tgG7F5n4wHofTrLlbgz1AV0
+         Gg2BqvAn2KoviNvahP7zl9N6EQZwH5opWrzJ3nOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 198/393] drm/bridge: sil_sii8620: initialize return of sii8620_readb
-Date:   Mon, 17 Aug 2020 17:14:08 +0200
-Message-Id: <20200817143829.227122165@linuxfoundation.org>
+Subject: [PATCH 5.7 208/393] ima: Free the entire rule when deleting a list of rules
+Date:   Mon, 17 Aug 2020 17:14:18 +0200
+Message-Id: <20200817143829.714149914@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -62,47 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
+[ Upstream commit 465aee77aae857b5fcde56ee192b33dc369fba04 ]
 
-clang static analysis flags this error
+Create a function, ima_free_rule(), to free all memory associated with
+an ima_rule_entry. Use the new function to fix memory leaks of allocated
+ima_rule_entry members, such as .fsname and .keyrings, when deleting a
+list of rules.
 
-sil-sii8620.c:184:2: warning: Undefined or garbage value
-  returned to caller [core.uninitialized.UndefReturn]
-        return ret;
-        ^~~~~~~~~~
+Make the existing ima_lsm_free_rule() function specific to the LSM
+audit rule array of an ima_rule_entry and require that callers make an
+additional call to kfree to free the ima_rule_entry itself.
 
-sii8620_readb calls sii8620_read_buf.
-sii8620_read_buf can return without setting its output
-pararmeter 'ret'.
+This fixes a memory leak seen when loading by a valid rule that contains
+an additional piece of allocated memory, such as an fsname, followed by
+an invalid rule that triggers a policy load failure:
 
-So initialize ret.
+ # echo -e "dont_measure fsname=securityfs\nbad syntax" > \
+    /sys/kernel/security/ima/policy
+ -bash: echo: write error: Invalid argument
+ # echo scan > /sys/kernel/debug/kmemleak
+ # cat /sys/kernel/debug/kmemleak
+ unreferenced object 0xffff9bab67ca12c0 (size 16):
+   comm "bash", pid 684, jiffies 4295212803 (age 252.344s)
+   hex dump (first 16 bytes):
+     73 65 63 75 72 69 74 79 66 73 00 6b 6b 6b 6b a5  securityfs.kkkk.
+   backtrace:
+     [<00000000adc80b1b>] kstrdup+0x2e/0x60
+     [<00000000d504cb0d>] ima_parse_add_rule+0x7d4/0x1020
+     [<00000000444825ac>] ima_write_policy+0xab/0x1d0
+     [<000000002b7f0d6c>] vfs_write+0xde/0x1d0
+     [<0000000096feedcf>] ksys_write+0x68/0xe0
+     [<0000000052b544a2>] do_syscall_64+0x56/0xa0
+     [<000000007ead1ba7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
+Fixes: f1b08bbcbdaf ("ima: define a new policy condition based on the filesystem name")
+Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/integrity/ima/ima_policy.c | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-index 92acd336aa894..ca98133411aab 100644
---- a/drivers/gpu/drm/bridge/sil-sii8620.c
-+++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-@@ -178,7 +178,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 236a731492d1e..641582230861c 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -261,6 +261,21 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
+ 		security_filter_rule_free(entry->lsm[i].rule);
+ 		kfree(entry->lsm[i].args_p);
+ 	}
++}
++
++static void ima_free_rule(struct ima_rule_entry *entry)
++{
++	if (!entry)
++		return;
++
++	/*
++	 * entry->template->fields may be allocated in ima_parse_rule() but that
++	 * reference is owned by the corresponding ima_template_desc element in
++	 * the defined_templates list and cannot be freed here
++	 */
++	kfree(entry->fsname);
++	kfree(entry->keyrings);
++	ima_lsm_free_rule(entry);
+ 	kfree(entry);
+ }
  
- static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
+@@ -302,6 +317,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 
+ out_err:
+ 	ima_lsm_free_rule(nentry);
++	kfree(nentry);
+ 	return NULL;
+ }
+ 
+@@ -315,7 +331,14 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
+ 
+ 	list_replace_rcu(&entry->list, &nentry->list);
+ 	synchronize_rcu();
++	/*
++	 * ima_lsm_copy_rule() shallow copied all references, except for the
++	 * LSM references, from entry to nentry so we only want to free the LSM
++	 * references and the entry itself. All other memory refrences will now
++	 * be owned by nentry.
++	 */
+ 	ima_lsm_free_rule(entry);
++	kfree(entry);
+ 
+ 	return 0;
+ }
+@@ -1402,15 +1425,11 @@ ssize_t ima_parse_add_rule(char *rule)
+ void ima_delete_rules(void)
  {
--	u8 ret;
-+	u8 ret = 0;
+ 	struct ima_rule_entry *entry, *tmp;
+-	int i;
  
- 	sii8620_read_buf(ctx, addr, &ret, 1);
- 	return ret;
+ 	temp_ima_appraise = 0;
+ 	list_for_each_entry_safe(entry, tmp, &ima_temp_rules, list) {
+-		for (i = 0; i < MAX_LSM_RULES; i++)
+-			kfree(entry->lsm[i].args_p);
+-
+ 		list_del(&entry->list);
+-		kfree(entry);
++		ima_free_rule(entry);
+ 	}
+ }
+ 
 -- 
 2.25.1
 
