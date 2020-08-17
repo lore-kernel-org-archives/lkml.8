@@ -2,53 +2,51 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87026C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791C1206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62ACE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684798;
-	bh=hyv6sIpajHqcyxJu/H5pXwKmGKQ/NfoJMOXFVjM/BgY=;
+	s=default; t=1597684807;
+	bh=hPo0V38jnWsNMAydRHO7trBV7uIaBeU/p2KnrRXXULM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l08ku0kHDns17j0nEj0X5lpVz3E6SBi3aKUexWdDZQlSRNgOnKPzRn6S57goinr/I
-	 R96P46FobezG6D+tcnRShg+WKaRswWxIBrk5CGYs6rmTs1wyZUC8XM5PjL95pc85Ws
-	 55UCabvfki98Z6d72OZbr8VoKlYsXVOIPgwe/e4E=
+	b=JKdj4kYJPJz39aVDzA4Wh6HTvv9q3d3MKJYz4GFU3OyOw9eqJIirbwilfEXq14QRg
+	 5uXGSeh6nFzm24VD9UvZG2VZe6ap4jSBqm3zA8Xlzv0DyxNwtcqpIIeKOOckaQ0xcX
+	 T2sEJv1AN8aaCz5INyC5dnQEc00BA0+vCVFLm4fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbgHQRTz (ORCPT
+        id S1731431AbgHQRUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbgHQQQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:24 -0400
+        id S1731125AbgHQQQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:16:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87B022D08;
-        Mon, 17 Aug 2020 16:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E0DA20772;
+        Mon, 17 Aug 2020 16:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680944;
-        bh=hyv6sIpajHqcyxJu/H5pXwKmGKQ/NfoJMOXFVjM/BgY=;
+        s=default; t=1597680999;
+        bh=hPo0V38jnWsNMAydRHO7trBV7uIaBeU/p2KnrRXXULM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVmgrtCTk9MUHxoUEaUcjWhfBwCIBxb37ezdWVLtj2x2emKS1dZcpVouc2s3LNVzv
-         0YxKJrNWO9jhnyKdpqONh36HTXlRdPR8zOC+ArBT+16YOfdjspCUqUW4qILqgAwUvo
-         bshW8NYIemox+wI79ownXcLTDSJad/XOp17tXsIQ=
+        b=Riw4kPNPOvsGcmm2o9+1wsu432u85ZjJu/RcgmLZAgq8wG1igxiCoJ9XGzzC8rv7u
+         XgLQ3iAcNJcQkO0p0RwX+9lXLSTt1vCmhXcjut49hFg3e4VOcQ/im4Ve3zheaRjfiW
+         OaztLVXfmSECOexCEK9PKgjaqF9bB3oXdIrg1urE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/168] fsl/fman: use 32-bit unsigned integer
-Date:   Mon, 17 Aug 2020 17:17:31 +0200
-Message-Id: <20200817143739.670020862@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 143/168] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
+Date:   Mon, 17 Aug 2020 17:17:54 +0200
+Message-Id: <20200817143740.824601407@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,41 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florinel Iordache <florinel.iordache@nxp.com>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit 99f47abd9f7bf6e365820d355dc98f6955a562df ]
+commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
 
-Potentially overflowing expression (ts_freq << 16 and intgr << 16)
-declared as type u32 (32-bit unsigned) is evaluated using 32-bit
-arithmetic and then used in a context that expects an expression of
-type u64 (64-bit unsigned) which ultimately is used as 16-bit
-unsigned by typecasting to u16. Fixed by using an unsigned 32-bit
-integer since the value is truncated anyway in the end.
+Further investigation of the L-R swap problem on the MS2109 reveals that
+the problem isn't that the channels are swapped, but rather that they
+are swapped and also out of phase by one sample. In other words, the
+issue is actually that the very first frame that comes from the hardware
+is a half-frame containing only the right channel, and after that
+everything becomes offset.
 
-Fixes: 414fd46e7762 ("fsl/fman: Add FMan support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So introduce a new quirk field to drop the very first 2 bytes that come
+in after the format is configured and a capture stream starts. This puts
+the channels in phase and in the correct order.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/freescale/fman/fman.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/usb/card.h   |    1 +
+ sound/usb/pcm.c    |    6 ++++++
+ sound/usb/quirks.c |    3 +++
+ sound/usb/stream.c |    1 +
+ 4 files changed, 11 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
-index 21d8023535ae4..eba7e54ecf85b 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -1396,8 +1396,7 @@ static void enable_time_stamp(struct fman *fman)
- {
- 	struct fman_fpm_regs __iomem *fpm_rg = fman->fpm_regs;
- 	u16 fm_clk_freq = fman->state->fm_clk_freq;
--	u32 tmp, intgr, ts_freq;
--	u64 frac;
-+	u32 tmp, intgr, ts_freq, frac;
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -129,6 +129,7 @@ struct snd_usb_substream {
+ 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
+ 	unsigned int fmt_type;		/* USB audio format type (1-3) */
+ 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
++	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
  
- 	ts_freq = (u32)(1 << fman->state->count1_micro_bit);
- 	/* configure timestamp so that bit 8 will count 1 microsecond
--- 
-2.25.1
-
+ 	unsigned int running: 1;	/* running status */
+ 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1387,6 +1387,12 @@ static void retire_capture_urb(struct sn
+ 			// continue;
+ 		}
+ 		bytes = urb->iso_frame_desc[i].actual_length;
++		if (subs->stream_offset_adj > 0) {
++			unsigned int adj = min(subs->stream_offset_adj, bytes);
++			cp += adj;
++			bytes -= adj;
++			subs->stream_offset_adj -= adj;
++		}
+ 		frames = bytes / stride;
+ 		if (!subs->txfr_quirk)
+ 			bytes = frames * stride;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1166,6 +1166,9 @@ void snd_usb_set_format_quirk(struct snd
+ 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
+ 		set_format_emu_quirk(subs, fmt);
+ 		break;
++	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
++		subs->stream_offset_adj = 2;
++		break;
+ 	}
+ }
+ 
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -99,6 +99,7 @@ static void snd_usb_init_substream(struc
+ 	subs->tx_length_quirk = as->chip->tx_length_quirk;
+ 	subs->speed = snd_usb_get_speed(subs->dev);
+ 	subs->pkt_offset_adj = 0;
++	subs->stream_offset_adj = 0;
+ 
+ 	snd_usb_set_pcm_ops(as->pcm, stream);
+ 
 
 
