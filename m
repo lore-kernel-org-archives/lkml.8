@@ -2,176 +2,120 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0773C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 915EA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF98204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UHRcBPsn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sn2+pfvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgHQUCU (ORCPT
+        id S1729691AbgHQUDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
+        Mon, 17 Aug 2020 16:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729317AbgHQUCR (ORCPT
+        with ESMTP id S1729534AbgHQUCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:02:17 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C406C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 13:02:17 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id r13so11206887iln.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 13:02:17 -0700 (PDT)
+        Mon, 17 Aug 2020 16:02:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99311C06134A;
+        Mon, 17 Aug 2020 13:02:39 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id u126so18794573iod.12;
+        Mon, 17 Aug 2020 13:02:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=42EHKaiZokDYEpY04AQEHHdjVaoqLPYqnG7cOPFCkVo=;
-        b=UHRcBPsnuwQhn3lAwxUnaMePKdIl5grFxltDU8PhTR6WLHfWFDbi2EKC+nzAhXFKsk
-         Kj26U6KLk9VROr9Zvg9QT+0ePSN5fZsV5DJBIov3SJk+OVUohgcEBBDoYt/AdOFb3VId
-         ntKhlpjtfnSoZfherw1s1yh05Ozxy1lNa20PIXZN4EYEu7T8EEsf4PWtydabRxXHX8fx
-         lqd/l6hGDUi/rFf9nKBX1AKe0Vo3ohnAoa2gM4PZ/3byBobTwWlN+6PmI9PFlph0wyDG
-         BoG6ayyGj/c0QIyGXj91qlxT7SaGZrldW0BhTH39V4+UPxdEJMrqCbBFSFf0+VUc9MHf
-         OTGA==
+        bh=WwUrycf48TYkmEUsmwdsPhuJLiR8sk6wFEPhan5oRwY=;
+        b=sn2+pfvHDOajFSskAm9Fxm/qqS/xvSKDRlv+Nr+am6Zd0sVSR6cX7LVWLoDov8ber3
+         ce5nnc1y1Sl5ZemoRcLc074zh71xINuWQLLNszSbXYlsgJgJ38RkM2hGgvFJwOGXYpsZ
+         o5dvorhKPsFoQl+XtP0CCdb6evXVON9IYxqcnIEktO6LXfErwy5ZNcqK++1SQWA3KNP4
+         VSD2WV68j34nl7stIi0clDmhgjh/GipeiGa3AVpZQWj3AwkW7TFube9OeZ221ELOQLtH
+         c2kjOVqgPbtpcwo4g1Aa/BQQgxzvrHsfrWeqUulbwUQaLcOuLUS7mSBNAAEhAqBCdkcv
+         hguQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=42EHKaiZokDYEpY04AQEHHdjVaoqLPYqnG7cOPFCkVo=;
-        b=ZWb/GHRbJyuk0UN5IKnSuhvXlXwrlXJOpyjGo7IemyMuBGfWkz54d129xU2l/Q4whv
-         d+jQ9IzOO0y/YM2Dh0lB6s58zg7hf5bdaPVj0VKbU8N8YzLVwl5GqjWVlFj9QR2VPIpc
-         0wrYmX65irIXcWA5Yyukus06gNhPX/XOk+xdfO/QzR6hNXydK1JtznOAuW3n2WG3y9Li
-         Q4rH4U/Ks8U/mymOkC92tXGilcO30eBW+AQyBzku5nO3sC05lYAukCPsBohbymqYVVY3
-         SujnARXDBw7+YkFSTW4QoNlmBl4rhmDgXrNDIhvhJjQtDVGnYFGCJsyCfyaR4UjjkWEU
-         rX8g==
-X-Gm-Message-State: AOAM533BQb6FclcoYG2RPR3nh1GUxSjoBsh8NlH3lroxGXYKEQfLZrca
-        0bsRwvSnWT7CUQk2EVE3di70Sn8nBTLRTy3a+80s7A==
-X-Google-Smtp-Source: ABdhPJz7+/cSad+TqEVktg+PR5xxDaQJGXqAXQEodbtGBY1kqiUkr3yUdwTHkmeHwjQMPc5WO3+3DORBrxf8XAicLVM=
-X-Received: by 2002:a92:a157:: with SMTP id v84mr14515417ili.189.1597694536738;
- Mon, 17 Aug 2020 13:02:16 -0700 (PDT)
+        bh=WwUrycf48TYkmEUsmwdsPhuJLiR8sk6wFEPhan5oRwY=;
+        b=kkK1G22yzevA0EJg2pyjmGTRLpOfebJObOYRvOXlo1UJ5Dd+nQLWMOq0hfTM3GqDzT
+         oIEAjxQYq28A/5BC7qa+Vg95HREKO+SXETSyy9XTyIp1S3WQdp8sI/xl+ZV1YHUdAjFv
+         PQ3c3xFrw+YzsWg6yEXxrMVCCJ3/5j3DqR7mNQsbnCnEvAVCyqXCx9guoYV/63ZyXzIq
+         oOkyIykGfM/YFy2CYoo4oOLIYob3rP8r8Bj9Jsqoe9wKlbE5iFDJ5sRePDiHGDmtnW5R
+         ZRFUx6nVq/pcogNsQo+G2zxyE1x/SyPVTH/jHAbn0uo4/81V1fVufmTGavpPiKF3COan
+         NnYQ==
+X-Gm-Message-State: AOAM531BopSGU6L5Gg215yFjkNEEfdp9lmMYr+v47Dryf2jL7+8sZ1F/
+        NGHknxicYi5LJDusgY5Sf5ySBWRa70I7Hs2rB/o=
+X-Google-Smtp-Source: ABdhPJzj+6X2ku5vJmBvnez2/FVa+qVYD9yvkbDWWfWNDJmGlYW6tYwx9XRCr4Kkh/o15zvNhmsVrj/7A7T0TUym9xE=
+X-Received: by 2002:a6b:e002:: with SMTP id z2mr13402090iog.178.1597694558727;
+ Mon, 17 Aug 2020 13:02:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817170535.17041-1-brgl@bgdev.pl> <20200817170535.17041-2-brgl@bgdev.pl>
- <20200817173908.GS1891694@smile.fi.intel.com>
-In-Reply-To: <20200817173908.GS1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 17 Aug 2020 22:02:05 +0200
-Message-ID: <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <20200817133931.11785-1-aford173@gmail.com> <20200817215953.59607c11@aktux>
+In-Reply-To: <20200817215953.59607c11@aktux>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 17 Aug 2020 15:02:27 -0500
+Message-ID: <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        "H. Nikolaus Schaller" <hns@goldelico.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
 >
-> On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Mon, 17 Aug 2020 08:39:31 -0500
+> Adam Ford <aford173@gmail.com> wrote:
+>
+> > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> > depending on commercial or industrial temperature ratings.
 > >
-> > Implement the managed variant of krealloc(). This function works with
-> > all memory allocated by devm_kmalloc() (or devres functions using it
-> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> > This patch expands the thermal information to include the limits of 90
+> > and 105C for alert and critical.  It sets the coolings-cells for the
+> > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
 > >
-> > Managed realloc'ed chunks can be manually released with devm_kfree().
->
-> Thanks for an update! My comments / questions below.
->
-> ...
->
-> > +static struct devres *to_devres(void *data)
-> > +{
-> > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
-> > +                                                 ARCH_KMALLOC_MINALIGN));
->
-> Do you really need both explicit castings?
->
+> > For boards who never use industrial temperatures, these can be
+> > changed on their respective device trees with something like:
+> >
+> > &cpu_alert0 {
+> >       temperature = <85000>; /* millicelsius */
+> > };
+> >
+> > &cpu_crit {
+> >       temperature = <90000>; /* millicelsius */
+> > };
+> >
+> > OMAP3_THERMAL will need to be enabled.  It is off by default.
+> >
+> hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+> got stuck somewhere. It still seems not to work. Shouldn't that patch
+> be applied first?
 
-Yeah, we can probably drop the (struct devres *) here.
+I rebased the idle stuff, and now I get errors, so I haven't pushed it
+yet.  I put a note that OMAP3_THERMAL is off by default, but this
+patch would at least get the framing in there.  I know at least two of
+us that use 1GHZ processors which are not supposed to run at that
+speed above 90MHz, so the idea was to tolerate the higher current for
+now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
+default.
 
-> > +}
+adam
 >
-> ...
->
-> > +     total_old_size = ksize(to_devres(ptr));
->
-> But how you can guarantee this pointer:
->  - belongs to devres,
-
-We can only check if a chunk is dynamically allocated with ksize() -
-it will return 0 if it isn't and I'll add a check for that in the next
-iteration. We check whether it's a managed chunk later after taking
-the lock.
-
->  - hasn't gone while you run a ksize()?
->
-
-At some point you need to draw a line. In the end: how do you
-guarantee a devres buffer hasn't been freed when you're using it? In
-my comment to the previous version of this patch I clarified that we
-need to protect all modifications of the devres linked list - we must
-not realloc a chunk that contains the links without taking the
-spinlock but also we must not call alloc() funcs with GFP_KERNEL with
-spinlock taken. The issue we could run into is: someone modifies the
-linked list by adding/removing other managed resources, not modifying
-this one.
-
-The way this function works now guarantees it but other than that:
-it's up to the users to not free memory they're actively using.
-
-> ...
->
-> > +     new_dr = alloc_dr(devm_kmalloc_release,
-> > +                       total_new_size, gfp, dev_to_node(dev));
->
-> Can you move some parameters to the previous line?
->
-
-Why though? It's fine this way.
-
-> > +     if (!new_dr)
-> > +             return NULL;
->
-> ...
->
-> > +     spin_lock_irqsave(&dev->devres_lock, flags);
-> > +
-> > +     old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-> > +     if (!old_dr) {
-> > +             spin_unlock_irqrestore(&dev->devres_lock, flags);
-> > +             devres_free(new_dr);
-> > +             WARN(1, "Memory chunk not managed or managed by a different device.");
-> > +             return NULL;
-> > +     }
-> > +
-> > +     replace_dr(dev, &old_dr->node, &new_dr->node);
-> > +
-> > +     spin_unlock_irqrestore(&dev->devres_lock, flags);
-> > +
-> > +     memcpy(new_dr->data, old_dr->data, devres_data_size(total_old_size));
->
-> But new_dr may concurrently gone at this point, no? It means memcpy() should be
-> under spin lock.
->
-
-Just as I explained above: we're protecting the linked list, not the
-resource itself.
-
-Bartosz
+> Regards,
+> Andreas
