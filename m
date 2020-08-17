@@ -2,242 +2,160 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28AAC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64277C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4CD20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IXeW+oo/"
+	by mail.kernel.org (Postfix) with ESMTP id 311C82072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597694512;
+	bh=v/fyguDJgngMm4D7i8RenkD4TNEW+1PlLNlPWyhPCMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=blPjBeXSFnHcjXH7Zu8msCcbwrHfYd+p+/UqHEN24+rGpHgUMdUaCupOPgwSx7LMF
+	 cQLlo55iYu37Pvt4gHLRvMwxmX5QuMlJl1Ok0ko92oM7KBGRjvRAYMue/5Qzy7tMJn
+	 JOvb57h6+I6qyG3wnW26MzS8UwxlfKqvc6j1YAQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbgHQUAl (ORCPT
+        id S1730462AbgHQUBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:00:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:31982 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 16:01:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgHQUAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:00:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597694439; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=NdD48skVszuOItAKskoiRELtYxmKvKcR/jrt0QNwEyM=;
- b=IXeW+oo/324jPKzsbDGmP5tMz9HpSaOvtelLusVJRvBDJnICoGsvTHfUna+kaTkYtZ60vZTF
- +N2PkmTsB6ElB9Djrd0f5CfhiZiZXEUe9TmLk/KflTwp43GxYDWkcDpQLalImUBnPgyuDTB3
- y26SPDeO42ZilGxskgRI9vmNino=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3ae1dd46ed996674f549fa (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 20:00:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 966F7C43391; Mon, 17 Aug 2020 20:00:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1729118AbgHQUBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 16:01:50 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02D87C433CA;
-        Mon, 17 Aug 2020 20:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFBB4204EC;
+        Mon, 17 Aug 2020 20:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597694509;
+        bh=v/fyguDJgngMm4D7i8RenkD4TNEW+1PlLNlPWyhPCMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HgNGlfQuhDucmukwOltDYSq8Cr51/e0tYsvwbQaCFdB4G0jwq8kyxoudqo7kV+erE
+         A/ROK83tkaAUJUlxhOby0oA0wkIpLg4i0JGJom9ho0BSX93an/0/JxJYL/ces7lhXx
+         XNNOqkKDDT98Jj7RnoFIMnFOzMvpI4Bm3laiUvZQ=
+Date:   Mon, 17 Aug 2020 15:01:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: Drop pcibios_pm_ops from the PCI subsystem
+Message-ID: <20200817200147.GA1438651@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 13:00:26 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Jonathan Marek <jonathan@marek.ca>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        dri-devel <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL
- driver
-In-Reply-To: <CAF6AEGt+NV-T7Qo_-gLM981QBWy3865Vbj518sd-4XQJccX_WA@mail.gmail.com>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
- <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
- <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
- <CAF6AEGt+NV-T7Qo_-gLM981QBWy3865Vbj518sd-4XQJccX_WA@mail.gmail.com>
-Message-ID: <544ff63864a06f70f7b4541b913180bf@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730194416.1029509-1-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-15 15:45, Rob Clark wrote:
-> On Sat, Aug 15, 2020 at 2:21 PM Jonathan Marek <jonathan@marek.ca> 
-> wrote:
->> 
->> On 8/15/20 4:20 PM, Rob Clark wrote:
->> > On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
->> > <dmitry.baryshkov@linaro.org> wrote:
->> >>
->> >>
->> >> On 12/08/2020 07:42, Tanmay Shah wrote:
->> >>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
->> >>   >
->> >>   > Add the needed DP PLL specific files to support
->> >>   > display port interface on msm targets.
->> >>
->> >> [skipped]
->> >>
->> >>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> >> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> >>   > new file mode 100644
->> >>   > index 000000000000..475ba6ed59ab
->> >>   > --- /dev/null
->> >>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> >>   > @@ -0,0 +1,98 @@
->> >>   > +/* SPDX-License-Identifier: GPL-2.0-only */
->> >>   > +/*
->> >>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights
-> reserved.
->> >>   > + */
->> >>   > +
->> >>   > +#ifndef __DP_PLL_10NM_H
->> >>   > +#define __DP_PLL_10NM_H
->> >>   > +
->> >>   > +#include "dp_pll.h"
->> >>   > +#include "dp_reg.h"
->> >>   > +
->> >>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->> >>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->> >>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->> >>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->> >>   > +
->> >>   > +#define NUM_DP_CLOCKS_MAX            6
->> >>   > +
->> >>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
->> >>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->> >>   > +
->> >>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->> >>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->> >>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->> >>   > +
->> >>   > +struct dp_pll_vco_clk {
->> >>   > +    struct clk_hw hw;
->> >>   > +    unsigned long    rate;        /* current vco rate */
->> >>   > +    u64        min_rate;    /* min vco rate */
->> >>   > +    u64        max_rate;    /* max vco rate */
->> >>   > +    void        *priv;
->> >>   > +};
->> >>   > +
->> >>   > +struct dp_pll_db {
->> >>
->> >> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
->> >> example, will use slightly different structure.
->> >
->> > Note that sboyd has a WIP series to move all of the pll code out to a
->> > phy driver.  If there is work already happening on 7nm support, it
->> > might be better to go with the separate phy driver approach?  I'm
->> > still a bit undecided about whether to land the dp code initially with
->> > the pll stuff in drm, and then continue refactoring to move to
->> > separate phy driver upstream, or to strip out the pll code from the
->> > beginning.  If you/someone is working on 7nm support, then feedback
->> > about which approach is easier is welcome.
->> >
->> >
-> https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.
-> org/
->> >
->> 
->> I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, 
->> and
->> I have done something similar, with the PLL driver in the QMP phy,
->> although not based on sboyd's series (along with some typec changes to
->> negotiate the DP alt mode and get HPD events, etc.). I don't think
->> having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't 
->> need
->> to be aware of the DP PLL/PHY driver, it only needs to set the
->> link/pixel clock rates which are in dispcc (and those then have the 
->> PLL
->> clocks as a parent).
+On Fri, Jul 31, 2020 at 01:14:16AM +0530, Vaibhav Gupta wrote:
+> The "struct dev_pm_ops pcibios_pm_ops", declared in include/linux/pci.h and
+> defined in drivers/pci/pci-driver.c, provided arch-specific hooks when a
+> PCI device was doing a hibernate transisiton.
 > 
-> yeah, in the dp case, having phy split out makes a ton of sense.. it
-> would maybe be a nice cleanup in other cases (dsi, hdmi) but the
-> combination of usb+dp makes burying this in drm not so great..
+> Although it lost its last usage after
+> 394216275c7d ("s390: remove broken hibernate / power management support")
+> patch.
 > 
-> It would be good if you could work w/ sboyd on this.. based on what
-> I've seen on previous gens, it is probably a different phy driver for
-> 7nm vs 10nm, but I think where we want to end up upstream is with phy
-> split out of drm.
+> After that, instances of it are found only in drivers/pci/pci-driver.c and
+> include/linux/pci.h, which are now unnecessary. Thus it is safe and
+> reasonable to remove even that.
 > 
->> FYI, since it sounds you are considering landing this: it is 
->> completely
->> broken, for example:
->> - ioremap()'s to #define'd addresses in the PLL driver
->> - main DP driver reading/writing to registers in the PHY region, but
->> getting the base address from devicetree was removed since earlier
->> revisions, so it just fails completely. Look at usb3_dp_com (for
->> example), which in dp_catalog_ctrl_usb_reset() would be used to
->> overwrite registers already being driven by the qmp phy driver - but 
->> now
->> the usb3_dp_com.base is never initialized.
-> 
-> Yeah, the idea to land dp isn't that it is perfect (or even not
-> broken), so much as having something upstream gives a common base for
-> others to work against.. maybe we should make the dp parts 'depends on
-> STAGING'?
-> 
-> I could keep a separate msm-next-dp branch that I rebase, to give a
-> common point for folks working dp support for various different gens
-> to coordinate work on.. that kinda sounds like a bunch of extra work
-> for me, so might as well land what we have somehow and work together
-> from there ;-)
-> 
-> But it does sound like you are making the case for including the patch
-> to drop the pll stuff and use phy framework as part of what initially
-> goes upstream.
-> 
+> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-I agree with Rob on landing what we have in DP driver. Of course, by 
-addressing any outstanding comments. That would help in setting base 
-functional code for DisplayPort
-Bring-up. Other features such as PHY compliance and DP audio are 
-dependent on these changes.
+Applied to pci/pm for v5.10, thanks!
 
-We don't want to keep PLL code in drm/msm directory and so we have 
-removed bindings of PLL from DP node. Once base driver is merged, we can 
-rebase Stephen's QMP PHY changes and merge them. Stephen's changes are 
-removing PLL code from drm/msm directory already.
-
-Other dependent patches for DisplayPort driver on msm are posted here:
-https://lore.kernel.org/dri-devel/20200810232315.18707-1-khsieh@codeaurora.org/
-https://lore.kernel.org/dri-devel/20200813015439.4174-2-abhinavk@codeaurora.org/
-
-
-> BR,
-> -R
+> ---
+>  drivers/pci/pci-driver.c | 24 ------------------------
+>  include/linux/pci.h      |  4 ----
+>  2 files changed, 28 deletions(-)
 > 
->> 
->> -Jonathan
->> 
->> > BR,
->> > -R
->> > _______________________________________________
->> > Freedreno mailing list
->> > Freedreno@lists.freedesktop.org
->> > https://lists.freedesktop.org/mailman/listinfo/freedreno
->> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index da6510af1221..0bebbdf85be8 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -966,12 +966,6 @@ static int pci_pm_resume(struct device *dev)
+>  
+>  #ifdef CONFIG_HIBERNATE_CALLBACKS
+>  
+> -/*
+> - * pcibios_pm_ops - provide arch-specific hooks when a PCI device is doing
+> - * a hibernate transition
+> - */
+> -struct dev_pm_ops __weak pcibios_pm_ops;
+> -
+>  static int pci_pm_freeze(struct device *dev)
+>  {
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+> @@ -1030,9 +1024,6 @@ static int pci_pm_freeze_noirq(struct device *dev)
+>  
+>  	pci_pm_set_unknown_state(pci_dev);
+>  
+> -	if (pcibios_pm_ops.freeze_noirq)
+> -		return pcibios_pm_ops.freeze_noirq(dev);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1042,12 +1033,6 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>  	int error;
+>  
+> -	if (pcibios_pm_ops.thaw_noirq) {
+> -		error = pcibios_pm_ops.thaw_noirq(dev);
+> -		if (error)
+> -			return error;
+> -	}
+> -
+>  	/*
+>  	 * The pm->thaw_noirq() callback assumes the device has been
+>  	 * returned to D0 and its config state has been restored.
+> @@ -1171,9 +1156,6 @@ static int pci_pm_poweroff_noirq(struct device *dev)
+>  
+>  	pci_fixup_device(pci_fixup_suspend_late, pci_dev);
+>  
+> -	if (pcibios_pm_ops.poweroff_noirq)
+> -		return pcibios_pm_ops.poweroff_noirq(dev);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1183,12 +1165,6 @@ static int pci_pm_restore_noirq(struct device *dev)
+>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>  	int error;
+>  
+> -	if (pcibios_pm_ops.restore_noirq) {
+> -		error = pcibios_pm_ops.restore_noirq(dev);
+> -		if (error)
+> -			return error;
+> -	}
+> -
+>  	pci_pm_default_resume_early(pci_dev);
+>  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..c4900975041c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2034,10 +2034,6 @@ int pcibios_alloc_irq(struct pci_dev *dev);
+>  void pcibios_free_irq(struct pci_dev *dev);
+>  resource_size_t pcibios_default_alignment(void);
+>  
+> -#ifdef CONFIG_HIBERNATE_CALLBACKS
+> -extern struct dev_pm_ops pcibios_pm_ops;
+> -#endif
+> -
+>  #if defined(CONFIG_PCI_MMCONFIG) || defined(CONFIG_ACPI_MCFG)
+>  void __init pci_mmcfg_early_init(void);
+>  void __init pci_mmcfg_late_init(void);
+> -- 
+> 2.27.0
+> 
