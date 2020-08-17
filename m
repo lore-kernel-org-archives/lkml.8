@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA407C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC99E20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B052072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693211;
-	bh=GC5CVeGW9+4MlK32PYiEpDBO++kd+M/2fVBOrraFITo=;
+	s=default; t=1597693219;
+	bh=9tU5YFD76bVfGvbZRgLUI4JCisB5S13EcVehNhmKP9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bswk5Kvb42XD86zjMTJYP8RJEzYgXeXaWx1qF8OlvloHQQNhdM5R6eNSnbVmIikiU
-	 4RpbWdAJGL7a05MgfELv8Gl1F6JC7FGSp1Su4y/2dcGkcC5+sAuWsekRd9FNJoe/a4
-	 cd1bAHmT1j5J/fTA0lnvIDonW76PUIiepp7FAxDE=
+	b=HLf8P6FzVaVJdGjuBq95cXyXDr+96l9MAprEzM60oz+w4xAmcF06OaHIDfeT/UTot
+	 u7oEIVoqRxQH8cvRtpZaERoVC4082RSwGE9N9DtdJyOBT6yQUb5hYnhfsjYmPH+QjU
+	 Ufnd1mNYTIQVy5ddzoRdWTMcNR9FqBWV7nuXGzFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbgHQTkA (ORCPT
+        id S1732546AbgHQTkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:40:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgHQP0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:04 -0400
+        id S1729768AbgHQPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F2CE23AA0;
-        Mon, 17 Aug 2020 15:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81AC1205CB;
+        Mon, 17 Aug 2020 15:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677963;
-        bh=GC5CVeGW9+4MlK32PYiEpDBO++kd+M/2fVBOrraFITo=;
+        s=default; t=1597677953;
+        bh=9tU5YFD76bVfGvbZRgLUI4JCisB5S13EcVehNhmKP9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qN/7+MQz0kUmVsRGLY45ZXZpCmcYRaFI0z1/14UyxnQW99XGjsdkHVZUIZqbxHgol
-         f3FlpHE4r0+68GEUSWtn5z1yMLroCwuVD8GT/qqh+69YBssYodBtUiLCs+mh+/LVkD
-         ynRCbSGedSTX0fSbgdbSvMcDU1lLNRSSa+9oZMgQ=
+        b=nXjYdXHo9CeXKExJ4jGhwcg0LNR0hUniPMmVAMGaBUEhjsvzMg9OlfuDOeZR33L+U
+         O3SCpxPbMSQG1D8AYlsLtXEBjd98yXXxEbsVk1hUJJrtyOjlIUZY49tFRBUBiA1lR+
+         ecNs6l9f72JSq72/WgFy/yNUP+5Ntv//p4ttNdLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Chen <Mark-YW.Chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 171/464] Bluetooth: btmtksdio: fix up firmware download sequence
-Date:   Mon, 17 Aug 2020 17:12:04 +0200
-Message-Id: <20200817143842.009232452@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 168/464] leds: lm355x: avoid enum conversion warning
+Date:   Mon, 17 Aug 2020 17:12:01 +0200
+Message-Id: <20200817143841.865037175@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,57 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 737cd06072a72e8984e41af8e5919338d0c5bf2b ]
+[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
 
-Data RAM on the device have to be powered on before starting to download
-the firmware.
+clang points out that doing arithmetic between diffent enums is usually
+a mistake:
 
-Fixes: 9aebfd4a2200 ("Bluetooth: mediatek: add support for MediaTek MT7663S and MT7668S SDIO devices")
-Co-developed-by: Mark Chen <Mark-YW.Chen@mediatek.com>
-Signed-off-by: Mark Chen <Mark-YW.Chen@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+
+In this driver, it is intentional, so add a cast to hide the false-positive
+warning. It appears to be the only instance of this warning at the moment.
+
+Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmtksdio.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/leds/leds-lm355x.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index bff095be2f971..c7ab7a23bd676 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -685,7 +685,7 @@ static int mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
- 	const u8 *fw_ptr;
- 	size_t fw_size;
- 	int err, dlen;
--	u8 flag;
-+	u8 flag, param;
+diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+index 11ce052497514..b2eb2e1e9c04b 100644
+--- a/drivers/leds/leds-lm355x.c
++++ b/drivers/leds/leds-lm355x.c
+@@ -164,18 +164,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+ 	/* input and output pins configuration */
+ 	switch (chip->type) {
+ 	case CHIP_LM3554:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+ 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-		reg_val = pdata->pass_mode;
++		reg_val = (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+ 		break;
  
- 	err = request_firmware(&fw, fwname, &hdev->dev);
- 	if (err < 0) {
-@@ -693,6 +693,20 @@ static int mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
- 		return err;
- 	}
- 
-+	/* Power on data RAM the firmware relies on. */
-+	param = 1;
-+	wmt_params.op = MTK_WMT_FUNC_CTRL;
-+	wmt_params.flag = 3;
-+	wmt_params.dlen = sizeof(param);
-+	wmt_params.data = &param;
-+	wmt_params.status = NULL;
-+
-+	err = mtk_hci_wmt_sync(hdev, &wmt_params);
-+	if (err < 0) {
-+		bt_dev_err(hdev, "Failed to power on data RAM (%d)", err);
-+		return err;
-+	}
-+
- 	fw_ptr = fw->data;
- 	fw_size = fw->size;
- 
+ 	case CHIP_LM3556:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
++		          (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+ 		if (ret < 0)
+ 			goto out;
 -- 
 2.25.1
 
