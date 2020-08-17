@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7727C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA67C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59742072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8692072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690894;
-	bh=Wxm+dQv1e/7S1fyu4VC3ugX/kDSnqeoQZQzm/VmVwXQ=;
+	s=default; t=1597690897;
+	bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aLmjSW7X8I5MZpm/kf+fTT+Ir0rgPep+vJ8twpnQxS9seL5cC7FcpUpK13gBNikAb
-	 hE8ZLHC45JqYv2xUXqrnHtaLMDH3rOnjqCUVa27B9KOLeEfwM6GtV+EiUEMbiKnhoF
-	 /Yz0RG6j7BRAz7mvWWatX1DiCaEpQ9Aseo9VD97U=
+	b=VbNMmGa9+N7b8P9YPNR1djl8C2l0bGHbsY0KwpuNu2s8t8u1DGGanH7RsebIAM9U1
+	 2aWmk2YXIGZ9P2ql6n/Cjzw6GLZDvJ2QeNax7Q8zR99ZuYXbGNy+sGnHcHKPTbjeDs
+	 eZbsTzqSoF6GJXHMC7dVA99v7sVXttBBL0WoiWuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgHQTBd (ORCPT
+        id S2404017AbgHQTBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730272AbgHQPro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:44 -0400
+        id S1730265AbgHQPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA7E20789;
-        Mon, 17 Aug 2020 15:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAAB92067C;
+        Mon, 17 Aug 2020 15:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679263;
-        bh=Wxm+dQv1e/7S1fyu4VC3ugX/kDSnqeoQZQzm/VmVwXQ=;
+        s=default; t=1597679260;
+        bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEGWAseOMH0LWg7NJWzmP1RBVWtey5Rcr/taMENO/hCDJfzU6yQmq+3hOPiEsTmeX
-         1RSSTU6uvh6n7x0a7rejkSDYCmviBHA3kHhoxuMu5WTtXjWgoSeRJrvLBNNWSa/1UG
-         1MjanwfZ9CsA3xBSCqwjA8tFSOFtPo1ejJRvPoFM=
+        b=AmnxeODPRdaDfkVvgcoyjM0rpKLqUMSTr6yXGP1fusFJfhX76VG4VyoxRaVfDppbt
+         tM/hOXfcT4odZQUNg9XJ5UA69LpTgWlXSwRcNLCy3BPuTNNoH5VIBPRgWcJyAAslFs
+         Nc0/QKvijgnnpdOzcQ5SKHYmuW8PBrhUOf+EWqwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Chen <Mark-YW.Chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 150/393] Bluetooth: btusb: fix up firmware download sequence
-Date:   Mon, 17 Aug 2020 17:13:20 +0200
-Message-Id: <20200817143826.890504707@linuxfoundation.org>
+Subject: [PATCH 5.7 123/393] drm/bridge: ti-sn65dsi86: Clear old error bits before AUX transfers
+Date:   Mon, 17 Aug 2020 17:12:53 +0200
+Message-Id: <20200817143825.576027194@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,57 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit f645125711c80f9651e4a57403d799070c6ad13b ]
+[ Upstream commit baef4d56195b6d6e0f681f6eac03d8c6db011d34 ]
 
-Data RAM on the device have to be powered on before starting to download
-the firmware.
+The AUX channel transfer error bits in the status register are latched
+and need to be cleared.  Clear them before doing our transfer so we
+don't see old bits and get confused.
 
-Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
-Co-developed-by: Mark Chen <Mark-YW.Chen@mediatek.com>
-Signed-off-by: Mark Chen <Mark-YW.Chen@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Without this patch having a single failure would mean that all future
+transfers would look like they failed.
+
+Fixes: b814ec6d4535 ("drm/bridge: ti-sn65dsi86: Implement AUX channel")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200508163314.1.Idfa69d5d3fc9623083c0ff78572fea87dccb199c@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 3d9313c746f39..4085387f13cfb 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2826,7 +2826,7 @@ static int btusb_mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
- 	const u8 *fw_ptr;
- 	size_t fw_size;
- 	int err, dlen;
--	u8 flag;
-+	u8 flag, param;
- 
- 	err = request_firmware(&fw, fwname, &hdev->dev);
- 	if (err < 0) {
-@@ -2834,6 +2834,20 @@ static int btusb_mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
- 		return err;
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6ad688b320aee..d865cc2565bc0 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -827,6 +827,12 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *aux,
+ 				     buf[i]);
  	}
  
-+	/* Power on data RAM the firmware relies on. */
-+	param = 1;
-+	wmt_params.op = BTMTK_WMT_FUNC_CTRL;
-+	wmt_params.flag = 3;
-+	wmt_params.dlen = sizeof(param);
-+	wmt_params.data = &param;
-+	wmt_params.status = NULL;
++	/* Clear old status bits before start so we don't get confused */
++	regmap_write(pdata->regmap, SN_AUX_CMD_STATUS_REG,
++		     AUX_IRQ_STATUS_NAT_I2C_FAIL |
++		     AUX_IRQ_STATUS_AUX_RPLY_TOUT |
++		     AUX_IRQ_STATUS_AUX_SHORT);
 +
-+	err = btusb_mtk_hci_wmt_sync(hdev, &wmt_params);
-+	if (err < 0) {
-+		bt_dev_err(hdev, "Failed to power on data RAM (%d)", err);
-+		return err;
-+	}
-+
- 	fw_ptr = fw->data;
- 	fw_size = fw->size;
+ 	regmap_write(pdata->regmap, SN_AUX_CMD_REG, request_val | AUX_CMD_SEND);
  
+ 	ret = regmap_read_poll_timeout(pdata->regmap, SN_AUX_CMD_REG, val,
 -- 
 2.25.1
 
