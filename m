@@ -8,70 +8,73 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A94C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E0120658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F365E20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMpOJ+RW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp0tN+rA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgHQI3h (ORCPT
+        id S1728583AbgHQI3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
+        Mon, 17 Aug 2020 04:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgHQI3S (ORCPT
+        with ESMTP id S1728101AbgHQIZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:29:18 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E683BC061388;
-        Mon, 17 Aug 2020 01:29:17 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so7787788pgf.0;
-        Mon, 17 Aug 2020 01:29:17 -0700 (PDT)
+        Mon, 17 Aug 2020 04:25:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DC7C061388;
+        Mon, 17 Aug 2020 01:25:24 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s14so1163851plp.4;
+        Mon, 17 Aug 2020 01:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vUxE5IeTrT0uCQB6Hz6X7n59nqYPK8f19l5eZsLWZHk=;
-        b=MMpOJ+RWvTnu+RVdki2iQGVC8V89OH3VVXnGu/Y1RXOtkejr+GGOhHI3zVcflDZCqq
-         g9v5dZss8ljsyK8YQZwsh20zKQzUtQa1GyansxULKF1ZunW/QCxnhgebjLu5MRqyTX+K
-         kM3JBkP/wxurYrtpjJ1sUceO8AZi2c7hmKKgwsAD1BW+Y5QqjzW3hhyYmrS6uluFyaYn
-         TDwFAbsuaWgLI6llChgHaLRJZHwXc/6xfUFeHSDkaLh3Eh88+iUYlP4M9g1jAznBqzxH
-         r5reKQ0qB6hMVsvEpbk1WTLzXzSVwmKB3ShvqyfuP7COb5jgcZYAx7616Lg8HNsYNqbA
-         u2qQ==
+        bh=YNvMy4AuY+7swgSlQS3LYVsoHEcImnFolbz565rcKCo=;
+        b=gp0tN+rAx/ViPmdFY3zUwZzTzj/Mg191vxLR90RxlqxOVPK45tXw3AbH1absvhOybR
+         L6XttLKa2rjCShl6MqYQ44QfUdD3CVHD/k57/uefx7mFbw+dvycMW2owDft3AzCYyaXg
+         Y1BmBIF3uILRsHaMGOz6on8xFypoYQ+YpP9K7zS9WIdsZr2rdHgI+e3rRrY/Y1ehFs4z
+         YLfJwdzquI3XniXWrq0BcbCg8tEUFTyHrJPXLn3HnBveGGnmRIaVf9eeW9Dea/WmD2Mg
+         zUc8GkJfzCMUzMW2uxsTdDJiiIf52wovdrIoBeC0iJpmdGWJJbAGwIplKpTw7jseeePb
+         MyVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vUxE5IeTrT0uCQB6Hz6X7n59nqYPK8f19l5eZsLWZHk=;
-        b=LiTwPuu9J2/suUnm75QvMsoKawgR2rw00jMKR6oZw3bX5IM88Sxm9YOZTjcRvKyE20
-         zItdk2fdR6uxT8A1kcg8yNN07S/Pz8klw4qcdYt2KwJRUQf+8jSdxm0Q4F2MsDNgiMCe
-         gsASQz8dmVVuZXTlv2532IlN0Nfwg/hqYOwf5D25TZQ8BSmGWgEubEbAk7PGWNgB+/TG
-         A/PwEI9Zl3YBe3P0LlfTdhu48en/w1xUGIA5FEeB7y3ggdvfEyYOi3EF+Hh9pVlAJOql
-         f+6sIHEkZcVZIQ8YXk3XnbumMjVcOibDxcYTNRIXex9A+mFyOseLdifppFvHBAIIyxQR
-         6URA==
-X-Gm-Message-State: AOAM532t9pcncnk5KLLWu99jC19sCOuUXAx/ptRcwh4T8TUngc7Sazao
-        p9GSZkSM3SOEx0EuRsAA6jhUUnRO4ypo9w==
-X-Google-Smtp-Source: ABdhPJyYs1aNn2mn1IdIEBv6VUmsXeEGAWZ/8yu4FckGc55qa1H6aT4QyV5onP+w/yrk5eNfiI4cfA==
-X-Received: by 2002:a05:6a00:228f:: with SMTP id f15mr10444046pfe.222.1597652957399;
-        Mon, 17 Aug 2020 01:29:17 -0700 (PDT)
+        bh=YNvMy4AuY+7swgSlQS3LYVsoHEcImnFolbz565rcKCo=;
+        b=XI8vejuvSaBrM6ivB/n9RK8AfZqN7e+fTvSEA/TtfCjpV1YeQtzSbItVjJu6NaAjg3
+         On8ef1AySMdCnqvwqZeB0TLJr5RKk/Dj0e8RIjXk4irx8MzXUiPggIN1FPHFlBNJAdRG
+         h4S0fJY/rtqpRIk98T9WJ+sxtTrjIsQ6e07ysRUDN5+yLXaTL6nvH4K+YY7GdWYsTfxm
+         Ylm0HQr0wJV1thlt1rsKlnh1tksDcX2Svo9HWWMu1Vw9HFCKmsZMGrYMscODBsVxv629
+         k8/g8U1mn8JziVfRWVFMwBZaBYwchf2VndHAd/gtUUktiB+nu723iloiiapzGOtCKpkd
+         ygFw==
+X-Gm-Message-State: AOAM532Qe2Uewhu8V7Tgr0W+pIyzWqeOK5beEnxTNhv0XymOSyQGQfwa
+        Hd5d94zqOj2CufcKjiYYm04=
+X-Google-Smtp-Source: ABdhPJzHbNppt+UgUbbnFLVZ8W8+Njht8c/Lw3IR0qTaF2iala6YGQd/m/DGKcMclr2bZnj1397x2A==
+X-Received: by 2002:a17:90b:11c4:: with SMTP id gv4mr11263497pjb.198.1597652724297;
+        Mon, 17 Aug 2020 01:25:24 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id r7sm18948102pfl.186.2020.08.17.01.29.13
+        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.25.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:29:16 -0700 (PDT)
+        Mon, 17 Aug 2020 01:25:23 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
-To:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        nareshkumar.pbs@broadcom.com
-Cc:     keescook@chromium.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
+To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
+        kda@linux-powerpc.org, dougmill@linux.ibm.com,
+        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com
+Cc:     keescook@chromium.org, linux-acenic@sunsite.dk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 5/5] infiniband: rxe: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:58:44 +0530
-Message-Id: <20200817082844.21700-6-allen.lkml@gmail.com>
+Subject: [PATCH 05/20] ethernet: cavium: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:54:19 +0530
+Message-Id: <20200817082434.21176-7-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817082844.21700-1-allen.lkml@gmail.com>
-References: <20200817082844.21700-1-allen.lkml@gmail.com>
+In-Reply-To: <20200817082434.21176-1-allen.lkml@gmail.com>
+References: <20200817082434.21176-1-allen.lkml@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,86 +88,153 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/infiniband/sw/rxe/rxe_cq.c   | 6 +++---
- drivers/infiniband/sw/rxe/rxe_task.c | 8 ++++----
- drivers/infiniband/sw/rxe/rxe_task.h | 2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/cavium/liquidio/lio_main.c    | 12 ++++++------
+ drivers/net/ethernet/cavium/liquidio/octeon_main.h |  1 +
+ drivers/net/ethernet/cavium/octeon/octeon_mgmt.c   |  8 ++++----
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c   | 10 ++++------
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.c |  4 ++--
+ drivers/net/ethernet/cavium/thunder/nicvf_queues.h |  2 +-
+ 6 files changed, 18 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
-index ad3090131126..f232fd03d19a 100644
---- a/drivers/infiniband/sw/rxe/rxe_cq.c
-+++ b/drivers/infiniband/sw/rxe/rxe_cq.c
-@@ -66,9 +66,9 @@ int rxe_cq_chk_attr(struct rxe_dev *rxe, struct rxe_cq *cq,
- 	return -EINVAL;
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+index e73bc211779a..41c5f4c6ca22 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+@@ -161,13 +161,13 @@ static int liquidio_set_vf_link_state(struct net_device *netdev, int vfidx,
+ static struct handshake handshake[MAX_OCTEON_DEVICES];
+ static struct completion first_stage;
+ 
+-static void octeon_droq_bh(unsigned long pdev)
++static void octeon_droq_bh(struct tasklet_struct *t)
+ {
+ 	int q_no;
+ 	int reschedule = 0;
+-	struct octeon_device *oct = (struct octeon_device *)pdev;
+-	struct octeon_device_priv *oct_priv =
+-		(struct octeon_device_priv *)oct->priv;
++	struct octeon_device_priv *oct_priv = from_tasklet(oct_priv, t,
++							  droq_tasklet);
++	struct octeon_device *oct = oct_priv->dev;
+ 
+ 	for (q_no = 0; q_no < MAX_OCTEON_OUTPUT_QUEUES(oct); q_no++) {
+ 		if (!(oct->io_qmask.oq & BIT_ULL(q_no)))
+@@ -4194,8 +4194,7 @@ static int octeon_device_init(struct octeon_device *octeon_dev)
+ 
+ 	/* Initialize the tasklet that handles output queue packet processing.*/
+ 	dev_dbg(&octeon_dev->pci_dev->dev, "Initializing droq tasklet\n");
+-	tasklet_init(&oct_priv->droq_tasklet, octeon_droq_bh,
+-		     (unsigned long)octeon_dev);
++	tasklet_setup(&oct_priv->droq_tasklet, octeon_droq_bh);
+ 
+ 	/* Setup the interrupt handler and record the INT SUM register address
+ 	 */
+@@ -4299,6 +4298,7 @@ static int octeon_device_init(struct octeon_device *octeon_dev)
+ 	complete(&handshake[octeon_dev->octeon_id].init);
+ 
+ 	atomic_set(&octeon_dev->status, OCT_DEV_HOST_OK);
++	oct_priv->dev = octeon_dev;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_main.h b/drivers/net/ethernet/cavium/liquidio/octeon_main.h
+index 073d0647b439..5b4cb725f60f 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_main.h
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_main.h
+@@ -39,6 +39,7 @@ struct octeon_device_priv {
+ 	/** Tasklet structures for this device. */
+ 	struct tasklet_struct droq_tasklet;
+ 	unsigned long napi_mask;
++	struct octeon_device *dev;
+ };
+ 
+ /** This structure is used by NIC driver to store information required
+diff --git a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+index 3e17ce0d2314..c745ace07fc3 100644
+--- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
++++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+@@ -315,9 +315,9 @@ static void octeon_mgmt_clean_tx_buffers(struct octeon_mgmt *p)
+ 		netif_wake_queue(p->netdev);
  }
  
--static void rxe_send_complete(unsigned long data)
-+static void rxe_send_complete(struct tasklet_struct *t)
+-static void octeon_mgmt_clean_tx_tasklet(unsigned long arg)
++static void octeon_mgmt_clean_tx_tasklet(struct tasklet_struct *t)
  {
--	struct rxe_cq *cq = (struct rxe_cq *)data;
-+	struct rxe_cq *cq = from_tasklet(cq, t, comp_task);
- 	unsigned long flags;
+-	struct octeon_mgmt *p = (struct octeon_mgmt *)arg;
++	struct octeon_mgmt *p = from_tasklet(p, t, tx_clean_tasklet);
+ 	octeon_mgmt_clean_tx_buffers(p);
+ 	octeon_mgmt_enable_tx_irq(p);
+ }
+@@ -1489,8 +1489,8 @@ static int octeon_mgmt_probe(struct platform_device *pdev)
  
- 	spin_lock_irqsave(&cq->cq_lock, flags);
-@@ -107,7 +107,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
+ 	skb_queue_head_init(&p->tx_list);
+ 	skb_queue_head_init(&p->rx_list);
+-	tasklet_init(&p->tx_clean_tasklet,
+-		     octeon_mgmt_clean_tx_tasklet, (unsigned long)p);
++	tasklet_setup(&p->tx_clean_tasklet,
++		     octeon_mgmt_clean_tx_tasklet);
  
- 	cq->is_dying = false;
+ 	netdev->priv_flags |= IFF_UNICAST_FLT;
  
--	tasklet_init(&cq->comp_task, rxe_send_complete, (unsigned long)cq);
-+	tasklet_setup(&cq->comp_task, rxe_send_complete);
- 
- 	spin_lock_init(&cq->cq_lock);
- 	cq->ibcq.cqe = cqe;
-diff --git a/drivers/infiniband/sw/rxe/rxe_task.c b/drivers/infiniband/sw/rxe/rxe_task.c
-index 08f05ac5f5d5..f7c944d2f987 100644
---- a/drivers/infiniband/sw/rxe/rxe_task.c
-+++ b/drivers/infiniband/sw/rxe/rxe_task.c
-@@ -55,12 +55,12 @@ int __rxe_do_task(struct rxe_task *task)
-  * a second caller finds the task already running
-  * but looks just after the last call to func
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+index c1378b5c780c..11112b58c88f 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -985,9 +985,9 @@ static int nicvf_poll(struct napi_struct *napi, int budget)
+  *
+  * As of now only CQ errors are handled
   */
--void rxe_do_task(unsigned long data)
-+void rxe_do_task(struct tasklet_struct *t)
+-static void nicvf_handle_qs_err(unsigned long data)
++static void nicvf_handle_qs_err(struct tasklet_struct *t)
  {
- 	int cont;
- 	int ret;
- 	unsigned long flags;
--	struct rxe_task *task = (struct rxe_task *)data;
-+	struct rxe_task *task = from_tasklet(task, t, tasklet);
+-	struct nicvf *nic = (struct nicvf *)data;
++	struct nicvf *nic = from_tasklet(nic, t, qs_err_task);
+ 	struct queue_set *qs = nic->qs;
+ 	int qidx;
+ 	u64 status;
+@@ -1493,12 +1493,10 @@ int nicvf_open(struct net_device *netdev)
+ 	}
  
- 	spin_lock_irqsave(&task->state_lock, flags);
- 	switch (task->state) {
-@@ -123,7 +123,7 @@ int rxe_init_task(void *obj, struct rxe_task *task,
- 	snprintf(task->name, sizeof(task->name), "%s", name);
- 	task->destroyed	= false;
+ 	/* Init tasklet for handling Qset err interrupt */
+-	tasklet_init(&nic->qs_err_task, nicvf_handle_qs_err,
+-		     (unsigned long)nic);
++	tasklet_setup(&nic->qs_err_task, nicvf_handle_qs_err);
  
--	tasklet_init(&task->tasklet, rxe_do_task, (unsigned long)task);
-+	tasklet_setup(&task->tasklet, rxe_do_task);
+ 	/* Init RBDR tasklet which will refill RBDR */
+-	tasklet_init(&nic->rbdr_task, nicvf_rbdr_task,
+-		     (unsigned long)nic);
++	tasklet_setup(&nic->rbdr_task, nicvf_rbdr_task);
+ 	INIT_DELAYED_WORK(&nic->rbdr_work, nicvf_rbdr_work);
  
- 	task->state = TASK_STATE_START;
- 	spin_lock_init(&task->state_lock);
-@@ -159,7 +159,7 @@ void rxe_run_task(struct rxe_task *task, int sched)
- 	if (sched)
- 		tasklet_schedule(&task->tasklet);
- 	else
--		rxe_do_task((unsigned long)task);
-+		rxe_do_task(&task->tasklet);
+ 	/* Configure CPI alorithm */
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+index a45223f0cca5..7a141ce32e86 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.c
+@@ -460,9 +460,9 @@ void nicvf_rbdr_work(struct work_struct *work)
  }
  
- void rxe_disable_task(struct rxe_task *task)
-diff --git a/drivers/infiniband/sw/rxe/rxe_task.h b/drivers/infiniband/sw/rxe/rxe_task.h
-index 08ff42d451c6..f69fbb2dd09f 100644
---- a/drivers/infiniband/sw/rxe/rxe_task.h
-+++ b/drivers/infiniband/sw/rxe/rxe_task.h
-@@ -80,7 +80,7 @@ int __rxe_do_task(struct rxe_task *task);
-  * work to do someone must reschedule the task before
-  * leaving
-  */
--void rxe_do_task(unsigned long data);
-+void rxe_do_task(struct tasklet_struct *t);
+ /* In Softirq context, alloc rcv buffers in atomic mode */
+-void nicvf_rbdr_task(unsigned long data)
++void nicvf_rbdr_task(struct tasklet_struct *t)
+ {
+-	struct nicvf *nic = (struct nicvf *)data;
++	struct nicvf *nic = from_tasklet(nic, t, rbdr_task);
  
- /* run a task, else schedule it to run as a tasklet, The decision
-  * to run or schedule tasklet is based on the parameter sched.
+ 	nicvf_refill_rbdr(nic, GFP_ATOMIC);
+ 	if (nic->rb_alloc_fail) {
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_queues.h b/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
+index 2460451fc48f..8453defc296c 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_queues.h
+@@ -348,7 +348,7 @@ void nicvf_xdp_sq_doorbell(struct nicvf *nic, struct snd_queue *sq, int sq_num);
+ 
+ struct sk_buff *nicvf_get_rcv_skb(struct nicvf *nic,
+ 				  struct cqe_rx_t *cqe_rx, bool xdp);
+-void nicvf_rbdr_task(unsigned long data);
++void nicvf_rbdr_task(struct tasklet_struct *t);
+ void nicvf_rbdr_work(struct work_struct *work);
+ 
+ void nicvf_enable_intr(struct nicvf *nic, int int_type, int q_idx);
 -- 
 2.17.1
 
