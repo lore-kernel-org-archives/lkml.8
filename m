@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB23C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A05AD20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5219B208B3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681200;
-	bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+	s=default; t=1597681205;
+	bh=/0WF2HzaJkRlHABOF4pK8/hY3Inw71GYs2pC0/o9Qqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyzIG23kFcVgxSKuQ2QlcW5UqfyOmLr1Vssb7yee/QGaw//xq2z3FxQLi2lCGl4dD
-	 sseCTNSLNLRTLGZQ48HL/Uy4W5XkQQ+amB3R9r9Cf28FFdn0rvUfqwCKgeL0UwUfk+
-	 NSIugyIYDAhzu+rwcAbOHNprwr77hJqt6lEpq5x0=
+	b=k0CgNhAOEVCMPYWnLp4+hiEB/UG2dH+1wqFXRhmn1+bcbgyGwOKKIonLiY+8y6Xvp
+	 9HHAN2SPpFrA5qX9lwFpI0oUtA4rjT120DVa2wziNLfp8uQ7npA58VyqoC1K3XsmQj
+	 sm8Fc/u9t4HS5X/ufozOIuKTq0H0l/LhvBpkQvz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbgHQQTz (ORCPT
+        id S1729576AbgHQQUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33190 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387765AbgHQPtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:49:06 -0400
+        id S2387770AbgHQPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:49:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F2C62065D;
-        Mon, 17 Aug 2020 15:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1265F20789;
+        Mon, 17 Aug 2020 15:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679345;
-        bh=A5cDiprIgsMvCjnEr/jbEPmBcCQcz0QY9VuRftCkkn0=;
+        s=default; t=1597679351;
+        bh=/0WF2HzaJkRlHABOF4pK8/hY3Inw71GYs2pC0/o9Qqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MuauEgPCBcKOnR67RR0RGuvHUZNXmCxme46WNynpvkXl/xQmTAhjft/qePzjYdUzh
-         nu5bQDo4FDDfkJtI7EIHGEJ7fNiC8q85kZBzCmQleBle0gj8d/F+ztnA0yfkfyiMEH
-         eHL9fJ9ngOyHu+HWBDaeCe2aOZCOb0rwGGhqHghE=
+        b=M2L8YY1Gn1aXbzHVARK+KAIDmjtRSHjmI5sVpj5Ljp+ilV/UJUOoTRE7kj9H3Spkz
+         +C1QP3o+uwLrP1J84li+WbDH2a0N2RL+k+hMUpGy9lyFrlQJy6YRZyC9WyqqixaedH
+         +YeY8T9YfDLJWbM4q1JW9ZLJuRb14m9m0RmPt354=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 179/393] media: firewire: Using uninitialized values in node_probe()
-Date:   Mon, 17 Aug 2020 17:13:49 +0200
-Message-Id: <20200817143828.299603634@linuxfoundation.org>
+Subject: [PATCH 5.7 181/393] media: staging: rkisp1: rsz: supported formats are the isps src formats, not sink formats
+Date:   Mon, 17 Aug 2020 17:13:51 +0200
+Message-Id: <20200817143828.399477326@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,38 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 2505a210fc126599013aec2be741df20aaacc490 ]
+[ Upstream commit 7b8ce1f2763b9351a4cb04b802835470e76770a5 ]
 
-If fw_csr_string() returns -ENOENT, then "name" is uninitialized.  So
-then the "strlen(model_names[i]) <= name_len" is true because strlen()
-is unsigned and -ENOENT is type promoted to a very high positive value.
-Then the "strncmp(name, model_names[i], name_len)" uses uninitialized
-data because "name" is uninitialized.
+The rkisp1_resizer's enum callback 'rkisp1_rsz_enum_mbus_code'
+calls the enum callback of the 'rkisp1_isp' on it's video sink pad.
+This is a bug, the resizer should support the same formats
+supported by the 'rkisp1_isp' on the source pad (not the sink pad).
 
-Fixes: 92374e886c75 ("[media] firedtv: drop obsolete backend abstraction")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 56e3b29f9f6b "media: staging: rkisp1: add streaming paths"
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/firewire/firedtv-fw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/media/rkisp1/rkisp1-resizer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/firewire/firedtv-fw.c b/drivers/media/firewire/firedtv-fw.c
-index 97144734eb052..3f1ca40b9b987 100644
---- a/drivers/media/firewire/firedtv-fw.c
-+++ b/drivers/media/firewire/firedtv-fw.c
-@@ -272,6 +272,8 @@ static int node_probe(struct fw_unit *unit, const struct ieee1394_device_id *id)
+diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+index 87799fbf0363e..8b1c0cc5ea3f1 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
++++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+@@ -427,8 +427,8 @@ static int rkisp1_rsz_enum_mbus_code(struct v4l2_subdev *sd,
+ 	u32 pad = code->pad;
+ 	int ret;
  
- 	name_len = fw_csr_string(unit->directory, CSR_MODEL,
- 				 name, sizeof(name));
-+	if (name_len < 0)
-+		return name_len;
- 	for (i = ARRAY_SIZE(model_names); --i; )
- 		if (strlen(model_names[i]) <= name_len &&
- 		    strncmp(name, model_names[i], name_len) == 0)
+-	/* supported mbus codes are the same in isp sink pad */
+-	code->pad = RKISP1_ISP_PAD_SINK_VIDEO;
++	/* supported mbus codes are the same in isp video src pad */
++	code->pad = RKISP1_ISP_PAD_SOURCE_VIDEO;
+ 	ret = v4l2_subdev_call(&rsz->rkisp1->isp.sd, pad, enum_mbus_code,
+ 			       &dummy_cfg, code);
+ 
 -- 
 2.25.1
 
