@@ -2,179 +2,94 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0F12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687909;
-	bh=Fiw50jeqkobRhQDGKeJkItSxQGeO+dfc6ICco/9FPvY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpkG8RAYx4OaNX5T1jYrEvrXp2bbYSw+nE+shzDeU7eIHkiPChRjym2kfN2956KxR
-	 03/9OGet/gddcJ2ojdDgVdGLTqPUYyVVYfkg/lFv4ZN3lhF/QtlnSE2IzkPfnLVvsR
-	 Usj95ACQUFadOBZJDmOlXBnXWshhvMCsUTKhZVsM=
+	by mail.kernel.org (Postfix) with ESMTP id 62D432072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:12:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QH5bN5Gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390471AbgHQSLp (ORCPT
+        id S2387727AbgHQSMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388411AbgHQQH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:07:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C78720729;
-        Mon, 17 Aug 2020 16:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680447;
-        bh=Fiw50jeqkobRhQDGKeJkItSxQGeO+dfc6ICco/9FPvY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uO0vWYofnUUeqE3zOWKh4CspFIToV/1bipfnd5RbJIZq1QY/1j98BkyJsqjk3d7Si
-         VTB8dp702PckuVfYLZhbbAHLLBdyBJAYMKyIumOtc9QnRJwIuFCte1nD13h6vghOJq
-         5DhGqCHqr2R3KiY2qQyLUrSZHYst5WK1o9tmd8OQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 189/270] ASoC: meson: axg-tdm-formatters: fix sclk inversion
-Date:   Mon, 17 Aug 2020 17:16:30 +0200
-Message-Id: <20200817143805.220979553@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 14:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389992AbgHQSLP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:11:15 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32730C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:11:15 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id p24so18844139ejf.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C6ypGmjV5QV8jczV+szLTlCNKbExU317d5C4pfNiTBA=;
+        b=QH5bN5Gl0drAhXI9N8YU8pV3AJfFsH6TLbTiToy4QTiLV3wHSVJrCCvk30GL/VgIkr
+         EdsKYoeupPRFWraUKqeA6dkSCAgTnc3+e5DwhP6Rm+mLU/RaToNv3g5yAjLvWU/LFbkg
+         LL+iH2FzEuvMYTChY0GdDSD/0+V17fIWjFDk/t60eywxrLTFs1JRJRl966CPgxVEsYTP
+         RBVFEDkfRbbfVeRY6PDvUhjiMeAcPnodPtkW6nt79CitdTJJwODfnrkTNOP+2fwbRqim
+         9gMVCedpFDgw5IfJRAiz0hcBikYdorq3T/BiK9ZSyxZBFV4TKBwvPztc7RMkBVqMtEE1
+         rIYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C6ypGmjV5QV8jczV+szLTlCNKbExU317d5C4pfNiTBA=;
+        b=BJCbFBnVKDqpqKXicjE+b0+6vL1nhG5wXBKF0OUWd1zx6M1PwZ/9yKoe58cHF2FRwN
+         D0dw8cq8e1unbY4jbSG9KvPoYiRV51rQHzxieaFlnEbULFFjwzp4BUdsOiv6c0CKMQps
+         Yq/2w5ZEh3yFZZuoSaHNsuwS3esSJcv18UxrfXpNjKVo0ktPZ0tGbqNoBSSsiq6jSUQt
+         2I/xBFtIX/QaQNl76PvAtu7+b+H4ChnQ2q+Fl5W8VQqm+6RaUUCu3rl3LhlT5yIIvpR6
+         L4u76r/d+AqrgUbYdxt8BPeS64dYel5A1sXpDzHPJCWXBJaC+8q1QhF5hs9m0kCRtgu6
+         4sBQ==
+X-Gm-Message-State: AOAM532vcsKDgokMnnKimnDSAW8bp5F6csiNaN7wP3tFg66q4RuBrLpQ
+        Jz5KmKFpWEmvFLpuFpzAAJhxeEchg5Lizpxd29aqtQ==
+X-Google-Smtp-Source: ABdhPJzNB/PgsaWp8IxtULbKUmClytzwV/KE+ZZS+LO1yoO50MWhcV5EgmW5ly7qVI8Y0AbPjo1CmP6k7pPLX3eHcks=
+X-Received: by 2002:a17:906:1cd3:: with SMTP id i19mr16089941ejh.552.1597687873687;
+ Mon, 17 Aug 2020 11:11:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200805045955.GB9127@nazgul.tnic> <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+ <20200812210909.GA3283093@google.com> <20200817151357.GK549@zn.tnic>
+ <CABCJKuccY-wOEuQm--TQYgJvErOXu5u-jBMgCrM7JYsNqYK=gg@mail.gmail.com> <20200817174102.GN549@zn.tnic>
+In-Reply-To: <20200817174102.GN549@zn.tnic>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 17 Aug 2020 11:11:02 -0700
+Message-ID: <CABCJKud6M+u-TUZ2w5zdPPnwJQ1b7wxXwg8Rnoc=rBC6zMvRxA@mail.gmail.com>
+Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+On Mon, Aug 17, 2020 at 10:40 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Aug 17, 2020 at 08:58:26AM -0700, Sami Tolvanen wrote:
+> > Sorry for not clarifying. This was in a tree with patches for enabling
+> > Clang's Control-Flow Integrity.
+>
+> Well, I just did:
+>
+> $ make CC=clang-10 HOSTCC=clang-10 allyesconfig
+> $ make -j...
+>
+> and it built fine here, no complaints. So your toolchain must have
+> something else.
 
-[ Upstream commit 0d3f01dcdc234001f979a0af0b6b31cb9f25b6c1 ]
+Not the toolchain, the tree has patches for LTO+CFI, which tends to
+break with type mismatches. This doesn't affect just building the
+kernel with Clang without other changes.
 
-After carefully checking, it appears that both tdmout and tdmin require the
-rising edge of the sclk they get to be synchronized with the frame sync
-event (which should be a rising edge of lrclk).
-
-TDMIN was improperly set before this patch. Remove the sclk_invert quirk
-which is no longer needed and fix the sclk phase.
-
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200729154456.1983396-4-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/meson/axg-tdm-formatter.c | 11 ++++++-----
- sound/soc/meson/axg-tdm-formatter.h |  1 -
- sound/soc/meson/axg-tdmin.c         |  2 --
- sound/soc/meson/axg-tdmout.c        |  3 ---
- 4 files changed, 6 insertions(+), 11 deletions(-)
-
-diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
-index 358c8c0d861cd..f7e8e9da68a06 100644
---- a/sound/soc/meson/axg-tdm-formatter.c
-+++ b/sound/soc/meson/axg-tdm-formatter.c
-@@ -70,7 +70,7 @@ EXPORT_SYMBOL_GPL(axg_tdm_formatter_set_channel_masks);
- static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- {
- 	struct axg_tdm_stream *ts = formatter->stream;
--	bool invert = formatter->drv->quirks->invert_sclk;
-+	bool invert;
- 	int ret;
- 
- 	/* Do nothing if the formatter is already enabled */
-@@ -96,11 +96,12 @@ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- 		return ret;
- 
- 	/*
--	 * If sclk is inverted, invert it back and provide the inversion
--	 * required by the formatter
-+	 * If sclk is inverted, it means the bit should latched on the
-+	 * rising edge which is what our HW expects. If not, we need to
-+	 * invert it before the formatter.
- 	 */
--	invert ^= axg_tdm_sclk_invert(ts->iface->fmt);
--	ret = clk_set_phase(formatter->sclk, invert ? 180 : 0);
-+	invert = axg_tdm_sclk_invert(ts->iface->fmt);
-+	ret = clk_set_phase(formatter->sclk, invert ? 0 : 180);
- 	if (ret)
- 		return ret;
- 
-diff --git a/sound/soc/meson/axg-tdm-formatter.h b/sound/soc/meson/axg-tdm-formatter.h
-index 9ef98e955cb27..a1f0dcc0ff134 100644
---- a/sound/soc/meson/axg-tdm-formatter.h
-+++ b/sound/soc/meson/axg-tdm-formatter.h
-@@ -16,7 +16,6 @@ struct snd_kcontrol;
- 
- struct axg_tdm_formatter_hw {
- 	unsigned int skew_offset;
--	bool invert_sclk;
- };
- 
- struct axg_tdm_formatter_ops {
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index 3d002b4eb939e..88ed95ae886bb 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -228,7 +228,6 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
- 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
- 	.ops		= &axg_tdmin_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk	= false,
- 		.skew_offset	= 2,
- 	},
- };
-@@ -238,7 +237,6 @@ static const struct axg_tdm_formatter_driver g12a_tdmin_drv = {
- 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
- 	.ops		= &axg_tdmin_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk	= false,
- 		.skew_offset	= 3,
- 	},
- };
-diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
-index 418ec314b37d4..3ceabddae629e 100644
---- a/sound/soc/meson/axg-tdmout.c
-+++ b/sound/soc/meson/axg-tdmout.c
-@@ -238,7 +238,6 @@ static const struct axg_tdm_formatter_driver axg_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 1,
- 	},
- };
-@@ -248,7 +247,6 @@ static const struct axg_tdm_formatter_driver g12a_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 2,
- 	},
- };
-@@ -309,7 +307,6 @@ static const struct axg_tdm_formatter_driver sm1_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 2,
- 	},
- };
--- 
-2.25.1
-
-
-
+Sami
