@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F403C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B660C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8AA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F9C20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685809;
-	bh=mI8PCUrsUO9qLk+bSDFKXHpYLx2CG2hsDgwY8dJoT/I=;
+	s=default; t=1597685828;
+	bh=70U/j3EOCkHqW9olwUsw787MZO+sPdWvgTDRm3H4ins=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRx9x2hc3CtY7FLkzxkkH6dQ1seIXyUyICM4NEkUMmVzPdd/F8eEUXXlIwldHh5GI
-	 fPpREMnGidsyiA4EGdQNlI5ACWnWuXY/oRP+uAOrGVq4MIgIEna3jnTPigNu7W1Y/d
-	 PvFi2ewvD0rqYCHK9IqgPufSJF5WHEnS9/kMPJhU=
+	b=AhP+mGvRB5EiMcuCAJ4QkmSHIT2n14sQJq1QXiMjNWX3DtGbCJRiVR0KLA9CcW2rN
+	 0LZ+Q8pDIJ+eOJoscAoLrJu65Wb7jpkph1YaOHETxvhi6E6HjBBQjj9mAyeLFxl+Cd
+	 EQPjZLF26iaWpf8ThIx8vr0Or4iPV8WGkhiodBO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgHQRgp (ORCPT
+        id S1731178AbgHQRhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59172 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbgHQQRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:31 -0400
+        id S1729988AbgHQQR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710BD204FD;
-        Mon, 17 Aug 2020 16:17:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB5A620657;
+        Mon, 17 Aug 2020 16:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681050;
-        bh=mI8PCUrsUO9qLk+bSDFKXHpYLx2CG2hsDgwY8dJoT/I=;
+        s=default; t=1597681048;
+        bh=70U/j3EOCkHqW9olwUsw787MZO+sPdWvgTDRm3H4ins=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqmgqIDiMl+oe6j6OqFWz/1cCPltkRcAR8puS+lRjTCAUU+Niv9o/J2jY5e4K5Z/9
-         86FeHNe9ruqU3OVXaf1gC7QtkVDZD01/XiJTB4R0f+nwzrNdGYbejzzLkLIuku1dJG
-         qfwiZWUdFqF+4xZkY/PjsYhcbyj+tXO5VtYnnNhY=
+        b=z7+LVXINcGqIsiJlSlNvF1yQDLolgmSX8FyhEt273CcGjh49VyHpvlDRCiUEZArPd
+         1fbm+En/Z2/k6JF9/aO9G43Rvrc0qSQAEJToZi4f4o4A5xfsy+0JsoQ5+D9Gn8vTgu
+         16VKeGQFxkv5vOG5csV3OqBhRoTMUeow0NmIyi60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 134/168] net: Set fput_needed iff FDPUT_FPUT is set
-Date:   Mon, 17 Aug 2020 17:17:45 +0200
-Message-Id: <20200817143740.392546819@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Eggers <ceggers@arri.de>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 160/168] spi: spidev: Align buffers for DMA
+Date:   Mon, 17 Aug 2020 17:18:11 +0200
+Message-Id: <20200817143741.663477319@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,31 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Christian Eggers <ceggers@arri.de>
 
-[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
+commit aa9e862d7d5bcecd4dca9f39e8b684b93dd84ee7 upstream.
 
-We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
-accordingly.
+Simply copying all xfers from userspace into one bounce buffer causes
+alignment problems if the SPI controller uses DMA.
 
-Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Ensure that all transfer data blocks within the rx and tx bounce buffers
+are aligned for DMA (according to ARCH_KMALLOC_MINALIGN).
+
+Alignment may increase the usage of the bounce buffers. In some cases,
+the buffers may need to be increased using the "bufsiz" module
+parameter.
+
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200728100832.24788-1-ceggers@arri.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/socket.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -474,7 +474,7 @@ static struct socket *sockfd_lookup_ligh
- 	if (f.file) {
- 		sock = sock_from_file(f.file, err);
- 		if (likely(sock)) {
--			*fput_needed = f.flags;
-+			*fput_needed = f.flags & FDPUT_FPUT;
- 			return sock;
+---
+ drivers/spi/spidev.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -232,6 +232,11 @@ static int spidev_message(struct spidev_
+ 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
+ 			n;
+ 			n--, k_tmp++, u_tmp++) {
++		/* Ensure that also following allocations from rx_buf/tx_buf will meet
++		 * DMA alignment requirements.
++		 */
++		unsigned int len_aligned = ALIGN(u_tmp->len, ARCH_KMALLOC_MINALIGN);
++
+ 		k_tmp->len = u_tmp->len;
+ 
+ 		total += k_tmp->len;
+@@ -247,17 +252,17 @@ static int spidev_message(struct spidev_
+ 
+ 		if (u_tmp->rx_buf) {
+ 			/* this transfer needs space in RX bounce buffer */
+-			rx_total += k_tmp->len;
++			rx_total += len_aligned;
+ 			if (rx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+ 			}
+ 			k_tmp->rx_buf = rx_buf;
+-			rx_buf += k_tmp->len;
++			rx_buf += len_aligned;
  		}
- 		fdput(f);
+ 		if (u_tmp->tx_buf) {
+ 			/* this transfer needs space in TX bounce buffer */
+-			tx_total += k_tmp->len;
++			tx_total += len_aligned;
+ 			if (tx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+@@ -267,7 +272,7 @@ static int spidev_message(struct spidev_
+ 						(uintptr_t) u_tmp->tx_buf,
+ 					u_tmp->len))
+ 				goto done;
+-			tx_buf += k_tmp->len;
++			tx_buf += len_aligned;
+ 		}
+ 
+ 		k_tmp->cs_change = !!u_tmp->cs_change;
+@@ -297,16 +302,16 @@ static int spidev_message(struct spidev_
+ 		goto done;
+ 
+ 	/* copy any rx data out of bounce buffer */
+-	rx_buf = spidev->rx_buffer;
+-	for (n = n_xfers, u_tmp = u_xfers; n; n--, u_tmp++) {
++	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
++			n;
++			n--, k_tmp++, u_tmp++) {
+ 		if (u_tmp->rx_buf) {
+ 			if (copy_to_user((u8 __user *)
+-					(uintptr_t) u_tmp->rx_buf, rx_buf,
++					(uintptr_t) u_tmp->rx_buf, k_tmp->rx_buf,
+ 					u_tmp->len)) {
+ 				status = -EFAULT;
+ 				goto done;
+ 			}
+-			rx_buf += u_tmp->len;
+ 		}
+ 	}
+ 	status = total;
 
 
