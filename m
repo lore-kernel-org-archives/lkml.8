@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FF0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4123C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC3F9206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF02D206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683724;
-	bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
+	s=default; t=1597683735;
+	bh=T5us2k8hg03pCpop1vMg7wZST1JOLVXdB83orq0Yb5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrmXJytW2t87nkkKNkk6q+ehkxfkd/hHmNelhQLUz3Xg05r489BmEARAOIa2z/VKC
-	 1FLwxw+e5G1KnsOoLehRAJhzxQh1ivFMFNPZjJQV9/2ndQU7LzZ8pch9Jy4NSuc1PN
-	 7ZXCV50Ak7g5Vz7gaNzsVFvQCedAHTOMHKjwtnpg=
+	b=vx+xbffbN28LpwvmRNiumIpxflSw1u7HrWGOnPfdFyCJxcEVkSq5tlHFWVuH/+C4R
+	 uZkbNHPZUSI5KEe8jRmRog9qBK8vSwisLXjE7srGwYV/i5wMxOvJ5Wh5EeuOey+F1O
+	 WHGxCsjBFyULyk8G8J4Hg/KidMPeTXdY+mV/N7Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgHQRCD (ORCPT
+        id S1730712AbgHQRCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:02:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388433AbgHQQIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:11 -0400
+        id S2388446AbgHQQIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C94A208B3;
-        Mon, 17 Aug 2020 16:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5609620658;
+        Mon, 17 Aug 2020 16:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680490;
-        bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
+        s=default; t=1597680497;
+        bh=T5us2k8hg03pCpop1vMg7wZST1JOLVXdB83orq0Yb5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=loGY20JRLJkZpPCvVcUzdebYD6Y1w5Ggnk/L+p7mSaA4ZGDfgtcs5HRBK49JOEov0
-         EstHyiBwu0zsdIbCYCh/lLLNBUVGscaMraMOaXbfzsQh3M915dKuNVNMG3btm6rciy
-         aJX1fTqpj/F0ZJ07iRT+ZsFSfulzSrgS45doxm/8=
+        b=tej8uAPjhrxnVN6n4lny2VVzBhh4n9mxlORGgC7cESeRfe2e1RZso/DacbtHB2uFG
+         84W9SmblO3aLBySZ8Qb7ttx+JLnaXo44f3ZnqBeGrWhTpVEvEe0c1B0KJqvipQK9oT
+         tBI/qzjKBxHSK54kLjlWcMRl6bOD/KhbHig4ilwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tsang-Shian Lin <thlin@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 208/270] fsl/fman: fix eth hash table allocation
-Date:   Mon, 17 Aug 2020 17:16:49 +0200
-Message-Id: <20200817143806.145255961@linuxfoundation.org>
+Subject: [PATCH 5.4 193/270] rtw88: fix LDPC field for RA info
+Date:   Mon, 17 Aug 2020 17:16:34 +0200
+Message-Id: <20200817143805.405657453@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florinel Iordache <florinel.iordache@nxp.com>
+From: Tsang-Shian Lin <thlin@realtek.com>
 
-[ Upstream commit 3207f715c34317d08e798e11a10ce816feb53c0f ]
+[ Upstream commit ae44fa993e8e6c1a1d22e5ca03d9eadd53b2745b ]
 
-Fix memory allocation for ethernet address hash table.
-The code was wrongly allocating an array for eth hash table which
-is incorrect because this is the main structure for eth hash table
-(struct eth_hash_t) that contains inside a number of elements.
+Convert the type of LDPC field to boolen because
+LDPC field of RA info H2C command to firmware
+is only one bit.
 
-Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Tsang-Shian Lin <thlin@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200717064937.27966-2-yhchuang@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_mac.h | 2 +-
+ drivers/net/wireless/realtek/rtw88/fw.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_mac.h b/drivers/net/ethernet/freescale/fman/fman_mac.h
-index dd6d0526f6c1f..19f327efdaff3 100644
---- a/drivers/net/ethernet/freescale/fman/fman_mac.h
-+++ b/drivers/net/ethernet/freescale/fman/fman_mac.h
-@@ -252,7 +252,7 @@ static inline struct eth_hash_t *alloc_hash_table(u16 size)
- 	struct eth_hash_t *hash;
- 
- 	/* Allocate address hash table */
--	hash = kmalloc_array(size, sizeof(struct eth_hash_t *), GFP_KERNEL);
-+	hash = kmalloc(sizeof(*hash), GFP_KERNEL);
- 	if (!hash)
- 		return NULL;
- 
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index 35dbdb3c4f1e5..8efaee7571f35 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -340,7 +340,7 @@ void rtw_fw_send_ra_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 	SET_RA_INFO_INIT_RA_LVL(h2c_pkt, si->init_ra_lv);
+ 	SET_RA_INFO_SGI_EN(h2c_pkt, si->sgi_enable);
+ 	SET_RA_INFO_BW_MODE(h2c_pkt, si->bw_mode);
+-	SET_RA_INFO_LDPC(h2c_pkt, si->ldpc_en);
++	SET_RA_INFO_LDPC(h2c_pkt, !!si->ldpc_en);
+ 	SET_RA_INFO_NO_UPDATE(h2c_pkt, no_update);
+ 	SET_RA_INFO_VHT_EN(h2c_pkt, si->vht_enable);
+ 	SET_RA_INFO_DIS_PT(h2c_pkt, disable_pt);
 -- 
 2.25.1
 
