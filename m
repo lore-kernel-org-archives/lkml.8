@@ -2,92 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F69C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C14C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E8C2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D34E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690273;
-	bh=okS449SiMJwhh6wi/76ByFQ04nynJXjMuYg/drWDrzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=agKqVm2+2O6oxJgyEI1OZA514FWjqbPH8l0mCUX1ufpMJ2AjRNa7KV3rrQ2EK6yOC
-	 nmpePq3FDwj3KXtLUNHIY9e1+GqProjHdvc4WZCxKkr3c9pNdZUbKH0XXGkAGEqcJE
-	 HIx7GxoKHscj+5WlzZX7hnP72Mw+h2SSebMi+HPU=
+	s=default; t=1597690283;
+	bh=clEvRprQOIGkDRAWFDG+96hcuZGnmMYRrX3yX8njJZc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y0eE3PzJ9laeok+WKmelCCs3lrHL4OfrWKBmZc+jiknGb3RHhm6Mz0dJGCTZGgYbU
+	 UBR43Ze35RkbrG3Q7TfQ3Oyp/Q1qCNpiX9XByhi1jzrBgOla4OneSqF9gz+E/EZ+Dd
+	 c2hlkiOX9ziMGpL2q3AH6ot0VmkCUEptc+Lz+W14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403925AbgHQSu6 (ORCPT
+        id S2391733AbgHQSvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:50:58 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:42758 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387911AbgHQPxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:53:16 -0400
-Received: by mail-ej1-f65.google.com with SMTP id g19so18292388ejc.9;
-        Mon, 17 Aug 2020 08:53:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vtt9zu3rKhz+aEK+qnCz92XQFKGN9MiYVulnhNcc6uc=;
-        b=iNxev2U48j+e+L2L+O+F3IcRXtfg52cFOMJ2ItjWmlKEDNdiuz7Fo4ICIsveJTHomT
-         v/a7I2pDlu4riySf07tc1BvCl+ulFsMO01KedwF0vq0fFBZ3LODtJD3e4t3AC80RZ5r9
-         /PNv+Mm0hTUPgh4F4XdRtT5H1fnLwZQ06a69DkSL4jSyXYttqPKBsmSmVJrwmoAy0XKV
-         5+OcKMA7I+c0rk9IRGsUQZrsfilLnTemce377EQ9QFTpQZLoQSeaxNwUOr4MTuO39Ogt
-         mCg6rLzitKsmwqRopXg8IIKELoJQuEbXpiMlT/yAI1T45gsCVpANE+HUc6kGW98AHWwW
-         m/kg==
-X-Gm-Message-State: AOAM5300GZh81AGoQf9g1fo7K54WeSE9g2JxeWMECi905Dxkffzpj68N
-        BYyQOFLaAqj1hYzsoonCUQI=
-X-Google-Smtp-Source: ABdhPJwyKhWu7DD4MWUN9q9tsLJuBm/9FV41CT+IeC5LSQzePyUu1SGYQjo0fVxodFmVcFMiWrd2NA==
-X-Received: by 2002:a17:907:aaa:: with SMTP id bz10mr15533045ejc.304.1597679594754;
-        Mon, 17 Aug 2020 08:53:14 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id y14sm14305273ejr.35.2020.08.17.08.53.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Aug 2020 08:53:14 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 17:53:12 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        patches@opensource.cirrus.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: s3c64xx: use simple i2c probe function
-Message-ID: <20200817155312.GD15887@kozik-lap>
-References: <20200809172243.15192-1-steve@sk2.org>
+        Mon, 17 Aug 2020 14:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387893AbgHQPxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:53:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D586620882;
+        Mon, 17 Aug 2020 15:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679586;
+        bh=clEvRprQOIGkDRAWFDG+96hcuZGnmMYRrX3yX8njJZc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1GrkxSkEGNpp5nlAlOSRXheo70hvBRvADN5hzBbj80j0z/sqGhtOa5wbgKvI1/7PY
+         41qhzbw/oNFs+8uZRVGlducdoi26bxByWKghtoOSlt7m8VHcrgTVOD6STgsymik5Jz
+         X9ra/xbJFZLjcTNbguozr8tFSDB4Y8BeamcKDmHg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 266/393] powerpc/32s: Fix CONFIG_BOOK3S_601 uses
+Date:   Mon, 17 Aug 2020 17:15:16 +0200
+Message-Id: <20200817143832.518144370@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200809172243.15192-1-steve@sk2.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 07:22:43PM +0200, Stephen Kitt wrote:
-> The i2c probe functions here don't use the id information provided in
-> their second argument, so the single-parameter i2c probe function
-> ("probe_new") can be used instead.
-> 
-> This avoids scanning the identifier tables during probes.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
-> Changes since v1:
->   - split into per-sub-architecture patches.
-> 
->  arch/arm/mach-s3c64xx/mach-crag6410-module.c | 5 ++---
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-Thanks, applied.
+[ Upstream commit df4d4ef22446b3a789a4efd74d34f2ec1e24deb2 ]
 
-Best regards,
-Krzysztof
+We have two uses of CONFIG_BOOK3S_601, which doesn't exist. Fix them
+to use CONFIG_PPC_BOOK3S_601 which is the correct symbol.
+
+Fixes: 12c3f1fd87bf ("powerpc/32s: get rid of CPU_FTR_601 feature")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200724131728.1643966-5-mpe@ellerman.id.au
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/include/asm/ptrace.h | 2 +-
+ arch/powerpc/include/asm/timex.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
+index e0195e6b892bc..71ade62fb8975 100644
+--- a/arch/powerpc/include/asm/ptrace.h
++++ b/arch/powerpc/include/asm/ptrace.h
+@@ -206,7 +206,7 @@ do {									      \
+ #endif /* __powerpc64__ */
+ 
+ #define arch_has_single_step()	(1)
+-#ifndef CONFIG_BOOK3S_601
++#ifndef CONFIG_PPC_BOOK3S_601
+ #define arch_has_block_step()	(true)
+ #else
+ #define arch_has_block_step()	(false)
+diff --git a/arch/powerpc/include/asm/timex.h b/arch/powerpc/include/asm/timex.h
+index d2d2c4bd84358..6047402b0a4db 100644
+--- a/arch/powerpc/include/asm/timex.h
++++ b/arch/powerpc/include/asm/timex.h
+@@ -17,7 +17,7 @@ typedef unsigned long cycles_t;
+ 
+ static inline cycles_t get_cycles(void)
+ {
+-	if (IS_ENABLED(CONFIG_BOOK3S_601))
++	if (IS_ENABLED(CONFIG_PPC_BOOK3S_601))
+ 		return 0;
+ 
+ 	return mftb();
+-- 
+2.25.1
+
+
 
