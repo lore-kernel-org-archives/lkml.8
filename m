@@ -5,53 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3011920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AD320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693125;
-	bh=Ev2MKrV3RTdHkwWtyN15qSAmclYuXz3Qy4/2nqB5rpE=;
+	s=default; t=1597693126;
+	bh=vgdOslLjnw2DeqL4RFV6A0J6tXKrRXKMdLe0JxpjvX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WL5zklxkgFPAWpzW9gVwHQn8jUjyyxR1DK/bRF96584AvflfPmviTPRb0o5uQ43il
-	 OaPgy/s2zeyLknKEJ05s4TyH88Ac0uzyW5jQ007/j4gJDCH2Y2sGXH8LPYi2+299tj
-	 8Q5kTV56M2r5YIIrDBopm2US00dg5qFoVXXCSf54=
+	b=UqfJ8gZ/W+KJXMhM9Pqf4D8AjO+GIaA3ziDXNRpEzAYNCPMCmlK0Sy33sL2AfdtHu
+	 n3nQoRj2jnYCCabC1f7HVZ217vnWWb+eTw3mJbfY3/T+cu69FMdStadHebd+/NkyjO
+	 fHCgLhOHfyKgxIQTSPj6uxVNLKTXn2yHntoLv+o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbgHQTin (ORCPT
+        id S1732466AbgHQTio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHQP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:06 -0400
+        id S1729857AbgHQP1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61F7323A85;
-        Mon, 17 Aug 2020 15:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9979C2078D;
+        Mon, 17 Aug 2020 15:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678024;
-        bh=Ev2MKrV3RTdHkwWtyN15qSAmclYuXz3Qy4/2nqB5rpE=;
+        s=default; t=1597678021;
+        bh=vgdOslLjnw2DeqL4RFV6A0J6tXKrRXKMdLe0JxpjvX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bw9m/wWPylCfFwPHmWte3B8Gq/nGWDe4S7Kqme6rnRlF9SsHdZhch5Sq9Zo/AgSsH
-         4ppPtzeLAZS2upJEoFOsRQjAU6ZTXFMB8QpNnVRk45bWOlvuKrbER4nCDqEjY1lKjI
-         +8MIRDNxj/5yHOsuQLeEikStGc1AJzwQSjpvYSiE=
+        b=O3DTwkWAp+f9hIUUxAArABUS/Fds+ORoMh/pVZPkIpIg1xhx6pZ6twDu3vQJ+rm96
+         vxi6Q6SsEMCIAua/ryF0MU9rktku9aERI4gj3Zo4nuBwbPCMC/Nz2nKUCRLIv/rQwE
+         bL/a7ahcaXLWIIyrkNDaeAJS+Hu/0FzSXVIAN6Gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Jani Nikula <jani.nikula@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Miao <eric.miao@marvell.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 185/464] drm/mipi: use dcs write for mipi_dsi_dcs_set_tear_scanline
-Date:   Mon, 17 Aug 2020 17:12:18 +0200
-Message-Id: <20200817143842.686102592@linuxfoundation.org>
+Subject: [PATCH 5.8 151/464] video: pxafb: Fix the function used to balance a dma_alloc_coherent() call
+Date:   Mon, 17 Aug 2020 17:11:44 +0200
+Message-Id: <20200817143841.043265483@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -64,48 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Velikov <emil.velikov@collabora.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7a05c3b6d24b8460b3cec436cf1d33fac43c8450 ]
+[ Upstream commit 499a2c41b954518c372873202d5e7714e22010c4 ]
 
-The helper uses the MIPI_DCS_SET_TEAR_SCANLINE, although it's currently
-using the generic write. This does not look right.
+'dma_alloc_coherent()' must be balanced by a call to 'dma_free_coherent()'
+not 'dma_free_wc()'.
+The correct dma_free_ function is already used in the error handling path
+of the probe function.
 
-Perhaps some platforms don't distinguish between the two writers?
-
-Cc: Robert Chiras <robert.chiras@nxp.com>
-Cc: Vinay Simha BN <simhavcs@gmail.com>
+Fixes: 77e196752bdd ("[ARM] pxafb: allow video memory size to be configurable")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Thierry Reding <treding@nvidia.com>
-Fixes: e83950816367 ("drm/dsi: Implement set tear scanline")
-Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200505160329.2976059-3-emil.l.velikov@gmail.com
+cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Eric Miao <eric.miao@marvell.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200429084505.108897-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_mipi_dsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/pxafb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-index 55531895dde6d..37b03fefbdf6f 100644
---- a/drivers/gpu/drm/drm_mipi_dsi.c
-+++ b/drivers/gpu/drm/drm_mipi_dsi.c
-@@ -1082,11 +1082,11 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_pixel_format);
-  */
- int mipi_dsi_dcs_set_tear_scanline(struct mipi_dsi_device *dsi, u16 scanline)
- {
--	u8 payload[3] = { MIPI_DCS_SET_TEAR_SCANLINE, scanline >> 8,
--			  scanline & 0xff };
-+	u8 payload[2] = { scanline >> 8, scanline & 0xff };
- 	ssize_t err;
+diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
+index 00b96a78676ef..6f972bed410a9 100644
+--- a/drivers/video/fbdev/pxafb.c
++++ b/drivers/video/fbdev/pxafb.c
+@@ -2417,8 +2417,8 @@ static int pxafb_remove(struct platform_device *dev)
  
--	err = mipi_dsi_generic_write(dsi, payload, sizeof(payload));
-+	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_SCANLINE, payload,
-+				 sizeof(payload));
- 	if (err < 0)
- 		return err;
+ 	free_pages_exact(fbi->video_mem, fbi->video_mem_size);
  
+-	dma_free_wc(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
+-		    fbi->dma_buff_phys);
++	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
++			  fbi->dma_buff_phys);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
