@@ -2,161 +2,97 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80E9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C39EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC742067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eZR0WfgN"
+	by mail.kernel.org (Postfix) with ESMTP id 1C91E20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597686818;
+	bh=SuA5w6ezMb0ojAPZt/AGc+QJN57Z38+WSNy/llYyw8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i3aR8KQ7IH3npB49yf2GPYKcWLHnxTVCdxIDQ1rG5dSG8hgiXlFOHOrEk4CsQfzVw
+	 2BBverpYtY2jDp0iGtr28hwk5hZGDf3LIF9eTngJw++TgUR6e8EuK8ShDk9fZ2o6W7
+	 6/dJ2ED8feQq3KZVHgug7AqXfBQ6MxSeXtIInIWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbgHQRx1 (ORCPT
+        id S1731640AbgHQRxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731600AbgHQRxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:53:23 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C393AC061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:53:20 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x12so13106788qtp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9qJKHV+uR7EHxj6Xx8FbbDgPhogd8I9njcQU8EAXvkQ=;
-        b=eZR0WfgN5VnjasTe4SSju/DBe5GM7/1zgG558EVIEYqjTyUtTzYQ9HQO8tZ/pjhXR4
-         y4MDdtYuAAwlwpXLG1N/fGPd2GrheSQvtp26XM7gOaX3NztXoqM6k9pRO/Gow4qk0aR3
-         BpPuw4JlOpLKZicE4gEzsIg0Fy9Nq/LwItDtcIVXVFACAQFUovgsDmYgv0FB4S0ztZLq
-         5P6Nqh5qURy6QR1nhiv3i9uQ9Kxe1h1H1e88am3REjCsiNneoTWSrw0uE1poR/cME3GJ
-         gmIJRZI56BiHf81xGF37tpNxbhaN27HdFfunjzN/EjKZm2GbMXqD8c3Lop1cr5QD7nhR
-         p5ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9qJKHV+uR7EHxj6Xx8FbbDgPhogd8I9njcQU8EAXvkQ=;
-        b=WA3f0ipc4/lQoDArOgLfLjXbvUoxIp7XUlUx5ZMLrXznQYR/yfTJ1moyCAiCNefgEG
-         /A4O16w5m6zy9i01dDYlyqDE2/pyfVTl/zSj7ZJ+G5cfHMSHTaRPXKKHZcPJSFSPLhzj
-         +jXpE6G+8zU69nCAjfkUq5BycDYnWRipMNe9mkJxi2+d2CgXNlIqmBfNtbHkN9s3b38M
-         1zqCSrZMGUvr7+LalWvrz4x619xINQTwgkuIzjhMbXC+ZhYzHPyu1ufEw1xNCqDCG79i
-         I07dLE9OqKGnRM2tAuqF495lXnhoJyos3qb7nR6N1qgy+87oprLFh5gNtlseeA8es6+e
-         abjg==
-X-Gm-Message-State: AOAM531sRIoq0vWvBZyknhqnZl9uKBoAL2fJcw9jk4NPQN99R/CO7qbV
-        zXCNJocy2tCUoTtaCKTnILjJXw==
-X-Google-Smtp-Source: ABdhPJzCaYQxApihx4dIieIEvWuoenIg4/F/KmoMRyKOXtKtqpn47Et8huEquYYdnWP2opbPNFOzKQ==
-X-Received: by 2002:aed:3b7a:: with SMTP id q55mr14580291qte.78.1597686799970;
-        Mon, 17 Aug 2020 10:53:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 141sm17857695qke.41.2020.08.17.10.53.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 10:53:18 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k7jJu-007tAD-4T; Mon, 17 Aug 2020 14:53:18 -0300
-Date:   Mon, 17 Aug 2020 14:53:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        nareshkumar.pbs@broadcom.com, keescook@chromium.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH 1/5] infiniband: bnxt_re: convert tasklets to use new
- tasklet_setup() API
-Message-ID: <20200817175318.GW24045@ziepe.ca>
-References: <20200817082844.21700-1-allen.lkml@gmail.com>
- <20200817082844.21700-2-allen.lkml@gmail.com>
+        Mon, 17 Aug 2020 13:53:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387597AbgHQQLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279E020658;
+        Mon, 17 Aug 2020 16:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680700;
+        bh=SuA5w6ezMb0ojAPZt/AGc+QJN57Z38+WSNy/llYyw8k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rmeSvwS3bcGkgCaGVTVhrbIfgFknXZB9a8Ibt6mRie13wPSaVBCJtuVPDExjxnH+n
+         +hfB8W13DAbzHebvaCiEcK0ghnh6bqNtALj1Pb2SeorbhaKHMVBY1hsHtlMzN591rD
+         TYtMYDxc9pIK470joJkDtrmsrf12R+kAGfKEnEGA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 021/168] ARM: dts: gose: Fix ports node name for adv7612
+Date:   Mon, 17 Aug 2020 17:15:52 +0200
+Message-Id: <20200817143734.780787471@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
+References: <20200817143733.692105228@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817082844.21700-2-allen.lkml@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 01:58:40PM +0530, Allen Pais wrote:
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
->  drivers/infiniband/hw/bnxt_re/qplib_fp.c   |  7 +++----
->  drivers/infiniband/hw/bnxt_re/qplib_rcfw.c | 13 ++++++-------
->  2 files changed, 9 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-> index 117b42349a28..62b01582aa1c 100644
-> +++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-> @@ -295,9 +295,9 @@ static void __wait_for_all_nqes(struct bnxt_qplib_cq *cq, u16 cnq_events)
->  	}
->  }
->  
-> -static void bnxt_qplib_service_nq(unsigned long data)
-> +static void bnxt_qplib_service_nq(struct tasklet_struct *t)
->  {
-> -	struct bnxt_qplib_nq *nq = (struct bnxt_qplib_nq *)data;
-> +	struct bnxt_qplib_nq *nq = from_tasklet(nq, t, nq_tasklet);
->  	struct bnxt_qplib_hwq *hwq = &nq->hwq;
->  	int num_srqne_processed = 0;
->  	int num_cqne_processed = 0;
-> @@ -448,8 +448,7 @@ int bnxt_qplib_nq_start_irq(struct bnxt_qplib_nq *nq, int nq_indx,
->  
->  	nq->msix_vec = msix_vector;
->  	if (need_init)
-> -		tasklet_init(&nq->nq_tasklet, bnxt_qplib_service_nq,
-> -			     (unsigned long)nq);
-> +		tasklet_setup(&nq->nq_tasklet, bnxt_qplib_service_nq);
->  	else
->  		tasklet_enable(&nq->nq_tasklet);
->  
-> diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-> index 4e211162acee..7261be29fb09 100644
-> +++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-> @@ -50,7 +50,7 @@
->  #include "qplib_sp.h"
->  #include "qplib_fp.h"
->  
-> -static void bnxt_qplib_service_creq(unsigned long data);
-> +static void bnxt_qplib_service_creq(struct tasklet_struct *t);
->  
->  /* Hardware communication channel */
->  static int __wait_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
-> @@ -79,7 +79,7 @@ static int __block_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
->  		goto done;
->  	do {
->  		mdelay(1); /* 1m sec */
-> -		bnxt_qplib_service_creq((unsigned long)rcfw);
-> +		bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
->  	} while (test_bit(cbit, cmdq->cmdq_bitmap) && --count);
->  done:
->  	return count ? 0 : -ETIMEDOUT;
-> @@ -369,10 +369,10 @@ static int bnxt_qplib_process_qp_event(struct bnxt_qplib_rcfw *rcfw,
->  }
->  
->  /* SP - CREQ Completion handlers */
-> -static void bnxt_qplib_service_creq(unsigned long data)
-> +static void bnxt_qplib_service_creq(struct tasklet_struct *t)
->  {
-> -	struct bnxt_qplib_rcfw *rcfw = (struct bnxt_qplib_rcfw *)data;
-> -	struct bnxt_qplib_creq_ctx *creq = &rcfw->creq;
-> +	struct bnxt_qplib_creq_ctx *creq = from_tasklet(creq, t, creq_tasklet);
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-This is just:
+[ Upstream commit 59692ac5a7bb8c97ff440fc8917828083fbc38d6 ]
 
-  struct bnxt_qplib_rcfw *rcfw = from_tasklet(rcfw, t, crew.creq_tasklet);
+When adding the adv7612 device node the ports node was misspelled as
+port, fix this.
 
-No need for the extra container_of
+Fixes: bc63cd87f3ce924f ("ARM: dts: gose: add HDMI input")
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20200713111016.523189-1-niklas.soderlund+renesas@ragnatech.se
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jason
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 9235be8f0f007..7802ce842a736 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -399,7 +399,7 @@ hdmi-in@4c {
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			default-input = <0>;
+ 
+-			port {
++			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+-- 
+2.25.1
+
+
+
