@@ -5,49 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E08CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC44B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6006F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691675;
-	bh=9kbtJj5MZYdGlCALe7/YrBS+f1CSatDlU2VRx8ZXG9Q=;
+	s=default; t=1597691678;
+	bh=Pp+vN7qB4/2ERCceyOTqwYXEP0XhOyD+YA3d2GFVuFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0KMiI3UB1EesG0wRJeSnL1Z//RMW38adykLbPiff+fNcV+xqTWHYF8M9jZ2OlVMP
-	 /AtELlgGIFvTilvum/5c6IftVO7U0e4mUKOybpOvTt06H25wu+vPisz9f4HcJFT8nG
-	 XQT52cVBeYWaaEcF28rQpi0uAQOF0losTmtUEzEc=
+	b=LL7CnzQ3w+1iju0ITQxASaMOwBRWpi/JTmyWR8AH0aOCJyMN4yithq15RRvih5Y1/
+	 rO0ht+0fxQ4OAoD7kSCAfg2bUPqD6QhLYat3Uth8+ANn8wPNV/zdjKkQFUjx2pkd5+
+	 NRYOkeProFgGiLCbW7ohmTPsJFPH8xVPDeyE5oJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbgHQTOe (ORCPT
+        id S2388324AbgHQTOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387478AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730355AbgHQPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 11:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C05A23123;
-        Mon, 17 Aug 2020 15:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677CA23105;
+        Mon, 17 Aug 2020 15:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678806;
-        bh=9kbtJj5MZYdGlCALe7/YrBS+f1CSatDlU2VRx8ZXG9Q=;
+        s=default; t=1597678809;
+        bh=Pp+vN7qB4/2ERCceyOTqwYXEP0XhOyD+YA3d2GFVuFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kw2h9G5QiA5WPid7AuhXMyrnvMiITD2so0R1f+h/bNO0WIBV+rbDSMOQGf3PtwQtG
-         rCSgbzzKdszIcyFgP89vv5EoYF0VGv5PsawRB8qz+7avmREoNjilqtmP9hj7ODFyc/
-         jmfZxn2ZFQd5uGobfNGKiRGqvUa4Nx0SOEfqPRu0=
+        b=MJRlFvRWep+x8nsvpeCdxnN7gpfOTZSGYk9uUsfn2qdieIG+DpWtQVnqeAgxiECtt
+         JXLKAtxKp7p/yrZqJWAWD3hxrydrYqS6ek+6PEZNFCyshbMgNmuqWtKR2CGb0Ewyk3
+         B/N4PcHr5z56FTl3yRMBL5u5bK3hLuPr7vk+gzOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 461/464] io_uring: hold ctx reference around task_work queue + execute
-Date:   Mon, 17 Aug 2020 17:16:54 +0200
-Message-Id: <20200817143855.860533637@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 462/464] io_uring: add missing REQ_F_COMP_LOCKED for nested requests
+Date:   Mon, 17 Aug 2020 17:16:55 +0200
+Message-Id: <20200817143855.909267241@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,66 +60,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jens Axboe <axboe@kernel.dk>
 
-commit 6d816e088c359866f9867057e04f244c608c42fe upstream.
+commit 9b7adba9eaec28e0e4343c96d0dbeb9578802f5f upstream.
 
-We're holding the request reference, but we need to go one higher
-to ensure that the ctx remains valid after the request has finished.
-If the ring is closed with pending task_work inflight, and the
-given io_kiocb finishes sync during issue, then we need a reference
-to the ring itself around the task_work execution cycle.
+When we traverse into failing links or timeouts, we need to ensure we
+propagate the REQ_F_COMP_LOCKED flag to ensure that we correctly signal
+to the completion side that we already hold the completion lock.
 
-Cc: stable@vger.kernel.org # v5.7+
-Reported-by: syzbot+9b260fc33297966f5a8e@syzkaller.appspotmail.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
 ---
- fs/io_uring.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/io_uring.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -4140,6 +4140,8 @@ static int __io_async_wake(struct io_kio
- 	tsk = req->task;
- 	req->result = mask;
- 	init_task_work(&req->task_work, func);
-+	percpu_ref_get(&req->ctx->refs);
-+
- 	/*
- 	 * If this fails, then the task is exiting. When a task exits, the
- 	 * work gets canceled, so just cancel this request as well instead
-@@ -4239,6 +4241,7 @@ static void io_poll_task_handler(struct
- static void io_poll_task_func(struct callback_head *cb)
+@@ -1549,12 +1549,9 @@ static void io_req_link_next(struct io_k
+ /*
+  * Called if REQ_F_LINK_HEAD is set, and we fail the head request
+  */
+-static void io_fail_links(struct io_kiocb *req)
++static void __io_fail_links(struct io_kiocb *req)
  {
- 	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+ 	struct io_ring_ctx *ctx = req->ctx;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&ctx->completion_lock, flags);
+ 
+ 	while (!list_empty(&req->link_list)) {
+ 		struct io_kiocb *link = list_first_entry(&req->link_list,
+@@ -1568,13 +1565,29 @@ static void io_fail_links(struct io_kioc
+ 			io_link_cancel_timeout(link);
+ 		} else {
+ 			io_cqring_fill_event(link, -ECANCELED);
++			link->flags |= REQ_F_COMP_LOCKED;
+ 			__io_double_put_req(link);
+ 		}
+ 		req->flags &= ~REQ_F_LINK_TIMEOUT;
+ 	}
+ 
+ 	io_commit_cqring(ctx);
+-	spin_unlock_irqrestore(&ctx->completion_lock, flags);
++}
++
++static void io_fail_links(struct io_kiocb *req)
++{
 +	struct io_ring_ctx *ctx = req->ctx;
- 	struct io_kiocb *nxt = NULL;
- 
- 	io_poll_task_handler(req, &nxt);
-@@ -4249,6 +4252,7 @@ static void io_poll_task_func(struct cal
- 		__io_queue_sqe(nxt, NULL);
- 		mutex_unlock(&ctx->uring_lock);
- 	}
-+	percpu_ref_put(&ctx->refs);
++
++	if (!(req->flags & REQ_F_COMP_LOCKED)) {
++		unsigned long flags;
++
++		spin_lock_irqsave(&ctx->completion_lock, flags);
++		__io_fail_links(req);
++		spin_unlock_irqrestore(&ctx->completion_lock, flags);
++	} else {
++		__io_fail_links(req);
++	}
++
+ 	io_cqring_ev_posted(ctx);
  }
  
- static int io_poll_double_wake(struct wait_queue_entry *wait, unsigned mode,
-@@ -4365,6 +4369,7 @@ static void io_async_task_func(struct ca
+@@ -4767,6 +4780,7 @@ static int io_timeout_cancel(struct io_r
+ 		return -EALREADY;
  
- 	if (io_poll_rewait(req, &apoll->poll)) {
- 		spin_unlock_irq(&ctx->completion_lock);
-+		percpu_ref_put(&ctx->refs);
- 		return;
- 	}
- 
-@@ -4402,6 +4407,7 @@ end_req:
- 		req_set_fail_links(req);
- 		io_double_put_req(req);
- 	}
-+	percpu_ref_put(&ctx->refs);
- }
- 
- static int io_async_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 	req_set_fail_links(req);
++	req->flags |= REQ_F_COMP_LOCKED;
+ 	io_cqring_fill_event(req, -ECANCELED);
+ 	io_put_req(req);
+ 	return 0;
 
 
