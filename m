@@ -2,52 +2,55 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B6CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FF922CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017C62075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678970;
-	bh=S77HsE32xw75YMJY8MhWSvUCv7M5y/Urn5gHgTo7HQ8=;
+	s=default; t=1597678974;
+	bh=TJ9AZakn52veKcbnZMKtfI9JpjIqWLaXbvn0eVDK0/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnJivtzSe0S2AUlRgnrDaUHKvS8FYio5t+tbviS0q3viBw1tVn73KecAj9kfTC5G8
-	 6fKvO/5Jx1hKkI8XsaKhlZV7mOmh5YCsbE+vttX7GP0DqTmLGeF5YI90E93L0QIZ+3
-	 ceeDbAWVQDpvQpHwOoH8C7qeNHBNXmm5qbKKXXFE=
+	b=oZkfE4+oHiZmq5PJM7B1ra8haz02VZWv151C2C2dZcL435u7TAG2ymRbTQNdlupva
+	 T5jnAhsNxYCHcjTIN/QnRdaLioWGkdIBHectCOHsmFBVQf/4zVzs09+4afNvHr2zJJ
+	 eNr7g0ye01VUBJd78XGFM2780iJwBmpE+QizD7Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbgHQPmt (ORCPT
+        id S2387593AbgHQPmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgHQPgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:36:24 -0400
+        id S1730520AbgHQPgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:36:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE2DA22E02;
-        Mon, 17 Aug 2020 15:36:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7995020709;
+        Mon, 17 Aug 2020 15:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678583;
-        bh=S77HsE32xw75YMJY8MhWSvUCv7M5y/Urn5gHgTo7HQ8=;
+        s=default; t=1597678612;
+        bh=TJ9AZakn52veKcbnZMKtfI9JpjIqWLaXbvn0eVDK0/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVIojPJOTebDzIBOS1FuX9YOhnNqAZESCRES/5r0REjt8RadArzmE/k7kLsonTYDR
-         YO68/WfoHaE2eU5DmSZQzCpUstuTZ0fw++4SXnP26E5A5P2UH5n9tsdO4SF5EZ89+i
-         du5/wBHZJ8A9GFCY8BJYq6CfGOomn/w/fgCOWrq0=
+        b=xCI/6ggC/ki06LObWJ3Af3LQSor26sN7kA4NHVHB2oYKTO1vF2yJk2ZCmG7fT8ecc
+         icdeKQ8YrLmRM729KcjqTfgA7ekfPLcbmJ3k8HaaNvX4XpbKdRyNmEKX6g95MeK4m/
+         +I9ozehsqypN35gCLa1BoTyIjOlulAKe/0ptzWW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 354/464] ftrace: Fix ftrace_trace_task return value
-Date:   Mon, 17 Aug 2020 17:15:07 +0200
-Message-Id: <20200817143850.724302013@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 395/464] net: phy: marvell10g: fix null pointer dereference
+Date:   Mon, 17 Aug 2020 17:15:48 +0200
+Message-Id: <20200817143852.699988475@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,71 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: "Marek Behún" <marek.behun@nic.cz>
 
-[ Upstream commit c58b6b0372de0d4cd0536d6585addd1b36b151ae ]
+[ Upstream commit 1b8ef1423dbfd34de2439a2db457b84480b7c8a8 ]
 
-I was attempting to use pid filtering with function_graph, but it wasn't
-allowing anything to make it through.  Turns out ftrace_trace_task
-returns false if ftrace_ignore_pid is not-empty, which isn't correct
-anymore.  We're now setting it to FTRACE_PID_IGNORE if we need to ignore
-that pid, otherwise it's set to the pid (which is weird considering the
-name) or to FTRACE_PID_TRACE.  Fix the check to check for !=
-FTRACE_PID_IGNORE.  With this we can now use function_graph with pid
-filtering.
+Commit c3e302edca24 ("net: phy: marvell10g: fix temperature sensor on 2110")
+added a check for PHY ID via phydev->drv->phy_id in a function which is
+called by devres at a time when phydev->drv is already set to null by
+phy_remove function.
 
-Link: https://lkml.kernel.org/r/20200725005048.1790-1-josef@toxicpanda.com
+This null pointer dereference can be triggered via SFP subsystem with a
+SFP module containing this Marvell PHY. When the SFP interface is put
+down, the SFP subsystem removes the PHY.
 
-Fixes: 717e3f5ebc82 ("ftrace: Make function trace pid filtering a bit more exact")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c3e302edca24 ("net: phy: marvell10g: fix temperature sensor on 2110")
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Baruch Siach <baruch@tkos.co.il>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/trace/ftrace.c | 3 ---
- kernel/trace/trace.h  | 7 ++++++-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/phy/marvell10g.c |   18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1903b80db6ebc..7d879fae3777f 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -139,9 +139,6 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
- #endif
+--- a/drivers/net/phy/marvell10g.c
++++ b/drivers/net/phy/marvell10g.c
+@@ -205,13 +205,6 @@ static int mv3310_hwmon_config(struct ph
+ 			      MV_V2_TEMP_CTRL_MASK, val);
  }
  
--#define FTRACE_PID_IGNORE	-1
--#define FTRACE_PID_TRACE	-2
+-static void mv3310_hwmon_disable(void *data)
+-{
+-	struct phy_device *phydev = data;
 -
- static void ftrace_pid_func(unsigned long ip, unsigned long parent_ip,
- 			    struct ftrace_ops *op, struct pt_regs *regs)
+-	mv3310_hwmon_config(phydev, false);
+-}
+-
+ static int mv3310_hwmon_probe(struct phy_device *phydev)
  {
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index f21607f871891..610d21355526d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1103,6 +1103,10 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
- extern struct list_head ftrace_pids;
+ 	struct device *dev = &phydev->mdio.dev;
+@@ -235,10 +228,6 @@ static int mv3310_hwmon_probe(struct phy
+ 	if (ret)
+ 		return ret;
  
- #ifdef CONFIG_FUNCTION_TRACER
-+
-+#define FTRACE_PID_IGNORE	-1
-+#define FTRACE_PID_TRACE	-2
-+
- struct ftrace_func_command {
- 	struct list_head	list;
- 	char			*name;
-@@ -1114,7 +1118,8 @@ struct ftrace_func_command {
- extern bool ftrace_filter_param __initdata;
- static inline int ftrace_trace_task(struct trace_array *tr)
- {
--	return !this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid);
-+	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
-+		FTRACE_PID_IGNORE;
+-	ret = devm_add_action_or_reset(dev, mv3310_hwmon_disable, phydev);
+-	if (ret)
+-		return ret;
+-
+ 	priv->hwmon_dev = devm_hwmon_device_register_with_info(dev,
+ 				priv->hwmon_name, phydev,
+ 				&mv3310_hwmon_chip_info, NULL);
+@@ -423,6 +412,11 @@ static int mv3310_probe(struct phy_devic
+ 	return phy_sfp_probe(phydev, &mv3310_sfp_ops);
  }
- extern int ftrace_is_dead(void);
- int ftrace_create_function_files(struct trace_array *tr,
--- 
-2.25.1
-
+ 
++static void mv3310_remove(struct phy_device *phydev)
++{
++	mv3310_hwmon_config(phydev, false);
++}
++
+ static int mv3310_suspend(struct phy_device *phydev)
+ {
+ 	return mv3310_power_down(phydev);
+@@ -762,6 +756,7 @@ static struct phy_driver mv3310_drivers[
+ 		.read_status	= mv3310_read_status,
+ 		.get_tunable	= mv3310_get_tunable,
+ 		.set_tunable	= mv3310_set_tunable,
++		.remove		= mv3310_remove,
+ 	},
+ 	{
+ 		.phy_id		= MARVELL_PHY_ID_88E2110,
+@@ -776,6 +771,7 @@ static struct phy_driver mv3310_drivers[
+ 		.read_status	= mv3310_read_status,
+ 		.get_tunable	= mv3310_get_tunable,
+ 		.set_tunable	= mv3310_set_tunable,
++		.remove		= mv3310_remove,
+ 	},
+ };
+ 
 
 
