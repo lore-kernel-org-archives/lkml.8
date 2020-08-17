@@ -2,54 +2,55 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE33C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD0E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CAD20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648477;
-	bh=2ySxnifEZD8oaBtv2l66MKMMUsoZY8TKt22SdNRdIOo=;
+	s=default; t=1597648480;
+	bh=MlDcxzkbuLMgyFc0uqNYSBwf021ccWZS89Xs+dghTz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHPQNFNUqRTUhACx5sGi9xG0kpuAKEY7Fo48NMokUWXsJi9ydMfK5a9/7L+qJ2i8/
-	 XGQTScIinPWDCM9bZfzpz/wEEwBBlokeagKJ6t7POBdba0IbCxoE9vZXPLJHkWssSh
-	 M61CNUjq6x3/d32u7Gj3ee+j2Kn+MfKvK2ZsZxKE=
+	b=aehnil0XJ+qd6y6oBhbAhz7uPDv80vdT3Sf3q9+QLUAslp25pMQw1KutsSiy1I/Zm
+	 YGK5CkoxOuHsDO0Kb7uVDw7CNd+oog2ZyRKe7Mu/FQ9/b6bC6UHASD7dCaxllLV/Z1
+	 hR5EH3YULuFzuAuf2NLkPK/6vlXIQh38KXpxZNxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHQHOf (ORCPT
+        id S1727944AbgHQHOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57850 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgHQHLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:11:19 -0400
+        id S1726361AbgHQHLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:11:17 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1D72080D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 88DB22072D;
         Mon, 17 Aug 2020 07:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597648277;
-        bh=2ySxnifEZD8oaBtv2l66MKMMUsoZY8TKt22SdNRdIOo=;
+        s=default; t=1597648276;
+        bh=MlDcxzkbuLMgyFc0uqNYSBwf021ccWZS89Xs+dghTz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XfHJoodD38UbgG1EJdPi0NswB9PFpNYTTIC5/Ne4s+q6hpeVzVi7OPAY70a6a+JJu
-         q3vkuxz+Hz2uQIh203wHfY1z5AzeBV5Q1ORBPUqZ5gi1mDEgin2TpfCkdrKrcmTfo0
-         7tZom32E7mW7pgnyG4hot6tOnB2vIrw8ItqbmL9s=
+        b=AqXPmSZISoigOPTt924tBAw2zeV56xSInUY1f/pYelNx1kB5QkYZt0SBiSHDCEFBp
+         t3AJ029dqObrSjMl2himXI77fLtLk30nFFe1oGEF4YSbDK/XBu9dwR4L+0U3AA8SUp
+         fBry9gw2vk4A2wPFl1nGAJKkBkjab8vctR7XP44Q=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIY-00BdjQ-Vk; Mon, 17 Aug 2020 09:11:14 +0200
+        id 1k7ZIY-00BdjE-O1; Mon, 17 Aug 2020 09:11:14 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mayulong <mayulong1@huawei.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH v3 06/44] staging: spmi: hisi-spmi-controller: use le32 macros where needed
-Date:   Mon, 17 Aug 2020 09:10:25 +0200
-Message-Id: <927ac4f981649318dba399e46a1aa429c428cfa3.1597647359.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 01/44] staging: spmi: add Hikey 970 SPMI controller driver
+Date:   Mon, 17 Aug 2020 09:10:20 +0200
+Message-Id: <b4810f476e41e7de4efdf28b42472ae4ffe7defe.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
@@ -60,86 +61,420 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of manually using bswap_32(), just use the
-le32 macros.
+From: Mayulong <mayulong1@huawei.com>
 
+Add the SPMI controller code required to use the Kirin 970
+SPMI bus.
+
+[mchehab+huawei@kernel.org: added just the SPMI controller on this patch]
+
+The complete patch is at:
+
+	https://github.com/96boards-hikey/linux/commit/08464419fba2
+
+Signed-off-by: Mayulong <mayulong1@huawei.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/hisi-spmi-controller.c   | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ .../staging/hikey9xx/hisi-spmi-controller.c   | 390 ++++++++++++++++++
+ 1 file changed, 390 insertions(+)
+ create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
 
 diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-index 7fae267a6062..cacd28150b49 100644
---- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
+new file mode 100644
+index 000000000000..987526c8b49f
+--- /dev/null
 +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -11,7 +11,6 @@
- #include <linux/module.h>
- #include <linux/seq_file.h>
- #include <linux/spmi.h>
--#include <linux/spmi.h>
- 
- #define SPMI_CONTROLLER_NAME		"spmi_controller"
- 
-@@ -43,11 +42,6 @@
- #define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
- #define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
- 
--#define bswap_32(X)   \
--    ((((u32)(X) & 0xff000000) >> 24) | \
--     (((u32)(X) & 0x00ff0000) >> 8) | \
--     (((u32)(X) & 0x0000ff00) << 8) | \
--     (((u32)(X) & 0x000000ff) << 24))
- #define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET		16
- #define SPMI_APB_SPMI_CMD_ADDR_OFFSET			0
- 
-@@ -179,14 +173,15 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
- 
- 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
- 
--	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
-+	rc = spmi_controller_wait_for_done(spmi_controller,
-+					   spmi_controller->base, sid, addr);
- 	if (rc)
- 		goto done;
- 
- 	i = 0;
- 	do {
- 		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * sid + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
--		data = bswap_32(data);
-+		data = be32_to_cpu((__be32)data);
- 		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
- 			memcpy(buf, &data, sizeof(data));
- 			buf += sizeof(data);
-@@ -210,8 +205,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- {
- 	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
- 	unsigned long flags;
--	u32 cmd;
--	u32 data = 0;
+@@ -0,0 +1,390 @@
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/seq_file.h>
++#include <linux/spmi.h>
++#include <linux/spmi.h>
++
++#define SPMI_CONTROLLER_NAME		"spmi_controller"
++
++/*
++ * SPMI register addr
++ */
++#define SPMI_CHANNEL_OFFSET					0x0300
++#define SPMI_SLAVE_OFFSET						0x20
++
++#define SPMI_APB_SPMI_CMD_BASE_ADDR				0x0100
++/*lint -e750 -esym(750,*)*/
++#define SPMI_APB_SPMI_WDATA0_BASE_ADDR			0x0104
++#define SPMI_APB_SPMI_WDATA1_BASE_ADDR			0x0108
++#define SPMI_APB_SPMI_WDATA2_BASE_ADDR			0x010c
++#define SPMI_APB_SPMI_WDATA3_BASE_ADDR			0x0110
++
++#define SPMI_APB_SPMI_STATUS_BASE_ADDR			0x0200
++
++#define SPMI_APB_SPMI_RDATA0_BASE_ADDR			0x0204
++#define SPMI_APB_SPMI_RDATA1_BASE_ADDR			0x0208
++#define SPMI_APB_SPMI_RDATA2_BASE_ADDR			0x020c
++#define SPMI_APB_SPMI_RDATA3_BASE_ADDR			0x0210
++/*lint +e750 -esym(750,*)*/
++
++#define SPMI_PER_DATAREG_BYTE					4
++/*
++ * SPMI cmd register
++ */
++#define SPMI_APB_SPMI_CMD_EN						(1 << 31)
++#define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
++#define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
++#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET			16
++#define SPMI_APB_SPMI_CMD_ADDR_OFFSET				0
++
++#define Tranverse32(X)                 ((((u32)(X) & 0xff000000) >> 24) | \
++							   (((u32)(X) & 0x00ff0000) >> 8) | \
++							   (((u32)(X) & 0x0000ff00) << 8) | \
++							   (((u32)(X) & 0x000000ff) << 24))
++
++/* Command Opcodes */
++/*lint -e749 -esym(749,*)*/
++enum spmi_controller_cmd_op_code {
++	SPMI_CMD_REG_ZERO_WRITE = 0,
++	SPMI_CMD_REG_WRITE = 1,
++	SPMI_CMD_REG_READ = 2,
++	SPMI_CMD_EXT_REG_WRITE = 3,
++	SPMI_CMD_EXT_REG_READ = 4,
++	SPMI_CMD_EXT_REG_WRITE_L = 5,
++	SPMI_CMD_EXT_REG_READ_L = 6,
++	SPMI_CMD_REG_RESET = 7,
++	SPMI_CMD_REG_SLEEP = 8,
++	SPMI_CMD_REG_SHUTDOWN = 9,
++	SPMI_CMD_REG_WAKEUP = 10,
++};
++/*lint +e749 -esym(749,*)*/
++
++/*
++ * SPMI status register
++ */
++#define SPMI_APB_TRANS_DONE						(1 << 0)
++#define SPMI_APB_TRANS_FAIL						(1 << 2)
++
++/* Command register fields */
++#define SPMI_CONTROLLER_CMD_MAX_BYTE_COUNT	16
++
++/* Maximum number of support PMIC peripherals */
++#define SPMI_CONTROLLER_TIMEOUT_US		1000
++#define SPMI_CONTROLLER_MAX_TRANS_BYTES	(16)
++
++#define SPMI_WRITEL( dev, reg, addr )	\
++	do { \
++		writel( ( reg ), ( addr ) ); \
++	} while (0)
++
++#define  SPMI_READL( dev, reg, addr )	\
++	do { \
++		reg = readl( addr ); \
++	} while (0)
++
++/*
++ * @base base address of the PMIC Arbiter core registers.
++ * @rdbase, @wrbase base address of the PMIC Arbiter read core registers.
++ *     For HW-v1 these are equal to base.
++ *     For HW-v2, the value is the same in eeraly probing, in order to read
++ *     PMIC_ARB_CORE registers, then chnls, and obsrvr are set to
++ *     PMIC_ARB_CORE_REGISTERS and PMIC_ARB_CORE_REGISTERS_OBS respectivly.
++ * @intr base address of the SPMI interrupt control registers
++ * @ppid_2_chnl_tbl lookup table f(SID, Periph-ID) -> channel num
++ *      entry is only valid if corresponding bit is set in valid_ppid_bitmap.
++ * @valid_ppid_bitmap bit is set only for valid ppids.
++ * @fmt_cmd formats a command to be set into PMIC_ARBq_CHNLn_CMD
++ * @chnl_ofst calculates offset of the base of a channel reg space
++ * @ee execution environment id
++ * @irq_acc0_init_val initial value of the interrupt accumulator at probe time.
++ *      Use for an HW workaround. On handling interrupts, the first accumulator
++ *      register will be compared against this value, and bits which are set at
++ *      boot will be ignored.
++ * @reserved_chnl entry of ppid_2_chnl_tbl that this driver should never touch.
++ *      value is positive channel number or negative to mark it unused.
++ */
++struct spmi_controller_dev {
++	struct spmi_controller	*controller;
++	struct device		*dev;
++	void __iomem		*base;
++	spinlock_t		lock;
++	u32			channel;
++};
++
++static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
++				  void __iomem *base, u8 sid, u16 addr)
++{
++	u32 status = 0;
++	u32 timeout = SPMI_CONTROLLER_TIMEOUT_US;
++	u32 offset = SPMI_APB_SPMI_STATUS_BASE_ADDR + SPMI_CHANNEL_OFFSET * ctrl_dev->channel
++		+ SPMI_SLAVE_OFFSET * sid;
++
++	while (timeout--) {
++		SPMI_READL(ctrl_dev->dev, status, base + offset);/*lint !e732 */
++
++		if (status & SPMI_APB_TRANS_DONE) {
++			if (status & SPMI_APB_TRANS_FAIL) {
++				dev_err(ctrl_dev->dev,
++					"%s: transaction failed (0x%x)\n",
++					__func__, status);
++				return -EIO;
++			}
++			return 0;
++		}
++		udelay(1);/*lint !e778 !e774 !e747*/
++	}
++
++	dev_err(ctrl_dev->dev,
++		"%s: timeout, status 0x%x\n",
++		__func__, status);
++	return -ETIMEDOUT;/*lint !e438*/
++}/*lint !e715 !e529*/
++
++static int spmi_read_cmd(struct spmi_controller *ctrl,
++				u8 opc, u8 sid, u16 addr, u8 *buf, size_t bc)
++{
++	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
++	unsigned long flags;
 +	u32 cmd, data;
- 	int rc;
- 	u32 chnl_ofst = SPMI_CHANNEL_OFFSET * spmi_controller->channel;
- 	u8 op_code, i;
-@@ -246,7 +240,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 
- 	i = 0;
- 	do {
--		memset(&data, 0, sizeof(data));
-+		data = 0;
- 		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
- 			memcpy(&data, buf, sizeof(data));
- 			buf += sizeof(data);
-@@ -255,8 +249,8 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
- 			buf += (bc % SPMI_PER_DATAREG_BYTE);
- 		}
- 
--		data = bswap_32(data);
--		writel(data, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
-+		writel((u32)cpu_to_be32(data),
-+		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
- 		i++;
- 	} while (bc > i * SPMI_PER_DATAREG_BYTE);
- 
++	int rc;
++	u32 chnl_ofst = SPMI_CHANNEL_OFFSET*spmi_controller->channel;
++	u8 op_code, i;
++
++	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
++		dev_err(spmi_controller->dev
++		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
++					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
++		return  -EINVAL;
++	}
++
++	/* Check the opcode */
++	if (SPMI_CMD_READ == opc)
++		op_code = SPMI_CMD_REG_READ;
++	else if (SPMI_CMD_EXT_READ == opc)
++		op_code = SPMI_CMD_EXT_REG_READ;
++	else if (SPMI_CMD_EXT_READL == opc)
++		op_code = SPMI_CMD_EXT_REG_READ_L;
++	else {
++		dev_err(spmi_controller->dev, "invalid read cmd 0x%x", opc);
++		return -EINVAL;
++	}
++
++	cmd = SPMI_APB_SPMI_CMD_EN |/*lint !e648 !e701 */								/* cmd_en */
++		 (op_code << SPMI_APB_SPMI_CMD_TYPE_OFFSET) |/*lint !e648 !e701 */			/* cmd_type */
++		 ((bc-1) << SPMI_APB_SPMI_CMD_LENGTH_OFFSET) |/*lint !e648 !e701 */		/* byte_cnt */
++		 ((sid & 0xf) << SPMI_APB_SPMI_CMD_SLAVEID_OFFSET) |						/* slvid */
++		 ((addr & 0xffff)  << SPMI_APB_SPMI_CMD_ADDR_OFFSET);					/* slave_addr */
++
++	spin_lock_irqsave(&spmi_controller->lock, flags);/*lint !e550 */
++
++	SPMI_WRITEL(spmi_controller->dev, cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
++
++
++	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
++	if (rc)
++		goto done;
++
++	i = 0;
++	do {
++		SPMI_READL(spmi_controller->dev, data, spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET*sid + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i*SPMI_PER_DATAREG_BYTE);/*lint !e732 */
++		data = Tranverse32(data);
++		if ((bc - i*SPMI_PER_DATAREG_BYTE ) >> 2) {/*lint !e702 */
++			memcpy(buf, &data, sizeof(data));
++			buf += sizeof(data);
++		} else {
++			memcpy(buf, &data, bc%SPMI_PER_DATAREG_BYTE);/*lint !e747 */
++			buf += (bc%SPMI_PER_DATAREG_BYTE);
++		}
++		i++;
++	} while (bc > i*SPMI_PER_DATAREG_BYTE);
++
++done:
++	spin_unlock_irqrestore(&spmi_controller->lock, flags);
++	if (rc)
++		dev_err(spmi_controller->dev, "spmi read wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
++							opc, sid, addr, bc + 1);
++	return rc;
++}/*lint !e550 !e529*/
++
++/*lint -e438 -esym(438,*)*/
++static int spmi_write_cmd(struct spmi_controller *ctrl,
++				u8 opc, u8 sid, u16 addr, const u8 *buf, size_t bc)
++{
++	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
++	unsigned long flags;
++	u32 cmd;
++	u32 data = 0;
++	int rc;
++	u32 chnl_ofst = SPMI_CHANNEL_OFFSET*spmi_controller->channel;
++	u8 op_code, i;
++
++
++	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
++		dev_err(spmi_controller->dev
++		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
++					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
++		return  -EINVAL;
++	}
++
++	/* Check the opcode */
++	if (SPMI_CMD_WRITE == opc)
++		op_code = SPMI_CMD_REG_WRITE;
++	else if (SPMI_CMD_EXT_WRITE == opc)
++		op_code = SPMI_CMD_EXT_REG_WRITE;
++	else if (SPMI_CMD_EXT_WRITEL == opc)
++		op_code = SPMI_CMD_EXT_REG_WRITE_L;
++	else {
++		dev_err(spmi_controller->dev, "invalid write cmd 0x%x", opc);
++		return -EINVAL;
++	}
++
++	cmd = SPMI_APB_SPMI_CMD_EN |/*lint !e648 !e701 */								/* cmd_en */
++		 (op_code << SPMI_APB_SPMI_CMD_TYPE_OFFSET) |/*lint !e648 !e701 */			/* cmd_type */
++		 ((bc-1) << SPMI_APB_SPMI_CMD_LENGTH_OFFSET) |/*lint !e648 !e701 */		/* byte_cnt */
++		 ((sid & 0xf) << SPMI_APB_SPMI_CMD_SLAVEID_OFFSET) |						/* slvid */
++		 ((addr & 0xffff)  << SPMI_APB_SPMI_CMD_ADDR_OFFSET);					/* slave_addr */
++
++	/* Write data to FIFOs */
++	spin_lock_irqsave(&spmi_controller->lock, flags);/*lint !e550 */
++
++	i = 0;
++	do {
++		memset(&data, 0, sizeof(data));
++		if ((bc - i*SPMI_PER_DATAREG_BYTE ) >> 2) {/*lint !e702 */
++			memcpy(&data, buf, sizeof(data));
++			buf +=sizeof(data);
++		} else {
++			memcpy(&data, buf, bc%SPMI_PER_DATAREG_BYTE);/*lint !e747 */
++			buf +=(bc%SPMI_PER_DATAREG_BYTE);
++		}
++
++		data = Tranverse32(data);
++		SPMI_WRITEL(spmi_controller->dev, data, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR+SPMI_PER_DATAREG_BYTE*i);
++		i++;
++	} while (bc > i*SPMI_PER_DATAREG_BYTE);
++
++	/* Start the transaction */
++	SPMI_WRITEL(spmi_controller->dev, cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
++
++	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
++	spin_unlock_irqrestore(&spmi_controller->lock, flags);
++
++	if (rc)
++		dev_err(spmi_controller->dev, "spmi write wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
++							opc, sid, addr, bc);
++
++	return rc;
++}/*lint !e438 !e550 !e529*/
++/*lint +e438 -esym(438,*)*/
++static int spmi_controller_probe(struct platform_device *pdev)
++{
++	struct spmi_controller_dev *spmi_controller;
++	struct spmi_controller *ctrl;
++	struct resource *iores;
++	int ret = 0;
++
++	printk(KERN_INFO "HISI SPMI probe\n");
++	ctrl = spmi_controller_alloc(&pdev->dev, sizeof(*spmi_controller));
++	if (!ctrl) {
++		dev_err(&pdev->dev, "can not allocate spmi_controller data\n");
++		return -ENOMEM;  /*lint !e429*/
++	}
++	spmi_controller = spmi_controller_get_drvdata(ctrl);
++	spmi_controller->controller = ctrl;
++
++	/* NOTE: driver uses the static register mapping */
++	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!iores) {
++		dev_err(&pdev->dev, "can not get resource! \n");
++		return -EINVAL; /*lint !e429*/
++	}
++
++	spmi_controller->base = ioremap(iores->start, resource_size(iores));
++	if (!spmi_controller->base) {
++		dev_err(&pdev->dev, "can not remap base addr! \n");
++		return -EADDRNOTAVAIL; /*lint !e429*/
++	}
++	dev_dbg(&pdev->dev, "spmi_add_controller base addr=0x%lx!\n", (long unsigned int)spmi_controller->base);/*lint !e774*/
++
++	/* Get properties from the device tree */
++	ret = of_property_read_u32(pdev->dev.of_node, "spmi-channel",
++			&spmi_controller->channel);/*lint !e838*/
++	if (ret) {
++		dev_err(&pdev->dev, "can not get chanel \n");
++		return -ENODEV; /*lint !e429*/
++	}
++
++	platform_set_drvdata(pdev, spmi_controller);
++	dev_set_drvdata(&ctrl->dev, spmi_controller);
++
++	spin_lock_init(&spmi_controller->lock);
++
++	ctrl->nr = spmi_controller->channel;
++	ctrl->dev.parent = pdev->dev.parent;
++	ctrl->dev.of_node = of_node_get(pdev->dev.of_node);
++
++	/* Callbacks */
++	ctrl->read_cmd = spmi_read_cmd;
++	ctrl->write_cmd = spmi_write_cmd;
++
++	ret = spmi_controller_add(ctrl);
++	if (ret) {
++		dev_err(&pdev->dev, "spmi_add_controller failed!\n");
++		goto err_add_controller;
++	}
++err_add_controller:
++	platform_set_drvdata(pdev, NULL);
++	return ret; /*lint !e429*/
++}
++
++static int spmi_del_controller(struct platform_device *pdev)
++{
++	struct spmi_controller *ctrl = platform_get_drvdata(pdev);
++
++	platform_set_drvdata(pdev, NULL);
++	spmi_controller_remove(ctrl);
++	return 0;
++}
++
++static struct of_device_id spmi_controller_match_table[] = {
++	{	.compatible = "hisilicon,spmi-controller",
++	},/*lint !e785*/
++	{}/*lint !e785*/
++};
++
++static struct platform_driver spmi_controller_driver = {
++	.probe		= spmi_controller_probe,
++	.remove		= spmi_del_controller,
++	.driver		= {
++		.name	= SPMI_CONTROLLER_NAME,
++		.owner	= THIS_MODULE,/*lint !e64*/
++		.of_match_table = spmi_controller_match_table,
++	},/*lint !e785*/
++};/*lint !e785*/
++/*lint -e528 -esym(528,*)*/
++static int __init spmi_controller_init(void)
++{
++	return platform_driver_register(&spmi_controller_driver);/*lint !e64*/
++}
++postcore_initcall(spmi_controller_init);
++
++static void __exit spmi_controller_exit(void)
++{
++	platform_driver_unregister(&spmi_controller_driver);
++}
++module_exit(spmi_controller_exit);
++/*lint -e753 -esym(753,*)*/
++MODULE_LICENSE("GPL v2");
++MODULE_VERSION("1.0");/*lint !e785 !e64 !e528*/
++MODULE_ALIAS("platform:spmi_controlller");
++/*lint -e753 +esym(753,*)*/
++/*lint -e528 +esym(528,*)*/
++
 -- 
 2.26.2
 
