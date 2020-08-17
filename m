@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E22C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133862063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459B62063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686358;
-	bh=WCLSTyctYQydyz63ECXOFQ04mqoEo7Lk+bb2o7lFBHY=;
+	s=default; t=1597686373;
+	bh=kzluFWsY2fiiCl0l4OyJh0sdNPTrUhMuXiTdHJRSrQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ijHc6quinn7Pv/FzbT2fMndIrB7L3dC7ytZzLiDATNACoaL9EaPOpx44iF3oJ7xSn
-	 XlOJVirndihCs0Pw3sXMn6I6cs1pWAWVMvXGtAAKC/7YbKyfH2qCbcVZE7NacDDOyO
-	 cro/t1B9wTw5+Q+8JbQb2LLjIls2/1eFgF6pOtKg=
+	b=vqyPUZvXs1L9P3lbDInY3i81FnDDDtddAdNu2WWOvWpdIbVR0AFXIL4hVmr1FQGK2
+	 ageOVGd5XiXGXgbsSljOIACS35iyN1CZ9F5b7SAjD1dU1s+za9mGk84e+ak0IF7e9j
+	 qY1gsGg3Dk4urLYwR8+F4u6HGde5VcLfQnTpZb+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389929AbgHQRpy (ORCPT
+        id S1729307AbgHQRqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50006 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388784AbgHQQON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:14:13 -0400
+        id S2388779AbgHQQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B8920748;
-        Mon, 17 Aug 2020 16:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BD420578;
+        Mon, 17 Aug 2020 16:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680852;
-        bh=WCLSTyctYQydyz63ECXOFQ04mqoEo7Lk+bb2o7lFBHY=;
+        s=default; t=1597680847;
+        bh=kzluFWsY2fiiCl0l4OyJh0sdNPTrUhMuXiTdHJRSrQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fX2HyZvEYhLEc4UdCN7x8JumTtuNBCfbCGgilfgj2lzkrKZe3dF+LJIIFioFhxdWj
-         L0PWu2fB43w5BoqcG/NhfRpUK3LL5aarYh+SdbNMoj90rajEfMKt3XUoMjjHTvqz+B
-         mI0gai/zWIoHX8dq0jCGZmN4R16gk0TUIZu25hwo=
+        b=JogB7GVxeqeeDgCV+vnHzxFMLO7FFYC6PC85QqhoTEEwVVG5sJCNCtbyBYXJmQ0fM
+         VCCXqwK1OKX4geGfxhpq0JZALu1iNFTRiAsD7o93FLvCidL5PnJD+sfP/g6lRaSetQ
+         VYeWujZ3EP7f9RjWUH0uMp4LdWhZoAy+CjXLPUA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/168] mwifiex: Prevent memory corruption handling keys
-Date:   Mon, 17 Aug 2020 17:16:55 +0200
-Message-Id: <20200817143737.926679773@linuxfoundation.org>
+Subject: [PATCH 4.19 082/168] drm/bridge: sil_sii8620: initialize return of sii8620_readb
+Date:   Mon, 17 Aug 2020 17:16:53 +0200
+Message-Id: <20200817143737.822006575@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,80 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit e18696786548244914f36ec3c46ac99c53df99c3 ]
+[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
 
-The length of the key comes from the network and it's a 16 bit number.  It
-needs to be capped to prevent a buffer overflow.
+clang static analysis flags this error
 
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200708115857.GA13729@mwanda
+sil-sii8620.c:184:2: warning: Undefined or garbage value
+  returned to caller [core.uninitialized.UndefReturn]
+        return ret;
+        ^~~~~~~~~~
+
+sii8620_readb calls sii8620_read_buf.
+sii8620_read_buf can return without setting its output
+pararmeter 'ret'.
+
+So initialize ret.
+
+Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/marvell/mwifiex/sta_cmdresp.c    | 22 +++++++++++++------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-index 69e3b624adbb9..797c2e9783943 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-@@ -581,6 +581,11 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index a6e8f4591e636..1ea2a1b0fe375 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -180,7 +180,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+ 
+ static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
  {
- 	struct host_cmd_ds_802_11_key_material *key =
- 						&resp->params.key_material;
-+	int len;
-+
-+	len = le16_to_cpu(key->key_param_set.key_len);
-+	if (len > sizeof(key->key_param_set.key))
-+		return -EINVAL;
+-	u8 ret;
++	u8 ret = 0;
  
- 	if (le16_to_cpu(key->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key->key_param_set.key_info) & KEY_MCAST)) {
-@@ -594,9 +599,8 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
- 
- 	memset(priv->aes_key.key_param_set.key, 0,
- 	       sizeof(key->key_param_set.key));
--	priv->aes_key.key_param_set.key_len = key->key_param_set.key_len;
--	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key,
--	       le16_to_cpu(priv->aes_key.key_param_set.key_len));
-+	priv->aes_key.key_param_set.key_len = cpu_to_le16(len);
-+	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key, len);
- 
- 	return 0;
- }
-@@ -611,9 +615,14 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 					      struct host_cmd_ds_command *resp)
- {
- 	struct host_cmd_ds_802_11_key_material_v2 *key_v2;
--	__le16 len;
-+	int len;
- 
- 	key_v2 = &resp->params.key_material_v2;
-+
-+	len = le16_to_cpu(key_v2->key_param_set.key_params.aes.key_len);
-+	if (len > WLAN_KEY_LEN_CCMP)
-+		return -EINVAL;
-+
- 	if (le16_to_cpu(key_v2->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key_v2->key_param_set.key_info) & KEY_MCAST)) {
- 			mwifiex_dbg(priv->adapter, INFO, "info: key: GTK is set\n");
-@@ -629,10 +638,9 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 	memset(priv->aes_key_v2.key_param_set.key_params.aes.key, 0,
- 	       WLAN_KEY_LEN_CCMP);
- 	priv->aes_key_v2.key_param_set.key_params.aes.key_len =
--				key_v2->key_param_set.key_params.aes.key_len;
--	len = priv->aes_key_v2.key_param_set.key_params.aes.key_len;
-+				cpu_to_le16(len);
- 	memcpy(priv->aes_key_v2.key_param_set.key_params.aes.key,
--	       key_v2->key_param_set.key_params.aes.key, le16_to_cpu(len));
-+	       key_v2->key_param_set.key_params.aes.key, len);
- 
- 	return 0;
- }
+ 	sii8620_read_buf(ctx, addr, &ret, 1);
+ 	return ret;
 -- 
 2.25.1
 
