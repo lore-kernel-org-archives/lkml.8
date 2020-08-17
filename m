@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD82C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955B7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3607204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689851;
-	bh=Xv54CaqVCi1m1GANoiOQQGe55LlmlYY8gLV+z/tCpRA=;
+	s=default; t=1597689861;
+	bh=ajvV0d32WBJRaggyuBZcCSeJkyczV/yiyWt3d1xXQAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iV3QYmOBhpuLbYkAtU3S73x7hh9F81DviiPvyQDvCYHfC+o0yiJSmNKT+i8+K8sl0
-	 d2jqj/Kd1TSy3LGCNENTShuWRAZ6/krqrxQoAyBZFlHqsA0AUfwM+KuH95/fAG9qO/
-	 ytvs/qPItggkL34Im5WlyJxqm/vafqVVqYajSEmo=
+	b=f0rGxELv7Lwlk5NRTyGg3LBn3PZLFWpqg/7XknOBljSEYvwwGiacKKEtYb+1vI0lB
+	 4+L06r4fmxZbkmX5v5gwnECCRuxk2Vho+tNAqTv1SKqbGPAeC0L29unZPgqvnVgvI3
+	 ZVkHM04D3hVYIOwdP30/fPao2zgy7Q4baXH6zSic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403779AbgHQSoJ (ORCPT
+        id S2390989AbgHQSnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44160 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388073AbgHQP40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:26 -0400
+        id S2388082AbgHQP4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 625472177B;
-        Mon, 17 Aug 2020 15:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6912173E;
+        Mon, 17 Aug 2020 15:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679785;
-        bh=Xv54CaqVCi1m1GANoiOQQGe55LlmlYY8gLV+z/tCpRA=;
+        s=default; t=1597679794;
+        bh=ajvV0d32WBJRaggyuBZcCSeJkyczV/yiyWt3d1xXQAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ju8LTVU+dJ45Jh3fNUUrZBciMB7btbJk4h554MIqNacImeipvJRtX+KWXQ0aOfPoA
-         t39OoPrLVulLjmg8p1WzRynoElq8FaSOIg5rzgxxy/VCjY9rcsX4w3fYOi8JwdgozF
-         S+s0MRDCGocWTr9htbS8j0DoJAJHsAxU7WV/U4DY=
+        b=XchvJ4jVjcTCZ4/g5nsc8iGTaPksmq1qFiNX2p+u8Sl1MbjDqDjGmQWBENi5tQzTD
+         i/Hsr1IuteFEDOtkgyy2k4LMebYHcQQbb0kMaHgAf2WvVHua78NLZFPfR9fhmHq+r9
+         b6ybiCrRoOSgt0BuGwxEmHhmUFCgL+4NM8mfG75I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 334/393] ALSA: hda - fix the micmute led status for Lenovo ThinkCentre AIO
-Date:   Mon, 17 Aug 2020 17:16:24 +0200
-Message-Id: <20200817143835.798866467@linuxfoundation.org>
+Subject: [PATCH 5.7 337/393] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
+Date:   Mon, 17 Aug 2020 17:16:27 +0200
+Message-Id: <20200817143835.944446284@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,36 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit 386a6539992b82fe9ac4f9dc3f548956fd894d8c upstream.
+commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
 
-After installing the Ubuntu Linux, the micmute led status is not
-correct. Users expect that the led is on if the capture is disabled,
-but with the current kernel, the led is off with the capture disabled.
+Further investigation of the L-R swap problem on the MS2109 reveals that
+the problem isn't that the channels are swapped, but rather that they
+are swapped and also out of phase by one sample. In other words, the
+issue is actually that the very first frame that comes from the hardware
+is a half-frame containing only the right channel, and after that
+everything becomes offset.
 
-We tried the old linux kernel like linux-4.15, there is no this issue.
-It looks like we introduced this issue when switching to the led_cdev.
+So introduce a new quirk field to drop the very first 2 bytes that come
+in after the format is configured and a capture stream starts. This puts
+the channels in phase and in the correct order.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200810021659.7429-1-hui.wang@canonical.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/card.h   |    1 +
+ sound/usb/pcm.c    |    6 ++++++
+ sound/usb/quirks.c |    3 +++
+ sound/usb/stream.c |    1 +
+ 4 files changed, 11 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4391,6 +4391,7 @@ static void alc233_fixup_lenovo_line2_mi
- {
- 	struct alc_spec *spec = codec->spec;
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -133,6 +133,7 @@ struct snd_usb_substream {
+ 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
+ 	unsigned int fmt_type;		/* USB audio format type (1-3) */
+ 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
++	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
  
-+	spec->micmute_led_polarity = 1;
- 	alc_fixup_hp_gpio_led(codec, action, 0, 0x04);
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		spec->init_amp = ALC_INIT_DEFAULT;
+ 	unsigned int running: 1;	/* running status */
+ 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1416,6 +1416,12 @@ static void retire_capture_urb(struct sn
+ 			// continue;
+ 		}
+ 		bytes = urb->iso_frame_desc[i].actual_length;
++		if (subs->stream_offset_adj > 0) {
++			unsigned int adj = min(subs->stream_offset_adj, bytes);
++			cp += adj;
++			bytes -= adj;
++			subs->stream_offset_adj -= adj;
++		}
+ 		frames = bytes / stride;
+ 		if (!subs->txfr_quirk)
+ 			bytes = frames * stride;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1468,6 +1468,9 @@ void snd_usb_set_format_quirk(struct snd
+ 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
+ 		set_format_emu_quirk(subs, fmt);
+ 		break;
++	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
++		subs->stream_offset_adj = 2;
++		break;
+ 	}
+ }
+ 
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -94,6 +94,7 @@ static void snd_usb_init_substream(struc
+ 	subs->tx_length_quirk = as->chip->tx_length_quirk;
+ 	subs->speed = snd_usb_get_speed(subs->dev);
+ 	subs->pkt_offset_adj = 0;
++	subs->stream_offset_adj = 0;
+ 
+ 	snd_usb_set_pcm_ops(as->pcm, stream);
+ 
 
 
