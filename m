@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459B62063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007892063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686373;
-	bh=kzluFWsY2fiiCl0l4OyJh0sdNPTrUhMuXiTdHJRSrQ8=;
+	s=default; t=1597686379;
+	bh=7A+++Yw0+TysqxyiH4d3rKi9Zm++2+xI6pxXoC56GEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqyPUZvXs1L9P3lbDInY3i81FnDDDtddAdNu2WWOvWpdIbVR0AFXIL4hVmr1FQGK2
-	 ageOVGd5XiXGXgbsSljOIACS35iyN1CZ9F5b7SAjD1dU1s+za9mGk84e+ak0IF7e9j
-	 qY1gsGg3Dk4urLYwR8+F4u6HGde5VcLfQnTpZb+A=
+	b=xdl1+jwynWTcOTlm4cGHu/vNSDcajfuCG+Jyk3RhsalftyWfYjuKAPaYRf/GpNtQ8
+	 twU5dXsrVpF3z+gMtSw98e1QRiZCyG+JungygjOXgjB+NZ5S0zfnEFSjPxp/L1DZrA
+	 fJXgb42EuAf5/cONvNC1nz0GeRjTBm/3gT9k2Q5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgHQRqD (ORCPT
+        id S1730819AbgHQRqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388779AbgHQQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388777AbgHQQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:14:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69BD420578;
-        Mon, 17 Aug 2020 16:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2C4822CA0;
+        Mon, 17 Aug 2020 16:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680847;
-        bh=kzluFWsY2fiiCl0l4OyJh0sdNPTrUhMuXiTdHJRSrQ8=;
+        s=default; t=1597680845;
+        bh=7A+++Yw0+TysqxyiH4d3rKi9Zm++2+xI6pxXoC56GEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JogB7GVxeqeeDgCV+vnHzxFMLO7FFYC6PC85QqhoTEEwVVG5sJCNCtbyBYXJmQ0fM
-         VCCXqwK1OKX4geGfxhpq0JZALu1iNFTRiAsD7o93FLvCidL5PnJD+sfP/g6lRaSetQ
-         VYeWujZ3EP7f9RjWUH0uMp4LdWhZoAy+CjXLPUA8=
+        b=Z8pd6eVOEcR0KmMFTbrFtrpcGvHM/ZwaYO/BIvKqtT4n0REZJQVtXNX0HccaYAPpP
+         Q5zfuCy1ptCPE/Ojb/ZFxVC6xjhvegS1fKh2vUpglOWnbkhq2reOPFCkvU/bUkbcl8
+         sAmk2eeNgBqUuEWXeGS6eZG2zygzv/vzHDseolS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/168] drm/bridge: sil_sii8620: initialize return of sii8620_readb
-Date:   Mon, 17 Aug 2020 17:16:53 +0200
-Message-Id: <20200817143737.822006575@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 081/168] phy: exynos5-usbdrd: Calibrating makes sense only for USB2.0 PHY
+Date:   Mon, 17 Aug 2020 17:16:52 +0200
+Message-Id: <20200817143737.773044179@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,47 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
+[ Upstream commit dcbabfeb17c3c2fdb6bc92a3031ecd37df1834a8 ]
 
-clang static analysis flags this error
+PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
+calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
 
-sil-sii8620.c:184:2: warning: Undefined or garbage value
-  returned to caller [core.uninitialized.UndefReturn]
-        return ret;
-        ^~~~~~~~~~
-
-sii8620_readb calls sii8620_read_buf.
-sii8620_read_buf can return without setting its output
-pararmeter 'ret'.
-
-So initialize ret.
-
-Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
+Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20200708133800.3336-1-m.szyprowski@samsung.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-index a6e8f4591e636..1ea2a1b0fe375 100644
---- a/drivers/gpu/drm/bridge/sil-sii8620.c
-+++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-@@ -180,7 +180,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index b8b226a200146..1feb1e1bf85e2 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -717,7 +717,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
+ 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+ 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
  
- static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
- {
--	u8 ret;
-+	u8 ret = 0;
+-	return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
++		return exynos5420_usbdrd_phy_calibrate(phy_drd);
++	return 0;
+ }
  
- 	sii8620_read_buf(ctx, addr, &ret, 1);
- 	return ret;
+ static const struct phy_ops exynos5_usbdrd_phy_ops = {
 -- 
 2.25.1
 
