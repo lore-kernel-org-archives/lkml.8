@@ -2,85 +2,155 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B50FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0830BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA392078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597658836;
-	bh=eCw+2/lSjBV7bP7ZhU0BJWsyz5bbYEzAf+VX/NT+hPs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=reiTGYgb+QXd5q/ePd/mxg/2H4iU3LRfGTUNLp58MqqEtWCjlIZ3zTH4UXRENO/0o
-	 NtYphB8oe+uQlQ9CTvQSAuPpxEHtWzdDOCLqQ4hsD8jDwEhqyaCwqbTG+PZ7YDpd9L
-	 t2BALjvxX7FddspDhvPil4Q8we4V8lptaSKAvj2M=
+	by mail.kernel.org (Postfix) with ESMTP id A7C7F2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:07:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eBDfICT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgHQKHP (ORCPT
+        id S1727808AbgHQKHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbgHQKHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:07:14 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 17 Aug 2020 06:07:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47268 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726367AbgHQKHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 06:07:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597658855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=j/v002Gxe6nBxuXIo8xXJ4Ruh4kteZD7I/mhEJxj0MM=;
+        b=eBDfICT/v8YTHDafFU/7iASSIecGa09jy49lMA6bKXC89EsO/mJj0qoN4tM2a5qvfLkR4r
+        pFqXaIi9hi+YMfN+KOMDRihz3nqHlAupC5Ctyvn9sMPk7c6Ly4ZKyoHvt3ARqY7UwxZ8cl
+        l+5cL25XSxE5vWBojlUA20wFm6n3qpY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-zoNlyZsOPL2h4UiP-b4EoQ-1; Mon, 17 Aug 2020 06:07:31 -0400
+X-MC-Unique: zoNlyZsOPL2h4UiP-b4EoQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEE7D2067C;
-        Mon, 17 Aug 2020 10:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597658834;
-        bh=eCw+2/lSjBV7bP7ZhU0BJWsyz5bbYEzAf+VX/NT+hPs=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=iIIPM/3UjTg70NVgUJxOiOTsp3FhTrRIe4qeOMH4R3Pq32ZYAIdcsq4RXZriqMUoS
-         UskIS4j8TH1QhGIw71c0/ypsYfJSrZ22eT6mj0CjMXQBrLP2Cy9V9uiQv5stR+Xfcb
-         tHZ0SJpTD95agWGCKWw5QgN+9IypUs6jEOj/+1E8=
-Date:   Mon, 17 Aug 2020 12:07:10 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-cc:     Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] HID: roccat: add bounds checking in
- kone_sysfs_write_settings()
-In-Reply-To: <20200805095501.GD483832@mwanda>
-Message-ID: <nycvar.YFH.7.76.2008171206280.27422@cbobk.fhfr.pm>
-References: <20200805095501.GD483832@mwanda>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 379E1801AF2;
+        Mon, 17 Aug 2020 10:07:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 053085C62B;
+        Mon, 17 Aug 2020 10:07:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] watch_queue: Limit the number of watches a user can hold
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        dhowells@redhat.com, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Aug 2020 11:07:28 +0100
+Message-ID: <159765884811.1436382.16387370517871969276.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020, Dan Carpenter wrote:
+Impose a limit on the number of watches that a user can hold so that they
+can't use this mechanism to fill up all the available memory.
 
-> In the original code we didn't check if the new value for
-> "settings->startup_profile" was within bounds that could possibly
-> result in an out of bounds array acccess.  What we did was we checked if
-> we could write the data to the firmware and it's possibly the firmware
-> checks these values but there is no way to know.  It's safer and easier
-> to read if we check it in the kernel as well.
-> 
-> I also added a check to ensure that "settings->size" was correct.  The
-> comments say that the only valid value is 36 which is sizeof(struct
-> kone_settings).
-> 
-> Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+This is done by putting a counter in user_struct that's incremented when a
+watch is allocated and decreased when it is released.  If the number
+exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
 
-Stefan, could I please get your Reviewed-by and/or Tested-by, to make sure 
-this doesn't unintentionally somehow break userspace?
+This can be tested by the following means:
 
-Thanks,
+ (1) Create a watch queue and attach it to fd 5 in the program given - in
+     this case, bash:
 
--- 
-Jiri Kosina
-SUSE Labs
+	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
+
+ (2) In the shell, set the maximum number of files to, say, 99:
+
+	ulimit -n 99
+
+ (3) Add 200 keyrings:
+
+	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
+
+ (4) Try to watch all of the keyrings:
+
+	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
+
+     This should fail when the number of watches belonging to the user hits
+     99.
+
+ (5) Remove all the keyrings and all of those watches should go away:
+
+	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
+
+ (6) Kill off the watch queue by exiting the shell spawned by
+     watch_session.
+
+Fixes: c73be61cede5 ("pipe: Add general notification queue support")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+
+ include/linux/sched/user.h |    3 +++
+ kernel/watch_queue.c       |    8 ++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+index 917d88edb7b9..a8ec3b6093fc 100644
+--- a/include/linux/sched/user.h
++++ b/include/linux/sched/user.h
+@@ -36,6 +36,9 @@ struct user_struct {
+     defined(CONFIG_NET) || defined(CONFIG_IO_URING)
+ 	atomic_long_t locked_vm;
+ #endif
++#ifdef CONFIG_WATCH_QUEUE
++	atomic_t nr_watches;	/* The number of watches this user currently has */
++#endif
+ 
+ 	/* Miscellaneous per-user rate limit */
+ 	struct ratelimit_state ratelimit;
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index f74020f6bd9d..0ef8f65bd2d7 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
+ 	struct watch *watch = container_of(rcu, struct watch, rcu);
+ 
+ 	put_watch_queue(rcu_access_pointer(watch->queue));
++	atomic_dec(&watch->cred->user->nr_watches);
+ 	put_cred(watch->cred);
+ }
+ 
+@@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
+ 	watch->cred = get_current_cred();
+ 	rcu_assign_pointer(watch->watch_list, wlist);
+ 
++	if (atomic_inc_return(&watch->cred->user->nr_watches) >
++	    task_rlimit(current, RLIMIT_NOFILE)) {
++		atomic_dec(&watch->cred->user->nr_watches);
++		put_cred(watch->cred);
++		return -EAGAIN;
++	}
++
+ 	spin_lock_bh(&wqueue->lock);
+ 	kref_get(&wqueue->usage);
+ 	kref_get(&watch->usage);
+
 
