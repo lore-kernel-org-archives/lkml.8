@@ -2,54 +2,56 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9A62063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31D12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686395;
-	bh=UtwFBT0kfB+9WFyN4pTtQzi7oPQ09ioq8/mdTHXrjxw=;
+	s=default; t=1597686405;
+	bh=KeUbCMX13VC4pFeKZ0ZZ76whNysTnBQIFf+bEc0PV08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhFfelgFbf7fEDKSqRyEyBHfk6rGQrh+fENw9bdqFxi8Iumpx9n8Z3L/CU2qiNv4h
-	 Fot3TRLF0B/JLyW9QYuq7RR+7M7viEJ48Sa/PXUdU8/EyuMkIMD2z+YKXz5DVNo6pM
-	 YmdO0CMI60LE82UoTsOG3u5tRKxYoWdog9Jxo3GU=
+	b=m1+flGyorGg/x+GPut5vLE013Fu1s2gm0cVJwKxKcSudXbj8887HT2+lFN/nT/RKs
+	 TkjVikYCuz2dJg5zwxwdUwSMHCUrotLtwI7vOEyC5+X5GeOt5uonHjJo+BjQY0iYPT
+	 2wKRYKy3kn7C5/RbiEpmAVFnlp+oEGD/DZOVyUoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbgHQRqc (ORCPT
+        id S2388771AbgHQRqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46764 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388592AbgHQQNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:50 -0400
+        id S2388764AbgHQQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0383720760;
-        Mon, 17 Aug 2020 16:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5431922B47;
+        Mon, 17 Aug 2020 16:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680830;
-        bh=UtwFBT0kfB+9WFyN4pTtQzi7oPQ09ioq8/mdTHXrjxw=;
+        s=default; t=1597680825;
+        bh=KeUbCMX13VC4pFeKZ0ZZ76whNysTnBQIFf+bEc0PV08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AgPj9rjlB5dyIu5w5mOKPxeYmbZ4lhtiwk+fuoXryMHSBhQvZ699w7X0K2eFHZrYV
-         6D2PKpYvcEXjld5ErdHEr2MrR7aokW5ZboP5545VUydzs2kyfJQGlZwY0XOgmbPHNu
-         nCYwjDIgLJ8dsZpUkbqB1mu5uqRBIvc8Y5hH7K9g=
+        b=CuF/1xJ1LFLpRnfYb/0TDmijdP/ymmG6kuCLE+xhG1ne4WjF5nTs9LNau7OrHVwr9
+         wPfi8nALl8fwB50TqZICLxCZQBLufXLMFMIz94k0LIBGdxuSw3zeIOP/73Hw//+nWb
+         XDWOgGXN8yuW1kL+U0Ld1GuHi0+ZD/Eu1/xW6T0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
+        stable@vger.kernel.org, Craig Topper <craig.topper@intel.com>,
+        Craig Topper <craig.topper@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "ClangBuiltLinux" <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/168] xfs: dont eat an EIO/ENOSPC writeback error when scrubbing data fork
-Date:   Mon, 17 Aug 2020 17:16:46 +0200
-Message-Id: <20200817143737.462486829@linuxfoundation.org>
+Subject: [PATCH 4.19 032/168] crypto: aesni - Fix build with LLVM_IAS=1
+Date:   Mon, 17 Aug 2020 17:16:03 +0200
+Message-Id: <20200817143735.363498293@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,68 +64,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Sedat Dilek <sedat.dilek@gmail.com>
 
-[ Upstream commit eb0efe5063bb10bcb653e4f8e92a74719c03a347 ]
+[ Upstream commit 3347c8a079d67af21760a78cc5f2abbcf06d9571 ]
 
-The data fork scrubber calls filemap_write_and_wait to flush dirty pages
-and delalloc reservations out to disk prior to checking the data fork's
-extent mappings.  Unfortunately, this means that scrub can consume the
-EIO/ENOSPC errors that would otherwise have stayed around in the address
-space until (we hope) the writer application calls fsync to persist data
-and collect errors.  The end result is that programs that wrote to a
-file might never see the error code and proceed as if nothing were
-wrong.
+When building with LLVM_IAS=1 means using Clang's Integrated Assembly (IAS)
+from LLVM/Clang >= v10.0.1-rc1+ instead of GNU/as from GNU/binutils
+I see the following breakage in Debian/testing AMD64:
 
-xfs_scrub is not in a position to notify file writers about the
-writeback failure, and it's only here to check metadata, not file
-contents.  Therefore, if writeback fails, we should stuff the error code
-back into the address space so that an fsync by the writer application
-can pick that up.
+<instantiation>:15:74: error: too many positional arguments
+ PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
+                                                                         ^
+ arch/x86/crypto/aesni-intel_asm.S:1598:2: note: while in macro instantiation
+ GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
+ ^
+<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
+ GHASH_4_ENCRYPT_4_PARALLEL_dec %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
+ ^
+arch/x86/crypto/aesni-intel_asm.S:1599:2: note: while in macro instantiation
+ GCM_ENC_DEC dec
+ ^
+<instantiation>:15:74: error: too many positional arguments
+ PRECOMPUTE 8*3+8(%rsp), %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
+                                                                         ^
+arch/x86/crypto/aesni-intel_asm.S:1686:2: note: while in macro instantiation
+ GCM_INIT %r9, 8*3 +8(%rsp), 8*3 +16(%rsp), 8*3 +24(%rsp)
+ ^
+<instantiation>:47:2: error: unknown use of instruction mnemonic without a size suffix
+ GHASH_4_ENCRYPT_4_PARALLEL_enc %xmm9, %xmm10, %xmm11, %xmm12, %xmm13, %xmm14, %xmm0, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7, %xmm8, enc
+ ^
+arch/x86/crypto/aesni-intel_asm.S:1687:2: note: while in macro instantiation
+ GCM_ENC_DEC enc
 
-Fixes: 99d9d8d05da2 ("xfs: scrub inode block mappings")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Craig Topper suggested me in ClangBuiltLinux issue #1050:
+
+> I think the "too many positional arguments" is because the parser isn't able
+> to handle the trailing commas.
+>
+> The "unknown use of instruction mnemonic" is because the macro was named
+> GHASH_4_ENCRYPT_4_PARALLEL_DEC but its being instantiated with
+> GHASH_4_ENCRYPT_4_PARALLEL_dec I guess gas ignores case on the
+> macro instantiation, but llvm doesn't.
+
+First, I removed the trailing comma in the PRECOMPUTE line.
+
+Second, I substituted:
+1. GHASH_4_ENCRYPT_4_PARALLEL_DEC -> GHASH_4_ENCRYPT_4_PARALLEL_dec
+2. GHASH_4_ENCRYPT_4_PARALLEL_ENC -> GHASH_4_ENCRYPT_4_PARALLEL_enc
+
+With these changes I was able to build with LLVM_IAS=1 and boot on bare metal.
+
+I confirmed that this works with Linux-kernel v5.7.5 final.
+
+NOTE: This patch is on top of Linux v5.7 final.
+
+Thanks to Craig and especially Nick for double-checking and his comments.
+
+Suggested-by: Craig Topper <craig.topper@intel.com>
+Suggested-by: Craig Topper <craig.topper@gmail.com>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: "ClangBuiltLinux" <clang-built-linux@googlegroups.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1050
+Link: https://bugs.llvm.org/show_bug.cgi?id=24494
+Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/scrub/bmap.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/x86/crypto/aesni-intel_asm.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index e1d11f3223e36..f84a58e523bc8 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -53,9 +53,27 @@ xchk_setup_inode_bmap(
- 	 */
- 	if (S_ISREG(VFS_I(sc->ip)->i_mode) &&
- 	    sc->sm->sm_type == XFS_SCRUB_TYPE_BMBTD) {
-+		struct address_space	*mapping = VFS_I(sc->ip)->i_mapping;
-+
- 		inode_dio_wait(VFS_I(sc->ip));
--		error = filemap_write_and_wait(VFS_I(sc->ip)->i_mapping);
--		if (error)
-+
-+		/*
-+		 * Try to flush all incore state to disk before we examine the
-+		 * space mappings for the data fork.  Leave accumulated errors
-+		 * in the mapping for the writer threads to consume.
-+		 *
-+		 * On ENOSPC or EIO writeback errors, we continue into the
-+		 * extent mapping checks because write failures do not
-+		 * necessarily imply anything about the correctness of the file
-+		 * metadata.  The metadata and the file data could be on
-+		 * completely separate devices; a media failure might only
-+		 * affect a subset of the disk, etc.  We can handle delalloc
-+		 * extents in the scrubber, so leaving them in memory is fine.
-+		 */
-+		error = filemap_fdatawrite(mapping);
-+		if (!error)
-+			error = filemap_fdatawait_keep_errors(mapping);
-+		if (error && (error != -ENOSPC && error != -EIO))
- 			goto out;
- 	}
+diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
+index cb2deb61c5d96..29b27f9a6e1ee 100644
+--- a/arch/x86/crypto/aesni-intel_asm.S
++++ b/arch/x86/crypto/aesni-intel_asm.S
+@@ -270,7 +270,7 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
+ 	PSHUFB_XMM %xmm2, %xmm0
+ 	movdqu %xmm0, CurCount(%arg2) # ctx_data.current_counter = iv
  
+-	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7,
++	PRECOMPUTE \SUBKEY, %xmm1, %xmm2, %xmm3, %xmm4, %xmm5, %xmm6, %xmm7
+ 	movdqu HashKey(%arg2), %xmm13
+ 
+ 	CALC_AAD_HASH %xmm13, \AAD, \AADLEN, %xmm0, %xmm1, %xmm2, %xmm3, \
+@@ -982,7 +982,7 @@ _initial_blocks_done\@:
+ * arg1, %arg3, %arg4 are used as pointers only, not modified
+ * %r11 is the data offset value
+ */
+-.macro GHASH_4_ENCRYPT_4_PARALLEL_ENC TMP1 TMP2 TMP3 TMP4 TMP5 \
++.macro GHASH_4_ENCRYPT_4_PARALLEL_enc TMP1 TMP2 TMP3 TMP4 TMP5 \
+ TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 
+ 	movdqa	  \XMM1, \XMM5
+@@ -1190,7 +1190,7 @@ aes_loop_par_enc_done\@:
+ * arg1, %arg3, %arg4 are used as pointers only, not modified
+ * %r11 is the data offset value
+ */
+-.macro GHASH_4_ENCRYPT_4_PARALLEL_DEC TMP1 TMP2 TMP3 TMP4 TMP5 \
++.macro GHASH_4_ENCRYPT_4_PARALLEL_dec TMP1 TMP2 TMP3 TMP4 TMP5 \
+ TMP6 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 operation
+ 
+ 	movdqa	  \XMM1, \XMM5
 -- 
 2.25.1
 
