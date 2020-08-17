@@ -2,114 +2,136 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD3AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA32206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684957;
-	bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EZSHonAMPTBirkINdt5fjHYe0fROhuTY8UaLwb+MfXFy6qRIkxCU3tkfxGX7YsOKp
-	 0xSvIjwAUFtJqERscmmGxmcYPP+mHM6ZOcWmXKkb8Uf5cy6Rp2gu3lV5STTOMiDvyJ
-	 lhuHIiGY647hGDDER5RKlPe41Bn+l51OhG9iV+I0=
+	by mail.kernel.org (Postfix) with ESMTP id A9EC9206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389814AbgHQRWe (ORCPT
+        id S2389786AbgHQRWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388898AbgHQQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:39:56 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F75420674;
-        Mon, 17 Aug 2020 16:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597682395;
-        bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aiQBA39aUMY1Y44AGHoNsvI5heZEdPz3RASAMATyoNPfg904JKx/nEECcThKwh53D
-         iAGQuuobZ6SKApaX7I8nmQJgAhAR++iNLnMiy3//k4p9B/jPqrcdE/93PT0plYeBN+
-         TOHujonKP0VlLhiv7SR0cjSakloX2a506r41NXKg=
-Received: by mail-oi1-f174.google.com with SMTP id a24so15333804oia.6;
-        Mon, 17 Aug 2020 09:39:55 -0700 (PDT)
-X-Gm-Message-State: AOAM5314nPBTEPUp2TvMpqX21ze2p15uSx+El0+UVZeY/wsSoFA8Wchm
-        xtVdBVW5blUknlWj6GkPNT+jx/aF2ifj9XWBdw==
-X-Google-Smtp-Source: ABdhPJxhRWY6PWbqPYwgGjUIxWQR66vhMnMb3Lx3z86cqv3Gg8rVBxYxbVIvfsh9MLzYqkLWtvNEjbqKehRsRJxzIa4=
-X-Received: by 2002:aca:190c:: with SMTP id l12mr10376472oii.147.1597682394749;
- Mon, 17 Aug 2020 09:39:54 -0700 (PDT)
+        Mon, 17 Aug 2020 13:22:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37059 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388954AbgHQQnY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:43:24 -0400
+Received: from mail-qt1-f197.google.com ([209.85.160.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1k7iEC-0002wJ-Sx
+        for linux-kernel@vger.kernel.org; Mon, 17 Aug 2020 16:43:21 +0000
+Received: by mail-qt1-f197.google.com with SMTP id p22so12465915qtp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 09:43:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0xqp6xB0x/F0bhAYGhsldeK+3c9wtI19yZmF/fn1Ktk=;
+        b=pQ32GfSpQFmWMisOsd4yc4OEyB1NGFDSGKbQ8XHf891Bt4+FAZ/8Pnmg4y4h+z4Fwp
+         Pe0ggyGcQgz4teh8r6xGUgu3i7wTuPG0Z0vFNgjjCcSS52dY65Pgs6nUOtQU51tFe6RS
+         hpLs/bcbd2BRJq/hQgWOYIDCe997VUhTQDXxeSv5NlRLJXlqsBpO3e8QObOhFpxnQSwc
+         4I3kpDYAtBUVT2x5hJ0AA1uDOO7h+DEEpC2Vk83XCFuYym7PFwZcKknJOwU1pj8kQM4G
+         RjWAcPSsQEomLT+dZNlFqLclJMXFj+5+ZfGM3ZgB4JKUzuUjUHBw9pwYl6GYRzAyghy7
+         vejQ==
+X-Gm-Message-State: AOAM532y7JubkplwWnUgSAdgGkh+ObRXorpctHve4xTSK0xRzpX9mq2G
+        Q7R449bLhXA1AgHV2W51kNyV/6nsT8ntg5MeX/ZYvEi5iPchdSjo8/Alb6WfgyI1r1x2LW9t0GC
+        kqdoGiChRcb8si8+GzU/fQCyKyZ2YrpQnRVcx+EiYNw==
+X-Received: by 2002:aed:3689:: with SMTP id f9mr14186360qtb.238.1597682600000;
+        Mon, 17 Aug 2020 09:43:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyV+pqTxdDjsPAf45jTQsDme4iPUwb15CUTVTopNSxei2R4A1jDkAKkX2pvDfXB8lwqkS5Fmg==
+X-Received: by 2002:aed:3689:: with SMTP id f9mr14186338qtb.238.1597682599694;
+        Mon, 17 Aug 2020 09:43:19 -0700 (PDT)
+Received: from [192.168.1.75] ([191.8.4.228])
+        by smtp.gmail.com with ESMTPSA id k5sm19858067qtu.2.2020.08.17.09.43.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 09:43:18 -0700 (PDT)
+Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
+ spurious entry again
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jan.kiszka@siemens.com, jbeulich@suse.com,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        pedro.principeza@canonical.com
+References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+ <20200817162156.GA715236@kroah.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ xsBNBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAHNLUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPsLAdwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltvezsBNBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAHCwF8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
+Date:   Mon, 17 Aug 2020 13:43:14 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com> <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 17 Aug 2020 10:39:43 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
-Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
- get phy
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200817162156.GA715236@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Even if phy driver doesn't probe, the error message can't be distinguished
-> from other errors. This displays error message caused by the phy driver
-> explicitly.
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 93ef608..7c8721e 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->                 return PTR_ERR(priv->rst);
->
->         priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+On 17/08/2020 13:21, Greg KH wrote:
+> On Mon, Aug 17, 2020 at 12:36:25PM -0300, Guilherme G. Piccoli wrote:
+>> Hi Greg / Thomas and all involved here. First, apologies for
+>> necro-bumping this thread, but I'm working a backport of this patch to
+>> kernel 4.15 (Ubuntu) and then I noticed we have it on stable, but only
+>> in 4.19+.
+>>
+>> Since the fixes tag presents an old commit (since ~3.19), I'm curious if
+>> we have a special reason to not have it on long-term stables, like 4.9
+>> or 4.14. It's a subtle portion of arch code, so I'm afraid I didn't see
+>> something that prevents its backport for previous versions.
+> 
+> What is the git commit id of this patch you are referring to, you didn't
+> provide any context here :(
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The point of the optional variant vs. devm_phy_get() is whether or not
-you get an error message. So shouldn't you switch to devm_phy_get
-instead?
+I'm sorry, I hoped the subject + thread would suffice heh
 
-> -       if (IS_ERR(priv->phy))
-> -               return PTR_ERR(priv->phy);
-> +       if (IS_ERR(priv->phy)) {
-> +               ret = PTR_ERR(priv->phy);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
-> +               return ret;
-> +       }
->
->         platform_set_drvdata(pdev, priv);
->
-> --
-> 2.7.4
->
+So, the mainline commit is: f8a8fe61fec8 ("x86/irq: Seperate unused
+system vectors from spurious entry again") [0]. The backport to 4.19
+stable tree has the following id: fc6975ee932b .
+
+Thanks,
+
+
+Guilherme
+
+
+[0] http://git.kernel.org/linus/f8a8fe61fec8
