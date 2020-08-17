@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A467BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445B420578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8999220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690588;
-	bh=hTnNbtEfCMrvTSqapYGUoZuh/b5VfCS0ngh4R6Hsq2M=;
+	s=default; t=1597690591;
+	bh=aGj/7hEdXUnhNh5DUgFvGzUWzbqhgZ0YE/NUEnZkoy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZRX0SOcEo3qE7EQ1oPzIwJPY5nGiAk5Jz5pkhA2lDJ3xmxxWpSEJlEZdb6CxztD0
-	 39gpqbpZY3Ly2FhwyfMVfqf3tPu/eDeJB5CdTO21leLLAbeSKIDFGQeTIXX13gJFtf
-	 P3XsfhplbQkF2WjgCv1EvmWHbnAboamwXpGzrPgs=
+	b=Ts7ehRWve6JciDw1qAoy5EV2JOwmw3AE0gQYrR3CVku+1U+y9Q5+phw2rRNOgPaR6
+	 s45vs0ysgfvOjCM5NBjhmTuq5rcskdEZDOghOiURoh2wVRgpecuwKWNnx1tQWJtbnB
+	 R91X+lx0W0qX1UYitPSk9FPPqIQUkiAiKDjdvgBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbgHQS4Z (ORCPT
+        id S1731730AbgHQS42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgHQPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:50:25 -0400
+        id S1730875AbgHQPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:50:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC20620885;
-        Mon, 17 Aug 2020 15:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4EDB2075B;
+        Mon, 17 Aug 2020 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679425;
-        bh=hTnNbtEfCMrvTSqapYGUoZuh/b5VfCS0ngh4R6Hsq2M=;
+        s=default; t=1597679419;
+        bh=aGj/7hEdXUnhNh5DUgFvGzUWzbqhgZ0YE/NUEnZkoy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tuUVOyvOfyZZPTtALa5uTgPs27vXg47tFVBTwXyPvXu/jDFkrJnw011bzJwPTkcSk
-         iP3mrg/kOxKbdtuJEgllgxIYfXiAmGJxaEtejR6qGzd9hY907Q6zW0q6uxcgldd0p9
-         /3gpvjTC5FBHQOqvjo2D7PbmyW6BnjhqeI36YgXk=
+        b=KhSFCXDDlMqrtwis6bSpGiwiv0fnxWR4k60V41GC3i5zXagOzTpJXWPWs4cx1D5ZV
+         vk6w8fKlGjaKrINszu/BXq0xMcDDAhqGi3ASnyONeuIiZ/f5xzgpsQLfExFD4c+RHk
+         PPFNvb/VWveyqL7BwmE2GzzkvAtCSuXvj4Baj5Do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikhail Malygin <m.malygin@yadro.com>,
-        Sergey Kojushev <s.kojushev@yadro.com>,
+        stable@vger.kernel.org, Michal Kalderon <mkalderon@marvell.com>,
+        Yuval Basson <ybason@marvell.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 206/393] RDMA/rxe: Prevent access to wr->next ptr afrer wr is posted to send queue
-Date:   Mon, 17 Aug 2020 17:14:16 +0200
-Message-Id: <20200817143829.614648068@linuxfoundation.org>
+Subject: [PATCH 5.7 205/393] RDMA/qedr: SRQs bug fixes
+Date:   Mon, 17 Aug 2020 17:14:15 +0200
+Message-Id: <20200817143829.567269534@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,58 +61,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikhail Malygin <m.malygin@yadro.com>
+From: Yuval Basson <ybason@marvell.com>
 
-[ Upstream commit 5f0b2a6093a4d9aab093964c65083fe801ef1e58 ]
+[ Upstream commit acca72e2b031b9fbb4184511072bd246a0abcebc ]
 
-rxe_post_send_kernel() iterates over linked list of wr's, until the
-wr->next ptr is NULL.  However if we've got an interrupt after last wr is
-posted, control may be returned to the code after send completion callback
-is executed and wr memory is freed.
+QP's with the same SRQ, working on different CQs and running in parallel
+on different CPUs could lead to a race when maintaining the SRQ consumer
+count, and leads to FW running out of SRQs. Update the consumer
+atomically.  Make sure the wqe_prod is updated after the sge_prod due to
+FW requirements.
 
-As a result, wr->next pointer may contain incorrect value leading to
-panic. Store the wr->next on the stack before posting it.
-
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200716190340.23453-1-m.malygin@yadro.com
-Signed-off-by: Mikhail Malygin <m.malygin@yadro.com>
-Signed-off-by: Sergey Kojushev <s.kojushev@yadro.com>
+Fixes: 3491c9e799fb ("qedr: Add support for kernel mode SRQ's")
+Link: https://lore.kernel.org/r/20200708195526.31040-1-ybason@marvell.com
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Yuval Basson <ybason@marvell.com>
 Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/qedr/qedr.h  |  4 ++--
+ drivers/infiniband/hw/qedr/verbs.c | 22 ++++++++++------------
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
-index 9dd4bd7aea92e..2aaa0b592a2d8 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-@@ -683,6 +683,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
- 	unsigned int mask;
- 	unsigned int length = 0;
- 	int i;
-+	struct ib_send_wr *next;
+diff --git a/drivers/infiniband/hw/qedr/qedr.h b/drivers/infiniband/hw/qedr/qedr.h
+index 5488dbd59d3c1..8cf462a3d0f64 100644
+--- a/drivers/infiniband/hw/qedr/qedr.h
++++ b/drivers/infiniband/hw/qedr/qedr.h
+@@ -345,10 +345,10 @@ struct qedr_srq_hwq_info {
+ 	u32 wqe_prod;
+ 	u32 sge_prod;
+ 	u32 wr_prod_cnt;
+-	u32 wr_cons_cnt;
++	atomic_t wr_cons_cnt;
+ 	u32 num_elems;
  
- 	while (wr) {
- 		mask = wr_opcode_mask(wr->opcode, qp);
-@@ -699,6 +700,8 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
- 			break;
- 		}
+-	u32 *virt_prod_pair_addr;
++	struct rdma_srq_producers *virt_prod_pair_addr;
+ 	dma_addr_t phy_prod_pair_addr;
+ };
  
-+		next = wr->next;
-+
- 		length = 0;
- 		for (i = 0; i < wr->num_sge; i++)
- 			length += wr->sg_list[i].length;
-@@ -709,7 +712,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index a5bd3adaf90aa..ac93447c95244 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -3688,7 +3688,7 @@ static u32 qedr_srq_elem_left(struct qedr_srq_hwq_info *hw_srq)
+ 	 * count and consumer count and subtract it from max
+ 	 * work request supported so that we get elements left.
+ 	 */
+-	used = hw_srq->wr_prod_cnt - hw_srq->wr_cons_cnt;
++	used = hw_srq->wr_prod_cnt - (u32)atomic_read(&hw_srq->wr_cons_cnt);
+ 
+ 	return hw_srq->max_wr - used;
+ }
+@@ -3703,7 +3703,6 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 	unsigned long flags;
+ 	int status = 0;
+ 	u32 num_sge;
+-	u32 offset;
+ 
+ 	spin_lock_irqsave(&srq->lock, flags);
+ 
+@@ -3716,7 +3715,8 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 		if (!qedr_srq_elem_left(hw_srq) ||
+ 		    wr->num_sge > srq->hw_srq.max_sges) {
+ 			DP_ERR(dev, "Can't post WR  (%d,%d) || (%d > %d)\n",
+-			       hw_srq->wr_prod_cnt, hw_srq->wr_cons_cnt,
++			       hw_srq->wr_prod_cnt,
++			       atomic_read(&hw_srq->wr_cons_cnt),
+ 			       wr->num_sge, srq->hw_srq.max_sges);
+ 			status = -ENOMEM;
  			*bad_wr = wr;
- 			break;
+@@ -3750,22 +3750,20 @@ int qedr_post_srq_recv(struct ib_srq *ibsrq, const struct ib_recv_wr *wr,
+ 			hw_srq->sge_prod++;
  		}
--		wr = wr->next;
-+		wr = next;
+ 
+-		/* Flush WQE and SGE information before
++		/* Update WQE and SGE information before
+ 		 * updating producer.
+ 		 */
+-		wmb();
++		dma_wmb();
+ 
+ 		/* SRQ producer is 8 bytes. Need to update SGE producer index
+ 		 * in first 4 bytes and need to update WQE producer in
+ 		 * next 4 bytes.
+ 		 */
+-		*srq->hw_srq.virt_prod_pair_addr = hw_srq->sge_prod;
+-		offset = offsetof(struct rdma_srq_producers, wqe_prod);
+-		*((u8 *)srq->hw_srq.virt_prod_pair_addr + offset) =
+-			hw_srq->wqe_prod;
++		srq->hw_srq.virt_prod_pair_addr->sge_prod = hw_srq->sge_prod;
++		/* Make sure sge producer is updated first */
++		dma_wmb();
++		srq->hw_srq.virt_prod_pair_addr->wqe_prod = hw_srq->wqe_prod;
+ 
+-		/* Flush producer after updating it. */
+-		wmb();
+ 		wr = wr->next;
  	}
  
- 	rxe_run_task(&qp->req.task, 1);
+@@ -4184,7 +4182,7 @@ static int process_resp_one_srq(struct qedr_dev *dev, struct qedr_qp *qp,
+ 	} else {
+ 		__process_resp_one(dev, qp, cq, wc, resp, wr_id);
+ 	}
+-	srq->hw_srq.wr_cons_cnt++;
++	atomic_inc(&srq->hw_srq.wr_cons_cnt);
+ 
+ 	return 1;
+ }
 -- 
 2.25.1
 
