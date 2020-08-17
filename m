@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A63C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ADAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DA720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54AC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692984;
-	bh=Uqy9v9exJLdbF5R32vYNL2jcC8xvFc/Zck+E9tLIs9I=;
+	s=default; t=1597692999;
+	bh=0hbrlxmro4xdBPINl9EDl3KmLs6384LI2U5SX4Dq/3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l158G7XGCny80AI+K6Ika61cCxCCb4QG1Hi+15XjeERoHCa3DIZjMe1b6j768uwWF
-	 hD8O9HHfrJxw21TjSOgLN3t6UzziAPzViIpznlDgbWwIpslslRnpANekoeuOCn54Je
-	 Se78/lz8qMY/fLOqq2W12SbKQZkmpAkxv6yZZHrY=
+	b=gzxHuSBBhz4FwspZ/EOXrYFadEl3xxqX05iL/L/7Xkmq9UyZVvYXO+9YHCgbggiXP
+	 Dtp+yDD7ZOt/DyGdnic48ZnWoPk+4KqFTWoHF5g2fwgE7pJxkYv9RTxsV8IS3pqIST
+	 lyaqPlo1NWPgCUswXnPOBdoh71LDuNqLSsWI6gy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbgHQTgX (ORCPT
+        id S1732378AbgHQTgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:36:23 -0400
+        Mon, 17 Aug 2020 15:36:31 -0400
 Received: from mail.kernel.org ([198.145.29.99]:42830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbgHQP2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:38 -0400
+        id S1729676AbgHQP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6248523B6C;
-        Mon, 17 Aug 2020 15:28:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3767523B80;
+        Mon, 17 Aug 2020 15:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678117;
-        bh=Uqy9v9exJLdbF5R32vYNL2jcC8xvFc/Zck+E9tLIs9I=;
+        s=default; t=1597678103;
+        bh=0hbrlxmro4xdBPINl9EDl3KmLs6384LI2U5SX4Dq/3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0o1ZrBdzoi5DIr48iALy/NoQg45ksuGj/MvSfsFUiiNK6bZWwDWCpSwDwo9i8W8df
-         cPcOpOMxfQN6wa9TP/CnPXTUrJr/oqSe5brHegGWbr582HRjxqZaYk5FZkBjniuXZq
-         UNvhHGHckzuqa7Pmpv7GTQKYqOaT2NUvfRhteK/k=
+        b=KOOh9bqKGM0W9mO8N7Y0Kg//Vj8FthsIQLOI9eTaTQB3dp+XiIzAs5ShKPWd3K8D1
+         tcX+hVLZUll7baGf0u363E6tHm2efF1ZDkvSc22K0Pgp8ruUEB5+O+6mtQ0UCrccBq
+         gKoFDx5qFGe16K+c6gp3PPHwn/uF/mE3pcW/ppdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steev Klimaszewski <steev@kali.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 184/464] scsi: ufs: Disable WriteBooster capability for non-supported UFS devices
-Date:   Mon, 17 Aug 2020 17:12:17 +0200
-Message-Id: <20200817143842.638117050@linuxfoundation.org>
+Subject: [PATCH 5.8 189/464] lkdtm: Make arch-specific tests always available
+Date:   Mon, 17 Aug 2020 17:12:22 +0200
+Message-Id: <20200817143842.875855419@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,111 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit a7f1e69d4974666ea40886ee4801aebb2729ea81 ]
+[ Upstream commit ae56942c14740c2963222efdc36c667ab19555ef ]
 
-If a UFS device is not qualified to use WriteBooster, either due to wrong
-UFS version or device-specific quirks, then the capability in host shall be
-disabled to prevent any WriteBooster operations in the future.
+I'd like arch-specific tests to XFAIL when on a mismatched architecture
+so that we can more easily compare test coverage across all systems.
+Lacking kernel configs or CPU features count as a FAIL, not an XFAIL.
 
-Link: https://lore.kernel.org/r/20200625030430.25048-1-stanley.chu@mediatek.com
-Fixes: 3d17b9b5ab11 ("scsi: ufs: Add write booster feature support")
-Tested-by: Steev Klimaszewski <steev@kali.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Additionally fixes a build failure under 32-bit UML.
+
+Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
+Fixes: cea23efb4de2 ("lkdtm/bugs: Make double-fault test always available")
+Fixes: 6cb6982f42cb ("lkdtm: arm64: test kernel pointer authentication")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200625203704.317097-5-keescook@chromium.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ drivers/misc/lkdtm/bugs.c               | 38 ++++++++++++++-----------
+ drivers/misc/lkdtm/lkdtm.h              |  2 --
+ tools/testing/selftests/lkdtm/tests.txt |  1 +
+ 3 files changed, 22 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ec93bec8e78d8..e412e43d23821 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6818,20 +6818,30 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba *hba)
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 08c70281c380e..10338800f6be1 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -13,7 +13,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
  
- static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+-#ifdef CONFIG_X86_32
++#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
+ #include <asm/desc.h>
+ #endif
+ 
+@@ -418,7 +418,7 @@ void lkdtm_UNSET_SMEP(void)
+ 
+ void lkdtm_DOUBLE_FAULT(void)
  {
-+	struct ufs_dev_info *dev_info = &hba->dev_info;
- 	u8 lun;
- 	u32 d_lu_wb_buf_alloc;
+-#ifdef CONFIG_X86_32
++#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
+ 	/*
+ 	 * Trigger #DF by setting the stack limit to zero.  This clobbers
+ 	 * a GDT TLS slot, which is okay because the current task will die
+@@ -453,38 +453,42 @@ void lkdtm_DOUBLE_FAULT(void)
+ #endif
+ }
  
- 	if (!ufshcd_is_wb_allowed(hba))
+-#ifdef CONFIG_ARM64_PTR_AUTH
++#ifdef CONFIG_ARM64
+ static noinline void change_pac_parameters(void)
+ {
+-	/* Reset the keys of current task */
+-	ptrauth_thread_init_kernel(current);
+-	ptrauth_thread_switch_kernel(current);
++	if (IS_ENABLED(CONFIG_ARM64_PTR_AUTH)) {
++		/* Reset the keys of current task */
++		ptrauth_thread_init_kernel(current);
++		ptrauth_thread_switch_kernel(current);
++	}
+ }
++#endif
+ 
+-#define CORRUPT_PAC_ITERATE	10
+ noinline void lkdtm_CORRUPT_PAC(void)
+ {
++#ifdef CONFIG_ARM64
++#define CORRUPT_PAC_ITERATE	10
+ 	int i;
+ 
++	if (!IS_ENABLED(CONFIG_ARM64_PTR_AUTH))
++		pr_err("FAIL: kernel not built with CONFIG_ARM64_PTR_AUTH\n");
++
+ 	if (!system_supports_address_auth()) {
+-		pr_err("FAIL: arm64 pointer authentication feature not present\n");
++		pr_err("FAIL: CPU lacks pointer authentication feature\n");
  		return;
-+	/*
-+	 * Probe WB only for UFS-2.2 and UFS-3.1 (and later) devices or
-+	 * UFS devices with quirk UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES
-+	 * enabled
-+	 */
-+	if (!(dev_info->wspecversion >= 0x310 ||
-+	      dev_info->wspecversion == 0x220 ||
-+	     (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES)))
-+		goto wb_disabled;
+ 	}
  
- 	if (hba->desc_size.dev_desc < DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 4)
- 		goto wb_disabled;
- 
--	hba->dev_info.d_ext_ufs_feature_sup =
-+	dev_info->d_ext_ufs_feature_sup =
- 		get_unaligned_be32(desc_buf +
- 				   DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
- 
--	if (!(hba->dev_info.d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
-+	if (!(dev_info->d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
- 		goto wb_disabled;
- 
+-	pr_info("Change the PAC parameters to force function return failure\n");
++	pr_info("changing PAC parameters to force function return failure...\n");
  	/*
-@@ -6840,17 +6850,17 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
- 	 * a max of 1 lun would have wb buffer configured.
- 	 * Now only shared buffer mode is supported.
+-	 * Pac is a hash value computed from input keys, return address and
++	 * PAC is a hash value computed from input keys, return address and
+ 	 * stack pointer. As pac has fewer bits so there is a chance of
+ 	 * collision, so iterate few times to reduce the collision probability.
  	 */
--	hba->dev_info.b_wb_buffer_type =
-+	dev_info->b_wb_buffer_type =
- 		desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
+ 	for (i = 0; i < CORRUPT_PAC_ITERATE; i++)
+ 		change_pac_parameters();
  
--	hba->dev_info.b_presrv_uspc_en =
-+	dev_info->b_presrv_uspc_en =
- 		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
+-	pr_err("FAIL: %s test failed. Kernel may be unstable from here\n", __func__);
+-}
+-#else /* !CONFIG_ARM64_PTR_AUTH */
+-noinline void lkdtm_CORRUPT_PAC(void)
+-{
+-	pr_err("FAIL: arm64 pointer authentication config disabled\n");
+-}
++	pr_err("FAIL: survived PAC changes! Kernel may be unstable from here\n");
++#else
++	pr_err("XFAIL: this test is arm64-only\n");
+ #endif
++}
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 601a2156a0d48..8878538b2c132 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -31,9 +31,7 @@ void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
+ void lkdtm_UNSET_SMEP(void);
+-#ifdef CONFIG_X86_32
+ void lkdtm_DOUBLE_FAULT(void);
+-#endif
+ void lkdtm_CORRUPT_PAC(void);
  
--	if (hba->dev_info.b_wb_buffer_type == WB_BUF_MODE_SHARED) {
--		hba->dev_info.d_wb_alloc_units =
-+	if (dev_info->b_wb_buffer_type == WB_BUF_MODE_SHARED) {
-+		dev_info->d_wb_alloc_units =
- 		get_unaligned_be32(desc_buf +
- 				   DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS);
--		if (!hba->dev_info.d_wb_alloc_units)
-+		if (!dev_info->d_wb_alloc_units)
- 			goto wb_disabled;
- 	} else {
- 		for (lun = 0; lun < UFS_UPIU_MAX_WB_LUN_ID; lun++) {
-@@ -6861,7 +6871,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
- 					(u8 *)&d_lu_wb_buf_alloc,
- 					sizeof(d_lu_wb_buf_alloc));
- 			if (d_lu_wb_buf_alloc) {
--				hba->dev_info.wb_dedicated_lu = lun;
-+				dev_info->wb_dedicated_lu = lun;
- 				break;
- 			}
- 		}
-@@ -6950,14 +6960,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 
- 	ufs_fixup_device_setup(hba);
- 
--	/*
--	 * Probe WB only for UFS-3.1 devices or UFS devices with quirk
--	 * UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES enabled
--	 */
--	if (dev_info->wspecversion >= 0x310 ||
--	    dev_info->wspecversion == 0x220 ||
--	    (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES))
--		ufshcd_wb_probe(hba, desc_buf);
-+	ufshcd_wb_probe(hba, desc_buf);
- 
- 	/*
- 	 * ufshcd_read_string_desc returns size of the string
+ /* lkdtm_heap.c */
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 92ca32143ae5f..9d266e79c6a27 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -14,6 +14,7 @@ STACK_GUARD_PAGE_LEADING
+ STACK_GUARD_PAGE_TRAILING
+ UNSET_SMEP CR4 bits went missing
+ DOUBLE_FAULT
++CORRUPT_PAC
+ UNALIGNED_LOAD_STORE_WRITE
+ #OVERWRITE_ALLOCATION Corrupts memory on failure
+ #WRITE_AFTER_FREE Corrupts memory on failure
 -- 
 2.25.1
 
