@@ -2,74 +2,101 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B26C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABD4204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C9B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692434;
-	bh=oRpPTF8CLVl2GdwVLqbcgNxfGrfqo2YvIIghubdcD3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Mvt+eUQv0tsUsSB/nKJ22kciRfWw9+iUEY4xNlEdBHrouPkYBBVt0ZJY/rW5ZxaPD
-	 sDxbDs1+21J8GadmIJpZCoobIrmnZCMfpdHmSDHwIeyMUpCJVDj1FBVl5/GKg/XlOt
-	 LuY0kK6EMBVeUfa2TPePEwcS8wmWoz2+Y4TEeB3I=
+	s=default; t=1597692438;
+	bh=oX7lTzGgeXonwrNUvKojEuRglaFg/4flqmCnB8GgwlE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JL78S3rBaDSp4GhPKo11rrgKl4IRczpdzti3tyKnR80mbCJqWM8jTnrtxAZfYPxlM
+	 DwLtBqKSWxt7+RepCTUwA4jWmW+A0NX7WD7RuT/SB5+iOaijMnjM/x7px2HxMULxe2
+	 BfJDwVTNjeFRY4nwGj3Dw5XMkf3eIWiaVwcR75es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbgHQT1M (ORCPT
+        id S1730375AbgHQPdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgHQPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:33 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        id S1729695AbgHQP3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:29:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 273CA22CAE;
-        Mon, 17 Aug 2020 15:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025AF23BC7;
+        Mon, 17 Aug 2020 15:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678413;
-        bh=oRpPTF8CLVl2GdwVLqbcgNxfGrfqo2YvIIghubdcD3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cuCOTw7vdPagZu/YDOJ36n2k21iuhjC6Q+xcZCv5VwkvMnHehBKNuY7qWH1YfhLfQ
-         uxs01fevGl2GXxKi+lBy8SDRp/QtPGUzthJFloMf+LShCgY+WQoz9xkezYTUR31ppl
-         J47G6NfE97P+DK4Vs9w04H/cBfS//QF3y2IB04fA=
-Date:   Mon, 17 Aug 2020 08:33:30 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     jes@trained-monkey.org, davem@davemloft.net, kda@linux-powerpc.org,
-        dougmill@linux.ibm.com, cooldavid@cooldavid.org,
-        mlindner@marvell.com, borisp@mellanox.com, keescook@chromium.org,
-        linux-acenic@sunsite.dk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH 08/20] ethernet: hinic: convert tasklets to use new
- tasklet_setup() API
-Message-ID: <20200817083330.78e365eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200817082434.21176-10-allen.lkml@gmail.com>
-References: <20200817082434.21176-1-allen.lkml@gmail.com>
-        <20200817082434.21176-10-allen.lkml@gmail.com>
+        s=default; t=1597678186;
+        bh=oX7lTzGgeXonwrNUvKojEuRglaFg/4flqmCnB8GgwlE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sofXjED3GGAUJlAwDzfLwuZhtwAMJ0IGLEKJGoxq+/rdWESjlKPkcHKLDuGIyeLRW
+         KOYHCqQhgT7AjXtG39pX5vkOiYzFiwoPIG6b4zytSxHg4cmZV+93E3z6xodezwNh82
+         dnoMRt5nVTCNjlC7wUVp2CevPkU1AQ2NQ/+Mls+s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 220/464] leds: core: Flush scheduled work for system suspend
+Date:   Mon, 17 Aug 2020 17:12:53 +0200
+Message-Id: <20200817143844.342356105@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 13:54:22 +0530 Allen Pais wrote:
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c:374: warning: Function parameter or member 't' not described in 'ceq_tasklet'
-drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c:374: warning: Excess function parameter 'ceq_data' description in 'ceq_tasklet'
+[ Upstream commit 302a085c20194bfa7df52e0fe684ee0c41da02e6 ]
+
+Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
+system suspend.
+
+led_set_brightness_nopm() uses schedule_work() to set LED brightness.
+However, there's no guarantee that the scheduled work gets executed
+because no one flushes the work.
+
+So flush the scheduled work to make sure LED gets turned off.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Fixes: 81fe8e5b73e3 ("leds: core: Add led_set_brightness_nosleep{nopm} functions")
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/leds/led-class.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 3363a6551a708..cc3929f858b68 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -173,6 +173,7 @@ void led_classdev_suspend(struct led_classdev *led_cdev)
+ {
+ 	led_cdev->flags |= LED_SUSPENDED;
+ 	led_set_brightness_nopm(led_cdev, 0);
++	flush_work(&led_cdev->set_brightness_work);
+ }
+ EXPORT_SYMBOL_GPL(led_classdev_suspend);
+ 
+-- 
+2.25.1
+
+
+
