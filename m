@@ -2,105 +2,260 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B09C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A2220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B498820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgHQWJV (ORCPT
+        id S1730078AbgHQWJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:09:21 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50968 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgHQWJN (ORCPT
+        Mon, 17 Aug 2020 18:09:39 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60014 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728426AbgHQWJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:09:13 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1AF0D1C0BB6; Tue, 18 Aug 2020 00:09:09 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 00:09:08 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Witten <mfwitten@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        John Levon <john.levon@joyent.com>,
-        John Levon <levon@movementarian.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] Makefile: Yes. Finally remove
- '-Wdeclaration-after-statement'
-Message-ID: <20200817220908.GA3701@amd>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
- <20200816175303.GB1236603@ZenIV.linux.org.uk>
- <20200817204223.GB12414@amd>
- <87lfid6kpi.fsf@x220.int.ebiederm.org>
- <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
+        Mon, 17 Aug 2020 18:09:36 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k7nJu-001qlG-Is; Mon, 17 Aug 2020 16:09:34 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.int.ebiederm.org)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k7nJt-0004PB-Fc; Mon, 17 Aug 2020 16:09:34 -0600
+From:   "Eric W. Biederman" <ebiederm@xmission.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, criu@openvz.org,
+        bpf@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Daniel=20P=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Date:   Mon, 17 Aug 2020 17:04:09 -0500
+Message-Id: <20200817220425.9389-1-ebiederm@xmission.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-XM-SPF: eid=1k7nJt-0004PB-Fc;;;mid=<20200817220425.9389-1-ebiederm@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/o4kAvkkEgoK7xQWUvEOU/m0JXjAtAz0g=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 01/17] exec: Move unshare_files to fix posix file locking during exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Many moons ago the binfmts were doing some very questionable things
+with file descriptors and an unsharing of the file descriptor table
+was added to make things better[1][2].  The helper steal_files was
+added to avoid breaking the userspace programs[3][4][6].
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Unfortunately it turned out that steal_locks did not work for network
+file systems[5], so it was removed to see if anyone would
+complain[7][8].  It was thought at the time that NPTL would not be
+affected as the unshare_files happened after the other threads were
+killed[8].  Unfortunately because there was an unshare_files in
+binfmt_elf.c before the threads were killed this analysis was
+incorrect.
 
-On Mon 2020-08-17 14:29:37, Linus Torvalds wrote:
-> On Mon, Aug 17, 2020 at 2:15 PM Eric W. Biederman <ebiederm@xmission.com>=
- wrote:
-> >
-> > Does anyone remember why we added this warning?  I had always thought
-> > it's purpose was to ensure we stayed within our chosen dialect of C.
->=20
-> As far as I'm concerned, that's the primary motivation.
->=20
-> I'm not seeing why we'd suddenly allow the "put variable declarations
-> anywhere" when we've been able to keep from doing it until now.
->=20
-> We're still building primarily good old K&R ANSI C, just with
-> extensions. Wild variable placement doesn't seem like a useful
-> extension.
+This unshare_files in binfmt_elf.c resulted in the unshares_files
+happening whenever threads were present.  Which led to unshare_files
+being moved to the start of do_execve[9].
 
-I certainly hope we are not going back to good old K&R C :-).
+Later the problems were rediscovered and suggested approach was to
+readd steal_locks under a different name[10].  I happened to be
+reviewing patches and I noticed that this approach was a step
+backwards[11].
 
-Submitter believes "wild variable placement" can help with
-#ifdefs.. and that may be actually good tradeoff.
+I proposed simply moving unshare_files[12] and it was pointed
+out that moving unshare_files without auditing the code was
+also unsafe[13].
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+There were then several attempts to solve this[14][15][16] and I even
+posted this set of changes[17].  Unfortunately because auditing all of
+execve is time consuming this change did not make it in at the time.
 
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Well now that I am cleaning up exec I have made the time to read
+through all of the binfmts and the only playing with file descriptors
+is either the security modules closing them in
+security_bprm_committing_creds or is in the generic code in fs/exec.c.
+None of it happens before begin_new_exec is called.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+So move unshare_files into begin_new_exec, after the point of no
+return.  If memory is very very very low and the application calling
+exec is sharing file descriptor tables between processes we might fail
+past the point of no return.  Which is unfortunate but no different
+than any of the other places where we allocate memory after the point
+of no return.
 
-iEYEARECAAYFAl87AAQACgkQMOfwapXb+vKiVgCeIkXAgbXAQQ5tusMee++/3DR4
-lz8AnRYXzPxLP4LdF9kvOHHKNW1y76Vk
-=KDJT
------END PGP SIGNATURE-----
+This movement allows another process that shares the file table, or
+another thread of the same process and that closes files or changes
+their close on exec behavior and races with execve to cause some
+unexpected things to happen.  There is only one time of check to time
+of use race and it is just there so that execve fails instead of
+an interpreter failing when it tries to open the file it is supposed
+to be interpreting.   Failing later if userspace is being silly is
+not a problem.
 
---45Z9DzgjV8m4Oswq--
+With this change it the following discription from the removal
+of steal_locks[8] finally becomes true.
+
+    Apps using NPTL are not affected, since all other threads are killed before
+    execve.
+
+    Apps using LinuxThreads are only affected if they
+
+      - have multiple threads during exec (LinuxThreads doesn't kill other
+        threads, the app may do it with pthread_kill_other_threads_np())
+      - rely on POSIX locks being inherited across exec
+
+    Both conditions are documented, but not their interaction.
+
+    Apps using clone() natively are affected if they
+
+      - use clone(CLONE_FILES)
+      - rely on POSIX locks being inherited across exec
+
+I have investigated some paths to make it possible to solve this
+without moving unshare_files but they all look more complicated[18].
+
+Reported-by: Daniel P. Berrangé <berrange@redhat.com>
+Reported-by: Jeff Layton <jlayton@redhat.com>
+History-tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+[1] 02cda956de0b ("[PATCH] unshare_files"
+[2] 04e9bcb4d106 ("[PATCH] use new unshare_files helper")
+[3] 088f5d7244de ("[PATCH] add steal_locks helper")
+[4] 02c541ec8ffa ("[PATCH] use new steal_locks helper")
+[5] https://lkml.kernel.org/r/E1FLIlF-0007zR-00@dorka.pomaz.szeredi.hu
+[6] https://lkml.kernel.org/r/0060321191605.GB15997@sorel.sous-sol.org
+[7] https://lkml.kernel.org/r/E1FLwjC-0000kJ-00@dorka.pomaz.szeredi.hu
+[8] c89681ed7d0e ("[PATCH] remove steal_locks()")
+[9] fd8328be874f ("[PATCH] sanitize handling of shared descriptor tables in failing execve()")
+[10] https://lkml.kernel.org/r/20180317142520.30520-1-jlayton@kernel.org
+[11] https://lkml.kernel.org/r/87r2nwqk73.fsf@xmission.com
+[12] https://lkml.kernel.org/r/87bmfgvg8w.fsf@xmission.com
+[13] https://lkml.kernel.org/r/20180322111424.GE30522@ZenIV.linux.org.uk
+[14] https://lkml.kernel.org/r/20180827174722.3723-1-jlayton@kernel.org
+[15] https://lkml.kernel.org/r/20180830172423.21964-1-jlayton@kernel.org
+[16] https://lkml.kernel.org/r/20180914105310.6454-1-jlayton@kernel.org
+[17] https://lkml.kernel.org/r/87a7ohs5ow.fsf@xmission.com
+[18] https://lkml.kernel.org/r/87pn8c1uj6.fsf_-_@x220.int.ebiederm.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/exec.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index a91003e28eaa..17c007bba712 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1354,6 +1354,7 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+ int begin_new_exec(struct linux_binprm * bprm)
+ {
+ 	struct task_struct *me = current;
++	struct files_struct *displaced;
+ 	int retval;
+ 
+ 	/* Once we are committed compute the creds */
+@@ -1373,6 +1374,13 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	if (retval)
+ 		goto out;
+ 
++	/* Ensure the files table is not shared. */
++	retval = unshare_files(&displaced);
++	if (retval)
++		goto out;
++	if (displaced)
++		put_files_struct(displaced);
++
+ 	/*
+ 	 * Must be called _before_ exec_mmap() as bprm->mm is
+ 	 * not visibile until then. This also enables the update
+@@ -1892,16 +1900,11 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 		       int fd, struct filename *filename, int flags)
+ {
+ 	struct file *file;
+-	struct files_struct *displaced;
+ 	int retval;
+ 
+-	retval = unshare_files(&displaced);
+-	if (retval)
+-		return retval;
+-
+ 	retval = prepare_bprm_creds(bprm);
+ 	if (retval)
+-		goto out_files;
++		return retval;
+ 
+ 	check_unsafe_exec(bprm);
+ 	current->in_execve = 1;
+@@ -1916,8 +1919,12 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 	bprm->file = file;
+ 	/*
+ 	 * Record that a name derived from an O_CLOEXEC fd will be
+-	 * inaccessible after exec. Relies on having exclusive access to
+-	 * current->files (due to unshare_files above).
++	 * inaccessible after exec.  This allows the code in exec to
++	 * choose to fail when the executable is not mmaped into the
++	 * interpreter and an open file descriptor is not passed to
++	 * the interpreter.  This makes for a better user experience
++	 * than having the interpreter start and then immediately fail
++	 * when it finds the executable is inaccessible.
+ 	 */
+ 	if (bprm->fdpath &&
+ 	    close_on_exec(fd, rcu_dereference_raw(current->files->fdt)))
+@@ -1938,8 +1945,6 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 	rseq_execve(current);
+ 	acct_update_integrals(current);
+ 	task_numa_free(current, false);
+-	if (displaced)
+-		put_files_struct(displaced);
+ 	return retval;
+ 
+ out:
+@@ -1956,10 +1961,6 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 	current->fs->in_exec = 0;
+ 	current->in_execve = 0;
+ 
+-out_files:
+-	if (displaced)
+-		reset_files_struct(displaced);
+-
+ 	return retval;
+ }
+ 
+-- 
+2.25.0
+
