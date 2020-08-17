@@ -2,156 +2,133 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E316C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63484C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B5D207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389A32078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NjM2tnQd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLR2V20u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgHQIMU (ORCPT
+        id S1726401AbgHQIOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:12:20 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19636 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgHQIMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:12:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597651936; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=eI34u/iSchtGSOGXnguCsZq4UgsFfKNHCgVA8utOJCo=; b=NjM2tnQdD/tKlBFpNT6fFAW9cz0TEnGtXAhz5oe5TMiLfev2uneuRKA1wlIIi0YMQpqReH8T
- TlAn91TEgyHk88iBg4VlcxKDDhKd25hbulsPFGKRWc0l/eclrUbDLZSHgsWcPJaGO+as8zOD
- 7fYm2CE4nM6wfSvt2eu8RNE3HH0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f3a3bd791f8def8b28f2847 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 08:12:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31CAAC4344D; Mon, 17 Aug 2020 08:12:05 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0B33C43449;
-        Mon, 17 Aug 2020 08:12:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0B33C43449
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] soc: qcom: llcc: Support chipsets that can write to llcc registers
-Date:   Mon, 17 Aug 2020 13:41:38 +0530
-Message-Id: <20200817081138.6755-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Mon, 17 Aug 2020 04:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgHQIOf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:14:35 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589A9C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:14:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d190so12488216wmd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:14:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zGAK9MYpIMYK7dsR6FZRmSk0GY2An22Am46kypmkj7E=;
+        b=NLR2V20u2W2VMApwICVaXQJyg2ojDwSbi5i2AjCLzgHRNrp8blWSZg1lLF2zcJHBfO
+         Gwqy6dJpCZZUampeYzWmuR5tshuUz8WdR4R78W2r+Hwvj8TnHsxUQMmGunKGeMHRFo/j
+         QRs4CqWWsmvgL0BvSLDy8mzGgPobgrrynY7ZLdzcG8jo64Zz5MwI83022+Xnm6BCl7kM
+         J9cLRc8VgYkxtK7fjnRPVMFtkQuS+kJAhX2UBVv5jAS8OQWaeVCbGz6atJwbK9Q3vHjM
+         6j3eDgu+e8iZgO53OUHIKDGxlrQDbUiJmFNRLY2ExPDuanDDInYxFUm5eYgNLO4r+CJl
+         mYHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zGAK9MYpIMYK7dsR6FZRmSk0GY2An22Am46kypmkj7E=;
+        b=uFjNfqLmd34V/t2N4noDpDQ+d4coaHVf45fL2fkqKl8XOHnxvZTP9WcB6fWWU1vPEU
+         lgn3FSzrnRAxDwlIeZRVzTSFpADd1+tcvJyECkasZ2WxJrqU+pPCjCT/BANB77ow2ZPp
+         sWaQmCTRkutr+QevQOPM2Ck/FwMoighDC8CGSFvrpKLiGJUA6COeOqirQMLKEpCw7yI+
+         j9JtrIIVnBz9j+HaD0VgqPURa1dW9XTyeDA5XT4LlUwKdrVmDsiginFVQJ8aSnqAZXzY
+         ylN+ygeslGBgG9LpTvK5y22R/wiE4NjY2pPrJuA8xFZGDKA+5B0eEWEU2f1OOJQxa4/s
+         /j6w==
+X-Gm-Message-State: AOAM531cAuCvJVk83Epq+UeyjcMAHoZ8I/2FxdrVXAGW8lD6FGoBNnT9
+        +9EPQZRZ7lQ3y3B3cCk+VXt/GIlkfnCUVw==
+X-Google-Smtp-Source: ABdhPJy0sZvHw65zzALFy/HYB8JRQVZtgjP5fsqH/JgMooJdqF9eKB9tPIpfmvIhT7NEf8Tw2oJKEA==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr14258647wml.106.1597652073949;
+        Mon, 17 Aug 2020 01:14:33 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id y24sm26890770wmi.17.2020.08.17.01.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:14:32 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 09:14:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL v2] MFD for v5.9
+Message-ID: <20200817081431.GQ4354@dell>
+References: <20200811074637.GG4411@dell>
+ <CAHk-=wgF6Ld0-E0Ych_s=jyS4ssaabK08QR4NOzfRrde0LVHfg@mail.gmail.com>
+ <20200813071949.GG4354@dell>
+ <20200814144206.GL4354@dell>
+ <CAHk-=whSXfOKSXeaSBP9MtgtYewZ_xpnAnTj96_4wKLndpzMjA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=whSXfOKSXeaSBP9MtgtYewZ_xpnAnTj96_4wKLndpzMjA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
+On Sat, 15 Aug 2020, Linus Torvalds wrote:
 
-Older chipsets may not be allowed to configure certain LLCC registers
-as that is handled by the secure side software. However, this is not
-the case for newer chipsets and they must configure these registers
-according to the contents of the SCT table, while keeping in mind that
-older targets may not have these capabilities. So add support to allow
-such configuration of registers to enable capacity based allocation
-and power collapse retention for capable chipsets.
+> On Fri, Aug 14, 2020 at 7:42 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > Here is the new pull request.  It has been tested; locally, by
+> > TuxBuild and the Intel 'kernel test robot' [0].  Please consider this for
+> > addition into v5.9.  All of these patches have also soak tested in
+> > -next for a considerable amount of time.
+> 
+> I'm extremely annoyed by this all, but I've pulled this.
+> 
+> Please just *STOP* doing any W=1 fixes (and most definitely W=2 ones -
+> many of those warnings are just plain garbage and indicate more about
+> the compiler than they do about the code) if you can't then make damn
+> sure that the warnings that actually matter are always *ALWAY* taken
+> care of.
+> 
+> I absolutely abhor warnings in the default build, just because they
+> only result in people ignoring them. Which is exactly what happened
+> bvecause you then tried to care about the more-or-less worthless W=1
+> ones.
+> 
+> So a clean build is really important to me. And developers who don't
+> check and follow up on warnings in the normal build are something that
+> pisses me off no end.
+> 
+> Now something like 25 commits are pointlessly rebased just because you
+> didn't check warnings properly.
 
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-(sai: use table instead of dt property and minor commit msg change)
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/soc/qcom/llcc-qcom.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Your point is clear.
 
-diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-index 429b5a60a1ba..20619d15ecba 100644
---- a/drivers/soc/qcom/llcc-qcom.c
-+++ b/drivers/soc/qcom/llcc-qcom.c
-@@ -45,6 +45,9 @@
- #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
- #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
- 
-+#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
-+#define LLCC_TRP_PCB_ACT              0x21F04
-+
- #define BANK_OFFSET_STRIDE	      0x80000
- 
- /**
-@@ -318,6 +321,11 @@ size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
- }
- EXPORT_SYMBOL_GPL(llcc_get_slice_size);
- 
-+static const struct of_device_id qcom_llcc_configure_of_match[] = {
-+	{ .compatible = "qcom,sc7180-llcc" },
-+	{ }
-+};
-+
- static int qcom_llcc_cfg_program(struct platform_device *pdev)
- {
- 	int i;
-@@ -327,13 +335,18 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 	u32 attr0_val;
- 	u32 max_cap_cacheline;
- 	u32 sz;
-+	u32 disable_cap_alloc = 0, retain_pc = 0;
- 	int ret = 0;
- 	const struct llcc_slice_config *llcc_table;
- 	struct llcc_slice_desc desc;
-+	const struct of_device_id *llcc_configure;
-+	const struct device_node *np = dev_of_node(&pdev->dev);
- 
- 	sz = drv_data->cfg_size;
- 	llcc_table = drv_data->cfg;
- 
-+	llcc_configure = of_match_node(qcom_llcc_configure_of_match, np);
-+
- 	for (i = 0; i < sz; i++) {
- 		attr1_cfg = LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
- 		attr0_cfg = LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
-@@ -369,6 +382,21 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 					attr0_val);
- 		if (ret)
- 			return ret;
-+
-+		if (llcc_configure) {
-+			disable_cap_alloc |= llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
-+			ret = regmap_write(drv_data->bcast_regmap,
-+						LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
-+			if (ret)
-+				return ret;
-+
-+			retain_pc |= llcc_table[i].retain_on_pc << llcc_table[i].slice_id;
-+			ret = regmap_write(drv_data->bcast_regmap,
-+						LLCC_TRP_PCB_ACT, retain_pc);
-+			if (ret)
-+				return ret;
-+		}
-+
- 		if (llcc_table[i].activate_on_init) {
- 			desc.slice_id = llcc_table[i].slice_id;
- 			ret = llcc_slice_activate(&desc);
+Allowing a W=0 warning into my pull-request was a genuine mistake
+(most of us are only human after all).  It will be treated as a
+learning point, safeguards will be put into place at my end and this
+situation should not be repeated in the future.
+
+I shall continue with my W=1 push (not going to touch W=2s however).
+It's understandable that to you W=0s are paramount, but as long as
+none are introduced then fixing up W=1s can only help to improve the
+code-base (not withstanding 'type-limits' of course!) and ensure it's
+more in sync/aligned with itself [thinking API documentation warnings
+here]).
+
+Thanks for pulling though.  It is appreciated.
+
+Apologies again for the fuss.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
