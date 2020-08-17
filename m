@@ -2,72 +2,138 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A98C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDA9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC2620578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597690059;
+	bh=A+gXy+WEDFoe8sMhOiELZeqnP0z58AULk6aCMoFF6Ls=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y1SshNWX9ZRxINhIoObAEcCwv3tZoFqJ6Hocg6pzzzS7iEbLluD+nM8lkkgs8T4Gd
+	 hMf4UTrwKEDybIhZfz0uiOTtBttcdPYyg2E33VjET9L11Kk0oL+hdXVP6qHasmBtwX
+	 QvMXjnrUWgJ1eceB8+ZemHbA+gMnBhwMAVFzOxS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391615AbgHQSrP (ORCPT
+        id S2403809AbgHQSrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:47:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:35786 "EHLO mga06.intel.com"
+        Mon, 17 Aug 2020 14:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391607AbgHQSq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:46:58 -0400
-IronPort-SDR: iM7JMPgDl1SMpaEYb0MNNo+9icdl3D11PMZ+vS//g1N4Spj5RZ1E+YUzrtijlZ2NtEiCjHSeme
- Wb9ZisOhJZiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216296295"
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="216296295"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:46:56 -0700
-IronPort-SDR: es36+i1onmXPqW83f7u1/Q1fmWC0Un2m/tSACm7I0mIyVf6iSR9ZNsTqARmWaOvlBH2ZlSsai6
- 37iELQbJqWrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
-   d="scan'208";a="292520047"
-Received: from martincl-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.45.150])
-  by orsmga003.jf.intel.com with ESMTP; 17 Aug 2020 11:46:53 -0700
-Date:   Mon, 17 Aug 2020 21:46:52 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial
- device
-Message-ID: <20200817184652.GA44714@linux.intel.com>
-References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
- <20200728031433.3370-3-masahisa.kojima@linaro.org>
+        id S2388030AbgHQPzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:55:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB2220825;
+        Mon, 17 Aug 2020 15:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679739;
+        bh=A+gXy+WEDFoe8sMhOiELZeqnP0z58AULk6aCMoFF6Ls=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fkDnTsBAmuhnkgsMSYkGJRiLp5ndFwo2+v54Inc9J8/EH1h+X55qUhP2hObo02SMA
+         ZesCisblS+6P74CZiK9EtBOXYE15IbkPdD+jqMWN+9iADGmzsR8xwmkNTgj1LKmvIb
+         dhr3xvIbQpb0AxBU2L8U4HwTUKxdWiDVOqBs9rI4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 316/393] crypto: aesni - add compatibility with IAS
+Date:   Mon, 17 Aug 2020 17:16:06 +0200
+Message-Id: <20200817143834.933371870@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728031433.3370-3-masahisa.kojima@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:14:32PM +0900, Masahisa Kojima wrote:
-> Add a compatible string for the SynQuacer TPM to the binding for a
-> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
-> slightly differently on this hardware, so it requires its own
-> identifier.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+From: Jian Cai <caij2003@gmail.com>
 
-Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+[ Upstream commit 44069737ac9625a0f02f0f7f5ab96aae4cd819bc ]
 
-/Jarkko
+Clang's integrated assembler complains "invalid reassignment of
+non-absolute variable 'var_ddq_add'" while assembling
+arch/x86/crypto/aes_ctrby8_avx-x86_64.S. It was because var_ddq_add was
+reassigned with non-absolute values several times, which IAS did not
+support. We can avoid the reassignment by replacing the uses of
+var_ddq_add with its definitions accordingly to have compatilibility
+with IAS.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/1008
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Reported-by: Fangrui Song <maskray@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot Linux v5.7.5; clang v11.0.0-git
+Signed-off-by: Jian Cai <caij2003@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+index ec437db1fa547..494a3bda84870 100644
+--- a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
++++ b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+@@ -127,10 +127,6 @@ ddq_add_8:
+ 
+ /* generate a unique variable for ddq_add_x */
+ 
+-.macro setddq n
+-	var_ddq_add = ddq_add_\n
+-.endm
+-
+ /* generate a unique variable for xmm register */
+ .macro setxdata n
+ 	var_xdata = %xmm\n
+@@ -140,9 +136,7 @@ ddq_add_8:
+ 
+ .macro club name, id
+ .altmacro
+-	.if \name == DDQ_DATA
+-		setddq %\id
+-	.elseif \name == XDATA
++	.if \name == XDATA
+ 		setxdata %\id
+ 	.endif
+ .noaltmacro
+@@ -165,9 +159,8 @@ ddq_add_8:
+ 
+ 	.set i, 1
+ 	.rept (by - 1)
+-		club DDQ_DATA, i
+ 		club XDATA, i
+-		vpaddq	var_ddq_add(%rip), xcounter, var_xdata
++		vpaddq	(ddq_add_1 + 16 * (i - 1))(%rip), xcounter, var_xdata
+ 		vptest	ddq_low_msk(%rip), var_xdata
+ 		jnz 1f
+ 		vpaddq	ddq_high_add_1(%rip), var_xdata, var_xdata
+@@ -180,8 +173,7 @@ ddq_add_8:
+ 	vmovdqa	1*16(p_keys), xkeyA
+ 
+ 	vpxor	xkey0, xdata0, xdata0
+-	club DDQ_DATA, by
+-	vpaddq	var_ddq_add(%rip), xcounter, xcounter
++	vpaddq	(ddq_add_1 + 16 * (by - 1))(%rip), xcounter, xcounter
+ 	vptest	ddq_low_msk(%rip), xcounter
+ 	jnz	1f
+ 	vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
+-- 
+2.25.1
+
+
+
