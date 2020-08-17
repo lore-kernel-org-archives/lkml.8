@@ -2,138 +2,173 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46327C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF27C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253672075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1227B2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DAYwF3iC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgHQWHU convert rfc822-to-8bit (ORCPT
+        id S1729875AbgHQWH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:07:20 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:45574 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729822AbgHQWHJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:07:09 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7nHN-004vaQ-Vv; Mon, 17 Aug 2020 16:06:58 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k7nHM-0004FX-Km; Mon, 17 Aug 2020 16:06:57 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     <linux-fsdevel@vger.kernel.org>, criu@openvz.org,
-        bpf@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        =?utf-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Date:   Mon, 17 Aug 2020 17:03:24 -0500
-Message-ID: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 17 Aug 2020 18:07:28 -0400
+Received: from mail-bn8nam12on2063.outbound.protection.outlook.com ([40.107.237.63]:20384
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729823AbgHQWHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:07:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W6vylFwGFNQRAJeHHHYBDxcf2z+JkpeTO2YBBSJBZWRCTPD4+XsZsquZlU693y07SjruZSlB6zG6+nTO+MQ3ZrucwRI10O+3YAjfZZ3DvQGZWeAWTlGjpDvaZ7CrGOMnuuhg1aP2Lbjea4qlr7UTc7ZSxag5DrQpQ5/Q9lDIV/0EUxvmFmZaoHvwjayYkrfmJ17bDgzAnFJeFACz+MKdQkIXcomDNLyV3+62Bi1n3duRv4Pht05vuCXSm85fnfNHnlyWtD9JLjTGoYCXMWgvD5tQipvoLuhmKu4iOP2R8OTHtCg0RPbOFGPx7V6yWOhpsJ2yRRq33XVuo+Sa1i7Mcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zWlakddX/mXdlMo3YVJIBNDqfwOTSLlTw+XltoCWNrw=;
+ b=RKudCqPgSU0vUhn2cqno6Vl0KMmXcOjnUSLYJ1/9QYD6rmw+camvVe/p6Z2Ad5nG9jKggdiO9yEOqi1+N9S3SpCjYaOmucqQ45nJzWYKk9ORq7n5W3PG/hqTm9rRpUfDWC5T+cDbsaEQmJxBkawClNOd6xuvgSiSuMZZRfPuQrUFDJLiLqRWGG0iyPse9c2jzeH4m24KYTTOmZhTheyAdjitHZMI7KN346brTXprmEzW8HEDpXRYsQKDRoC6EzqnUy878/QOghmHv32GA770rcOnwUOaOLJszFdPcrwSuQFoP3j8oYfRMUFgfefmL9iS5nbqaWPBrpfRCprquI7R5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zWlakddX/mXdlMo3YVJIBNDqfwOTSLlTw+XltoCWNrw=;
+ b=DAYwF3iC6tLKUyNWQ6tOmX2xH9BYYHReIp0xtGAuSrtlz27JZ2yMeFw1bt+gDNZJckfZ3aOI0q60a12kp8v/VK1kiF37IN1X9jlJ6jy87YsraODg5qAr9E6axpVgA6TI+pkloaOQkvu9ArgZCbak97hcsyoKYuyYLZalRyP7Uag=
+Authentication-Results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
+ by BN8PR12MB3220.namprd12.prod.outlook.com (2603:10b6:408:9e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Mon, 17 Aug
+ 2020 22:07:04 +0000
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0]) by BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::ac22:9457:4d25:5ff0%5]) with mapi id 15.20.3283.024; Mon, 17 Aug 2020
+ 22:07:04 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Kim Phillips <kim.phillips@amd.com>
+Cc:     Stephane Eranian <stephane.eranian@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH 3/7] arch/x86/amd/ibs: Fix re-arming IBS Fetch
+Date:   Mon, 17 Aug 2020 17:06:24 -0500
+Message-Id: <20200817220628.7604-3-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200817220628.7604-1-kim.phillips@amd.com>
+References: <20200817220628.7604-1-kim.phillips@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0401CA0004.namprd04.prod.outlook.com
+ (2603:10b6:803:21::14) To BN8PR12MB2946.namprd12.prod.outlook.com
+ (2603:10b6:408:9d::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1k7nHM-0004FX-Km;;;mid=<87ft8l6ic3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+/fUJAwFV2XgC7GXJ+FcckxCNXevxLZww=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: exec: Move unshare_files and guarantee files_struct.count is correct
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (70.114.200.6) by SN4PR0401CA0004.namprd04.prod.outlook.com (2603:10b6:803:21::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Mon, 17 Aug 2020 22:07:02 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [70.114.200.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 97249ba6-ce45-44c4-53bd-08d842f9dfab
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3220:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB32202A60649B5408CB37DF12875F0@BN8PR12MB3220.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: l74c0G66GkpH/6GuuZltjPZkV6r2xFq2UyifHFxPQ6YIkmVpg49FMDOSjhr+YtdfahcGXnWKhumG/t+JwQQdhgjw/ADKcP6cKveF6PHiIhINbuJkfWleOERb6TOXAU5OsuroIANIO1gMjWhqPenaBrhuXAMq7hhsBaUW98dkD0ZQCf4LdswWndh6hUHzDM53wfss+X3XKDVf+rGZ3ejKhGfHvPZJCfm9NCQ1obomS2vXqQPCMooLLZPU2qPoLmloDeMVRVi2elMJ0gQGo/yTYtysngO1OyvUkbwiC6AnFa6zsi1m7EaqZKzLeRHp7+8L0E9xX/xnrAxyC7MUhv85KB+w4uJOASN3bDn3KPU4yB+806Ec1uUh6gG7r8v5YANoPqd/XbtikEZx+tz506mUXLOMire014CmKng6tQcUhEBcG1LiUi3tRSUkU8IJoNv0BCue165cu3bGg5WoXScIjQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(36756003)(5660300002)(7049001)(2906002)(6506007)(83380400001)(44832011)(956004)(186003)(52116002)(69590400007)(478600001)(2616005)(16526019)(7416002)(6486002)(4326008)(966005)(6512007)(8676002)(66946007)(1076003)(6666004)(86362001)(26005)(316002)(66556008)(110136005)(8936002)(54906003)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: d84hrNVxPrPhQr1gdgtrNIBE9iHyhGa//WhiJmRQO5uhhRfVLMf0G68TwLf7tZLKiLWOW1vKb4FOCouQpWfjZQZd8FMXP+fDm3jsSeCWcQ5z8zygE/PEf/8AETF5n356EUoFP029as/1hY5HlVC9oFoeqXItQRt+PUMAvne0kMnWnLm6DLVLw0X1kFLaConFih5jp2XnSl+L2mffBRjnKDGj4FqOSBRC6f+z+STkG8RGwiJ8qO8+mrvW0eLd2cKsW5aZTt1cDcDsdhRTa4ds1UREU+LF3+qmchvxJFy9feQ8Kkc8QRmbbTg8kl3Mzg+iuKotOhljm5CV2HHiwLevRPiYMoxrff1xHuQ+Lo9RDv1xaT8bRVNwV96bK4c/2sIrbl+E/t6+rywwfdZFKNcD8JAlFrJ+iBeF3UMthXOMo2+anbO8egihlSVxjIWtBuk6tQ9UHusYOiJs7GJ4tCVzsOl8nfBTQht38SG/XJba0RmqVZx15+UieMQy8JYOLXUhDJPUjhNnZ17EN3v8o50/GLE9bPc9O16siLGPo2oO0r/v6z2dvgPhx+WPh5R+ZjS+yd5cQcyaWOa/oVNgx2ZAoLQNEWBEMtnREX44Cqg5P7DIg2oVttc1ixGhiBUnnd5s91MWtIgCSe24qRjIwcvwoQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97249ba6-ce45-44c4-53bd-08d842f9dfab
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2020 22:07:04.1501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ackMSf+3mUy1qwB5RnRzn6NkdC19yLirPvN3GX0pVzt1O2eRSUUrmiYu9sG0cHenItNR77CUutvrn13XBbPKAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Stephane Eranian found a bug in that IBS' current Fetch counter was not
+being reset when the driver would write the new value to clear it along
+with the enable bit set, and found that adding an MSR write that would
+first disable IBS Fetch would make IBS Fetch reset its current count.
 
+Indeed, the PPR for AMD Family 17h Model 31h B0 55803 Rev 0.54 - Sep 12,
+2019 states "The periodic fetch counter is set to IbsFetchCnt [...] when
+IbsFetchEn is changed from 0 to 1."
 
-A while ago it was reported that posix file locking goes wrong when a
-multi-threaded process calls exec.  I looked into the history and this
-is definitely a regression, that should be fixed if we can.
+Explicitly set IbsFetchEn to 0 and then to 1 when re-enabling IBS Fetch,
+so the driver properly resets the internal counter to 0 and IBS
+Fetch starts counting again.
 
-This set of changes cleanups of the code in exec so hopefully this code
-will not regress again.  Then it adds helpers and fixes the users of
-files_struct so the reference count is only incremented if COPY_FILES is
-passed to clone.  Then it removes helpers (get_files_struct,
-__install_fd, __alloc_fd, __close_fd) that are no longer needed and
-if used would encourage code that increments the count of files_struct
-somewhere besides in clone when COPY_FILES is passed.
+It is not clear what versions of IBS hardware need IbsFetchEn explicitly
+zeroed and which historically may not have, so now make the driver
+always do it.
 
-In addition to fixing the bug in exec and simplifing the code this set
-of changes by virtue of getting files_struct.count correct it optimizes
-fdget.  With proc and other places not temporarily increasing the count
-on files_struct __fget_light should succeed more often in being able to
-return a struct file without touching it's reference count.
+Reported-by: Stephane Eranian <stephane.eranian@google.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: x86 <x86@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/events/amd/ibs.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Fixing the count in files_struct was suggested by Oleg[1].
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 26c36357c4c9..8ddce7dd2c4a 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -363,7 +363,14 @@ perf_ibs_event_update(struct perf_ibs *perf_ibs, struct perf_event *event,
+ static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
+ 					 struct hw_perf_event *hwc, u64 config)
+ {
+-	wrmsrl(hwc->config_base, hwc->config | config | perf_ibs->enable_mask);
++	u64 _config = (hwc->config | config) & ~perf_ibs->enable_mask;
++
++	/* The periodic fetch counter is set when IbsFetchEn is changed from 0 to 1 */
++	if (perf_ibs == &perf_ibs_fetch)
++		wrmsrl(hwc->config_base, _config);
++
++ 	_config |= perf_ibs->enable_mask;
++	wrmsrl(hwc->config_base, _config);
+ }
+ 
+ /*
+-- 
+2.27.0
 
-For those that are interested in the history of this issue I have
-included as much of it as I could find in the first change.
-
- fs/coredump.c            |   5 +--
- fs/exec.c                |  26 ++++++-----
- fs/file.c                | 110 +++++++++++++++++++++--------------------------
- fs/open.c                |   2 +-
- fs/proc/fd.c             |  47 +++++++-------------
- include/linux/fdtable.h  |  13 ++----
- include/linux/syscalls.h |   6 +--
- kernel/bpf/syscall.c     |  20 ++-------
- kernel/bpf/task_iter.c   |  43 +++++-------------
- kernel/fork.c            |  12 +++---
- kernel/kcmp.c            |  20 ++-------
- 11 files changed, 109 insertions(+), 195 deletions(-)
-
-Eric W. Biederman (17):
-      exec: Move unshare_files to fix posix file locking during exec
-      exec: Simplify unshare_files
-      exec: Remove reset_files_struct
-      kcmp: In kcmp_epoll_target use fget_task
-      bpf: In bpf_task_fd_query use fget_task
-      file: Implement fcheck_task
-      proc/fd: In tid_fd_mode use fcheck_task
-      proc/fd: In proc_fd_link use fcheck_task
-      file: Implement fnext_task
-      proc/fd: In proc_readfd_common use fnext_task
-      bpf/task_iter: In task_file_seq_get_next use fnext_task
-      proc/fd: In fdinfo seq_show don't use get_files_struct
-      file: Remove get_files_struct
-      file: Merge __fd_install into fd_install
-      file: In f_dupfd read RLIMIT_NOFILE once.
-      file: Merge __alloc_fd into alloc_fd
-      file: Rename __close_fd to close_fd and remove the files parameter
-
-[1] https://lkml.kernel.org/r/20180915160423.GA31461@redhat.com
-Reported-by: Jeff Layton <jlayton@redhat.com>
-Reported-by: Daniel P. Berrangé <berrange@redhat.com>
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-Eric
