@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B02AC208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B7F208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678697;
-	bh=IVjjFA0DYsoC7bTosHCMh3WCsr8pULJgQQr7kWsxjpA=;
+	s=default; t=1597678714;
+	bh=gVKeEKKY+TbImxEgUxvijJBzrR3by6I8snMip+JEKHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u429LoUIGQBnxgRLvYROLTDei6ex4maqgsG7VwAWcH1yaCPCXx+zNb8YjkDE8xaYf
-	 6AXf5DJlUjFwsACgzTHRR6jQmnhVp3MZaphIIX/hAMB1IRP5to1SwwU2hd1kllRAGh
-	 5qONRz6mKo6kC9xriDxSNm0WpmLRyPJbI48cHxRQ=
+	b=vHlpeOMiYdXDo7S9T8lBmtFwXi7k7DSFtLOrrXZx04hK5bNvVe/T7WAQXEQA5Rah8
+	 AlBLH4jXN9jZZlKKR5ZxxvFvJ8pxjPawiXbNIy7nZgYg8uuce4Ff0bv0eRfLp82+Wn
+	 y80P8BxBWoDcEFw2/+JuIIqjxN1KTUSYwS9s3qm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgHQPiO (ORCPT
+        id S2387418AbgHQPie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbgHQPb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:31:56 -0400
+        id S1730312AbgHQPcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6802313F;
-        Mon, 17 Aug 2020 15:31:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C499220786;
+        Mon, 17 Aug 2020 15:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678315;
-        bh=IVjjFA0DYsoC7bTosHCMh3WCsr8pULJgQQr7kWsxjpA=;
+        s=default; t=1597678333;
+        bh=gVKeEKKY+TbImxEgUxvijJBzrR3by6I8snMip+JEKHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqC6EB6r1mtwyb/0kKAs0xkCACm4QrFGpWZkDB98jaurdLZ8p8wttkqSWHPpqoSnV
-         xUguA4ZMeAiSr3Hj3VJPxPuaaAZSVzhZC5u04eeBR+UqRCtwnCKJ1g/PMinF21UMwP
-         vQ/bmFSAMpteRyffTq2ADuLC/snhZfujWjK9Ys5o=
+        b=lf4f76l1q/nQ6V1AfK4Vcp0pu4GMnrCYZrPzB5m6yFWpiKdxbCJsIuY11RSa/sj0k
+         IJRHHRyUxnYGDQy4py3FpqdXPepEN1CyMe2I9iHBpk5KXifqwEELbZD6nVMDRxxcC8
+         3K1FpKe1tnXFABNCVidM6M1p6uCMxTmcSK+Zy+GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 284/464] thermal: int340x: processor_thermal: fix: update Jasper Lake PCI id
-Date:   Mon, 17 Aug 2020 17:13:57 +0200
-Message-Id: <20200817143847.359016888@linuxfoundation.org>
+Subject: [PATCH 5.8 298/464] PCI: hv: Fix a timing issue which causes kdump to fail occasionally
+Date:   Mon, 17 Aug 2020 17:14:11 +0200
+Message-Id: <20200817143848.081418490@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,36 +61,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+From: Wei Hu <weh@microsoft.com>
 
-[ Upstream commit 287d959558357e155c889bc35579eb35691a8fcb ]
+[ Upstream commit d6af2ed29c7c1c311b96dac989dcb991e90ee195 ]
 
-Update PCI device id for Jasper Lake processor thermal device.
-With this proc_thermal driver is getting loaded and processor
-thermal functionality works on Jasper Lake system.
+Kdump could fail sometime on Hyper-V guest because the retry in
+hv_pci_enter_d0() releases child device structures in hv_pci_bus_exit().
 
-Fixes: f64a6583d3f5 ("thermal: int340x: processor_thermal: Add Jasper Lake support")
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1595577146-1221-1-git-send-email-sumeet.r.pawnikar@intel.com
+Although there is a second asynchronous device relations message sending
+from the host, if this message arrives to the guest after
+hv_send_resource_allocated() is called, the retry would fail.
+
+Fix the problem by moving retry to hv_pci_probe() and start the retry
+from hv_pci_query_relations() call.  This will cause a device relations
+message to arrive to the guest synchronously; the guest would then be
+able to rebuild the child device structures before calling
+hv_send_resource_allocated().
+
+Link: https://lore.kernel.org/r/20200727071731.18516-1-weh@microsoft.com
+Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+Signed-off-by: Wei Hu <weh@microsoft.com>
+[lorenzo.pieralisi@arm.com: fixed a comment and commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
+ 1 file changed, 37 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index 297db1d2d960c..81e8b15ef405d 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -43,7 +43,7 @@
- #define PCI_DEVICE_ID_PROC_ICL_THERMAL	0x8a03
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index bf40ff09c99d6..d0033ff6c1437 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	struct pci_bus_d0_entry *d0_entry;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_packet *pkt;
+-	bool retry = true;
+ 	int ret;
  
- /* JasperLake thermal reporting device */
--#define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4503
-+#define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4E03
+-enter_d0_retry:
+ 	/*
+ 	 * Tell the host that the bus is ready to use, and moved into the
+ 	 * powered-on state.  This includes telling the host which region
+@@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	if (ret)
+ 		goto exit;
  
- /* TigerLake thermal reporting device */
- #define PCI_DEVICE_ID_PROC_TGL_THERMAL	0x9A03
+-	/*
+-	 * In certain case (Kdump) the pci device of interest was
+-	 * not cleanly shut down and resource is still held on host
+-	 * side, the host could return invalid device status.
+-	 * We need to explicitly request host to release the resource
+-	 * and try to enter D0 again.
+-	 */
+-	if (comp_pkt.completion_status < 0 && retry) {
+-		retry = false;
+-
+-		dev_err(&hdev->device, "Retrying D0 Entry\n");
+-
+-		/*
+-		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+-		 * to free up resources of its child devices.
+-		 * In the kdump kernel we need to set the
+-		 * wslot_res_allocated to 255 so it scans all child
+-		 * devices to release resources allocated in the
+-		 * normal kernel before panic happened.
+-		 */
+-		hbus->wslot_res_allocated = 255;
+-
+-		ret = hv_pci_bus_exit(hdev, true);
+-
+-		if (ret == 0) {
+-			kfree(pkt);
+-			goto enter_d0_retry;
+-		}
+-		dev_err(&hdev->device,
+-			"Retrying D0 failed with ret %d\n", ret);
+-	}
+-
+ 	if (comp_pkt.completion_status < 0) {
+ 		dev_err(&hdev->device,
+ 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+@@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	struct hv_pcibus_device *hbus;
+ 	u16 dom_req, dom;
+ 	char *name;
++	bool enter_d0_retry = true;
+ 	int ret;
+ 
+ 	/*
+@@ -3178,11 +3145,47 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	if (ret)
+ 		goto free_fwnode;
+ 
++retry:
+ 	ret = hv_pci_query_relations(hdev);
+ 	if (ret)
+ 		goto free_irq_domain;
+ 
+ 	ret = hv_pci_enter_d0(hdev);
++	/*
++	 * In certain case (Kdump) the pci device of interest was
++	 * not cleanly shut down and resource is still held on host
++	 * side, the host could return invalid device status.
++	 * We need to explicitly request host to release the resource
++	 * and try to enter D0 again.
++	 * Since the hv_pci_bus_exit() call releases structures
++	 * of all its child devices, we need to start the retry from
++	 * hv_pci_query_relations() call, requesting host to send
++	 * the synchronous child device relations message before this
++	 * information is needed in hv_send_resources_allocated()
++	 * call later.
++	 */
++	if (ret == -EPROTO && enter_d0_retry) {
++		enter_d0_retry = false;
++
++		dev_err(&hdev->device, "Retrying D0 Entry\n");
++
++		/*
++		 * Hv_pci_bus_exit() calls hv_send_resources_released()
++		 * to free up resources of its child devices.
++		 * In the kdump kernel we need to set the
++		 * wslot_res_allocated to 255 so it scans all child
++		 * devices to release resources allocated in the
++		 * normal kernel before panic happened.
++		 */
++		hbus->wslot_res_allocated = 255;
++		ret = hv_pci_bus_exit(hdev, true);
++
++		if (ret == 0)
++			goto retry;
++
++		dev_err(&hdev->device,
++			"Retrying D0 failed with ret %d\n", ret);
++	}
+ 	if (ret)
+ 		goto free_irq_domain;
+ 
 -- 
 2.25.1
 
