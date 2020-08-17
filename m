@@ -2,123 +2,97 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE75DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E092078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shhgpJ08"
+	by mail.kernel.org (Postfix) with ESMTP id 9EC1D20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgHQIXi (ORCPT
+        id S1728190AbgHQIXu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgHQIXd (ORCPT
+        Mon, 17 Aug 2020 04:23:50 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25465 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727898AbgHQIXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:23:33 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF21C061388;
-        Mon, 17 Aug 2020 01:23:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t6so7345693pjr.0;
-        Mon, 17 Aug 2020 01:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8m7i7NFD9jtK5LLWJqp7H8mCeAZp9HPWo5wwi/RHp1g=;
-        b=shhgpJ08JxORr1lpKJUfn3rchd09xpy5GGqJOy+g9NZHI2yF93ITXi9gFGnHqql9PN
-         IIqTRGM+YqPsbWPrgC9E5xcKRbIjXdKqoLaeQRRLy+BgZ0VlNpUtYLYotj9zO/XVLva2
-         +Tllzxp32+qQBUXckBM4g+opSCRbBgFt5ss7ET0g7omdzkYjanAgDryppqe6/vD/LI6c
-         6wkO4DAHsGqPFCf/eJ8A+MkhjsJ3eYHTsE7LczIFRuKKANtSFih6SHGz/cqeYpOIT9Jl
-         HxCJg00kHcNEYxKHr7oEq3LU6Jw+8qU4B+UYcCRUEaTTnfKB2ZJEdkXfVIujaTMUF+yw
-         YWqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8m7i7NFD9jtK5LLWJqp7H8mCeAZp9HPWo5wwi/RHp1g=;
-        b=exEjeocWw7iRLAma61FpooRQ9KNDQYKjya0Yq5kKYeFCXLM3neP0W6MgXoaDOrPCGx
-         X04TDGBmmCZY3jTpU4iw8+08O1TS7Rg+/SvhGClXDHpQefS+BMSaNiP1HjCi9n6lwlRA
-         cJMwOTKTQsmr8dgAcS5jmRqnWqNlZW1pzgSGtZCPK+eSIZNfJNCNkUQ3gd4c3ArqEY52
-         jB5PBxsNSROGo6uijfWgAIqCYCyXWTf9pzoQ63ZCkGnkQvodz+jdkN3a0UDcQ5jaW2J+
-         JnEigUphB3tcXwHd7KwtOaQ+AwgELc929xeAQ1mqRyNVCyOKx0n10/ASxpigMLM3roFV
-         l8TQ==
-X-Gm-Message-State: AOAM533Pquo9Q+MkL3fh+rTxNkEADHwH46DiYSnXTilCuXwysn6vBIae
-        MSYCgCzMJduTg53PMF5cKZY=
-X-Google-Smtp-Source: ABdhPJwa4r12zdeyzw2uMxlu/O5WMxHHX7aUf3vUQzREnZb/8WCIoQnzmvYJMcX5iK2KOq5isJHTnA==
-X-Received: by 2002:a17:902:5991:: with SMTP id p17mr10568056pli.78.1597652612472;
-        Mon, 17 Aug 2020 01:23:32 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.23.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:23:32 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, baohua@kernel.org, mripard@kernel.org,
-        wens@csie.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        michal.simek@xilinx.com, matthias.bgg@gmail.com
-Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Allen Pais <allen.lkml@gmail.com>
-Subject: [PATCH 35/35] dma: k3-udma: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 13:47:26 +0530
-Message-Id: <20200817081726.20213-36-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817081726.20213-1-allen.lkml@gmail.com>
-References: <20200817081726.20213-1-allen.lkml@gmail.com>
+        Mon, 17 Aug 2020 04:23:17 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-180-lNRQs7-OMBKEt5epJ5rllg-1; Mon, 17 Aug 2020 09:23:12 +0100
+X-MC-Unique: lNRQs7-OMBKEt5epJ5rllg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 17 Aug 2020 09:23:11 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 17 Aug 2020 09:23:11 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH 09/11] x86: remove address space overrides using set_fs()
+Thread-Topic: [PATCH 09/11] x86: remove address space overrides using set_fs()
+Thread-Index: AQHWdGicIkTuqnSld0yWphpVxhe9Oqk79IHw
+Date:   Mon, 17 Aug 2020 08:23:11 +0000
+Message-ID: <935d551809894d14965e430e05d21057@AcuMS.aculab.com>
+References: <20200817073212.830069-1-hch@lst.de>
+ <20200817073212.830069-10-hch@lst.de>
+In-Reply-To: <20200817073212.830069-10-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+From: Christoph Hellwig
+> Sent: 17 August 2020 08:32
+>
+> Stop providing the possibility to override the address space using
+> set_fs() now that there is no need for that any more.  To properly
+> handle the TASK_SIZE_MAX checking for 4 vs 5-level page tables on
+> x86 a new alternative is introduced, which just like the one in
+> entry_64.S has to use the hardcoded virtual address bits to escape
+> the fact that TASK_SIZE_MAX isn't actually a constant when 5-level
+> page tables are enabled.
+....
+> @@ -93,7 +69,7 @@ static inline bool pagefault_disabled(void);
+>  #define access_ok(addr, size)					\
+>  ({									\
+>  	WARN_ON_IN_IRQ();						\
+> -	likely(!__range_not_ok(addr, size, user_addr_max()));		\
+> +	likely(!__range_not_ok(addr, size, TASK_SIZE_MAX));		\
+>  })
 
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- drivers/dma/ti/k3-udma.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Can't that always compare against a constant even when 5-levl
+page tables are enabled on x86-64?
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index c14e6cb105cd..59cd8770334c 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -2914,9 +2914,9 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
-  * This tasklet handles the completion of a DMA descriptor by
-  * calling its callback and freeing it.
-  */
--static void udma_vchan_complete(unsigned long arg)
-+static void udma_vchan_complete(struct tasklet_struct *t)
- {
--	struct virt_dma_chan *vc = (struct virt_dma_chan *)arg;
-+	struct virt_dma_chan *vc = from_tasklet(vc, t, task);
- 	struct virt_dma_desc *vd, *_vd;
- 	struct dmaengine_desc_callback cb;
- 	LIST_HEAD(head);
-@@ -3649,8 +3649,7 @@ static int udma_probe(struct platform_device *pdev)
- 
- 		vchan_init(&uc->vc, &ud->ddev);
- 		/* Use custom vchan completion handling */
--		tasklet_init(&uc->vc.task, udma_vchan_complete,
--			     (unsigned long)&uc->vc);
-+		tasklet_setup(&uc->vc.task, udma_vchan_complete);
- 		init_completion(&uc->teardown_completed);
- 		INIT_DELAYED_WORK(&uc->tx_drain.work, udma_check_tx_completion);
- 	}
--- 
-2.17.1
+On x86-64 it can (probably) reduce to (addr | (addr + size)) < 0.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
