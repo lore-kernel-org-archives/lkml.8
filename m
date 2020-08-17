@@ -2,54 +2,57 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96161C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDF2B20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA4C20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691296;
-	bh=hob5rQU3KtWXDybm623x085AoUsNKY9aH/mUMcv3jD8=;
+	s=default; t=1597691302;
+	bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jabKUnlLYPpa95h4zWZZ2TU/AX5Mydv5yWhjbITTv2xIjclFyItX9QOh4yhY7cR0Y
-	 zDeM2E1Y6jYQoAKBu90zjMWjFZnpe4Xkl7vpSrX6LIVY+my+Wn3ZdiMUS9M2hjWmBG
-	 h0tSoMowuxZlK3lm76Ja0q3IPposopBkDcWjTF3g=
+	b=tJVa4kfvgB8cm14JM3GpcdUUd+kIRLZhs+4r4GvNYFWCx/1OxISxjJ9A4vL90dCs5
+	 K+exU6z91S2SULaLuzLwCS/U791Hk47V/itT29ZK8kC/xktHbCWMZ8zyqRL4ILE1nZ
+	 vkfclj7+cvpU3NWDoyDV0B4KSfTL+xuUE5r4/KHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387615AbgHQPnD (ORCPT
+        id S2404085AbgHQTIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgHQPhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:22 -0400
+        id S2387625AbgHQPnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:43:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA17F23105;
-        Mon, 17 Aug 2020 15:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71AA520760;
+        Mon, 17 Aug 2020 15:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678642;
-        bh=hob5rQU3KtWXDybm623x085AoUsNKY9aH/mUMcv3jD8=;
+        s=default; t=1597678993;
+        bh=LgP2OlZL56NdcDzxmOX1Pp5E0+D4FDy8ClRGYt4r8wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X38FzG7VCV9sh7P2FSTDOyO58uu6akukDbyG9hHksK70Ymg6wfkbCLgWxgnn1oNnQ
-         vZkV7VVtTV2WfRvYniXNh/Tj4HxoU7c7mIWw94SQ6s2E/7aubBbAhJqFyaLIGThULA
-         QlJxTEEZOrVtFTxpOCjguuhJ5f34tmzX7OqRJzX0=
+        b=ooM/SfTLhSPk2fyQASE5/O0RmahiTx406PepGEPeQ+jmBl7JO9Bu3qnr5VxITyFD7
+         DqKrC0z4Gj863YN7yf4ho2uXMnDgjkCg4Rh6V0S/6VdssLvDsSAri0oJXKeqy98wg1
+         +d2MlUWu+aEJfnVwtOQUdJ8vCwfUG0QW/8A5GEkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mirko Dietrich <buzz@l4m1.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 404/464] ALSA: usb-audio: Creative USB X-Fi Pro SB1095 volume knob support
-Date:   Mon, 17 Aug 2020 17:15:57 +0200
-Message-Id: <20200817143853.131838691@linuxfoundation.org>
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 029/393] m68k: mac: Dont send IOP message until channel is idle
+Date:   Mon, 17 Aug 2020 17:11:19 +0200
+Message-Id: <20200817143821.021782178@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,34 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mirko Dietrich <buzz@l4m1.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit fec9008828cde0076aae595ac031bfcf49d335a4 upstream.
+[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
 
-Adds an entry for Creative USB X-Fi to the rc_config array in
-mixer_quirks.c to allow use of volume knob on the device.
-Adds support for newer X-Fi Pro card, known as "Model No. SB1095"
-with USB ID "041e:3263"
+In the following sequence of calls, iop_do_send() gets called when the
+"send" channel is not in the IOP_MSG_IDLE state:
 
-Signed-off-by: Mirko Dietrich <buzz@l4m1.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200806124850.20334-1-buzz@l4m1.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	iop_ism_irq()
+		iop_handle_send()
+			(msg->handler)()
+				iop_send_message()
+			iop_do_send()
 
+Avoid this by testing the channel state before calling iop_do_send().
+
+When sending, and iop_send_queue is empty, call iop_do_send() because
+the channel is idle. If iop_send_queue is not empty, iop_do_send() will
+get called later by iop_handle_send().
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/m68k/mac/iop.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -185,6 +185,7 @@ static const struct rc_config {
- 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
- 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
-+	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
- };
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index 9bfa170157688..d8f2282978f9c 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
+ 	msg->status = IOP_MSGSTATUS_UNUSED;
+ 	msg = msg->next;
+ 	iop_send_queue[iop_num][chan] = msg;
+-	if (msg) iop_do_send(msg);
++	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
++		iop_do_send(msg);
+ }
  
+ /*
+@@ -490,16 +491,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
+ 
+ 	if (!(q = iop_send_queue[iop_num][chan])) {
+ 		iop_send_queue[iop_num][chan] = msg;
++		iop_do_send(msg);
+ 	} else {
+ 		while (q->next) q = q->next;
+ 		q->next = msg;
+ 	}
+ 
+-	if (iop_readb(iop_base[iop_num],
+-	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
+-		iop_do_send(msg);
+-	}
+-
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
 
 
