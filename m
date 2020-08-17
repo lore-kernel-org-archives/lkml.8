@@ -2,131 +2,151 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D77C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 631E62072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B801420738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HlS+DhuF"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eYpLship"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgHQVpm (ORCPT
+        id S1728678AbgHQVqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgHQVpj (ORCPT
+        Mon, 17 Aug 2020 17:46:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37756 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726634AbgHQVqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:45:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84714C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:45:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 74so8878691pfx.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M5NX3Q1GYp48OUvJZQHx5AOAR0W2M3qE4XWtOJ4Fmf4=;
-        b=HlS+DhuF53gJlvJjmZwoSWeJywwWrbP2J0o6+lnOf2amORdoowBNfu/IO4Cv8mkKaf
-         938OP6GPK4aAGksebv44/DUxsozDxt9zhcS/5zZyF9y1f1Qq7jJfRokWHnoGpdiWRBK4
-         MLgvTQZpojbRQ7EMIjwOyDdvq6yym1jfoibP1ALDQDuqhKZ0z2ZEH2oLmx4+/oAhnXkr
-         Fh3XJZNmkckaTTGmloFQ2nryxSCa9cprNSRp7Hv9AOCVyzcn432/lwWV86+hNL5ETYP2
-         mlSy8xx8Ztf4+YdzJ3lgjyiBCRSLXQ8Z4nuMkR0/NR00SM8nnitb4AXUOVTm9LJNloDA
-         Ywyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M5NX3Q1GYp48OUvJZQHx5AOAR0W2M3qE4XWtOJ4Fmf4=;
-        b=Lz33Hmd/12gh8+/UJ6DMBudJQUzBnG2eA/3IhTbhelCNuR9M544dokjjBXzDptDlOH
-         SKe57tfrCi7hpcxQVjVhLP+8LqrMJ/DbKsgDw9LX8Zh/daT44SqlbryxZhLy0y8AS6Aa
-         DBbY4Hsa6JcvFj7mOXN/zwx3UOqVbyQBdOs5OR2BYDjZ161h+cqShvU9zkoiM4HHGFtK
-         OOSakr6qX/nBSv5Y1+mu4J0m56vlSOzPWv/uZzJ2UlCc/xkWNXuCWWSRkh6PNae5UTWh
-         uFp3bbNcN5nPcxxCBOPR/Kp0G63gMckKV2FBmtvudCjzrx60H4kzan5ogeRvOdqpqloX
-         Vbkw==
-X-Gm-Message-State: AOAM532tHV2QULZG6M8ZtxE2YzazOqh5cVvxq2TP3tEO/XLrwPJH+iY/
-        Fut3ljTYEDZLpCDAcpeyhPd9+ch5iJBzlVWLUcfwAQ==
-X-Google-Smtp-Source: ABdhPJzQtM0WgyIzaD6jqd80KqMJ+foDWc+kVqOWoecUhCR/LnSPxtj2Zb6aUss/SJr5hyl0bh6zqWx8BMSGNpoVy5w=
-X-Received: by 2002:a63:a119:: with SMTP id b25mr11094694pgf.10.1597700738307;
- Mon, 17 Aug 2020 14:45:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
- <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
- <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
- <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
- <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
- <20200816001917.4krsnrik7hxxfqfm@google.com> <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
- <20200816150217.GA1306483@rani.riverdale.lan> <CABCJKucsXufD6rmv7qQZ=9kLC7XrngCJkKA_WzGOAn-KfcObeA@mail.gmail.com>
- <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com> <20200817201351.GA2246446@rani.riverdale.lan>
-In-Reply-To: <20200817201351.GA2246446@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 17 Aug 2020 14:45:26 -0700
-Message-ID: <CAKwvOdnUydcU_LpEjXS+M-EUVztoiMNsVpvZ9eK+_+yoCen6ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Aug 2020 17:46:24 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07HLX9GS181310;
+        Mon, 17 Aug 2020 17:46:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=jInUC0R0UVKQLc0/xLiIatT1sLU8hK9HLPaQ5/pxHKs=;
+ b=eYpLshipE7u9UnPNF4rwelQjwsTelXdiRGCFdGO4EZv3CEYSb451LHabxnHTRC40SifB
+ StFseCYeudNvGcW+28bp584UwxLlRBaeDxMwQ0FcpxLnO93yiM7XjxxyFoXumjmvL8Jm
+ jQjEpT8761zZfgR6BzUPZjU2+2u2qDu3c6MXeTOpxpBW0ZIIe8Sh1Qm6W0Snh2CkzeiR
+ 3OLsjdANyQN5EmdICaIUZLq+M0HivHP6r60LNXa1w8Cm62ACQYj2oWIDF+ELA+/TvOvT
+ +GfW0sBtOoP6rsaO/aRj3t/1doOctICBRyzET9vC0bmGuNQdLJSYejCxYFxfMAGucIZr rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32yy8em1vj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 17:46:19 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07HLa99E193944;
+        Mon, 17 Aug 2020 17:46:19 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32yy8em1uy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 17:46:18 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07HLirNW009324;
+        Mon, 17 Aug 2020 21:46:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 32x7b81mmv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 21:46:17 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07HLkEWL29294974
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 21:46:14 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1419A405C;
+        Mon, 17 Aug 2020 21:46:14 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DC68A405B;
+        Mon, 17 Aug 2020 21:46:11 +0000 (GMT)
+Received: from sig-9-65-192-88.ibm.com (unknown [9.65.192.88])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Aug 2020 21:46:10 +0000 (GMT)
+Message-ID: <5f12cc89c535ccfc6c3d63efa2bf716a1fdd966d.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/2] dm-devel:dm-crypt: infrastructure for measurement
+ of DM target data using IMA
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, agk@redhat.com,
+        snitzer@redhat.com, gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Date:   Mon, 17 Aug 2020 17:46:08 -0400
+In-Reply-To: <20200816210250.11506-1-tusharsu@linux.microsoft.com>
+References: <20200816210250.11506-1-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_15:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008170146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 1:13 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Aug 17, 2020 at 11:36:49AM -0700, Nick Desaulniers wrote:
-> > > > Though I don't understand the original issue, with -ffreestanding,
-> > > > sprintf shouldn't have been turned into strcpy in the first place.
-> >
-> > Huh? The original issue for this thread is because `-ffreestanding`
-> > *isn't* being used for most targets (oh boy, actually mixed usage by
-> > ARCH. Looks like MIPS, m68k, superH, xtensa, and 32b x86 use it?); and
-> > I'm not suggesting it be used.
-> >
->
-> Sorry, I meant the issue mentioned in the commit that removed
-> -ffreestanding, not the stpcpy one you're solving now. It says that
-> sprintf got converted into strcpy, which caused failures because back
-> then, strcpy was #define'd to __builtin_strcpy, and the default
-> implementation was actually of a function called __builtin_strcpy o_O,
-> not strcpy.
->
-> Anyway, that's water under the bridge now.
->
-> 6edfba1b33c7 ("x86_64: Don't define string functions to builtin")
->   gcc should handle this anyways, and it causes problems when
->   sprintf is turned into strcpy by gcc behind our backs and
->   the C fallback version of strcpy is actually defining __builtin_strcpy
+On Sun, 2020-08-16 at 14:02 -0700, Tushar Sugandhi wrote:
+> There are several device-mapper targets which contribute to verify
+> the integrity of the mapped devices e.g. dm-integrity, dm-verity,
+> dm-crypt etc.
+> 
+> But they do not use the capabilities provided by kernel integrity
+> subsystem (IMA). For instance, the IMA capability that measures several
+> in-memory constructs and files to detect if they have been accidentally
+> or maliciously altered, both remotely and locally. IMA also has the
+> capability to include these measurements in the IMA measurement list and
+> use them to extend a TPM PCR so that it can be quoted.
 
-For fun, I tried removing `-ffreestanding` from arch/x86/Makefile;
-both gcc and clang can compile+boot the i386 defconfig just fine.  Why
-don't I send a patch removing it with your suggested by in a series of
-fixes for stpcpy and bcmp?
+"both remotely" refers to measurement and attestation, while "locally"
+refers to integrity enforcement, based on hashes or signatures.  Is
+this patch set adding both IMA-measurement and IMA-appraisal?
 
--- 
-Thanks,
-~Nick Desaulniers
+Mimi
+
+>  These TPM PCR
+> extend operations ensure that the tampering with the order of constructs
+> being measured, and tampering with the measured constructs themselves -
+> doesn't go undetected. In general, this capability is used for remote
+> attestation of in-memory constructs and files of interest. As of today,
+> device-mapper targets don't use the benefits of extended TPM PCR
+> quotes and ultimately the benefits of remote attestation.
+> 
+> This series bridges this gap, so that all device-mapper targets
+> could take advantage of IMA's measuring and quoting abilities - thus
+> ultimately enabling remote attestation for device-mapper targets.
+> 
+> This series is based on the following repo/branch:
+>  repo: https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+>  branch: next-integrity
+>  commit 3db0d0c276a7 ("integrity: remove redundant initialization of variable ret")
+> 
+> This series also has a dependency on the following patch series and
+> should be applied in the following order:
+>  1. https://patchwork.kernel.org/patch/11709527/
+>  2. https://patchwork.kernel.org/patch/11711249/
+>  3. https://patchwork.kernel.org/patch/11712729/
+> 
+> Tushar Sugandhi (2):
+>   dm-devel: collect target data and submit to IMA to measure
+>   dm-crypt: collect data and submit to DM to measure
+> 
+>  drivers/md/Makefile            |   1 +
+>  drivers/md/dm-crypt.c          | 170 +++++++++++++++++++
+>  drivers/md/dm-ima.c            | 296 +++++++++++++++++++++++++++++++++
+>  include/linux/device-mapper.h  |  58 +++++++
+>  security/integrity/ima/Kconfig |   2 +-
+>  5 files changed, 526 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/md/dm-ima.c
+> 
+
+
