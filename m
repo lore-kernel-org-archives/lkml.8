@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD18EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DE5205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD74204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681819;
-	bh=Fiw50jeqkobRhQDGKeJkItSxQGeO+dfc6ICco/9FPvY=;
+	s=default; t=1597681825;
+	bh=zWkn7msTWdqSd4W9q862mQxFYapma4IhXp8NLDsgtio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqbYSECVwpedAKcIs5Lcnzr93Fu5bCUzfyLK4jqtEDZil/GdzXlJ6z5q8s8ys9kHR
-	 FeuTH4J3l5dpzV9HHitXKwblQd0zEKMut4K8wwwL2MfRrYHVQHNcbBZPobya9jJ3Jz
-	 cd2kXc5LcgVbIORX/0e4YLWZh2hvz2XrmhKCogFU=
+	b=RyGEAzD+q4tKjMFkmv3BcpaDzw+Kr/VU5N4pui7kOSfXeAlfN9ukQ+0iUXBZi37vL
+	 U3r9xMJrNsqFNm0vtXlBnFsREau1djSRNpZeR3rMlGJEt4cDJZ64AY5wyorArCg+Xe
+	 75jry+BeoWv5qZD2W51JPHLI9/HFLC0lSgO8JxMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgHQQaH (ORCPT
+        id S2388297AbgHQQaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40692 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387939AbgHQPxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:53:42 -0400
+        id S2387948AbgHQPxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:53:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 573682063A;
-        Mon, 17 Aug 2020 15:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2730320657;
+        Mon, 17 Aug 2020 15:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679621;
-        bh=Fiw50jeqkobRhQDGKeJkItSxQGeO+dfc6ICco/9FPvY=;
+        s=default; t=1597679630;
+        bh=zWkn7msTWdqSd4W9q862mQxFYapma4IhXp8NLDsgtio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uMF5jYdgnvubI/m3Qk1FoWe7UiJWGHahFr9fqHpbzHsbSC1994uSvwrgaNwvKkAM+
-         C5b3rrEx4rsoCsvx6E2AUySkAEkIsGvQZS8Y/vFPLZeIots1J1DPvoW92MNKmglg8i
-         qCIohrIz8oxncvO29yPijRYf8JGh2wV1L88uWduw=
+        b=bTGmw3djEwZBokoMt0g/xdenTABfPwnSvjalQ585VvcSpzuoY2B+WRsedAJWUtiiD
+         5Yiak66mY0yC8cQl4xD+pBNErZOjmyeGw6ykLBtgPoG4vazUSYJWS+P7L0zruGpfSs
+         PMCiFJ2BdgJcBtZ0flCCgdL1vO5Zlz9j2L5kBM3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 277/393] ASoC: meson: axg-tdm-formatters: fix sclk inversion
-Date:   Mon, 17 Aug 2020 17:15:27 +0200
-Message-Id: <20200817143833.056492499@linuxfoundation.org>
+Subject: [PATCH 5.7 280/393] ASoC: fsl_sai: Fix value of FSL_SAI_CR1_RFW_MASK
+Date:   Mon, 17 Aug 2020 17:15:30 +0200
+Message-Id: <20200817143833.201619932@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,119 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 0d3f01dcdc234001f979a0af0b6b31cb9f25b6c1 ]
+[ Upstream commit 5aef1ff2397d021f93d874b57dff032fdfac73de ]
 
-After carefully checking, it appears that both tdmout and tdmin require the
-rising edge of the sclk they get to be synchronized with the frame sync
-event (which should be a rising edge of lrclk).
+The fifo_depth is 64 on i.MX8QM/i.MX8QXP, 128 on i.MX8MQ, 16 on
+i.MX7ULP.
 
-TDMIN was improperly set before this patch. Remove the sclk_invert quirk
-which is no longer needed and fix the sclk phase.
+Original FSL_SAI_CR1_RFW_MASK value 0x1F is not suitable for
+these platform, the FIFO watermark mask should be updated
+according to the fifo_depth.
 
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200729154456.1983396-4-jbrunet@baylibre.com
+Fixes: a860fac42097 ("ASoC: fsl_sai: Add support for imx7ulp/imx8mq")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/r/1596176895-28724-1-git-send-email-shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-tdm-formatter.c | 11 ++++++-----
- sound/soc/meson/axg-tdm-formatter.h |  1 -
- sound/soc/meson/axg-tdmin.c         |  2 --
- sound/soc/meson/axg-tdmout.c        |  3 ---
- 4 files changed, 6 insertions(+), 11 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 5 +++--
+ sound/soc/fsl/fsl_sai.h | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
-index 358c8c0d861cd..f7e8e9da68a06 100644
---- a/sound/soc/meson/axg-tdm-formatter.c
-+++ b/sound/soc/meson/axg-tdm-formatter.c
-@@ -70,7 +70,7 @@ EXPORT_SYMBOL_GPL(axg_tdm_formatter_set_channel_masks);
- static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- {
- 	struct axg_tdm_stream *ts = formatter->stream;
--	bool invert = formatter->drv->quirks->invert_sclk;
-+	bool invert;
- 	int ret;
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 9d436b0c5718a..7031869a023a1 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -680,10 +680,11 @@ static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
+ 	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
  
- 	/* Do nothing if the formatter is already enabled */
-@@ -96,11 +96,12 @@ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- 		return ret;
+ 	regmap_update_bits(sai->regmap, FSL_SAI_TCR1(ofs),
+-			   FSL_SAI_CR1_RFW_MASK,
++			   FSL_SAI_CR1_RFW_MASK(sai->soc_data->fifo_depth),
+ 			   sai->soc_data->fifo_depth - FSL_SAI_MAXBURST_TX);
+ 	regmap_update_bits(sai->regmap, FSL_SAI_RCR1(ofs),
+-			   FSL_SAI_CR1_RFW_MASK, FSL_SAI_MAXBURST_RX - 1);
++			   FSL_SAI_CR1_RFW_MASK(sai->soc_data->fifo_depth),
++			   FSL_SAI_MAXBURST_RX - 1);
  
- 	/*
--	 * If sclk is inverted, invert it back and provide the inversion
--	 * required by the formatter
-+	 * If sclk is inverted, it means the bit should latched on the
-+	 * rising edge which is what our HW expects. If not, we need to
-+	 * invert it before the formatter.
- 	 */
--	invert ^= axg_tdm_sclk_invert(ts->iface->fmt);
--	ret = clk_set_phase(formatter->sclk, invert ? 180 : 0);
-+	invert = axg_tdm_sclk_invert(ts->iface->fmt);
-+	ret = clk_set_phase(formatter->sclk, invert ? 0 : 180);
- 	if (ret)
- 		return ret;
+ 	snd_soc_dai_init_dma_data(cpu_dai, &sai->dma_params_tx,
+ 				&sai->dma_params_rx);
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index 76b15deea80c7..6aba7d28f5f34 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -94,7 +94,7 @@
+ #define FSL_SAI_CSR_FRDE	BIT(0)
  
-diff --git a/sound/soc/meson/axg-tdm-formatter.h b/sound/soc/meson/axg-tdm-formatter.h
-index 9ef98e955cb27..a1f0dcc0ff134 100644
---- a/sound/soc/meson/axg-tdm-formatter.h
-+++ b/sound/soc/meson/axg-tdm-formatter.h
-@@ -16,7 +16,6 @@ struct snd_kcontrol;
+ /* SAI Transmit and Receive Configuration 1 Register */
+-#define FSL_SAI_CR1_RFW_MASK	0x1f
++#define FSL_SAI_CR1_RFW_MASK(x)	((x) - 1)
  
- struct axg_tdm_formatter_hw {
- 	unsigned int skew_offset;
--	bool invert_sclk;
- };
- 
- struct axg_tdm_formatter_ops {
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index 3d002b4eb939e..88ed95ae886bb 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -228,7 +228,6 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
- 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
- 	.ops		= &axg_tdmin_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk	= false,
- 		.skew_offset	= 2,
- 	},
- };
-@@ -238,7 +237,6 @@ static const struct axg_tdm_formatter_driver g12a_tdmin_drv = {
- 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
- 	.ops		= &axg_tdmin_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk	= false,
- 		.skew_offset	= 3,
- 	},
- };
-diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
-index 418ec314b37d4..3ceabddae629e 100644
---- a/sound/soc/meson/axg-tdmout.c
-+++ b/sound/soc/meson/axg-tdmout.c
-@@ -238,7 +238,6 @@ static const struct axg_tdm_formatter_driver axg_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 1,
- 	},
- };
-@@ -248,7 +247,6 @@ static const struct axg_tdm_formatter_driver g12a_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 2,
- 	},
- };
-@@ -309,7 +307,6 @@ static const struct axg_tdm_formatter_driver sm1_tdmout_drv = {
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
- 	.quirks		= &(const struct axg_tdm_formatter_hw) {
--		.invert_sclk = true,
- 		.skew_offset = 2,
- 	},
- };
+ /* SAI Transmit and Receive Configuration 2 Register */
+ #define FSL_SAI_CR2_SYNC	BIT(30)
 -- 
 2.25.1
 
