@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A87DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2133C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF0920716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868E320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688439;
-	bh=NIfl73RREMDELHyMtwbSZUzs++FkBZ0sfKTVdjnFj1Q=;
+	s=default; t=1597688441;
+	bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRdRxqwfbxP1Xx/SY9SL+MN6Z7Ue3UxJm1RIXaVXCqOHRRyQHD6kVTZNlBLo6Gq2z
-	 GAg1ySCwj89GwQEGxM9ew//Aiqya50HlXnVhpvjf3BebWiczd+XoBdugkdL9rTQ8Bb
-	 ZzQwnWox64rjXWqfnoZAsYWp/OGUhaq3af10h6OM=
+	b=ZZ0JPh3ZMb7dpoe5/P1hCOPyVi0jCtUOvF0R3rYDeUrlTYWBnWguaYK/AqPc9CtUH
+	 Sd2XjoQv+xIgvM70W3fGdF1uro66r/0jdrPfB3jCt2jbMXPn1oGMa8E28Ga7BKR7gh
+	 +wrHfmpbwLSg4I5MDsWodm7/DDBtThRrgyuA53Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390712AbgHQSUi (ORCPT
+        id S2388313AbgHQQEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388326AbgHQQEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:04:35 -0400
+        id S2387698AbgHQPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E24206FA;
-        Mon, 17 Aug 2020 16:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6303A20760;
+        Mon, 17 Aug 2020 15:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680274;
-        bh=NIfl73RREMDELHyMtwbSZUzs++FkBZ0sfKTVdjnFj1Q=;
+        s=default; t=1597679081;
+        bh=l7DTXjuAfklnRbRkGFN8yM3xQMOqDlSYweAigS6M2Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTSYHesOJeDc+7i8JPYtYc+mE8DAmjPzXVLuwZfXHuZnmIIAA32fbGX1RBQoAu9kS
-         DMxayrm1OI4euiXL+Fe2qX2uVcE3E8H1AnM2hBkq4ChkX9Mt+aLnD8qCowXARDn9JU
-         kYvWN/zgzNCDuaH18nhRe/aJz5bhmudYwVwvj8oo=
+        b=t1BNfWkaKGckK9yfyqwoQxqxR8f2FIJhomQUqlv5yMYoI7BbKeXM3d/WPMDLrJI/Y
+         K//eZD3HRewsC2aZqkzvgNqRlpMB0bWHUwtPh70OwI3D5NV+i02WTyMx6cVDaVgv3Z
+         Lcl+fZYSjgy3o7AYwhGjjvIibUT+Gup86cYnC+dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 121/270] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
-Date:   Mon, 17 Aug 2020 17:15:22 +0200
-Message-Id: <20200817143801.791162806@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 059/393] nvme-rdma: fix controller reset hang during traffic
+Date:   Mon, 17 Aug 2020 17:11:49 +0200
+Message-Id: <20200817143822.485415520@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,35 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit d179f7c763241c1dc5077fca88ddc3c47d21b763 ]
+[ Upstream commit 9f98772ba307dd89a3d17dc2589f213d3972fc64 ]
 
-The dev_id used in request_irq() and free_irq() should match. Use 'info' in
-both cases.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Link: https://lore.kernel.org/r/20200626035948.944148-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
+
+This follows to how the pci driver handles resets.
+
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/powertec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/rdma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
-index c795537a671cb..2dc0df005cb3b 100644
---- a/drivers/scsi/arm/powertec.c
-+++ b/drivers/scsi/arm/powertec.c
-@@ -378,7 +378,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 1f9a45145d0d3..19c94080512cf 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -882,15 +882,20 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->ctrl.connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(&ctrl->tag_set,
+-			ctrl->ctrl.queue_count - 1);
+ 	}
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
+ 	ret = nvme_rdma_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
  
-  out_release:
- 	fas216_release(host);
++	if (!new) {
++		nvme_start_queues(&ctrl->ctrl);
++		nvme_wait_freeze(&ctrl->ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->ctrl.tagset,
++			ctrl->ctrl.queue_count - 1);
++		nvme_unfreeze(&ctrl->ctrl);
++	}
++
+ 	return 0;
+ 
+ out_cleanup_connect_q:
+@@ -923,6 +928,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
+ 		bool remove)
+ {
+ 	if (ctrl->ctrl.queue_count > 1) {
++		nvme_start_freeze(&ctrl->ctrl);
+ 		nvme_stop_queues(&ctrl->ctrl);
+ 		nvme_rdma_stop_io_queues(ctrl);
+ 		if (ctrl->ctrl.tagset) {
 -- 
 2.25.1
 
