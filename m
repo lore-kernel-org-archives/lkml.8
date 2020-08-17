@@ -2,109 +2,121 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E19AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D459BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3872E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1062063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSp/51Vb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgHQI2Y (ORCPT
+        id S1728463AbgHQI2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:28:24 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:60242 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbgHQI2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:28:20 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 7AF44FB04;
-        Mon, 17 Aug 2020 10:28:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8TlX4fRmALQd; Mon, 17 Aug 2020 10:28:17 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id A9DEE4576F; Mon, 17 Aug 2020 10:28:16 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 10:28:16 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] drm/panel: Add panel driver for the Mantix
- MLAF057WE51-X DSI panel
-Message-ID: <20200817082816.GA33443@bogon.m.sigxcpu.org>
-References: <cover.1597526107.git.agx@sigxcpu.org>
- <d4e3f881e3d53166eea0be31a885e08679813558.1597526107.git.agx@sigxcpu.org>
- <20200815212727.GA1244923@ravnborg.org>
- <20200816175521.GC2838@bogon.m.sigxcpu.org>
- <20200816190417.GA1421437@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200816190417.GA1421437@ravnborg.org>
+        Mon, 17 Aug 2020 04:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgHQIZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:25:48 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC144C061388;
+        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y10so5574649plr.11;
+        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=D/Mkx0k3buW6nMMz3cj3YWbXhyfw6abwbH3pFqES0j8=;
+        b=tSp/51VbeSEu3dHGWXjYT/NQzG6Ptsjimy1nJUoATyHiHCcmg9eo9jc9IaiQERQ5Nb
+         iJAIIF6kNiA5Kd5aBC89NdU0cLtr7LWwAU+vRwMSSvoATCgF7tWwsvtG0wOy0xB8tR9/
+         uOAPcGvqdMIfqbFOiERkTgq5S7X+z4sS3ug7MnwdPATua5rWEURHlk4bziUaJs2Yjlsb
+         vWNz9vVRd5LVHKlFP5bfXX+bJKOEIpgIa0s/1Mg//6L3c221wwHGJElufgvzxMAdDM+e
+         EvVviBBP45IMyXnW+2hgOqqTLP6sEvrQhnYgq1S+mB1staPKH7MXoRECZYP4+f3temKw
+         OJDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=D/Mkx0k3buW6nMMz3cj3YWbXhyfw6abwbH3pFqES0j8=;
+        b=IHwXcZEKTJ8xD21/nljgfBwe/ZWO3WKfVx2p0GU5fe4afsoOm2xlfLfOHBzVIMBlpK
+         wBbTHrfGfFrpiXR4gBQ6+5+H6W6MDMI4FHvhvJtU06gi7uAY1iOchyLBhumtyjwkp/6W
+         k94q0EjfyB58WAMvl5vSxNFG2xCdIGS7DydY/ry5ZN68VKAZKwwbi8DLo+lJvoNlfUCB
+         vVlcCxfJ8p/dmsVRuyPmmXSqPIJYY53GwQCr7pAgILEIA+JzDLUtyB+mFpv/PY803nSY
+         BETUol654Qi2v6yJUkZL/WE3/04hO20w09YI9WzALGcqBsAOY2dHrVPe2LXgB4Yk7XN5
+         6c7w==
+X-Gm-Message-State: AOAM5337sh8b2Kv94GLH+gDPp6K9XeEkust3/EsQ3Q/GIZzzo9tI4bng
+        IIZcoGJsTPJ0HSSHezHjQEE=
+X-Google-Smtp-Source: ABdhPJzYryo5CXUtCOTUoLLG1O0Nlya6EIJjoKSX670WNzdCiD+322/w/djTW43/04u8aHuCOv3Ndg==
+X-Received: by 2002:a17:90b:3197:: with SMTP id hc23mr11406806pjb.110.1597652747547;
+        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id r186sm19928482pfr.162.2020.08.17.01.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:25:47 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
+        kda@linux-powerpc.org, dougmill@linux.ibm.com,
+        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com
+Cc:     keescook@chromium.org, linux-acenic@sunsite.dk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
+        oss-drivers@netronome.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 09/20] ethernet: ehea: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:54:23 +0530
+Message-Id: <20200817082434.21176-11-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817082434.21176-1-allen.lkml@gmail.com>
+References: <20200817082434.21176-1-allen.lkml@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-On Sun, Aug 16, 2020 at 09:04:17PM +0200, Sam Ravnborg wrote:
-> On Sun, Aug 16, 2020 at 07:55:21PM +0200, Guido Günther wrote:
-> > Hi Sam,
-> > thanks for having a look!
-> > 
-> > On Sat, Aug 15, 2020 at 11:27:27PM +0200, Sam Ravnborg wrote:
-> > > Hi Guido.
-> > > 
-> > > On Sat, Aug 15, 2020 at 11:16:22PM +0200, Guido Günther wrote:
-> > > > The panel uses a Focaltech FT8006p, the touch part is handled by the
-> > > > already existing edt-ft5x06.
-> > > > 
-> > > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > > 
-> > > Two small nits - otherwise looks good.
-> > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > > 
-> > > I can fix while applying or you can send a new revision,
-> > > but I cannot apply until drm-misc-next have seen a backmerge
-> > > due to dev_err_probe() usage.
-> > 
-> > I'll send out a v3 with this fixed.
-> > 
-> > > Did you have commit rights yet?
-> > > If yes, then please apply yourself.
-> > 
-> > No commit rights here. So it would be great if you could apply the
-> > patches. Should I look for commit rights? I assume that means following
-> > 
-> >     https://drm.pages.freedesktop.org/maintainer-tools/commit-access.html#drm-misc    
-> I recall we discussed this before for some other driver.
-> For a single panel it is not needed, but if you continue to be active
-> on other parts it makes sense.
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
-I think st7703, mantix and nwl all go in via drm-misc so it might make
-sense. Thanks for the suggestion!
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> I will apply v3 when drm-misc-next is backmeged unless you tell me
-> otherwise. And ping me if I forgets.
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 0273fb7a9d01..f3d104fec7e9 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -1212,9 +1212,9 @@ static void ehea_parse_eqe(struct ehea_adapter *adapter, u64 eqe)
+ 	}
+ }
+ 
+-static void ehea_neq_tasklet(unsigned long data)
++static void ehea_neq_tasklet(struct tasklet_struct *t)
+ {
+-	struct ehea_adapter *adapter = (struct ehea_adapter *)data;
++	struct ehea_adapter *adapter = from_tasklet(adapter, t, neq_tasklet);
+ 	struct ehea_eqe *eqe;
+ 	u64 event_mask;
+ 
+@@ -3417,8 +3417,7 @@ static int ehea_probe_adapter(struct platform_device *dev)
+ 		goto out_free_ad;
+ 	}
+ 
+-	tasklet_init(&adapter->neq_tasklet, ehea_neq_tasklet,
+-		     (unsigned long)adapter);
++	tasklet_setup(&adapter->neq_tasklet, ehea_neq_tasklet);
+ 
+ 	ret = ehea_create_device_sysfs(dev);
+ 	if (ret)
+-- 
+2.17.1
 
-Thanks!
- -- Guido
