@@ -2,170 +2,128 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F34C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A15F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685091;
-	bh=BFKmMwm3OgowIDbWwU9+GxfmhcLKDlOgozUQDhUzMwE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fIrnp8l+O/CCuPmElehHCF1+yljmgnzBHsJkbmAQGWbjVRuxKBx1GNwCxjzM/xeuD
-	 VJ2emu705qXEf7dcsuX1RD2wQKeOga4CNlNjdlXWZflftzZK9yh1d2w06s4zRqhtQC
-	 4p+vkiYkThxM1DytVZP2t5v8vvpBFw+PfvWrjt/g=
+	by mail.kernel.org (Postfix) with ESMTP id ABC3720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389997AbgHQRYu (ORCPT
+        id S2389787AbgHQRZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389308AbgHQRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:12:01 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C44AF2067C;
-        Mon, 17 Aug 2020 17:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597684321;
-        bh=BFKmMwm3OgowIDbWwU9+GxfmhcLKDlOgozUQDhUzMwE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=I0l69/eVcqo9XoM5DNTMT2IHtJeSrEZ38TqHPaQ/MVg8ogXat9uYkR7vEL1h7hC/z
-         4cLCk8F86byzwpWkE5mzd9DLMcDhX/pCeCX3FeDhyRFWxlZX5zhabrxqFjID+r4yxO
-         t824qZlf+pcCGkc+eCBMReSoEY+74OYfzcbpY05c=
-Date:   Mon, 17 Aug 2020 12:11:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        christoffer.dall@arm.com, maz@kernel.org,
-        Robert Richter <rrichter@marvell.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH  v1 1/3] arm64: allow de-selection of ThunderX PCI
- controllers
-Message-ID: <20200817171159.GA1426023@bjorn-Precision-5520>
+        Mon, 17 Aug 2020 13:25:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38452 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389524AbgHQRNq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:13:46 -0400
+Received: from mail-ej1-f71.google.com ([209.85.218.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <guilherme.piccoli@canonical.com>)
+        id 1k7ihb-0005cu-US
+        for linux-kernel@vger.kernel.org; Mon, 17 Aug 2020 17:13:44 +0000
+Received: by mail-ej1-f71.google.com with SMTP id a19so5771672ejs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ortJXZij7qhe0ZAYBzpiXihdZh9t9k9y3DWPAjhxY9E=;
+        b=TGUNUZ2YyRYLK99T6y+w7F4B4muIdM+JL4qQOxcrTdp0uclMcTjjBksaJ89BWYO1Wh
+         0Fc7A0IqvFH8UHdgBL8uuX78UhITvKUCeWMhwmoR38TwQEAn0SdmC8viQryuz8gMJMSY
+         x8QpinbWA1+gvXtxbg1+p6ij1dh6RW33kOW97u2sFhQDneV7qzGwejqgXZp7wEeiNahU
+         yF13Oly0Hy1ZKbJnCRAPIUIbpiBkCIlJd6HJjhgLFLse/NOkgzrRsCAQfCdQ/8687lrq
+         fZu8jERY65AHi6lXZte/RfvYEFMAc+HQX8YCgTObV4ueiqdfjxRX4VDzBVwyOAcKcJbu
+         bSLA==
+X-Gm-Message-State: AOAM533qEh0IliYlCweSPcPG6sb9SlQD428ESwmC8V0EP9idbdUtwNrp
+        KTmqp5gLHjaJu6dvFTAzcXH8ZK9wYw3ouvkoXSIyP6hDWARiXwQ8zJY1DSEYfPk2gxyuYbGXnxe
+        tSJIwvTVXfuPM7SY0NCw/PNspJz31ifgZx4qNOKefQuMfuV7u/oTsY+Xd3Q==
+X-Received: by 2002:a17:907:11dd:: with SMTP id va29mr16717388ejb.470.1597684423591;
+        Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy+P7qcj2FO8zBWQkQhYdBN5ckyKddUU2gVpQAdmLowvJ1iTcyzeQlevRPzJ0r4zj5MZRKPlm7o/RxnXFvwmbo=
+X-Received: by 2002:a17:907:11dd:: with SMTP id va29mr16717379ejb.470.1597684423396;
+ Mon, 17 Aug 2020 10:13:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200804124417.27102-2-alex.bennee@linaro.org>
+References: <c2b7a96a-122e-bdec-7368-d54700a55915@canonical.com>
+ <20200817162156.GA715236@kroah.com> <a2788632-5690-932b-90de-14bd9cabedec@canonical.com>
+ <20200817164924.GA721399@kroah.com> <14968c46-ad8f-fbdf-88d6-0ded954534c9@canonical.com>
+ <20200817170522.GA795695@kroah.com>
+In-Reply-To: <20200817170522.GA795695@kroah.com>
+From:   Guilherme Piccoli <gpiccoli@canonical.com>
+Date:   Mon, 17 Aug 2020 14:13:07 -0300
+Message-ID: <CAHD1Q_zsu=M9TZpNFwEni3zW4HQ0eCvmqPBtJt_oJi+3YNOCvQ@mail.gmail.com>
+Subject: Re: [PATCH 4.19 35/47] x86/irq: Seperate unused system vectors from
+ spurious entry again
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, jan.kiszka@siemens.com,
+        jbeulich@suse.com, LKML <linux-kernel@vger.kernel.org>,
+        marc.zyngier@arm.com, stable@vger.kernel.org,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        Pedro Principeza <pedro.principeza@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:44:15PM +0100, Alex Bennée wrote:
-> For a pure VirtIO guest bringing in all the PCI quirk handling adds a
-> significant amount of bloat to kernel we don't need. Solve this by
-> adding a CONFIG symbol for the ThunderX PCI devices and allowing it to
-> be turned off. Saving over 300k from the uncompressed vmlinux:
+On Mon, Aug 17, 2020 at 2:05 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Aug 17, 2020 at 01:59:00PM -0300, Guilherme G. Piccoli wrote:
+> > On 17/08/2020 13:49, Greg KH wrote:
+> > > [...]
+> > >> I'm sorry, I hoped the subject + thread would suffice heh
+> > >
+> > > There is no thread here :(
+> > >
+> >
+> > Wow, that's odd. I've sent with In-Reply-To, I'd expect it'd get
+> > threaded with the original message. Looking in lore archive [1], it
+> > seems my first message wasn't threaded but the others were...apologies
+> > for that, not sure what happened...
+>
+> reply to is fine, but how do you know what my email client has (hint,
+> not a copy of 1.5 years of history sitting around in it at the
+> moment...)  So there is no "thread" here as far as it is concerned...
+>
+> Anyway, not a big deal, just properly quote emails in the future, that's
+> good to get used to no matter what :)
+>
+Sure, will do - specially for super old threads like this.
 
-It *looks* like just turning off CONFIG_PCI_QUIRKS should be
-sufficient because pci-thunder-ecam.c and pci-thunder-pem.c are
-wrapped with:
 
-  #if defined(CONFIG_PCI_HOST_THUNDER_PEM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
+> > >> So, the mainline commit is: f8a8fe61fec8 ("x86/irq: Seperate unused
+> > >> system vectors from spurious entry again") [0]. The backport to 4.19
+> > >> stable tree has the following id: fc6975ee932b .
+> > >
+> > > Wow, over 1 1/2 years old, can you remember individual patches that long
+> > > ago?
+> > >
+> > > Anyway, did you try to backport the patch to older kernels to see if it
+> > > was possible and could work?
+> > >
+> > > If so, great, please feel free to submit it to the
+> > > stable@vger.kernel.org list and I will be glad to pick it up.
+> > >
+> >
+> > I'm working on it, it is feasible. But I'm seeking here, in this
+> > message, what is the reason it wasn't backported for pre-4.19
+>
+> Try reading the stable mailing list archives, again, you are asking
+> about a patch 1.5 years ago.  I can't remember information about patches
+> sent _yesterday_ given the quantity we go through...
+>
+> thanks,
+>
+> greg k-h
 
-so if you turn off CONFIG_PCI_HOST_THUNDER_ECAM,
-CONFIG_PCI_HOST_THUNDER_PEM, and CONFIG_PCI_QUIRKS that should omit
-pci-thunder-ecam.o and pci-thunder-pem.o.  But I must be missing
-something.
+OK, thanks Greg. If Thomas or anybody involved here knows a reason to
+not backport it to older kernels, please let me know - I'd really
+appreciate that.
+Cheers,
 
->   -rwxr-xr-x 1 alex alex  85652472 Aug  3 16:48 vmlinux*
->   -rwxr-xr-x 1 alex alex  86033880 Aug  3 16:39 vmlinux.orig*
-> 
-> Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
-> Cc: Robert Richter <rrichter@marvell.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  arch/arm64/Kconfig.platforms    | 2 ++
->  arch/arm64/configs/defconfig    | 1 +
->  drivers/pci/controller/Kconfig  | 7 +++++++
->  drivers/pci/controller/Makefile | 4 ++--
->  4 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 8dd05b2a925c..a328eebdaa59 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -253,12 +253,14 @@ config ARCH_SPRD
->  
->  config ARCH_THUNDER
->  	bool "Cavium Inc. Thunder SoC Family"
-> +        select PCI_THUNDER
->  	help
->  	  This enables support for Cavium's Thunder Family of SoCs.
->  
->  config ARCH_THUNDER2
->  	bool "Cavium ThunderX2 Server Processors"
->  	select GPIOLIB
-> +        select PCI_THUNDER
 
-Indent these with tabs, not spaces, to be consistent with other
-whitespace usage in this file.
-
->  	help
->  	  This enables support for Cavium's ThunderX2 CN99XX family of
->  	  server processors.
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 2ca7ba69c318..d840cba99941 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -199,6 +199,7 @@ CONFIG_PCI_HOST_GENERIC=y
->  CONFIG_PCI_XGENE=y
->  CONFIG_PCIE_ALTERA=y
->  CONFIG_PCIE_ALTERA_MSI=y
-> +CONFIG_PCI_THUNDER=y
->  CONFIG_PCI_HOST_THUNDER_PEM=y
->  CONFIG_PCI_HOST_THUNDER_ECAM=y
->  CONFIG_PCIE_ROCKCHIP_HOST=m
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index adddf21fa381..28335ffa5d48 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -286,6 +286,13 @@ config PCI_LOONGSON
->  	  Say Y here if you want to enable PCI controller support on
->  	  Loongson systems.
->  
-> +config PCI_THUNDER
-> +       bool "Thunder X PCIE controllers"
-> +       depends on ARM64
-> +       select PCI_QUIRKS
-> +       help
-> +          Say Y here to enable ThunderX ECAM and PEM PCI controllers.
-
-Indent with tabs, not spaces.
-
-The existing Kconfig help text refers to simply "Thunder", not
-"Thunder X", so both of these references should probably follow suit.
-
-s/PCIE controllers/PCIe controllers/
-
->  source "drivers/pci/controller/dwc/Kconfig"
->  source "drivers/pci/controller/mobiveil/Kconfig"
->  source "drivers/pci/controller/cadence/Kconfig"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index efd9733ead26..8fad4781a5d3 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -45,8 +45,8 @@ obj-y				+= mobiveil/
->  # ARM64 and use internal ifdefs to only build the pieces we need
->  # depending on whether ACPI, the DT driver, or both are enabled.
->  
-> +obj-$(CONFIG_PCI_THUNDER) += pci-thunder-ecam.o
-> +obj-$(CONFIG_PCI_THUNDER) += pci-thunder-pem.o
->  ifdef CONFIG_PCI
-> -obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
-> -obj-$(CONFIG_ARM64) += pci-thunder-pem.o
->  obj-$(CONFIG_ARM64) += pci-xgene.o
->  endif
-> -- 
-> 2.20.1
-> 
+Guilherme
