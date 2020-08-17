@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4380C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DF2204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2588204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690154;
-	bh=sC52q1jskN1a4GCM1vdNvSZEDdBVrHK3PIW89cOAIoc=;
+	s=default; t=1597690158;
+	bh=fh3jWp5XO68vRG+wNMkxh5Ih2pnjQBAY0X+73kiWaj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XM/aR20QRVSdRlnzNqUfFJI090gmz6b4QE7CqUhKGbEel07MkLo5SXotJwl/0d2qV
-	 EvetukfzmhTUsgWI4N8H7XZXo5H1R/6CwuSaVZ5Qa7itLiBkUg6zqW9FUYpzFbT75R
-	 wSNrMghrUrWsIdgne/5lypGUbCE/TyzPWUHo4Z7A=
+	b=GZ47J/HKpeNPD342mj7/mYV7+To92NchKVNYk1e7Ve41ZMsb7xLNQL9JeqKCTPorr
+	 8hyg5ABk0SXwIYD4C2xFCXdsFhuxt27C0YQHaImDrS+jw9/WtYYAm3YzpXLWRgXRh1
+	 aExIlP1bfjL2ks9h+fdqAWNZ16PA5GiUjgNLJQtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403792AbgHQStN (ORCPT
+        id S2391684AbgHQStR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388003AbgHQPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:44 -0400
+        id S2387989AbgHQPyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC3820888;
-        Mon, 17 Aug 2020 15:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 050C52072E;
+        Mon, 17 Aug 2020 15:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679683;
-        bh=sC52q1jskN1a4GCM1vdNvSZEDdBVrHK3PIW89cOAIoc=;
+        s=default; t=1597679671;
+        bh=fh3jWp5XO68vRG+wNMkxh5Ih2pnjQBAY0X+73kiWaj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOYZOOt1i/msLn3u1PKw4Pl4B9AQD0lyvRh4qK6EJSHeAoadFnJOw5efDp923DEdS
-         zQjE+nLUGv4ln1DrxaWpu9PZiSjuKfg/cUhg0L8+xPbpjoj1H+zD/23i5djiasSaNv
-         9FP3KN/O9mmEGvREP7ehrbjcIvqSP1Dt4Y1FJDp0=
+        b=Cy8Ctmfu7gOid+H0v+EvYYRq6YOoN44TBGVljIzIK08VmeFsryh+yB6BcYaQqgS/J
+         Ylii4erI3YU8DCiUM8mEYypjCQ7OC+TW1Xl4VMOcqUYvC+dTRVvcefFgJ39K7FaUey
+         BXFMJjWfOAzTtH1KJfc/NIqa9YgiiegPFbkmtrbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tsang-Shian Lin <thlin@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 299/393] net: spider_net: Fix the size used in a dma_free_coherent() call
-Date:   Mon, 17 Aug 2020 17:15:49 +0200
-Message-Id: <20200817143834.120303583@linuxfoundation.org>
+Subject: [PATCH 5.7 287/393] rtw88: fix short GI capability based on current bandwidth
+Date:   Mon, 17 Aug 2020 17:15:37 +0200
+Message-Id: <20200817143833.544231071@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,37 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Tsang-Shian Lin <thlin@realtek.com>
 
-[ Upstream commit 36f28f7687a9ce665479cce5d64ce7afaa9e77ae ]
+[ Upstream commit 4dd86b901d1373ef8446ecb50a7ca009f3475211 ]
 
-Update the size used in 'dma_free_coherent()' in order to match the one
-used in the corresponding 'dma_alloc_coherent()', in
-'spider_net_init_chain()'.
+Fix the transmission is not sent with short GI under
+some conditions even if the receiver supports short GI.
+If VHT capability IE exists in the beacon, the original
+code uses the short GI for 80M field as driver's short GI
+setting for transmission, even the current bandwidth is
+not 80MHz.
 
-Fixes: d4ed8f8d1fb7 ("Spidernet DMA coalescing")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Short GI supported fields for 20M/40M are informed in HT
+capability information element, and short GI supported
+field for 80M is informed in VHT capability information
+element.
+
+These three fields may be set to different values.
+Driver needs to record each short GI support field for
+each bandwidth, and send correct info depends on current
+bandwidth to the WiFi firmware.
+
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Tsang-Shian Lin <thlin@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200717064937.27966-3-yhchuang@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/spider_net.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 6576271642c14..ce8b123cdbcc1 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -283,8 +283,8 @@ spider_net_free_chain(struct spider_net_card *card,
- 		descr = descr->next;
- 	} while (descr != chain->ring);
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 7640e97706f52..72fe026e8a3c9 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -703,8 +703,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 			stbc_en = VHT_STBC_EN;
+ 		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_RXLDPC)
+ 			ldpc_en = VHT_LDPC_EN;
+-		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80)
+-			is_support_sgi = true;
+ 	} else if (sta->ht_cap.ht_supported) {
+ 		ra_mask |= (sta->ht_cap.mcs.rx_mask[1] << 20) |
+ 			   (sta->ht_cap.mcs.rx_mask[0] << 12);
+@@ -712,9 +710,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 			stbc_en = HT_STBC_EN;
+ 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_LDPC_CODING)
+ 			ldpc_en = HT_LDPC_EN;
+-		if (sta->ht_cap.cap & IEEE80211_HT_CAP_SGI_20 ||
+-		    sta->ht_cap.cap & IEEE80211_HT_CAP_SGI_40)
+-			is_support_sgi = true;
+ 	}
  
--	dma_free_coherent(&card->pdev->dev, chain->num_desc,
--	    chain->hwring, chain->dma_addr);
-+	dma_free_coherent(&card->pdev->dev, chain->num_desc * sizeof(struct spider_net_hw_descr),
-+			  chain->hwring, chain->dma_addr);
- }
+ 	if (efuse->hw_cap.nss == 1)
+@@ -756,12 +751,18 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 	switch (sta->bandwidth) {
+ 	case IEEE80211_STA_RX_BW_80:
+ 		bw_mode = RTW_CHANNEL_WIDTH_80;
++		is_support_sgi = sta->vht_cap.vht_supported &&
++				 (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80);
+ 		break;
+ 	case IEEE80211_STA_RX_BW_40:
+ 		bw_mode = RTW_CHANNEL_WIDTH_40;
++		is_support_sgi = sta->ht_cap.ht_supported &&
++				 (sta->ht_cap.cap & IEEE80211_HT_CAP_SGI_40);
+ 		break;
+ 	default:
+ 		bw_mode = RTW_CHANNEL_WIDTH_20;
++		is_support_sgi = sta->ht_cap.ht_supported &&
++				 (sta->ht_cap.cap & IEEE80211_HT_CAP_SGI_20);
+ 		break;
+ 	}
  
- /**
 -- 
 2.25.1
 
