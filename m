@@ -2,95 +2,146 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC16C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B8B2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC532072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="kVBF4LkT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX05aoU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgHQJXZ (ORCPT
+        id S1728208AbgHQJYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 05:23:25 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:49786 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726538AbgHQJXY (ORCPT
+        Mon, 17 Aug 2020 05:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgHQJYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 05:23:24 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07H9Eei0010088;
-        Mon, 17 Aug 2020 04:22:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=TIgmhQPJma7LMTwk9a2r2DrIV+fSdBsZPGpZsfznD4U=;
- b=kVBF4LkTLx+vxHzdlXI1tA7RDqD1CjQfpE84Hhq/pf2ALXeTa8QDni7zy382rlhUn1ls
- xPiR1Vo8Jpnsa2/INR2kWExSzu5ENhrUH+2xECCel8ELvmTXiKy9ATK+zyMuCt1ZDRHH
- 5AXYi2s8hgkVEt7MjOx+sY2DlByUWWI8pctYa0OsCet7v1n2qqdezmKeL0XvgnXCY7bm
- SPVxvzgliAALRuMLzSFUPg4SHjBSKywMfcS6ImkMBMLZo1XKu9F6F9LiwxPmJqu7krsQ
- QmE6oDxyJG/cC/lG0xPaqv+yt0XMttcHMU9OIsQkidCstX7sDrE1DujKkDAcJDtZBILG vw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 32xd42t8c0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 17 Aug 2020 04:22:23 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 17 Aug
- 2020 10:22:21 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Mon, 17 Aug 2020 10:22:21 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id AB8B42C3;
-        Mon, 17 Aug 2020 09:22:21 +0000 (UTC)
-Date:   Mon, 17 Aug 2020 09:22:21 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>
-CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, "kernel@puri.sm" <kernel@puri.sm>
-Subject: Re: [PATCH] ASoC: wm8962: Export DAC/ADC monomix switches
-Message-ID: <20200817092221.GE10899@ediswmail.ad.cirrus.com>
-References: <3662154.EqNIRYjrc8@pliszka>
+        Mon, 17 Aug 2020 05:24:08 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB52C061389;
+        Mon, 17 Aug 2020 02:24:08 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g14so17016680iom.0;
+        Mon, 17 Aug 2020 02:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pzS+9+lr2xk/rP+YjZ4CjcDZPGT5BpmB3I8mWcl+aVY=;
+        b=LX05aoU4ZVoS9xaRC8X67z1mTc/+5idee9umeA30L1hzpVy+ZSCFEQz+eTK7+pEQgK
+         eecOTM44AXzxjFkPqTtFBBpBf8R4NxoR7i3hpXKd8PTKtR93o+HZByEZHzgTvNpb4R1j
+         V7Z6/oZ5xDa550yylWG6lLV57SfGssiexFU98JGm4viuN5+0/KnunlKsDr3ZjoSqxfgx
+         CJ4PgFiF1TilwDvtgoiCAlPLgkbuv4dmh2AUvvn0UjAHlb88CrBRzfs0FMmKXvheGozS
+         lfBhHO277RftiovjJQ82OGT8nTjFn9asbMIE4i4XteBqo9nS0FbHp4N02ynaTzojEuUr
+         3pvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pzS+9+lr2xk/rP+YjZ4CjcDZPGT5BpmB3I8mWcl+aVY=;
+        b=kU7oAovsfNlznW428rT9Bu4x791PNCCVc09TSsR4bdyAsNZ0rSVBaIjaN5XX0+/qMc
+         vdq8sOy/2God1nx4UbS4+6Xu76hIOS9ZSqHCEF3o2v1vlo9HVtUd0ef9LqPNmBTebBDv
+         LU+PeaJ6BEUB9Cg7FG7xrp02J2wUmciaIz/Y8UNOGd0RxTPFKWK9woiqsiJZBmman0cg
+         7tzLEuwUTgPfhsatP+hZbg6A+O0MOwpvIRvW+gn//+0ywqAIPtUPq+vLCyp9ePwOAqsk
+         ctzQvfTDsSzMCG720xpYShdT6fQbTrdRK2CetbpL5QnozFCDWQ3NFd5bB0s5AooGhHaL
+         kUhA==
+X-Gm-Message-State: AOAM530mcX9wukGtIzTZ0qvIn+SCWxg8lI1bKquqBclWp8/NSF2RgHgH
+        CEE7gtjIZMpgBIocsvW7DreJn8aIa5I7RarHsWlRYR/0EfA=
+X-Google-Smtp-Source: ABdhPJxFJXneRWWi/rpBakz3RagKmL2mkuCH1mPE+9wwmmShGsnLNvVVEtlROdtWS9xT1gEqtFNo5W/7fEMyoDcR73s=
+X-Received: by 2002:a6b:bb43:: with SMTP id l64mr11709080iof.191.1597656247336;
+ Mon, 17 Aug 2020 02:24:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3662154.EqNIRYjrc8@pliszka>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=756
- mlxscore=0 spamscore=0 suspectscore=0 phishscore=0 impostorscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008170070
+References: <cover.1597626802.git.joe@perches.com> <fe4e9e2a544af4d00aa5c97d9288d9b4d67db1ed.1597626802.git.joe@perches.com>
+In-Reply-To: <fe4e9e2a544af4d00aa5c97d9288d9b4d67db1ed.1597626802.git.joe@perches.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 17 Aug 2020 11:24:14 +0200
+Message-ID: <CAOi1vP8rL6R8LqFnz10O=N4gfC2zYiZdfZbg3NkcePRvOKu7xA@mail.gmail.com>
+Subject: Re: [PATCH V2 6/6] ceph_debug: Remove now unused dout macro definitions
+To:     Joe Perches <joe@perches.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 03:23:34AM +0200, Sebastian Krzyszkowiak wrote:
-> This allows solutions like ALSA UCM to utilize hardware mono downmix
-> for cases where mono output to a single speaker is desired only in
-> specific situations (like on a mobile phone).
-> 
-> Signed-off-by: Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>
+On Mon, Aug 17, 2020 at 3:34 AM Joe Perches <joe@perches.com> wrote:
+>
+> All the uses have be converted to pr_debug, so remove these.
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
 > ---
+>  include/linux/ceph/ceph_debug.h | 30 ------------------------------
+>  1 file changed, 30 deletions(-)
+>
+> diff --git a/include/linux/ceph/ceph_debug.h b/include/linux/ceph/ceph_debug.h
+> index d5a5da838caf..81c0d7195f1e 100644
+> --- a/include/linux/ceph/ceph_debug.h
+> +++ b/include/linux/ceph/ceph_debug.h
+> @@ -6,34 +6,4 @@
+>
+>  #include <linux/string.h>
+>
+> -#ifdef CONFIG_CEPH_LIB_PRETTYDEBUG
+> -
+> -/*
+> - * wrap pr_debug to include a filename:lineno prefix on each line.
+> - * this incurs some overhead (kernel size and execution time) due to
+> - * the extra function call at each call site.
+> - */
+> -
+> -# if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
+> -#  define dout(fmt, ...)                                               \
+> -       pr_debug("%.*s %12.12s:%-4d : " fmt,                            \
+> -                8 - (int)sizeof(KBUILD_MODNAME), "    ",               \
+> -                kbasename(__FILE__), __LINE__, ##__VA_ARGS__)
+> -# else
+> -/* faux printk call just to see any compiler warnings. */
+> -#  define dout(fmt, ...)       do {                            \
+> -               if (0)                                          \
+> -                       printk(KERN_DEBUG fmt, ##__VA_ARGS__);  \
+> -       } while (0)
+> -# endif
+> -
+> -#else
+> -
+> -/*
+> - * or, just wrap pr_debug
+> - */
+> -# define dout(fmt, ...)        pr_debug(" " fmt, ##__VA_ARGS__)
+> -
+> -#endif
+> -
+>  #endif
+> --
+> 2.26.0
+>
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Hi Joe,
+
+Yeah, roughly the same thing can be achieved with +flmp instead
+of just +p with PRETTYDEBUG, but PRETTYDEBUG formatting actually
+predates those flags and some of us still use bash scripts from
+back then.  We also have a few guides and blog entries with just
++p, but that's not a big deal.
+
+I'd be fine with removing CONFIG_CEPH_LIB_PRETTYDEBUG since it's
+disabled by default and in all major distributions, but I'm not a
+fan of a wide-sweeping dout -> pr_debug change.  We do extensive
+backporting to older kernels and these kind of changes are rather
+annoying.  dout is shorter to type too ;)
+
+I know that in some cases the function names are outdated or
+duplicated, but I prefer fixing them gradually, along with actual
+code changes in the area (i.e. similar to whitespace).
 
 Thanks,
-Charles
+
+                Ilya
