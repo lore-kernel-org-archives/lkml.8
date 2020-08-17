@@ -2,161 +2,124 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1D1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E08C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1CA72072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WHXclwah"
+	by mail.kernel.org (Postfix) with ESMTP id 3D78B207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgHQIov (ORCPT
+        id S1728028AbgHQIo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgHQIol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:44:41 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CC6C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:44:40 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id k25so7841251vsm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JW8u7xiSKNIzGMhYWbwC+RKDQR8pzglywvhzZXDEkZQ=;
-        b=WHXclwahJSz/Cxrjjcju+WOHdG8o0dUnAAakONyLI65BlMgWeRagwi6qVETf7MW9tm
-         R+5kFslbjP2FQgV8J8DYMH/8owm2iFxmwGKoNTkuKOQxor0qoEPZv9S2yPl596YZymuF
-         Xq9yPFKKxEuUBgsnaSXaDPciI8oqVyyjr6CY6DLm/rqst+003VjBk5l3IvB0VdXiMvQe
-         dhtFwQHIklZ9Wb+Gmrb4/yG9Pt248XXZunKUIzE045m7luJYAFPaLMQNV4PXRYaQd5A0
-         tMgC6NzU7nKj+SgOr3wxECIANIgB3N+nQkWv3H+yN3HRZcVmif44ZXgEiW5izAeanb0b
-         hroQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JW8u7xiSKNIzGMhYWbwC+RKDQR8pzglywvhzZXDEkZQ=;
-        b=qUwHsSSXtuGSyw2bqnCr8TMd/sFAhLfl9z29hMve7qvQJ7L8LKlamKGB0010KEMzKW
-         HCpfbyvAo1lxLn+vOtl42lwarEsaXeFzOskSFp9w/OmG+D8vuJBbuA2MzXo2CR5Rqf/i
-         +xF8XYQi6zmoEnfCe8v4MfFXX0Jw06M2+oum3IlY+rIPhveR6k4JpY7OYJLe5zH9XNNz
-         q1QgY1ZCCKdQQTiC6VDEJSySjVJL3LbppjPcymzIwPvgg+ous4woKwfNuH0DsP/TiOWQ
-         umzPCfqMxKJRGNfMd+apMTlv0XB9mzDJR3AcSO6Ef+EcL5AZ8/1/577BqzILI2KwkqED
-         RH6A==
-X-Gm-Message-State: AOAM532+LKCuE9B4Ubsq9da/t2PMwa+Bi7cXVIaInKyQpZIQPvuPcEer
-        i0lrl7E5Pj+tw0GY5fJJw3gPmu5VZ1isuYGZAXrAUw==
-X-Google-Smtp-Source: ABdhPJw35yYpOaJW1X+f4vuBqtH7/IKZ8YOmgvU3WY2dnnlAcinZeZ/zAzO2H+c6qCaz0SSHgyynVt0yqlzSmqmZ5Kc=
-X-Received: by 2002:a67:8c06:: with SMTP id o6mr7569090vsd.200.1597653878128;
- Mon, 17 Aug 2020 01:44:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200811190252.10559-1-sibis@codeaurora.org> <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
- <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org> <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
- <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
-In-Reply-To: <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Aug 2020 10:44:01 +0200
-Message-ID: <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Gross <agross@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-kernel-owner@vger.kernel.org,
-        Kevin Hilman <khilman@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Aug 2020 04:44:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18713 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbgHQIoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:44:55 -0400
+IronPort-SDR: rgabjZv8SN7MQJ+bWgjTE5heWDkXochQwmvMBmB9O0qFUr76CXx6Qn6TSs9QWZWRzrC0auJsj0
+ vQG0P7GtYXag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="172714574"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="172714574"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:44:54 -0700
+IronPort-SDR: 5cM4pTxsYwjSNtKYD83oXLf5sIZeqLFnVy+wYgruJvkNg7QlR3pEB1qGknk63QcvdqygLnhut+
+ ziHIoHDyic3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="471350658"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 17 Aug 2020 01:44:52 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com
+Subject: [PATCH v6 0/3] Modularization of DFL private feature drivers
+Date:   Mon, 17 Aug 2020 16:40:09 +0800
+Message-Id: <1597653612-5064-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 at 19:26, Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> On 2020-08-13 18:04, Ulf Hansson wrote:
-> > On Wed, 12 Aug 2020 at 19:03, Sibi Sankar <sibis@codeaurora.org> wrote:
-> >>
-> >> Uffe,
-> >> Thanks for taking time to review the
-> >> series!
-> >>
-> >> On 2020-08-12 15:15, Ulf Hansson wrote:
-> >> > On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
-> >> >>
-> >> >> This is for power domains which needs to stay powered on for suspend
-> >> >> but can be powered on/off as part of runtime PM. This flag is aimed at
-> >> >> power domains coupled to remote processors which enter suspend states
-> >> >> independent to that of the application processor. Such power domains
-> >> >> are turned off only on remote processor crash/shutdown.
-> >> >
-> >> > As Kevin also requested, please elaborate more on the use case.
-> >> >
-> >> > Why exactly must the PM domain stay powered on during system suspend?
-> >> > Is there a wakeup configured that needs to be managed - or is there a
-> >> > co-processor/FW behaviour that needs to be obeyed to?
-> >>
-> >> Yes this is a co-processor behavior that
-> >> needs to be obeyed. Specifically application
-> >> processor notifies the Always on Subsystem
-> >> (AOSS) that a particular co-processor is up
-> >> using the power domains exposed by AOSS QMP
-> >> driver. AOSS uses this information to wait
-> >> for the co-processors to suspend before
-> >> starting its sleep sequence. The application
-> >> processor powers off these power domains only
-> >> if the co-processor has crashed or powered
-> >> off.
-> >
-> > Thanks for clarifying!
-> >
-> > Although, can you please elaborate a bit more on the actual use case?
-> > What are the typical co-processor and what drivers are involved in
-> > managing it?
->
-> The co-processors using the power domains
-> exposed by qcom_aoss driver are modem,
-> audio dsp, compute dsp managed using
-> qcom_q6v5_mss and qcom_q6v5_pas driver.
->
-> >
-> > As you may know, runtime PM becomes disabled during system suspend of
-> > a device. Which means, if the driver tries to power off the
-> > coprocessor (via calling pm_runtime_put() for example), somewhere in
-> > the system suspend phase of the corresponding device, its attached PM
-> > domain stays powered on when managed by genpd.
->
-> The drivers aren't really expected
-> do anything during suspend/resume
-> pretty much because the co-processors
-> enter low-power modes independent to
-> that of the application processor. On
-> co-processor crash the remoteproc core
-> does a pm_stay_awake followed by a
-> pm_relax after crash recovery.
+This patchset makes it possible to develop independent driver modules
+for DFL private features. It also helps to leverage existing kernel
+drivers to enable some IP blocks in DFL.
 
-Okay, thanks again for clarifying. You have convinced me about the
-need for a new flag to cope with these use cases.
+Patch #1: Release the dfl mmio regions after enumeration, so that private
+          feature drivers could request mmio region in their own drivers.
+Patch #2: Introduce the dfl bus, then dfl devices could be supported by
+          independent dfl drivers.
+Patch #3: An example of the dfl driver for N3000 nios private feature.
 
-Would you mind updating the commit message with some of the
-information you just provided?
 
-Additionally, to make it clear that the flag should be used to keep
-the PM domain powered on during system suspend, but only if it's
-already powered on - please rename the flag to GENPD_FLAG_NO_SUSPEND,
-and update the corresponding description of it in the header file.
+Main changes from v1:
+- Add the new Patch #1, to improve the feature id definition.
+- Change the dfl bus uevent format.
+- Change the dfl device's sysfs name format.
+- refactor dfl_dev_add()
+- Add the Patch #4 as an example of the dfl driver.
+- A lot of minor fixes for comments from Hao and Tom.
 
-[...]
+Main changes from v2:
+- Add the doc for dfl-n3000-nios driver.
+- Minor fixes for comments from Tom.
 
-Kind regards
-Uffe
+Main changes from v3:
+- improve the dfl devices' uevent format, 4 bits for type & 12 bits for id
+- change dfl_device->type to u8
+- A dedicate field in struct dfl_feature for dfl device instance.
+- error out if dfl_device already exist on dfl_devs_init().
+- Move the err log in regmap implementation, and delete
+   n3000_nios_writel/readl(), they have nothing to wrapper now.
+- Minor fixes and comments improvement.
+
+Main changes from v4:
+- The patch "fpga: dfl: change data type of feature id to u16" is already
+   applied to for-next
+- Unify the naming of some functions in dfl.c
+- Fix the output of fec_mode sysfs inf to "no" on 10G configuration, cause
+   no FEC mode could be configured for 10G.
+- Change the N3000 Nios driver name from "dfl-n3000-nios" to "n3000-nios",
+   and also rename some structures and functions from dfl_n3000_nios_* to
+   n3000_nios_*
+- Minor fixes and comments improvement.
+
+Main changes from v5:
+- Fix the output of fec_mode sysfs inf to "not supported" if in 10G,
+   or the firmware version major < 3.
+- The input param of dfl_devs_add() changes to
+   struct dfl_feature_platform_data.
+- Minor fixes and improves comments.
+
+
+Xu Yilun (3):
+  fpga: dfl: map feature mmio resources in their own feature drivers
+  fpga: dfl: create a dfl bus type to support DFL devices
+  fpga: dfl: add support for N3000 Nios private feature
+
+ Documentation/ABI/testing/sysfs-bus-dfl            |  15 +
+ .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  21 +
+ Documentation/fpga/dfl-n3000-nios.rst              |  79 +++
+ Documentation/fpga/index.rst                       |   1 +
+ drivers/fpga/Kconfig                               |  11 +
+ drivers/fpga/Makefile                              |   2 +
+ drivers/fpga/dfl-n3000-nios.c                      | 539 +++++++++++++++++++++
+ drivers/fpga/dfl-pci.c                             |  24 +-
+ drivers/fpga/dfl.c                                 | 449 ++++++++++++++---
+ drivers/fpga/dfl.h                                 |  93 +++-
+ 10 files changed, 1149 insertions(+), 85 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+ create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+ create mode 100644 drivers/fpga/dfl-n3000-nios.c
+
+-- 
+2.7.4
+
