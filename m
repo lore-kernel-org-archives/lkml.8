@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13206C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4004C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E667B2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF85620738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685864;
-	bh=ztlG9QaknFyTfYzdpNT3wqiqJdOID9j2ksEW3cd4nbk=;
+	s=default; t=1597685871;
+	bh=6DHbHLVvao1IOlB/zt8+RprsouiSiHG/qkIEQ1H8n/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rR608K37ya4DbmWG0nsmqTFxwHNfNjwJEPyEhi6rljV8pshVGF2cyO0osr0JtDklJ
-	 vBZZlf6yVtOtYsNTRH9MN6imWCy+o7gz7orr2h1HFn/mMOHVupCMH2tphIcGGHWhWo
-	 luezFeedgUbOsKbGDAXa5FqoB/NsT6DBrO+sysR8=
+	b=MpBvWiWKan2weK10YbldN3MEzsjBLfIHd9u8rMmpGdAO2lOTTEG8KKehuE8QTyBKk
+	 icXXciiiDVQGfGJ4ZQrj0ruH4hmj04M0L8b0YbAkaqc8o1u+15vK0/1s27QKFsLe/Z
+	 Dz/VRuYiAA5zEHeUpCDtsdxf6i8mRrafRk9PfHZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbgHQRhm (ORCPT
+        id S2387978AbgHQRht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729746AbgHQQRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:24 -0400
+        id S1731131AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605DE20772;
-        Mon, 17 Aug 2020 16:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1CC207DE;
+        Mon, 17 Aug 2020 16:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681040;
-        bh=ztlG9QaknFyTfYzdpNT3wqiqJdOID9j2ksEW3cd4nbk=;
+        s=default; t=1597681011;
+        bh=6DHbHLVvao1IOlB/zt8+RprsouiSiHG/qkIEQ1H8n/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fp5QezfThy0E+8gwAk5BnNBMZo8+c8cgZKv7z5hlzsrMLoVMBrNReMa5qNMSe3yzn
-         mBeqo4Qzk//OCahLdGSzhQfSlanAYkGak8kw1iJUpPI3DeORP3ZFfwqq4pzg57PtNC
-         ekuqoafvU6NMK3dXe/nf0J4aGTyTvlMFwb+ckPyc=
+        b=HelnaL+RM3F+4oac+7zzOXqQzpWhQYkd2nAIkz6E16dTP33/swpCKKIvti3KgG6pN
+         m0DQ5okmutpx8D4pIEOGElderr+qI0bXRwy/VhHJIsc+beDtxfU72JtN76wyOyQcCU
+         RhVYEfBP5nri/AsGh0FX/8k1pb+aCSHNZ+GHGv84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 157/168] NFS: Dont return layout segments that are in use
-Date:   Mon, 17 Aug 2020 17:18:08 +0200
-Message-Id: <20200817143741.510921746@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 148/168] crypto: cpt - dont sleep of CRYPTO_TFM_REQ_MAY_SLEEP was not specified
+Date:   Mon, 17 Aug 2020 17:17:59 +0200
+Message-Id: <20200817143741.059298855@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,71 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit d474f96104bd4377573526ebae2ee212205a6839 upstream.
+commit 9e27c99104707f083dccd3b4d79762859b5a0614 upstream.
 
-If the NFS_LAYOUT_RETURN_REQUESTED flag is set, we want to return the
-layout as soon as possible, meaning that the affected layout segments
-should be marked as invalid, and should no longer be in use for I/O.
+There is this call chain:
+cvm_encrypt -> cvm_enc_dec -> cptvf_do_request -> process_request -> kzalloc
+where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
+was not specified.
 
-Fixes: f0b429819b5f ("pNFS: Ignore non-recalled layouts in pnfs_layout_need_return()")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org	# v4.11+
+Fixes: c694b233295b ("crypto: cavium - Add the Virtual Function driver for CPT")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |   34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+ drivers/crypto/cavium/cpt/cptvf_algs.c       |    1 +
+ drivers/crypto/cavium/cpt/cptvf_reqmanager.c |   12 ++++++------
+ drivers/crypto/cavium/cpt/request_manager.h  |    2 ++
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1181,31 +1181,27 @@ out:
- 	return status;
- }
+--- a/drivers/crypto/cavium/cpt/cptvf_algs.c
++++ b/drivers/crypto/cavium/cpt/cptvf_algs.c
+@@ -205,6 +205,7 @@ static inline int cvm_enc_dec(struct abl
+ 	int status;
  
-+static bool
-+pnfs_layout_segments_returnable(struct pnfs_layout_hdr *lo,
-+				enum pnfs_iomode iomode,
-+				u32 seq)
-+{
-+	struct pnfs_layout_range recall_range = {
-+		.length = NFS4_MAX_UINT64,
-+		.iomode = iomode,
-+	};
-+	return pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
-+					       &recall_range, seq) != -EBUSY;
-+}
+ 	memset(req_info, 0, sizeof(struct cpt_request_info));
++	req_info->may_sleep = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) != 0;
+ 	memset(fctx, 0, sizeof(struct fc_context));
+ 	create_input_list(req, enc, enc_iv_len);
+ 	create_output_list(req, enc_iv_len);
+--- a/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
++++ b/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
+@@ -136,7 +136,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup gather (input) components */
+ 	g_sz_bytes = ((req->incnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->gather_components = kzalloc(g_sz_bytes, GFP_KERNEL);
++	info->gather_components = kzalloc(g_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->gather_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -153,7 +153,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Setup scatter (output) components */
+ 	s_sz_bytes = ((req->outcnt + 3) / 4) * sizeof(struct sglist_component);
+-	info->scatter_components = kzalloc(s_sz_bytes, GFP_KERNEL);
++	info->scatter_components = kzalloc(s_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->scatter_components) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -170,7 +170,7 @@ static inline int setup_sgio_list(struct
+ 
+ 	/* Create and initialize DPTR */
+ 	info->dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
+-	info->in_buffer = kzalloc(info->dlen, GFP_KERNEL);
++	info->in_buffer = kzalloc(info->dlen, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->in_buffer) {
+ 		ret = -ENOMEM;
+ 		goto  scatter_gather_clean;
+@@ -198,7 +198,7 @@ static inline int setup_sgio_list(struct
+ 	}
+ 
+ 	/* Create and initialize RPTR */
+-	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, GFP_KERNEL);
++	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (!info->out_buffer) {
+ 		ret = -ENOMEM;
+ 		goto scatter_gather_clean;
+@@ -434,7 +434,7 @@ int process_request(struct cpt_vf *cptvf
+ 	struct cpt_vq_command vq_cmd;
+ 	union cpt_inst_s cptinst;
+ 
+-	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	info = kzalloc(sizeof(*info), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for info_buffer\n");
+ 		return -ENOMEM;
+@@ -456,7 +456,7 @@ int process_request(struct cpt_vf *cptvf
+ 	 * Get buffer for union cpt_res_s response
+ 	 * structure and its physical address
+ 	 */
+-	info->completion_addr = kzalloc(sizeof(union cpt_res_s), GFP_KERNEL);
++	info->completion_addr = kzalloc(sizeof(union cpt_res_s), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
+ 	if (unlikely(!info->completion_addr)) {
+ 		dev_err(&pdev->dev, "Unable to allocate memory for completion_addr\n");
+ 		ret = -ENOMEM;
+--- a/drivers/crypto/cavium/cpt/request_manager.h
++++ b/drivers/crypto/cavium/cpt/request_manager.h
+@@ -65,6 +65,8 @@ struct cpt_request_info {
+ 	union ctrl_info ctrl; /* User control information */
+ 	struct cptvf_request req; /* Request Information (Core specific) */
+ 
++	bool may_sleep;
 +
- /* Return true if layoutreturn is needed */
- static bool
- pnfs_layout_need_return(struct pnfs_layout_hdr *lo)
- {
--	struct pnfs_layout_segment *s;
--	enum pnfs_iomode iomode;
--	u32 seq;
--
- 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
- 		return false;
--
--	seq = lo->plh_return_seq;
--	iomode = lo->plh_return_iomode;
--
--	/* Defer layoutreturn until all recalled lsegs are done */
--	list_for_each_entry(s, &lo->plh_segs, pls_list) {
--		if (seq && pnfs_seqid_is_newer(s->pls_seq, seq))
--			continue;
--		if (iomode != IOMODE_ANY && s->pls_range.iomode != iomode)
--			continue;
--		if (test_bit(NFS_LSEG_LAYOUTRETURN, &s->pls_flags))
--			return false;
--	}
--
--	return true;
-+	return pnfs_layout_segments_returnable(lo, lo->plh_return_iomode,
-+					       lo->plh_return_seq);
- }
+ 	struct buf_ptr in[MAX_BUF_CNT];
+ 	struct buf_ptr out[MAX_BUF_CNT];
  
- static void pnfs_layoutreturn_before_put_layout_hdr(struct pnfs_layout_hdr *lo)
 
 
