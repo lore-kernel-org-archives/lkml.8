@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06C1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA0D20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690306;
-	bh=MDW7zPGSxlpGtuVlSdNQEyo/5VeyAqxAcooG2pKk2kc=;
+	s=default; t=1597690310;
+	bh=YjfSUPal4nQVgLYdU8tmjzxp1u/sjv9OzIFU/D3XKvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lqh3J2AsUUvr6HQucmcEVx7kxtjllgZMTTraiT3iUa6oUxHiiATxwbv79uf/nnI7C
-	 +F+irlyUxhVGb3eHcnirknBkPASLca/IP0BH8rCEUiG/Ey8qwz7JsHSfm+ppxlW3BK
-	 FrNle04/WvCaPXz587LIimIKAaCewgdISFZV1EYg=
+	b=aodvDOvJSwNg1NRsLOEm6szrQaFadEEdWM/EGdLubhGvWm7fByCGE3yA610pFzh/y
+	 l30w/689QROdL77wOG2E/jbc47G/CTVbUq9/2/Qu+xuyQ5KC0DZdp5bV1PO+g4huxJ
+	 CCF/MSo+ETdNbQED29tqeT0FAzGI8U4xVjGOEMxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391442AbgHQSvp (ORCPT
+        id S2391762AbgHQSvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39408 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387795AbgHQPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:52:58 -0400
+        id S2387639AbgHQPwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B30F2063A;
-        Mon, 17 Aug 2020 15:52:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D1A82072E;
+        Mon, 17 Aug 2020 15:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679577;
-        bh=MDW7zPGSxlpGtuVlSdNQEyo/5VeyAqxAcooG2pKk2kc=;
+        s=default; t=1597679570;
+        bh=YjfSUPal4nQVgLYdU8tmjzxp1u/sjv9OzIFU/D3XKvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7t9LDdQETwfmeSPcPt3Pid4DQaaC+2BotX+2ZIZfZWJJHvp680JHcDVW+QkhnjLg
-         JMny7jI9MjzFrdC06nYNwGuKB0fokTCf/g1asr+cyFZKh3z4t99+v05LYssukTP5zD
-         CZYgkL7VlYuWV5olOOQcWVrt3vll17n/IfBh5oAk=
+        b=lYQWmS1A84ww9nEI+fIlqAt8yGxVakvjHRR0YuHhTSozgOfSy/oPammS9oLVkCvOX
+         2OQ/JR/LlH+LkckdrgrHQAnMuLiS+sqOAvtnkcVoOZAsYvluylcWsVp9om2HuKmneo
+         wfIHgD+rgAa9mQ8rNUPwN3qNx6TLFrE0+CGKoGZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 263/393] xfs: fix inode allocation block res calculation precedence
-Date:   Mon, 17 Aug 2020 17:15:13 +0200
-Message-Id: <20200817143832.370190899@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 219/393] powerpc/book3s64/pkeys: Use PVR check instead of cpu feature
+Date:   Mon, 17 Aug 2020 17:14:29 +0200
+Message-Id: <20200817143830.247271431@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,44 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit b2a8864728683443f34a9fd33a2b78b860934cc1 ]
+[ Upstream commit d79e7a5f26f1d179cbb915a8bf2469b6d7431c29 ]
 
-The block reservation calculation for inode allocation is supposed
-to consist of the blocks required for the inode chunk plus
-(maxlevels-1) of the inode btree multiplied by the number of inode
-btrees in the fs (2 when finobt is enabled, 1 otherwise).
+We are wrongly using CPU_FTRS_POWER8 to check for P8 support. Instead, we should
+use PVR value. Now considering we are using CPU_FTRS_POWER8, that
+implies we returned true for P9 with older firmware. Keep the same behavior
+by checking for P9 PVR value.
 
-Instead, the macro returns (ialloc_blocks + 2) due to a precedence
-error in the calculation logic. This leads to block reservation
-overruns via generic/531 on small block filesystems with finobt
-enabled. Add braces to fix the calculation and reserve the
-appropriate number of blocks.
-
-Fixes: 9d43b180af67 ("xfs: update inode allocation/free transaction reservations for finobt")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_trans_space.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/pkeys.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_trans_space.h b/fs/xfs/libxfs/xfs_trans_space.h
-index 88221c7a04ccf..c6df01a2a1585 100644
---- a/fs/xfs/libxfs/xfs_trans_space.h
-+++ b/fs/xfs/libxfs/xfs_trans_space.h
-@@ -57,7 +57,7 @@
- 	XFS_DAREMOVE_SPACE_RES(mp, XFS_DATA_FORK)
- #define	XFS_IALLOC_SPACE_RES(mp)	\
- 	(M_IGEO(mp)->ialloc_blks + \
--	 (xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1 * \
-+	 ((xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1) * \
- 	  (M_IGEO(mp)->inobt_maxlevels - 1)))
+diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
+index 268ce9581676a..fa237c8c161f7 100644
+--- a/arch/powerpc/mm/book3s64/pkeys.c
++++ b/arch/powerpc/mm/book3s64/pkeys.c
+@@ -83,13 +83,17 @@ static int pkey_initialize(void)
+ 	scan_pkey_feature();
  
- /*
+ 	/*
+-	 * Let's assume 32 pkeys on P8 bare metal, if its not defined by device
+-	 * tree. We make this exception since skiboot forgot to expose this
+-	 * property on power8.
++	 * Let's assume 32 pkeys on P8/P9 bare metal, if its not defined by device
++	 * tree. We make this exception since some version of skiboot forgot to
++	 * expose this property on power8/9.
+ 	 */
+-	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR) &&
+-			cpu_has_feature(CPU_FTRS_POWER8))
+-		pkeys_total = 32;
++	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR)) {
++		unsigned long pvr = mfspr(SPRN_PVR);
++
++		if (PVR_VER(pvr) == PVR_POWER8 || PVR_VER(pvr) == PVR_POWER8E ||
++		    PVR_VER(pvr) == PVR_POWER8NVL || PVR_VER(pvr) == PVR_POWER9)
++			pkeys_total = 32;
++	}
+ 
+ 	/*
+ 	 * Adjust the upper limit, based on the number of bits supported by
 -- 
 2.25.1
 
