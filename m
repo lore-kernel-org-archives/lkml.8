@@ -2,94 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B77DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C963204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAAE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689713;
-	bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BkHfOqtfGHidUUkOogusJdGxxVHE476PtW6b5km4uBySxFanbqLbqpE3YQr+OR1sV
-	 66lOCYt40tVFghCZ9GFRPUWCdCnkxhhJdok6h/np2keY9YVhcsCX6SMnP32KEHDcWe
-	 h24a+Tisit8mG24oVNOBEQ+F/64pWmxPZ3I2tZUE=
+	s=default; t=1597689720;
+	bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DFmQ29p/2/2pAHJcWTd/kv/G7nEdizqA4GjxmyXFPbq9qzAXfaPPD2YBjQh2AfTsl
+	 e/CG2S8iZ67IOa/NTGIQjY3U/I+lvwTt/e7/QaxkztOK0wPOnb5UOU8vOHHwPsW5rs
+	 pLaDinzAsUMqKmgT23NNyv04CaG9apHZ6S3zOjKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391445AbgHQSlw (ORCPT
+        id S2391340AbgHQSlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389597AbgHQSlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:41:40 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730674AbgHQP5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73123204EC;
-        Mon, 17 Aug 2020 18:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC452072E;
+        Mon, 17 Aug 2020 15:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597689700;
-        bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jHawPRZQrrd5xxfRQtHweKENED5UFeclNEs/TU/nUtthQQZGnCL0R1AJ+Sk46mDyQ
-         icRCngDuUc/ZyulO0k04YaBQYT5wRmJvOyTh0Yqj/ernE9YH+1S6cpkWclCHRgMYQA
-         3d20KnUo5XBAY2DvCeRAvg2R4oADhEYrn4Kfvg4k=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
-Date:   Mon, 17 Aug 2020 20:41:30 +0200
-Message-Id: <20200817184131.907-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1597679841;
+        bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K3/yy7qc8+tRY8bKb/Dwj3e1wLNyMlEWoxR/+8DZ5DLoWFpSVlzGROx7CgPCpw/ft
+         TkCrg+hptu3d+tUD/2rqsPYP7HdLGnsRrLdfoTbj7cY6RL3zEQ2y9t0CtJky5utvIC
+         Mr3xhyUFCKv6n1pS/X71iYY29C9BjmN24R26jvGA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 5.7 351/393] 9p: Fix memory leak in v9fs_mount
+Date:   Mon, 17 Aug 2020 17:16:41 +0200
+Message-Id: <20200817143836.628088230@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The entry for MIPS Ingenic JZ4780 DMA driver is not up to date anymore.
-Zubair Lutfullah Kakakhel's email bounces and no maintenance is
-provided.
+From: Zheng Bin <zhengbin13@huawei.com>
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+commit cb0aae0e31c632c407a2cab4307be85a001d4d98 upstream.
+
+v9fs_mount
+  v9fs_session_init
+    v9fs_cache_session_get_cookie
+      v9fs_random_cachetag                     -->alloc cachetag
+      v9ses->fscache = fscache_acquire_cookie  -->maybe NULL
+  sb = sget                                    -->fail, goto clunk
+clunk_fid:
+  v9fs_session_close
+    if (v9ses->fscache)                        -->NULL
+      kfree(v9ses->cachetag)
+
+Thus memleak happens.
+
+Link: http://lkml.kernel.org/r/20200615012153.89538-1-zhengbin13@huawei.com
+Fixes: 60e78d2c993e ("9p: Add fscache support to 9p")
+Cc: <stable@vger.kernel.org> # v2.6.32+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
+ fs/9p/v9fs.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Changes since v1:
-1. New patch
----
- MAINTAINERS | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b0a742ce8f2c..9ab3a7fd6451 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8580,11 +8580,6 @@ F:	include/uapi/rdma/
- F:	samples/bpf/ibumad_kern.c
- F:	samples/bpf/ibumad_user.c
+--- a/fs/9p/v9fs.c
++++ b/fs/9p/v9fs.c
+@@ -500,10 +500,9 @@ void v9fs_session_close(struct v9fs_sess
+ 	}
  
--INGENIC JZ4780 DMA Driver
--M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
--S:	Maintained
--F:	drivers/dma/dma-jz4780.c
--
- INGENIC JZ4780 NAND DRIVER
- M:	Harvey Hunt <harveyhuntnexus@gmail.com>
- L:	linux-mtd@lists.infradead.org
--- 
-2.17.1
+ #ifdef CONFIG_9P_FSCACHE
+-	if (v9ses->fscache) {
++	if (v9ses->fscache)
+ 		v9fs_cache_session_put_cookie(v9ses);
+-		kfree(v9ses->cachetag);
+-	}
++	kfree(v9ses->cachetag);
+ #endif
+ 	kfree(v9ses->uname);
+ 	kfree(v9ses->aname);
+
 
