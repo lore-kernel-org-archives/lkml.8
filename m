@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6570DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF4820738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1B720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691027;
-	bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
+	s=default; t=1597691031;
+	bh=USN0Q1T9sE6yZpQz7cHcvRFMEmyBPpCpKUSkznsy/i4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PpJQThNSpQVsRMJxu9s1Ohm674FsBBi/BDHN7b4q0fA3G8SKjbnZQ0x46oRuW6gRN
-	 dx+LHkz3D8GN2JnOc2cx72cLmNvjmk1zgcTWFQd4Q9taBatTPTT+hn1Zvu5EeIzjCs
-	 gxXsX0WW63tg12EqwO99DnTSD8ADcoqLzp1gofGg=
+	b=G46pH0I90akpdC7VMUYyLOr3zStNxyEkXUp2LMYiHuQtMUsFaAfz66z/U2Kkkh6NK
+	 H1HpA3bPwq56ZI3qmnqawuwd9rzf3mF4eNmXLxxNop3vJ+EFI5h9pv6qSGQ53JZrVH
+	 f+RgAuDY9iYSMfnzLLZCDlK8j0XncnVHkTLkNneY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbgHQTDq (ORCPT
+        id S2391920AbgHQTDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbgHQPqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:46:30 -0400
+        id S2387413AbgHQPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:46:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B3B2067C;
-        Mon, 17 Aug 2020 15:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EFD2065D;
+        Mon, 17 Aug 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679189;
-        bh=HM15DRQruEOLK3MMp93V+owjUYiahA5zhe7I8I3MwYo=;
+        s=default; t=1597679192;
+        bh=USN0Q1T9sE6yZpQz7cHcvRFMEmyBPpCpKUSkznsy/i4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYsD10D1cAabwuEX15msB1Nxlr2jcRp5Qu1Mntm/N+2qMpffh0ckSHyQ5NWYjX4rv
-         BHoTwyJPt+4uK34IhvkePAqi2C50Tmvu3ofX7Qki0YNfHEvoHNGVWEXeq+7gFYJTtD
-         exS7PXYVTjMJWI09aqf3lLgd47rMs5RQYQ0+4QyI=
+        b=V0IE37VmkXM/j3NrMhmueAutY2Vq4iKYk+iEKk/02D/BxEoCRbt8JMtRX9AgIMbdK
+         5yHNoNQ6R86Dvs7aw+lsjhQKKyB4EgU/FApDVQtZPbZS5eTmr+VQa55pzALgDPE4tf
+         yN/+VXAVCje1IMnsUM3646+CetqBLqomvPVRZH3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 096/393] drm/amdgpu/display: properly guard the calls to swSMU functions
-Date:   Mon, 17 Aug 2020 17:12:26 +0200
-Message-Id: <20200817143824.283043751@linuxfoundation.org>
+Subject: [PATCH 5.7 087/393] drm: msm: a6xx: fix gpu failure after system resume
+Date:   Mon, 17 Aug 2020 17:12:17 +0200
+Message-Id: <20200817143823.852398092@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,43 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Akhil P Oommen <akhilpo@codeaurora.org>
 
-[ Upstream commit 4072327a2622af8688b88f5cd0a472136d3bf33d ]
+[ Upstream commit 57c0bd517c06b088106b0236ed604056c8e06da5 ]
 
-It's only applicable on newer asics.  We could end up here when
-using DC on older asics like SI or KV.
+On targets where GMU is available, GMU takes over the ownership of GX GDSC
+during its initialization. So, move the refcount-get on GX PD before we
+initialize the GMU. This ensures that nobody can collapse the GX GDSC
+once GMU owns the GX GDSC. This patch fixes some GMU OOB errors seen
+during GPU wake up during a system resume.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1170
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-index 7cee8070cb113..5c6a6ae48d396 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -106,7 +106,7 @@ bool dm_pp_apply_display_requirements(
- 			adev->powerplay.pp_funcs->display_configuration_change(
- 				adev->powerplay.pp_handle,
- 				&adev->pm.pm_display_cfg);
--		else
-+		else if (adev->smu.ppt_funcs)
- 			smu_display_configuration_change(smu,
- 							 &adev->pm.pm_display_cfg);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 34607a98cc7c8..9a7a18951dc2b 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -732,10 +732,19 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	/* Turn on the resources */
+ 	pm_runtime_get_sync(gmu->dev);
  
-@@ -592,7 +592,7 @@ void pp_rv_set_wm_ranges(struct pp_smu *pp,
- 	if (pp_funcs && pp_funcs->set_watermarks_for_clocks_ranges)
- 		pp_funcs->set_watermarks_for_clocks_ranges(pp_handle,
- 							   &wm_with_clock_ranges);
--	else
-+	else if (adev->smu.ppt_funcs)
- 		smu_set_watermarks_for_clock_ranges(&adev->smu,
- 				&wm_with_clock_ranges);
- }
++	/*
++	 * "enable" the GX power domain which won't actually do anything but it
++	 * will make sure that the refcounting is correct in case we need to
++	 * bring down the GX after a GMU failure
++	 */
++	if (!IS_ERR_OR_NULL(gmu->gxpd))
++		pm_runtime_get_sync(gmu->gxpd);
++
+ 	/* Use a known rate to bring up the GMU */
+ 	clk_set_rate(gmu->core_clk, 200000000);
+ 	ret = clk_bulk_prepare_enable(gmu->nr_clocks, gmu->clocks);
+ 	if (ret) {
++		pm_runtime_put(gmu->gxpd);
+ 		pm_runtime_put(gmu->dev);
+ 		return ret;
+ 	}
+@@ -771,19 +780,12 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+ 	/* Set the GPU to the current freq */
+ 	__a6xx_gmu_set_freq(gmu, gmu->current_perf_index);
+ 
+-	/*
+-	 * "enable" the GX power domain which won't actually do anything but it
+-	 * will make sure that the refcounting is correct in case we need to
+-	 * bring down the GX after a GMU failure
+-	 */
+-	if (!IS_ERR_OR_NULL(gmu->gxpd))
+-		pm_runtime_get(gmu->gxpd);
+-
+ out:
+ 	/* On failure, shut down the GMU to leave it in a good state */
+ 	if (ret) {
+ 		disable_irq(gmu->gmu_irq);
+ 		a6xx_rpmh_stop(gmu);
++		pm_runtime_put(gmu->gxpd);
+ 		pm_runtime_put(gmu->dev);
+ 	}
+ 
 -- 
 2.25.1
 
