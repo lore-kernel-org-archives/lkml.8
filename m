@@ -2,122 +2,128 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44904C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26338205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E978205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESZ2E0xm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqbjGe9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgHQUNh (ORCPT
+        id S1729240AbgHQUOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
+        Mon, 17 Aug 2020 16:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgHQUNc (ORCPT
+        with ESMTP id S1726133AbgHQUNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:13:32 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D21C061389;
-        Mon, 17 Aug 2020 13:13:32 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id s16so13436843qtn.7;
-        Mon, 17 Aug 2020 13:13:32 -0700 (PDT)
+        Mon, 17 Aug 2020 16:13:55 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30092C061389;
+        Mon, 17 Aug 2020 13:13:55 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 77so16189286qkm.5;
+        Mon, 17 Aug 2020 13:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zt/7bcE3rheAEIDkdYnD+DA7k8FVJTMGh0E4kEj1Ywo=;
-        b=ESZ2E0xmMQv1mWWmfIDLDh8ElbMLOrMjACpT1NtfcDZAkPcK1cx7Tqq5wJCtNEoGkv
-         sNw5WzTK45vDd7RivwzHNzmA+PcKiL/XxM9Ood/DKjXdOeiydUXFP/EEfZeqmRP4bw8Z
-         +io4TpeIColjCVGs36mDk0I6bxguWRgcFAL3veyxZTAvhvNBDMSmG8R8h2Kt/8bndqtQ
-         jQ0MZZFuMLhLKGH0ysqarbbMykNQs6XMViTx/MXWvSd6io25Qj/YSKqPwbQh0bjRTaUF
-         ZsgdSXj/DbEAmcXu8+jNw9Mig59+a3k37b+Fy3vvGyZcKxqxNeP7dIRR3NMpTm1jtFcB
-         ljKw==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2iB7Xz00n5+0Lgu+wndRSafBvCLWjlpZRZyNPVeU2aE=;
+        b=FqbjGe9U5+KoOmxxjyJUB/RZzrdUONjZiYMyDKoUkuh/2yHKnD6zT2Uj7I8UbYuYAG
+         QKES7m4drXles2frxuunVXJFU1vO1nTqmKZtt9pWAP++iA9oQf2C6rcqPgkgJq3LFSBX
+         lcHri0k4ctEipOVQzk2ZLIF4Zno7KvX8T8mxizBKLaRryyosyhgMbAVe5l5ZNGawNZcB
+         JMeGxi8/ZTYXacW+5uXhoZSwXrvm3+V8etyM/j7swCB+x8Eyz25aPf+13K1O9qptwy0f
+         Wu+weqYJRxwBupy6n1sgAadO/uIXEAL/BHeBAw1uDn6HckGZAQ45nlUhdDG2KSNvUAI9
+         41fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zt/7bcE3rheAEIDkdYnD+DA7k8FVJTMGh0E4kEj1Ywo=;
-        b=FXY5ligulFCgMjVmI5NSv7VXHK1fLdcnAuFFvLejxLhph7Jp7U4jEcoywk6QHNs3OH
-         u7w5Wg2SeuLtLyaSPWNfqXmrv59COhq7gduPYpyCOK4zJMQpOJPaPUlllK5VXVgIL2n0
-         vRx1CA9WLkGKo/VhR6fNwueOBKe4skuSWeEFTcJka0SaOSZgaSZyX1ztjEYgQYmoonUW
-         Wj+9FolUDjELZcT5ATXpImEJ3cn6TeU4SV9hnYm84EC0NyKegEjVdc3j63neHf/KDOR1
-         W+fPunQ/oO2go3B4IqLcHn3rgEmfzCy9Lj/me2zP9UMppc8Igz1JUBVBGDxHe4M8Ye78
-         ehHw==
-X-Gm-Message-State: AOAM531yeubrws6Nbf1d7YIeCcO6j9s2DvmCxWKEEJYymwOkLJnP5XNw
-        zN9R2tCFVedMLfbHo/GKu7uBfjKNihU=
-X-Google-Smtp-Source: ABdhPJx9e+AdRduaomcbQkwct21cWv/QPycXamX0237ajy9InAmdTZJ1sTza9+t49kGyOuGVwikz1w==
-X-Received: by 2002:ac8:2ab9:: with SMTP id b54mr14845227qta.323.1597695211196;
-        Mon, 17 Aug 2020 13:13:31 -0700 (PDT)
-Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
-        by smtp.gmail.com with ESMTPSA id 95sm19509597qtc.29.2020.08.17.13.13.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 13:13:30 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
-To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-References: <20200817170729.2605279-1-tweek@google.com>
- <20200817170729.2605279-4-tweek@google.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Message-ID: <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com>
-Date:   Mon, 17 Aug 2020 16:13:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2iB7Xz00n5+0Lgu+wndRSafBvCLWjlpZRZyNPVeU2aE=;
+        b=j5D2bvwczN7VvQMNm3359TiFjXDcaMiTr8oqJe5WD8PyFtrsgbWEhjJqjzzNmgD8qR
+         f8UoPWozBwCBPKN+B3W18ef8pzDqBCE9kVC1AWEtwzaBgj0+QEVWOC5TXAVybQSjrnU3
+         gifrBKID06Q+qAMgw9Q+6lz4NknA6OdeqK5h07VauyDfocviKACmCPNalLjfNjEFsl5a
+         uTEiGJRRhsjvaol1qjW7KmjsxzKKFmGSJyxRvobkwoiyEFgjbyLT8ES+wcaskfnzwz2M
+         u9vMt3VcPiMudOTDY9EObXk5qw950Za9813RRqBiK72VixtKILm+cGDMOsrCyWzuPLyu
+         YXaA==
+X-Gm-Message-State: AOAM530fHNLLhO/nFMbue+akz0cvC97BKHT4kS5r82Tlo2oA/jkvhBov
+        EAem/LSZ+uY3XeHUxLNvVzg=
+X-Google-Smtp-Source: ABdhPJwcD83COjwoesiJj86XB2SqJAdVYnEaAF0ceFWHGp52ZZZ3SM1gxfEjep5vmUDLeI3v8fGScw==
+X-Received: by 2002:a37:6cc1:: with SMTP id h184mr14674031qkc.101.1597695234334;
+        Mon, 17 Aug 2020 13:13:54 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id k5sm18742660qke.18.2020.08.17.13.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 13:13:53 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 17 Aug 2020 16:13:51 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
+Message-ID: <20200817201351.GA2246446@rani.riverdale.lan>
+References: <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
+ <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
+ <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
+ <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
+ <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
+ <20200816001917.4krsnrik7hxxfqfm@google.com>
+ <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
+ <20200816150217.GA1306483@rani.riverdale.lan>
+ <CABCJKucsXufD6rmv7qQZ=9kLC7XrngCJkKA_WzGOAn-KfcObeA@mail.gmail.com>
+ <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817170729.2605279-4-tweek@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 1:07 PM, Thiébaud Weksteen wrote:
+On Mon, Aug 17, 2020 at 11:36:49AM -0700, Nick Desaulniers wrote:
+> > > Though I don't understand the original issue, with -ffreestanding,
+> > > sprintf shouldn't have been turned into strcpy in the first place.
+> 
+> Huh? The original issue for this thread is because `-ffreestanding`
+> *isn't* being used for most targets (oh boy, actually mixed usage by
+> ARCH. Looks like MIPS, m68k, superH, xtensa, and 32b x86 use it?); and
+> I'm not suggesting it be used.
+> 
 
-> From: Peter Enderborg <peter.enderborg@sony.com>
->
-> In the print out add permissions, it will look like:
->      <...>-1042  [007] ....   201.965142: selinux_audited:
->      requested=0x4000000 denied=0x4000000 audited=0x4000000
->      result=-13
->      scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
->      tcontext=system_u:object_r:bin_t:s0
->      tclass=file permissions={ !entrypoint }
->
-> This patch is adding the "permissions={ !entrypoint }".
-> The permissions preceded by "!" have been denied and the permissions
-> without have been accepted.
->
-> Note that permission filtering is done on the audited, denied or
-> requested attributes.
->
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> Reviewed-by: Thiébaud Weksteen <tweek@google.com>
-> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-> ---
+Sorry, I meant the issue mentioned in the commit that removed
+-ffreestanding, not the stpcpy one you're solving now. It says that
+sprintf got converted into strcpy, which caused failures because back
+then, strcpy was #define'd to __builtin_strcpy, and the default
+implementation was actually of a function called __builtin_strcpy o_O,
+not strcpy.
 
-Does this require a corresponding patch to userspace?  Otherwise, I get 
-the following:
+Anyway, that's water under the bridge now.
 
-libtraceevent: No such file or directory
-   [avc:selinux_audited] function avc_trace_perm_to_name not defined
-
+6edfba1b33c7 ("x86_64: Don't define string functions to builtin")
+  gcc should handle this anyways, and it causes problems when
+  sprintf is turned into strcpy by gcc behind our backs and
+  the C fallback version of strcpy is actually defining __builtin_strcpy
