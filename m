@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA18C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC30C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAC7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B71B20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690778;
-	bh=deTRSKqym2ESqM59ZVGraolv/F1PUNmemVxpu0kvG+Y=;
+	s=default; t=1597690784;
+	bh=A4X9IdiTBJ1xoQQLa2m88VESOr4Le8PIWGChoLy6KN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoPnT9cZFkjru0bWpkUETgzJ+EZFKGHbzPJU/+DqOJ6ka7WARxnOosYzBnmqJbS1Q
-	 9vmJIRENiirt6ubX3DCdtoUVU1Wy4Trz7Zw0kkB67+0iOmtUu7aZDLiKkOh/DSjgdR
-	 5Sxvvicj+t5dTwWUgdFt0Cl1RYAJR0jcPZfnw5Uw=
+	b=qVgyZvGmpJt5PfUzmjRujqKZOf49icOXBnYkiF0Gs1MVl3B/PeOe1MzLPeZhwpMWz
+	 niosFOTuEZZJA0VCqOBCaSjNC7veCN+3ACI8BwCkOm3z741TSTJxHNCz29KcQsgbBg
+	 hVBrPDF2k2Y/h0CXv5TxBOyMpD3jUycxTLWorelI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391858AbgHQS7g (ORCPT
+        id S2391870AbgHQS7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgHQPs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:48:28 -0400
+        id S1730854AbgHQPsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:48:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6BC221E2;
-        Mon, 17 Aug 2020 15:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D292065D;
+        Mon, 17 Aug 2020 15:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679307;
-        bh=deTRSKqym2ESqM59ZVGraolv/F1PUNmemVxpu0kvG+Y=;
+        s=default; t=1597679304;
+        bh=A4X9IdiTBJ1xoQQLa2m88VESOr4Le8PIWGChoLy6KN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIQT6/GZ483//dAfhsbd6sZ7BHEsqiLWngSe2pXPeqA3jA4jtawvDL121Tl1dM9pw
-         d7spue8JZfI+kq3DX7r4b8RgaBC07Yc/C3fCHFaHRrXnqjwJPzHCIdrk4iIy8nL0Pc
-         /gWu/1nhW8kdB/GklHod+hvmFwqvnwQHQEP18gh0=
+        b=w4v0QePhW/FuKy4KIz/DW5Tj2Q9tbg4jpqMD6whj9MNV45iVtuaebzA2awccC1qSF
+         wxe2VKHA71CgzZ8nD7zAKRtShS4jylJjrYFdWyJm/0WzznVqTXK8sv9WDgLDcMbiuR
+         O0BKkxffLL3mQg25rF+orfAktpSD4K4/qM8OjBXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 167/393] lkdtm: Make arch-specific tests always available
-Date:   Mon, 17 Aug 2020 17:13:37 +0200
-Message-Id: <20200817143827.721129529@linuxfoundation.org>
+Subject: [PATCH 5.7 166/393] selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
+Date:   Mon, 17 Aug 2020 17:13:36 +0200
+Message-Id: <20200817143827.671007285@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,133 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit ae56942c14740c2963222efdc36c667ab19555ef ]
+[ Upstream commit 4fccc8c0ff740e62343b6de38426a48b345b95f4 ]
 
-I'd like arch-specific tests to XFAIL when on a mismatched architecture
-so that we can more easily compare test coverage across all systems.
-Lacking kernel configs or CPU features count as a FAIL, not an XFAIL.
+Since we expect to see warnings every time for many tests, just reset
+the WARN_ONCE flags each time the script runs.
 
-Additionally fixes a build failure under 32-bit UML.
-
-Fixes: b09511c253e5 ("lkdtm: Add a DOUBLE_FAULT crash type on x86")
-Fixes: cea23efb4de2 ("lkdtm/bugs: Make double-fault test always available")
-Fixes: 6cb6982f42cb ("lkdtm: arm64: test kernel pointer authentication")
+Fixes: 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200625203704.317097-5-keescook@chromium.org
+Link: https://lore.kernel.org/r/20200625203704.317097-4-keescook@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/bugs.c               | 38 ++++++++++++++-----------
- drivers/misc/lkdtm/lkdtm.h              |  2 --
- tools/testing/selftests/lkdtm/tests.txt |  1 +
- 3 files changed, 22 insertions(+), 19 deletions(-)
+ tools/testing/selftests/lkdtm/run.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index e1b43f6155496..7913c9ff216c9 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -13,7 +13,7 @@
- #include <linux/uaccess.h>
- #include <linux/slab.h>
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+index ee64ff8df8f4d..8383eb89d88a9 100755
+--- a/tools/testing/selftests/lkdtm/run.sh
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -8,6 +8,7 @@
+ #
+ set -e
+ TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
++CLEAR_ONCE=/sys/kernel/debug/clear_warn_once
+ KSELFTEST_SKIP_TEST=4
  
--#ifdef CONFIG_X86_32
-+#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
- #include <asm/desc.h>
- #endif
- 
-@@ -418,7 +418,7 @@ void lkdtm_UNSET_SMEP(void)
- 
- void lkdtm_DOUBLE_FAULT(void)
- {
--#ifdef CONFIG_X86_32
-+#if IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_UML)
- 	/*
- 	 * Trigger #DF by setting the stack limit to zero.  This clobbers
- 	 * a GDT TLS slot, which is okay because the current task will die
-@@ -453,38 +453,42 @@ void lkdtm_DOUBLE_FAULT(void)
- #endif
+ # Verify we have LKDTM available in the kernel.
+@@ -67,6 +68,11 @@ cleanup() {
  }
+ trap cleanup EXIT
  
--#ifdef CONFIG_ARM64_PTR_AUTH
-+#ifdef CONFIG_ARM64
- static noinline void change_pac_parameters(void)
- {
--	/* Reset the keys of current task */
--	ptrauth_thread_init_kernel(current);
--	ptrauth_thread_switch_kernel(current);
-+	if (IS_ENABLED(CONFIG_ARM64_PTR_AUTH)) {
-+		/* Reset the keys of current task */
-+		ptrauth_thread_init_kernel(current);
-+		ptrauth_thread_switch_kernel(current);
-+	}
- }
-+#endif
- 
--#define CORRUPT_PAC_ITERATE	10
- noinline void lkdtm_CORRUPT_PAC(void)
- {
-+#ifdef CONFIG_ARM64
-+#define CORRUPT_PAC_ITERATE	10
- 	int i;
- 
-+	if (!IS_ENABLED(CONFIG_ARM64_PTR_AUTH))
-+		pr_err("FAIL: kernel not built with CONFIG_ARM64_PTR_AUTH\n");
++# Reset WARN_ONCE counters so we trip it each time this runs.
++if [ -w $CLEAR_ONCE ] ; then
++	echo 1 > $CLEAR_ONCE
++fi
 +
- 	if (!system_supports_address_auth()) {
--		pr_err("FAIL: arm64 pointer authentication feature not present\n");
-+		pr_err("FAIL: CPU lacks pointer authentication feature\n");
- 		return;
- 	}
+ # Save existing dmesg so we can detect new content below
+ dmesg > "$DMESG"
  
--	pr_info("Change the PAC parameters to force function return failure\n");
-+	pr_info("changing PAC parameters to force function return failure...\n");
- 	/*
--	 * Pac is a hash value computed from input keys, return address and
-+	 * PAC is a hash value computed from input keys, return address and
- 	 * stack pointer. As pac has fewer bits so there is a chance of
- 	 * collision, so iterate few times to reduce the collision probability.
- 	 */
- 	for (i = 0; i < CORRUPT_PAC_ITERATE; i++)
- 		change_pac_parameters();
- 
--	pr_err("FAIL: %s test failed. Kernel may be unstable from here\n", __func__);
--}
--#else /* !CONFIG_ARM64_PTR_AUTH */
--noinline void lkdtm_CORRUPT_PAC(void)
--{
--	pr_err("FAIL: arm64 pointer authentication config disabled\n");
--}
-+	pr_err("FAIL: survived PAC changes! Kernel may be unstable from here\n");
-+#else
-+	pr_err("XFAIL: this test is arm64-only\n");
- #endif
-+}
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index 601a2156a0d48..8878538b2c132 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -31,9 +31,7 @@ void lkdtm_CORRUPT_USER_DS(void);
- void lkdtm_STACK_GUARD_PAGE_LEADING(void);
- void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
- void lkdtm_UNSET_SMEP(void);
--#ifdef CONFIG_X86_32
- void lkdtm_DOUBLE_FAULT(void);
--#endif
- void lkdtm_CORRUPT_PAC(void);
- 
- /* lkdtm_heap.c */
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-index 92ca32143ae5f..9d266e79c6a27 100644
---- a/tools/testing/selftests/lkdtm/tests.txt
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -14,6 +14,7 @@ STACK_GUARD_PAGE_LEADING
- STACK_GUARD_PAGE_TRAILING
- UNSET_SMEP CR4 bits went missing
- DOUBLE_FAULT
-+CORRUPT_PAC
- UNALIGNED_LOAD_STORE_WRITE
- #OVERWRITE_ALLOCATION Corrupts memory on failure
- #WRITE_AFTER_FREE Corrupts memory on failure
 -- 
 2.25.1
 
