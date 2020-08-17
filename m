@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F10C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55019C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5A4205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A08020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597682361;
-	bh=/omsBwg8Yyncdrw92Temo+2BdmMOicqXhOUwneH6NX0=;
+	s=default; t=1597682376;
+	bh=fj7OTwg1Q9qwuTeOWnL//T7iD24j2iceMgT8eXMLeE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H5AIu9aHMEJ+80UzOdU2HX230GeyNvkMKW2dT3T8K8v6nPuJX2ew1cpHYkGe1zr6W
-	 LnhNGa9WmnQFPB9507QEJ2cIDOZHeUgglSdCo8IcLj4HS5NJpxyanhjmvKZIqcWT1/
-	 CWBxGqy2s9HSSw74LqgzvfMJtsoIBDfg1rtW2aCE=
+	b=SWXsJ3acFOTqp7I+lZHy0EWkndW8EdnBdmjohKH6J349YQqyNOWiO3myKHjRA3RFg
+	 mAeFBArGQe4KNO8FZ4aeTXCTj7lcuFU2xAOlghLsW1fG/M4/d7bxTnU4bON38Z6U5o
+	 5JcucY5Hyrx14UO2PlOVnPxhjpm7CaZ1hPCUAZh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388883AbgHQQjS (ORCPT
+        id S2388876AbgHQQjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45160 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730789AbgHQP5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:40 -0400
+        id S1730791AbgHQP5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64532173E;
-        Mon, 17 Aug 2020 15:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF9B21744;
+        Mon, 17 Aug 2020 15:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679859;
-        bh=/omsBwg8Yyncdrw92Temo+2BdmMOicqXhOUwneH6NX0=;
+        s=default; t=1597679862;
+        bh=fj7OTwg1Q9qwuTeOWnL//T7iD24j2iceMgT8eXMLeE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ur3/lf9CmT+nl0GCru1ad3PFxd+7QPc1tlRTSiMBeGRAO3uXsZsIQqxzv5a0qwzxP
-         RmO+k1WaQgHrPwGDbjuJ4VVI+xKSx5iBZyjYk+TPSJUFlGbSujREVAr5SNUl1rNHLa
-         F4rkBdKIbLBXgLdoUgDUxjmy6sOHfHK8T4KD8SfI=
+        b=harGuBlWLqTd9pcxARxsNcWeF81xBqpPBG7eCF2pL1SuOiObdHHjT42VGkTjYSXeK
+         hv+rFp7TiVrcpd/KkUdAevTIHtzaAktKpyH8HJf1XAcPPHmaBBFh4gPshKXq2W+t5V
+         qKyCaVuux8N6h3f2/1LhsdOuS9v3q2kAWCyS+EJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 328/393] vsock: fix potential null pointer dereference in vsock_poll()
-Date:   Mon, 17 Aug 2020 17:16:18 +0200
-Message-Id: <20200817143835.506412482@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 319/393] net: Fix potential memory leak in proto_register()
+Date:   Mon, 17 Aug 2020 17:16:09 +0200
+Message-Id: <20200817143835.078988445@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,55 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit 1980c05844830a44708c98c96d600833aa3fae08 ]
+[ Upstream commit 0f5907af39137f8183ed536aaa00f322d7365130 ]
 
-syzbot reported this issue where in the vsock_poll() we find the
-socket state at TCP_ESTABLISHED, but 'transport' is null:
-  general protection fault, probably for non-canonical address 0xdffffc0000000012: 0000 [#1] PREEMPT SMP KASAN
-  KASAN: null-ptr-deref in range [0x0000000000000090-0x0000000000000097]
-  CPU: 0 PID: 8227 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:vsock_poll+0x75a/0x8e0 net/vmw_vsock/af_vsock.c:1038
-  Call Trace:
-   sock_poll+0x159/0x460 net/socket.c:1266
-   vfs_poll include/linux/poll.h:90 [inline]
-   do_pollfd fs/select.c:869 [inline]
-   do_poll fs/select.c:917 [inline]
-   do_sys_poll+0x607/0xd40 fs/select.c:1011
-   __do_sys_poll fs/select.c:1069 [inline]
-   __se_sys_poll fs/select.c:1057 [inline]
-   __x64_sys_poll+0x18c/0x440 fs/select.c:1057
-   do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+If we failed to assign proto idx, we free the twsk_slab_name but forget to
+free the twsk_slab. Add a helper function tw_prot_cleanup() to free these
+together and also use this helper function in proto_unregister().
 
-This issue can happen if the TCP_ESTABLISHED state is set after we read
-the vsk->transport in the vsock_poll().
-
-We could put barriers to synchronize, but this can only happen during
-connection setup, so we can simply check that 'transport' is valid.
-
-Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
-Reported-and-tested-by: syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Fixes: b45ce32135d1 ("sock: fix potential memory leak in proto_register()")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/af_vsock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sock.c |   25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -1032,7 +1032,7 @@ static __poll_t vsock_poll(struct file *
- 		}
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3354,6 +3354,16 @@ static void sock_inuse_add(struct net *n
+ }
+ #endif
  
- 		/* Connected sockets that can produce data can be written. */
--		if (sk->sk_state == TCP_ESTABLISHED) {
-+		if (transport && sk->sk_state == TCP_ESTABLISHED) {
- 			if (!(sk->sk_shutdown & SEND_SHUTDOWN)) {
- 				bool space_avail_now = false;
- 				int ret = transport->notify_poll_out(
++static void tw_prot_cleanup(struct timewait_sock_ops *twsk_prot)
++{
++	if (!twsk_prot)
++		return;
++	kfree(twsk_prot->twsk_slab_name);
++	twsk_prot->twsk_slab_name = NULL;
++	kmem_cache_destroy(twsk_prot->twsk_slab);
++	twsk_prot->twsk_slab = NULL;
++}
++
+ static void req_prot_cleanup(struct request_sock_ops *rsk_prot)
+ {
+ 	if (!rsk_prot)
+@@ -3424,7 +3434,7 @@ int proto_register(struct proto *prot, i
+ 						  prot->slab_flags,
+ 						  NULL);
+ 			if (prot->twsk_prot->twsk_slab == NULL)
+-				goto out_free_timewait_sock_slab_name;
++				goto out_free_timewait_sock_slab;
+ 		}
+ 	}
+ 
+@@ -3432,15 +3442,15 @@ int proto_register(struct proto *prot, i
+ 	ret = assign_proto_idx(prot);
+ 	if (ret) {
+ 		mutex_unlock(&proto_list_mutex);
+-		goto out_free_timewait_sock_slab_name;
++		goto out_free_timewait_sock_slab;
+ 	}
+ 	list_add(&prot->node, &proto_list);
+ 	mutex_unlock(&proto_list_mutex);
+ 	return ret;
+ 
+-out_free_timewait_sock_slab_name:
++out_free_timewait_sock_slab:
+ 	if (alloc_slab && prot->twsk_prot)
+-		kfree(prot->twsk_prot->twsk_slab_name);
++		tw_prot_cleanup(prot->twsk_prot);
+ out_free_request_sock_slab:
+ 	if (alloc_slab) {
+ 		req_prot_cleanup(prot->rsk_prot);
+@@ -3464,12 +3474,7 @@ void proto_unregister(struct proto *prot
+ 	prot->slab = NULL;
+ 
+ 	req_prot_cleanup(prot->rsk_prot);
+-
+-	if (prot->twsk_prot != NULL && prot->twsk_prot->twsk_slab != NULL) {
+-		kmem_cache_destroy(prot->twsk_prot->twsk_slab);
+-		kfree(prot->twsk_prot->twsk_slab_name);
+-		prot->twsk_prot->twsk_slab = NULL;
+-	}
++	tw_prot_cleanup(prot->twsk_prot);
+ }
+ EXPORT_SYMBOL(proto_unregister);
+ 
 
 
