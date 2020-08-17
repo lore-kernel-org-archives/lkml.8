@@ -2,103 +2,177 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55250C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D55C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3816A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WA+o569b"
+	by mail.kernel.org (Postfix) with ESMTP id 70A96204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597690507;
+	bh=GLoDUOwmC610yENadQGS6YsK/gPoQy/7rRYSTZ2bj9M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nYlF/iORaYtSocTFUoAaDXO50RjlL4tuCFsVfROB9bTVLIOP+M8QnpyLiyerqeWpz
+	 OXhQIkD0MPPXvL10EBF0mqXRw4/kQakcX97BWRNb8FKUiwZgB4oSFG5f0W3CElEoDf
+	 Rsdexb1FAekMjsMnx/SK0ZgzYimC1wLTgwUW2xUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbgHQSy7 (ORCPT
+        id S2389162AbgHQSzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730917AbgHQSy4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:54:56 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED041C061389;
-        Mon, 17 Aug 2020 11:54:55 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id 6so13276296qtt.0;
-        Mon, 17 Aug 2020 11:54:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EyInuEBx4tu8/dpK6QVmoYclYZh/Tpg6DL8iKkTJkGU=;
-        b=WA+o569b6qU9RIK8BsU79Xhczucyqu1v2kaoVouU7fMrqwOUY2OyVs9O7aiNYPuzfl
-         avdb3ooAA8YBV5u5nvog6hB9QI+4Zu3Hcywk15YkFXfgkTKZpvbXvyJxFm8PNit0vxWb
-         MCL6CkZwvbKmggNumNDl30FJvQfjWmAlFGqpQfbbhX2RbABWBKLeAUJHT6dl5EVWzyt3
-         PRbcXED8PgwrPH3jLFqA2lmIcSNXW8uL2ngTMKUIrcY06yjln5EPuX7OSmr5AqYkzCvw
-         BRPWf/YRFhdul+WTxFcaiqgDtgjuLswXlYksDLI0omlITnTOz+vWaQxrYds/lfvGIPxq
-         GfEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EyInuEBx4tu8/dpK6QVmoYclYZh/Tpg6DL8iKkTJkGU=;
-        b=j74txvyTsmf1BePC0+JhhhO+oeXByoXiAosVJU05Lnjdq2fRmeN98dSHGrqAHQDMIg
-         Z5mB65ov0XmbXJIV7Z7luwlBRLmUNbQjqUmpkIe+Uu9hEp7tBXG+RMCGmyTgRJhxVVfV
-         UrVQCCXHXiD0UXixHOSMcgn7tuQyJWpQmr9qV6Lc1jHuk/pPUpszJXD3eSokvyOK+Y7b
-         QieihtBv1nEB05BCxb3Ur+Y7+3svteCe5r8B/ChPlEp6qQyGVJkyoCmIJhK+su/0MKN3
-         kCt/G0aDAqU2TBgEWoajXKJGykSWSc4eKbbmE2RPArfpU66872HaxqHLogyo01fQxU7Z
-         Sp5Q==
-X-Gm-Message-State: AOAM532oRaWOYplV+iFyWgvMP7kyXwfZOJqdNPVwReSBkcs0zQ2kS+vl
-        xifTywEeF2IzcwJuhYRusMY=
-X-Google-Smtp-Source: ABdhPJyOu0pQY8yotrl8IF2bpoy442cARcsPMMim1bBFdx5ZWmsjekNfmiZ04J3F1AzoSCTJFVk3sQ==
-X-Received: by 2002:ac8:4c86:: with SMTP id j6mr14725822qtv.65.1597690495228;
-        Mon, 17 Aug 2020 11:54:55 -0700 (PDT)
-Received: from tong-desktop.local ([2601:5c0:c100:b9d:c66:53f8:5dc7:25fa])
-        by smtp.googlemail.com with ESMTPSA id w12sm17318534qkj.116.2020.08.17.11.54.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 11:54:54 -0700 (PDT)
-From:   Tong Zhang <ztong0001@gmail.com>
-To:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     ztong0001@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Fixes: tty: serial: earlycon dependency
-Date:   Mon, 17 Aug 2020 14:54:19 -0400
-Message-Id: <20200817185419.1133596-1-ztong0001@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200817170038.GA725471@kroah.com>
-References: <20200817170038.GA725471@kroah.com>
+        Mon, 17 Aug 2020 14:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730915AbgHQPvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B1E20888;
+        Mon, 17 Aug 2020 15:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679471;
+        bh=GLoDUOwmC610yENadQGS6YsK/gPoQy/7rRYSTZ2bj9M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LSLiVvE7BWToc0jNfn0vhT+Ta2ZqBVg4wfgEaeV89KP1yp3iIxS/Uam2dTN/323QR
+         v8QrPcPiu5eKhm+m5uaIt4CXzdO2e1tv/daIaOUAALz/h10+ELhH/FcXLqV4LygjIK
+         fIaUBcowBC47ZmHFYkMe5BBb/0hYL9273pvS3VII=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 193/393] kobject: Avoid premature parent object freeing in kobject_cleanup()
+Date:   Mon, 17 Aug 2020 17:14:03 +0200
+Message-Id: <20200817143828.985107612@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-parse_options() in drivers/tty/serial/earlycon.c calls uart_parse_earlycon
-in drivers/tty/serial/serial_core.c therefore selecting SERIAL_EARLYCON
-should automatically select SERIAL_CORE, otherwise will result in symbol
-not found error during linking if SERIAL_CORE is not configured as builtin
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+[ Upstream commit 079ad2fb4bf9eba8a0aaab014b49705cd7f07c66 ]
+
+If kobject_del() is invoked by kobject_cleanup() to delete the
+target kobject, it may cause its parent kobject to be freed
+before invoking the target kobject's ->release() method, which
+effectively means freeing the parent before dealing with the
+child entirely.
+
+That is confusing at best and it may also lead to functional
+issues if the callers of kobject_cleanup() are not careful enough
+about the order in which these calls are made, so avoid the
+problem by making kobject_cleanup() drop the last reference to
+the target kobject's parent at the end, after invoking the target
+kobject's ->release() method.
+
+[ rjw: Rewrite the subject and changelog, make kobject_cleanup()
+  drop the parent reference only when __kobject_del() has been
+  called. ]
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/1908555.IiAGLGrh1Z@kreacher
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ lib/kobject.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 8a0352eb337c..42e844314cbb 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -8,6 +8,7 @@ menu "Serial drivers"
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d9..386873bdd51c9 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+ }
+ EXPORT_SYMBOL_GPL(kobject_move);
  
- config SERIAL_EARLYCON
- 	bool
-+	select SERIAL_CORE
- 	help
- 	  Support for early consoles with the earlycon parameter. This enables
- 	  the console before standard serial driver is probed. The console is
+-/**
+- * kobject_del() - Unlink kobject from hierarchy.
+- * @kobj: object.
+- *
+- * This is the function that should be called to delete an object
+- * successfully added via kobject_add().
+- */
+-void kobject_del(struct kobject *kobj)
++static void __kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
+ 	const struct kobj_type *ktype;
+@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ 
+ 	kobj->state_in_sysfs = 0;
+ 	kobj_kset_leave(kobj);
+-	kobject_put(kobj->parent);
+ 	kobj->parent = NULL;
+ }
++
++/**
++ * kobject_del() - Unlink kobject from hierarchy.
++ * @kobj: object.
++ *
++ * This is the function that should be called to delete an object
++ * successfully added via kobject_add().
++ */
++void kobject_del(struct kobject *kobj)
++{
++	struct kobject *parent = kobj->parent;
++
++	__kobject_del(kobj);
++	kobject_put(parent);
++}
+ EXPORT_SYMBOL(kobject_del);
+ 
+ /**
+@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
+ 	const char *name = kobj->name;
+ 
+@@ -684,7 +692,10 @@ static void kobject_cleanup(struct kobject *kobj)
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+ 			 kobject_name(kobj), kobj);
+-		kobject_del(kobj);
++		__kobject_del(kobj);
++	} else {
++		/* avoid dropping the parent reference unnecessarily */
++		parent = NULL;
+ 	}
+ 
+ 	if (t && t->release) {
+@@ -698,6 +709,8 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		pr_debug("kobject: '%s': free name\n", name);
+ 		kfree_const(name);
+ 	}
++
++	kobject_put(parent);
+ }
+ 
+ #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
 -- 
 2.25.1
+
+
 
