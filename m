@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB14020729
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03A720866
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680322;
-	bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
+	s=default; t=1597680353;
+	bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1snAHAuNkW+UdnKBFY0Ojrbrcu7drhO7YZhvzkc9WOtR0uHoUWrYk7DYuZpVe7a7
-	 IQ52yV1c5bA7uBmE8tt7G85MZ2g2nfFIoZxvWtShs133XezweiZDSlN6FGQBA465Er
-	 JT12ozeOehVUZYEvwIRH2hSzEN/3Y03Qj7dlKgo4=
+	b=avMRY0MQDQb4tbqWo3LF1eWFO/5FV8GJs4FDbwJGDMklJHLaX0qiB1xOOBvDM0ZTJ
+	 ez7xdgVZuYOGmiMb42jwF+88roQCDvUgY9iEr5BU5fTGyTxhCfOyw+854ufJi9ChiX
+	 Dg3djG8Vb7L2SNstwKRZBwRyYqrkSZAKNQVUst4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgHQQEy (ORCPT
+        id S2388372AbgHQQFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55852 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbgHQPox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:53 -0400
+        id S2387717AbgHQPo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2578E20760;
-        Mon, 17 Aug 2020 15:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF3322CF8;
+        Mon, 17 Aug 2020 15:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679092;
-        bh=6LmQh1e/NqQGj+89BAr9m4CJNhDun1U7OdbG+iIs+F8=;
+        s=default; t=1597679095;
+        bh=bpCArGqYhu7XR0T4plFq2F98eNWRFqKGrxCDzFsaknQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WCpjSdask3j1fEVRsynAT/3RqHCz5QMDMEC7f+eAEOUJ2kHMY9fozKjYWK5tArVUQ
-         NkPdhNX8smORJENcq1ga8E70HDu1x+q1lSJMys9PgFjG2tkuVLpj+9oWkawKqUrejI
-         wS0ABZ/ikZadYv5QQd1Jv6LHuQ37DXije10Stbb8=
+        b=ylwX6LekODkLGtVkwVsQt33smWArj1NvO9y8Gt67yrp1Wwr3LsekIl/DDKGoF2OZ1
+         Jl75aei2rnPynXdJUAgMSGdCWk/mhB2BN/YGPALhjqee+UB2hgk53WfB1RpZ/XcjT6
+         mg/n8nlejL6gGNamTtA5cqI94JeNz2QtL6vnWxo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 063/393] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Mon, 17 Aug 2020 17:11:53 +0200
-Message-Id: <20200817143822.688249282@linuxfoundation.org>
+Subject: [PATCH 5.7 054/393] md: raid0/linear: fix dereference before null check on pointer mddev
+Date:   Mon, 17 Aug 2020 17:11:44 +0200
+Message-Id: <20200817143822.237081915@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,49 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+Pointer mddev is being dereferenced with a test_bit call before mddev
+is being null checked, this may cause a null pointer dereference. Fix
+this by moving the null pointer checks to sanity check mddev before
+it is dereferenced.
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
-
-Fix these two issues.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/md/md.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 5584e656b8575..8c4fd1aa4c2db 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -143,12 +143,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 41eead9cbee98..d5a5c18813985 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -469,17 +469,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
+ 	struct mddev *mddev = q->queuedata;
+ 	unsigned int sectors;
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
+-	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
++	if (mddev == NULL || mddev->pers == NULL) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
+ 	}
  
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
- 
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
+-	blk_queue_split(q, &bio);
+-
+-	if (mddev == NULL || mddev->pers == NULL) {
++	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
+ 		bio_io_error(bio);
+ 		return BLK_QC_T_NONE;
+ 	}
 +
- 		drm_display_mode_from_videomode(&vm, mode);
- 
- 		mode->type = DRM_MODE_TYPE_DRIVER;
++	blk_queue_split(q, &bio);
++
+ 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
+ 		if (bio_sectors(bio) != 0)
+ 			bio->bi_status = BLK_STS_IOERR;
 -- 
 2.25.1
 
