@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064A6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37894C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DECD120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA3A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690375;
-	bh=IVjjFA0DYsoC7bTosHCMh3WCsr8pULJgQQr7kWsxjpA=;
+	s=default; t=1597690395;
+	bh=vLVCELfJ5xUJYRbUxXEgmD7kf3j/T/A1DBP4LsAtY4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dj/4rCsCeHHS/zvX33MXmcUEd/fnTa5mFnVjiCKKOCH+T3RCp2NUXcwgAL57cmeN2
-	 2ozRlVPBvqEOyPRwIOof6CpPeJ9yYMOZu/ScGRnKvX4yFwk9X5Mo3hFoRJAfGi/66W
-	 uu0iZvZRIap8Xj8N6oA6DhLmGy3g6xbaInL7jn7s=
+	b=1LD5x01zsZEwZHMFBXIbBiKxraWekY7UUg4AqjgMQ/+jQ7cRArzPTt3mafK99mIY1
+	 FsBgFw8Vb1g9KClVgpLvNxBN0k5LtkSCDecfJa10QoX/lFu+OPMbOHQyajjSl7ItHk
+	 pJq4uIIPufe9j8oSzjK5nY263doCSf3q7QQ/Gc7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391772AbgHQSwy (ORCPT
+        id S2391785AbgHQSxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387833AbgHQPwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:52:08 -0400
+        id S2387823AbgHQPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87C8720729;
-        Mon, 17 Aug 2020 15:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB23D2072E;
+        Mon, 17 Aug 2020 15:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679528;
-        bh=IVjjFA0DYsoC7bTosHCMh3WCsr8pULJgQQr7kWsxjpA=;
+        s=default; t=1597679511;
+        bh=vLVCELfJ5xUJYRbUxXEgmD7kf3j/T/A1DBP4LsAtY4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWWoYwNj+9xvAiG1cu+65I8x0woui9/coGj3npHOf7xtRBnTcDAskxJODi8234U/D
-         N9BtX1QRMp+cttOw1q1ydGcTGce72zN2cxDPTdg2QAUk/4L9Vp+CIwxLhctpKGnzM8
-         qdRyC3OCeGhjZ17tI9pfgHbwc6uihaWI1ITXHMeI=
+        b=MrzahYsXFRvHRjcaRr749YdfvXhCfXmf8wiuLEYOO6dQLUtXzyphGUYa1EnmGN4e9
+         M5uK/1s+oJHlmLSbcxeZctMd6nG/u/b4OwvFYb3W+cESVEq4CHz4eECpr9cKgEKfs/
+         IOXII+poprjK8vnCLaF8AobIz8WR8L6helqBx8rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 243/393] thermal: int340x: processor_thermal: fix: update Jasper Lake PCI id
-Date:   Mon, 17 Aug 2020 17:14:53 +0200
-Message-Id: <20200817143831.406811888@linuxfoundation.org>
+Subject: [PATCH 5.7 238/393] s390/bpf: Tolerate not converging code shrinking
+Date:   Mon, 17 Aug 2020 17:14:48 +0200
+Message-Id: <20200817143831.164467346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,36 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 287d959558357e155c889bc35579eb35691a8fcb ]
+[ Upstream commit 1491b73311a15bb5beeab5d30e03bff761ef6c18 ]
 
-Update PCI device id for Jasper Lake processor thermal device.
-With this proc_thermal driver is getting loaded and processor
-thermal functionality works on Jasper Lake system.
+"BPF_MAXINSNS: Maximum possible literals" unnecessarily falls back to
+the interpreter because of failing sanity check in bpf_set_addr. The
+problem is that there are a lot of branches that can be shrunk, and
+doing so opens up the possibility to shrink even more. This process
+does not converge after 3 passes, causing code offsets to change during
+the codegen pass, which must never happen.
 
-Fixes: f64a6583d3f5 ("thermal: int340x: processor_thermal: Add Jasper Lake support")
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1595577146-1221-1-git-send-email-sumeet.r.pawnikar@intel.com
+Fix by inserting nops during codegen pass in order to preserve code
+offets.
+
+Fixes: 4e9b4a6883dd ("s390/bpf: Use relative long branches")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200717165326.6786-5-iii@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/net/bpf_jit_comp.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index 297db1d2d960c..81e8b15ef405d 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -43,7 +43,7 @@
- #define PCI_DEVICE_ID_PROC_ICL_THERMAL	0x8a03
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 650b89eb693e6..95809599ebffd 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -489,6 +489,24 @@ static void save_restore_regs(struct bpf_jit *jit, int op, u32 stack_depth)
+ 	} while (re <= last);
+ }
  
- /* JasperLake thermal reporting device */
--#define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4503
-+#define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4E03
- 
- /* TigerLake thermal reporting device */
- #define PCI_DEVICE_ID_PROC_TGL_THERMAL	0x9A03
++static void bpf_skip(struct bpf_jit *jit, int size)
++{
++	if (size >= 6 && !is_valid_rel(size)) {
++		/* brcl 0xf,size */
++		EMIT6_PCREL_RIL(0xc0f4000000, size);
++		size -= 6;
++	} else if (size >= 4 && is_valid_rel(size)) {
++		/* brc 0xf,size */
++		EMIT4_PCREL(0xa7f40000, size);
++		size -= 4;
++	}
++	while (size >= 2) {
++		/* bcr 0,%0 */
++		_EMIT2(0x0700);
++		size -= 2;
++	}
++}
++
+ /*
+  * Emit function prologue
+  *
+@@ -1502,7 +1520,14 @@ static bool bpf_is_new_addr_sane(struct bpf_jit *jit, int i)
+  */
+ static int bpf_set_addr(struct bpf_jit *jit, int i)
+ {
+-	if (!bpf_is_new_addr_sane(jit, i))
++	int delta;
++
++	if (is_codegen_pass(jit)) {
++		delta = jit->prg - jit->addrs[i];
++		if (delta < 0)
++			bpf_skip(jit, -delta);
++	}
++	if (WARN_ON_ONCE(!bpf_is_new_addr_sane(jit, i)))
+ 		return -1;
+ 	jit->addrs[i] = jit->prg;
+ 	return 0;
 -- 
 2.25.1
 
