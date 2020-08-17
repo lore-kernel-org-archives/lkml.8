@@ -2,529 +2,254 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30D5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5835620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="edbrCTmS"
+	by mail.kernel.org (Postfix) with ESMTP id 860CA2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597688613;
+	bh=uVMG5b5otyl6qwqwsN/Tcmg2xmutUScQrHiyk0Y2vHk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hl+AqOlx6meStsMrfW2Lc2nfYeln6DNtbr+t4gTiV0KLI+z4jCZNBW+4fGbkm1jgr
+	 tHYoB4L1gEd1gMad9jkTTtZ03l/NLHyxS01ORPgcKfYvRmFuz+rHHc0GB3bREuZPrE
+	 PFbhxRckYCq0YQX/TXQh0eYN13LkVBfj7GbUkADE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390776AbgHQSXK (ORCPT
+        id S2390925AbgHQSXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390689AbgHQSWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:22:21 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF30C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:22:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id s16so13151324qtn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 11:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J9dvFP+0mrzUlWmpgdOgYv9a+Gd1Oq2yM4Ejw4+Gutc=;
-        b=edbrCTmSv6czW4A7cnKMhqoflwbGJPQXhq/w38m4K8mUYpgj72w7p28L5yUCUEMy/r
-         T6ww10QkZxJ0VbR7ZlQyJ0goDO4bzFp/9uhiWMhDY3cVoLxRP1OTrrDfolyllAUizui1
-         0NV/sM5nUaWbxZrqzHeSDdO5r85l5Szt6SfAFHCCa7ZTYKB0lPwVaVstfHMrrOOitCa9
-         dHPDxsJG4yEJtAI1zedpCaM/rrkRVQtdBzixN08Mv37C1vrolJj9uhkAua2FiKDPz7Yb
-         h1zDjLuu/U1vELw+YYhnQuT+Lm4QEnGRGf3EEV5QSogwm9w95WtO/44KJSfa9WDOEhwu
-         zt7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J9dvFP+0mrzUlWmpgdOgYv9a+Gd1Oq2yM4Ejw4+Gutc=;
-        b=oaWYgLiQ0weG27Grt+t84gbk4LeZozUr20jo8TjrlLv0oPYyZc8LEx2sELq6pGkg6n
-         XRiSDudcIy//mBbcSTSktMS8136VhTiAozaYCZMfOco7y3s/AyCQ6NAyRUdWX505uHty
-         8eSm/rnJ8td3X1A8A1TNXUT1CA3uFpG/0CUKQGE5+00b8uhp5Yc3kOZIgqFBctXGFmJS
-         AGON87IQjZGsuU2dy8ruSsBrjjDLA3KCvpclNWfzj+ZtmC5hnXhI8b/nJ1xCNCImoW8O
-         Jj41NTENae2A3m4amCYLGzhbtjZlQfBfcMRYoHWgaulrC7DeuELeN+BVqSjLXYCpEKM2
-         BiTA==
-X-Gm-Message-State: AOAM5311IZRanRcUBWMSzCae7BpAvWbuiXYJawq8YZHFctEhTgZdua2G
-        F+7rfksHm6SB4uBWzbwQvgdyAGFSrEeMW5PjIDYVeA==
-X-Google-Smtp-Source: ABdhPJwiPtfkdPpZxReHtJsaIH8919iNSI/fD10ktftGIMatirtejLzHUgf0g+UhXLhtaME5pU4AD4By6oMSHQ1Aa10=
-X-Received: by 2002:ac8:1488:: with SMTP id l8mr14812949qtj.131.1597688529506;
- Mon, 17 Aug 2020 11:22:09 -0700 (PDT)
+        Mon, 17 Aug 2020 14:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388241AbgHQQD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C6E120772;
+        Mon, 17 Aug 2020 16:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680205;
+        bh=uVMG5b5otyl6qwqwsN/Tcmg2xmutUScQrHiyk0Y2vHk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bgHZFzBYTID8deNvPV6+k22hS7KhVH2SlQi9/Vcw0WvZC2untd7Kj+4XczDCs8Biw
+         Tc/uUhdfXJMRbT+KZ6NFkRPUh4DxUSVwVtu7qGWMqO85JmR49U4e/eevCltzlgvBT3
+         I7mwkXhHdwdIb12VVqRPHArq+V32j+hqr8ryrLa4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 063/270] mmc: sdhci-cadence: do not use hardware tuning for SD mode
+Date:   Mon, 17 Aug 2020 17:14:24 +0200
+Message-Id: <20200817143758.893566740@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
+References: <20200817143755.807583758@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200814030257.135463-1-warthog618@gmail.com> <20200814030257.135463-13-warthog618@gmail.com>
-In-Reply-To: <20200814030257.135463-13-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 17 Aug 2020 20:21:58 +0200
-Message-ID: <CAMpxmJXxUD9HqkEAzMjJA6dOem9aAkPwdT4BKyPXb-C06dGkqw@mail.gmail.com>
-Subject: Re: [PATCH v4 12/20] gpiolib: cdev: support setting debounce
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 5:05 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add support for setting debounce on a line via the GPIO uAPI.
-> Where debounce is not supported by hardware, a software debounce is
-> provided.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> The implementation of the software debouncer waits for the line to be
-> stable for the debounce period before determining if a level change,
-> and a corresponding edge event, has occurred.  This provides maximum
-> protection against glitches, but also introduces a debounce_period
-> latency to edge events.
->
-> The software debouncer is integrated with the edge detection as it
-> utilises the line interrupt, and integration is simpler than getting
-> the two to interwork.  Where software debounce AND edge detection is
-> required, the debouncer provides both.
->
-> Due to the tight integration between the debouncer and edge detection,
-> and to avoid particular corner cases, it is not allowed to alter the
-> debounce value if edge detection is enabled.  Changing the debounce with
-> edge detection enabled is a very unlikely use case, so it is preferable
-> to disallow it rather than complicate the code to allow it.
-> Should the user wish to alter the debounce value in such cases they will
-> need to release and re-request the line.
->
-> Changes for v4:
->  - fix handling of mask in line_get_values
->
-> Changes for v3:
->  - only GPIO_V2 field renaming
->
-> Changes for v2:
->  - improve documentation on fields shared by threads.
->  - use READ_ONCE/WRITE_ONCE for shared fields rather than atomic_t
->    which was overkill.
->
->  drivers/gpio/gpiolib-cdev.c | 265 +++++++++++++++++++++++++++++++++++-
->  drivers/gpio/gpiolib.h      |   4 +
->  2 files changed, 263 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index de88b7a5ba0f..77fabf815de8 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -6,6 +6,7 @@
->  #include <linux/build_bug.h>
->  #include <linux/cdev.h>
->  #include <linux/compat.h>
-> +#include <linux/compiler.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/file.h>
-> @@ -22,6 +23,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/timekeeping.h>
->  #include <linux/uaccess.h>
-> +#include <linux/workqueue.h>
->  #include <uapi/linux/gpio.h>
->
->  #include "gpiolib.h"
-> @@ -395,6 +397,9 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->   * for the corresponding line request. Ths is drawn from the @line.
->   * @line_seqno: the seqno for the current edge event in the sequence of
->   * events for this line.
-> + * @work: the worker that implements software debouncing
-> + * @sw_debounced: flag indicating if the software debouncer is active
-> + * @level: the current debounced physical level of the line
->   */
->  struct edge_detector {
->         struct line *line;
-> @@ -406,7 +411,27 @@ struct edge_detector {
->          */
->         u64 timestamp;
->         u32 seqno;
-> +       /*
-> +        * line_seqno is used by either edge_irq_thread() or
-> +        * debounce_work_func() which are themselves mutually exclusive.
-> +        */
->         u32 line_seqno;
-> +       /*
-> +        * -- debouncer specific fields --
-> +        */
-> +       struct delayed_work work;
-> +       /*
-> +        * sw_debounce is shared by line_set_config(), which is the only
-> +        * setter, and line_ioctl(), which can live with a slightly stale
-> +        * value.
-> +        */
-> +       unsigned int sw_debounced;
-> +       /*
-> +        * level is shared by debounce_work_func(), which is the only
-> +        * setter, and line_ioctl() which can live with a slightly stale
-> +        * value.
-> +        */
-> +       unsigned int level;
->  };
->
->  /**
-> @@ -523,6 +548,10 @@ static int edge_detector_start(struct edge_detector *edet)
->         int ret, irq, irqflags = 0;
->         struct gpio_desc *desc;
->
-> +       if (READ_ONCE(edet->sw_debounced))
-> +               /* debouncer is setup and will provide edge detection */
-> +               return 0;
-> +
->         desc = edge_detector_desc(edet);
->         irq = gpiod_to_irq(desc);
->
-> @@ -554,17 +583,215 @@ static int edge_detector_start(struct edge_detector *edet)
->         return 0;
->  }
->
-> +/*
-> + * returns the current debounced logical value.
-> + */
-> +static int debounced_value(struct edge_detector *edet)
-> +{
-> +       int value;
-> +
-> +       /*
-> +        * minor race - debouncer may be stopped here, so edge_detector_stop
-> +        * must leave the value unchanged so the following will read the level
-> +        * from when the debouncer was last running.
-> +        */
-> +       value = READ_ONCE(edet->level);
-> +
-> +       if (test_bit(FLAG_ACTIVE_LOW, &edge_detector_desc(edet)->flags))
-> +               value = !value;
-> +
-> +       return value;
-> +}
-> +
-> +static irqreturn_t debounce_irq_handler(int irq, void *p)
-> +{
-> +       struct edge_detector *edet = p;
-> +       struct gpio_desc *desc = edge_detector_desc(edet);
-> +
-> +       mod_delayed_work(system_wq,
-> +                        &edet->work,
-> +                        usecs_to_jiffies(READ_ONCE(desc->debounce_period)));
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static void debounce_work_func(struct work_struct *work)
-> +{
-> +       struct gpio_v2_line_event le;
-> +       int ret, level;
-> +       struct edge_detector *edet =
-> +               container_of(work, struct edge_detector, work.work);
-> +       struct gpio_desc *desc = edge_detector_desc(edet);
-> +       struct line *line;
-> +
-> +       level = gpiod_get_raw_value_cansleep(desc);
-> +       if (level < 0) {
-> +               pr_debug_ratelimited("debouncer failed to read line value\n");
-> +               return;
-> +       }
-> +
-> +       if (READ_ONCE(edet->level) == level)
-> +               return;
-> +
-> +       WRITE_ONCE(edet->level, level);
-> +
-> +       /* -- edge detection -- */
-> +       if (!edet->flags)
-> +               return;
-> +
-> +       /* switch from physical level to logical - if they differ */
-> +       if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
-> +               level = !level;
-> +
-> +       /* ignore edges that are not being monitored */
-> +       if (((edet->flags == GPIO_V2_LINE_FLAG_EDGE_RISING) && !level) ||
-> +           ((edet->flags == GPIO_V2_LINE_FLAG_EDGE_FALLING) && level))
-> +               return;
-> +
-> +       /* Do not leak kernel stack to userspace */
-> +       memset(&le, 0, sizeof(le));
-> +
-> +       line = edet->line;
-> +       le.timestamp = ktime_get_ns();
-> +       le.offset = gpio_chip_hwgpio(desc);
-> +       edet->line_seqno++;
-> +       le.line_seqno = edet->line_seqno;
-> +       le.seqno = (line->num_descs == 1) ?
-> +               le.line_seqno : atomic_inc_return(&line->seqno);
-> +
-> +       if (level)
-> +               /* Emit low-to-high event */
-> +               le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
-> +       else
-> +               /* Emit high-to-low event */
-> +               le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
-> +
-> +       ret = kfifo_in_spinlocked_noirqsave(&line->events, &le,
-> +                                           1, &line->wait.lock);
-> +       if (ret)
-> +               wake_up_poll(&line->wait, EPOLLIN);
-> +       else
-> +               pr_debug_ratelimited("event FIFO is full - event dropped\n");
-> +}
-> +
-> +static int debounce_setup(struct edge_detector *edet,
-> +                         unsigned int debounce_period)
-> +{
-> +       int ret, level, irq, irqflags;
-> +       struct gpio_desc *desc = edge_detector_desc(edet);
-> +
-> +       /* try hardware */
-> +       ret = gpiod_set_debounce(desc, debounce_period);
-> +       if (!ret) {
-> +               WRITE_ONCE(desc->debounce_period, debounce_period);
-> +               return ret;
-> +       }
-> +       if (ret != -ENOTSUPP)
-> +               return ret;
-> +
-> +       if (debounce_period) {
-> +               /* setup software debounce */
-> +               level = gpiod_get_raw_value_cansleep(desc);
-> +               if (level < 0)
-> +                       return level;
-> +
-> +               irq = gpiod_to_irq(desc);
-> +               if (irq <= 0)
-> +                       return -ENODEV;
-> +
-> +               WRITE_ONCE(edet->level, level);
-> +               edet->line_seqno = 0;
-> +               irqflags = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
-> +               ret = request_irq(irq,
-> +                                 debounce_irq_handler,
-> +                                 irqflags,
-> +                                 edet->line->label,
-> +                                 edet);
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Nit: Don't break lines too eagerly: this call could fit in two lines.
-I think I saw some other instances in other patches.
+[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
 
-> +               if (ret)
-> +                       return ret;
-> +
-> +               WRITE_ONCE(edet->sw_debounced, 1);
-> +               edet->irq = irq;
-> +       }
-> +       WRITE_ONCE(desc->debounce_period, debounce_period);
-> +       return 0;
-> +}
-> +
->  static void edge_detector_stop(struct edge_detector *edet)
->  {
-> +       struct gpio_desc *desc = edge_detector_desc(edet);
-> +
->         if (edet->irq) {
->                 free_irq(edet->irq, edet);
->                 edet->irq = 0;
->         }
-> +
-> +       cancel_delayed_work_sync(&edet->work);
-> +       WRITE_ONCE(edet->sw_debounced, 0);
-> +       /* do not change edet->level - see comment in debounced_value */
-> +
-> +       if (desc)
-> +               WRITE_ONCE(desc->debounce_period, 0);
-> +}
-> +
-> +static int debounce_update(struct edge_detector *edet,
-> +                          unsigned int debounce_period)
-> +{
-> +       struct gpio_desc *desc = edge_detector_desc(edet);
-> +
-> +       if (READ_ONCE(desc->debounce_period) == debounce_period)
-> +               return 0;
-> +
-> +       if (!READ_ONCE(edet->sw_debounced))
-> +               return debounce_setup(edet, debounce_period);
-> +
-> +       if (!debounce_period)
-> +               edge_detector_stop(edet);
-> +       else
-> +               WRITE_ONCE(desc->debounce_period, debounce_period);
-> +       return 0;
-> +}
-> +
-> +static int gpio_v2_line_config_debounced(struct gpio_v2_line_config *lc,
-> +                                        int line_idx)
-> +{
-> +       int i;
-> +       unsigned long long mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return 1;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
-> +                                              int line_idx)
-> +{
-> +       int i;
-> +       unsigned long long mask = BIT_ULL(line_idx);
-> +
-> +       for (i = 0; i < lc->num_attrs; i++) {
-> +               if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
-> +                   (lc->attrs[i].mask & mask))
-> +                       return lc->attrs[i].attr.debounce_period;
-> +       }
-> +       return 0;
->  }
->
->  static int edge_detector_setup(struct edge_detector *edet,
-> -                              struct gpio_v2_line_config *lc)
-> +                              struct gpio_v2_line_config *lc,
-> +                              int line_idx)
->  {
-> +       int ret;
-> +
-> +       if (gpio_v2_line_config_debounced(lc, line_idx)) {
-> +               ret = debounce_setup(edet,
-> +                       gpio_v2_line_config_debounce_period(lc, line_idx));
-> +               if (ret)
-> +                       return ret;
-> +       }
->         if (edet->flags)
->                 return edge_detector_start(edet);
->         return 0;
-> @@ -703,6 +930,11 @@ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
->                 ret = gpio_v2_line_flags_validate(flags);
->                 if (ret)
->                         return ret;
-> +
-> +               /* debounce requires explicit input */
-> +               if (gpio_v2_line_config_debounced(lc, i) &&
-> +                   !(flags & GPIO_V2_LINE_FLAG_INPUT))
-> +                       return -EINVAL;
->         }
->         return 0;
->  }
-> @@ -761,7 +993,7 @@ static long line_get_values(struct line *line, void __user *ip)
->         struct gpio_v2_line_values lv;
->         DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
->         struct gpio_desc **descs;
-> -       int ret, i, didx, num_get = 0;
-> +       int ret, i, val, didx, num_get = 0;
->
->         /* NOTE: It's ok to read values of output lines. */
->         if (copy_from_user(&lv, ip, sizeof(lv)))
-> @@ -799,7 +1031,11 @@ static long line_get_values(struct line *line, void __user *ip)
->         lv.bits = 0;
->         for (didx = 0, i = 0; i < line->num_descs; i++) {
->                 if (lv.mask & BIT_ULL(i)) {
-> -                       if (test_bit(didx, vals))
-> +                       if (line->edets[i].sw_debounced)
-> +                               val = debounced_value(&line->edets[i]);
-> +                       else
-> +                               val = test_bit(didx, vals);
-> +                       if (val)
->                                 lv.bits |= BIT_ULL(i);
->                         didx++;
->                 }
-> @@ -907,6 +1143,12 @@ static long line_set_config_locked(struct line *line,
->                         ret = gpiod_direction_input(desc);
->                         if (ret)
->                                 return ret;
-> +                       if (gpio_v2_line_config_debounced(lc, i)) {
-> +                               ret = debounce_update(&line->edets[i],
-> +                                       gpio_v2_line_config_debounce_period(lc, i));
-> +                               if (ret)
-> +                                       return ret;
-> +                       }
->                 }
->
->                 blocking_notifier_call_chain(&desc->gdev->notifier,
-> @@ -1109,8 +1351,11 @@ static int line_create(struct gpio_device *gdev, void __user *ip)
->                 goto out_free_line;
->         }
->
-> -       for (i = 0; i < lr.num_lines; i++)
-> +       for (i = 0; i < lr.num_lines; i++) {
->                 line->edets[i].line = line;
-> +               WRITE_ONCE(line->edets[i].sw_debounced, 0);
-> +               INIT_DELAYED_WORK(&line->edets[i].work, debounce_work_func);
-> +       }
->
->         /* Make sure this is terminated */
->         lr.consumer[sizeof(lr.consumer)-1] = '\0';
-> @@ -1177,7 +1422,7 @@ static int line_create(struct gpio_device *gdev, void __user *ip)
->                         if (ret)
->                                 goto out_free_line;
->                         line->edets[i].flags = flags & GPIO_V2_LINE_EDGE_FLAGS;
-> -                       ret = edge_detector_setup(&line->edets[i], lc);
-> +                       ret = edge_detector_setup(&line->edets[i], lc, i);
->                         if (ret)
->                                 goto out_free_line;
->                 }
-> @@ -1649,6 +1894,8 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->         struct gpio_chip *gc = desc->gdev->chip;
->         bool ok_for_pinctrl;
->         unsigned long flags;
-> +       u32 debounce_period;
-> +       int num_attrs = 0;
->
->         memset(info, 0, sizeof(*info));
->         info->offset = gpio_chip_hwgpio(desc);
-> @@ -1708,7 +1955,13 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->         if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
->                 info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
->
-> -       info->num_attrs = 0;
-> +       debounce_period = READ_ONCE(desc->debounce_period);
-> +       if (debounce_period) {
-> +               info->attrs[num_attrs].id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-> +               info->attrs[num_attrs].debounce_period = debounce_period;
-> +               num_attrs++;
-> +       }
-> +       info->num_attrs = num_attrs;
+As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
+work around errata") stated, this IP has an errata. This commit applies
+the second workaround for the SD mode.
 
-AFAICT this (reading it in gpio_desc_to_lineinfo) is the only reason
-to store the debounce period in struct gpio_desc. I'm wondering if we
-can avoid extending this struct only for such uncommon case and store
-it elsewhere. In all other cases where you read or write to it - you
-have access to the underlying edge detector. Would the single-line
-struct line I suggested elsewhere be a good place? On the other hand
-I'm not sure how to get it having only the desc. I need to think about
-it more.
+Due to the errata, it is not possible to use the hardware tuning provided
+by SDHCI_HOST_CONTROL2.
 
-Bart
+Use the software-controlled tuning like the eMMC mode.
 
->
->         spin_unlock_irqrestore(&gpio_lock, flags);
->  }
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 39b356160937..671805a79a15 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -124,6 +124,10 @@ struct gpio_desc {
->  #ifdef CONFIG_OF_DYNAMIC
->         struct device_node      *hog;
->  #endif
-> +#ifdef CONFIG_GPIO_CDEV
-> +       /* debounce period in microseconds */
-> +       unsigned int            debounce_period;
-> +#endif
->  };
->
->  int gpiod_request(struct gpio_desc *desc, const char *label);
-> --
-> 2.28.0
->
+Set sdhci_host_ops::platform_execute_tuning instead of overriding
+mmc_host_ops::execute_tuning.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 5f2e9696ee4de..0c2489446bd73 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -194,57 +194,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
+ 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
+ }
+ 
+-static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
+-					 unsigned int timing)
+-{
+-	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+-	u32 mode;
+-
+-	switch (timing) {
+-	case MMC_TIMING_MMC_HS:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
+-		break;
+-	case MMC_TIMING_MMC_DDR52:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
+-		break;
+-	case MMC_TIMING_MMC_HS200:
+-		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
+-		break;
+-	case MMC_TIMING_MMC_HS400:
+-		if (priv->enhanced_strobe)
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
+-		else
+-			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
+-		break;
+-	default:
+-		mode = SDHCI_CDNS_HRS06_MODE_SD;
+-		break;
+-	}
+-
+-	sdhci_cdns_set_emmc_mode(priv, mode);
+-
+-	/* For SD, fall back to the default handler */
+-	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
+-		sdhci_set_uhs_signaling(host, timing);
+-}
+-
+-static const struct sdhci_ops sdhci_cdns_ops = {
+-	.set_clock = sdhci_set_clock,
+-	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
+-	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+-	.ops = &sdhci_cdns_ops,
+-};
+-
+ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ {
+ 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
+@@ -278,23 +227,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
+ 
+-static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
++/*
++ * In SD mode, software must not use the hardware tuning and instead perform
++ * an almost identical procedure to eMMC.
++ */
++static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
+ {
+-	struct sdhci_host *host = mmc_priv(mmc);
+ 	int cur_streak = 0;
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
+ 
+ 	/*
+-	 * This handler only implements the eMMC tuning that is specific to
+-	 * this controller.  Fall back to the standard method for SD timing.
++	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
++	 * The delay is set by probe, based on the DT properties.
+ 	 */
+-	if (host->timing != MMC_TIMING_MMC_HS200)
+-		return sdhci_execute_tuning(mmc, opcode);
+-
+-	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
+-		return -EINVAL;
++	if (host->timing != MMC_TIMING_MMC_HS200 &&
++	    host->timing != MMC_TIMING_UHS_SDR104)
++		return 0;
+ 
+ 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
+ 		if (sdhci_cdns_set_tune_val(host, i) ||
+@@ -317,6 +267,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
+ }
+ 
++static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
++	u32 mode;
++
++	switch (timing) {
++	case MMC_TIMING_MMC_HS:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
++		break;
++	case MMC_TIMING_MMC_DDR52:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
++		break;
++	case MMC_TIMING_MMC_HS200:
++		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
++		break;
++	case MMC_TIMING_MMC_HS400:
++		if (priv->enhanced_strobe)
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
++		else
++			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
++		break;
++	default:
++		mode = SDHCI_CDNS_HRS06_MODE_SD;
++		break;
++	}
++
++	sdhci_cdns_set_emmc_mode(priv, mode);
++
++	/* For SD, fall back to the default handler */
++	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
++		sdhci_set_uhs_signaling(host, timing);
++}
++
++static const struct sdhci_ops sdhci_cdns_ops = {
++	.set_clock = sdhci_set_clock,
++	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.reset = sdhci_reset,
++	.platform_execute_tuning = sdhci_cdns_execute_tuning,
++	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++};
++
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+ 					     struct mmc_ios *ios)
+ {
+@@ -377,7 +379,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
+ 	priv->hrs_addr = host->ioaddr;
+ 	priv->enhanced_strobe = false;
+ 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
+-	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
+ 	sdhci_enable_v4_mode(host);
+-- 
+2.25.1
+
+
+
