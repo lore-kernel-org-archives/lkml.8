@@ -6,87 +6,204 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B325EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F236C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895532072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB752072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="tK9KPbz4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vso+itO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHQHyf (ORCPT
+        id S1726749AbgHQH4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:54:35 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:19361 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgHQHyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:54:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597650873; x=1629186873;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4ofZrqwAJsIrM6P1Vwx0HSmOUvg40eLwTglG9qnXtQI=;
-  b=tK9KPbz4XCO3lgUQs22GS0IrgImLbaV5JtTSZvjGNgra9W219D4NLZIU
-   SJvUsA4FZ5CFnBGMgheHtdFULIfMMzNmBUvBpFl+RrHHxvOg4bNE21Vus
-   cluQMLbqpvASfBqjmGSqd/9iax6agxkjTL6TLL5yd+GFXfSKtQ/kFpC/H
-   sWXZ4rU41mhpgbQ2A1V7R6ULj61FyTSoEaZAupms3EB7ZYOwwsOJEyXYe
-   26BNeUNnsvu52PbDTCcDJZBceGkLSHtLBlbGF8vnvxJ9GUcgZs3AkgSUD
-   3eZHzdN5n/ZVUgMJ/HAsDrXtfO7H75iUotGALITCABsm/BAHd0T4be593
-   g==;
-IronPort-SDR: E6jKT3W4gGuPCqcb4dACYlUcJdMvMQ6vN3AbLOWDsFITViC1ocTwq1NFR8yGc6UYCithd/ds9s
- LPsfgBt9exsxIDt7Cyls6tvynZTqeupkZtIlqWC4Dj3vUtFmkq5ntcwsd7c0PGxzzJ4nfm0V8B
- RjUVFTXtvCyL5tAsN4ROaAJ0yohsvLVjerg1Vlr8I4Y63JzHavc/QzETBWPP406Je0v+nZiGr2
- zpp3CSi1EhzAgl6Kt38qpvIN7JsLTIy6kvy4BaIA+KHSXcnt1KuyRdMnsAN01TCTx0J/zeS+JY
- ybk=
-X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="2642593"
-Date:   Mon, 17 Aug 2020 09:54:26 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     Christian Eggers <ceggers@arri.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Hering <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] Add two new configuration drivers for Microchip USB
- hubs
-Message-ID: <20200817075426.GA560469@pcleri>
-References: <20200726084116.GD448215@kroah.com>
- <20200727083333.19623-1-ceggers@arri.de>
+        Mon, 17 Aug 2020 03:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgHQH43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:56:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F70C061388;
+        Mon, 17 Aug 2020 00:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YFe2M9qNEESzBDrGBKXESj8fKVBytShtkStVuIOD0aA=; b=vso+itO36itlX33V0OujrEVXWQ
+        XWOCxai+RblU2HPFcG4y0Jc/Kkch/9519feMu5s/JjVi8kTLvzWVt8mnTUGqV4Cb0+I7Er/hrvthc
+        R5N5OM5tAoW96hS2ye5pIEl5nQyNJqrubGMtqCszVVtBspv2srl07dDEa0F0G5/gUA8aGKzpkXLYw
+        k2FAT2VzLtDegOEIEu/RnyZWL67Q6tIa0g3HdMf5fJsLoy7kJpkCWoMxdwZAeVACFh2c1TNo70QSF
+        RrBuxRTwIiQOv2qfehbS/TwK0O9StnS8IXlzcdtzsMWBP0oe9HCdG02oaTJxZC/LAuCvtA74Y4YvV
+        PaxCkggg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7ZzV-0002Uv-HF; Mon, 17 Aug 2020 07:55:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 892D0303271;
+        Mon, 17 Aug 2020 09:55:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5DF642BFDE0AB; Mon, 17 Aug 2020 09:55:33 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 09:55:33 +0200
+From:   peterz@infradead.org
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        WANG Xuerui <git@xen0n.name>,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Peter Xu <peterx@redhat.com>,
+        Sergey Korolev <s.korolev@ndmsystems.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Marc Zyngier <maz@kernel.org>, Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Steven Price <steven.price@arm.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 1/7] MIPS: sync-r4k: Rework to be many cores firendly
+Message-ID: <20200817075533.GI2674@hirez.programming.kicks-ass.net>
+References: <20200817034701.3515721-1-jiaxun.yang@flygoat.com>
+ <20200817034701.3515721-2-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727083333.19623-1-ceggers@arri.de>
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+In-Reply-To: <20200817034701.3515721-2-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:33:29AM +0200, Christian Eggers wrote:
-> On Sonday, greg k-h wrote:
-> > Please resend the whole series, not just a single patch, as it makes it
-> > very difficult to pick the "correct" patches to be applied...
+On Mon, Aug 17, 2020 at 11:46:40AM +0800, Jiaxun Yang wrote:
+> Here we reworked the whole procdure. Now the synchronise event on CPU0
+> is triggered by smp call function, and we won't touch the count on CPU0
+> at all.
 
-Hi Christian,
-sorry for the late reply. My MUA somehow didn't show me that series
-earlier...
+Are you telling me, that in 2020 you're building chips that need
+horrible crap like this ?!?
 
-I haven't looked into the patches in detail, but at a first glance it
-looks like a lot copy-n-paste.
-Have you thought about merging the (after your series) 3 hub drivers
-into one? Something like a "microchip i2c usb hub driver"?
-Would that be feasible for your point of view?
+> +#define MAX_LOOPS	1000
+> +
+> +void synchronise_count_master(void *unused)
+>  {
+>  	unsigned long flags;
+> +	long delta;
+> +	int i;
+>  
+> +	if (atomic_read(&sync_stage) != STAGE_START)
+> +		BUG();
 
-regards;rl
+	BUG_ON(atomic_read(&sync_state) != STAGE_START);
 
-> 
-> Changes in v3:
->  - none (only resend the whole series)
-> 
-> Changes in v2:
->  - added property description for ocs-min-width-ms
->  - fixed property description for oc-delay-ns
-> 
+>  
+>  	local_irq_save(flags);
+
+That's silly, replace with: lockdep_assert_hardirqs_disabled().
+
+>  
+> +	cur_count = read_c0_count();
+> +	smp_wmb();
+> +	atomic_inc(&sync_stage); /* inc to STAGE_MASTER_READY */
+
+memory barriers require a comment that describes the ordering. This
+includes at least 2 variables and at least 2 code paths (*) -- afaict
+your code does NOT have a matching barrier, see below.
+
+>  
+> +	for (i = 0; i < MAX_LOOPS; i++) {
+> +		cur_count = read_c0_count();
+>  		smp_wmb();
+> -		atomic_inc(&count_count_stop);
+> +		if (atomic_read(&sync_stage) == STAGE_SLAVE_SYNCED)
+> +			break;
+>  	}
+> +
+> +	delta = read_c0_count() - fini_count;
+>  
+>  	local_irq_restore(flags);
+>  
+> +	if (i == MAX_LOOPS)
+> +		pr_err("sync-r4k: Master: synchronise timeout\n");
+> +	else
+> +		pr_info("sync-r4k: Master: synchronise succeed, maximum delta: %ld\n", delta);
+> +
+> +	return;
+>  }
+>  
+>  void synchronise_count_slave(int cpu)
+>  {
+>  	int i;
+>  	unsigned long flags;
+> +	call_single_data_t csd;
+>  
+> +	raw_spin_lock(&sync_r4k_lock);
+
+Why should this be a raw_spnilock_t ?
+
+>  
+> +	/* Let variables get attention from cache */
+> +	for (i = 0; i < MAX_LOOPS; i++) {
+> +		cur_count++;
+> +		fini_count += cur_count;
+> +		cur_count += fini_count;
+>  	}
+
+What does this actually do? You're going to bounce those variables
+between this CPU and CPU-0.
+
+> +
+> +	atomic_set(&sync_stage, STAGE_START);
+> +	csd.func = synchronise_count_master;
+> +
+> +	/* Master count is always CPU0 */
+> +	if (smp_call_function_single_async(0, &csd)) {
+
+This is diguisting.
+
+It also requires a comment on how the on-stack csd is correct (it is,
+but it really needs a comment).
+
+> +		pr_err("sync-r4k: Salve: Failed to call master\n");
+> +		raw_spin_unlock(&sync_r4k_lock);
+> +		return;
+> +	}
+> +
+> +	local_irq_save(flags);
+> +
+> +	/* Wait until master ready */
+> +	while (atomic_read(&sync_stage) != STAGE_MASTER_READY)
+> +		cpu_relax();
+
+This really wants to be:
+
+	atomic_cond_read_acquire(&&sync_stage, VAL == STAGE_MASTER_READY);
+
+Because, afaict the smp_wmb() (*) in synchronize_count_master() order
+against this here and we need to guarantee we read @sync_stage _before_
+@cur_count.
+
+> +
+> +	write_c0_count(cur_count);
+> +	fini_count = read_c0_count();
+> +	smp_wmb();
+> +	atomic_inc(&sync_stage); /* inc to STAGE_SLAVE_SYNCED */
+>  
+>  	local_irq_restore(flags);
+> +
+> +	raw_spin_unlock(&sync_r4k_lock);
+>  }
+
+
+Furthermore, afaict there isn't actually any concurrency on @sync_stage,
+so atomic_t isn't required, Using smp_store_release() to change state
+might be far more natural.
