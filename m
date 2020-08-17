@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B48AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E63720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2B32075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688279;
-	bh=x/U1bl+LeQHB8ISocmOrRYbQGZsUSt9XyVWUZ+kUUaM=;
+	s=default; t=1597688281;
+	bh=LDRde579IH4D7jgSa7XKhXppNTvURu23QBA65CP4FqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yX8/N2HPcUWqM9gYWJawW4dqcFAYaUUeav+SB0Vn8ANmCc2zkQfQkswIbd5rPgfFC
-	 8tgvTAqo60Q1nZzgceiFxAQTdlH6c7djE0fCJDRlaAir5pbuk8HF18Zzy95twTQZ+6
-	 HhiD/HPECTbDmIzAaRpIf+fmam5L8AN7lHk2KlQE=
+	b=o6E5l60/qkjyX4Dy6oawuPczraYm0xxkztQpYe5G85s7k8AxLpLKQYAWNV7yPyvQ4
+	 ifAFGH6J5EeRe2uCVEM2I3DkQYa957SXTInLqtC11TJbxD7gv3umShM90YS4J83EW+
+	 1cWZNsDnXJbxV0GemPMOZZNFCrtOK3XaWZXxClDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390752AbgHQSRh (ORCPT
+        id S2390744AbgHQSRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53232 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388378AbgHQQFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:48 -0400
+        id S2388377AbgHQQFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF1CA207FB;
-        Mon, 17 Aug 2020 16:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54B1E207FF;
+        Mon, 17 Aug 2020 16:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680346;
-        bh=x/U1bl+LeQHB8ISocmOrRYbQGZsUSt9XyVWUZ+kUUaM=;
+        s=default; t=1597680336;
+        bh=LDRde579IH4D7jgSa7XKhXppNTvURu23QBA65CP4FqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yq00zIznshsJwEtZrkCzMa1UqKUD205VXTs/z3y6ZvRRA+9NpwriS1V8W3zMOxmZd
-         LHo9J7lZe9ZyhODGaeJwUkupUzffzcMuet2HAWtEhzjEveCayNOtjoVCGXTOre34Q4
-         5ToCYveeoQyat6+MzN57JS4Su6loEyGJ8hHUAASs=
+        b=K3YPmfqHxf5UYeie+LJAa81UpzRilAff/OswhWMlFHZMh6bgJBtl0o7KnnaI6Qa0N
+         Msyzq0skCyxfAYel9djhXJx04fSX/pSfHpTs6IaH2TWGOvZMLMhHDJL4UrAc7lHHLn
+         9vZStgL1R4FJAsJGisOUPdlIRlMivgOFbaHWb64A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 150/270] powerpc/book3s64/pkeys: Use PVR check instead of cpu feature
-Date:   Mon, 17 Aug 2020 17:15:51 +0200
-Message-Id: <20200817143803.288732568@linuxfoundation.org>
+Subject: [PATCH 5.4 146/270] staging: rtl8192u: fix a dubious looking mask before a shift
+Date:   Mon, 17 Aug 2020 17:15:47 +0200
+Message-Id: <20200817143803.078856991@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,52 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit d79e7a5f26f1d179cbb915a8bf2469b6d7431c29 ]
+[ Upstream commit c4283950a9a4d3bf4a3f362e406c80ab14f10714 ]
 
-We are wrongly using CPU_FTRS_POWER8 to check for P8 support. Instead, we should
-use PVR value. Now considering we are using CPU_FTRS_POWER8, that
-implies we returned true for P9 with older firmware. Keep the same behavior
-by checking for P9 PVR value.
+Currently the masking of ret with 0xff and followed by a right shift
+of 8 bits always leaves a zero result.  It appears the mask of 0xff
+is incorrect and should be 0xff00, but I don't have the hardware to
+test this. Fix this to mask the upper 8 bits before shifting.
 
-Fixes: cf43d3b26452 ("powerpc: Enable pkey subsystem")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-2-aneesh.kumar@linux.ibm.com
+[ Not tested ]
+
+Addresses-Coverity: ("Operands don't affect result")
+Fixes: 8fc8598e61f6 ("Staging: Added Realtek rtl8192u driver to staging")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200716154720.1710252-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/pkeys.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/staging/rtl8192u/r8192U_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
-index 66f307e873dca..432fd9fa8c3f0 100644
---- a/arch/powerpc/mm/book3s64/pkeys.c
-+++ b/arch/powerpc/mm/book3s64/pkeys.c
-@@ -83,13 +83,17 @@ static int pkey_initialize(void)
- 	scan_pkey_feature();
- 
- 	/*
--	 * Let's assume 32 pkeys on P8 bare metal, if its not defined by device
--	 * tree. We make this exception since skiboot forgot to expose this
--	 * property on power8.
-+	 * Let's assume 32 pkeys on P8/P9 bare metal, if its not defined by device
-+	 * tree. We make this exception since some version of skiboot forgot to
-+	 * expose this property on power8/9.
- 	 */
--	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR) &&
--			cpu_has_feature(CPU_FTRS_POWER8))
--		pkeys_total = 32;
-+	if (!pkeys_devtree_defined && !firmware_has_feature(FW_FEATURE_LPAR)) {
-+		unsigned long pvr = mfspr(SPRN_PVR);
-+
-+		if (PVR_VER(pvr) == PVR_POWER8 || PVR_VER(pvr) == PVR_POWER8E ||
-+		    PVR_VER(pvr) == PVR_POWER8NVL || PVR_VER(pvr) == PVR_POWER9)
-+			pkeys_total = 32;
-+	}
- 
- 	/*
- 	 * Adjust the upper limit, based on the number of bits supported by
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index 511136dce3a4c..ddc09616248a5 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -2401,7 +2401,7 @@ static int rtl8192_read_eeprom_info(struct net_device *dev)
+ 				ret = eprom_read(dev, (EEPROM_TX_PW_INDEX_CCK >> 1));
+ 				if (ret < 0)
+ 					return ret;
+-				priv->EEPROMTxPowerLevelCCK = ((u16)ret & 0xff) >> 8;
++				priv->EEPROMTxPowerLevelCCK = ((u16)ret & 0xff00) >> 8;
+ 			} else
+ 				priv->EEPROMTxPowerLevelCCK = 0x10;
+ 			RT_TRACE(COMP_EPROM, "CCK Tx Power Levl: 0x%02x\n", priv->EEPROMTxPowerLevelCCK);
 -- 
 2.25.1
 
