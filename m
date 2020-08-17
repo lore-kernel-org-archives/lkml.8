@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F277C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5E5F2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC182063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687082;
-	bh=IZjzyE1aX3712sShmYz1uvcd4FP+29hcOBDseRn3yik=;
+	s=default; t=1597687108;
+	bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovkgr9SaRpAdo9kmfr6AD9oBwvd4AgQJuKJoc+rpE1CeqhbnxhVuiDY6r+mWKIm6o
-	 6wIvSD8p52cgVYdZmC64vmxobZ0GixkJs9qc95Psn6hd0Hqo12HQiL2X5UaEfSNOSr
-	 FSjEJ1VUmR94z0k81h3ZuDd3fzdR6mrvQiBzWfMc=
+	b=uJarCfK0UHDKzCdEHHgMyrtWJvSrw79a0AltFY/iPlIwRUhVnLaMva6KPzwMUPlTN
+	 Llo/f564UXbiOqHTaluEz51tmihuoxQsnlwjJPRDXU/TJ7xDjUGjKQqKQe1doAD7ED
+	 ag8QNYwF09LrFUfZv5O2/VE1WIVyIoEWtzcrR4BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390023AbgHQR56 (ORCPT
+        id S2390143AbgHQR6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388548AbgHQQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388547AbgHQQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:10:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83C9D22CB3;
-        Mon, 17 Aug 2020 16:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A6120729;
+        Mon, 17 Aug 2020 16:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680625;
-        bh=IZjzyE1aX3712sShmYz1uvcd4FP+29hcOBDseRn3yik=;
+        s=default; t=1597680620;
+        bh=SrnGT9mFV8mx+n9fnp7oqTYm1Ykr9auihTd+1/BmR7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHqnBkoSjZM2wX+2BPFccsYkAhq5ZXFg7Tikf3jICNv3+7J3J2kLcOYYnF+3iz+fT
-         //yWFJLEW58EhW55z+DrqHj7q2OoJdqtgEUA69bfJS+UDygDYgsuHNZ/UW+zEmJGTa
-         0dL1lABDvaawrHmseNHrVt39uOAnjIIEeHXE/rSk=
+        b=14nCjVjjRzrTwtMS1/c5jqjtG94FXhKln0u759mTiwTZ8sFsEjooERt3duI1eGPYm
+         A3GmIUZYlxlNhGMVjnl+x2goTrbxHv+6YV+NVGQH+dc6Fp+WY2M3Rnq0jhJjajKzFe
+         eS6GLJ1ZN8RtOo6of88ZQMC8Bst5UhYfLDgc6WUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mirko Dietrich <buzz@l4m1.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 231/270] ALSA: usb-audio: Creative USB X-Fi Pro SB1095 volume knob support
-Date:   Mon, 17 Aug 2020 17:17:12 +0200
-Message-Id: <20200817143807.298484277@linuxfoundation.org>
+        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
+        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 229/270] USB: serial: cp210x: enable usb generic throttle/unthrottle
+Date:   Mon, 17 Aug 2020 17:17:10 +0200
+Message-Id: <20200817143807.201622565@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,34 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mirko Dietrich <buzz@l4m1.de>
+From: Brant Merryman <brant.merryman@silabs.com>
 
-commit fec9008828cde0076aae595ac031bfcf49d335a4 upstream.
+commit 4387b3dbb079d482d3c2b43a703ceed4dd27ed28 upstream.
 
-Adds an entry for Creative USB X-Fi to the rc_config array in
-mixer_quirks.c to allow use of volume knob on the device.
-Adds support for newer X-Fi Pro card, known as "Model No. SB1095"
-with USB ID "041e:3263"
+Assign the .throttle and .unthrottle functions to be generic function
+in the driver structure to prevent data loss that can otherwise occur
+if the host does not enable USB throttling.
 
-Signed-off-by: Mirko Dietrich <buzz@l4m1.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200806124850.20334-1-buzz@l4m1.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+Co-developed-by: Phu Luu <phu.luu@silabs.com>
+Signed-off-by: Phu Luu <phu.luu@silabs.com>
+Link: https://lore.kernel.org/r/57401AF3-9961-461F-95E1-F8AFC2105F5E@silabs.com
+[ johan: fix up tags ]
+Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
+Cc: stable <stable@vger.kernel.org>     # 2.6.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/cp210x.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -184,6 +184,7 @@ static const struct rc_config {
- 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
- 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
-+	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
- };
- 
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_d
+ 	.break_ctl		= cp210x_break_ctl,
+ 	.set_termios		= cp210x_set_termios,
+ 	.tx_empty		= cp210x_tx_empty,
++	.throttle		= usb_serial_generic_throttle,
++	.unthrottle		= usb_serial_generic_unthrottle,
+ 	.tiocmget		= cp210x_tiocmget,
+ 	.tiocmset		= cp210x_tiocmset,
+ 	.attach			= cp210x_attach,
 
 
