@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D36C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D1923AA3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14AFA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678181;
-	bh=4+6wWIKe8l/IB4rjBL6yXthtlQS2Tw3kyYjyTfIWmLQ=;
+	s=default; t=1597678188;
+	bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/eSjc3gx4abcc71PGmXJdqtwtZX3Wgtdb7icZiLnOlITwbVg2Afzs9udeDheXTZ/
-	 9QM5gOJKD/9kyfT88mMoj1SaRFGn4gU5DFViOoJgVekngr4ofxEn6PXEcuHoyJqpNa
-	 hy+1js/OMEfr60dWtUy2vLhk3j5tUPzKyNjRmGmU=
+	b=U/wVumHcnk2zmAk1h1MT4mKlI/3B4uEVb3JIFUbNc0RwmT1+EneGJJH97cROv2Ex7
+	 CV6roVqyk0iGRhXj5nBRbuWU/SD88u4CSJDXvZNKoKEXuOxQPVyKhktBvHndFGz7lr
+	 6P2w0dzksWTLS5ioqrh3WyiCxGBPmnV0sHGRKRHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgHQP3i (ORCPT
+        id S1730132AbgHQP3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729890AbgHQP11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:27:27 -0400
+        id S1729924AbgHQP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B894E23B55;
-        Mon, 17 Aug 2020 15:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8D8233CF;
+        Mon, 17 Aug 2020 15:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678047;
-        bh=4+6wWIKe8l/IB4rjBL6yXthtlQS2Tw3kyYjyTfIWmLQ=;
+        s=default; t=1597678056;
+        bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0WvhY8jZg6zZ3QEp/jjmI3CMcZSrgq5qnaJRlOYJc8cjs8hcnDhiMIyL/Q+DhNm+
-         /nNoQFq1j/QANiCHnpz1Jtd9UpuGbBTeD+QH1sp6tI+sNW2GrI0JsssD4a8/BH6eiO
-         tTc0kf9dzNxwCJd8EA50ivHNRMBgyo1JrbGKgxCM=
+        b=qAW545Eoe/ytO6yawRJ0VqgiKpQoRXZsOtoR2TJBwapVg4A42UjmpptV64C5ItZOm
+         9JL2OK8ezNft2ImdGbplp865XGqOjfi/y1sl7dn4O79mkuGy+AESDWSObxPZTYBjh2
+         gdo38SVG4irfSm5p+d7b3cCRbZiZS98OR7hl67Fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 201/464] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
-Date:   Mon, 17 Aug 2020 17:12:34 +0200
-Message-Id: <20200817143843.450164445@linuxfoundation.org>
+Subject: [PATCH 5.8 186/464] cxl: Fix kobject memleak
+Date:   Mon, 17 Aug 2020 17:12:19 +0200
+Message-Id: <20200817143842.731796077@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,35 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit d179f7c763241c1dc5077fca88ddc3c47d21b763 ]
+[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
 
-The dev_id used in request_irq() and free_irq() should match. Use 'info' in
-both cases.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Link: https://lore.kernel.org/r/20200626035948.944148-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/powertec.c | 2 +-
+ drivers/misc/cxl/sysfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
-index 772a13e5fd916..d99ef014528e3 100644
---- a/drivers/scsi/arm/powertec.c
-+++ b/drivers/scsi/arm/powertec.c
-@@ -378,7 +378,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
+diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
+index f0263d1a1fdf2..d97a243ad30c0 100644
+--- a/drivers/misc/cxl/sysfs.c
++++ b/drivers/misc/cxl/sysfs.c
+@@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
+ 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+ 				  &afu->dev.kobj, "cr%i", cr->cr);
+ 	if (rc)
+-		goto err;
++		goto err1;
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
- 
-  out_release:
- 	fas216_release(host);
+ 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+ 	if (rc)
 -- 
 2.25.1
 
