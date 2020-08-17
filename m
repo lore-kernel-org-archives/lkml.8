@@ -2,89 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70085C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C8220758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DFE207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLdjt5aG"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lOAIwZ6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHQIG2 (ORCPT
+        id S1726910AbgHQIGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgHQIG0 (ORCPT
+        Mon, 17 Aug 2020 04:06:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725765AbgHQIGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:06:26 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B13C061388;
-        Mon, 17 Aug 2020 01:06:25 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id q3so8953519ybp.7;
-        Mon, 17 Aug 2020 01:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RvZPDrvmfEiKC4tHNx7HHIStbbhxJ3KZNZoKmceVCt8=;
-        b=iLdjt5aGTDR2TjfH/YM/zYjVgquCAFjTonvBSjNebP+JplL/9szjGBHNCoIw4A3kzT
-         FlDKeVeq3h6yAVKSRKIfMqF4IxNmb7EwJVykI2N2weat8Qj6zSQbCwHmU/q7S8rjBA7s
-         SSVLIopj6vA9mUZehH+uhO4juamYi2ym5judzl6lFE4/PtBvGnR3iy7WQgf2XYiImavU
-         Sw4kRLnLb5ylIvhXRLrnajIO8p0VG+n3lbl3wodIIq4TUSj+vyvDIWWR3Xhcfgr1zits
-         mck22Jyqro/lL3uFXyqdLPDHK24SxnUx00feSoPus3RGKkO1Q7Dyeq/SOVKoL/L2rxOX
-         SS2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RvZPDrvmfEiKC4tHNx7HHIStbbhxJ3KZNZoKmceVCt8=;
-        b=kVl9CodUWHHbdIjPefjrfda2C7i9Mxv7mm8nfZcTt5pl4QMyJV3Y2I0UZrYss46A2r
-         2lFIu9AZxX40m5IJxGcTtWuHDXybMx26T7L5wQXXioUz54v/ZhvN5dZXs9VYXJ57w/XM
-         FTUJUY237oMEmOnl9BUN1gH0fmg0/CQG8KrbUcNtomDvBnvFSxG/yldMBaDe8sXAiPXo
-         SZR3DtO56PELQm6QVTTdAvQofr9EZtv3R3rZMaT+RwbSkqW0mE2eZyfg0vYWcY9ZyhLy
-         dGSrRiYkonxeQPE0L17ETi7UvQM4y1UwuUNav89k3M30eisjPI0LtWROcwGnoTkjimQL
-         VQXg==
-X-Gm-Message-State: AOAM533qgO08LbzY2OpP/PphglE1foFanrXURRZ831C45W9w2WTHd6+5
-        rb/wZ7JeeVs6ESvWmf8Bfg9OAfitPUd3nNd+VzQ=
-X-Google-Smtp-Source: ABdhPJwuEiUsH+Vvl0Yk+PNDQ+Y5+7C2mO55RV8fSgIhUwox27zfL1LyVmevflabpOJiY5DM9KPz97anKR2APR5znb8=
-X-Received: by 2002:a25:df92:: with SMTP id w140mr18569600ybg.455.1597651583753;
- Mon, 17 Aug 2020 01:06:23 -0700 (PDT)
+        Mon, 17 Aug 2020 04:06:45 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07H81U6S088239;
+        Mon, 17 Aug 2020 04:06:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
+ to : cc : references : in-reply-to : mime-version : message-id :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=X07FvFb0QfIASln5B97rfeHj9PpOEHmY/M1fLCCLXdI=;
+ b=lOAIwZ6C5ugZiiO3+2bAGdPZ6gPHdgi/WYlBdSRf756AdpK0Qag9rE/qT/i1uQIFQPB9
+ T589z/740xkaqxnKhl1aBjkTFbqF5whV2ZW66vFVsofpQW9mPdpuECQhN4EuZOrrD5Pp
+ i7aBaHzgvd2KLIN3pO1UxD7QMzUSXnkjVrF8xYJ7GK+bHcpsQeaASc7BTA6UuhIOpowY
+ U43AWTU051ED4WSTgNMlqzuumABr84U1Y5aNTqndTTb4VoazWdkVzVGcDrTRZMLke/2k
+ sP5px7yJdb9Mxk8OeHgGku2uJdquP091k5+/13PP+UcXE4pmRQpvZW5lRzHJftfRLJFb AA== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32y5s7acmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 04:06:11 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07H85gdc004000;
+        Mon, 17 Aug 2020 08:05:45 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 32x7b8208b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 08:05:45 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07H85hf922413736
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 08:05:43 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E051F4203F;
+        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 884E442045;
+        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
+Received: from localhost (unknown [9.102.3.68])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
+Date:   Mon, 17 Aug 2020 13:35:42 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH v1] powerpc/process: Remove unnecessary #ifdef
+ CONFIG_FUNCTION_GRAPH_TRACER
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <9d11143d4e27ba8274369a926968756917584868.1597643153.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <9d11143d4e27ba8274369a926968756917584868.1597643153.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-References: <20200814113933.1903438-1-lee.jones@linaro.org> <20200814113933.1903438-27-lee.jones@linaro.org>
-In-Reply-To: <20200814113933.1903438-27-lee.jones@linaro.org>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Date:   Mon, 17 Aug 2020 10:06:12 +0200
-Message-ID: <CACna6ryNNyyVftEFNFEwouKc3O21oPaeqie+bjJR4L_Cf8z2BQ@mail.gmail.com>
-Subject: Re: [PATCH 26/30] net: wireless: broadcom: b43: phy_common: Demote
- non-conformant kerneldoc header
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
-        Michael Buesch <m@bues.ch>,
-        Stefano Brivio <stefano.brivio@polimi.it>,
-        Andreas Jaggi <andreas.jaggi@waterwave.ch>,
-        Network Development <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        b43-dev <b43-dev@lists.infradead.org>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Martin Langer <martin-langer@gmx.de>,
-        van Dyk <kugelfang@gentoo.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Message-Id: <1597651522.loa8bqu8s9.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_02:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ clxscore=1011 bulkscore=0 priorityscore=1501 mlxlogscore=879
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008170059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 13:41, Lee Jones <lee.jones@linaro.org> wrote:
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/net/wireless/broadcom/b43/phy_common.c:467: warning: Function parameter or member 'work' not described in 'b43_phy_txpower_adjust_work'
+Christophe Leroy wrote:
+> ftrace_graph_ret_addr() is always defined and returns 'ip' when
+> CONFIG_FUNCTION GRAPH_TRACER is not set.
+>=20
+> So the #ifdef is not needed, remove it.
+>=20
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/kernel/process.c | 4 ----
+>  1 file changed, 4 deletions(-)
 
-Why you can't document @work instead? Should be quite a better solution.
+LGTM.
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+
+- Naveen
+
