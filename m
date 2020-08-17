@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8C2C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDFE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A22204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689842;
-	bh=Kp8YB+cckSSzEOMiviR23Op7YTUgP0UQ2ytfzormX48=;
+	s=default; t=1597689845;
+	bh=hob5rQU3KtWXDybm623x085AoUsNKY9aH/mUMcv3jD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uTCfR9njLbA3L+y7QOdTq6C72oRMwxxom/K4BF9zR1gAVepAjRuNAIWHp+utKRIgp
-	 chmGu87MB1PYCtaIgwyR2yYbtV5p/3Y5fG91W7qOEVfDdEEG09UN9EujGA+7M1Jhnt
-	 YFQvk0dCZ0jU71iCWpKpwpNdW/qCc8sR1NxemU/o=
+	b=DtHgPOw9GkQULlIKj/3e68wdMIJIjH7glgNoYVw/HWmP0REWvtdr7/j4zcfurK0TL
+	 zXfp1DrYf7bQjKrf4kwzxqwkO3M3cYW0I0c4mzTMA/RtAtNCMQr789L4x+Zvncv6Hh
+	 a9TV8f+mKbd0IQeUs9L4U8Hd6ojagFyW6rBFLJEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403773AbgHQSn7 (ORCPT
+        id S2391519AbgHQSoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388079AbgHQP4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:32 -0400
+        id S2388077AbgHQP4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33629206FA;
-        Mon, 17 Aug 2020 15:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D98221E2;
+        Mon, 17 Aug 2020 15:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679791;
-        bh=Kp8YB+cckSSzEOMiviR23Op7YTUgP0UQ2ytfzormX48=;
+        s=default; t=1597679788;
+        bh=hob5rQU3KtWXDybm623x085AoUsNKY9aH/mUMcv3jD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANszUnQRwa0KcNyby+37RwxC5L75vJudGOxVgnSSm04Gp+TKSdE2KUVQB+ot1czxZ
-         pofe+lln4OYfA6bk44PFyOtihg1MzQnIMRWWYVjNcx5MLhqAaKIOIcvlXIlAQQC48r
-         2XBp59TwOXxtmbXX4JaHFxy1oeR3Un2oEq+ew3GE=
+        b=oM6xIgZab7jmbkQO9nfX7WPVMJo6kMc0xdKTF4DcC1CoMSPPQq1+CPjSty1akMCod
+         dwR96FTjedA5iXIbfgVW0T+AqfRbcUgNrKD5w1LXHaS/rHmJnrhr9Q1Fcwz7Xy0fcO
+         UtovaYvJhqLpAkDq9hLETyWYKrJUMTPyh92aDXMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        stable@vger.kernel.org, Mirko Dietrich <buzz@l4m1.de>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 336/393] ALSA: usb-audio: fix overeager device match for MacroSilicon MS2109
-Date:   Mon, 17 Aug 2020 17:16:26 +0200
-Message-Id: <20200817143835.896367156@linuxfoundation.org>
+Subject: [PATCH 5.7 335/393] ALSA: usb-audio: Creative USB X-Fi Pro SB1095 volume knob support
+Date:   Mon, 17 Aug 2020 17:16:25 +0200
+Message-Id: <20200817143835.848186262@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,40 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Mirko Dietrich <buzz@l4m1.de>
 
-commit 14a720dc1f5332f3bdf30a23a3bc549e81be974c upstream.
+commit fec9008828cde0076aae595ac031bfcf49d335a4 upstream.
 
-Matching by device matches all interfaces, which breaks the video/HID
-portions of the device depending on module load order.
+Adds an entry for Creative USB X-Fi to the rc_config array in
+mixer_quirks.c to allow use of volume knob on the device.
+Adds support for newer X-Fi Pro card, known as "Model No. SB1095"
+with USB ID "041e:3263"
 
-Fixes: e337bf19f6af ("ALSA: usb-audio: add quirk for MacroSilicon MS2109")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810045319.128745-1-marcan@marcan.st
+Signed-off-by: Mirko Dietrich <buzz@l4m1.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200806124850.20334-1-buzz@l4m1.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks-table.h |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/usb/mixer_quirks.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3623,7 +3623,13 @@ ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* A
-  * with.
-  */
- {
--	USB_DEVICE(0x534d, 0x2109),
-+	.match_flags = USB_DEVICE_ID_MATCH_DEVICE |
-+		       USB_DEVICE_ID_MATCH_INT_CLASS |
-+		       USB_DEVICE_ID_MATCH_INT_SUBCLASS,
-+	.idVendor = 0x534d,
-+	.idProduct = 0x2109,
-+	.bInterfaceClass = USB_CLASS_AUDIO,
-+	.bInterfaceSubClass = USB_SUBCLASS_AUDIOCONTROL,
- 	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
- 		.vendor_name = "MacroSilicon",
- 		.product_name = "MS2109",
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -185,6 +185,7 @@ static const struct rc_config {
+ 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
+ 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
+ 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
++	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
+ 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
+ };
+ 
 
 
