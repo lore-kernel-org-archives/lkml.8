@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D500C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEC6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C0A2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4231D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh+EGB+k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+VGCUsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgHQIcs (ORCPT
+        id S1727997AbgHQIdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
+        Mon, 17 Aug 2020 04:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgHQIcg (ORCPT
+        with ESMTP id S1728271AbgHQIcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:32:36 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C636C061388;
-        Mon, 17 Aug 2020 01:32:36 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so7128856plk.13;
-        Mon, 17 Aug 2020 01:32:36 -0700 (PDT)
+        Mon, 17 Aug 2020 04:32:47 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC7EC061389;
+        Mon, 17 Aug 2020 01:32:47 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 128so7772677pgd.5;
+        Mon, 17 Aug 2020 01:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NqEhz7gjYdgryeSdNN20GePxbntGjPIIXSk67vgjhoU=;
-        b=Gh+EGB+k8MzIKZg3w4K1ReMB81hsNs2AGPTnCES/QCxxcuy4qM7/sBQrJNQ1rZHuzq
-         8czJSF/odgqsMdRQ6yGzY1iPtKRcg2YWPqLMvSmk1ini9g1Y5ggfMX2Yq9gxO0rCL1XW
-         pc+g+KGPFngjL/wT8JdwBlwS/0t9kq4tDuTDu/3cRdiWucfvW9ot2zpxMGuHoXypTVHf
-         GzcWtlRMRpUXDGWlrIHAj7LJ/JZqzSlEQKL2Weq16sJD8FIiGwErWBPUdWUEEAECmHmX
-         IsubQ+XrnAe/To191WyUFC1zxUwNK1vw+zkEBGQc8CtOGz9x/a6LU+QrgCSp1mtmLuEc
-         EXPQ==
+        bh=jjvDDq/8L15Sv7VUgqoIMZQVb7xUNFz5WyPYgZ5irWo=;
+        b=d+VGCUspw14qYJuXoZkofwmewEPLwDoqAhfQWhxRAiRzuc4CC5op9Jo8Pk21mbzXrr
+         1uN0G6TbIBH/sUQRwlZ+wg2iYL1iXUn784j8XL0V7yzj/Mhr993koq+QW72sAQ2tD8e8
+         dFbKzTrY5Ge1rn9Mjz8MJq7F6rROW7bj8YEBdEezlDX58Qx10GX9BLMqw4uj2A3K8KyJ
+         A9lc7iv1QMOOBs9iZp4atM50JObFBIgAQuM3gLsCap55F4OeXql4cXbjolMZqqhoTq1W
+         /sTx7ipxPKLAhoGw8FWtiDtYW0SC7z/xzz6c3m9R2vq9nWfhKoyioMAZ68CU04IeJ8t0
+         6ZmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NqEhz7gjYdgryeSdNN20GePxbntGjPIIXSk67vgjhoU=;
-        b=AhcG0oB5iQP1Fl+rPSeb2m+ekZZ/YgBYqfStVxwr9kSW//O5EPpX8SfFNUzJGX90SD
-         7yKYUendP/sSixVK/UHGWLaHv7cw4KvSgACr2q1nrZJ14bF8P+j3uX2pS4Da5ElAQ+UE
-         l/w7zmsiuLkKiQGGT2+MXdxXsc3y0MR6a0icdu8u3s0/h41d0BZ0Io56ycnOAGnKAk53
-         +Vqq/+ov9KvXDhla2cHUkxzpAGR+g6GZ8ooY2XVZQTQcQxGTod9r9APZvyH6QPXfZ9+v
-         cpm0MYogwoPaetL4dmzGGs9ZKysldPozMktXDuCApiESJavRAbOOQlBW6S5YVYrpj0LQ
-         coVQ==
-X-Gm-Message-State: AOAM5305uQQGA6xDV0GDYRaNyx75ItlRXBdxLObdAuPkqyJinVgqVpLH
-        59GqWxFKqJhoCgyQpoQhmMc=
-X-Google-Smtp-Source: ABdhPJyaxIojnOBxSDHaqmulSYl6Xyx5DXhb37mfDSkclxjTW0DvKjhIzVP6JCoCGtu8211RqApIaA==
-X-Received: by 2002:a17:90b:3008:: with SMTP id hg8mr11716483pjb.120.1597653155825;
-        Mon, 17 Aug 2020 01:32:35 -0700 (PDT)
+        bh=jjvDDq/8L15Sv7VUgqoIMZQVb7xUNFz5WyPYgZ5irWo=;
+        b=CoylhD8iEISUUmSd1lSX7T2NFlyWNk5sTlBVrpCWIkCpY6ruuqnT7aIzwUJVzgZE2S
+         oSyQvdeJXXKVVnk94rgQ8wbLjHpwzXuXwhDtM0ntHmteDLTtV0E6i9NpS2D1j7lYFggE
+         TShSmskioThVCBKd/xyAkQkYaxD4RZMRyhim2NIer/cmQk+jsR/CjD55ZKZncxQut1nD
+         bOmkNHyvjervUr9ESth7zn2lalY1oJHO44QzjnPw3y1djAznloFLD4t98FuRL42xozg/
+         6IFqoxCC+yaW5KnM7XEixGFbrv7TwBLGcYMlTXibYGflMZoaqnpbTeliYLRqkUQ1t2US
+         Dk7Q==
+X-Gm-Message-State: AOAM530s3z1+C1A/sx/cH5nThwJ+My1qrZQINZluB9Yy9Zlno6uKirew
+        JKmfxmxCaopmrBpxGVUgBvk=
+X-Google-Smtp-Source: ABdhPJyTu4zxbEbd5s2N3jMG1TWfoMJhqkj4QdJNVr58XHa/J2AnOn05SJcGSqAWcG9POyc7s9+u9A==
+X-Received: by 2002:a62:6887:: with SMTP id d129mr10726892pfc.279.1597653166944;
+        Mon, 17 Aug 2020 01:32:46 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.32
+        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:32:35 -0700 (PDT)
+        Mon, 17 Aug 2020 01:32:46 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     mchehab@kernel.org, maintainers@bluecherrydvr.com,
         patrice.chotard@st.com
@@ -66,9 +66,9 @@ Cc:     keescook@chromium.org, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 07/11] media: marvell-ccic: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:01:49 +0530
-Message-Id: <20200817083153.22218-8-allen.lkml@gmail.com>
+Subject: [PATCH 10/11] media/radio: wl128x: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:01:52 +0530
+Message-Id: <20200817083153.22218-11-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817083153.22218-1-allen.lkml@gmail.com>
 References: <20200817083153.22218-1-allen.lkml@gmail.com>
@@ -85,35 +85,61 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/media/radio/wl128x/fmdrv_common.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index 3d4242b8182b..7c4e3498d6bb 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -438,9 +438,9 @@ static void mcam_ctlr_dma_vmalloc(struct mcam_camera *cam)
- /*
-  * Copy data out to user space in the vmalloc case
+diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
+index cce97c9d5409..5c395da74e17 100644
+--- a/drivers/media/radio/wl128x/fmdrv_common.c
++++ b/drivers/media/radio/wl128x/fmdrv_common.c
+@@ -244,7 +244,7 @@ void fmc_update_region_info(struct fmdev *fmdev, u8 region_to_set)
+  * FM common sub-module will schedule this tasklet whenever it receives
+  * FM packet from ST driver.
   */
--static void mcam_frame_tasklet(unsigned long data)
-+static void mcam_frame_tasklet(struct tasklet_struct *t)
+-static void recv_tasklet(unsigned long arg)
++static void recv_tasklet(struct tasklet_struct *t)
  {
--	struct mcam_camera *cam = (struct mcam_camera *) data;
-+	struct mcam_camera *cam = from_tasklet(cam, t, s_tasklet);
- 	int i;
+ 	struct fmdev *fmdev;
+ 	struct fm_irq *irq_info;
+@@ -253,7 +253,7 @@ static void recv_tasklet(unsigned long arg)
+ 	u8 num_fm_hci_cmds;
  	unsigned long flags;
- 	struct mcam_vb_buffer *buf;
-@@ -1323,8 +1323,7 @@ static int mcam_setup_vb2(struct mcam_camera *cam)
- 		break;
- 	case B_vmalloc:
- #ifdef MCAM_MODE_VMALLOC
--		tasklet_init(&cam->s_tasklet, mcam_frame_tasklet,
--				(unsigned long) cam);
-+		tasklet_setup(&cam->s_tasklet, mcam_frame_tasklet);
- 		vq->ops = &mcam_vb2_ops;
- 		vq->mem_ops = &vb2_vmalloc_memops;
- 		cam->dma_setup = mcam_ctlr_dma_vmalloc;
+ 
+-	fmdev = (struct fmdev *)arg;
++	fmdev = from_tasklet(fmdev, t, tx_task);
+ 	irq_info = &fmdev->irq_info;
+ 	/* Process all packets in the RX queue */
+ 	while ((skb = skb_dequeue(&fmdev->rx_q))) {
+@@ -328,13 +328,13 @@ static void recv_tasklet(unsigned long arg)
+ }
+ 
+ /* FM send tasklet: is scheduled when FM packet has to be sent to chip */
+-static void send_tasklet(unsigned long arg)
++static void send_tasklet(struct tasklet_struct *t)
+ {
+ 	struct fmdev *fmdev;
+ 	struct sk_buff *skb;
+ 	int len;
+ 
+-	fmdev = (struct fmdev *)arg;
++	fmdev = from_tasklet(fmdev, t, tx_task);
+ 
+ 	if (!atomic_read(&fmdev->tx_cnt))
+ 		return;
+@@ -1535,11 +1535,11 @@ int fmc_prepare(struct fmdev *fmdev)
+ 
+ 	/* Initialize TX queue and TX tasklet */
+ 	skb_queue_head_init(&fmdev->tx_q);
+-	tasklet_init(&fmdev->tx_task, send_tasklet, (unsigned long)fmdev);
++	tasklet_setup(&fmdev->tx_task, send_tasklet);
+ 
+ 	/* Initialize RX Queue and RX tasklet */
+ 	skb_queue_head_init(&fmdev->rx_q);
+-	tasklet_init(&fmdev->rx_task, recv_tasklet, (unsigned long)fmdev);
++	tasklet_setup(&fmdev->rx_task, recv_tasklet);
+ 
+ 	fmdev->irq_info.stage = 0;
+ 	atomic_set(&fmdev->tx_cnt, 1);
 -- 
 2.17.1
 
