@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06772C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC909C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D573D206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D7220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684621;
-	bh=ZHdZeUNfPebrCd7h6gzCOK/bhU6K5xOHghtX55Jk7IU=;
+	s=default; t=1597684623;
+	bh=vpLSfXoKR1MHlZ8yGXef8XVFmlC40F+UnSJ/HtKcSj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4tMiAjqMri8J6eFu3PP2sQRo6QU/CyOl3kvdQZvCnmqbPLkgwFY6bHjINW/bAEaQ
-	 RHnnCmfPdyt4VEvySN9rsKmtFmLb4U7e6i7GisfXY1vk/lCFtOwU+IuOJJNZA3TNme
-	 EpqAcaEUfUwujlkCTnfVlKt2oPRGxmgdOaxuPl20=
+	b=qucHxl09tKwRZtByuCUzGThdaikuOQwL6ZGxcKMRkkOAdVR+8KICvVi+KjKdGcL7J
+	 uTc/4rvLGZcDVxoCimPIjmOs3SxfTo/pvx3XbopfT8z5YBlB0mzOfdwufdT+DBNINb
+	 Rjb2o01N6Al6dFYnYUlspCrc2Xkjjzuega9TIh1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389570AbgHQRQU (ORCPT
+        id S2389616AbgHQRRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46764 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388744AbgHQQNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:09 -0400
+        id S2388785AbgHQQOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B59220578;
-        Mon, 17 Aug 2020 16:13:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF82620825;
+        Mon, 17 Aug 2020 16:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680788;
-        bh=ZHdZeUNfPebrCd7h6gzCOK/bhU6K5xOHghtX55Jk7IU=;
+        s=default; t=1597680857;
+        bh=vpLSfXoKR1MHlZ8yGXef8XVFmlC40F+UnSJ/HtKcSj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+jcYdDdhRFus7L0Bjqhd1ApqXqW1oi0ido+OUomVIGJVq4ZDQswLnPZHYTGH4le1
-         aLT0Pflcw9A+T//lnWy/LM8GhXjmvTN6SoDT16OfMjCDQEiVwy51Nzym4WwjLc9y9C
-         64JLV/fls3m0WuJsIStLarEg4ciJ+LuitAUd/mtI=
+        b=W2oPRL2bWglaeE3oOqj2lmfL55mNI9ZYaS9Nppbk0+Ny/JTr2WlRKalB3BCzO2vb9
+         OvVK2g8qyuXjb/RjEf6bttuGa4yXJSTVCXVeEHRPK8IjiVElw39PxgGVn8+kol910P
+         yBeQlhOfipEs0W99pCG3cCeXfaWhDqYyL7zcG/mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@osdl.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/168] console: newport_con: fix an issue about leak related system resources
-Date:   Mon, 17 Aug 2020 17:16:28 +0200
-Message-Id: <20200817143736.599882486@linuxfoundation.org>
+        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
+        Anton Blanchard <anton@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 085/168] powerpc/vdso: Fix vdso cpu truncation
+Date:   Mon, 17 Aug 2020 17:16:56 +0200
+Message-Id: <20200817143737.984332584@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -63,88 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Milton Miller <miltonm@us.ibm.com>
 
-[ Upstream commit fd4b8243877250c05bb24af7fea5567110c9720b ]
+[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
 
-A call of the function do_take_over_console() can fail here.
-The corresponding system resources were not released then.
-Thus add a call of iounmap() and release_mem_region()
-together with the check of a failure predicate. and also
-add release_mem_region() on device removal.
+The code in vdso_cpu_init that exposes the cpu and numa node to
+userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
+that any kernel running on a box with more than 4096 threads (NR_CPUS
+advertises a limit of of 8192 cpus) would expose userspace to two cpu
+contexts running at the same time with the same cpu number.
 
-Fixes: e86bb8acc0fdc ("[PATCH] VT binding: Make newport_con support binding")
-Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@osdl.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200423164251.3349-1-zhengdejin5@gmail.com
+Note: I'm not aware of any distro shipping a kernel with support for more
+than 4096 threads today, nor of any system image that currently exceeds
+4096 threads. Found via code browsing.
+
+Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
+Signed-off-by: Milton Miller <miltonm@us.ibm.com>
+Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/console/newport_con.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/vdso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-index 7f2526b43b336..cc2fb50431840 100644
---- a/drivers/video/console/newport_con.c
-+++ b/drivers/video/console/newport_con.c
-@@ -31,6 +31,8 @@
- #include <linux/linux_logo.h>
- #include <linux/font.h>
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index 65b3bdb99f0ba..31ab6eb61e26e 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -705,7 +705,7 @@ int vdso_getcpu_init(void)
+ 	node = cpu_to_node(cpu);
+ 	WARN_ON_ONCE(node > 0xffff);
  
-+#define NEWPORT_LEN	0x10000
-+
- #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
+-	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
++	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
+ 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
+ 	get_paca()->sprg_vdso = val;
  
- /* borrowed from fbcon.c */
-@@ -42,6 +44,7 @@
- static unsigned char *font_data[MAX_NR_CONSOLES];
- 
- static struct newport_regs *npregs;
-+static unsigned long newport_addr;
- 
- static int logo_active;
- static int topscan;
-@@ -701,7 +704,6 @@ const struct consw newport_con = {
- static int newport_probe(struct gio_device *dev,
- 			 const struct gio_device_id *id)
- {
--	unsigned long newport_addr;
- 	int err;
- 
- 	if (!dev->resource.start)
-@@ -711,7 +713,7 @@ static int newport_probe(struct gio_device *dev,
- 		return -EBUSY; /* we only support one Newport as console */
- 
- 	newport_addr = dev->resource.start + 0xF0000;
--	if (!request_mem_region(newport_addr, 0x10000, "Newport"))
-+	if (!request_mem_region(newport_addr, NEWPORT_LEN, "Newport"))
- 		return -ENODEV;
- 
- 	npregs = (struct newport_regs *)/* ioremap cannot fail */
-@@ -719,6 +721,11 @@ static int newport_probe(struct gio_device *dev,
- 	console_lock();
- 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
- 	console_unlock();
-+
-+	if (err) {
-+		iounmap((void *)npregs);
-+		release_mem_region(newport_addr, NEWPORT_LEN);
-+	}
- 	return err;
- }
- 
-@@ -726,6 +733,7 @@ static void newport_remove(struct gio_device *dev)
- {
- 	give_up_console(&newport_con);
- 	iounmap((void *)npregs);
-+	release_mem_region(newport_addr, NEWPORT_LEN);
- }
- 
- static struct gio_device_id newport_ids[] = {
 -- 
 2.25.1
 
