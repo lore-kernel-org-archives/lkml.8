@@ -2,51 +2,55 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D016C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA877C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C49204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FE1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691772;
-	bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
+	s=default; t=1597691776;
+	bh=3bA66jFSyUuGfQ13Zx/hap/5xok8FbaDikQg8GCSOgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAr0ovW7NGpQI+fZrWBk/BFFbjZ/BRzIKFQiR64XOg9YnGIPZym66ODJwy5cH4mDA
-	 1NiEnAIrzAjfMoVJfm9wygR+KuGCxscf+lxSZGpA/PJyLHvRB8IxxdnFIKU0M+RHfK
-	 nasGWLiFiUpN551X7ddc8shsfeMRRkH8jEBqqXPc=
+	b=U6sXAVWmnpjySPUL8WNYZBNVQpmoeXEP3xNqZW46EzKCw5lWnovoDgwQYpeOiTZmi
+	 FS00u0v95WyuFNAjkdjpffjmCrvKdK0ymC8bdKVFR46mYDWiGdfrDI+a051Ik7lv6h
+	 ZU1m1lWNLKKnCz3D5Tx4sQrocKEqo8Av7Dxk3NFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391946AbgHQTQI (ORCPT
+        id S1730634AbgHQPjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48172 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387433AbgHQPji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:39:38 -0400
+        id S1730335AbgHQPcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0417122C9F;
-        Mon, 17 Aug 2020 15:39:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B7022B40;
+        Mon, 17 Aug 2020 15:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678777;
-        bh=8cLVw7nzYeeb/D1UEPPeffAQwZifocd6+H+cQwWUp8A=;
+        s=default; t=1597678372;
+        bh=3bA66jFSyUuGfQ13Zx/hap/5xok8FbaDikQg8GCSOgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1fKrUYoEFdj8Jp2zOc2FvA+AUpRd4SlmJ77HX1X1p4lJjFPpcziBVluXdjWVlYNh
-         ib+d3AO9r5T8lSWr92T2JitguQbGCmp+DirGbX0CrnnBGFd28OqjhSgAANTxnJAAO7
-         nfanmv/ECRWL+Y3zQ7Eo+JCZn5NIDzO0eG/vk4EI=
+        b=nQuzbFHHQnjOsbXYP9rmMUNWlb1aQZowyq8LQRAadE8Z1MlNJ2vxh69mgVYBoZpbd
+         ZJKLS9Kug26ntKHQCr1IiCA3GLyXtyfoWRW5nlbBKlqz+rZlAIiH93IB/pI9otELCp
+         BdYifF9bm/4knXAAa/YR53EfbSMBNyAzINSYXQDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 5.8 420/464] 9p: Fix memory leak in v9fs_mount
-Date:   Mon, 17 Aug 2020 17:16:13 +0200
-Message-Id: <20200817143853.891906569@linuxfoundation.org>
+        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
+        Mauri Sandberg <sandberg@mailfence.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 311/464] net: dsa: rtl8366: Fix VLAN semantics
+Date:   Mon, 17 Aug 2020 17:14:24 +0200
+Message-Id: <20200817143848.693885753@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,48 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit cb0aae0e31c632c407a2cab4307be85a001d4d98 upstream.
+[ Upstream commit 15ab7906cc9290afb006df1bb1074907fbcc7061 ]
 
-v9fs_mount
-  v9fs_session_init
-    v9fs_cache_session_get_cookie
-      v9fs_random_cachetag                     -->alloc cachetag
-      v9ses->fscache = fscache_acquire_cookie  -->maybe NULL
-  sb = sget                                    -->fail, goto clunk
-clunk_fid:
-  v9fs_session_close
-    if (v9ses->fscache)                        -->NULL
-      kfree(v9ses->cachetag)
+The RTL8366 would not handle adding new members (ports) to
+a VLAN: the code assumed that ->port_vlan_add() was only
+called once for a single port. When intializing the
+switch with .configure_vlan_while_not_filtering set to
+true, the function is called numerous times for adding
+all ports to VLAN1, which was something the code could
+not handle.
 
-Thus memleak happens.
+Alter rtl8366_set_vlan() to just |= new members and
+untagged flags to 4k and MC VLAN table entries alike.
+This makes it possible to just add new ports to a
+VLAN.
 
-Link: http://lkml.kernel.org/r/20200615012153.89538-1-zhengbin13@huawei.com
-Fixes: 60e78d2c993e ("9p: Add fscache support to 9p")
-Cc: <stable@vger.kernel.org> # v2.6.32+
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Put in some helpful debug code that can be used to find
+any further bugs here.
 
+Cc: DENG Qingfang <dqfext@gmail.com>
+Cc: Mauri Sandberg <sandberg@mailfence.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/v9fs.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/dsa/rtl8366.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
---- a/fs/9p/v9fs.c
-+++ b/fs/9p/v9fs.c
-@@ -500,10 +500,9 @@ void v9fs_session_close(struct v9fs_sess
- 	}
+diff --git a/drivers/net/dsa/rtl8366.c b/drivers/net/dsa/rtl8366.c
+index ac88caca5ad4d..a75dcd6698b8a 100644
+--- a/drivers/net/dsa/rtl8366.c
++++ b/drivers/net/dsa/rtl8366.c
+@@ -43,18 +43,26 @@ int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
+ 	int ret;
+ 	int i;
  
- #ifdef CONFIG_9P_FSCACHE
--	if (v9ses->fscache) {
-+	if (v9ses->fscache)
- 		v9fs_cache_session_put_cookie(v9ses);
--		kfree(v9ses->cachetag);
--	}
-+	kfree(v9ses->cachetag);
- #endif
- 	kfree(v9ses->uname);
- 	kfree(v9ses->aname);
++	dev_dbg(smi->dev,
++		"setting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
++		vid, member, untag);
++
+ 	/* Update the 4K table */
+ 	ret = smi->ops->get_vlan_4k(smi, vid, &vlan4k);
+ 	if (ret)
+ 		return ret;
+ 
+-	vlan4k.member = member;
+-	vlan4k.untag = untag;
++	vlan4k.member |= member;
++	vlan4k.untag |= untag;
+ 	vlan4k.fid = fid;
+ 	ret = smi->ops->set_vlan_4k(smi, &vlan4k);
+ 	if (ret)
+ 		return ret;
+ 
++	dev_dbg(smi->dev,
++		"resulting VLAN%d 4k members: 0x%02x, untagged: 0x%02x\n",
++		vid, vlan4k.member, vlan4k.untag);
++
+ 	/* Try to find an existing MC entry for this VID */
+ 	for (i = 0; i < smi->num_vlan_mc; i++) {
+ 		struct rtl8366_vlan_mc vlanmc;
+@@ -65,11 +73,16 @@ int rtl8366_set_vlan(struct realtek_smi *smi, int vid, u32 member,
+ 
+ 		if (vid == vlanmc.vid) {
+ 			/* update the MC entry */
+-			vlanmc.member = member;
+-			vlanmc.untag = untag;
++			vlanmc.member |= member;
++			vlanmc.untag |= untag;
+ 			vlanmc.fid = fid;
+ 
+ 			ret = smi->ops->set_vlan_mc(smi, i, &vlanmc);
++
++			dev_dbg(smi->dev,
++				"resulting VLAN%d MC members: 0x%02x, untagged: 0x%02x\n",
++				vid, vlanmc.member, vlanmc.untag);
++
+ 			break;
+ 		}
+ 	}
+-- 
+2.25.1
+
 
 
