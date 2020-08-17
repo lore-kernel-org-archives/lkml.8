@@ -2,83 +2,98 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80122C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6699C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D042072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JLyHtJuM"
+	by mail.kernel.org (Postfix) with ESMTP id 82A3E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597690440;
+	bh=xahJdK5HOHjZ/sQrsJBMAbZG1S10XcSs6h1S6y1Lf64=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NUY0F6THc9pzeccJnzMNg44sVItK1O0PJHZa1hNgQrd0CZedaAtHe/7XFOMPSws5f
+	 3OEvnUXScCUyTeroP+7dKDbNJEwTXKqWqErut+QhDBDbJSNO3WNv5IBqhNdkWLD1Js
+	 mF6WJLBCoVC/9MTpclRb6xXKZdm+z61S9SjGnk/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgHQSxw (ORCPT
+        id S2387814AbgHQSx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387814AbgHQSxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:53:44 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5D0C061389;
-        Mon, 17 Aug 2020 11:53:44 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f26be00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:be00:329c:23ff:fea6:a903])
+        Mon, 17 Aug 2020 14:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387803AbgHQPvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 594151EC026E;
-        Mon, 17 Aug 2020 20:53:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597690421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=R9rpQQ3QHK65dGeiLDAY9hsv8ikqXlZFeTV49qjDFhs=;
-        b=JLyHtJuMAboC+cV46FCxtaqv6/HVYof2SrVxT377a4nEjVxBhWTBBZjvB2FWruvZeCoftT
-        oxmab1CVK7Y+XDzb2G9AU00CkuADnq9K0D8MoBmdemyZFos51X34b5zQcoYRY1jtNV0Gnn
-        wuCneV/LpbFQyLhQPohnFbuIoPkCjPA=
-Date:   Mon, 17 Aug 2020 20:54:36 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
-Message-ID: <20200817185436.GO549@zn.tnic>
-References: <20200805045955.GB9127@nazgul.tnic>
- <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
- <20200812210909.GA3283093@google.com>
- <20200817151357.GK549@zn.tnic>
- <CABCJKuccY-wOEuQm--TQYgJvErOXu5u-jBMgCrM7JYsNqYK=gg@mail.gmail.com>
- <20200817174102.GN549@zn.tnic>
- <CABCJKud6M+u-TUZ2w5zdPPnwJQ1b7wxXwg8Rnoc=rBC6zMvRxA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D64E208B3;
+        Mon, 17 Aug 2020 15:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679500;
+        bh=xahJdK5HOHjZ/sQrsJBMAbZG1S10XcSs6h1S6y1Lf64=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P2DPLvB+1FvErWLLQ4CSq3Jt87737uM4P0LY+m9hn7P1qu7zTVOey+NcHhSCKIC2L
+         D0afA0ATbUT/rIkfqCzcKceyDJKF9iQj+JhDw9OkizwPr3uEpzwqHpmlu372YAJsJ7
+         FGYbhU/iOAfNrmqRX/47GoUXI3LRTEuu5gl7ZA5w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 234/393] mt76: mt7615: fix possible memory leak in mt7615_mcu_wtbl_sta_add
+Date:   Mon, 17 Aug 2020 17:14:44 +0200
+Message-Id: <20200817143830.972501520@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABCJKud6M+u-TUZ2w5zdPPnwJQ1b7wxXwg8Rnoc=rBC6zMvRxA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:11:02AM -0700, Sami Tolvanen wrote:
-> Not the toolchain, the tree has patches for LTO+CFI, which tends to
-> break with type mismatches. This doesn't affect just building the
-> kernel with Clang without other changes.
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Ok, that explains it.
+[ Upstream commit 2bccc8415883c1cd5ae8836548d9783dbbd84999 ]
 
-As for why I'm still chasing down the exact reason for the reported
-breakage: this will determine the urgency with which this fix is handled
-and to which trees it needs to go so please be more precise next time
-when saying "it broke". :)
+Free the second mcu skb if __mt76_mcu_skb_send_msg() fails to transmit
+the first one in mt7615_mcu_wtbl_sta_add().
 
-Thx.
+Fixes: 99c457d902cf9 ("mt76: mt7615: move mt7615_mcu_set_bmc to mt7615_mcu_ops")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 9c55424962522..81d6127dc6fd8 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -1036,8 +1036,12 @@ mt7615_mcu_wtbl_sta_add(struct mt7615_dev *dev, struct ieee80211_vif *vif,
+ 	skb = enable ? wskb : sskb;
+ 
+ 	err = __mt76_mcu_skb_send_msg(&dev->mt76, skb, cmd, true);
+-	if (err < 0)
++	if (err < 0) {
++		skb = enable ? sskb : wskb;
++		dev_kfree_skb(skb);
++
+ 		return err;
++	}
+ 
+ 	cmd = enable ? MCU_EXT_CMD_STA_REC_UPDATE : MCU_EXT_CMD_WTBL_UPDATE;
+ 	skb = enable ? sskb : wskb;
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+
