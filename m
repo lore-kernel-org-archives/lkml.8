@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1767DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E922920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CDA20855
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693538;
-	bh=pheYLl1F1b+RkUaS318nzLCRhq4G0ZZVeOC/26y6vwE=;
+	s=default; t=1597693543;
+	bh=wNpQYJFvzAHC3btzCqiA6w25nsGp1ZuOBw4d9rOui6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWojZZOo6OOdVPZpd197P9gBUYmO0o+J2v7OSGhgPQ1O7trIpOiJSrwjuk9Q2IRo3
-	 QH7wOG+nRq5wRvPfSAsjo/xioNTDP1QQwYajU4SFBb6wpbgd6ne4tc5NJnG3YgV9B+
-	 XibSv6vedTDv0Fr+eS+biMKkjj/LhQP74QSRkSMY=
+	b=2sl1Tkap6LFDzqA8yXw11Yq0QDVvvFqJJCOzgYEE+EKJhG1D6Ny7z95vcnxkrqmgb
+	 hQdK7FVNAXR/1W97VImbnX8cK818PtU6A2bn5ZjwA25uVNVPsDA4O5DjMnklav6yVM
+	 oOvsCLxS1dPk42IfzHIgnYFmdH1aer7tDIroVJ2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404355AbgHQTpg (ORCPT
+        id S2404368AbgHQTpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbgHQPWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:22:07 -0400
+        id S1729341AbgHQPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6500422D75;
-        Mon, 17 Aug 2020 15:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFA9222D07;
+        Mon, 17 Aug 2020 15:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677727;
-        bh=pheYLl1F1b+RkUaS318nzLCRhq4G0ZZVeOC/26y6vwE=;
+        s=default; t=1597677716;
+        bh=wNpQYJFvzAHC3btzCqiA6w25nsGp1ZuOBw4d9rOui6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5aaE4TQw1AWDuvBIe8wKdWSu/0O5p8s2iG3QKpRzDAR/lEmVQGlzg1v9eT3fhLqZ
-         M51HHvcybtNFqlgGoVv1VbthDbqvlvko1LLvQb/+dY5a1sgoCQbyVX5ygbNWu3vLZX
-         CDXD31hmBtvMTl03HsBhZtmhhJM0AJN8AGzsMS6U=
+        b=nIblKl/g4U/pQViUtorHAlX6eopfBcRhEQoMhjpQQ7aZtSeHtI/fe8UdxnNelGMrp
+         VVmDeFiy9eeddgJwdQyEw94AOXV9ssbEPjAeP1shsubLkftgBEeV30SMqs2wJMZCtr
+         4j+qU+gW8XULJsRGUow3SIFD4OURYj7CkULjc8Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
+        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
+        Lihong Kou <koulihong@huawei.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 055/464] soc: qcom: pdr: Reorder the PD state indication ack
-Date:   Mon, 17 Aug 2020 17:10:08 +0200
-Message-Id: <20200817143836.397478153@linuxfoundation.org>
+Subject: [PATCH 5.8 081/464] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
+Date:   Mon, 17 Aug 2020 17:10:34 +0200
+Message-Id: <20200817143837.661655849@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,48 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Lihong Kou <koulihong@huawei.com>
 
-[ Upstream commit 72fe996f9643043c8f84e32c0610975b01aa555b ]
+[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
 
-The Protection Domains (PD) have a mechanism to keep its resources
-enabled until the PD down indication is acked. Reorder the PD state
-indication ack so that clients get to release the relevant resources
-before the PD goes down.
+In the case we set or free the global value listen_chan in
+different threads, we can encounter the UAF problems because
+the method is not protected by any lock, add one to avoid
+this bug.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200701195954.9007-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
+net/bluetooth/l2cap_core.c:730
+Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+
+CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Workqueue: events do_enable_set
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+ do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
+ chan_create net/bluetooth/6lowpan.c:640 [inline]
+ bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
+ do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
+ do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096950000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 0 bytes inside of
+ 2048-byte region [ffff888096950000, ffff888096950800)
+The buggy address belongs to the page:
+page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
+raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
+Signed-off-by: Lihong Kou <koulihong@huawei.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/pdr_interface.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/bluetooth/6lowpan.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-index bdcf16f88a97f..4c9225f15c4e6 100644
---- a/drivers/soc/qcom/pdr_interface.c
-+++ b/drivers/soc/qcom/pdr_interface.c
-@@ -278,13 +278,15 @@ static void pdr_indack_work(struct work_struct *work)
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index bb55d92691b06..cff4944d5b663 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -50,6 +50,7 @@ static bool enable_6lowpan;
+ /* We are listening incoming connections via this channel
+  */
+ static struct l2cap_chan *listen_chan;
++static DEFINE_MUTEX(set_lock);
  
- 	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
- 		pds = ind->pds;
--		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+ struct lowpan_peer {
+ 	struct list_head list;
+@@ -1078,12 +1079,14 @@ static void do_enable_set(struct work_struct *work)
  
- 		mutex_lock(&pdr->status_lock);
- 		pds->state = ind->curr_state;
- 		pdr->status(pds->state, pds->service_path, pdr->priv);
- 		mutex_unlock(&pdr->status_lock);
+ 	enable_6lowpan = set_enable->flag;
  
-+		/* Ack the indication after clients release the PD resources */
-+		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-+
- 		mutex_lock(&pdr->list_lock);
- 		list_del(&ind->node);
- 		mutex_unlock(&pdr->list_lock);
++	mutex_lock(&set_lock);
+ 	if (listen_chan) {
+ 		l2cap_chan_close(listen_chan, 0);
+ 		l2cap_chan_put(listen_chan);
+ 	}
+ 
+ 	listen_chan = bt_6lowpan_listen();
++	mutex_unlock(&set_lock);
+ 
+ 	kfree(set_enable);
+ }
+@@ -1135,11 +1138,13 @@ static ssize_t lowpan_control_write(struct file *fp,
+ 		if (ret == -EINVAL)
+ 			return ret;
+ 
++		mutex_lock(&set_lock);
+ 		if (listen_chan) {
+ 			l2cap_chan_close(listen_chan, 0);
+ 			l2cap_chan_put(listen_chan);
+ 			listen_chan = NULL;
+ 		}
++		mutex_unlock(&set_lock);
+ 
+ 		if (conn) {
+ 			struct lowpan_peer *peer;
 -- 
 2.25.1
 
