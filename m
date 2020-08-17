@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1F9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6B322CF8
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FA42075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678861;
-	bh=xkpyY6I8Zhi0kMyrTuN+pP4gLQV21eoOEKpQZ8mG5Sk=;
+	s=default; t=1597678869;
+	bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1q93rhVRtum4NVlwPA5v/BlQF7qXeUIweram7IwxEIC+XYZHUSKhslLnLi+kB3VIr
-	 Moo8txc4qFM7mZMbNJpsHfI7+Li3f8yPlDQf8UqMqCYjhZkzOjx9fccaukbOEMCr71
-	 GQqCN/8Zia1ish0zFv2i5pcbVu/c97a53Dr205c8=
+	b=KDshhByTExpRh6SmS6+O/vGw9CynFdMvVQKVfVJHndio6w8wa90rSVBzcZSXNSX1G
+	 mOK6vpHZxDPBANH9gRbmH3PqzjTIc+GwfgT/bZzcVuvaVxNifqP5zw9qKWqOfDzeJm
+	 kYn0Hww6iZ4NetIHG+eElnHRVSy4xMSdYFAegxCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbgHQPk5 (ORCPT
+        id S1730712AbgHQPlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:40:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730383AbgHQPda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:30 -0400
+        id S1730385AbgHQPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:33:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEB022D70;
-        Mon, 17 Aug 2020 15:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91FFF22BEB;
+        Mon, 17 Aug 2020 15:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678409;
-        bh=xkpyY6I8Zhi0kMyrTuN+pP4gLQV21eoOEKpQZ8mG5Sk=;
+        s=default; t=1597678412;
+        bh=iUmHx0gnU9KXKyMHqL5n3WV2OpVGhB51nKFJ6EEKsww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKE+dnvUbHwXAsBj15PhyK93EwdR9Qb8J0eq93MLzNuR6Ji78ej8LUMdZVTw6Ibvf
-         81PPZ69mn//yoammLOISte68DZ3ZcpBdT1hT4A3t9yBiQtaXwbupnoIXAxK9h9OBr3
-         +I5cigika8XiluyizK3S68/YSYqlLX2JYfS50a34=
+        b=0CKjLb86alG0sIRizdo+KNbjlDICd0n3F4/nXjEuLwmd6w2Xon/Mm1p8mboqfPeVm
+         PYPC4TdMBqO+VzOC53fZUb5sNsS1STPZhplJiIEda2+ieg9G0pB3n6+SFU2f46EYgc
+         hgt2uCbo00QLNwx1R50tmilzU52KrgLZugOPENhU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 317/464] powerpc/boot: Fix CONFIG_PPC_MPC52XX references
-Date:   Mon, 17 Aug 2020 17:14:30 +0200
-Message-Id: <20200817143848.980474582@linuxfoundation.org>
+Subject: [PATCH 5.8 326/464] selftests/powerpc: Fix online CPU selection
+Date:   Mon, 17 Aug 2020 17:14:39 +0200
+Message-Id: <20200817143849.408739879@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,51 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Sandipan Das <sandipan@linux.ibm.com>
 
-[ Upstream commit e5eff89657e72a9050d95fde146b54c7dc165981 ]
+[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
 
-Commit 866bfc75f40e ("powerpc: conditionally compile platform-specific
-serial drivers") made some code depend on CONFIG_PPC_MPC52XX, which
-doesn't exist.
+The size of the CPU affinity mask must be large enough for
+systems with a very large number of CPUs. Otherwise, tests
+which try to determine the first online CPU by calling
+sched_getaffinity() will fail. This makes sure that the size
+of the allocated affinity mask is dependent on the number of
+CPUs as reported by get_nprocs_conf().
 
-Fix it to use CONFIG_PPC_MPC52xx.
-
-Fixes: 866bfc75f40e ("powerpc: conditionally compile platform-specific serial drivers")
+Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
+Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200724131728.1643966-7-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/Makefile | 2 +-
- arch/powerpc/boot/serial.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 63d7456b95180..2039ed41250df 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -117,7 +117,7 @@ src-wlib-y := string.S crt0.S stdio.c decompress.c main.c \
- 		elf_util.c $(zlib-y) devtree.c stdlib.c \
- 		oflib.c ofconsole.c cuboot.c
+diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
+index 5ee0e98c48967..eb530e73e02c1 100644
+--- a/tools/testing/selftests/powerpc/utils.c
++++ b/tools/testing/selftests/powerpc/utils.c
+@@ -16,6 +16,7 @@
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <sys/stat.h>
++#include <sys/sysinfo.h>
+ #include <sys/types.h>
+ #include <sys/utsname.h>
+ #include <unistd.h>
+@@ -88,28 +89,40 @@ void *get_auxv_entry(int type)
  
--src-wlib-$(CONFIG_PPC_MPC52XX) += mpc52xx-psc.c
-+src-wlib-$(CONFIG_PPC_MPC52xx) += mpc52xx-psc.c
- src-wlib-$(CONFIG_PPC64_BOOT_WRAPPER) += opal-calls.S opal.c
- ifndef CONFIG_PPC64_BOOT_WRAPPER
- src-wlib-y += crtsavres.S
-diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
-index 0bfa7e87e5460..9a19e5905485c 100644
---- a/arch/powerpc/boot/serial.c
-+++ b/arch/powerpc/boot/serial.c
-@@ -128,7 +128,7 @@ int serial_console_init(void)
- 	         dt_is_compatible(devp, "fsl,cpm2-smc-uart"))
- 		rc = cpm_console_init(devp, &serial_cd);
- #endif
--#ifdef CONFIG_PPC_MPC52XX
-+#ifdef CONFIG_PPC_MPC52xx
- 	else if (dt_is_compatible(devp, "fsl,mpc5200-psc-uart"))
- 		rc = mpc5200_psc_console_init(devp, &serial_cd);
- #endif
+ int pick_online_cpu(void)
+ {
+-	cpu_set_t mask;
+-	int cpu;
++	int ncpus, cpu = -1;
++	cpu_set_t *mask;
++	size_t size;
++
++	ncpus = get_nprocs_conf();
++	size = CPU_ALLOC_SIZE(ncpus);
++	mask = CPU_ALLOC(ncpus);
++	if (!mask) {
++		perror("malloc");
++		return -1;
++	}
+ 
+-	CPU_ZERO(&mask);
++	CPU_ZERO_S(size, mask);
+ 
+-	if (sched_getaffinity(0, sizeof(mask), &mask)) {
++	if (sched_getaffinity(0, size, mask)) {
+ 		perror("sched_getaffinity");
+-		return -1;
++		goto done;
+ 	}
+ 
+ 	/* We prefer a primary thread, but skip 0 */
+-	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
+-		if (CPU_ISSET(cpu, &mask))
+-			return cpu;
++	for (cpu = 8; cpu < ncpus; cpu += 8)
++		if (CPU_ISSET_S(cpu, size, mask))
++			goto done;
+ 
+ 	/* Search for anything, but in reverse */
+-	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
+-		if (CPU_ISSET(cpu, &mask))
+-			return cpu;
++	for (cpu = ncpus - 1; cpu >= 0; cpu--)
++		if (CPU_ISSET_S(cpu, size, mask))
++			goto done;
+ 
+ 	printf("No cpus in affinity mask?!\n");
+-	return -1;
++
++done:
++	CPU_FREE(mask);
++	return cpu;
+ }
+ 
+ bool is_ppc64le(void)
 -- 
 2.25.1
 
