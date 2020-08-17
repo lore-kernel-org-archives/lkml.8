@@ -2,58 +2,61 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE33C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CAD20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8D92072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648480;
-	bh=MlDcxzkbuLMgyFc0uqNYSBwf021ccWZS89Xs+dghTz4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aehnil0XJ+qd6y6oBhbAhz7uPDv80vdT3Sf3q9+QLUAslp25pMQw1KutsSiy1I/Zm
-	 YGK5CkoxOuHsDO0Kb7uVDw7CNd+oog2ZyRKe7Mu/FQ9/b6bC6UHASD7dCaxllLV/Z1
-	 hR5EH3YULuFzuAuf2NLkPK/6vlXIQh38KXpxZNxM=
+	s=default; t=1597648486;
+	bh=kXMV8wukE99rUYUOv+jkANRPnJMhnnypd20U67KLfaM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pZDnlNxHLvHV4qqq9RLY6nmuTqM1bXqRJPlBfOpD78xzQRrw53v1VIiat0Lg7D89w
+	 bprZ8txGNo/e0pBerumDrrG4Pwn4g9ZFojVKV32RO5b9IZDLaRJWHr4SV2vb2wc/zB
+	 8FLNUVBfTv6HMI7flA9rjZFpiao/5JbcG4n8g0Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgHQHOh (ORCPT
+        id S1726945AbgHQHOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57200 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbgHQHLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726402AbgHQHLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 03:11:17 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DB22072D;
+        by mail.kernel.org (Postfix) with ESMTPSA id AED44207FB;
         Mon, 17 Aug 2020 07:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597648276;
-        bh=MlDcxzkbuLMgyFc0uqNYSBwf021ccWZS89Xs+dghTz4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AqXPmSZISoigOPTt924tBAw2zeV56xSInUY1f/pYelNx1kB5QkYZt0SBiSHDCEFBp
-         t3AJ029dqObrSjMl2himXI77fLtLk30nFFe1oGEF4YSbDK/XBu9dwR4L+0U3AA8SUp
-         fBry9gw2vk4A2wPFl1nGAJKkBkjab8vctR7XP44Q=
+        bh=kXMV8wukE99rUYUOv+jkANRPnJMhnnypd20U67KLfaM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jOAsnPYqqJ4qtBSn87nrOrPbEigb7xFFYFG8QCQ4rp/xTsR2UPFbZGd19UWPCV/vV
+         HcskDkPpEiYRvvhpHxz6Q5a1MCnRJNmboj2KF+K7HaLxiqH9IiwAsDEMLnMBPaHjUY
+         uYUGXE4Uls0X5F2zdmeiuWsXFDR57VpXqfnWmLIQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIY-00BdjE-O1; Mon, 17 Aug 2020 09:11:14 +0200
+        id 1k7ZIY-00BdjC-MB; Mon, 17 Aug 2020 09:11:14 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mayulong <mayulong1@huawei.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH v3 01/44] staging: spmi: add Hikey 970 SPMI controller driver
-Date:   Mon, 17 Aug 2020 09:10:20 +0200
-Message-Id: <b4810f476e41e7de4efdf28b42472ae4ffe7defe.1597647359.git.mchehab+huawei@kernel.org>
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v3 00/44] SPMI patches needed by Hikey 970
+Date:   Mon, 17 Aug 2020 09:10:19 +0200
+Message-Id: <cover.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
-References: <cover.1597647359.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,420 +64,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mayulong <mayulong1@huawei.com>
+Hi Greg,
 
-Add the SPMI controller code required to use the Kirin 970
-SPMI bus.
+This patch series is part of a work I'm doing in order to be able to support
+a HiKey 970 board that I recently got on my hands.
 
-[mchehab+huawei@kernel.org: added just the SPMI controller on this patch]
+Regards,
+Mauro.
 
-The complete patch is at:
+v1:
+   submitted to drivers/{mfd,spmi,regulator}
 
-	https://github.com/96boards-hikey/linux/commit/08464419fba2
+v2:
+  - submitted via staging, mainly to preserve original
+    authorship and his SoB;
+  - as requested on previous review, patches were split per
+    target subsystem.
 
-Signed-off-by: Mayulong <mayulong1@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../staging/hikey9xx/hisi-spmi-controller.c   | 390 ++++++++++++++++++
- 1 file changed, 390 insertions(+)
+v3:
+  - Some coding style changes, due to reviews from Joe Perches
+
+Patches were tested on a Hikey 970 board.
+
+Mauro Carvalho Chehab (41):
+  staging: spmi: hisi-spmi-controller: coding style fixup
+  staging: spmi: hisi-spmi-controller: fix it to probe successfully
+  staging: spmi: hisi-spmi-controller: fix a typo
+  staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
+  staging: spmi: hisi-spmi-controller: use le32 macros where needed
+  staging: spmi: hisi-spmi-controller: add debug when values are
+    read/write
+  staging: spmi: hisi-spmi-controller: fix the dev_foo() logic
+  staging: spmi: hisi-spmi-controller: add it to the building system
+  staging: spmi: hisi-spmi-controller: do some code cleanups
+  staging: mfd: hi6421-spmi-pmic: get rid of unused code
+  staging: mfd: hi6421-spmi-pmic: deal with non-static functions
+  staging: mfd: hi6421-spmi-pmic: get rid of the static vars
+  staging: mfd: hi6421-spmi-pmic: cleanup hi6421-spmi-pmic.h header
+  staging: mfd: hi6421-spmi-pmic: change the binding logic
+  staging: mfd: hi6421-spmi-pmic: get rid of unused OF properties
+  staging: mfd: hi6421-spmi-pmic: cleanup OF properties
+  staging: mfd: hi6421-spmi-pmic: change namespace on its functions
+  staging: mfd: hi6421-spmi-pmic: fix some coding style issues
+  staging: mfd: hi6421-spmi-pmic: add it to the building system
+  staging: mfd: hi6421-spmi-pmic: cleanup the code
+  staging: regulator: hi6421v600-regulator: get rid of unused code
+  staging: regulator: hi6421v600-regulator: port it to upstream
+  staging: regulator: hi6421v600-regulator: coding style fixups
+  staging: regulator: hi6421v600-regulator: change the binding logic
+  staging: regulator: hi6421v600-regulator: cleanup struct
+    hisi_regulator
+  staging: regulator: hi6421v600-regulator: cleanup debug messages
+  staging: regulator: hi6421v600-regulator: use shorter names for OF
+    properties
+  staging: regulator: hi6421v600-regulator: better handle modes
+  staging: regulator: hi6421v600-regulator: change namespace
+  staging: regulator: hi6421v600-regulator: convert to use get/set
+    voltage_sel
+  staging: regulator: hi6421v600-regulator: don't use usleep_range for
+    off_on_delay
+  staging: regulator: hi6421v600-regulator: add a driver-specific debug
+    macro
+  staging: regulator: hi6421v600-regulator: initialize ramp_delay
+  staging: regulator: hi6421v600-regulator: cleanup DT settings
+  staging: regulator: hi6421v600-regulator: fix some coding style issues
+  staging: regulator: hi6421v600-regulator: add it to the building
+    system
+  staging: regulator: hi6421v600-regulator: code cleanup
+  staging: hikey9xx: add a TODO list
+  MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
+  dt: document HiSilicon SPMI controller and mfd/regulator properties
+  dt: hisilicon: add support for the PMIC found on Hikey 970
+
+Mayulong (3):
+  staging: spmi: add Hikey 970 SPMI controller driver
+  staging: mfd: add a PMIC driver for HiSilicon 6421 SPMI version
+  staging: regulator: add a regulator driver for HiSilicon 6421v600 SPMI
+    PMIC
+
+ .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 +++++++
+ .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++
+ MAINTAINERS                                   |   6 +
+ .../boot/dts/hisilicon/hi3670-hikey970.dts    |  22 +-
+ .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++
+ drivers/staging/Kconfig                       |   2 +
+ drivers/staging/Makefile                      |   1 +
+ drivers/staging/hikey9xx/Kconfig              |  35 ++
+ drivers/staging/hikey9xx/Makefile             |   5 +
+ drivers/staging/hikey9xx/TODO                 |   5 +
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 382 ++++++++++++++
+ .../staging/hikey9xx/hi6421v600-regulator.c   | 479 ++++++++++++++++++
+ .../staging/hikey9xx/hisi-spmi-controller.c   | 356 +++++++++++++
+ include/linux/mfd/hi6421-spmi-pmic.h          |  68 +++
+ 14 files changed, 1778 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
+ create mode 100644 drivers/staging/hikey9xx/Kconfig
+ create mode 100644 drivers/staging/hikey9xx/Makefile
+ create mode 100644 drivers/staging/hikey9xx/TODO
+ create mode 100644 drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+ create mode 100644 drivers/staging/hikey9xx/hi6421v600-regulator.c
  create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
+ create mode 100644 include/linux/mfd/hi6421-spmi-pmic.h
 
-diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-new file mode 100644
-index 000000000000..987526c8b49f
---- /dev/null
-+++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-@@ -0,0 +1,390 @@
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/seq_file.h>
-+#include <linux/spmi.h>
-+#include <linux/spmi.h>
-+
-+#define SPMI_CONTROLLER_NAME		"spmi_controller"
-+
-+/*
-+ * SPMI register addr
-+ */
-+#define SPMI_CHANNEL_OFFSET					0x0300
-+#define SPMI_SLAVE_OFFSET						0x20
-+
-+#define SPMI_APB_SPMI_CMD_BASE_ADDR				0x0100
-+/*lint -e750 -esym(750,*)*/
-+#define SPMI_APB_SPMI_WDATA0_BASE_ADDR			0x0104
-+#define SPMI_APB_SPMI_WDATA1_BASE_ADDR			0x0108
-+#define SPMI_APB_SPMI_WDATA2_BASE_ADDR			0x010c
-+#define SPMI_APB_SPMI_WDATA3_BASE_ADDR			0x0110
-+
-+#define SPMI_APB_SPMI_STATUS_BASE_ADDR			0x0200
-+
-+#define SPMI_APB_SPMI_RDATA0_BASE_ADDR			0x0204
-+#define SPMI_APB_SPMI_RDATA1_BASE_ADDR			0x0208
-+#define SPMI_APB_SPMI_RDATA2_BASE_ADDR			0x020c
-+#define SPMI_APB_SPMI_RDATA3_BASE_ADDR			0x0210
-+/*lint +e750 -esym(750,*)*/
-+
-+#define SPMI_PER_DATAREG_BYTE					4
-+/*
-+ * SPMI cmd register
-+ */
-+#define SPMI_APB_SPMI_CMD_EN						(1 << 31)
-+#define SPMI_APB_SPMI_CMD_TYPE_OFFSET			24
-+#define SPMI_APB_SPMI_CMD_LENGTH_OFFSET			20
-+#define SPMI_APB_SPMI_CMD_SLAVEID_OFFSET			16
-+#define SPMI_APB_SPMI_CMD_ADDR_OFFSET				0
-+
-+#define Tranverse32(X)                 ((((u32)(X) & 0xff000000) >> 24) | \
-+							   (((u32)(X) & 0x00ff0000) >> 8) | \
-+							   (((u32)(X) & 0x0000ff00) << 8) | \
-+							   (((u32)(X) & 0x000000ff) << 24))
-+
-+/* Command Opcodes */
-+/*lint -e749 -esym(749,*)*/
-+enum spmi_controller_cmd_op_code {
-+	SPMI_CMD_REG_ZERO_WRITE = 0,
-+	SPMI_CMD_REG_WRITE = 1,
-+	SPMI_CMD_REG_READ = 2,
-+	SPMI_CMD_EXT_REG_WRITE = 3,
-+	SPMI_CMD_EXT_REG_READ = 4,
-+	SPMI_CMD_EXT_REG_WRITE_L = 5,
-+	SPMI_CMD_EXT_REG_READ_L = 6,
-+	SPMI_CMD_REG_RESET = 7,
-+	SPMI_CMD_REG_SLEEP = 8,
-+	SPMI_CMD_REG_SHUTDOWN = 9,
-+	SPMI_CMD_REG_WAKEUP = 10,
-+};
-+/*lint +e749 -esym(749,*)*/
-+
-+/*
-+ * SPMI status register
-+ */
-+#define SPMI_APB_TRANS_DONE						(1 << 0)
-+#define SPMI_APB_TRANS_FAIL						(1 << 2)
-+
-+/* Command register fields */
-+#define SPMI_CONTROLLER_CMD_MAX_BYTE_COUNT	16
-+
-+/* Maximum number of support PMIC peripherals */
-+#define SPMI_CONTROLLER_TIMEOUT_US		1000
-+#define SPMI_CONTROLLER_MAX_TRANS_BYTES	(16)
-+
-+#define SPMI_WRITEL( dev, reg, addr )	\
-+	do { \
-+		writel( ( reg ), ( addr ) ); \
-+	} while (0)
-+
-+#define  SPMI_READL( dev, reg, addr )	\
-+	do { \
-+		reg = readl( addr ); \
-+	} while (0)
-+
-+/*
-+ * @base base address of the PMIC Arbiter core registers.
-+ * @rdbase, @wrbase base address of the PMIC Arbiter read core registers.
-+ *     For HW-v1 these are equal to base.
-+ *     For HW-v2, the value is the same in eeraly probing, in order to read
-+ *     PMIC_ARB_CORE registers, then chnls, and obsrvr are set to
-+ *     PMIC_ARB_CORE_REGISTERS and PMIC_ARB_CORE_REGISTERS_OBS respectivly.
-+ * @intr base address of the SPMI interrupt control registers
-+ * @ppid_2_chnl_tbl lookup table f(SID, Periph-ID) -> channel num
-+ *      entry is only valid if corresponding bit is set in valid_ppid_bitmap.
-+ * @valid_ppid_bitmap bit is set only for valid ppids.
-+ * @fmt_cmd formats a command to be set into PMIC_ARBq_CHNLn_CMD
-+ * @chnl_ofst calculates offset of the base of a channel reg space
-+ * @ee execution environment id
-+ * @irq_acc0_init_val initial value of the interrupt accumulator at probe time.
-+ *      Use for an HW workaround. On handling interrupts, the first accumulator
-+ *      register will be compared against this value, and bits which are set at
-+ *      boot will be ignored.
-+ * @reserved_chnl entry of ppid_2_chnl_tbl that this driver should never touch.
-+ *      value is positive channel number or negative to mark it unused.
-+ */
-+struct spmi_controller_dev {
-+	struct spmi_controller	*controller;
-+	struct device		*dev;
-+	void __iomem		*base;
-+	spinlock_t		lock;
-+	u32			channel;
-+};
-+
-+static int spmi_controller_wait_for_done(struct spmi_controller_dev *ctrl_dev,
-+				  void __iomem *base, u8 sid, u16 addr)
-+{
-+	u32 status = 0;
-+	u32 timeout = SPMI_CONTROLLER_TIMEOUT_US;
-+	u32 offset = SPMI_APB_SPMI_STATUS_BASE_ADDR + SPMI_CHANNEL_OFFSET * ctrl_dev->channel
-+		+ SPMI_SLAVE_OFFSET * sid;
-+
-+	while (timeout--) {
-+		SPMI_READL(ctrl_dev->dev, status, base + offset);/*lint !e732 */
-+
-+		if (status & SPMI_APB_TRANS_DONE) {
-+			if (status & SPMI_APB_TRANS_FAIL) {
-+				dev_err(ctrl_dev->dev,
-+					"%s: transaction failed (0x%x)\n",
-+					__func__, status);
-+				return -EIO;
-+			}
-+			return 0;
-+		}
-+		udelay(1);/*lint !e778 !e774 !e747*/
-+	}
-+
-+	dev_err(ctrl_dev->dev,
-+		"%s: timeout, status 0x%x\n",
-+		__func__, status);
-+	return -ETIMEDOUT;/*lint !e438*/
-+}/*lint !e715 !e529*/
-+
-+static int spmi_read_cmd(struct spmi_controller *ctrl,
-+				u8 opc, u8 sid, u16 addr, u8 *buf, size_t bc)
-+{
-+	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
-+	unsigned long flags;
-+	u32 cmd, data;
-+	int rc;
-+	u32 chnl_ofst = SPMI_CHANNEL_OFFSET*spmi_controller->channel;
-+	u8 op_code, i;
-+
-+	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
-+		dev_err(spmi_controller->dev
-+		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
-+					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
-+		return  -EINVAL;
-+	}
-+
-+	/* Check the opcode */
-+	if (SPMI_CMD_READ == opc)
-+		op_code = SPMI_CMD_REG_READ;
-+	else if (SPMI_CMD_EXT_READ == opc)
-+		op_code = SPMI_CMD_EXT_REG_READ;
-+	else if (SPMI_CMD_EXT_READL == opc)
-+		op_code = SPMI_CMD_EXT_REG_READ_L;
-+	else {
-+		dev_err(spmi_controller->dev, "invalid read cmd 0x%x", opc);
-+		return -EINVAL;
-+	}
-+
-+	cmd = SPMI_APB_SPMI_CMD_EN |/*lint !e648 !e701 */								/* cmd_en */
-+		 (op_code << SPMI_APB_SPMI_CMD_TYPE_OFFSET) |/*lint !e648 !e701 */			/* cmd_type */
-+		 ((bc-1) << SPMI_APB_SPMI_CMD_LENGTH_OFFSET) |/*lint !e648 !e701 */		/* byte_cnt */
-+		 ((sid & 0xf) << SPMI_APB_SPMI_CMD_SLAVEID_OFFSET) |						/* slvid */
-+		 ((addr & 0xffff)  << SPMI_APB_SPMI_CMD_ADDR_OFFSET);					/* slave_addr */
-+
-+	spin_lock_irqsave(&spmi_controller->lock, flags);/*lint !e550 */
-+
-+	SPMI_WRITEL(spmi_controller->dev, cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
-+
-+
-+	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
-+	if (rc)
-+		goto done;
-+
-+	i = 0;
-+	do {
-+		SPMI_READL(spmi_controller->dev, data, spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET*sid + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i*SPMI_PER_DATAREG_BYTE);/*lint !e732 */
-+		data = Tranverse32(data);
-+		if ((bc - i*SPMI_PER_DATAREG_BYTE ) >> 2) {/*lint !e702 */
-+			memcpy(buf, &data, sizeof(data));
-+			buf += sizeof(data);
-+		} else {
-+			memcpy(buf, &data, bc%SPMI_PER_DATAREG_BYTE);/*lint !e747 */
-+			buf += (bc%SPMI_PER_DATAREG_BYTE);
-+		}
-+		i++;
-+	} while (bc > i*SPMI_PER_DATAREG_BYTE);
-+
-+done:
-+	spin_unlock_irqrestore(&spmi_controller->lock, flags);
-+	if (rc)
-+		dev_err(spmi_controller->dev, "spmi read wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
-+							opc, sid, addr, bc + 1);
-+	return rc;
-+}/*lint !e550 !e529*/
-+
-+/*lint -e438 -esym(438,*)*/
-+static int spmi_write_cmd(struct spmi_controller *ctrl,
-+				u8 opc, u8 sid, u16 addr, const u8 *buf, size_t bc)
-+{
-+	struct spmi_controller_dev *spmi_controller = dev_get_drvdata(&ctrl->dev);
-+	unsigned long flags;
-+	u32 cmd;
-+	u32 data = 0;
-+	int rc;
-+	u32 chnl_ofst = SPMI_CHANNEL_OFFSET*spmi_controller->channel;
-+	u8 op_code, i;
-+
-+
-+	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
-+		dev_err(spmi_controller->dev
-+		, "spmi_controller supports 1..%d bytes per trans, but:%ld requested"
-+					, SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
-+		return  -EINVAL;
-+	}
-+
-+	/* Check the opcode */
-+	if (SPMI_CMD_WRITE == opc)
-+		op_code = SPMI_CMD_REG_WRITE;
-+	else if (SPMI_CMD_EXT_WRITE == opc)
-+		op_code = SPMI_CMD_EXT_REG_WRITE;
-+	else if (SPMI_CMD_EXT_WRITEL == opc)
-+		op_code = SPMI_CMD_EXT_REG_WRITE_L;
-+	else {
-+		dev_err(spmi_controller->dev, "invalid write cmd 0x%x", opc);
-+		return -EINVAL;
-+	}
-+
-+	cmd = SPMI_APB_SPMI_CMD_EN |/*lint !e648 !e701 */								/* cmd_en */
-+		 (op_code << SPMI_APB_SPMI_CMD_TYPE_OFFSET) |/*lint !e648 !e701 */			/* cmd_type */
-+		 ((bc-1) << SPMI_APB_SPMI_CMD_LENGTH_OFFSET) |/*lint !e648 !e701 */		/* byte_cnt */
-+		 ((sid & 0xf) << SPMI_APB_SPMI_CMD_SLAVEID_OFFSET) |						/* slvid */
-+		 ((addr & 0xffff)  << SPMI_APB_SPMI_CMD_ADDR_OFFSET);					/* slave_addr */
-+
-+	/* Write data to FIFOs */
-+	spin_lock_irqsave(&spmi_controller->lock, flags);/*lint !e550 */
-+
-+	i = 0;
-+	do {
-+		memset(&data, 0, sizeof(data));
-+		if ((bc - i*SPMI_PER_DATAREG_BYTE ) >> 2) {/*lint !e702 */
-+			memcpy(&data, buf, sizeof(data));
-+			buf +=sizeof(data);
-+		} else {
-+			memcpy(&data, buf, bc%SPMI_PER_DATAREG_BYTE);/*lint !e747 */
-+			buf +=(bc%SPMI_PER_DATAREG_BYTE);
-+		}
-+
-+		data = Tranverse32(data);
-+		SPMI_WRITEL(spmi_controller->dev, data, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR+SPMI_PER_DATAREG_BYTE*i);
-+		i++;
-+	} while (bc > i*SPMI_PER_DATAREG_BYTE);
-+
-+	/* Start the transaction */
-+	SPMI_WRITEL(spmi_controller->dev, cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
-+
-+	rc = spmi_controller_wait_for_done(spmi_controller, spmi_controller->base, sid, addr);
-+	spin_unlock_irqrestore(&spmi_controller->lock, flags);
-+
-+	if (rc)
-+		dev_err(spmi_controller->dev, "spmi write wait timeout op:0x%x sid:%d addr:0x%x bc:%ld\n",
-+							opc, sid, addr, bc);
-+
-+	return rc;
-+}/*lint !e438 !e550 !e529*/
-+/*lint +e438 -esym(438,*)*/
-+static int spmi_controller_probe(struct platform_device *pdev)
-+{
-+	struct spmi_controller_dev *spmi_controller;
-+	struct spmi_controller *ctrl;
-+	struct resource *iores;
-+	int ret = 0;
-+
-+	printk(KERN_INFO "HISI SPMI probe\n");
-+	ctrl = spmi_controller_alloc(&pdev->dev, sizeof(*spmi_controller));
-+	if (!ctrl) {
-+		dev_err(&pdev->dev, "can not allocate spmi_controller data\n");
-+		return -ENOMEM;  /*lint !e429*/
-+	}
-+	spmi_controller = spmi_controller_get_drvdata(ctrl);
-+	spmi_controller->controller = ctrl;
-+
-+	/* NOTE: driver uses the static register mapping */
-+	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!iores) {
-+		dev_err(&pdev->dev, "can not get resource! \n");
-+		return -EINVAL; /*lint !e429*/
-+	}
-+
-+	spmi_controller->base = ioremap(iores->start, resource_size(iores));
-+	if (!spmi_controller->base) {
-+		dev_err(&pdev->dev, "can not remap base addr! \n");
-+		return -EADDRNOTAVAIL; /*lint !e429*/
-+	}
-+	dev_dbg(&pdev->dev, "spmi_add_controller base addr=0x%lx!\n", (long unsigned int)spmi_controller->base);/*lint !e774*/
-+
-+	/* Get properties from the device tree */
-+	ret = of_property_read_u32(pdev->dev.of_node, "spmi-channel",
-+			&spmi_controller->channel);/*lint !e838*/
-+	if (ret) {
-+		dev_err(&pdev->dev, "can not get chanel \n");
-+		return -ENODEV; /*lint !e429*/
-+	}
-+
-+	platform_set_drvdata(pdev, spmi_controller);
-+	dev_set_drvdata(&ctrl->dev, spmi_controller);
-+
-+	spin_lock_init(&spmi_controller->lock);
-+
-+	ctrl->nr = spmi_controller->channel;
-+	ctrl->dev.parent = pdev->dev.parent;
-+	ctrl->dev.of_node = of_node_get(pdev->dev.of_node);
-+
-+	/* Callbacks */
-+	ctrl->read_cmd = spmi_read_cmd;
-+	ctrl->write_cmd = spmi_write_cmd;
-+
-+	ret = spmi_controller_add(ctrl);
-+	if (ret) {
-+		dev_err(&pdev->dev, "spmi_add_controller failed!\n");
-+		goto err_add_controller;
-+	}
-+err_add_controller:
-+	platform_set_drvdata(pdev, NULL);
-+	return ret; /*lint !e429*/
-+}
-+
-+static int spmi_del_controller(struct platform_device *pdev)
-+{
-+	struct spmi_controller *ctrl = platform_get_drvdata(pdev);
-+
-+	platform_set_drvdata(pdev, NULL);
-+	spmi_controller_remove(ctrl);
-+	return 0;
-+}
-+
-+static struct of_device_id spmi_controller_match_table[] = {
-+	{	.compatible = "hisilicon,spmi-controller",
-+	},/*lint !e785*/
-+	{}/*lint !e785*/
-+};
-+
-+static struct platform_driver spmi_controller_driver = {
-+	.probe		= spmi_controller_probe,
-+	.remove		= spmi_del_controller,
-+	.driver		= {
-+		.name	= SPMI_CONTROLLER_NAME,
-+		.owner	= THIS_MODULE,/*lint !e64*/
-+		.of_match_table = spmi_controller_match_table,
-+	},/*lint !e785*/
-+};/*lint !e785*/
-+/*lint -e528 -esym(528,*)*/
-+static int __init spmi_controller_init(void)
-+{
-+	return platform_driver_register(&spmi_controller_driver);/*lint !e64*/
-+}
-+postcore_initcall(spmi_controller_init);
-+
-+static void __exit spmi_controller_exit(void)
-+{
-+	platform_driver_unregister(&spmi_controller_driver);
-+}
-+module_exit(spmi_controller_exit);
-+/*lint -e753 -esym(753,*)*/
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION("1.0");/*lint !e785 !e64 !e528*/
-+MODULE_ALIAS("platform:spmi_controlller");
-+/*lint -e753 +esym(753,*)*/
-+/*lint -e528 +esym(528,*)*/
-+
 -- 
 2.26.2
+
 
