@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EDFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE18C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FED12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5972072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679802;
-	bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+	s=default; t=1597679840;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zT1wBJN1J4uVS3ziWhC/wujDnIsMM02jXab+Z4T0VLMiLo9e9zMC/vRv9pH8+1tFE
-	 4dsIg/Ef7C89+E+Zy6ZHues+jQUZHpFCCjMd42QAHCyG8RBU+A/HEy0OqiAd7s8sH+
-	 whlyYMlCuZILdR1U/W+pBbQcv7cnIlcoYg+0Yx0E=
+	b=ATflz+7Rd40lKpGgbj1VdP5k22yAVw8nWYYLO6QExfV/Bu5Kg74/RTgfX5wpiQxT2
+	 iQW0MTOGXk462Du9jKZtrFZ9IvwPSi/zyHcN7eE3ITvqSV2TsPqbLMH9Ss24SudioJ
+	 W096VUOw3Xnj8e8iSOzw/vD7KlHBq43aTCMW92Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgHQP4d (ORCPT
+        id S2388106AbgHQP5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387495AbgHQPmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:42:05 -0400
+        id S1730343AbgHQPmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E68520760;
-        Mon, 17 Aug 2020 15:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DC820760;
+        Mon, 17 Aug 2020 15:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678924;
-        bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+        s=default; t=1597678930;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v83lhnPY1j6HLNuyItSKz5YU5ixvLYt7sQmQjat2ehKC5P7hwEw6tBW2BNzde+eJP
-         mcrHsGl5CUKa26scHToMZc+3vhzDVuLU9JGOg+2ip2DvgjE5JZy7ZOA44Mv9Z2eHQT
-         FCUlBQFZRYjyikQS4xFWS8b5T1dbI4XTmOKM11Qw=
+        b=YwulDsEGIzdt/iHTh8lgKqIxYiUbAMzvtlnX5BypyKVbz7ItaZmc4wS5FqzwFW0GG
+         J6ZcVy+hSStBjEaGpEZXkYIFqT3JTF08V7S6CPC3RatQYmO3GGCos9jzgGe/zZBDEG
+         nmNSg2yX9Fit5jaf8MRHwYSyJEuiYA3BnZ7WXcZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 037/393] ARM: dts: exynos: Disable frequency scaling for FSYS bus on Odroid XU3 family
-Date:   Mon, 17 Aug 2020 17:11:27 +0200
-Message-Id: <20200817143821.406953057@linuxfoundation.org>
+Subject: [PATCH 5.7 039/393] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Mon, 17 Aug 2020 17:11:29 +0200
+Message-Id: <20200817143821.496743524@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,56 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 9ff416cf45a08f28167b75045222c762a0347930 ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-Commit 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the
-values correct for Exynos5422 Odroids") changed the parameters of the
-OPPs for the FSYS bus. Besides the frequency adjustments, it also removed
-the 'shared-opp' property from the OPP table used for FSYS_APB and FSYS
-busses.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-This revealed that in fact the FSYS bus frequency scaling never worked.
-When one OPP table is marked as 'opp-shared', only the first bus which
-selects the OPP sets the rate of its clock. Then OPP core assumes that
-the other busses have been changed to that OPP and no change to their
-clock rates are needed. Thus when FSYS_APB bus, which was registered
-first, set the rate for its clock, the OPP core did not change the FSYS
-bus clock later.
+Assign the same regulator supply to the remaining CPU cores to address
+this.
 
-The mentioned commit removed that behavior, what introduced a regression
-on some Odroid XU3 boards. Frequency scaling of the FSYS bus causes
-instability of the USB host operation, what can be observed as network
-hangs. To restore old behavior, simply disable frequency scaling for the
-FSYS bus.
-
-Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Fixes: 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index ab27ff8bc3dca..afe090578e8fa 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -411,12 +411,6 @@ &bus_fsys_apb {
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
  };
- 
--&bus_fsys {
--	operating-points-v2 = <&bus_fsys2_opp_table>;
--	devfreq = <&bus_wcore>;
--	status = "okay";
--};
--
- &bus_fsys2 {
- 	operating-points-v2 = <&bus_fsys2_opp_table>;
- 	devfreq = <&bus_wcore>;
++
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
