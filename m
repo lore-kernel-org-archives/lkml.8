@@ -2,53 +2,59 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D072067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957152067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690809;
-	bh=WyO2If/OfFCea9PXnScXqeh4WKPM3dmI5l5aslUJ0Zs=;
+	s=default; t=1597690815;
+	bh=Ev2MKrV3RTdHkwWtyN15qSAmclYuXz3Qy4/2nqB5rpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WtsgOOGxJZ/pj5gi3DlnSUaMI+ieA9rFjQQMX5rDeBojkwLuX8lNVPt3dqdc2uYkJ
-	 /ctXNXcEAcSfJ8Eq4Rt+fK389K31Y6762e9Aok7H0WfNCEmCWVVfDeHK3NmlFsMlyA
-	 7KiLkEC1PiA/btYnz9V+NFZKNF3aJROUfoKDbjA0=
+	b=Sn4RJ81uCxHYsJEWOZVuzaSFjtVEF8vlPTDfEQZC6CxqKaiGQcjeFrCfyzwoeSh/m
+	 9LG2mxbRUnMcN3BXtx75MiH9yC5KkCZ20jtArg7bA/9QP4S4A6z0G53BmnzXUDbrdu
+	 MQ0HrE0sCHKJRi5eE2gLrxyjsiWEij4+NAIeRZ9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgHQPsL (ORCPT
+        id S2389600AbgHQTAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730612AbgHQPiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:51 -0400
+        id S1730849AbgHQPsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:48:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 271D223120;
-        Mon, 17 Aug 2020 15:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18DC92075B;
+        Mon, 17 Aug 2020 15:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678730;
-        bh=WyO2If/OfFCea9PXnScXqeh4WKPM3dmI5l5aslUJ0Zs=;
+        s=default; t=1597679295;
+        bh=Ev2MKrV3RTdHkwWtyN15qSAmclYuXz3Qy4/2nqB5rpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cAmoaSWDvih/JxKoA87g9851GFfeDKgjpGoWyoZewldYnjEhmuTBLCOYZwEXtCMjL
-         QlF6hsO0Ir0dbCMXde+zeBjAZNrQohub3ZOUAgmYx9rOF6/Ufcb9khnYzgM3rrd+SG
-         sgf570FiHTV0oVIHBx8XasCyqQNi/imd4AWtIHHc=
+        b=UcfqzE2GQ0WSExMMMq7uCOMmNHVmGJlFbyrG3Q+os0hz7JYf3cZJ7Ps/2c8yjIavi
+         SrG0Rf5ofrhIm8VQ9JdSzcTw31nIbae6vewRzmlT5/Vn/YwAR35lUaf+/vnYNM54sV
+         Vy0mqcpLk9EJ9qL5psgeDXf8i94v3h9ZtwKy8pyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 5.8 435/464] PM / devfreq: Fix indentaion of devfreq_summary debugfs node
-Date:   Mon, 17 Aug 2020 17:16:28 +0200
-Message-Id: <20200817143854.615375831@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 163/393] drm/mipi: use dcs write for mipi_dsi_dcs_set_tear_scanline
+Date:   Mon, 17 Aug 2020 17:13:33 +0200
+Message-Id: <20200817143827.524032519@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,82 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Emil Velikov <emil.velikov@collabora.com>
 
-commit 0aae11bcdefb4894b6100656ad24cbd85ff34b52 upstream.
+[ Upstream commit 7a05c3b6d24b8460b3cec436cf1d33fac43c8450 ]
 
-The commit 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name
-as devfreq(X) for sysfs"") roll back the device name from 'devfreqX'
-to device name explained in DT. After applied commit 66d0e797bf09,
-the indentation of devfreq_summary debugfs node was broken.
+The helper uses the MIPI_DCS_SET_TEAR_SCANLINE, although it's currently
+using the generic write. This does not look right.
 
-So, fix indentaion of devfreq_summary debugfs node as following:
+Perhaps some platforms don't distinguish between the two writers?
 
-For example on Exynos5422-based Odroid-XU3 board,
-$ cat /sys/kernel/debug/devfreq/devfreq_summary
-dev                            parent_dev                     governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
------------------------------- ------------------------------ --------------- ---------- ------------ ------------ ------------
-10c20000.memory-controller     null                           simple_ondemand          0    413000000    165000000    825000000
-soc:bus_wcore                  null                           simple_ondemand         50     88700000     88700000    532000000
-soc:bus_noc                    soc:bus_wcore                  passive                  0     66600000     66600000    111000000
-soc:bus_fsys_apb               soc:bus_wcore                  passive                  0    111000000    111000000    222000000
-soc:bus_fsys                   soc:bus_wcore                  passive                  0     75000000     75000000    200000000
-soc:bus_fsys2                  soc:bus_wcore                  passive                  0     75000000     75000000    200000000
-soc:bus_mfc                    soc:bus_wcore                  passive                  0     83250000     83250000    333000000
-soc:bus_gen                    soc:bus_wcore                  passive                  0     88700000     88700000    266000000
-soc:bus_peri                   soc:bus_wcore                  passive                  0     66600000     66600000     66600000
-soc:bus_g2d                    soc:bus_wcore                  passive                  0     83250000     83250000    333000000
-soc:bus_g2d_acp                soc:bus_wcore                  passive                  0            0     66500000    266000000
-soc:bus_jpeg                   soc:bus_wcore                  passive                  0            0     75000000    300000000
-soc:bus_jpeg_apb               soc:bus_wcore                  passive                  0            0     83250000    166500000
-soc:bus_disp1_fimd             soc:bus_wcore                  passive                  0            0    120000000    200000000
-soc:bus_disp1                  soc:bus_wcore                  passive                  0            0    120000000    300000000
-soc:bus_gscl_scaler            soc:bus_wcore                  passive                  0            0    150000000    300000000
-soc:bus_mscl                   soc:bus_wcore                  passive                  0            0     84000000    666000000
-
-Cc: stable@vger.kernel.org
-Fixes: 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"")
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Robert Chiras <robert.chiras@nxp.com>
+Cc: Vinay Simha BN <simhavcs@gmail.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Fixes: e83950816367 ("drm/dsi: Implement set tear scanline")
+Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200505160329.2976059-3-emil.l.velikov@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_mipi_dsi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -1657,8 +1657,7 @@ static int devfreq_summary_show(struct s
- 	unsigned long cur_freq, min_freq, max_freq;
- 	unsigned int polling_ms;
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 55531895dde6d..37b03fefbdf6f 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -1082,11 +1082,11 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_pixel_format);
+  */
+ int mipi_dsi_dcs_set_tear_scanline(struct mipi_dsi_device *dsi, u16 scanline)
+ {
+-	u8 payload[3] = { MIPI_DCS_SET_TEAR_SCANLINE, scanline >> 8,
+-			  scanline & 0xff };
++	u8 payload[2] = { scanline >> 8, scanline & 0xff };
+ 	ssize_t err;
  
--	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
--			"dev_name",
-+	seq_printf(s, "%-30s %-30s %-15s %10s %12s %12s %12s\n",
- 			"dev",
- 			"parent_dev",
- 			"governor",
-@@ -1666,10 +1665,9 @@ static int devfreq_summary_show(struct s
- 			"cur_freq_Hz",
- 			"min_freq_Hz",
- 			"max_freq_Hz");
--	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
-+	seq_printf(s, "%30s %30s %15s %10s %12s %12s %12s\n",
-+			"------------------------------",
- 			"------------------------------",
--			"----------",
--			"----------",
- 			"---------------",
- 			"----------",
- 			"------------",
-@@ -1698,8 +1696,7 @@ static int devfreq_summary_show(struct s
- 		mutex_unlock(&devfreq->lock);
+-	err = mipi_dsi_generic_write(dsi, payload, sizeof(payload));
++	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_SCANLINE, payload,
++				 sizeof(payload));
+ 	if (err < 0)
+ 		return err;
  
- 		seq_printf(s,
--			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
--			dev_name(devfreq->dev.parent),
-+			"%-30s %-30s %-15s %10d %12ld %12ld %12ld\n",
- 			dev_name(&devfreq->dev),
- 			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
- 			devfreq->governor_name,
+-- 
+2.25.1
+
 
 
