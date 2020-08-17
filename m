@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B6AC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48181C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9A320786
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232A5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692106;
-	bh=HWpxdmjKCO69zPhrgx75MpXgrFO+tbzvwbdJu6VUjCU=;
+	s=default; t=1597692110;
+	bh=oW8Q2gX404RnSg8IAzieF3YdseTlcXK4bg6JzLaRKXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtTj1sLHhGn9EBWwAt0HOuAdzzFJBKxbjLdLS2/rTYXxw1t91IQDyefMwtcW/8tkL
-	 w6yZyL0W5ofRttv9SDcT2RuA9/5mKW8SJCOo7EKEAHo1L3J8d6sFTArh2BVdi5fw4D
-	 Soop6HfxZ6ZSwH02tgCnSUa4gzpJkXX94Ia9lJI8=
+	b=SFn/wGRoUG1kNwHxOUqd5FG3qqNwxFHDzyPtnJPzsXc1kL92MU86x775nr0lQJ6lZ
+	 TCFzCdUgJsYokLgjQPQ7KAeVnAW9DIgMYdf7uE6j0z48URm9nbzjHIbl39Jir1CxI8
+	 82BFzDVgjY3le2Vm1HYrgeM7Z0G6cZwX7HO726wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392385AbgHQTVk (ORCPT
+        id S2392393AbgHQTVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43410 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgHQPgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:36:15 -0400
+        id S1730330AbgHQPgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:36:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4057222E00;
-        Mon, 17 Aug 2020 15:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD57B22C9F;
+        Mon, 17 Aug 2020 15:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678574;
-        bh=HWpxdmjKCO69zPhrgx75MpXgrFO+tbzvwbdJu6VUjCU=;
+        s=default; t=1597678571;
+        bh=oW8Q2gX404RnSg8IAzieF3YdseTlcXK4bg6JzLaRKXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbnS/eYm1PA2Da6IwiHxemVQ1O1deRPSUxGXiDj1KY3WNkBhawFrsgRhIo/w9VcgS
-         HlJPgrV21up4WehrLNSKvzqxfbT5/fVfUlZauHxa/LsXDT0Ti7smQHeghrdo6bokGy
-         C7MaUUcHAbuqhIdQBvvxtrJ3oaX6hoIX5VhU33mo=
+        b=fywCanZzmZZ0g3xl2SPJRtV1PJ35N5iDxZp4einTTo9DReHpkucxlSrqJodUm2evL
+         1SV99WQJM+Xvd//lZgMm3t2+Au5rped5q2wamkU8ctMS7eHkKw1SsATNH6wzX5Lq/u
+         KnjRGS4VT0krSMBmVM5TXWiAd1CUgLQYYrxQPhO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Sauter <pierre.sauter@stwm.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 380/464] SUNRPC: Fix ("SUNRPC: Add "@len" parameter to gss_unwrap()")
-Date:   Mon, 17 Aug 2020 17:15:33 +0200
-Message-Id: <20200817143851.978492301@linuxfoundation.org>
+Subject: [PATCH 5.8 353/464] net/mlx5: Delete extra dump stack that gives nothing
+Date:   Mon, 17 Aug 2020 17:15:06 +0200
+Message-Id: <20200817143850.676924569@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,59 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 986a4b63d3bc5f2c0eb4083b05aff2bf883b7b2f ]
+[ Upstream commit 6c4e9bcfb48933d533ff975e152757991556294a ]
 
-Braino when converting "buf->len -=" to "buf->len = len -".
+The WARN_*() macros are intended to catch impossible situations
+from the SW point of view. They gave a little in case HW<->SW interface
+is out-of-sync.
 
-The result is under-estimation of the ralign and rslack values. On
-krb5p mounts, this has caused READDIR to fail with EIO, and KASAN
-splats when decoding READLINK replies.
+Such out-of-sync scenario can be due to SW errors that are not part
+of this flow or because some HW errors, where dump stack won't help
+either.
 
-As a result of fixing this oversight, the gss_unwrap method now
-returns a buf->len that can be shorter than priv_len for small
-RPC messages. The additional adjustment done in unwrap_priv_data()
-can underflow buf->len. This causes the nfsd_request_too_large
-check to fail during some NFSv3 operations.
+This specific WARN_ON() is useless because mlx5_core code is prepared
+to handle such situations and will unfold everything correctly while
+providing enough information to the users to understand why FS is not
+working.
 
-Reported-by: Marian Rainer-Harbach
-Reported-by: Pierre Sauter <pierre.sauter@stwm.de>
-BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1886277
-Fixes: 31c9590ae468 ("SUNRPC: Add "@len" parameter to gss_unwrap()")
-Reviewed-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+WARNING: CPU: 0 PID: 3222 at drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:825 connect_fts_in_prio.isra.20+0x1dd/0x260 linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:825
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 3222 Comm: syz-executor861 Not tainted 5.5.0-rc6+ #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack linux/lib/dump_stack.c:77 [inline]
+ dump_stack+0x94/0xce linux/lib/dump_stack.c:118
+ panic+0x234/0x56f linux/kernel/panic.c:221
+ __warn+0x1cc/0x1e1 linux/kernel/panic.c:582
+ report_bug+0x200/0x310 linux/lib/bug.c:195
+ fixup_bug.part.11+0x32/0x80 linux/arch/x86/kernel/traps.c:174
+ fixup_bug linux/arch/x86/kernel/traps.c:273 [inline]
+ do_error_trap+0xd3/0x100 linux/arch/x86/kernel/traps.c:267
+ do_invalid_op+0x31/0x40 linux/arch/x86/kernel/traps.c:286
+ invalid_op+0x1e/0x30 linux/arch/x86/entry/entry_64.S:1027
+RIP: 0010:connect_fts_in_prio.isra.20+0x1dd/0x260
+linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:825
+Code: 00 00 48 c7 c2 60 8c 31 84 48 c7 c6 00 81 31 84 48 8b 38 e8 3c a8
+cb ff 41 83 fd 01 8b 04 24 0f 8e 29 ff ff ff e8 83 7b bc fe <0f> 0b 8b
+04 24 e9 1a ff ff ff 89 04 24 e8 c1 20 e0 fe 8b 04 24 eb
+RSP: 0018:ffffc90004bb7858 EFLAGS: 00010293
+RAX: ffff88805de98e80 RBX: 0000000000000c96 RCX: ffffffff827a853d
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: fffff52000976efa
+RBP: 0000000000000007 R08: ffffed100da060e3 R09: ffffed100da060e3
+R10: 0000000000000001 R11: ffffed100da060e2 R12: dffffc0000000000
+R13: 0000000000000002 R14: ffff8880683a1a10 R15: ffffed100d07bc1c
+ connect_prev_fts linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:844 [inline]
+ connect_flow_table linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:975 [inline]
+ __mlx5_create_flow_table+0x8f8/0x1710 linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:1064
+ mlx5_create_flow_table linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:1094 [inline]
+ mlx5_create_auto_grouped_flow_table+0xe1/0x210 linux/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c:1136
+ _get_prio linux/drivers/infiniband/hw/mlx5/main.c:3286 [inline]
+ get_flow_table+0x2ea/0x760 linux/drivers/infiniband/hw/mlx5/main.c:3376
+ mlx5_ib_create_flow+0x331/0x11c0 linux/drivers/infiniband/hw/mlx5/main.c:3896
+ ib_uverbs_ex_create_flow+0x13e8/0x1b40 linux/drivers/infiniband/core/uverbs_cmd.c:3311
+ ib_uverbs_write+0xaa5/0xdf0 linux/drivers/infiniband/core/uverbs_main.c:769
+ __vfs_write+0x7c/0x100 linux/fs/read_write.c:494
+ vfs_write+0x168/0x4a0 linux/fs/read_write.c:558
+ ksys_write+0xc8/0x200 linux/fs/read_write.c:611
+ do_syscall_64+0x9c/0x390 linux/arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45a059
+Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89
+f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fcc17564c98 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fcc17564ca0 RCX: 000000000045a059
+RDX: 0000000000000030 RSI: 00000000200003c0 RDI: 0000000000000005
+RBP: 0000000000000007 R08: 0000000000000002 R09: 0000000000003131
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e636c
+R13: 0000000000000000 R14: 00000000006e6360 R15: 00007ffdcbdaf6a0
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+Kernel Offset: disabled
+Rebooting in 1 seconds..
+
+Fixes: f90edfd279f3 ("net/mlx5_core: Connect flow tables")
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/gss_krb5_wrap.c | 2 +-
- net/sunrpc/auth_gss/svcauth_gss.c   | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-index cf0fd170ac189..90b8329fef824 100644
---- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-@@ -584,7 +584,7 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, int len,
- 							buf->head[0].iov_len);
- 	memmove(ptr, ptr + GSS_KRB5_TOK_HDR_LEN + headskip, movelen);
- 	buf->head[0].iov_len -= GSS_KRB5_TOK_HDR_LEN + headskip;
--	buf->len = len - GSS_KRB5_TOK_HDR_LEN + headskip;
-+	buf->len = len - (GSS_KRB5_TOK_HDR_LEN + headskip);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+index 2569bb6228b65..2e5f7efb82a88 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -847,18 +847,15 @@ static int connect_fts_in_prio(struct mlx5_core_dev *dev,
+ {
+ 	struct mlx5_flow_root_namespace *root = find_root(&prio->node);
+ 	struct mlx5_flow_table *iter;
+-	int i = 0;
+ 	int err;
  
- 	/* Trim off the trailing "extra count" and checksum blob */
- 	xdr_buf_trim(buf, ec + GSS_KRB5_TOK_HDR_LEN + tailskip);
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 46027d0c903f9..c28051f7d217d 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -958,7 +958,6 @@ unwrap_priv_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct gs
- 
- 	maj_stat = gss_unwrap(ctx, 0, priv_len, buf);
- 	pad = priv_len - buf->len;
--	buf->len -= pad;
- 	/* The upper layers assume the buffer is aligned on 4-byte boundaries.
- 	 * In the krb5p case, at least, the data ends up offset, so we need to
- 	 * move it around. */
+ 	fs_for_each_ft(iter, prio) {
+-		i++;
+ 		err = root->cmds->modify_flow_table(root, iter, ft);
+ 		if (err) {
+-			mlx5_core_warn(dev, "Failed to modify flow table %d\n",
+-				       iter->id);
++			mlx5_core_err(dev,
++				      "Failed to modify flow table id %d, type %d, err %d\n",
++				      iter->id, iter->type, err);
+ 			/* The driver is out of sync with the FW */
+-			if (i > 1)
+-				WARN_ON(true);
+ 			return err;
+ 		}
+ 	}
 -- 
 2.25.1
 
