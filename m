@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC68C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B808C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853962072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B2B20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693427;
-	bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
+	s=default; t=1597693449;
+	bh=FAWNIdyvFpKy3gLuGZk3l1aE1ffiq5S95HtYP5TCpc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hzn1ICpYWAJXo2wrfWHLPyosXUxamvD36rdvN/GgSioBtQcQkUpUdL9HzSOIOamIl
-	 OdUlSCWSkH4TlgQr3vwJjQTUep6i3fnAqKsCrr3MTaNnfx9qsxbrwVgAB6zd4JE7pw
-	 taQV224z8KiSavRYB56Z3W5fdhXR7pZ1sxWzT0uI=
+	b=bWaZGc8Pi9Uht3+MMfXev5B7p9Ub9BSQmFq1DCSsi0tUGPMakTx4eSZsKSANThjRF
+	 b7m/WuIFGgJBMadP95Y54IWO2MC/jYSRDXgurOyrL3AfqVJW/cHiQjoNEMSoef4TSg
+	 ZuVbcwuMv4HYR4nUkLzOBk6Nqak88DlKlb7yZ9Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgHQTnq (ORCPT
+        id S1732620AbgHQToI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50770 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbgHQPX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:23:26 -0400
+        id S1729272AbgHQPXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764AE2339E;
-        Mon, 17 Aug 2020 15:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BD123109;
+        Mon, 17 Aug 2020 15:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677805;
-        bh=4Abc2RcV96zkWCXOb26k7nxJQ2yw3b6kMzMkLIEkKJ0=;
+        s=default; t=1597677783;
+        bh=FAWNIdyvFpKy3gLuGZk3l1aE1ffiq5S95HtYP5TCpc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTrvTOoHxh35uO++C80GrPbYIkGZc8I8bqblo6MwpXmM1b1H7bdgvA6rj7VWYf8K3
-         VaFx7aVR+QWEBKB/0WBApd2WXY9rTwJAJadi6mFNtRSDEt2oC+u9+ioxhwzmeRGFSC
-         frGnq+P/7p6FfKRoTJffQfd5yTnoSo/Mj4gi0Yh8=
+        b=bwbWnupcXDiOIVg4dca5qhMe8ZEBCqGBGs/OqgepCWMOaJqVc/pT0d2IQY5ZEJZ9i
+         Qq5SGt/26RHJytrTPfLoKe7y5tsCU8xrOJixGlSX/ZAr3fnXdW52fI/RuZ4ZtDhLvC
+         LJ66bEMyDc8ELqnrgVKmcOh52enemJOPzxq5HrqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenjing Liu <wenjing.liu@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 114/464] drm/amd/display: allow query ddc data over aux to be read only operation
-Date:   Mon, 17 Aug 2020 17:11:07 +0200
-Message-Id: <20200817143839.270709622@linuxfoundation.org>
+Subject: [PATCH 5.8 106/464] drm/radeon: disable AGP by default
+Date:   Mon, 17 Aug 2020 17:10:59 +0200
+Message-Id: <20200817143838.874655870@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,117 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenjing Liu <wenjing.liu@amd.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 26b4750d6cf84cb2b3f0a84c9b345e7b71886410 ]
+[ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
 
-[why]
-Two issues:
-1. Add read only operation support for query ddc data over aux.
-2. Fix a bug where if read size is multiple of 16,
-mot of the last read transaction will not be set to 0.
+Always use the PCI GART instead. We just have to many cases
+where AGP still causes problems. This means a performance
+regression for some GPUs, but also a bug fix for some others.
 
-Signed-off-by: Wenjing Liu <wenjing.liu@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/core/dc_link_ddc.c | 29 ++++++++++++-------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-index aefd29a440b52..be8f265976b09 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_ddc.c
-@@ -503,7 +503,7 @@ bool dal_ddc_service_query_ddc_data(
- 	uint8_t *read_buf,
- 	uint32_t read_size)
- {
--	bool ret = false;
-+	bool success = true;
- 	uint32_t payload_size =
- 		dal_ddc_service_is_in_aux_transaction_mode(ddc) ?
- 			DEFAULT_AUX_MAX_DATA_SIZE : EDID_SEGMENT_SIZE;
-@@ -527,7 +527,6 @@ bool dal_ddc_service_query_ddc_data(
- 	 *  but we want to read 256 over i2c!!!!*/
- 	if (dal_ddc_service_is_in_aux_transaction_mode(ddc)) {
- 		struct aux_payload payload;
--		bool read_available = true;
- 
- 		payload.i2c_over_aux = true;
- 		payload.address = address;
-@@ -536,21 +535,26 @@ bool dal_ddc_service_query_ddc_data(
- 
- 		if (write_size != 0) {
- 			payload.write = true;
--			payload.mot = false;
-+			/* should not set mot (middle of transaction) to 0
-+			 * if there are pending read payloads
-+			 */
-+			payload.mot = read_size == 0 ? false : true;
- 			payload.length = write_size;
- 			payload.data = write_buf;
- 
--			ret = dal_ddc_submit_aux_command(ddc, &payload);
--			read_available = ret;
-+			success = dal_ddc_submit_aux_command(ddc, &payload);
- 		}
- 
--		if (read_size != 0 && read_available) {
-+		if (read_size != 0 && success) {
- 			payload.write = false;
-+			/* should set mot (middle of transaction) to 0
-+			 * since it is the last payload to send
-+			 */
- 			payload.mot = false;
- 			payload.length = read_size;
- 			payload.data = read_buf;
- 
--			ret = dal_ddc_submit_aux_command(ddc, &payload);
-+			success = dal_ddc_submit_aux_command(ddc, &payload);
- 		}
- 	} else {
- 		struct i2c_command command = {0};
-@@ -573,7 +577,7 @@ bool dal_ddc_service_query_ddc_data(
- 		command.number_of_payloads =
- 			dal_ddc_i2c_payloads_get_count(&payloads);
- 
--		ret = dm_helpers_submit_i2c(
-+		success = dm_helpers_submit_i2c(
- 				ddc->ctx,
- 				ddc->link,
- 				&command);
-@@ -581,7 +585,7 @@ bool dal_ddc_service_query_ddc_data(
- 		dal_ddc_i2c_payloads_destroy(&payloads);
- 	}
- 
--	return ret;
-+	return success;
- }
- 
- bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
-@@ -598,7 +602,7 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
- 
- 	do {
- 		struct aux_payload current_payload;
--		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >
-+		bool is_end_of_payload = (retrieved + DEFAULT_AUX_MAX_DATA_SIZE) >=
- 			payload->length;
- 
- 		current_payload.address = payload->address;
-@@ -607,7 +611,10 @@ bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
- 		current_payload.i2c_over_aux = payload->i2c_over_aux;
- 		current_payload.length = is_end_of_payload ?
- 			payload->length - retrieved : DEFAULT_AUX_MAX_DATA_SIZE;
--		current_payload.mot = !is_end_of_payload;
-+		/* set mot (middle of transaction) to false
-+		 * if it is the last payload
-+		 */
-+		current_payload.mot = is_end_of_payload ? payload->mot:true;
- 		current_payload.reply = payload->reply;
- 		current_payload.write = payload->write;
- 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 62b5069122cc4..4cd30613fa1dd 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -171,12 +171,7 @@ int radeon_no_wb;
+ int radeon_modeset = -1;
+ int radeon_dynclks = -1;
+ int radeon_r4xx_atom = 0;
+-#ifdef __powerpc__
+-/* Default to PCI on PowerPC (fdo #95017) */
+ int radeon_agpmode = -1;
+-#else
+-int radeon_agpmode = 0;
+-#endif
+ int radeon_vram_limit = 0;
+ int radeon_gart_size = -1; /* auto */
+ int radeon_benchmarking = 0;
 -- 
 2.25.1
 
