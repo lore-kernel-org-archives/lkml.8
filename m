@@ -2,83 +2,141 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0474C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F0720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GxHe3TcT"
+	by mail.kernel.org (Postfix) with ESMTP id 9045020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597686096;
+	bh=gC8/wPGyCFCRF3pJJ6lZrF65xmkbLWfo794ETf82wAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UeMHzc10De7MyVji2wV1WbmyLvsx2MS8pJqiuE3fzxk9Uyg6QER3UVdzxJMFdqmTW
+	 tRjnyJL0YuAnOxLhrOcDFLblvH26yFId4Far/fY01ief61yqs4bUM4nIcPp60MFYNK
+	 6eQirSohzrvUcO5tObjGPogpooepPjHdyPu7ObuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731497AbgHQRl1 (ORCPT
+        id S1731508AbgHQRlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:41:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57100 "EHLO mail.skyhub.de"
+        Mon, 17 Aug 2020 13:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731447AbgHQRkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:40:03 -0400
-Received: from zn.tnic (p200300ec2f26be005d5d46115b1a3c6f.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:be00:5d5d:4611:5b1a:3c6f])
+        id S1731106AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:16:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 263DD1EC0373;
-        Mon, 17 Aug 2020 19:40:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597686002;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Fw1454RQoPux7IHeoJy+rsjGku6lKkDblw9peEpp6e8=;
-        b=GxHe3TcTxwxflCvn+9qeE1LBFfvK3qDKSyoOB5yjrCoYMparPakQTOzOg29E3XclG0FJQe
-        HByM67RIOodSL5yW6+xU1dX4s96B/UMowfvZ1zgw66OBKIPofaSI9gmKXu3CAz9gJ/8qws
-        yKfD6Z0Txej1Mw6aQYMF1tfFUx6X9gA=
-Date:   Mon, 17 Aug 2020 19:41:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RAS/CEC: Fix cec_init prototype
-Message-ID: <20200817174102.GN549@zn.tnic>
-References: <20200805045955.GB9127@nazgul.tnic>
- <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
- <20200812210909.GA3283093@google.com>
- <20200817151357.GK549@zn.tnic>
- <CABCJKuccY-wOEuQm--TQYgJvErOXu5u-jBMgCrM7JYsNqYK=gg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC7222CF6;
+        Mon, 17 Aug 2020 16:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597680966;
+        bh=gC8/wPGyCFCRF3pJJ6lZrF65xmkbLWfo794ETf82wAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bNGJZOGy9ozs3cpw/z0f86FlOh9eDUaaXBZbX6GjMKxiBUY4XwnY9LWUv/4ylKZEN
+         s4R7IzilRnWSIbFR5X4Eyo5xyMin8O07EddldtjZzAadsCADJAsYj77F4a6wupBW3Q
+         yO81MwUOZSauZhgQ1fX990HvPsy4WzGVYNW97/qs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 128/168] svcrdma: Fix page leak in svc_rdma_recv_read_chunk()
+Date:   Mon, 17 Aug 2020 17:17:39 +0200
+Message-Id: <20200817143740.079593346@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
+References: <20200817143733.692105228@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABCJKuccY-wOEuQm--TQYgJvErOXu5u-jBMgCrM7JYsNqYK=gg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 08:58:26AM -0700, Sami Tolvanen wrote:
-> Sorry for not clarifying. This was in a tree with patches for enabling
-> Clang's Control-Flow Integrity.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Well, I just did:
+[ Upstream commit e814eecbe3bbeaa8b004d25a4b8974d232b765a9 ]
 
-$ make CC=clang-10 HOSTCC=clang-10 allyesconfig
-$ make -j...
+Commit 07d0ff3b0cd2 ("svcrdma: Clean up Read chunk path") moved the
+page saver logic so that it gets executed event when an error occurs.
+In that case, the I/O is never posted, and those pages are then
+leaked. Errors in this path, however, are quite rare.
 
-and it built fine here, no complaints. So your toolchain must have
-something else.
+Fixes: 07d0ff3b0cd2 ("svcrdma: Clean up Read chunk path")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/sunrpc/xprtrdma/svc_rdma_rw.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-> However, this type mismatch looks like something that should be fixed
-> regardless.
-
-No question there - I'm just trying to figure out how something as minor
-as this would break a build.
-
-Thx.
-
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index 4fc0ce1270894..22f1352638151 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -679,7 +679,6 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
+ 				     struct svc_rdma_read_info *info,
+ 				     __be32 *p)
+ {
+-	unsigned int i;
+ 	int ret;
+ 
+ 	ret = -EINVAL;
+@@ -702,12 +701,6 @@ static int svc_rdma_build_read_chunk(struct svc_rqst *rqstp,
+ 		info->ri_chunklen += rs_length;
+ 	}
+ 
+-	/* Pages under I/O have been copied to head->rc_pages.
+-	 * Prevent their premature release by svc_xprt_release() .
+-	 */
+-	for (i = 0; i < info->ri_readctxt->rc_page_count; i++)
+-		rqstp->rq_pages[i] = NULL;
+-
+ 	return ret;
+ }
+ 
+@@ -802,6 +795,26 @@ static int svc_rdma_build_pz_read_chunk(struct svc_rqst *rqstp,
+ 	return ret;
+ }
+ 
++/* Pages under I/O have been copied to head->rc_pages. Ensure they
++ * are not released by svc_xprt_release() until the I/O is complete.
++ *
++ * This has to be done after all Read WRs are constructed to properly
++ * handle a page that is part of I/O on behalf of two different RDMA
++ * segments.
++ *
++ * Do this only if I/O has been posted. Otherwise, we do indeed want
++ * svc_xprt_release() to clean things up properly.
++ */
++static void svc_rdma_save_io_pages(struct svc_rqst *rqstp,
++				   const unsigned int start,
++				   const unsigned int num_pages)
++{
++	unsigned int i;
++
++	for (i = start; i < num_pages + start; i++)
++		rqstp->rq_pages[i] = NULL;
++}
++
+ /**
+  * svc_rdma_recv_read_chunk - Pull a Read chunk from the client
+  * @rdma: controlling RDMA transport
+@@ -855,6 +868,7 @@ int svc_rdma_recv_read_chunk(struct svcxprt_rdma *rdma, struct svc_rqst *rqstp,
+ 	ret = svc_rdma_post_chunk_ctxt(&info->ri_cc);
+ 	if (ret < 0)
+ 		goto out_err;
++	svc_rdma_save_io_pages(rqstp, 0, head->rc_page_count);
+ 	return 0;
+ 
+ out_err:
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+
