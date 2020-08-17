@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134AF23444
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315BC23B89
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678071;
-	bh=uV6qIhz4BQd4/2PvMwxiyKnrpeVYq28NqbseEiesAaY=;
+	s=default; t=1597678077;
+	bh=f/0xQXnoIu068crQhuUc/3oebvyspQdCHqf8GvIepZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UeLCLBP1UfLVb/H6DwZtgunUDYHg0xequg+PFSRVU2O7L446vS2Nwz3H5VYKONyvg
-	 ULW0Jg94g3FgkXMbeILz1Ez2nJaGorZdfRl6L7VWXkCALIblUrOEc3TGAIbDtAf7uB
-	 gR65pbtXWHV5fQvLbwraQTJoW18GQbt6R3Hd6+/k=
+	b=AbEn5QIpssZIBW96FQ/pzP+pAbdApMK1BFGWAwa1eIIbGiuNBgeZSwO00BfmTc6J+
+	 AhpjGR+/rA0CJb/Yy0Sz/9mAxSpgH8RvjkJ5sU1I8Z2mmkD4fbwjO9t25fjXjKhRek
+	 +wYClwRR/6bJGhbznDIxGFk6Bsp23C357khNLO7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgHQP1t (ORCPT
+        id S1729976AbgHQP1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbgHQPZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:56 -0400
+        id S1729498AbgHQP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0FD923442;
-        Mon, 17 Aug 2020 15:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9EB205CB;
+        Mon, 17 Aug 2020 15:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677956;
-        bh=uV6qIhz4BQd4/2PvMwxiyKnrpeVYq28NqbseEiesAaY=;
+        s=default; t=1597677971;
+        bh=f/0xQXnoIu068crQhuUc/3oebvyspQdCHqf8GvIepZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r8R77W+8FrvnsvqRTTyyXNpUgZ6usGUSEG+CdRcpM8HHBuIiVeQ5G/o5AYAgZM3x3
-         UhDdUK2Xz6Bi4+8Ogk0qvDtJLVDmdX4qxOO7UcEHsKMcH7jlG8jPB3THBks9K69sYC
-         mVRhTeWb5ljBsw/eDooBT2kaNTnRy7N+oOXKfBTo=
+        b=tbD5c2QRPbCZ/jKKxeaOXDU1dO+EEOnqeGpmOWIEgX6xRs2RmQjZ38J9Tcu09DqFt
+         kcZWLoGguHXkEHehbX/8vGtq+MKl4jhHxMLIXtOK+UY1jLRb0KimQB1eAZ8qcs6VgO
+         gcA4D5Q7zzXX7YfVpw2ScP86INYI8d6Um1p5x+/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 169/464] ASoC: fsl_easrc: Fix uninitialized scalar variable in fsl_easrc_set_ctx_format
-Date:   Mon, 17 Aug 2020 17:12:02 +0200
-Message-Id: <20200817143841.913407092@linuxfoundation.org>
+Subject: [PATCH 5.8 174/464] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
+Date:   Mon, 17 Aug 2020 17:12:07 +0200
+Message-Id: <20200817143842.151654932@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 5748f4eb01a4df7a42024fe8bc7855f05febb7c5 ]
+[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
 
-The "ret" in fsl_easrc_set_ctx_format is not initialized, then
-the unknown value maybe returned by this function.
+preview_init_entities() does not call v4l2_ctrl_handler_free() when
+it fails.
+Add the missed function to fix it.
 
-Fixes: 955ac624058f ("ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/1592816611-16297-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_easrc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/omap3isp/isppreview.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
-index c6b5eb2d2af79..fff1f02dadfee 100644
---- a/sound/soc/fsl/fsl_easrc.c
-+++ b/sound/soc/fsl/fsl_easrc.c
-@@ -1133,7 +1133,7 @@ int fsl_easrc_set_ctx_format(struct fsl_asrc_pair *ctx,
- 	struct fsl_easrc_ctx_priv *ctx_priv = ctx->private;
- 	struct fsl_easrc_data_fmt *in_fmt = &ctx_priv->in_params.fmt;
- 	struct fsl_easrc_data_fmt *out_fmt = &ctx_priv->out_params.fmt;
--	int ret;
-+	int ret = 0;
+diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
+index 4dbdf3180d108..607b7685c982f 100644
+--- a/drivers/media/platform/omap3isp/isppreview.c
++++ b/drivers/media/platform/omap3isp/isppreview.c
+@@ -2287,7 +2287,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	me->ops = &preview_media_ops;
+ 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
+ 	if (ret < 0)
+-		return ret;
++		goto error_handler_free;
  
- 	/* Get the bitfield values for input data format */
- 	if (in_raw_format && out_raw_format) {
+ 	preview_init_formats(sd, NULL);
+ 
+@@ -2320,6 +2320,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	omap3isp_video_cleanup(&prev->video_in);
+ error_video_in:
+ 	media_entity_cleanup(&prev->subdev.entity);
++error_handler_free:
++	v4l2_ctrl_handler_free(&prev->ctrls);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
