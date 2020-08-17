@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE29C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B753AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0032207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC7D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688642;
-	bh=OVDkHsSG07NKTNVnTJzwLv0lVIcR7G7fqta95REk53A=;
+	s=default; t=1597688645;
+	bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJGdxY07RL3QEHnAJ990Cwru9lN5eU7Ci4ohdYWBPK2t0GKqxtyUhzNF/4QwNyH8R
-	 pQGITAGCgOHvsWimPrBZvgU3KBaGRw2fqt00b6CdF+LGdxr7vs8B16680ic6FS7Uty
-	 pDNzEs4uoAlifiud55w/3r14mLnLRDOOQREupRpc=
+	b=rNKHm9u0j/UnEgMZPrp8Zd0GS8ZWaL8e53rBDGBCSRCFosWh+xLbHPFB2k1MsFxAp
+	 u/1juV44/Sp7HJct6Mx/uUwtqr2lSxuYthtIJAJuTT1LT0tn7Rf5DdiGpgVnn3iaHx
+	 mdiGoxByij5+NsHfjSphlR+4w07RABcEsijXLijM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbgHQSX6 (ORCPT
+        id S2390936AbgHQSYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50924 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388233AbgHQQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:22 -0400
+        id S2388235AbgHQQDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9041A206FA;
-        Mon, 17 Aug 2020 16:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5FA2053B;
+        Mon, 17 Aug 2020 16:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680196;
-        bh=OVDkHsSG07NKTNVnTJzwLv0lVIcR7G7fqta95REk53A=;
+        s=default; t=1597680198;
+        bh=SKGMe+AprkijJRliWRr1iYnN8WQZPb7T8w0+0v5Nv6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGc6lIU1cyLo1mkZbCfZ/6C8++A9HZUOZ/47zNq1h/EZorG3WoWzLN2q1VSTmofi1
-         DZX7h7buaS3MOcv9lM8jGOVm+4319e0GsOsveKWv0hdDRYGNJD3wnWhdh7HLDrHDwC
-         HAFQ5HJPbybeGsNa2gE2graY+XqPun3F7odHPMVQ=
+        b=uCl1Zl8+ZPSnX2nZOjOkbtGCuJQNVfMxIeh/ksjMTczI4cU8l2vixNmmk/FTtrO/Q
+         guhNTax9eliv0yPQn6/9JGzyZ5X3c2EPkjt/lsM1x3TEMllXt0q3TNAn+Eqnwm6AB+
+         xHSTvHPUX9y0EybVpJTTXCrKZ2O+kYkcXk0JkHck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/270] drm/nouveau: fix multiple instances of reference count leaks
-Date:   Mon, 17 Aug 2020 17:14:23 +0200
-Message-Id: <20200817143758.844564966@linuxfoundation.org>
+Subject: [PATCH 5.4 089/270] drm/msm: ratelimit crtc event overflow error
+Date:   Mon, 17 Aug 2020 17:14:50 +0200
+Message-Id: <20200817143800.194189346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,66 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
+[ Upstream commit 5e16372b5940b1fecc3cc887fc02a50ba148d373 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-ref count before returning the error.
+This can happen a lot when things go pear shaped.  Lets not flood dmesg
+when this happens.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
- drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b1beed40e746a..5347e5bdee8cc 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1052,8 +1052,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index ce59adff06aa1..36c85c05b7cf7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -381,7 +381,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 event)
+ 	spin_unlock_irqrestore(&dpu_crtc->spin_lock, flags);
  
- 	/* need to bring up power immediately if opening device */
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	get_task_comm(tmpname, current);
- 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
-@@ -1135,8 +1137,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	long ret;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
- 	case DRM_NOUVEAU_NVIF:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-index 1324c19f4e5cf..fbfe254227740 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-@@ -45,8 +45,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (WARN_ON(ret < 0 && ret != -EACCES))
-+	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-+		pm_runtime_put_autosuspend(dev);
+ 	if (!fevent) {
+-		DRM_ERROR("crtc%d event %d overflow\n", crtc->base.id, event);
++		DRM_ERROR_RATELIMITED("crtc%d event %d overflow\n", crtc->base.id, event);
  		return;
-+	}
+ 	}
  
- 	if (gem->import_attach)
- 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
