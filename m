@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F19C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50644C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD24320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256F720716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693573;
-	bh=ZQqVU7TG/KpLcPr0o/0mZ3eI0AAOkC63u17RKU6K1lI=;
+	s=default; t=1597693582;
+	bh=gWkKBLqrFyWOSdK7if2G2dxRkh8/ELMIAsFk2X3V7AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCMnWOlTb5boxfGG02iHPfbt6fV9s0RqxR6cVv4DjdCZ67FGXfFCUDM1LD9YEaEvT
-	 U5smQzNcTbxLIftOAtPl5pyOWf3iZJ8JnxNoug6EG5E8TgsKnytcbRUehBk1+wH6f6
-	 8//U4NtPQcIWHKnsEbI07Xl8H1U/aWVLHTWq0JwU=
+	b=kp3NxSZSLMnRWrWpe2ffY8xZo/LGS12PS/T3e/V1/NMfWccZ0JjNtBke272ryZJIU
+	 +gbzBSnCWdT0qpP0ZVfqqMxZLCfG6tz9VgggxJvILz76+f+aO6O5F8/OLusL4Op3mL
+	 aGw2/3NFbAk63xHl3HM/FoEGnF3v7zfWyaxxB/00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgHQPVd (ORCPT
+        id S1729990AbgHQTqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbgHQPUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:52 -0400
+        id S1729360AbgHQPVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE9920729;
-        Mon, 17 Aug 2020 15:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E62F207D3;
+        Mon, 17 Aug 2020 15:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677651;
-        bh=ZQqVU7TG/KpLcPr0o/0mZ3eI0AAOkC63u17RKU6K1lI=;
+        s=default; t=1597677692;
+        bh=gWkKBLqrFyWOSdK7if2G2dxRkh8/ELMIAsFk2X3V7AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJ9lE/uw/pVaEbSP5J41Zs2Q/K/3vwu5ea7Sm3dAL7bFsr3R//8QcYTE+6a3L/Fku
-         IcRczP5BezhIjvHinMHcq2F+Pk2eqzTiSuVcDBkaIOLLh7nkRBvEAEyGuRuUyuTM3L
-         dw+t4I4PTOywe/cs7atFcBRvu/V+kWsTHGyxjMkk=
+        b=2l6P3DpknOknM90+KPhTNTysoWeXi6ohLiXLG/aaBs9z2HB4Afp1AS6TkGAjNcpzJ
+         KV+DVeVcu1rPU/kjTAV/gQvi2mTi88wOlEIj5U4j9WAVb/icTt1mWbd6Y3DB7rKL+t
+         /tlBlA6axk6bRf0PErglntRe1AOu9HyHh439tPiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Hristo Venev <hristo@venev.name>, io-uring@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 052/464] io_uring: fix sq array offset calculation
-Date:   Mon, 17 Aug 2020 17:10:05 +0200
-Message-Id: <20200817143836.252163777@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 073/464] nvme-multipath: fix logic for non-optimized paths
+Date:   Mon, 17 Aug 2020 17:10:26 +0200
+Message-Id: <20200817143837.268973244@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,49 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit b36200f543ff07a1cb346aa582349141df2c8068 ]
+[ Upstream commit 3f6e3246db0e6f92e784965d9d0edb8abe6c6b74 ]
 
-rings_size() sets sq_offset to the total size of the rings (the returned
-value which is used for memory allocation). This is wrong: sq array should
-be located within the rings, not after them. Set sq_offset to where it
-should be.
+Handle the special case where we have exactly one optimized path,
+which we should keep using in this case.
 
-Fixes: 75b28affdd6a ("io_uring: allocate the two rings together")
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Hristo Venev <hristo@venev.name>
-Cc: io-uring@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 75c10e732724 ("nvme-multipath: round-robin I/O policy")
+Signed off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 95bacab047ddb..8503aec7ea295 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7093,6 +7093,9 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
- 		return SIZE_MAX;
- #endif
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 66509472fe06a..fe8f7f123fac7 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -246,6 +246,12 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
+ 			fallback = ns;
+ 	}
  
-+	if (sq_offset)
-+		*sq_offset = off;
-+
- 	sq_array_size = array_size(sizeof(u32), sq_entries);
- 	if (sq_array_size == SIZE_MAX)
- 		return SIZE_MAX;
-@@ -7100,9 +7103,6 @@ static unsigned long rings_size(unsigned sq_entries, unsigned cq_entries,
- 	if (check_add_overflow(off, sq_array_size, &off))
- 		return SIZE_MAX;
- 
--	if (sq_offset)
--		*sq_offset = off;
--
- 	return off;
- }
- 
++	/* No optimized path found, re-check the current path */
++	if (!nvme_path_is_disabled(old) &&
++	    old->ana_state == NVME_ANA_OPTIMIZED) {
++		found = old;
++		goto out;
++	}
+ 	if (!fallback)
+ 		return NULL;
+ 	found = fallback;
 -- 
 2.25.1
 
