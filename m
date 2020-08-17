@@ -2,74 +2,110 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A51C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 746FC2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F360D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+0tZ+XE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHQIbW (ORCPT
+        id S1727884AbgHQIcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:31:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1808 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgHQIbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:31:21 -0400
-IronPort-SDR: 8dTlWI76XhtspZhuWhxnXqRFBetY563pZ1St6IJCW7SMbERy9mIl1k0mwmf4C8cab0v2mRifd6
- eo2uUxOifkcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="142284607"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="142284607"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:31:20 -0700
-IronPort-SDR: 3H0imvvqwXYvalrcURB4ZVobiAarxMXgSw6lf9x2eqV5SI+GV4MUYrcqDXTJrPae8Bu5XIQNhP
- kFOSTAAyMv7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="440798680"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga004.jf.intel.com with ESMTP; 17 Aug 2020 01:31:18 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Len Brown <lenb@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH] tools/power turbostat: Support Sapphire Rapids
-Date:   Mon, 17 Aug 2020 16:32:23 +0800
-Message-Id: <20200817083223.18697-1-yu.c.chen@intel.com>
+        Mon, 17 Aug 2020 04:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgHQIcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:32:06 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E55C061388;
+        Mon, 17 Aug 2020 01:32:06 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id i10so2235672pgk.1;
+        Mon, 17 Aug 2020 01:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/sULagr6LTMBEuIph56ozIPDd5gsq8y7yywDtmV0n1o=;
+        b=L+0tZ+XEaNx7E4bbqWdgnVsz05mRxd2IID1oB4iucIHmz+ujI3Yx7XYTlP58S0u0Bs
+         hvA98jxKbeUnp7ewygHv4JhNMDqhmtol9thap/we92EJ3kgL0thCI+sCo+9ol3bF7Cfu
+         luS2MhiK0sY0slNz8U8v9FWJDAyab63xhcMdSjnUbng1he2CZJoAY6euA8eU8D8+JyJs
+         BNvDGK1hqgnj8xLS1u58UMPF1x3yNQ39214Hzv4jxYiOgJESKTYfVwON80pdEa7Kr45I
+         mOAqR+CwlEsx9v3cFYF2W3C4iMDGVe1AhntkLUnhfIyh2GPFw7OKQ3oWgqtyHXS7KxGB
+         HUNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/sULagr6LTMBEuIph56ozIPDd5gsq8y7yywDtmV0n1o=;
+        b=QEL/oPHRQGK4rTEPZwbRKURQ3cindteTebchh2oDPFnNH3gUJ9iwrFm72z97lXtHMb
+         0UyhupCQ7hqVUDyFLUPJIPC+01uLwbhL30iGamukaT1fLIRFBOenZMPIctHhfWMLF2YG
+         ZYrBqTVtbGTy8DZM0MBde8wGCHLs7VtA6Un3/fjl1dOBfv7NdU6OFWTqxJC6+pnaRZA9
+         3TQn55BKVzJkDX51cYjU4+AfM2xs4yimQE82VZ5LqXKaJ/s0hC5TmgX4al3zx++Rpv12
+         NJtGDpjg98ZU6TQSRMxCznPOZMeKloJC9oklvERO+2pxP1WtdU5bGQNXX2u2A3YumLMi
+         cGVw==
+X-Gm-Message-State: AOAM532QiGuM7Nb7/wJ1oSwS8FqqKLXwWzeu6er3PanluPb3pfbQu5lV
+        nFv3yiJfs5FoZ7+ZfNG3j/E=
+X-Google-Smtp-Source: ABdhPJxCXAqHcjructN7rnGdX9eJEKESjUkpSJjxGaqlz5tyib3O8nNtJ04PWKPZf3ou8Fjkw1YSiA==
+X-Received: by 2002:aa7:9712:: with SMTP id a18mr10020822pfg.197.1597653126219;
+        Mon, 17 Aug 2020 01:32:06 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:32:05 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     mchehab@kernel.org, maintainers@bluecherrydvr.com,
+        patrice.chotard@st.com
+Cc:     keescook@chromium.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Allen Pais <allen.lkml@gmail.com>
+Subject: [PATCH 00/11] media: convert tasklets to use new tasklet_setup()
+Date:   Mon, 17 Aug 2020 14:01:42 +0530
+Message-Id: <20200817083153.22218-1-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enumerate Saphire Rapids.
-Treat it like Sky Lake and Ice Lake server in turbostat.
+Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
+introduced a new tasklet initialization API. This series converts 
+all the media drivers to use the new tasklet_setup() API
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- tools/power/x86/turbostat/turbostat.c | 1 +
- 1 file changed, 1 insertion(+)
+Allen Pais (11):
+  media: bt8xx: convert tasklets to use new tasklet_setup() API
+  media: mantis: convert tasklets to use new tasklet_setup() API
+  media: ngene: convert tasklets to use new tasklet_setup() API
+  media: smipcie: convert tasklets to use new tasklet_setup() API
+  media: ttpci: convert tasklets to use new tasklet_setup() API
+  media: tw5864: convert tasklets to use new tasklet_setup() API
+  media: marvell-ccic: convert tasklets to use new tasklet_setup() API
+  media: pxa_camera: convert tasklets to use new tasklet_setup() API
+  media: sti: convert tasklets to use new tasklet_setup() API
+  media/radio: wl128x: convert tasklets to use new tasklet_setup() API
+  media: ttusb-dec: convert tasklets to use new tasklet_setup() API
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 33b370865d16..bf09f8bc000b 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -4694,6 +4694,7 @@ unsigned int intel_model_duplicates(unsigned int model)
- 		return INTEL_FAM6_ATOM_TREMONT;
- 
- 	case INTEL_FAM6_ICELAKE_X:
-+	case INTEL_FAM6_SAPPHIRERAPIDS_X:
- 		return INTEL_FAM6_SKYLAKE_X;
- 	}
- 	return model;
+ drivers/media/pci/bt8xx/dvb-bt8xx.c           |  7 ++++---
+ drivers/media/pci/mantis/mantis_dma.c         |  4 ++--
+ drivers/media/pci/mantis/mantis_dma.h         |  2 +-
+ drivers/media/pci/mantis/mantis_dvb.c         |  2 +-
+ drivers/media/pci/ngene/ngene-core.c          | 12 +++++------
+ drivers/media/pci/smipcie/smipcie-main.c      |  6 +++---
+ drivers/media/pci/ttpci/av7110.c              | 20 +++++++++----------
+ drivers/media/pci/ttpci/budget-ci.c           | 15 +++++++-------
+ drivers/media/pci/ttpci/budget-core.c         |  6 +++---
+ drivers/media/pci/tw5864/tw5864-video.c       |  9 ++++-----
+ .../media/platform/marvell-ccic/mcam-core.c   |  7 +++----
+ drivers/media/platform/pxa_camera.c           |  6 +++---
+ .../platform/sti/c8sectpfe/c8sectpfe-core.c   | 10 ++++------
+ drivers/media/radio/wl128x/fmdrv_common.c     | 12 +++++------
+ drivers/media/usb/ttusb-dec/ttusb_dec.c       |  7 +++----
+ 15 files changed, 61 insertions(+), 64 deletions(-)
+
 -- 
 2.17.1
 
