@@ -2,141 +2,152 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D844C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0681FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB5720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:15:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="El20VIDg"
+	by mail.kernel.org (Postfix) with ESMTP id D35C721744
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 14:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgHQOPk (ORCPT
+        id S1728958AbgHQOPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 10:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbgHQOPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 10:15:36 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5341DC061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:15:36 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id di22so12365913edb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 07:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5GU+hvhFq5FTqZEE9oONoXIkAiVxgc+Oe9aNa54OoQw=;
-        b=El20VIDg2NdzHYr8IDobZ35xvin+mYvK5IfVN6E9Mz2vqJozybe5i/2Wlxsfn/Sw/y
-         f0k6vhoiwuZpjkzNSH7o+/kxhGMI3IyIdKA4L1csfLFdCS6VvpM1KpyCMatdms38ockb
-         vn6Q6r/gun8WRAuHZEgnHoD53UF7AoIaf1iQ4RKKUOFzHezYOMIPu4FjKKdkid1QrTsN
-         XYkEGMgZuM9FY7pC3oZAX3Vg3vp1JBtMrz/WWZifbhpZStXw/b3vMHLDcnShb+UIMLC4
-         o9oDwufDPJMlMN5ma80n0X1ZjkPVvlDsh9iTTR2Y6qpP13GK5L2sWymrfnPwd48VcEor
-         G8Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5GU+hvhFq5FTqZEE9oONoXIkAiVxgc+Oe9aNa54OoQw=;
-        b=jMhtnqtIZtorVGkD/zyIm0CctpSetce0wMDmF0WZANGLs5e6SIDkFq5TeHP2MEevIC
-         xA+USZizPQoydUGx5u6ftoBBcLKIaQzWpihP+RqeosgwnB9BvLXH3lZ5pGZ82x+6+4rw
-         6BRbJbRxBWNGjorTFTq9xGjiuynb6JeqgzrAvi3z5zcvggqajduLamUee+wUuC1/Qfu8
-         /u64QtyHYMDpQAbIgMnINnIJzPb8EK7TtVhtvSVjcqwWYM8NNydiuTNwmn9moy4Uv5Wp
-         s5IAnVqrpdp8UzHm/ZXyuam8SsO9vpckStV1n6WTowRkZQ5Rzapr1OYEt/djWdZDo164
-         t6FQ==
-X-Gm-Message-State: AOAM533r11Bh5EbaBHSBc4cbpK8e3iYYGX2K5VkhwpfjuzyY10tCWqSk
-        A+jx31NA4RqvvNhC5F71TmoMEQ==
-X-Google-Smtp-Source: ABdhPJzjr9ZxRXnAgQ3pOgNu0n1L4UO5JB4hdIav5PocnLg1VrC/U2k8Jix0avX3cyR6efPTsghljQ==
-X-Received: by 2002:a05:6402:3121:: with SMTP id dd1mr15268241edb.72.1597673735048;
-        Mon, 17 Aug 2020 07:15:35 -0700 (PDT)
-Received: from netronome.com ([2001:982:7ed1:403:9eeb:e8ff:fe0d:5b6a])
-        by smtp.gmail.com with ESMTPSA id g19sm14563399ejz.5.2020.08.17.07.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 07:15:34 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 16:15:33 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org,
-        kda@linux-powerpc.org, dougmill@linux.ibm.com,
-        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com,
-        keescook@chromium.org, linux-acenic@sunsite.dk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, Romain Perier <romain.perier@gmail.com>
-Subject: Re: [oss-drivers] [PATCH 16/20] ethernet: netronome: convert
- tasklets to use new tasklet_setup() API
-Message-ID: <20200817141532.GA4130@netronome.com>
-References: <20200817082434.21176-1-allen.lkml@gmail.com>
- <20200817082434.21176-18-allen.lkml@gmail.com>
+        Mon, 17 Aug 2020 10:15:54 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3065 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728831AbgHQOPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 10:15:53 -0400
+Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 5AC8B462E995EFE33ED2;
+        Mon, 17 Aug 2020 22:15:51 +0800 (CST)
+Received: from [10.174.186.8] (10.174.186.8) by dggeme755-chm.china.huawei.com
+ (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Mon, 17
+ Aug 2020 22:15:50 +0800
+Subject: Re: [RFC][PATCH 0/4] arm64:kvm: teach guest sched that VCPUs can be
+ preempted
+To:     Marc Zyngier <maz@kernel.org>
+References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
+ <20200817020310.GA1210848@jagdpanzerIV.localdomain>
+ <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
+ <cbcfb402b7fdb8a2a45b80fbb0e79f3e@kernel.org>
+CC:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "will@kernel.org" <will@kernel.org>, <joelaf@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <suleiman@google.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>,
+        <yezengruan@huawei.com>
+From:   yezengruan <yezengruan@huawei.com>
+Message-ID: <3ff3b016-3f63-7d03-ed4b-c98d74db4af8@huawei.com>
+Date:   Mon, 17 Aug 2020 22:15:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817082434.21176-18-allen.lkml@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cbcfb402b7fdb8a2a45b80fbb0e79f3e@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.174.186.8]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 01:54:30PM +0530, Allen Pais wrote:
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+On 2020/8/17 20:25, Marc Zyngier wrote:
+> On 2020-08-17 13:03, yezengruan wrote:
+>> On 2020/8/17 10:03, Sergey Senozhatsky wrote:
+>>> On (20/07/21 13:17), Sergey Senozhatsky wrote:
+>>>> Hello,
+>>>>
+>>>>     RFC
+>>>>
+>>>>     We noticed that in a number of cases when we wake_up_process()
+>>>> on arm64 guest we end up enqueuing that task on a preempted VCPU. The culprit
+>>>> appears to be the fact that arm64 guests are not aware of VCPU preemption
+>>>> as such, so when sched picks up an idle VCPU it always assumes that VCPU
+>>>> is available:
+>>>>
+>>>>       wake_up_process()
+>>>>        try_to_wake_up()
+>>>>         select_task_rq_fair()
+>>>>          available_idle_cpu()
+>>>>           vcpu_is_preempted()    // return false;
+>>>>
+>>>> Which is, obviously, not the case.
+>>>>
+>>>> This RFC patch set adds a simple vcpu_is_preempted() implementation so
+>>>> that scheduler can make better decisions when it search for the idle
+>>>> (v)CPU.
+>>> Hi,
+>>>
+>>> A gentle ping.
+>>>
+>>>     -ss
+>>> _______________________________________________
+>>> kvmarm mailing list
+>>> kvmarm@lists.cs.columbia.edu
+>>> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+>>> .
+>>
+>> Hi Sergey,
+>>
+>> I have a set of patches similar to yours.
+>>
+>> https://lore.kernel.org/lkml/20191226135833.1052-1-yezengruan@huawei.com/
+>
+> It really isn't the same thing at all. You are exposing PV spinlocks,
+> while Sergey exposes preemption to vcpus. The former is a massive,
+> and probably unnecessary superset of the later, which only impacts
+> the scheduler (it doesn't change the way locks are implemented).
+>
+> You really shouldn't conflate the two (which you have done in your
+> series).
+>
+>         M.
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
 
-But:
+Hi Marc,
 
-This series should be targeted at net-next, and thus have net-next in its
-subject
+Actually, both series support paravirtualization vcpu_is_preempted. My
+series regard this as PV lock, but only the vcpu_is_preempted interface
+of pv_lock_opt is implemented.
 
-	[PATCH net-next x/y] ...
+Except wake_up_process(), the vcpu_is_preempted interface of the current
+kernel is used in the following scenarios:
 
-And it should be posted when net-next is open: it is currently closed.
+kernel/sched/core.c:                            <---- wake_up_process()
+--------------------
+available_idle_cpu
+    vcpu_is_preempted
 
-	http://vger.kernel.org/~davem/net-next.html
+kernel/locking/rwsem.c:
+-----------------------
+rwsem_optimistic_spin
+    rwsem_spin_on_owner
+        owner_on_cpu
+            vcpu_is_preempted
 
-> ---
->  drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> index 39ee23e8c0bf..1dcd24d899f5 100644
-> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-> @@ -2287,9 +2287,9 @@ static bool nfp_ctrl_rx(struct nfp_net_r_vector *r_vec)
->  	return budget;
->  }
->  
-> -static void nfp_ctrl_poll(unsigned long arg)
-> +static void nfp_ctrl_poll(struct tasklet_struct *t)
->  {
-> -	struct nfp_net_r_vector *r_vec = (void *)arg;
-> +	struct nfp_net_r_vector *r_vec = from_tasklet(r_vec, t, tasklet);
->  
->  	spin_lock(&r_vec->lock);
->  	nfp_net_tx_complete(r_vec->tx_ring, 0);
-> @@ -2337,8 +2337,7 @@ static void nfp_net_vecs_init(struct nfp_net *nn)
->  
->  			__skb_queue_head_init(&r_vec->queue);
->  			spin_lock_init(&r_vec->lock);
-> -			tasklet_init(&r_vec->tasklet, nfp_ctrl_poll,
-> -				     (unsigned long)r_vec);
-> +			tasklet_setup(&r_vec->tasklet, nfp_ctrl_poll);
->  			tasklet_disable(&r_vec->tasklet);
->  		}
->  
-> -- 
-> 2.17.1
-> 
+kernel/locking/mutex.c:
+-----------------------
+mutex_optimistic_spin
+    mutex_spin_on_owner
+        vcpu_is_preempted
+
+kernel/locking/osq_lock.c:
+--------------------------
+osq_lock
+    vcpu_is_preempted
+
+
+Thanks,
+
+Zengruan
+
