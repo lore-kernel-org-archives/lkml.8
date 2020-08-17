@@ -5,52 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D55C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A96204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1461A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690507;
-	bh=GLoDUOwmC610yENadQGS6YsK/gPoQy/7rRYSTZ2bj9M=;
+	s=default; t=1597690515;
+	bh=G1OvFEXrou1OJyh/zOo3R3BvFhcRVwtwoYVL1FhzfHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nYlF/iORaYtSocTFUoAaDXO50RjlL4tuCFsVfROB9bTVLIOP+M8QnpyLiyerqeWpz
-	 OXhQIkD0MPPXvL10EBF0mqXRw4/kQakcX97BWRNb8FKUiwZgB4oSFG5f0W3CElEoDf
-	 Rsdexb1FAekMjsMnx/SK0ZgzYimC1wLTgwUW2xUw=
+	b=vmC/JmCjD6UaE+wAQH9sSPEhUWMK7DOdbfa1A3RXfhGQWD6ycuMIX9xOu+m76j+n8
+	 y1PPIaO+dUaLkyOUKggBoxxjm6UE+nwFa3PxenVT4GRtJ9yn40hyU8Nxrh9mkaNSuT
+	 Un0afMrkXbyHip8BB6zdSO3uBBtYyTSDXXe8IrYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389162AbgHQSzG (ORCPT
+        id S2389567AbgHQSzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730915AbgHQPvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:17 -0400
+        id S1730911AbgHQPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B1E20888;
-        Mon, 17 Aug 2020 15:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7400208B3;
+        Mon, 17 Aug 2020 15:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679471;
-        bh=GLoDUOwmC610yENadQGS6YsK/gPoQy/7rRYSTZ2bj9M=;
+        s=default; t=1597679468;
+        bh=G1OvFEXrou1OJyh/zOo3R3BvFhcRVwtwoYVL1FhzfHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSLiVvE7BWToc0jNfn0vhT+Ta2ZqBVg4wfgEaeV89KP1yp3iIxS/Uam2dTN/323QR
-         v8QrPcPiu5eKhm+m5uaIt4CXzdO2e1tv/daIaOUAALz/h10+ELhH/FcXLqV4LygjIK
-         fIaUBcowBC47ZmHFYkMe5BBb/0hYL9273pvS3VII=
+        b=DnX9422z/TZdcNBww480J/8EQgWZ+feQJVs+RTiFrYaLToarJusoeLPH3BzNsFCeX
+         /ehlCdrXvxDBj8w7vQ6xT1xWcJVX32DOv8cJ6CpFHyGLM7cLL7h5foH/YbTz2h4pFp
+         2+y+1EQoWHD5KTa+BwCwbI/yP85ZcTDUFEnL6M9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 193/393] kobject: Avoid premature parent object freeing in kobject_cleanup()
-Date:   Mon, 17 Aug 2020 17:14:03 +0200
-Message-Id: <20200817143828.985107612@linuxfoundation.org>
+Subject: [PATCH 5.7 192/393] drm/stm: repair runtime power management
+Date:   Mon, 17 Aug 2020 17:14:02 +0200
+Message-Id: <20200817143828.935241948@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,114 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 079ad2fb4bf9eba8a0aaab014b49705cd7f07c66 ]
+[ Upstream commit ebd267b2e3c25d5f93a08528b47c036569eb8744 ]
 
-If kobject_del() is invoked by kobject_cleanup() to delete the
-target kobject, it may cause its parent kobject to be freed
-before invoking the target kobject's ->release() method, which
-effectively means freeing the parent before dealing with the
-child entirely.
+Add missing pm_runtime_get_sync() into ltdc_crtc_atomic_enable() to
+match pm_runtime_put_sync() in ltdc_crtc_atomic_disable(), otherwise
+the LTDC might suspend via runtime PM, disable clock, and then fail
+to resume later on.
 
-That is confusing at best and it may also lead to functional
-issues if the callers of kobject_cleanup() are not careful enough
-about the order in which these calls are made, so avoid the
-problem by making kobject_cleanup() drop the last reference to
-the target kobject's parent at the end, after invoking the target
-kobject's ->release() method.
+The test which triggers it is roughly -- run qt5 application which
+uses eglfs platform and etnaviv, stop the application, sleep for 15
+minutes, run the application again. This leads to a timeout waiting
+for vsync, because the LTDC has suspended, but did not resume.
 
-[ rjw: Rewrite the subject and changelog, make kobject_cleanup()
-  drop the parent reference only when __kobject_del() has been
-  called. ]
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/1908555.IiAGLGrh1Z@kreacher
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 35ab6cfbf211 ("drm/stm: support runtime power management")
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Yannick Fertré <yannick.fertre@st.com>
+Cc: Philippe Cornu <philippe.cornu@st.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Vincent Abriou <vincent.abriou@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Acked-by: Philippe Cornu <philippe.cornu@st.com>
+Tested-by: Yannick Fertre <yannick.fertre@st.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200229221649.90813-1-marex@denx.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kobject.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/stm/ltdc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 83198cb37d8d9..386873bdd51c9 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
- }
- EXPORT_SYMBOL_GPL(kobject_move);
- 
--/**
-- * kobject_del() - Unlink kobject from hierarchy.
-- * @kobj: object.
-- *
-- * This is the function that should be called to delete an object
-- * successfully added via kobject_add().
-- */
--void kobject_del(struct kobject *kobj)
-+static void __kobject_del(struct kobject *kobj)
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index df585fe64f614..60ffe5bbc1294 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -425,9 +425,12 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
+ 				    struct drm_crtc_state *old_state)
  {
- 	struct kernfs_node *sd;
- 	const struct kobj_type *ktype;
-@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
++	struct drm_device *ddev = crtc->dev;
  
- 	kobj->state_in_sysfs = 0;
- 	kobj_kset_leave(kobj);
--	kobject_put(kobj->parent);
- 	kobj->parent = NULL;
- }
+ 	DRM_DEBUG_DRIVER("\n");
+ 
++	pm_runtime_get_sync(ddev->dev);
 +
-+/**
-+ * kobject_del() - Unlink kobject from hierarchy.
-+ * @kobj: object.
-+ *
-+ * This is the function that should be called to delete an object
-+ * successfully added via kobject_add().
-+ */
-+void kobject_del(struct kobject *kobj)
-+{
-+	struct kobject *parent = kobj->parent;
-+
-+	__kobject_del(kobj);
-+	kobject_put(parent);
-+}
- EXPORT_SYMBOL(kobject_del);
+ 	/* Sets the background color value */
+ 	reg_write(ldev->regs, LTDC_BCCR, BCCR_BCBLACK);
  
- /**
-@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-  */
- static void kobject_cleanup(struct kobject *kobj)
- {
-+	struct kobject *parent = kobj->parent;
- 	struct kobj_type *t = get_ktype(kobj);
- 	const char *name = kobj->name;
- 
-@@ -684,7 +692,10 @@ static void kobject_cleanup(struct kobject *kobj)
- 	if (kobj->state_in_sysfs) {
- 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
- 			 kobject_name(kobj), kobj);
--		kobject_del(kobj);
-+		__kobject_del(kobj);
-+	} else {
-+		/* avoid dropping the parent reference unnecessarily */
-+		parent = NULL;
- 	}
- 
- 	if (t && t->release) {
-@@ -698,6 +709,8 @@ static void kobject_cleanup(struct kobject *kobj)
- 		pr_debug("kobject: '%s': free name\n", name);
- 		kfree_const(name);
- 	}
-+
-+	kobject_put(parent);
- }
- 
- #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
 -- 
 2.25.1
 
