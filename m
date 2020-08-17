@@ -2,53 +2,56 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E195FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5EA720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C034D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684547;
-	bh=45VWdcIbF/o2v52taxnXd8WBDS6fFL77M2ekQL3Ub8U=;
+	s=default; t=1597684563;
+	bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=msPVtU2QOIEdhhPvbF1EnmgUwZ9i7p6jgloPXxh1nix6LufatKXc3f6Z/erUjO04O
-	 I93Mx4IX7rlO4Sb6s9qKyk53I6QnF5SwLk8mh6t6xnB79YTrsnpyAThLldyTU7M0KH
-	 5fglY7/AYtMpZ4E6o/xd+kKTt7gt/agbjU7/I/ZU=
+	b=uf2eJ8z/qhUhqXVZM7HMcn2QjdaNVQnuovSpCVb9A+M/BQuem+q0iofvYGZJubtwX
+	 motpetQp4+49FECsy4rUcRQN0qeXthxKZWXDEiazlTqGu2QdC+S26DFU/g0YCBlqvU
+	 Xj9tzS4tcEmtunbLHZchOa6ggZa1SftpvgyVe9p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389571AbgHQRPm (ORCPT
+        id S2389580AbgHQRPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388735AbgHQQNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:00 -0400
+        id S2388743AbgHQQNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C6520578;
-        Mon, 17 Aug 2020 16:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D166A22CAD;
+        Mon, 17 Aug 2020 16:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680779;
-        bh=45VWdcIbF/o2v52taxnXd8WBDS6fFL77M2ekQL3Ub8U=;
+        s=default; t=1597680786;
+        bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2BzxJDbz0nfXSo1/m95Rw7RKq2G4AS8Qw1HvrEuCnwQNzFD7vToXPugG359DF+yu
-         moZSLGrX4I1byno+uJ4JzRH2iN3ujkIFtdCGE8gRIYu1str/cwhSwsnAt5g31z3ZsX
-         gMkt7fm2Pv3EKRsd0RUd8VrwfnIll1c75oTzcvbw=
+        b=cQ3M8ENCRXT6E6smqUWlLOVGdat/b3Kl1gR5oOcDsfSQufg4FZ+NS7HWs/J4XUuTy
+         wBKCVdT/2PCPh84APKjj5VP54pqZ/eXksI49+9a+g3w6/fl9HKY5bU1mfwTCqEzeof
+         E2UYjdI4Y1xzN/SSxwS0vJi+snxznmBRtDPaJhoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/168] ACPICA: Do not increment operation_region reference counts for field units
-Date:   Mon, 17 Aug 2020 17:16:24 +0200
-Message-Id: <20200817143736.396855290@linuxfoundation.org>
+Subject: [PATCH 4.19 056/168] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
+Date:   Mon, 17 Aug 2020 17:16:27 +0200
+Message-Id: <20200817143736.554430842@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,78 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Kaneda <erik.kaneda@intel.com>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
+[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
 
-ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
+the sfb->fb->screen_base is not save the value get by iounmap() when
+the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
+is not right.
 
-Object reference counts are used as a part of ACPICA's garbage
-collection mechanism. This mechanism keeps track of references to
-heap-allocated structures such as the ACPI operand objects.
-
-Recent server firmware has revealed that this reference count can
-overflow on large servers that declare many field units under the
-same operation_region. This occurs because each field unit declaration
-will add a reference count to the source operation_region.
-
-This change solves the reference count overflow for operation_regions
-objects by preventing fieldunits from incrementing their
-operation_region's reference count. Each operation_region's reference
-count will not be changed by named objects declared under the Field
-operator. During namespace deletion, the operation_region namespace
-node will be deleted and each fieldunit will be deleted without
-touching the deleted operation_region object.
-
-Link: https://github.com/acpica/acpica/commit/e17b28cf
-Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/exprep.c   | 4 ----
- drivers/acpi/acpica/utdelete.c | 6 +-----
- 2 files changed, 1 insertion(+), 9 deletions(-)
+ drivers/video/fbdev/sm712fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
-index 738f3c732363a..228feeea555f1 100644
---- a/drivers/acpi/acpica/exprep.c
-+++ b/drivers/acpi/acpica/exprep.c
-@@ -473,10 +473,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
- 				    (u8)access_byte_width;
- 			}
- 		}
--		/* An additional reference for the container */
--
--		acpi_ut_add_reference(obj_desc->field.region_obj);
--
- 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
- 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
- 				  obj_desc->field.start_field_bit_offset,
-diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
-index 8cc4392c61f33..0dc8dea815823 100644
---- a/drivers/acpi/acpica/utdelete.c
-+++ b/drivers/acpi/acpica/utdelete.c
-@@ -563,11 +563,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			next_object = object->buffer_field.buffer_obj;
- 			break;
- 
--		case ACPI_TYPE_LOCAL_REGION_FIELD:
--
--			next_object = object->field.region_obj;
--			break;
--
- 		case ACPI_TYPE_LOCAL_BANK_FIELD:
- 
- 			next_object = object->bank_field.bank_obj;
-@@ -608,6 +603,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			}
- 			break;
- 
-+		case ACPI_TYPE_LOCAL_REGION_FIELD:
- 		case ACPI_TYPE_REGION:
- 		default:
- 
+diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
+index f1dcc6766d1ef..1781ca697f66b 100644
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
+ static void smtc_unmap_smem(struct smtcfb_info *sfb)
+ {
+ 	if (sfb && sfb->fb->screen_base) {
++		if (sfb->chip_id == 0x720)
++			sfb->fb->screen_base -= 0x00200000;
+ 		iounmap(sfb->fb->screen_base);
+ 		sfb->fb->screen_base = NULL;
+ 	}
 -- 
 2.25.1
 
