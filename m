@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81AE62054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9162B20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681608;
-	bh=TVYzjNuX4vwDfn/79udKVbRMl5PZMEj9N1jvPHPi73c=;
+	s=default; t=1597681625;
+	bh=S8mB5wGiY4l6snnRcf9CxVcHFjqZAemJdqLwKa3CuD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMpqrixKIEE6hswZ0dBGqSEBLnCBG2FqkZ4WZ/f+RgnAm+3MtzTWDHz68leShPDZ7
-	 FxDqYtbfmP2meU1uLSmzlzLC8sBLKB1u4csvbP3xUW7IR+ECjK5vEGBFHBtXY0IoUN
-	 OZ7g08yTZZlHcyJZAx0FjEQQvnRmbJ5PvCeoVE8s=
+	b=p5FuArDHixWxolN8QB1eqexMw0VxiWILSzcfeRqZodxkhbYbaTKVf0M/eagIS6498
+	 jDyYbwY0OsK4ymK4Qe8bqXCp9aKO19ZZJ39quVom4QWZfQdLs+fMVv1PYWMDluS/DT
+	 Ftzat0CZmajrxgJvwlngp0oNbSS5t3o1ksReI5+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388528AbgHQQ0k (ORCPT
+        id S2388703AbgHQQ1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387825AbgHQPv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:56 -0400
+        id S2387827AbgHQPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C5220882;
-        Mon, 17 Aug 2020 15:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 475B720885;
+        Mon, 17 Aug 2020 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679514;
-        bh=TVYzjNuX4vwDfn/79udKVbRMl5PZMEj9N1jvPHPi73c=;
+        s=default; t=1597679517;
+        bh=S8mB5wGiY4l6snnRcf9CxVcHFjqZAemJdqLwKa3CuD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPs7ZcBW+W7aHnTs/fEKEWCNg/z3AOG4q+40Xdzc1VlUgU1bMSyJiXpw2NkSPeQeh
-         hZvqIeVo0wj06HoVYoyCLrc8QIYE7+Iy3iNQryyZfU4KoFspdPrRMnQNzs1yVxtsKl
-         CWzd9bTHXHEGrQFPZolOX5bQPqwPNtFCWh0+6hyA=
+        b=G1xWicIHPXJDhiESVsHFQOFzuDH/fnoTsp090scp+CYxfc72F+B+fO/EOd8uqz09x
+         FocvNFFDgaJa/RqokIJil2Bb43x9ORYWST1tui3Zrg0GR8VIj6FoJEEAOEKfA0DQHj
+         kTrWaMhIlvnnyzM6YJ0oYq4aZ/Z6HdCsmlTcxwH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 221/393] drm/imx: tve: fix regulator_disable error path
-Date:   Mon, 17 Aug 2020 17:14:31 +0200
-Message-Id: <20200817143830.343688448@linuxfoundation.org>
+Subject: [PATCH 5.7 239/393] tools/bpftool: Fix error handing in do_skeleton()
+Date:   Mon, 17 Aug 2020 17:14:49 +0200
+Message-Id: <20200817143831.211722384@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,68 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7bb58b987fee26da2a1665c01033022624986b7c ]
+[ Upstream commit 956fcfcd359512f15b19bcd157fa8206ed26605b ]
 
-Add missing regulator_disable() as devm_action to avoid dedicated
-unbind() callback and fix the missing error handling.
+Fix pass 0 to PTR_ERR, also dump more err info using
+libbpf_strerror.
 
-Fixes: fcbc51e54d2a ("staging: drm/imx: Add support for Television Encoder (TVEv2)")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 5dc7a8b21144 ("bpftool, selftests/bpf: Embed object file inside skeleton")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+Link: https://lore.kernel.org/bpf/20200717123059.29624-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/imx-tve.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ tools/bpf/bpftool/gen.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
-index 9fd4b464e829c..f91c3eb7697bc 100644
---- a/drivers/gpu/drm/imx/imx-tve.c
-+++ b/drivers/gpu/drm/imx/imx-tve.c
-@@ -494,6 +494,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
- 	return 0;
- }
- 
-+static void imx_tve_disable_regulator(void *data)
-+{
-+	struct imx_tve *tve = data;
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index f5960b48c8615..5ff951e08c740 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -307,8 +307,11 @@ static int do_skeleton(int argc, char **argv)
+ 	opts.object_name = obj_name;
+ 	obj = bpf_object__open_mem(obj_data, file_sz, &opts);
+ 	if (IS_ERR(obj)) {
++		char err_buf[256];
 +
-+	regulator_disable(tve->dac_reg);
-+}
-+
- static bool imx_tve_readable_reg(struct device *dev, unsigned int reg)
- {
- 	return (reg % 4 == 0) && (reg <= 0xdc);
-@@ -617,6 +624,9 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
- 		ret = regulator_enable(tve->dac_reg);
- 		if (ret)
- 			return ret;
-+		ret = devm_add_action_or_reset(dev, imx_tve_disable_regulator, tve);
-+		if (ret)
-+			return ret;
++		libbpf_strerror(PTR_ERR(obj), err_buf, sizeof(err_buf));
++		p_err("failed to open BPF object file: %s", err_buf);
+ 		obj = NULL;
+-		p_err("failed to open BPF object file: %ld", PTR_ERR(obj));
+ 		goto out;
  	}
  
- 	tve->clk = devm_clk_get(dev, "tve");
-@@ -661,18 +671,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
- 	return 0;
- }
- 
--static void imx_tve_unbind(struct device *dev, struct device *master,
--	void *data)
--{
--	struct imx_tve *tve = dev_get_drvdata(dev);
--
--	if (!IS_ERR(tve->dac_reg))
--		regulator_disable(tve->dac_reg);
--}
--
- static const struct component_ops imx_tve_ops = {
- 	.bind	= imx_tve_bind,
--	.unbind	= imx_tve_unbind,
- };
- 
- static int imx_tve_probe(struct platform_device *pdev)
 -- 
 2.25.1
 
