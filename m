@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D215520760
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BFC20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684811;
-	bh=QdKk8iwX/fHrtIZ3mMKs136zx9HoLanBzPKWskM4QaM=;
+	s=default; t=1597684815;
+	bh=36Ragolxyd/Flo4B7MYaYdllsKKtXphqFUQeMBNKq5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWYxwcY+30CPP/ll2Xk25VtLNfx6lgYFCY3WZLW43HHycAqBtPE+x2WIH6JZeAOjU
-	 mRP7AU//IyodcC6g9IQXDu2fLLwU7tGhjWpRuXLjjRDOxmImhWpDevzQGsMM0/oMQx
-	 YlTjbw5ftXBlg58eRVDZQduUOhs642Jfey87tR8w=
+	b=FiKJyWh9wVNLZny4B4fkLeuFe30fIFjnIWknTwJshO212aSOVxnJT/LhDOCpQNoJV
+	 QSqDjVwiZn3I5uRCf/tBuFRbP/zdgZ5AChx4imbY7h75b9bmTxPgIE3cNkLSNMBPvW
+	 Moa7pXIlmEgrwwJpQFudivsWmSkEYqel1CnArNiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389604AbgHQRUH (ORCPT
+        id S2389734AbgHQRUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbgHQQRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:17:46 -0400
+        id S1730389AbgHQQSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:18:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F0F22CB1;
-        Mon, 17 Aug 2020 16:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A8622D00;
+        Mon, 17 Aug 2020 16:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681066;
-        bh=QdKk8iwX/fHrtIZ3mMKs136zx9HoLanBzPKWskM4QaM=;
+        s=default; t=1597681087;
+        bh=36Ragolxyd/Flo4B7MYaYdllsKKtXphqFUQeMBNKq5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPlZf2eS+fFObYyy7rpTNnV86WGkZQiQ/8OUNPzX66bcUHzXI7Wxmrr/j9mBH0MSd
-         5RK2rLkEIoiDxBa04K6ZjPqTXkGGzHjAf3G/0+YKwa88F/+d3Bk8GUg6YAaPvUTAzJ
-         6wqmunVJ9pqIxZWF9ZZa257kc2XsUYG7As38Epi8=
+        b=0xE3Ah1ph8k4ahASm2gJokcLCyT50RtPSJPKKjb7zPCbi1R5ULFHmiauYMOZmDrR6
+         ZOm4NzKWtFGj5+jvsIyhXL63ZDRPAJhPX1WCSfswpQuSIdmnlaGKFgQqTm+IBiD/yO
+         nC789NdIbtnsd4wzk9v/gagpG/HpWmHjL5h3Qq/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 137/168] net: initialize fastreuse on inet_inherit_port
-Date:   Mon, 17 Aug 2020 17:17:48 +0200
-Message-Id: <20200817143740.538666476@linuxfoundation.org>
+        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.19 164/168] ARM: 8992/1: Fix unwind_frame for clang-built kernels
+Date:   Mon, 17 Aug 2020 17:18:15 +0200
+Message-Id: <20200817143741.856362713@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,60 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit d76f3351cea2d927fdf70dd7c06898235035e84e ]
+commit b4d5ec9b39f8b31d98f65bc5577b5d15d93795d7 upstream.
 
-In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
-SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
-behaviour or in the incorrect reuse of a bind.
+Since clang does not push pc and sp in function prologues, the current
+implementation of unwind_frame does not work. By using the previous
+frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
+kernels.
 
-the kernel keeps track for each bind_bucket if all sockets in the
-bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
-These flags allow skipping the costly bind_conflict check when possible
-(meaning when all sockets have the proper SO_REUSE option).
+The bounds check on next frame pointer must be changed as well since
+there are 8 less bytes between frames.
 
-For every socket added to a bind_bucket, these flags need to be updated.
-As soon as a socket that does not support reuse is added, the flag is
-set to false and will never go back to true, unless the bind_bucket is
-deleted.
+This fixes /proc/<pid>/stack.
 
-Note that there is no mechanism to re-evaluate these flags when a socket
-is removed (this might make sense when removing a socket that would not
-allow reuse; this leaves room for a future patch).
+Link: https://github.com/ClangBuiltLinux/linux/issues/912
 
-For this optimization to work, it is mandatory that these flags are
-properly initialized and updated.
-
-When a child socket is created from a listen socket in
-__inet_inherit_port, the TPROXY case could create a new bind bucket
-without properly initializing these flags, thus preventing the
-optimization to work. Alternatively, a socket not allowing reuse could
-be added to an existing bind bucket without updating the flags, causing
-bind_conflict to never be called as it should.
-
-Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
-a new bind_bucket or use a different bind_bucket than the one of the
-listen socket.
-
-Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Miles Chen <miles.chen@mediatek.com>
+Tested-by: Miles Chen <miles.chen@mediatek.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/inet_hashtables.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -161,6 +161,7 @@ int __inet_inherit_port(const struct soc
- 				return -ENOMEM;
- 			}
- 		}
-+		inet_csk_update_fastreuse(tb, child);
- 	}
- 	inet_bind_hash(child, tb, port);
- 	spin_unlock(&head->lock);
+---
+ arch/arm/kernel/stacktrace.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -21,6 +21,19 @@
+  * A simple function epilogue looks like this:
+  *	ldm	sp, {fp, sp, pc}
+  *
++ * When compiled with clang, pc and sp are not pushed. A simple function
++ * prologue looks like this when built with clang:
++ *
++ *	stmdb	{..., fp, lr}
++ *	add	fp, sp, #x
++ *	sub	sp, sp, #y
++ *
++ * A simple function epilogue looks like this when built with clang:
++ *
++ *	sub	sp, fp, #x
++ *	ldm	{..., fp, pc}
++ *
++ *
+  * Note that with framepointer enabled, even the leaf functions have the same
+  * prologue and epilogue, therefore we can ignore the LR value in this case.
+  */
+@@ -33,6 +46,16 @@ int notrace unwind_frame(struct stackfra
+ 	low = frame->sp;
+ 	high = ALIGN(low, THREAD_SIZE);
+ 
++#ifdef CONFIG_CC_IS_CLANG
++	/* check current frame pointer is within bounds */
++	if (fp < low + 4 || fp > high - 4)
++		return -EINVAL;
++
++	frame->sp = frame->fp;
++	frame->fp = *(unsigned long *)(fp);
++	frame->pc = frame->lr;
++	frame->lr = *(unsigned long *)(fp + 4);
++#else
+ 	/* check current frame pointer is within bounds */
+ 	if (fp < low + 12 || fp > high - 4)
+ 		return -EINVAL;
+@@ -41,6 +64,7 @@ int notrace unwind_frame(struct stackfra
+ 	frame->fp = *(unsigned long *)(fp - 12);
+ 	frame->sp = *(unsigned long *)(fp - 8);
+ 	frame->pc = *(unsigned long *)(fp - 4);
++#endif
+ 
+ 	return 0;
+ }
 
 
