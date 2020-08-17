@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78664C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9918F22D3E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F003823BAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678271;
-	bh=BJjDYJYE346Ldmp46iR+ZohEp0FtQWmXQUaNUBXvTms=;
+	s=default; t=1597678278;
+	bh=fVsYi7eBhxo97gidGZ5lxuRWJg0zV7tBtn0iPbtwPU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKdcD8Prvb4W3EQCdCoN1Np/hBv/36a0x+d65v8iXj39y+vLxe0b3BmEs88457WgC
-	 jvJiqB1ooBoLsv3wpgSnIB0oZb4ruRB6W98RKLMRrqasQtndcUdtSn95iZjRvoqpu2
-	 Q2e60upKcpUgT7RC/f+Utwy1WLdzhaOwFGbUdrV4=
+	b=iNXp2RW4+1nL+YV/L7qpbAO1tDu2GPgv0/+tf42jGwncRLXeLj3FjcmUH6kun5XBh
+	 3CQuiUA8fzesyfx3YSAcsSUSaFwkHFSrUZVFpLaRmvOQJwZEi/w45gFNU+hAYogfiu
+	 D9ca274Jkd8RdU5JlTaOV1L9wnlI+fYCGySgoArQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgHQPbJ (ORCPT
+        id S1730249AbgHQPbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730028AbgHQP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:28:47 -0400
+        id S1730031AbgHQP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:28:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC46623CD5;
-        Mon, 17 Aug 2020 15:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F044239EE;
+        Mon, 17 Aug 2020 15:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678127;
-        bh=BJjDYJYE346Ldmp46iR+ZohEp0FtQWmXQUaNUBXvTms=;
+        s=default; t=1597678130;
+        bh=fVsYi7eBhxo97gidGZ5lxuRWJg0zV7tBtn0iPbtwPU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Itc5Y83DmZ0sNyvYzKjhjnGXzl2J1QW76iHZlQgSxvfX4rVofxjo58jQwtMAIT8cC
-         zpVhEKAkMIUJtdN/iuPUx/Snd7hluSGRs0LM73ebyJK40aa50uT0Zc6j4Nm7qcp4w/
-         7wBk3hxuez3zjOgKPn+n2gcU6o8RJoKievuirC0c=
+        b=xkxVEV8Tv6YXagnNQ+LU4CSMzFtnGsIjBGNxc/erWbYdIszg+dygTqggyYOQXuMWW
+         rcpCu2s3dJshDAEVuaTBgq5QZZe+pZoTIoelj2FhSjNbm5sdOUWWKsQH7GX0o/6yXo
+         7V2l21MfAXEEOoCUclhajCuQ2bN/hZCwyMsOx2eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 228/464] bpfilter: Initialize pos variable
-Date:   Mon, 17 Aug 2020 17:13:01 +0200
-Message-Id: <20200817143844.721217491@linuxfoundation.org>
+Subject: [PATCH 5.8 229/464] mwifiex: Prevent memory corruption handling keys
+Date:   Mon, 17 Aug 2020 17:13:02 +0200
+Message-Id: <20200817143844.769552131@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,31 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit a4fa458950b40d3849946daa32466392811a3716 ]
+[ Upstream commit e18696786548244914f36ec3c46ac99c53df99c3 ]
 
-Make sure 'pos' is initialized to zero before calling kernel_write().
+The length of the key comes from the network and it's a 16 bit number.  It
+needs to be capped to prevent a buffer overflow.
 
-Fixes: d2ba09c17a06 ("net: add skeleton of bpfilter kernel module")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200708115857.GA13729@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bpfilter/bpfilter_kern.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../wireless/marvell/mwifiex/sta_cmdresp.c    | 22 +++++++++++++------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
-index 4494ea6056cdb..42b88a92afe95 100644
---- a/net/bpfilter/bpfilter_kern.c
-+++ b/net/bpfilter/bpfilter_kern.c
-@@ -50,6 +50,7 @@ static int __bpfilter_process_sockopt(struct sock *sk, int optname,
- 	req.len = optlen;
- 	if (!bpfilter_ops.info.pid)
- 		goto out;
-+	pos = 0;
- 	n = kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
- 			   &pos);
- 	if (n != sizeof(req)) {
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+index f21660149f584..962d8bfe6f101 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+@@ -580,6 +580,11 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+ {
+ 	struct host_cmd_ds_802_11_key_material *key =
+ 						&resp->params.key_material;
++	int len;
++
++	len = le16_to_cpu(key->key_param_set.key_len);
++	if (len > sizeof(key->key_param_set.key))
++		return -EINVAL;
+ 
+ 	if (le16_to_cpu(key->action) == HostCmd_ACT_GEN_SET) {
+ 		if ((le16_to_cpu(key->key_param_set.key_info) & KEY_MCAST)) {
+@@ -593,9 +598,8 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+ 
+ 	memset(priv->aes_key.key_param_set.key, 0,
+ 	       sizeof(key->key_param_set.key));
+-	priv->aes_key.key_param_set.key_len = key->key_param_set.key_len;
+-	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key,
+-	       le16_to_cpu(priv->aes_key.key_param_set.key_len));
++	priv->aes_key.key_param_set.key_len = cpu_to_le16(len);
++	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key, len);
+ 
+ 	return 0;
+ }
+@@ -610,9 +614,14 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
+ 					      struct host_cmd_ds_command *resp)
+ {
+ 	struct host_cmd_ds_802_11_key_material_v2 *key_v2;
+-	__le16 len;
++	int len;
+ 
+ 	key_v2 = &resp->params.key_material_v2;
++
++	len = le16_to_cpu(key_v2->key_param_set.key_params.aes.key_len);
++	if (len > WLAN_KEY_LEN_CCMP)
++		return -EINVAL;
++
+ 	if (le16_to_cpu(key_v2->action) == HostCmd_ACT_GEN_SET) {
+ 		if ((le16_to_cpu(key_v2->key_param_set.key_info) & KEY_MCAST)) {
+ 			mwifiex_dbg(priv->adapter, INFO, "info: key: GTK is set\n");
+@@ -628,10 +637,9 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
+ 	memset(priv->aes_key_v2.key_param_set.key_params.aes.key, 0,
+ 	       WLAN_KEY_LEN_CCMP);
+ 	priv->aes_key_v2.key_param_set.key_params.aes.key_len =
+-				key_v2->key_param_set.key_params.aes.key_len;
+-	len = priv->aes_key_v2.key_param_set.key_params.aes.key_len;
++				cpu_to_le16(len);
+ 	memcpy(priv->aes_key_v2.key_param_set.key_params.aes.key,
+-	       key_v2->key_param_set.key_params.aes.key, le16_to_cpu(len));
++	       key_v2->key_param_set.key_params.aes.key, len);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
