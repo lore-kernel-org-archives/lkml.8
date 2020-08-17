@@ -2,102 +2,123 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06449C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E353C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF29720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692390;
-	bh=4b12TBHVSCwCKRb00ECpu9pazPTpNjuO50tR6Ppigl8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8pWNj1vBWBbHw0DlJn53YfsbdmlS5u3HF2qbZJGq65HHQ2eNK5Mw/CN3LHRujcml
-	 8hPfUu8FiLb2bfbc9fWDHZtQ5ZovvOvuLa90j8rFYxzueeNV1cXTgXBnMgxPeGy+B3
-	 zqMzLvAh3tbKx2Sx8G2P8K/QaI1Wh3UcID5fjTAs=
+	by mail.kernel.org (Postfix) with ESMTP id 3BD09204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbgHQT0Y (ORCPT
+        id S1731914AbgHQT0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37400 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:26:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52068 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730390AbgHQPdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:33:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 320FA207DA;
-        Mon, 17 Aug 2020 15:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678433;
-        bh=4b12TBHVSCwCKRb00ECpu9pazPTpNjuO50tR6Ppigl8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h18ahY0wxh0f9/PelFCuCJGc6oT+xzHDNBeGocU9x4puKJJe0u8sA2jxp8P2VQaA8
-         EEu/YRiWntO1rJ+j6QU1K+D0y3JCnBOUJTwLan9JJkMMc7Wi3XBUvdpUK0zilMrTHk
-         1DJB4vZLKUp3JLS+hGAJ0YHjyvd24RKmsYWbywyI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 333/464] net: ll_temac: Use devm_platform_ioremap_resource_byname()
-Date:   Mon, 17 Aug 2020 17:14:46 +0200
-Message-Id: <20200817143849.738305910@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730405AbgHQT02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:26:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EBF88B032;
+        Mon, 17 Aug 2020 19:26:51 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 21:26:25 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200817192625.GF28270@dhcp22.suse.cz>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200817152655.GE28270@dhcp22.suse.cz>
+ <e66d6b5f-6f02-8c8f-681e-1d6da7a72224@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e66d6b5f-6f02-8c8f-681e-1d6da7a72224@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+On Mon 17-08-20 11:55:37, Waiman Long wrote:
+> On 8/17/20 11:26 AM, Michal Hocko wrote:
+> > On Mon 17-08-20 10:08:23, Waiman Long wrote:
+> > > Memory controller can be used to control and limit the amount of
+> > > physical memory used by a task. When a limit is set in "memory.high" in
+> > > a v2 non-root memory cgroup, the memory controller will try to reclaim
+> > > memory if the limit has been exceeded. Normally, that will be enough
+> > > to keep the physical memory consumption of tasks in the memory cgroup
+> > > to be around or below the "memory.high" limit.
+> > > 
+> > > Sometimes, memory reclaim may not be able to recover memory in a rate
+> > > that can catch up to the physical memory allocation rate. In this case,
+> > > the physical memory consumption will keep on increasing.  When it reaches
+> > > "memory.max" for memory cgroup v2 or when the system is running out of
+> > > free memory, the OOM killer will be invoked to kill some tasks to free
+> > > up additional memory. However, one has little control of which tasks
+> > > are going to be killed by an OOM killer. Killing tasks that hold some
+> > > important resources without freeing them first can create other system
+> > > problems down the road.
+> > > 
+> > > Users who do not want the OOM killer to be invoked to kill random
+> > > tasks in an out-of-memory situation can use the memory control
+> > > facility provided by this new patchset via prctl(2) to better manage
+> > > the mitigation action that needs to be performed to various tasks when
+> > > the specified memory limit is exceeded with memory cgroup v2 being used.
+> > > 
+> > > The currently supported mitigation actions include the followings:
+> > > 
+> > >   1) Return ENOMEM for some syscalls that allocate or handle memory
+> > >   2) Slow down the process for memory reclaim to catch up
+> > >   3) Send a specific signal to the task
+> > >   4) Kill the task
+> > > 
+> > > The users that want better memory control for their applicatons can
+> > > either modify their applications to call the prctl(2) syscall directly
+> > > with the new memory control command code or write the desired action to
+> > > the newly provided memctl procfs files of their applications provided
+> > > that those applications run in a non-root v2 memory cgroup.
+> > prctl is fundamentally about per-process control while cgroup (not only
+> > memcg) is about group of processes interface. How do those two interact
+> > together? In other words what is the semantic when different processes
+> > have a different views on the same underlying memcg event?
+> As said in a previous mail, this patchset is derived from a customer request
+> and per-process control is exactly what the customer wants. That is why
+> prctl() is used. This patchset is intended to supplement the existing memory
+> cgroup features. Processes in a memory cgroup that don't use this new API
+> will behave exactly like before. Only processes that opt to use this new API
+> will have additional mitigation actions applied on them in case the
+> additional limits are reached.
 
-[ Upstream commit bd69058f50d5ffa659423bcfa6fe6280ce9c760a ]
+Please keep in mind that you are proposing a new user API that we will
+have to maintain for ever. That requires that the interface is
+consistent and well defined. As I've said the fundamental problem with
+this interface is that you are trying to hammer a process centric
+interface into a framework that is fundamentally process group oriented.
+Maybe there is a sensible way to do that without all sorts of weird
+corner cases but I haven't seen any of that explained here.
 
-platform_get_resource() may fail and return NULL, so we had better
-check its return value to avoid a NULL pointer dereference a bit later
-in the code. Fix it to use devm_platform_ioremap_resource_byname()
-instead of calling platform_get_resource_byname() and devm_ioremap().
-
-Fixes: 8425c41d1ef7 ("net: ll_temac: Extend support to non-device-tree platforms")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/xilinx/ll_temac_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 929244064abd9..9a15f14daa479 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -1407,10 +1407,8 @@ static int temac_probe(struct platform_device *pdev)
- 	}
- 
- 	/* map device registers */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	lp->regs = devm_ioremap(&pdev->dev, res->start,
--					resource_size(res));
--	if (!lp->regs) {
-+	lp->regs = devm_platform_ioremap_resource_byname(pdev, 0);
-+	if (IS_ERR(lp->regs)) {
- 		dev_err(&pdev->dev, "could not map TEMAC registers\n");
- 		return -ENOMEM;
- 	}
+Really just try to describe a semantic when two different tasks in the
+same memcg have a different opinion on the same event. One wants ENOMEM
+and other a specific signal to be delivered. Right now the behavior will
+be timing specific because who hits the oom path is non-deterministic
+from the userspace POV. Let's say that you can somehow handle that, now
+how are you going implement ENOMEM for any context other than current
+task? I am pretty sure the more specific questions you will have the
+more this will get awkward.
 -- 
-2.25.1
-
-
-
+Michal Hocko
+SUSE Labs
