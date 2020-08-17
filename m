@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18853C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E607B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364CA20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688684;
-	bh=3PqwFuyvyWp01jmhrrMGQOLnNySxF9XPHp52ZDa19Ek=;
+	s=default; t=1597688697;
+	bh=nLJEez5D3+KWTGWkl7L3ZwkzvHX5nNJKbSCaoB6TIp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13+1qKeYbU7U/WW905j8WBYN/HxTdWfzE3AYENJyCrWIpZi4tF5oQUGFxSp6IqrbZ
-	 xxu5ff7hUMd6MioKmTF6VH5omQ276NVHmh/QwwOKAt6GwpCIv8ebuBEG41fsEZc3GJ
-	 6IEQ1Jaw3xBXNLmA8V8P9xpU617MWTr772BbsEc4=
+	b=kiNbiYczubCijwH4SB9LNlXL2Q5tBYaXhHZ1OQDdKXe3KaUjgkhLpGWK4AaPXtGDt
+	 5olah4ox7janYRZmazvJ38dSx7+TuBegGvG1LKvoNJ4AZuAYi7qiIkvHAz6nay8G24
+	 ybh98ceipOPqCI5X2BTHS0XB5W3fHxPdNgA0YAmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbgHQSYm (ORCPT
+        id S1731052AbgHQSYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbgHQQDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:09 -0400
+        id S1731039AbgHQQDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50FAC20748;
-        Mon, 17 Aug 2020 16:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB5F120729;
+        Mon, 17 Aug 2020 16:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680187;
-        bh=3PqwFuyvyWp01jmhrrMGQOLnNySxF9XPHp52ZDa19Ek=;
+        s=default; t=1597680185;
+        bh=nLJEez5D3+KWTGWkl7L3ZwkzvHX5nNJKbSCaoB6TIp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCbOWv3QW3xu/eP2UR56ryNMhWn9wpa+5PrN0icMFixi4Dyis78qU78Ko306q4DyQ
-         L9PAgWsJf5OqUv8tfjpv/fA4laX27b0JJBDWVAJFbX0ZAO5ZcvSkQfjwWelRODlNPV
-         4pkTCU5FkLK67uxKaYPbaQxhYgjEtMbS7e2w7gY4=
+        b=J2oqFalbkckYAf6ihzl1nZyCEiM8VffQENB0pJ/AgJ6yRk7zRwyiTivryFxsjQg/v
+         eMqFSVUsZNSSVmUKAQjlH0GktNhw4qPaLJemBEquiUHDP3yJJOKtXF7NPA7t1OWFbm
+         wifAVYBTUt4CM1X2MaTsEuz/+WIzyKc4+czpL30c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, jbaron@akamai.com,
-        Jim Cromie <jim.cromie@gmail.com>,
+        stable@vger.kernel.org,
+        Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/270] dyndbg: fix a BUG_ON in ddebug_describe_flags
-Date:   Mon, 17 Aug 2020 17:14:47 +0200
-Message-Id: <20200817143800.050431684@linuxfoundation.org>
+Subject: [PATCH 5.4 085/270] usb: bdc: Halt controller on suspend
+Date:   Mon, 17 Aug 2020 17:14:46 +0200
+Message-Id: <20200817143800.003536313@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,99 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Cromie <jim.cromie@gmail.com>
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
-[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
+[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
 
-ddebug_describe_flags() currently fills a caller provided string buffer,
-after testing its size (also passed) in a BUG_ON.  Fix this by
-replacing them with a known-big-enough string buffer wrapped in a
-struct, and passing that instead.
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
 
-Also simplify ddebug_describe_flags() flags parameter from a struct to
-a member in that struct, and hoist the member deref up to the caller.
-This makes the function reusable (soon) where flags are unpacked.
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
 
-Acked-by: <jbaron@akamai.com>
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_debug.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c60409138e136..ccf05719b1ad6 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -87,22 +87,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
- 	{ _DPRINTK_FLAGS_NONE, '_' },
- };
- 
-+struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
-+
- /* format a string into buf[] which describes the _ddebug's flags */
--static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
--				    size_t maxlen)
-+static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 174555e94a6c0..3d33499db50b5 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -605,9 +605,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
  {
--	char *p = buf;
-+	char *p = fb->buf;
- 	int i;
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
  
--	BUG_ON(maxlen < 6);
- 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
--		if (dp->flags & opt_array[i].flag)
-+		if (flags & opt_array[i].flag)
- 			*p++ = opt_array[i].opt_char;
--	if (p == buf)
-+	if (p == fb->buf)
- 		*p++ = '_';
- 	*p = '\0';
- 
--	return buf;
-+	return fb->buf;
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
++
++	return ret;
  }
  
- #define vpr_info(fmt, ...)					\
-@@ -144,7 +144,7 @@ static int ddebug_change(const struct ddebug_query *query,
- 	struct ddebug_table *dt;
- 	unsigned int newflags;
- 	unsigned int nfound = 0;
--	char flagbuf[10];
-+	struct flagsbuf fbuf;
- 
- 	/* search for matching ddebugs */
- 	mutex_lock(&ddebug_lock);
-@@ -201,8 +201,7 @@ static int ddebug_change(const struct ddebug_query *query,
- 			vpr_info("changed %s:%d [%s]%s =%s\n",
- 				 trim_prefix(dp->filename), dp->lineno,
- 				 dt->mod_name, dp->function,
--				 ddebug_describe_flags(dp, flagbuf,
--						       sizeof(flagbuf)));
-+				 ddebug_describe_flags(dp->flags, &fbuf));
- 		}
- 	}
- 	mutex_unlock(&ddebug_lock);
-@@ -816,7 +815,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- {
- 	struct ddebug_iter *iter = m->private;
- 	struct _ddebug *dp = p;
--	char flagsbuf[10];
-+	struct flagsbuf flags;
- 
- 	vpr_info("called m=%p p=%p\n", m, p);
- 
-@@ -829,7 +828,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	seq_printf(m, "%s:%u [%s]%s =%s \"",
- 		   trim_prefix(dp->filename), dp->lineno,
- 		   iter->table->mod_name, dp->function,
--		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
-+		   ddebug_describe_flags(dp->flags, &flags));
- 	seq_escape(m, dp->format, "\t\r\n\"");
- 	seq_puts(m, "\"\n");
- 
+ static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
