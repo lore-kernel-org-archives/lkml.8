@@ -2,234 +2,180 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC61C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA745208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776372063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 12:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQ04CZsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgHQMOf (ORCPT
+        id S1728264AbgHQMPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 08:14:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:54236 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbgHQMOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 08:14:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B81430E;
-        Mon, 17 Aug 2020 05:14:29 -0700 (PDT)
-Received: from [172.16.1.113] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26AD03F66B;
-        Mon, 17 Aug 2020 05:14:27 -0700 (PDT)
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Young <dyoung@redhat.com>
-Cc:     Sang Yan <sangyan@huawei.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>, xiexiuqi@huawei.com,
-        guohanjun@huawei.com, luanjianhai@huawei.com, zhuling8@huawei.com,
-        luchunhua@huawei.com
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
- <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
- <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
- <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <a6e8de9c-06fa-75c4-b975-457877226f49@arm.com>
-Date:   Mon, 17 Aug 2020 13:14:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 08:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgHQMPX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 08:15:23 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C06BC061389;
+        Mon, 17 Aug 2020 05:15:19 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id r21so13178875ota.10;
+        Mon, 17 Aug 2020 05:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HJ0m+miDorhqglJ9JrK44iTq3d9R15TmbjC29old1f8=;
+        b=KQ04CZsRLDiNek1Hq6BgWjnM11s2YmAiDjqEVGZ1TB6F4rCxf78rX4jbJ0CzT3vabY
+         xrX4JEoDeIRQkHsLGU1+gcp8w5QWNQcEyBm3wuShwRxBfydODrCE4cRQV+E7WBzKB44r
+         nItPN0459qY5GQ/vDZ0NyzENyHv44GovdpKFSl4hiVWaOB2zEjXEpxHT00gUoMHFf0Aj
+         T3icpJ/3pjaEvvW0UMNkSAFYHa1jbJwCP0vrwjpIL/uytt4RzckTqwRdvf5FUeTb7MGh
+         bx2bsLCHbfEXkOD8bVoKRj4Mx5bjsmewyyPYaN17ohutCV8HXhFZHeJnJ+WLeKJ12UV0
+         gebw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=HJ0m+miDorhqglJ9JrK44iTq3d9R15TmbjC29old1f8=;
+        b=BawvITJey5PsSV7BXEpOue7EpVtQi3+iXHJsYZVKZdYiRA8/kRwQVI5HIeWV0bGPCu
+         m7uKL8v/oxpZXa7oAG42WalIdyUGIo+hgzhyu1BlvnrsD8cBz+Qi1PgcuCVTqKp5gExj
+         n9gHDMs+YAnobzWERS+YqmPVtanpS0Gsai2PXBQ5QImH3KJ6UDQzt26FdgsC78CF9AQ5
+         IiwWUelAatYpJy9uoRVIGMkTmvnd+xQj8SEg0QA2KxPBOI8JnUdNJ3ngpudUBrvA2eeS
+         B3Vi0nHMmtRJI/Jf0UgIFJCgyF+f69gcB6NIGErA5/XM49Kgi4Ati139o/Aa2Fxu1NXy
+         ITcA==
+X-Gm-Message-State: AOAM5327ljAHL33LdiA/TdNXAe/Xj7bYjmNYoDHPD3p9evAH8W98UjgW
+        g+zlgilyVfAGx9dcqW9ASA==
+X-Google-Smtp-Source: ABdhPJy4QfXEUBbWmVDtAzyWm157/pCVwSVPWhR0mJ058Fnm0lC/IAUOoEeTjBc9itF58Cw5xKVyqA==
+X-Received: by 2002:a05:6830:1346:: with SMTP id r6mr11152982otq.325.1597666517323;
+        Mon, 17 Aug 2020 05:15:17 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.146.204])
+        by smtp.gmail.com with ESMTPSA id l17sm3384049otn.2.2020.08.17.05.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 05:15:16 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 846E11800D4;
+        Mon, 17 Aug 2020 12:15:15 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 07:15:14 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        3chas3@gmail.com, axboe@kernel.dk, stefanr@s5r6.in-berlin.de,
+        airlied@linux.ie, daniel@ffwll.ch, sre@kernel.org,
+        James.Bottomley@HansenPartnership.com, kys@microsoft.com,
+        deller@gmx.de, dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        maximlevitsky@gmail.com, oakad@yahoo.com, ulf.hansson@linaro.org,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, davem@davemloft.net, kuba@kernel.org,
+        keescook@chromium.org, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH] char: ipmi: convert tasklets to use new tasklet_setup()
+ API
+Message-ID: <20200817121514.GE2865@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-3-allen.cryptic@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817091617.28119-3-allen.cryptic@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
-
-On 14/08/2020 20:22, Pavel Tatashin wrote:
-> On Fri, Aug 14, 2020 at 7:24 AM Dave Young <dyoung@redhat.com> wrote:
->> On 08/14/20 at 04:21pm, Sang Yan wrote:
->>> On 08/14/20 14:58, Dave Young wrote:
->>>> On 08/14/20 at 01:52am, Sang Yan wrote:
->>> Yes, it's particularly obvious on arm64. I will add it to the patch log,
->>> and test how long it takes on x86 and other arch.
-
-Earlier versions of kexec-tools had the in-purgatory checksum enabled unconditionally.
-More recent versions let you disable it, I think the parameter is called no-checks. This
-saves some time, but the relocations still have to be done.
-
-
->>>> About the arm64 problem, I know Pavel Tatashin is working on a patchset
->>>> to improve the performance with enabling mmu.
->>>>
->>>> I added Pavel in cc, can you try his patches?
->>>>
->>> Thanks for your tips, I will try these patches. @Pavel.
->>> Disable mmu after finishing copying pages?
-
->>>>> We introduce quick kexec to save time of copying memory as above,
->>>>> just like kdump(kexec on crash), by using reserved memory
->>>>> "Quick Kexec".
->>>>
->>>> This approach may have gain, but it also introduce extra requirements to
->>>> pre-reserve a memory region.  I wonder how Eric thinks about the idea.
->>>>
->>>> Anyway the "quick" name sounds not very good, I would suggest do not
->>>> introduce a new param, and the code can check if pre-reserved region
->>>> exist then use it, if not then fallback to old way.
->>>>
->>> aha. I agree with it, but I thought it may change the old behaviors of
->>> kexec_load.
->>>
->>> I will update a new patch without introducing new flags and new params.
->>
->> Frankly I'm still not sure it is worth to introduce a new interface if the
->> improvement can be done in arch code like Pavel is doing.  Can you try
->> that first?
-
-> My patches will fix this issue. This is an ARM64 specific problem and
-> I did not see this to be performance problem on x86 during kexec
-> relocation. This happens because on ARM64 relocation is performed with
-> MMU disabled, and when MMU is disabled the caching is disabled as
-> well.
-
-> I have a patch series that fixes this entirely, but James Morse
-> (+CCed) and I still have not agreed on the final approach. We had an
-> off-list conversation about it, and we need to continue it in public
-> ML.
+On Mon, Aug 17, 2020 at 02:45:57PM +0530, Allen Pais wrote:
+> From: Allen Pais <allen.lkml@gmail.com>
 > 
-> Here is some history:
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
 > 
-> This is the original series that I sent a year ago. It basically
-> proposes the same thing as this series from Sang Yan:
-> https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+
+This looks good to me.
+
+Reviewed-by: Corey Minyard <cminyard@mvista.com>
+
+Are you planning to push this, or do you want me to take it?  If you
+want me to take it, what is the urgency?
+
+-corey
+
+> ---
+>  drivers/char/ipmi/ipmi_msghandler.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
 > 
-> Once, I realized that with enabling MMU the relocation is issue is
-> gone completely, I sent a new series, and this is the latest version
-> of that series:
-> https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com/
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 737c0b6b24ea..e1814b6a1225 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -39,7 +39,7 @@
+>  
+>  static struct ipmi_recv_msg *ipmi_alloc_recv_msg(void);
+>  static int ipmi_init_msghandler(void);
+> -static void smi_recv_tasklet(unsigned long);
+> +static void smi_recv_tasklet(struct tasklet_struct *t);
+>  static void handle_new_recv_msgs(struct ipmi_smi *intf);
+>  static void need_waiter(struct ipmi_smi *intf);
+>  static int handle_one_recv_msg(struct ipmi_smi *intf,
+> @@ -3430,9 +3430,8 @@ int ipmi_add_smi(struct module         *owner,
+>  	intf->curr_seq = 0;
+>  	spin_lock_init(&intf->waiting_rcv_msgs_lock);
+>  	INIT_LIST_HEAD(&intf->waiting_rcv_msgs);
+> -	tasklet_init(&intf->recv_tasklet,
+> -		     smi_recv_tasklet,
+> -		     (unsigned long) intf);
+> +	tasklet_setup(&intf->recv_tasklet,
+> +		     smi_recv_tasklet);
+>  	atomic_set(&intf->watchdog_pretimeouts_to_deliver, 0);
+>  	spin_lock_init(&intf->xmit_msgs_lock);
+>  	INIT_LIST_HEAD(&intf->xmit_msgs);
+> @@ -4467,10 +4466,10 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
+>  	}
+>  }
+>  
+> -static void smi_recv_tasklet(unsigned long val)
+> +static void smi_recv_tasklet(struct tasklet_struct *t)
+>  {
+>  	unsigned long flags = 0; /* keep us warning-free. */
+> -	struct ipmi_smi *intf = (struct ipmi_smi *) val;
+> +	struct ipmi_smi *intf = from_tasklet(intf, t, recv_tasklet);
+>  	int run_to_completion = intf->run_to_completion;
+>  	struct ipmi_smi_msg *newmsg = NULL;
+>  
+> @@ -4542,7 +4541,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
+>  		spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
+>  
+>  	if (run_to_completion)
+> -		smi_recv_tasklet((unsigned long) intf);
+> +		smi_recv_tasklet(&intf->recv_tasklet);
+>  	else
+>  		tasklet_schedule(&intf->recv_tasklet);
+>  }
+> -- 
+> 2.17.1
 > 
-> It has been tested in production, and several people from different
-> companies commented to me that they are using it as well.
-> 
-> After my patch series was sent out, James created a new branch in his
-> tree with his approach of enabling MMU without having a new VA space,
-> but instead re-use what the kernel  has now. I have not tested that
-> branch yet.
-
-For context, that is here:
-http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/kexec%2Bmmu/v0
-
-I think we can maintain this approach, but it doesn't work for Pavel, as he has extra
-requirements. I stopped looking at it because it became a solution no-one needed.
-
-
-> Here are some comments from James Morse and the off-list discussion we had:
-> -------
-> It sounds like you are depending on write streaming mode to meet your
-> target performance.
-> This isn't even CPU specific, its cache and firmware configuration specific!
-> I don't think we should optimise a general purpose operating system
-> based on things like this.
-> ..
-> I think the best approach is going to be to eliminate the relocations entirely.> ...
-> I'm afraid I view this kexec-map thing as high-risk duct-tape over the
-> kexec core code
-> deliberately scattering the kexec payload.
-> I'd prefer any approach that causes the payload to be stored in-place
-> from the beginning
-> as that benefits other architectures too.
-> -------
-
-The 'eliminate relocations' comment goes with some of the context you removed.
-
-
-> It appears James is leaning to the approach of not performing
-> relocation at all and use what is proposed by Sang Yan and me during
-> my first approach for this problem.
-
-The background to that is Pavel's timing requirements: Enabling the MMU isn't enough, from
-his description he also depends on re-arranging the memory so the CPU only sees increasing
-virtual addresses. This is what my 'write streaming' comment refers to.
-Doing this requires rewriting the relocation assembly code.
-
-If we enable the MMU during kexec relocation, I expect someone on a memory constrained
-system to come out of the woodwork screaming 'regression'. Systems with insufficient
-memory to allocate the page tables will no longer be able to kexec.
-
-If we keep the relocation assembly code as it is, its possible for it to handle MMU-on and
-MMU-off relocations with a very small adjustment. It just won't work for Pavel, as
-enabling the MMU is not enough.
-
-I'm confident we won't get a second copy of the relocation code, that only runs on some
-platforms, past the arch code maintainer.
-
-
-> However, I have several issues
-> with this take, which if addressed would be OK for me.
-> 1. The newer, more secure kexec syscall kexec_file_load(), which
-> allows to check the IMA integrity of the loaded file does not have a
-> way to specify the area in memory where to place the kernel. We are
-> using this syscall in production, and cannot go back to kexec_load()
-> for security reasons.
-> 2. Reserving memory means wasting memory during run-time. Our machine
-> has only 8G of RAM, and reserving even 128M 
-
-You're loading a 128M kernel!?
-
-
-> for the next kernel is an
-> expensive proposition. Now we start loading the next kernel after some
-> non essential processes are stopped, but before essential processes
-> are stopped for the lowest downtime possible.
-
-> 3. Disabling relocation means changes in the common code, which I am
-> not sure actually helps any other platform beside ARM64, so I am
-> worried it won't be accepted into upstream.
-
-I'm happy to post the MMU-enabled series, it needs to be maintainable and solve someone's
-problem.
-
-To chip away at the rest of Pavel's problem, my suggestions were:
- * Allocate things in place. If we can allocate any 2MB hugepage, we can place the DTB
-  there and not need to relocate it.
-
- * use huge pages more generally in the core code. With the MMU enabled, this might keep
-   the core in write-streaming-mode for longer. (might, because this is very platform
-   specific).
-
- * Store the kexec payload in the crashkernel carveout, to eliminate the relocations
-   completely. This is the bit Pavel quoted.
-
-To expand on the carveout:
-The crashkernel carveout is sized to load the payload, and memory to run the kdump kernel
-entirely from within the carveout. Its obviously bigger than the payload it contains.
-
-If you load your kexec kernel into the 'memory' part of the carveout, it won't overwrite
-the kdump payload, and it wont require relocation, as its already stored in place. arm64's
-arch code will spot these in-place buffers, and skip the relocation.
-
-If you kdump even after doing this, the kdump kernel sees the kexec payload as
-uninitialised memory, and will overwrite it.
-
-If we did this, we wouldn't need to enable the MMU, and it should skip most of the
-relocation code on all architectures without any changes to the arch code.
-
-
-On arm64 the kernel and initramfs only need relocating because their physical addresses
-are baked into the DTB. The DTB's physical address is then passed to the new kernel.
-From memory: 'relocatable kernel' is detectable from the image header, and the support
-predates arm64's kexec support.
-
-
-James
