@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83446C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB54C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B1720866
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1213A20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686252;
-	bh=8n4MLbFEc1JbadAecSR/+GsTldndIr6BwD9NawghAOs=;
+	s=default; t=1597686263;
+	bh=8ZGoBqju/lye+2LTT4VSSUJ0uHKgnw6J0Qizfb+cNtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ooleBjCK+xP61QalgfKoNsJ2qkDpOWQNq4Yy8fRxSviPrPpOzzI9xwQfcM+Um+jEW
-	 gulNJsK3/GBWXFZLtnSdtXPiQkpeet4S1RgzpU4fsnmxc2DU8rsslQ6uhPEk325BoN
-	 Vn5fE2Svolm7uo6SvUdY/cIkrzH1C657PfLuEk94=
+	b=Oj4ZpdbM8t1RBjVR2iejUq6LJmkazhQ3FoIET/AC0zWLa7lZDxtR4KH4NOl0XpQ72
+	 jJFibANPVGjj5CKgSc0pDybjxSUT7z0pLGrzqLvrbxB5VxeJ++q1PhT2fGK9iJFrvu
+	 8NbXuFDm2VO4XmYggssczU8EOiBKOtfOfvdM57/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbgHQRoE (ORCPT
+        id S2388710AbgHQRoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388808AbgHQQPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:15 -0400
+        id S1731044AbgHQQO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:14:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22FA1208C7;
-        Mon, 17 Aug 2020 16:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 980C923108;
+        Mon, 17 Aug 2020 16:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680914;
-        bh=8n4MLbFEc1JbadAecSR/+GsTldndIr6BwD9NawghAOs=;
+        s=default; t=1597680895;
+        bh=8ZGoBqju/lye+2LTT4VSSUJ0uHKgnw6J0Qizfb+cNtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQVg/Gif/46TBO+nQvIu+Gn7SSoc9Yf2b6Hrv5xmpT+P6jrXtRRwLyqGLt+qpnoQ+
-         ckwemZpXGvcl2aYYE41+VQh3Zm+Q9XIXD8w2iskSCb4fZZsa3LL6BEBYxyIe7MI/qA
-         KEIMzXJVrDDpMURauj7TyAuq4PZZlS7XARJyegLk=
+        b=uX5vftjKOgghVbHH9Dk3XVR/sH8UghPzlXXA7jsc2rC9J6WcA+jp9I/yZwwrdozKh
+         v9dIM6MpuRKmoWZJ17v/f/wT9kDoJINtMlJsffJ1BhAeFBn5Mrgt/wUFAULXQb9HyB
+         XTs4PpdJ46GCq7W0ezHRslvBR3QZ675QKqwIXd6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/168] powerpc/boot: Fix CONFIG_PPC_MPC52XX references
-Date:   Mon, 17 Aug 2020 17:17:20 +0200
-Message-Id: <20200817143739.136316245@linuxfoundation.org>
+Subject: [PATCH 4.19 070/168] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
+Date:   Mon, 17 Aug 2020 17:16:41 +0200
+Message-Id: <20200817143737.207280782@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,51 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit e5eff89657e72a9050d95fde146b54c7dc165981 ]
+[ Upstream commit d179f7c763241c1dc5077fca88ddc3c47d21b763 ]
 
-Commit 866bfc75f40e ("powerpc: conditionally compile platform-specific
-serial drivers") made some code depend on CONFIG_PPC_MPC52XX, which
-doesn't exist.
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-Fix it to use CONFIG_PPC_MPC52xx.
-
-Fixes: 866bfc75f40e ("powerpc: conditionally compile platform-specific serial drivers")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200724131728.1643966-7-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/20200626035948.944148-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/Makefile | 2 +-
- arch/powerpc/boot/serial.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/arm/powertec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 7d5ddf53750ce..7a83b5e136e0d 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -122,7 +122,7 @@ src-wlib-y := string.S crt0.S stdio.c decompress.c main.c \
- 		elf_util.c $(zlib-y) devtree.c stdlib.c \
- 		oflib.c ofconsole.c cuboot.c
+diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
+index 79aa88911b7f3..b5e4a25ea1ef3 100644
+--- a/drivers/scsi/arm/powertec.c
++++ b/drivers/scsi/arm/powertec.c
+@@ -382,7 +382,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
  
--src-wlib-$(CONFIG_PPC_MPC52XX) += mpc52xx-psc.c
-+src-wlib-$(CONFIG_PPC_MPC52xx) += mpc52xx-psc.c
- src-wlib-$(CONFIG_PPC64_BOOT_WRAPPER) += opal-calls.S opal.c
- ifndef CONFIG_PPC64_BOOT_WRAPPER
- src-wlib-y += crtsavres.S
-diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
-index 48e3743faedfd..83c78427c20be 100644
---- a/arch/powerpc/boot/serial.c
-+++ b/arch/powerpc/boot/serial.c
-@@ -127,7 +127,7 @@ int serial_console_init(void)
- 	         dt_is_compatible(devp, "fsl,cpm2-smc-uart"))
- 		rc = cpm_console_init(devp, &serial_cd);
- #endif
--#ifdef CONFIG_PPC_MPC52XX
-+#ifdef CONFIG_PPC_MPC52xx
- 	else if (dt_is_compatible(devp, "fsl,mpc5200-psc-uart"))
- 		rc = mpc5200_psc_console_init(devp, &serial_cd);
- #endif
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_release:
+ 	fas216_release(host);
 -- 
 2.25.1
 
