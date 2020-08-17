@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9162B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3106205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681625;
-	bh=S8mB5wGiY4l6snnRcf9CxVcHFjqZAemJdqLwKa3CuD0=;
+	s=default; t=1597681629;
+	bh=zfTbdVOfDIBpKELnc64oGWyDb5AwND2CYHOdFudtnok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p5FuArDHixWxolN8QB1eqexMw0VxiWILSzcfeRqZodxkhbYbaTKVf0M/eagIS6498
-	 jDyYbwY0OsK4ymK4Qe8bqXCp9aKO19ZZJ39quVom4QWZfQdLs+fMVv1PYWMDluS/DT
-	 Ftzat0CZmajrxgJvwlngp0oNbSS5t3o1ksReI5+s=
+	b=ZYxyEDIzClXKVhGZDMNi+1Ew/9gXwm9Zs6tHSQUq6T77N/T6TfT/tgF+ZJErEFHcU
+	 pLT0H6xZacvP3fc6Kq1cI8dc1Pt4WrkoPPA7Pip/rfgyNgo4QRNNTAQEY2k6859kKg
+	 jm74zioEiCSzdnAnibuDlWS4jpINb4HQTGUBFX1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388703AbgHQQ1D (ORCPT
+        id S2388728AbgHQQ1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387827AbgHQPv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:51:57 -0400
+        id S2387832AbgHQPwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:52:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475B720885;
-        Mon, 17 Aug 2020 15:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56AB20657;
+        Mon, 17 Aug 2020 15:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679517;
-        bh=S8mB5wGiY4l6snnRcf9CxVcHFjqZAemJdqLwKa3CuD0=;
+        s=default; t=1597679525;
+        bh=zfTbdVOfDIBpKELnc64oGWyDb5AwND2CYHOdFudtnok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1xWicIHPXJDhiESVsHFQOFzuDH/fnoTsp090scp+CYxfc72F+B+fO/EOd8uqz09x
-         FocvNFFDgaJa/RqokIJil2Bb43x9ORYWST1tui3Zrg0GR8VIj6FoJEEAOEKfA0DQHj
-         kTrWaMhIlvnnyzM6YJ0oYq4aZ/Z6HdCsmlTcxwH0=
+        b=cNOp62eH+ZKahuGtVTZh3qhF6qNCspYXHGsrnZr6T15cRIU87+HK4jC0YRkAm5uYj
+         KZ8wrUttp4c9YAc0IeZh9IFWWaWgqxw4nCH37QRYsE6gC3hZN/tUcyQdOthoQNW6mD
+         3ShF4L+riQqeLH4alnUZUqLB977tqmBixOktibBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
+        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 239/393] tools/bpftool: Fix error handing in do_skeleton()
-Date:   Mon, 17 Aug 2020 17:14:49 +0200
-Message-Id: <20200817143831.211722384@linuxfoundation.org>
+Subject: [PATCH 5.7 242/393] MIPS: OCTEON: add missing put_device() call in dwc3_octeon_device_init()
+Date:   Mon, 17 Aug 2020 17:14:52 +0200
+Message-Id: <20200817143831.358053883@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,40 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 956fcfcd359512f15b19bcd157fa8206ed26605b ]
+[ Upstream commit e8b9fc10f2615b9a525fce56981e40b489528355 ]
 
-Fix pass 0 to PTR_ERR, also dump more err info using
-libbpf_strerror.
+if of_find_device_by_node() succeed, dwc3_octeon_device_init() doesn't have
+a corresponding put_device(). Thus add put_device() to fix the exception
+handling for this function implementation.
 
-Fixes: 5dc7a8b21144 ("bpftool, selftests/bpf: Embed object file inside skeleton")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-Link: https://lore.kernel.org/bpf/20200717123059.29624-1-yuehaibing@huawei.com
+Fixes: 93e502b3c2d4 ("MIPS: OCTEON: Platform support for OCTEON III USB controller")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/gen.c | 5 ++++-
+ arch/mips/cavium-octeon/octeon-usb.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
-index f5960b48c8615..5ff951e08c740 100644
---- a/tools/bpf/bpftool/gen.c
-+++ b/tools/bpf/bpftool/gen.c
-@@ -307,8 +307,11 @@ static int do_skeleton(int argc, char **argv)
- 	opts.object_name = obj_name;
- 	obj = bpf_object__open_mem(obj_data, file_sz, &opts);
- 	if (IS_ERR(obj)) {
-+		char err_buf[256];
-+
-+		libbpf_strerror(PTR_ERR(obj), err_buf, sizeof(err_buf));
-+		p_err("failed to open BPF object file: %s", err_buf);
- 		obj = NULL;
--		p_err("failed to open BPF object file: %ld", PTR_ERR(obj));
- 		goto out;
- 	}
+diff --git a/arch/mips/cavium-octeon/octeon-usb.c b/arch/mips/cavium-octeon/octeon-usb.c
+index cc88a08bc1f73..4017398519cf9 100644
+--- a/arch/mips/cavium-octeon/octeon-usb.c
++++ b/arch/mips/cavium-octeon/octeon-usb.c
+@@ -518,6 +518,7 @@ static int __init dwc3_octeon_device_init(void)
  
+ 			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 			if (res == NULL) {
++				put_device(&pdev->dev);
+ 				dev_err(&pdev->dev, "No memory resources\n");
+ 				return -ENXIO;
+ 			}
+@@ -529,8 +530,10 @@ static int __init dwc3_octeon_device_init(void)
+ 			 * know the difference.
+ 			 */
+ 			base = devm_ioremap_resource(&pdev->dev, res);
+-			if (IS_ERR(base))
++			if (IS_ERR(base)) {
++				put_device(&pdev->dev);
+ 				return PTR_ERR(base);
++			}
+ 
+ 			mutex_lock(&dwc3_octeon_clocks_mutex);
+ 			dwc3_octeon_clocks_start(&pdev->dev, (u64)base);
 -- 
 2.25.1
 
