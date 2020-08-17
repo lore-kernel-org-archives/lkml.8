@@ -5,67 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB950C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701A62072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2AD2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687683;
-	bh=wp8U4N3ZbGrSZIZBQVuacLPlQFEyAk9/jAmYVSOMDrg=;
+	s=default; t=1597687691;
+	bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsH/vPERB2mmiSur50bGKhcpqei1PnSNh6CX65UpsZFm+QlqhO4j5ntQrzt9zB5Wc
-	 XkbULrq7rqnQ7XpFp7eoIG7jVia2+8naYtxlXAAtf2k26Vdqi1qQy5RdRx5dJ3392X
-	 3T2sWsmtSQQ4A33Yr0QzIsi9XHw9XUObxYO3YXww=
+	b=gGiOB2pWzG4Yijy5qHO/cSB5oMCLN3PeQKGbJIoiAvdt2p4OR/HKGLcvD6zmK4HAl
+	 JaEhh8rnzMHtaBv26oocYyHH8tCSvyAuI4YUTCX4bmabOk/Wu3zxeCKSazQnMDST1K
+	 2h/L3Qr1QbsgsNOpJWGieDYWLCyln+JiZsYg+Wq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388502AbgHQSIB (ORCPT
+        id S2388456AbgHQQIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388458AbgHQQIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:31 -0400
+        id S2387727AbgHQPpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132E420729;
-        Mon, 17 Aug 2020 16:08:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA43E2053B;
+        Mon, 17 Aug 2020 15:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680510;
-        bh=wp8U4N3ZbGrSZIZBQVuacLPlQFEyAk9/jAmYVSOMDrg=;
+        s=default; t=1597679148;
+        bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TCqB5o4th8VUywq7bpKkQ1Q1z442OsMQvA+h2/A5aVVuVHTW72JQy4W8a+PxII/Os
-         5itFQmv+0fcBffgqOakMxZmPQpEoIWHm8+jpc/TiMMntgLpwlZ/L7RMqajpzVua0ri
-         RAPiGD71yLHijEjYA1Y1vo97bAR3cYKiwSQYdGFY=
+        b=HXoz2BUoW0Rz9PkFJdZfjqc4bCG3ktl09nRBA3mFkyy8tmExGkvBFweLSdi7J0KiT
+         PwTz4m4sEkPplKKKCglskXlVVy66geHiRpGVL240Ult8oXG9zJtsynVeMjb+JMFH4P
+         PZaZxtfPBPoMKUWtygX6vl+m0XRgIBofzkV/KW0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Markus T Metzger <markus.t.metzger@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>
-Subject: [PATCH 5.4 215/270] x86/fsgsbase/64: Fix NULL deref in 86_fsgsbase_read_task
-Date:   Mon, 17 Aug 2020 17:16:56 +0200
-Message-Id: <20200817143806.486151983@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 112/393] usb: bdc: Halt controller on suspend
+Date:   Mon, 17 Aug 2020 17:12:42 +0200
+Message-Id: <20200817143825.048580290@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
-References: <20200817143755.807583758@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,73 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
-[ Upstream commit 8ab49526b53d3172d1d8dd03a75c7d1f5bd21239 ]
+[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
 
-syzbot found its way in 86_fsgsbase_read_task() and triggered this oops:
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
 
-   KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-   CPU: 0 PID: 6866 Comm: syz-executor262 Not tainted 5.8.0-syzkaller #0
-   RIP: 0010:x86_fsgsbase_read_task+0x16d/0x310 arch/x86/kernel/process_64.c:393
-   Call Trace:
-     putreg32+0x3ab/0x530 arch/x86/kernel/ptrace.c:876
-     genregs32_set arch/x86/kernel/ptrace.c:1026 [inline]
-     genregs32_set+0xa4/0x100 arch/x86/kernel/ptrace.c:1006
-     copy_regset_from_user include/linux/regset.h:326 [inline]
-     ia32_arch_ptrace arch/x86/kernel/ptrace.c:1061 [inline]
-     compat_arch_ptrace+0x36c/0xd90 arch/x86/kernel/ptrace.c:1198
-     __do_compat_sys_ptrace kernel/ptrace.c:1420 [inline]
-     __se_compat_sys_ptrace kernel/ptrace.c:1389 [inline]
-     __ia32_compat_sys_ptrace+0x220/0x2f0 kernel/ptrace.c:1389
-     do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
-     __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
-     do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
-     entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
 
-This can happen if ptrace() or sigreturn() pokes an LDT selector into FS
-or GS for a task with no LDT and something tries to read the base before
-a return to usermode notices the bad selector and fixes it.
-
-The fix is to make sure ldt pointer is not NULL.
-
-Fixes: 07e1d88adaae ("x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately")
-Co-developed-by: Jann Horn <jannh@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Markus T Metzger <markus.t.metzger@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/process_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index af64519b26957..da3cc3a10d63f 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -316,7 +316,7 @@ static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
- 		 */
- 		mutex_lock(&task->mm->context.lock);
- 		ldt = task->mm->context.ldt;
--		if (unlikely(idx >= ldt->nr_entries))
-+		if (unlikely(!ldt || idx >= ldt->nr_entries))
- 			base = 0;
- 		else
- 			base = get_desc_base(ldt->entries + idx);
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 5fde5a8b065c1..2dca11f0a7444 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -603,9 +603,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
+ {
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
+ 
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
++
++	return ret;
+ }
+ 
+ static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
