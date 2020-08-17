@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11F22053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89F12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689084;
-	bh=aYbZFZAHTLy3UcV8xwsyYILmR4yEHjaWIROYwmwIX6I=;
+	s=default; t=1597689091;
+	bh=obDiQ1N67GFkAj7InPl86bhjnnFnZMxhTP60Tjy/xc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYNXvTS+tOpIUfxVmnd1VgXwTZLaFGA83vH97gP6Dx+UDWkk1//FFrkAq+91REXsE
-	 1Jj40pZgreuZFZNflIXcfmhwpbdBRoLW5mbcRI5X19djNz1emN5UvilBmLpAR0t0Iw
-	 dFf65ZHvE/HrX9gyl6vQcfledFEmnSVXJLtaCFQk=
+	b=lHruHhqIXlOmS3huJsFvkMYjFSjRtZkgPFg1fMQbzwjdYjyupT7yHf8Nqk1U5IRrH
+	 46XdiwYVU9qQqnu013upUGhezc+7fpzEZpmOLh9DCEl/IpfNqGJEdmtueJNicJ9Icj
+	 Ffz+65BeOZuF4jahx7nHd3eeqHThDPg9lv+67u+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388811AbgHQSbV (ORCPT
+        id S2389570AbgHQSba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387969AbgHQQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387979AbgHQQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:01:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0C020772;
-        Mon, 17 Aug 2020 16:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E9720829;
+        Mon, 17 Aug 2020 16:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680069;
-        bh=aYbZFZAHTLy3UcV8xwsyYILmR4yEHjaWIROYwmwIX6I=;
+        s=default; t=1597680072;
+        bh=obDiQ1N67GFkAj7InPl86bhjnnFnZMxhTP60Tjy/xc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcP8JhHo0VjtEi1NHIuI1IlT+xu0H6NqX9pN+T5yIcYUUy7zaTl8h7KtPDqMNXxau
-         0J3lAQolhzpvOGhrtseTpuO20j/QXU50dLkjr8zj4Hi1S25WqbXEh8DU/hF03DnwR9
-         J7jXZalO2JXFrEbti2akoMHx55sSsfa3nFlgk7hU=
+        b=pKz3KtkXzMxKhp9L6VZI66s6s+lLbHWlN83vdbEEAlTY+iJh8modbpU1sa982ItBM
+         U4lkJpr6BywO6aoMtFfSvxbdcdQok417JB16FZF7j8zFWG3OXWJu7Ff7rDyuMeTbme
+         pqMdw94hlPVrs8P/1LpDJ4AlzhvxLJVXM6zKN4oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/270] md: raid0/linear: fix dereference before null check on pointer mddev
-Date:   Mon, 17 Aug 2020 17:14:02 +0200
-Message-Id: <20200817143757.858028322@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 042/270] nvme-tcp: fix controller reset hang during traffic
+Date:   Mon, 17 Aug 2020 17:14:03 +0200
+Message-Id: <20200817143757.899851628@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,52 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 9a5a85972c073f720d81a7ebd08bfe278e6e16db ]
+[ Upstream commit 2875b0aecabe2f081a8432e2bc85b85df0529490 ]
 
-Pointer mddev is being dereferenced with a test_bit call before mddev
-is being null checked, this may cause a null pointer dereference. Fix
-this by moving the null pointer checks to sanity check mddev before
-it is dereferenced.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 62f7b1989c02 ("md raid0/linear: Mark array as 'broken' and fail BIOs if a member is gone")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
+
+This follows to how the pci driver handles resets.
+
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/nvme/host/tcp.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 5a378a453a2d4..acef01e519d06 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -376,17 +376,18 @@ static blk_qc_t md_make_request(struct request_queue *q, struct bio *bio)
- 	struct mddev *mddev = q->queuedata;
- 	unsigned int sectors;
- 
--	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
-+	if (mddev == NULL || mddev->pers == NULL) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 53e113a18a549..0166ff0e4738e 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1684,15 +1684,20 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(ctrl->tagset,
+-			ctrl->queue_count - 1);
  	}
  
--	blk_queue_split(q, &bio);
--
--	if (mddev == NULL || mddev->pers == NULL) {
-+	if (unlikely(test_bit(MD_BROKEN, &mddev->flags)) && (rw == WRITE)) {
- 		bio_io_error(bio);
- 		return BLK_QC_T_NONE;
- 	}
+ 	ret = nvme_tcp_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
+ 
++	if (!new) {
++		nvme_start_queues(ctrl);
++		nvme_wait_freeze(ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->tagset,
++			ctrl->queue_count - 1);
++		nvme_unfreeze(ctrl);
++	}
 +
-+	blk_queue_split(q, &bio);
-+
- 	if (mddev->ro == 1 && unlikely(rw == WRITE)) {
- 		if (bio_sectors(bio) != 0)
- 			bio->bi_status = BLK_STS_IOERR;
+ 	return 0;
+ 
+ out_cleanup_connect_q:
+@@ -1797,6 +1802,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
+ {
+ 	if (ctrl->queue_count <= 1)
+ 		return;
++	nvme_start_freeze(ctrl);
+ 	nvme_stop_queues(ctrl);
+ 	nvme_tcp_stop_io_queues(ctrl);
+ 	if (ctrl->tagset) {
 -- 
 2.25.1
 
