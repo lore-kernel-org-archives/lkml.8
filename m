@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B493120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6E320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684708;
-	bh=VaCrLvSekWJClVn1YBP6qZ2kXCHDNEXrVPAJS2fvwRs=;
+	s=default; t=1597684726;
+	bh=pQ16N8e2LiWEf96sWV/dqGe0lIXWe2ZQI7wtOvW25Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4zeP7IIbztqY78RpREMt3oWMhnub78fJv71C11EC3Euw6O5XUn+I9Hu8GUhQsrZf
-	 tn9dWUWz/1QKMtjyj3CpYPQfoNbH1N87+TX/aZTPgH46V1TTi4Onr7XS/5TtETl8uH
-	 sLGJXCySx3WLbNYbICB/X2dsHvEuFy9MIgmDMWu8=
+	b=ZdTpfqKgZmcHZWecrTQoHiRb6LqYz7jgGMgEfdPWUF/QG+ga+FeFrb0jlk6L1oQOJ
+	 3tzHqk8rMf0iG/c3OrFkTt+JyxUrAWR3NNxaLk1FlE32kx0fgMiNXSB0UHPZ8rs5DA
+	 vVv0nb0lYNZtr0/KcrGeqD6zF8PmSiFpA4T5v6FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389492AbgHQRSQ (ORCPT
+        id S2389699AbgHQRSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:18:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388799AbgHQQPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:15:10 -0400
+        id S1729355AbgHQQPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C2CD20578;
-        Mon, 17 Aug 2020 16:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34CFA20578;
+        Mon, 17 Aug 2020 16:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680910;
-        bh=VaCrLvSekWJClVn1YBP6qZ2kXCHDNEXrVPAJS2fvwRs=;
+        s=default; t=1597680919;
+        bh=pQ16N8e2LiWEf96sWV/dqGe0lIXWe2ZQI7wtOvW25Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kv00r9UoCwFy54kY7qY76F04pPW1NVNxrG8ycv/ScXQb3JsmfjvXkL75tJTGpEGgM
-         zJl1x3B5pebUl1+c2TudKETFqSdcL6sO/AnhLSFMuq1182tep5N2vZDbW8G6oHDQIS
-         sPy9Q5vsSHxojZfPGNum0y1PxSBQWzGXOVXYG2DA=
+        b=qT68V3+RCWZLrg37DPWwd88Ubm4sVsBb01cx3s4wA1VfC6IkeZ2V+gmjlZEGG4l4G
+         fzY/dHe9GIL3EO1x2kjJ5ARA/UXeRurD2tHHKVFcqYd4a4D+D3lxe2xeyFd452homF
+         sAzi4q3yoodJtESzltt/MqOAwdty4JM1ZSgX6D9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/168] net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
-Date:   Mon, 17 Aug 2020 17:17:10 +0200
-Message-Id: <20200817143738.655691195@linuxfoundation.org>
+Subject: [PATCH 4.19 111/168] PCI: Release IVRS table in AMD ACS quirk
+Date:   Mon, 17 Aug 2020 17:17:22 +0200
+Message-Id: <20200817143739.234115972@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit 0f3c66a3c7b4e8b9f654b3c998e9674376a51b0f ]
+[ Upstream commit 090688fa4e448284aaa16136372397d7d10814db ]
 
-The MV88E6097 chip does not support configuring jumbo frames. Prior to
-commit 5f4366660d65 only the 6352, 6351, 6165 and 6320 chips configured
-jumbo mode. The refactor accidentally added the function for the 6097.
-Remove the erroneous function pointer assignment.
+The acpi_get_table() should be coupled with acpi_put_table() if the mapped
+table is not used at runtime to release the table mapping.
 
-Fixes: 5f4366660d65 ("net: dsa: mv88e6xxx: Refactor setting of jumbo frames")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In pci_quirk_amd_sb_acs(), IVRS table is just used for checking AMD IOMMU
+is supported, not used at runtime, so put the table after using it.
+
+Fixes: 15b100dfd1c9 ("PCI: Claim ACS support for AMD southbridge devices")
+Link: https://lore.kernel.org/r/1595411068-15440-1-git-send-email-guohanjun@huawei.com
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 43b00e8bcdcd7..6fa8aa69b4180 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -2930,7 +2930,6 @@ static const struct mv88e6xxx_ops mv88e6097_ops = {
- 	.port_set_frame_mode = mv88e6351_port_set_frame_mode,
- 	.port_set_egress_floods = mv88e6352_port_set_egress_floods,
- 	.port_set_ether_type = mv88e6351_port_set_ether_type,
--	.port_set_jumbo_size = mv88e6165_port_set_jumbo_size,
- 	.port_egress_rate_limiting = mv88e6095_port_egress_rate_limiting,
- 	.port_pause_limit = mv88e6097_port_pause_limit,
- 	.port_disable_learn_limit = mv88e6xxx_port_disable_learn_limit,
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 8f856657dac22..9129ccd593d10 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4334,6 +4334,8 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
+ 
++	acpi_put_table(header);
++
+ 	/* Filter out flags not applicable to multifunction */
+ 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
+ 
 -- 
 2.25.1
 
