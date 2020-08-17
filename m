@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017C62075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9601C22CF8
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678974;
-	bh=TJ9AZakn52veKcbnZMKtfI9JpjIqWLaXbvn0eVDK0/8=;
+	s=default; t=1597678981;
+	bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oZkfE4+oHiZmq5PJM7B1ra8haz02VZWv151C2C2dZcL435u7TAG2ymRbTQNdlupva
-	 T5jnAhsNxYCHcjTIN/QnRdaLioWGkdIBHectCOHsmFBVQf/4zVzs09+4afNvHr2zJJ
-	 eNr7g0ye01VUBJd78XGFM2780iJwBmpE+QizD7Jw=
+	b=iFDDRd7rlOaYYQkHf/9854LwUgpdXjXxGFdvKswSbcGk1zi0r0fo0b+YMhpMBFWve
+	 vaM1w2+sxBV/cuJhUgLNY0x6brHbwpYC6pDZZvd7v0rju7e0B7KCvgtpKijNP9UhWV
+	 7wgFmclOJcitm0C7glJKWvpu0gNnYRXJz+CXw+fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387593AbgHQPmv (ORCPT
+        id S2387603AbgHQPm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730520AbgHQPgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:36:52 -0400
+        id S1730138AbgHQPg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:36:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7995020709;
-        Mon, 17 Aug 2020 15:36:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F3222DD6;
+        Mon, 17 Aug 2020 15:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678612;
-        bh=TJ9AZakn52veKcbnZMKtfI9JpjIqWLaXbvn0eVDK0/8=;
+        s=default; t=1597678617;
+        bh=4sgduH5P5O73KnNHItFH0MRZIlGcnmkccmJ2zfLYU+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCI/6ggC/ki06LObWJ3Af3LQSor26sN7kA4NHVHB2oYKTO1vF2yJk2ZCmG7fT8ecc
-         icdeKQ8YrLmRM729KcjqTfgA7ekfPLcbmJ3k8HaaNvX4XpbKdRyNmEKX6g95MeK4m/
-         +I9ozehsqypN35gCLa1BoTyIjOlulAKe/0ptzWW0=
+        b=2Exde/JLcxDIUqrrdt+2XwBCyejWxswl3yCJWo8r8z9kM1AvqmFEsHEd1TjCru1nZ
+         YY9X17WUXNsuQMPbMvR5kcWIHT8fnS1cXkqSyOwJXdnm+Od8ZuzW317jFCTDQQBxN8
+         wTMEWcOpC2XbVQ2Ou4GiZBM/B1YwZQnZ/6IHJ7ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 395/464] net: phy: marvell10g: fix null pointer dereference
-Date:   Mon, 17 Aug 2020 17:15:48 +0200
-Message-Id: <20200817143852.699988475@linuxfoundation.org>
+        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
+        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.8 397/464] USB: serial: cp210x: re-enable auto-RTS on open
+Date:   Mon, 17 Aug 2020 17:15:50 +0200
+Message-Id: <20200817143852.796011036@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,85 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Marek Behún" <marek.behun@nic.cz>
+From: Brant Merryman <brant.merryman@silabs.com>
 
-[ Upstream commit 1b8ef1423dbfd34de2439a2db457b84480b7c8a8 ]
+commit c7614ff9b73a1e6fb2b1b51396da132ed22fecdb upstream.
 
-Commit c3e302edca24 ("net: phy: marvell10g: fix temperature sensor on 2110")
-added a check for PHY ID via phydev->drv->phy_id in a function which is
-called by devres at a time when phydev->drv is already set to null by
-phy_remove function.
+CP210x hardware disables auto-RTS but leaves auto-CTS when in hardware
+flow control mode and UART on cp210x hardware is disabled. When
+re-opening the port, if auto-CTS is enabled on the cp210x, then auto-RTS
+must be re-enabled in the driver.
 
-This null pointer dereference can be triggered via SFP subsystem with a
-SFP module containing this Marvell PHY. When the SFP interface is put
-down, the SFP subsystem removes the PHY.
-
-Fixes: c3e302edca24 ("net: phy: marvell10g: fix temperature sensor on 2110")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Baruch Siach <baruch@tkos.co.il>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+Co-developed-by: Phu Luu <phu.luu@silabs.com>
+Signed-off-by: Phu Luu <phu.luu@silabs.com>
+Link: https://lore.kernel.org/r/ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com
+[ johan: fix up tags and problem description ]
+Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
+Cc: stable <stable@vger.kernel.org>     # 2.6.12
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/marvell10g.c |   18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
 
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -205,13 +205,6 @@ static int mv3310_hwmon_config(struct ph
- 			      MV_V2_TEMP_CTRL_MASK, val);
- }
+---
+ drivers/usb/serial/cp210x.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -915,6 +915,7 @@ static void cp210x_get_termios_port(stru
+ 	u32 baud;
+ 	u16 bits;
+ 	u32 ctl_hs;
++	u32 flow_repl;
  
--static void mv3310_hwmon_disable(void *data)
--{
--	struct phy_device *phydev = data;
--
--	mv3310_hwmon_config(phydev, false);
--}
--
- static int mv3310_hwmon_probe(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -235,10 +228,6 @@ static int mv3310_hwmon_probe(struct phy
- 	if (ret)
- 		return ret;
+ 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
  
--	ret = devm_add_action_or_reset(dev, mv3310_hwmon_disable, phydev);
--	if (ret)
--		return ret;
--
- 	priv->hwmon_dev = devm_hwmon_device_register_with_info(dev,
- 				priv->hwmon_name, phydev,
- 				&mv3310_hwmon_chip_info, NULL);
-@@ -423,6 +412,11 @@ static int mv3310_probe(struct phy_devic
- 	return phy_sfp_probe(phydev, &mv3310_sfp_ops);
- }
- 
-+static void mv3310_remove(struct phy_device *phydev)
-+{
-+	mv3310_hwmon_config(phydev, false);
-+}
+@@ -1015,6 +1016,22 @@ static void cp210x_get_termios_port(stru
+ 	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+ 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+ 		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
++		/*
++		 * When the port is closed, the CP210x hardware disables
++		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
++		 * in hardware flow control mode. When re-opening the port, if
++		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
++		 * re-enabled in the driver.
++		 */
++		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
++		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
++		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
++		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
++		cp210x_write_reg_block(port,
++				CP210X_SET_FLOW,
++				&flow_ctl,
++				sizeof(flow_ctl));
 +
- static int mv3310_suspend(struct phy_device *phydev)
- {
- 	return mv3310_power_down(phydev);
-@@ -762,6 +756,7 @@ static struct phy_driver mv3310_drivers[
- 		.read_status	= mv3310_read_status,
- 		.get_tunable	= mv3310_get_tunable,
- 		.set_tunable	= mv3310_set_tunable,
-+		.remove		= mv3310_remove,
- 	},
- 	{
- 		.phy_id		= MARVELL_PHY_ID_88E2110,
-@@ -776,6 +771,7 @@ static struct phy_driver mv3310_drivers[
- 		.read_status	= mv3310_read_status,
- 		.get_tunable	= mv3310_get_tunable,
- 		.set_tunable	= mv3310_set_tunable,
-+		.remove		= mv3310_remove,
- 	},
- };
- 
+ 		cflag |= CRTSCTS;
+ 	} else {
+ 		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
 
 
