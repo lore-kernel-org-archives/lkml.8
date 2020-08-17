@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9099AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A399C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A0F20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4CA20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689657;
-	bh=NowYS8qpEH68XmJngN9/L6QIe7P91u5W7CVd5KLUnZU=;
+	s=default; t=1597689663;
+	bh=fW0PLUaemraPxR56ZlLLDoiTZLlCiLqb4+qpdqoPWUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYut7scv6djXoyGuZ4z2bbmHZqKLx4kdg15GwNVgnHa5NPXcPtyhvOZpwGUhc5NzB
-	 V5E3iLa0v5RNi0VAbed2ipXJyGp6WSzf3hgT9eWhF7ZlSx9HRORjcyCiZtheo3gBzo
-	 rHT74KHAK9cG1WLnNUsksntvIPmHPGjvw7Cq3Crc=
+	b=h5mquhMLg7873nrexjYqAvUOadWbALEKDrwoHXqHktAMQTwK7MEAtaDEYAFzx14wO
+	 k8qpIHTh4LQ4Vr/pVvQSJijOEoF3TO3zrkqebtXupbMYTJHRu9yC+MJF1YQFNIPj4d
+	 EY6ui7lWFRnig6GPIgjnGDV+KBWskutoHmlU3T/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391425AbgHQSk4 (ORCPT
+        id S2391433AbgHQSlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730827AbgHQP5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:57:49 -0400
+        id S1730802AbgHQP5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C73E2053B;
-        Mon, 17 Aug 2020 15:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EED22177B;
+        Mon, 17 Aug 2020 15:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679867;
-        bh=NowYS8qpEH68XmJngN9/L6QIe7P91u5W7CVd5KLUnZU=;
+        s=default; t=1597679864;
+        bh=fW0PLUaemraPxR56ZlLLDoiTZLlCiLqb4+qpdqoPWUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjZqKS48gbNxK+K7Un1ZKMktgXq1+tbbcG3KoyetoQEGob/oJz+wsRkPkeokzNmnt
-         7kPwp4kss0+yvgdZ9GYIz1n7ic/9x8B/BpJ7iQEOqEBhuK/kDq37Vxo04Lq1IX/Uct
-         tZHFOYMn8D39BfzlFi5aeaQPYlz1HPSPjTvR0OOg=
+        b=cvDFehjMBtMKo8OOT4dcazK+E/s7eE8zrzIPP/BM55aQAtVSlGZcN/ZieyPU0qfMI
+         baUcWJiYsH4fSkN8gwkJUauhPFKoaHXnDueJlpoGr4uQl2Mom5ZKpQYPOnhpM7xs60
+         a03MCCeF6pGDZ6eTmavyhUHMrJoZacQpfKeg4AXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Romain Naour <romain.naour@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alan Modra <amodra@gmail.com>,
-        Bin Meng <bin.meng@windriver.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Rich Felker <dalias@libc.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 362/393] include/asm-generic/vmlinux.lds.h: align ro_after_init
-Date:   Mon, 17 Aug 2020 17:16:52 +0200
-Message-Id: <20200817143837.161151880@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.7 353/393] media: media-request: Fix crash if memory allocation fails
+Date:   Mon, 17 Aug 2020 17:16:43 +0200
+Message-Id: <20200817143836.725314288@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -70,48 +63,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Romain Naour <romain.naour@gmail.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-commit 7f897acbe5d57995438c831670b7c400e9c0dc00 upstream.
+commit e30cc79cc80fd919b697a15c5000d9f57487de8e upstream.
 
-Since the patch [1], building the kernel using a toolchain built with
-binutils 2.33.1 prevents booting a sh4 system under Qemu.  Apply the patch
-provided by Alan Modra [2] that fix alignment of rodata.
+Syzbot reports a NULL-ptr deref in the kref_put() call:
 
-[1] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=ebd2263ba9a9124d93bbc0ece63d7e0fae89b40e
-[2] https://www.sourceware.org/ml/binutils/2019-12/msg00112.html
+BUG: KASAN: null-ptr-deref in media_request_put drivers/media/mc/mc-request.c:81 [inline]
+ kref_put include/linux/kref.h:64 [inline]
+ media_request_put drivers/media/mc/mc-request.c:81 [inline]
+ media_request_close+0x4d/0x170 drivers/media/mc/mc-request.c:89
+ __fput+0x2ed/0x750 fs/file_table.c:281
+ task_work_run+0x147/0x1d0 kernel/task_work.c:123
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:165 [inline]
+ prepare_exit_to_usermode+0x48e/0x600 arch/x86/entry/common.c:196
 
-Signed-off-by: Romain Naour <romain.naour@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alan Modra <amodra@gmail.com>
-Cc: Bin Meng <bin.meng@windriver.com>
-Cc: Chen Zhou <chenzhou10@huawei.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: <stable@vger.kernel.org>
-Link: https://marc.info/?l=linux-sh&m=158429470221261
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+What led to this crash was an injected memory allocation failure in
+media_request_alloc():
+
+FAULT_INJECTION: forcing a failure.
+name failslab, interval 1, probability 0, space 0, times 0
+ should_failslab+0x5/0x20
+ kmem_cache_alloc_trace+0x57/0x300
+ ? anon_inode_getfile+0xe5/0x170
+ media_request_alloc+0x339/0x440
+ media_device_request_alloc+0x94/0xc0
+ media_device_ioctl+0x1fb/0x330
+ ? do_vfs_ioctl+0x6ea/0x1a00
+ ? media_ioctl+0x101/0x120
+ ? __media_device_usb_init+0x430/0x430
+ ? media_poll+0x110/0x110
+ __se_sys_ioctl+0xf9/0x160
+ do_syscall_64+0xf3/0x1b0
+
+When that allocation fails, filp->private_data is left uninitialized
+which media_request_close() does not expect and crashes.
+
+To avoid this, reorder media_request_alloc() such that
+allocating the struct file happens as the last step thus
+media_request_close() will no longer get called for a partially created
+media request.
+
+Reported-by: syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Fixes: 10905d70d788 ("media: media-request: implement media requests")
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/asm-generic/vmlinux.lds.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/mc/mc-request.c |   31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -375,6 +375,7 @@
-  */
- #ifndef RO_AFTER_INIT_DATA
- #define RO_AFTER_INIT_DATA						\
-+	. = ALIGN(8);							\
- 	__start_ro_after_init = .;					\
- 	*(.data..ro_after_init)						\
- 	JUMP_TABLE_DATA							\
+--- a/drivers/media/mc/mc-request.c
++++ b/drivers/media/mc/mc-request.c
+@@ -296,9 +296,18 @@ int media_request_alloc(struct media_dev
+ 	if (WARN_ON(!mdev->ops->req_alloc ^ !mdev->ops->req_free))
+ 		return -ENOMEM;
+ 
++	if (mdev->ops->req_alloc)
++		req = mdev->ops->req_alloc(mdev);
++	else
++		req = kzalloc(sizeof(*req), GFP_KERNEL);
++	if (!req)
++		return -ENOMEM;
++
+ 	fd = get_unused_fd_flags(O_CLOEXEC);
+-	if (fd < 0)
+-		return fd;
++	if (fd < 0) {
++		ret = fd;
++		goto err_free_req;
++	}
+ 
+ 	filp = anon_inode_getfile("request", &request_fops, NULL, O_CLOEXEC);
+ 	if (IS_ERR(filp)) {
+@@ -306,15 +315,6 @@ int media_request_alloc(struct media_dev
+ 		goto err_put_fd;
+ 	}
+ 
+-	if (mdev->ops->req_alloc)
+-		req = mdev->ops->req_alloc(mdev);
+-	else
+-		req = kzalloc(sizeof(*req), GFP_KERNEL);
+-	if (!req) {
+-		ret = -ENOMEM;
+-		goto err_fput;
+-	}
+-
+ 	filp->private_data = req;
+ 	req->mdev = mdev;
+ 	req->state = MEDIA_REQUEST_STATE_IDLE;
+@@ -336,12 +336,15 @@ int media_request_alloc(struct media_dev
+ 
+ 	return 0;
+ 
+-err_fput:
+-	fput(filp);
+-
+ err_put_fd:
+ 	put_unused_fd(fd);
+ 
++err_free_req:
++	if (mdev->ops->req_free)
++		mdev->ops->req_free(req);
++	else
++		kfree(req);
++
+ 	return ret;
+ }
+ 
 
 
