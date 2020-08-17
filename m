@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0670C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D567120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FF820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691324;
-	bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+	s=default; t=1597691332;
+	bh=zAUNWZzCI8ukKqTvNlnlscIEQVsbnvlQ1UoOIQ2chNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mgdqvSftIrMTElTCN5xgwbd1pSq37tzt6YmL1O6rjrEcmotYR24mNkzqkkdmYryrO
-	 27B4oSWLrbyiqhZseLYSYHaBs//fi8avBQFQeSQlWxGDIQSifQE5KisBQDJBd06B5m
-	 A3PxFwUjxyM5cFVtsKZZ6N8IB6sxRWTrlmbM4UHs=
+	b=syzCjLnhVxSFxEfk8L9VsDOgAenRNQx1LOgaNbgEETiJPCc+ZcELb6XvX5UmoX6wM
+	 1RFu2WqX+OKVGO45gKlUjO9Qu7/UY819OiSCf17+9gpqphJXycl1ooNSy03TQDhH9P
+	 2SIqIMe08tc6N7ZHbqGKVPyD984qhLc/17saC1ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392049AbgHQTIn (ORCPT
+        id S2392029AbgHQTIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387610AbgHQPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:43:01 -0400
+        id S2387580AbgHQPmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:42:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F11F2075B;
-        Mon, 17 Aug 2020 15:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB9422CAE;
+        Mon, 17 Aug 2020 15:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678980;
-        bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+        s=default; t=1597678965;
+        bh=zAUNWZzCI8ukKqTvNlnlscIEQVsbnvlQ1UoOIQ2chNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ky5N4VEM79STvbmFvCvPSI7PRnu2X5mnyQtPUszya1Bz6v0R98JUQ/kU8A77anYar
-         00lwOV440xStVL78p4kZQmSk58gO3Xl89Olt+BV74ikVpLmpidf8nC5up0lvLU4g16
-         qD/D3aGDg3925I6YQW3hD74lX2+ElMc43LD/Z4v4=
+        b=Z+MN5rnfFWwzdS0XRiRz510dIueG2eIPt91kEziLu7L7xJzpFgmSoL8WiUb8SvEa5
+         VF/ASpEHx5cBZz3+aEyCc/c+lSIVdc9wJTlfh34/7HwsJL75qTc6xPufUrd5/OIjCG
+         ou4PY1nPZnjqpGlf9XYZSmlMygHIGvA0eZa9iRUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 025/393] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Mon, 17 Aug 2020 17:11:15 +0200
-Message-Id: <20200817143820.823156924@linuxfoundation.org>
+Subject: [PATCH 5.7 050/393] iocost: Fix check condition of iocg abs_vdebt
+Date:   Mon, 17 Aug 2020 17:11:40 +0200
+Message-Id: <20200817143822.042647179@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,35 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit d9012a59db54442d5b2fcfdfcded35cf566397d3 ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+We shouldn't skip iocg when its abs_vdebt is not zero.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 0b80f9866e6b ("iocost: protect iocg->abs_vdebt with iocg->waitq.lock")
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-iocost.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 7af288fa9475f..a9412805c1d6a 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index ef193389fffe9..b5a9cfcd75e9d 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1374,7 +1374,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 	 * should have woken up in the last period and expire idle iocgs.
+ 	 */
+ 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
+-		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
++		if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
+ 		    !iocg_is_idle(iocg))
+ 			continue;
  
- 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
