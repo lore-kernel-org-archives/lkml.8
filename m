@@ -2,53 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF2C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084AB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691853;
-	bh=gfh42KL7ujKCHV4kDSr4rdAn7B6+6CS7vRDFhoN80vs=;
+	s=default; t=1597691862;
+	bh=hVCf1vtbcgT6nblngcNF5TbXlrzSAIyUa+ja/yUPDxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lC3mKE1q2v2yKVdTHsehZBh4X4RhjuJKE63gxEMrVZgf3nDfaI4N52+RcKDDQ36pQ
-	 B9ekBfb6kFn3SyO5Fn8vROMYCAZz9NZZI7tK9NnlV+qJck1xmGSdRz0KAra2Ww7hNT
-	 JXV9yz08vjNLdC6VyBfW/mYzmuh/05DjdvkJutVo=
+	b=AGYlzcqFGco2kfbl6ioux5BuZ1L/NZZeeKtEDf3nfuxCdF7EIwNPLtyvJexlcBy7c
+	 qNSSdPSiDW+J+mWo4+4CYT5yytmCm/k3F1WiiZAgqUyki0HzwYEmnijzMO14EG/LUK
+	 3fStR/irRr4QSpgpB7HoFhfNczsrLNm3a9A76ij4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbgHQPi0 (ORCPT
+        id S1730685AbgHQTRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730300AbgHQPcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:10 -0400
+        id S1730596AbgHQPi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE11120709;
-        Mon, 17 Aug 2020 15:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33A2A23105;
+        Mon, 17 Aug 2020 15:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678330;
-        bh=gfh42KL7ujKCHV4kDSr4rdAn7B6+6CS7vRDFhoN80vs=;
+        s=default; t=1597678706;
+        bh=hVCf1vtbcgT6nblngcNF5TbXlrzSAIyUa+ja/yUPDxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqvHdJmZZGvC0uxWRSpL9q+XqJlHT/xHw9vpRRSR6BDfoaDfPO/625FnF8rxN4Fvk
-         2Y9xiZ7N14HwgoF4cH9wQBMobAEeUgOPDGZ2W+4JYobWjuhOzKrmPSf108fn4F1gfb
-         P/92fMMBhy447P6xk3jDDtR/I8JXgqnXYQcCVe+E=
+        b=fp7/xgo9wt9teLOvp4EQ+LdpWcpHJT2sWBgUJSfOGHwsZrMZYMZIDAXjJl9TcczWS
+         ofp6aaRVUpdbkgIaYku68LNPdWsoB6A0WJhBcLAjNySkjoK8D/pb5xpV5WBARpZRuE
+         ukUt/qbxApDVEibiou2mgEmngP7ZHKozNcjqRb4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 297/464] gpio: regmap: fix type clash
-Date:   Mon, 17 Aug 2020 17:14:10 +0200
-Message-Id: <20200817143848.033752577@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 427/464] io_uring: sanitize double poll handling
+Date:   Mon, 17 Aug 2020 17:16:20 +0200
+Message-Id: <20200817143854.232224051@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,39 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit a070bdbbb06d7787ec7844a4f1e059cf8b55205d ]
+commit d4e7cd36a90e38e0276d6ce0c20f5ccef17ec38c upstream.
 
-GPIO_REGMAP_ADDR_ZERO() cast to unsigned long but the actual config
-parameters are unsigned int. We use unsigned int here because that is
-the type which is used by the underlying regmap.
+There's a bit of confusion on the matching pairs of poll vs double poll,
+depending on if the request is a pure poll (IORING_OP_POLL_ADD) or
+poll driven retry.
 
-Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20200725232337.27581-1-michael@walle.cc
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add io_poll_get_double() that returns the double poll waitqueue, if any,
+and io_poll_get_single() that returns the original poll waitqueue. With
+that, remove the argument to io_poll_remove_double().
+
+Finally ensure that wait->private is cleared once the double poll handler
+has run, so that remove knows it's already been seen.
+
+Cc: stable@vger.kernel.org # v5.8
+Reported-by: syzbot+7f617d4a9369028b8a2c@syzkaller.appspotmail.com
+Fixes: 18bceab101ad ("io_uring: allow POLL_ADD with double poll_wait() users")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/gpio/regmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |   34 +++++++++++++++++++++++++---------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 4c1e6b34e8249..ad76f3d0a6ba1 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -8,7 +8,7 @@ struct gpio_regmap;
- struct irq_domain;
- struct regmap;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4172,9 +4172,24 @@ static bool io_poll_rewait(struct io_kio
+ 	return false;
+ }
  
--#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
-+#define GPIO_REGMAP_ADDR_ZERO ((unsigned int)(-1))
- #define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
+-static void io_poll_remove_double(struct io_kiocb *req, void *data)
++static struct io_poll_iocb *io_poll_get_double(struct io_kiocb *req)
+ {
+-	struct io_poll_iocb *poll = data;
++	/* pure poll stashes this in ->io, poll driven retry elsewhere */
++	if (req->opcode == IORING_OP_POLL_ADD)
++		return (struct io_poll_iocb *) req->io;
++	return req->apoll->double_poll;
++}
++
++static struct io_poll_iocb *io_poll_get_single(struct io_kiocb *req)
++{
++	if (req->opcode == IORING_OP_POLL_ADD)
++		return &req->poll;
++	return &req->apoll->poll;
++}
++
++static void io_poll_remove_double(struct io_kiocb *req)
++{
++	struct io_poll_iocb *poll = io_poll_get_double(req);
  
- /**
--- 
-2.25.1
-
+ 	lockdep_assert_held(&req->ctx->completion_lock);
+ 
+@@ -4194,7 +4209,7 @@ static void io_poll_complete(struct io_k
+ {
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 
+-	io_poll_remove_double(req, req->io);
++	io_poll_remove_double(req);
+ 	req->poll.done = true;
+ 	io_cqring_fill_event(req, error ? error : mangle_poll(mask));
+ 	io_commit_cqring(ctx);
+@@ -4236,7 +4251,7 @@ static int io_poll_double_wake(struct wa
+ 			       int sync, void *key)
+ {
+ 	struct io_kiocb *req = wait->private;
+-	struct io_poll_iocb *poll = req->apoll->double_poll;
++	struct io_poll_iocb *poll = io_poll_get_single(req);
+ 	__poll_t mask = key_to_poll(key);
+ 
+ 	/* for instances that support it check for an event match first: */
+@@ -4250,6 +4265,8 @@ static int io_poll_double_wake(struct wa
+ 		done = list_empty(&poll->wait.entry);
+ 		if (!done)
+ 			list_del_init(&poll->wait.entry);
++		/* make sure double remove sees this as being gone */
++		wait->private = NULL;
+ 		spin_unlock(&poll->head->lock);
+ 		if (!done)
+ 			__io_async_wake(req, poll, mask, io_poll_task_func);
+@@ -4358,7 +4375,7 @@ static void io_async_task_func(struct ca
+ 		}
+ 	}
+ 
+-	io_poll_remove_double(req, apoll->double_poll);
++	io_poll_remove_double(req);
+ 	spin_unlock_irq(&ctx->completion_lock);
+ 
+ 	/* restore ->work in case we need to retry again */
+@@ -4484,7 +4501,7 @@ static bool io_arm_poll_handler(struct i
+ 	ret = __io_arm_poll_handler(req, &apoll->poll, &ipt, mask,
+ 					io_async_wake);
+ 	if (ret || ipt.error) {
+-		io_poll_remove_double(req, apoll->double_poll);
++		io_poll_remove_double(req);
+ 		spin_unlock_irq(&ctx->completion_lock);
+ 		if (req->flags & REQ_F_WORK_INITIALIZED)
+ 			memcpy(&req->work, &apoll->work, sizeof(req->work));
+@@ -4518,14 +4535,13 @@ static bool io_poll_remove_one(struct io
+ {
+ 	bool do_complete;
+ 
++	io_poll_remove_double(req);
++
+ 	if (req->opcode == IORING_OP_POLL_ADD) {
+-		io_poll_remove_double(req, req->io);
+ 		do_complete = __io_poll_remove_one(req, &req->poll);
+ 	} else {
+ 		struct async_poll *apoll = req->apoll;
+ 
+-		io_poll_remove_double(req, apoll->double_poll);
+-
+ 		/* non-poll requests have submit ref still */
+ 		do_complete = __io_poll_remove_one(req, &apoll->poll);
+ 		if (do_complete) {
 
 
