@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3D5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BA9204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692557;
-	bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
+	s=default; t=1597692560;
+	bh=0qMyAw59C0MWjKRZoXdZUm+02FzsbsnESMZtyqFa69k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XsNEVMQbPVTxiAnyRrkGhjW0+1h77Ha6lDpBEdLXgW4FVorSePGzT85J8thKLB4Rd
-	 S5muZhnJphbg9/qaDro6RhWXw64jKOfS0sIBKLMriq46+68YVQnWRjXkzbhNOC5hMU
-	 ejgzyDPLxGsHR6JX8bkfMPbiC7c19N9/1S7z9ouI=
+	b=dJQpJF6fShxHVIPGiS1I9c2NUq0JbdjH8NQelGyPIWhrxi42MTDQ1fngeghLfOvui
+	 vjNqgKcQYjFEVoFPS8fwNPow9Qh1SR/LmBVd/f9UHW40fhwuQ2UAgFXhOXljxCNv99
+	 WhGMqDSpFqeCyApRCBY0Z+7w5QlM/tzMjAcho830=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbgHQT3P (ORCPT
+        id S1732026AbgHQT3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59718 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730075AbgHQPcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:25 -0400
+        id S1729978AbgHQPcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:32:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC4523428;
-        Mon, 17 Aug 2020 15:32:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C7B20709;
+        Mon, 17 Aug 2020 15:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678345;
-        bh=N8Em1HI5CHy+i59UwXfiCvdXnRiojqqoK0W2KciPvSg=;
+        s=default; t=1597678341;
+        bh=0qMyAw59C0MWjKRZoXdZUm+02FzsbsnESMZtyqFa69k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4x08qlfrdLtaYxMzUJrd/uf2HysfSPyrWiObOasIHZFVSqFxEvdBXF9YZYsA8Mit
-         HDT8RgjKVo+bJYRl1XkjVpGgEB+UWZ1OrVsBAgnh4/6sx8eKkacxzvTZJucUx4YJah
-         gexCCA3T/3UrTteN5Hn/+nJkkwYxrCdR8BBwG2nE=
+        b=b08kuQSuQAqlE8MfuhMG3e0Y2pCfEI5Lryr8fg3iyhs3iYBwYVQmLGiuJvYX+Vpp9
+         NzeaQNjfvSZ3h5EBZnAoECiinchOctDbRml04eNAzr/5uhBNa4xTuP2HZ7TR81JDmz
+         enz54dx/kzS9f0R/MJ0x5F/HN8UWP17qWPW86eyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 302/464] Smack: fix another vsscanf out of bounds
-Date:   Mon, 17 Aug 2020 17:14:15 +0200
-Message-Id: <20200817143848.274981498@linuxfoundation.org>
+Subject: [PATCH 5.8 301/464] RDMA/core: Fix return error value in _ib_modify_qp() to negative
+Date:   Mon, 17 Aug 2020 17:14:14 +0200
+Message-Id: <20200817143848.227319625@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,37 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
+[ Upstream commit 47fda651d5af2506deac57d54887cf55ce26e244 ]
 
-This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
-vsscanf") where we added a bounds check on "rule".
+The error codes in _ib_modify_qp() are supposed to be negative errno.
 
-Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
-Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Fixes: 7a5c938b9ed0 ("IB/core: Check for rdma_protocol_ib only after validating port_num")
+Link: https://lore.kernel.org/r/1595645787-20375-1-git-send-email-liheng40@huawei.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/core/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 840a192e93370..2bae1fc493d16 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -905,6 +905,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 
- 	for (i = 0; i < catlen; i++) {
- 		rule += SMK_DIGITLEN;
-+		if (rule > data + count) {
-+			rc = -EOVERFLOW;
-+			goto out;
-+		}
- 		ret = sscanf(rule, "%u", &cat);
- 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
+index 53d6505c0c7b6..f369f0a19e851 100644
+--- a/drivers/infiniband/core/verbs.c
++++ b/drivers/infiniband/core/verbs.c
+@@ -1712,7 +1712,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct ib_qp_attr *attr,
+ 		if (!(rdma_protocol_ib(qp->device,
+ 				       attr->alt_ah_attr.port_num) &&
+ 		      rdma_protocol_ib(qp->device, port))) {
+-			ret = EINVAL;
++			ret = -EINVAL;
  			goto out;
+ 		}
+ 	}
 -- 
 2.25.1
 
