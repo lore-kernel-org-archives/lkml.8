@@ -2,118 +2,145 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D09BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4312AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323A220758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1FB206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 09:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqHEvOD6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ce8Py2ol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgHQI7x (ORCPT
+        id S1728559AbgHQJA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgHQI7q (ORCPT
+        Mon, 17 Aug 2020 05:00:28 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:6998 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgHQJA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:59:46 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDA6C061388;
-        Mon, 17 Aug 2020 01:59:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 128so7801407pgd.5;
-        Mon, 17 Aug 2020 01:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bfbk6qu+Dh0r09/BC2HVXkZhe9/6tVYt11hNr0Vm+DI=;
-        b=eqHEvOD60MZgX5QZiePO/SspTddcQhdgDeNCR0Mu0EohogFtoim9ZkpjIFOkxExKkV
-         GcXVa3oznDDxllthJndBo0kfvWz7VfsWVYM29+Efm6v+9NIBXW4oqCm5P1PyrK+NYpd+
-         9bmcq7UrAawZ2temd47NpyFCLPMwIvmx0FvUf4WNbQ3P46MunRJUvSzick/BSb5onCWf
-         pUyDwHsKJrMBe4XRtdo6RMydJkB89oFjWH7ubvmVKtxkHsKDJE1gwVmpNtwyGzYUyvG7
-         m/kOhs50nXk+/R+4pEyb+x+3OOzw/Di520QgWIpIR7WzYdlXiOIhUoqwM9F1NMGZ1lP4
-         M5qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bfbk6qu+Dh0r09/BC2HVXkZhe9/6tVYt11hNr0Vm+DI=;
-        b=jBan3AII1a1k/uPxJQxtuPjJFWdqtR15d3kgAY7L/suP1/WHGXojgqHE3/IOitofT+
-         PMFxjKZks8cfqgmsAJ56QJmQjUCBopQOkzC360LS+JLV1Abu/IrBFblAQnGKwF+GTcUG
-         zTd6iVe97QuXJ6T6Vaa314OoPeIS1Acq/NDJvfQzkOHtnKr8Gs5Ke30QbTrlJl6d5V90
-         d2dy+2bCnsJb08wRZXVPjDYu9kZ5mPxssLldqvgUmT3aQJUwUZo1lbUe3YGusLxvWvXH
-         Gbt/zM4PMhaGlOOcUSDUFw9jY+EHUoAUl0d/0f8Ib1FHUff9HC19SwaNHUWONxCZcCRn
-         oBcA==
-X-Gm-Message-State: AOAM530MvAGjMNso68NmXcKkY84RKxNRhvyyYiaVlafPyhDp1VICT9yH
-        0FXd2x0/z1HZ/kpf6/Qu9EpsK6A5BPnUvA==
-X-Google-Smtp-Source: ABdhPJwbOUjxkSKQIB51eMU9r5yw0K1XtQNm4cXz6JwSEOXlV6ZMtYAd8hVyZnS9wqz7EYBa7vpvLg==
-X-Received: by 2002:aa7:8c42:: with SMTP id e2mr10278896pfd.181.1597654785029;
-        Mon, 17 Aug 2020 01:59:45 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id j13sm18508547pfn.166.2020.08.17.01.59.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:59:44 -0700 (PDT)
-From:   Allen Pais <allen.cryptic@gmail.com>
-To:     richard.genoud@gmail.com, gregkh@linuxfoundation.org
-Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 4/4] tty: timbuart: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:29:21 +0530
-Message-Id: <20200817085921.26033-5-allen.cryptic@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817085921.26033-1-allen.cryptic@gmail.com>
-References: <20200817085921.26033-1-allen.cryptic@gmail.com>
+        Mon, 17 Aug 2020 05:00:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597654827;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3DmcE8byjOmgTWsAigd9op8NsNi8eLSFuqKj5KpZOxw=;
+  b=ce8Py2olCsO8PlYrBRBGcAXCl3c7fnbxG8x/veNmzuK2bO6RT1FGVl1u
+   vf58hu9Ofu9YlDhoHl8bsuNdRTvrZiNPzrU6M6IfubMrw0wmtAg3WVQ44
+   YviKt4NvoObDhzLcKBEQOpSvtUtr/A3M8gd70UmoOA9d/5izK9p1dHeL7
+   8=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: 2swBEYbKdmD1FD8GHQR+2YbfZXpfIYgEFzOMyMK29gK1GMAJdem30AdCMw9MXYaHOI7c5f3msZ
+ pRifdAgCZpu6q4RSLy4zsNorfgIOygSrIX5ziuMO5iNYVNJU4PPQgHI+kAggTRbICZDmKq4n5a
+ VWhB1J5XkVl78WUm6dR5wkprAYCmME8oKIGccthLlPOWav3j3pYbUdcDh8iInkeA3hRxhKlYwq
+ MzVxj7Qdy1Dih/+0w55FY7ALZxyBhAqtHZIHLDvfIzqAes/JXM/4A8qvadbS7uIrNW3S10QqQ8
+ aE4=
+X-SBRS: 2.7
+X-MesageID: 24993815
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,322,1592884800"; 
+   d="scan'208";a="24993815"
+Date:   Mon, 17 Aug 2020 11:00:13 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+CC:     Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
+        <norbert.kaminski@3mdeb.com>, <xen-devel@lists.xenproject.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+Message-ID: <20200817090013.GN975@Air-de-Roger>
+References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.lkml@gmail.com>
+On Sun, Aug 16, 2020 at 02:19:49AM +0200, Marek Marczykowski-Górecki wrote:
+> In case of Xen PV dom0, Xen passes along info about system tables (see
+> arch/x86/xen/efi.c), but not the memory map from EFI.
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+I think that's because the memory map returned by
+XENMEM_machine_memory_map is in e820 form, and doesn't contain the
+required information about the EFI regions due to the translation done
+by efi_arch_process_memory_map in Xen?
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- drivers/tty/serial/timbuart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> This makes sense
+> as it is Xen responsible for managing physical memory address space.
+> In this case, it doesn't make sense to condition using ESRT table on
+> availability of EFI memory map, as it isn't Linux kernel responsible for
+> it.
 
-diff --git a/drivers/tty/serial/timbuart.c b/drivers/tty/serial/timbuart.c
-index 19d38b504e27..2126e6e6dfd1 100644
---- a/drivers/tty/serial/timbuart.c
-+++ b/drivers/tty/serial/timbuart.c
-@@ -172,9 +172,9 @@ static void timbuart_handle_rx_port(struct uart_port *port, u32 isr, u32 *ier)
- 	dev_dbg(port->dev, "%s - leaving\n", __func__);
- }
- 
--static void timbuart_tasklet(unsigned long arg)
-+static void timbuart_tasklet(struct tasklet_struct *t)
- {
--	struct timbuart_port *uart = (struct timbuart_port *)arg;
-+	struct timbuart_port *uart = from_tasklet(uart, t, tasklet);
- 	u32 isr, ier = 0;
- 
- 	spin_lock(&uart->port.lock);
-@@ -451,7 +451,7 @@ static int timbuart_probe(struct platform_device *dev)
- 	}
- 	uart->port.irq = irq;
- 
--	tasklet_init(&uart->tasklet, timbuart_tasklet, (unsigned long)uart);
-+	tasklet_setup(&uart->tasklet, timbuart_tasklet);
- 
- 	err = uart_register_driver(&timbuart_driver);
- 	if (err)
--- 
-2.17.1
+PV dom0 is kind of special in that regard as it can create mappings to
+(almost) any MMIO regions, and hence can change it's memory map
+substantially.
 
+> Skip this part on Xen PV (let Xen do the right thing if it deems
+> necessary) and use ESRT table normally.
+
+Maybe it would be better to introduce a new hypercall (or add a
+parameter to XENMEM_machine_memory_map) in order to be able to fetch
+the EFI memory map?
+
+That should allow a PV dom0 to check the ESRT is correct and thus not
+diverge from bate metal.
+
+> 
+> This is a requirement for using fwupd in PV dom0 to update UEFI using
+> capsules.
+> 
+> Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> ---
+>  drivers/firmware/efi/esrt.c | 47 ++++++++++++++++++++-----------------
+>  1 file changed, 25 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+> index d5915272141f..5c49f2aaa4b1 100644
+> --- a/drivers/firmware/efi/esrt.c
+> +++ b/drivers/firmware/efi/esrt.c
+> @@ -245,36 +245,38 @@ void __init efi_esrt_init(void)
+>  	int rc;
+>  	phys_addr_t end;
+>  
+> -	if (!efi_enabled(EFI_MEMMAP))
+> +	if (!efi_enabled(EFI_MEMMAP) && !efi_enabled(EFI_PARAVIRT))
+>  		return;
+>  
+>  	pr_debug("esrt-init: loading.\n");
+>  	if (!esrt_table_exists())
+>  		return;
+>  
+> -	rc = efi_mem_desc_lookup(efi.esrt, &md);
+> -	if (rc < 0 ||
+> -	    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+> -	     md.type != EFI_BOOT_SERVICES_DATA &&
+> -	     md.type != EFI_RUNTIME_SERVICES_DATA)) {
+> -		pr_warn("ESRT header is not in the memory map.\n");
+> -		return;
+> -	}
+> +	if (efi_enabled(EFI_MEMMAP)) {
+> +		rc = efi_mem_desc_lookup(efi.esrt, &md);
+> +		if (rc < 0 ||
+> +		    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+> +		     md.type != EFI_BOOT_SERVICES_DATA &&
+> +		     md.type != EFI_RUNTIME_SERVICES_DATA)) {
+> +			pr_warn("ESRT header is not in the memory map.\n");
+> +			return;
+> +		}
+
+Here you blindly trust the data in the ESRT in the PV case, without
+checking it matches the regions on the memory map, which could lead to
+errors if ESRT turns to be wrong.
+
+Thanks, Roger.
