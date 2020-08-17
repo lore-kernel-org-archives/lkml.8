@@ -2,263 +2,161 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80E9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55F82063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC742067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="F2yCHAjB"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eZR0WfgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731605AbgHQRxE (ORCPT
+        id S1731614AbgHQRx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:53:04 -0400
-Received: from rcdn-iport-2.cisco.com ([173.37.86.73]:11902 "EHLO
-        rcdn-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731600AbgHQRwd (ORCPT
+        Mon, 17 Aug 2020 13:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731600AbgHQRxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 13:52:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=6582; q=dns/txt; s=iport;
-  t=1597686752; x=1598896352;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JeSwWmzIRAQz6j2ejwjeJoylWXxzdWjzKvU1IpkMkOc=;
-  b=F2yCHAjBkONahjLeoZz8iATsQoNd4cUdmo9BMOp+z4iQXgaCf1INA8vi
-   vojsEscquicST5bN3duFpGUg66xzpBbID9f7JLtGef5BwukF1NuApXCTo
-   GwY9v0siTLk4A4iowILzfU8U4w1Y1Y3tfi6WnNtVZUUvWjS3U9yi1zz+V
-   o=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BbBACIwjpf/5tdJa1fHQEBAQEJARI?=
- =?us-ascii?q?BBQUBggqBdTWBRAEyLLFuCwEBAQ4vBAEBhEyCTwIkOBMCAwEBCwEBBQEBAQI?=
- =?us-ascii?q?BBgRthWiGHwsBRoENMhKDJoJ9sA+BdTOJGYFAgTiIIm2EDhuBQT+EX4o0BJJ?=
- =?us-ascii?q?Ch0SBa5o+gmyaEQ8hoCGSOZ9ngWojgVczGggbFTuCaVAZDY4rF45EIQMwNwI?=
- =?us-ascii?q?GCgEBAwmRLQEB?=
-X-IronPort-AV: E=Sophos;i="5.76,324,1592870400"; 
-   d="scan'208";a="816481828"
-Received: from rcdn-core-4.cisco.com ([173.37.93.155])
-  by rcdn-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 Aug 2020 17:52:24 +0000
-Received: from sjc-ads-9103.cisco.com (sjc-ads-9103.cisco.com [10.30.208.113])
-        by rcdn-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id 07HHqOF6012615;
-        Mon, 17 Aug 2020 17:52:24 GMT
-Received: by sjc-ads-9103.cisco.com (Postfix, from userid 487941)
-        id 3A37B9A8; Mon, 17 Aug 2020 10:52:24 -0700 (PDT)
-From:   Denys Zagorui <dzagorui@cisco.com>
-To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org
-Cc:     "ikhoronz@cisco.com--cc=xe-linux-external"@cisco.com,
-        xiyou.wangcong@gmail.com, ap420073@gmail.com,
-        richardcochran@gmail.com, f.fainelli@gmail.com, andrew@lunn.ch,
-        mkubecek@suse.cz, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: core: SIOCADDMULTI/SIOCDELMULTI distinguish between uc and mc
-Date:   Mon, 17 Aug 2020 10:52:24 -0700
-Message-Id: <20200817175224.49608-1-dzagorui@cisco.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 17 Aug 2020 13:53:23 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C393AC061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:53:20 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x12so13106788qtp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 10:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9qJKHV+uR7EHxj6Xx8FbbDgPhogd8I9njcQU8EAXvkQ=;
+        b=eZR0WfgN5VnjasTe4SSju/DBe5GM7/1zgG558EVIEYqjTyUtTzYQ9HQO8tZ/pjhXR4
+         y4MDdtYuAAwlwpXLG1N/fGPd2GrheSQvtp26XM7gOaX3NztXoqM6k9pRO/Gow4qk0aR3
+         BpPuw4JlOpLKZicE4gEzsIg0Fy9Nq/LwItDtcIVXVFACAQFUovgsDmYgv0FB4S0ztZLq
+         5P6Nqh5qURy6QR1nhiv3i9uQ9Kxe1h1H1e88am3REjCsiNneoTWSrw0uE1poR/cME3GJ
+         gmIJRZI56BiHf81xGF37tpNxbhaN27HdFfunjzN/EjKZm2GbMXqD8c3Lop1cr5QD7nhR
+         p5ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9qJKHV+uR7EHxj6Xx8FbbDgPhogd8I9njcQU8EAXvkQ=;
+        b=WA3f0ipc4/lQoDArOgLfLjXbvUoxIp7XUlUx5ZMLrXznQYR/yfTJ1moyCAiCNefgEG
+         /A4O16w5m6zy9i01dDYlyqDE2/pyfVTl/zSj7ZJ+G5cfHMSHTaRPXKKHZcPJSFSPLhzj
+         +jXpE6G+8zU69nCAjfkUq5BycDYnWRipMNe9mkJxi2+d2CgXNlIqmBfNtbHkN9s3b38M
+         1zqCSrZMGUvr7+LalWvrz4x619xINQTwgkuIzjhMbXC+ZhYzHPyu1ufEw1xNCqDCG79i
+         I07dLE9OqKGnRM2tAuqF495lXnhoJyos3qb7nR6N1qgy+87oprLFh5gNtlseeA8es6+e
+         abjg==
+X-Gm-Message-State: AOAM531sRIoq0vWvBZyknhqnZl9uKBoAL2fJcw9jk4NPQN99R/CO7qbV
+        zXCNJocy2tCUoTtaCKTnILjJXw==
+X-Google-Smtp-Source: ABdhPJzCaYQxApihx4dIieIEvWuoenIg4/F/KmoMRyKOXtKtqpn47Et8huEquYYdnWP2opbPNFOzKQ==
+X-Received: by 2002:aed:3b7a:: with SMTP id q55mr14580291qte.78.1597686799970;
+        Mon, 17 Aug 2020 10:53:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 141sm17857695qke.41.2020.08.17.10.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 10:53:18 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k7jJu-007tAD-4T; Mon, 17 Aug 2020 14:53:18 -0300
+Date:   Mon, 17 Aug 2020 14:53:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Allen Pais <allen.lkml@gmail.com>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        nareshkumar.pbs@broadcom.com, keescook@chromium.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH 1/5] infiniband: bnxt_re: convert tasklets to use new
+ tasklet_setup() API
+Message-ID: <20200817175318.GW24045@ziepe.ca>
+References: <20200817082844.21700-1-allen.lkml@gmail.com>
+ <20200817082844.21700-2-allen.lkml@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Outbound-SMTP-Client: 10.30.208.113, sjc-ads-9103.cisco.com
-X-Outbound-Node: rcdn-core-4.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817082844.21700-2-allen.lkml@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SIOCADDMULTI API allows adding multicast/unicast mac addresses but
-doesn't deferentiate them so if someone tries to add secondary
-unicast mac addr it will be added to multicast netdev list which is
-confusing. There is at least one user that allows adding secondary
-unicast through this API.
-(2f41f3358672 i40e/i40evf: fix unicast mac address add)
+On Mon, Aug 17, 2020 at 01:58:40PM +0530, Allen Pais wrote:
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+>  drivers/infiniband/hw/bnxt_re/qplib_fp.c   |  7 +++----
+>  drivers/infiniband/hw/bnxt_re/qplib_rcfw.c | 13 ++++++-------
+>  2 files changed, 9 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
+> index 117b42349a28..62b01582aa1c 100644
+> +++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
+> @@ -295,9 +295,9 @@ static void __wait_for_all_nqes(struct bnxt_qplib_cq *cq, u16 cnq_events)
+>  	}
+>  }
+>  
+> -static void bnxt_qplib_service_nq(unsigned long data)
+> +static void bnxt_qplib_service_nq(struct tasklet_struct *t)
+>  {
+> -	struct bnxt_qplib_nq *nq = (struct bnxt_qplib_nq *)data;
+> +	struct bnxt_qplib_nq *nq = from_tasklet(nq, t, nq_tasklet);
+>  	struct bnxt_qplib_hwq *hwq = &nq->hwq;
+>  	int num_srqne_processed = 0;
+>  	int num_cqne_processed = 0;
+> @@ -448,8 +448,7 @@ int bnxt_qplib_nq_start_irq(struct bnxt_qplib_nq *nq, int nq_indx,
+>  
+>  	nq->msix_vec = msix_vector;
+>  	if (need_init)
+> -		tasklet_init(&nq->nq_tasklet, bnxt_qplib_service_nq,
+> -			     (unsigned long)nq);
+> +		tasklet_setup(&nq->nq_tasklet, bnxt_qplib_service_nq);
+>  	else
+>  		tasklet_enable(&nq->nq_tasklet);
+>  
+> diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
+> index 4e211162acee..7261be29fb09 100644
+> +++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
+> @@ -50,7 +50,7 @@
+>  #include "qplib_sp.h"
+>  #include "qplib_fp.h"
+>  
+> -static void bnxt_qplib_service_creq(unsigned long data);
+> +static void bnxt_qplib_service_creq(struct tasklet_struct *t);
+>  
+>  /* Hardware communication channel */
+>  static int __wait_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
+> @@ -79,7 +79,7 @@ static int __block_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
+>  		goto done;
+>  	do {
+>  		mdelay(1); /* 1m sec */
+> -		bnxt_qplib_service_creq((unsigned long)rcfw);
+> +		bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
+>  	} while (test_bit(cbit, cmdq->cmdq_bitmap) && --count);
+>  done:
+>  	return count ? 0 : -ETIMEDOUT;
+> @@ -369,10 +369,10 @@ static int bnxt_qplib_process_qp_event(struct bnxt_qplib_rcfw *rcfw,
+>  }
+>  
+>  /* SP - CREQ Completion handlers */
+> -static void bnxt_qplib_service_creq(unsigned long data)
+> +static void bnxt_qplib_service_creq(struct tasklet_struct *t)
+>  {
+> -	struct bnxt_qplib_rcfw *rcfw = (struct bnxt_qplib_rcfw *)data;
+> -	struct bnxt_qplib_creq_ctx *creq = &rcfw->creq;
+> +	struct bnxt_qplib_creq_ctx *creq = from_tasklet(creq, t, creq_tasklet);
 
-This patch adds check whether passed mac addr is uc or mc and adds
-this mac addr to the corresponding list. Add 'global' variant for
-adding/removing uc addresses similarly to mc.
+This is just:
 
-Signed-off-by: Denys Zagorui <dzagorui@cisco.com>
----
- include/linux/netdevice.h    |  2 +
- include/uapi/linux/sockios.h |  2 +-
- net/core/dev_addr_lists.c    | 75 +++++++++++++++++++++++++++---------
- net/core/dev_ioctl.c         | 13 ++++++-
- 4 files changed, 71 insertions(+), 21 deletions(-)
+  struct bnxt_qplib_rcfw *rcfw = from_tasklet(rcfw, t, crew.creq_tasklet);
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index b0e303f6603f..9394f369be33 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4345,8 +4345,10 @@ int dev_addr_init(struct net_device *dev);
- 
- /* Functions used for unicast addresses handling */
- int dev_uc_add(struct net_device *dev, const unsigned char *addr);
-+int dev_uc_add_global(struct net_device *dev, const unsigned char *addr);
- int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr);
- int dev_uc_del(struct net_device *dev, const unsigned char *addr);
-+int dev_uc_del_global(struct net_device *dev, const unsigned char *addr);
- int dev_uc_sync(struct net_device *to, struct net_device *from);
- int dev_uc_sync_multiple(struct net_device *to, struct net_device *from);
- void dev_uc_unsync(struct net_device *to, struct net_device *from);
-diff --git a/include/uapi/linux/sockios.h b/include/uapi/linux/sockios.h
-index 7d1bccbbef78..f41b152b0268 100644
---- a/include/uapi/linux/sockios.h
-+++ b/include/uapi/linux/sockios.h
-@@ -80,7 +80,7 @@
- #define SIOCGIFHWADDR	0x8927		/* Get hardware address		*/
- #define SIOCGIFSLAVE	0x8929		/* Driver slaving support	*/
- #define SIOCSIFSLAVE	0x8930
--#define SIOCADDMULTI	0x8931		/* Multicast address lists	*/
-+#define SIOCADDMULTI	0x8931		/* Mac address lists	*/
- #define SIOCDELMULTI	0x8932
- #define SIOCGIFINDEX	0x8933		/* name -> if_index mapping	*/
- #define SIOGIFINDEX	SIOCGIFINDEX	/* misprint compatibility :-)	*/
-diff --git a/net/core/dev_addr_lists.c b/net/core/dev_addr_lists.c
-index 54cd568e7c2f..d150c2d84df4 100644
---- a/net/core/dev_addr_lists.c
-+++ b/net/core/dev_addr_lists.c
-@@ -573,6 +573,20 @@ int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr)
- }
- EXPORT_SYMBOL(dev_uc_add_excl);
- 
-+static int __dev_uc_add(struct net_device *dev, const unsigned char *addr,
-+			bool global)
-+{
-+	int err;
-+
-+	netif_addr_lock_bh(dev);
-+	err = __hw_addr_add_ex(&dev->uc, addr, dev->addr_len,
-+			       NETDEV_HW_ADDR_T_UNICAST, global, false, 0);
-+	if (!err)
-+		__dev_set_rx_mode(dev);
-+	netif_addr_unlock_bh(dev);
-+	return err;
-+}
-+
- /**
-  *	dev_uc_add - Add a secondary unicast address
-  *	@dev: device
-@@ -583,18 +597,37 @@ EXPORT_SYMBOL(dev_uc_add_excl);
-  */
- int dev_uc_add(struct net_device *dev, const unsigned char *addr)
- {
--	int err;
--
--	netif_addr_lock_bh(dev);
--	err = __hw_addr_add(&dev->uc, addr, dev->addr_len,
--			    NETDEV_HW_ADDR_T_UNICAST);
--	if (!err)
--		__dev_set_rx_mode(dev);
--	netif_addr_unlock_bh(dev);
--	return err;
-+	return __dev_uc_add(dev, addr, false);
- }
- EXPORT_SYMBOL(dev_uc_add);
- 
-+/**
-+ *	dev_uc_add_global - Add a global unicast address
-+ *	@dev: device
-+ *	@addr: address to add
-+ *
-+ *	Add a global unicast address to the device.
-+ */
-+int dev_uc_add_global(struct net_device *dev, const unsigned char *addr)
-+{
-+	return __dev_uc_add(dev, addr, true);
-+}
-+EXPORT_SYMBOL(dev_uc_add_global);
-+
-+static int __dev_uc_del(struct net_device *dev, const unsigned char *addr,
-+			bool global)
-+{
-+	int err;
-+
-+	netif_addr_lock_bh(dev);
-+	err = __hw_addr_del_ex(&dev->uc, addr, dev->addr_len,
-+			       NETDEV_HW_ADDR_T_UNICAST, global, false);
-+	if (!err)
-+		__dev_set_rx_mode(dev);
-+	netif_addr_unlock_bh(dev);
-+	return err;
-+}
-+
- /**
-  *	dev_uc_del - Release secondary unicast address.
-  *	@dev: device
-@@ -605,18 +638,24 @@ EXPORT_SYMBOL(dev_uc_add);
-  */
- int dev_uc_del(struct net_device *dev, const unsigned char *addr)
- {
--	int err;
--
--	netif_addr_lock_bh(dev);
--	err = __hw_addr_del(&dev->uc, addr, dev->addr_len,
--			    NETDEV_HW_ADDR_T_UNICAST);
--	if (!err)
--		__dev_set_rx_mode(dev);
--	netif_addr_unlock_bh(dev);
--	return err;
-+	return __dev_uc_del(dev, addr, false);
- }
- EXPORT_SYMBOL(dev_uc_del);
- 
-+/**
-+ *	dev_uc_del_global - Delete a global unicast address.
-+ *	@dev: device
-+ *	@addr: address to delete
-+ *
-+ *	Release reference to a unicast address and remove it
-+ *	from the device if the reference count drops to zero.
-+ */
-+int dev_uc_del_global(struct net_device *dev, const unsigned char *addr)
-+{
-+	return __dev_uc_del(dev, addr, true);
-+}
-+EXPORT_SYMBOL(dev_uc_del_global);
-+
- /**
-  *	dev_uc_sync - Synchronize device's unicast list to another device
-  *	@to: destination device
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index b2cf9b7bb7b8..7883bfd920fd 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -7,6 +7,7 @@
- #include <linux/wireless.h>
- #include <net/dsa.h>
- #include <net/wext.h>
-+#include <linux/if_arp.h>
- 
- /*
-  *	Map an interface index to its name (SIOCGIFNAME)
-@@ -299,7 +300,11 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
- 			return -EINVAL;
- 		if (!netif_device_present(dev))
- 			return -ENODEV;
--		return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
-+		if (dev->type == ARPHRD_ETHER &&
-+		    is_unicast_ether_addr(ifr->ifr_hwaddr.sa_data))
-+			return dev_uc_add_global(dev, ifr->ifr_hwaddr.sa_data);
-+		else
-+			return dev_mc_add_global(dev, ifr->ifr_hwaddr.sa_data);
- 
- 	case SIOCDELMULTI:
- 		if (!ops->ndo_set_rx_mode ||
-@@ -307,7 +312,11 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, unsigned int cmd)
- 			return -EINVAL;
- 		if (!netif_device_present(dev))
- 			return -ENODEV;
--		return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
-+		if (dev->type == ARPHRD_ETHER &&
-+		    is_unicast_ether_addr(ifr->ifr_hwaddr.sa_data))
-+			return dev_uc_del_global(dev, ifr->ifr_hwaddr.sa_data);
-+		else
-+			return dev_mc_del_global(dev, ifr->ifr_hwaddr.sa_data);
- 
- 	case SIOCSIFTXQLEN:
- 		if (ifr->ifr_qlen < 0)
--- 
-2.19.1
+No need for the extra container_of
 
+Jason
