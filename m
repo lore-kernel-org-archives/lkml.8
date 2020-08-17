@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B71B20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBA22067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690784;
-	bh=A4X9IdiTBJ1xoQQLa2m88VESOr4Le8PIWGChoLy6KN4=;
+	s=default; t=1597690792;
+	bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVgyZvGmpJt5PfUzmjRujqKZOf49icOXBnYkiF0Gs1MVl3B/PeOe1MzLPeZhwpMWz
-	 niosFOTuEZZJA0VCqOBCaSjNC7veCN+3ACI8BwCkOm3z741TSTJxHNCz29KcQsgbBg
-	 hVBrPDF2k2Y/h0CXv5TxBOyMpD3jUycxTLWorelI=
+	b=mshb1DDdXk/S4aa8iq1RhYWL5a4JWpSt/w55mVMlSgQl5BkItzFMtqaZQ8Zk/MU3q
+	 8rYebxOfm9RSnhEeIA9GZpe0d2MI0oq8D9M4EwvKsI+AslpcZ6FDZEYUkLdgnaysq+
+	 ZNta+X/hjfxKMHLBDdP2JDDFlULAhUhEPUG9U19A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391870AbgHQS7m (ORCPT
+        id S2391877AbgHQS7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:59:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60236 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730854AbgHQPsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:48:25 -0400
+        id S1730852AbgHQPsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:48:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D292065D;
-        Mon, 17 Aug 2020 15:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CD3E20885;
+        Mon, 17 Aug 2020 15:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679304;
-        bh=A4X9IdiTBJ1xoQQLa2m88VESOr4Le8PIWGChoLy6KN4=;
+        s=default; t=1597679298;
+        bh=u6wmnyOOZXtqwxDGaWRzoJFsFE7VNtRuFcd3L5HmiBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4v0QePhW/FuKy4KIz/DW5Tj2Q9tbg4jpqMD6whj9MNV45iVtuaebzA2awccC1qSF
-         wxe2VKHA71CgzZ8nD7zAKRtShS4jylJjrYFdWyJm/0WzznVqTXK8sv9WDgLDcMbiuR
-         O0BKkxffLL3mQg25rF+orfAktpSD4K4/qM8OjBXU=
+        b=j8704IthNOUtJaGUtPudum6bxhZvjn3Hq4jK/MhJLlhN3Wzxv1Ct8umlbv0q2BtH+
+         fmNyY4F3kUZmWkC3xXE6+KITOAGq3j6hAWc24ywYiwalHBGUcXrGTNQnda7FZzmCnt
+         SEkdEKDTlKpriJG8u3UxlYdGZpjKChs45ylJaXzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 166/393] selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
-Date:   Mon, 17 Aug 2020 17:13:36 +0200
-Message-Id: <20200817143827.671007285@linuxfoundation.org>
+Subject: [PATCH 5.7 164/393] cxl: Fix kobject memleak
+Date:   Mon, 17 Aug 2020 17:13:34 +0200
+Message-Id: <20200817143827.571586506@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,46 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 4fccc8c0ff740e62343b6de38426a48b345b95f4 ]
+[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
 
-Since we expect to see warnings every time for many tests, just reset
-the WARN_ONCE flags each time the script runs.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Fixes: 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200625203704.317097-4-keescook@chromium.org
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/lkdtm/run.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/misc/cxl/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-index ee64ff8df8f4d..8383eb89d88a9 100755
---- a/tools/testing/selftests/lkdtm/run.sh
-+++ b/tools/testing/selftests/lkdtm/run.sh
-@@ -8,6 +8,7 @@
- #
- set -e
- TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-+CLEAR_ONCE=/sys/kernel/debug/clear_warn_once
- KSELFTEST_SKIP_TEST=4
+diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
+index f0263d1a1fdf2..d97a243ad30c0 100644
+--- a/drivers/misc/cxl/sysfs.c
++++ b/drivers/misc/cxl/sysfs.c
+@@ -624,7 +624,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
+ 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+ 				  &afu->dev.kobj, "cr%i", cr->cr);
+ 	if (rc)
+-		goto err;
++		goto err1;
  
- # Verify we have LKDTM available in the kernel.
-@@ -67,6 +68,11 @@ cleanup() {
- }
- trap cleanup EXIT
- 
-+# Reset WARN_ONCE counters so we trip it each time this runs.
-+if [ -w $CLEAR_ONCE ] ; then
-+	echo 1 > $CLEAR_ONCE
-+fi
-+
- # Save existing dmesg so we can detect new content below
- dmesg > "$DMESG"
- 
+ 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+ 	if (rc)
 -- 
 2.25.1
 
