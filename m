@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7313AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59432204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDFE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689837;
-	bh=nW21AHRpNbXFTr0vxcK4B0tYx33N8hK0p9KvN3PsyP8=;
+	s=default; t=1597689842;
+	bh=Kp8YB+cckSSzEOMiviR23Op7YTUgP0UQ2ytfzormX48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vhm01WOioAbjv75IJ2/jHMQaSvDn2PuclHtaTRoaI1VrSrBVUFaeng7tqDF1mjhB0
-	 gxN6e+AADHBgWmZB8KlD8lzr48vpDeAcRfvzAEh3tInDGzy/BN3xrpLzORIJ6gfrwd
-	 tYBy/Uo9n1uA1xzldwFH9qAUBbSpJ+38bZVm7bmU=
+	b=uTCfR9njLbA3L+y7QOdTq6C72oRMwxxom/K4BF9zR1gAVepAjRuNAIWHp+utKRIgp
+	 chmGu87MB1PYCtaIgwyR2yYbtV5p/3Y5fG91W7qOEVfDdEEG09UN9EujGA+7M1Jhnt
+	 YFQvk0dCZ0jU71iCWpKpwpNdW/qCc8sR1NxemU/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391422AbgHQSnz (ORCPT
+        id S2403773AbgHQSn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388075AbgHQP4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:44 -0400
+        id S2388079AbgHQP4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:56:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C013C207FF;
-        Mon, 17 Aug 2020 15:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33629206FA;
+        Mon, 17 Aug 2020 15:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679803;
-        bh=nW21AHRpNbXFTr0vxcK4B0tYx33N8hK0p9KvN3PsyP8=;
+        s=default; t=1597679791;
+        bh=Kp8YB+cckSSzEOMiviR23Op7YTUgP0UQ2ytfzormX48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aya4SCtlvczK2miZ5PyG+nLiA2oiUyPmq1mCRXq6naPzbIAzV7ViOdHdD3yQsSd4e
-         whzNF2oWAyF9xHV5YNXCOVpOE6qSv3Swx4Xkc58jKOLwY3zvcZKI06qr7sxt6nVXeV
-         aLC9ggn9glkiv87stZacG+kvrb3W95xFyIo4jUcU=
+        b=ANszUnQRwa0KcNyby+37RwxC5L75vJudGOxVgnSSm04Gp+TKSdE2KUVQB+ot1czxZ
+         pofe+lln4OYfA6bk44PFyOtihg1MzQnIMRWWYVjNcx5MLhqAaKIOIcvlXIlAQQC48r
+         2XBp59TwOXxtmbXX4JaHFxy1oeR3Un2oEq+ew3GE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.7 339/393] tpm: Unify the mismatching TPM space buffer sizes
-Date:   Mon, 17 Aug 2020 17:16:29 +0200
-Message-Id: <20200817143836.040654740@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 336/393] ALSA: usb-audio: fix overeager device match for MacroSilicon MS2109
+Date:   Mon, 17 Aug 2020 17:16:26 +0200
+Message-Id: <20200817143835.896367156@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,165 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit 6c4e79d99e6f42b79040f1a33cd4018f5425030b upstream.
+commit 14a720dc1f5332f3bdf30a23a3bc549e81be974c upstream.
 
-The size of the buffers for storing context's and sessions can vary from
-arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
-enough for most use with three handles (that is how many we allow at the
-moment). Parametrize the buffer size while doing this, so that it is easier
-to revisit this later on if required.
+Matching by device matches all interfaces, which breaks the video/HID
+portions of the device depending on module load order.
 
+Fixes: e337bf19f6af ("ALSA: usb-audio: add quirk for MacroSilicon MS2109")
 Cc: stable@vger.kernel.org
-Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810045319.128745-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm-chip.c   |    9 ++-------
- drivers/char/tpm/tpm.h        |    5 ++++-
- drivers/char/tpm/tpm2-space.c |   26 ++++++++++++++++----------
- drivers/char/tpm/tpmrm-dev.c  |    2 +-
- include/linux/tpm.h           |    1 +
- 5 files changed, 24 insertions(+), 19 deletions(-)
+ sound/usb/quirks-table.h |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -386,13 +386,8 @@ struct tpm_chip *tpm_chip_alloc(struct d
- 	chip->cdev.owner = THIS_MODULE;
- 	chip->cdevs.owner = THIS_MODULE;
- 
--	chip->work_space.context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.context_buf) {
--		rc = -ENOMEM;
--		goto out;
--	}
--	chip->work_space.session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.session_buf) {
-+	rc = tpm2_init_space(&chip->work_space, TPM2_SPACE_BUFFER_SIZE);
-+	if (rc) {
- 		rc = -ENOMEM;
- 		goto out;
- 	}
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -59,6 +59,9 @@ enum tpm_addr {
- 
- #define TPM_TAG_RQU_COMMAND 193
- 
-+/* TPM2 specific constants. */
-+#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-+
- struct	stclear_flags_t {
- 	__be16	tag;
- 	u8	deactivated;
-@@ -228,7 +231,7 @@ unsigned long tpm2_calc_ordinal_duration
- int tpm2_probe(struct tpm_chip *chip);
- int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip);
- int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
--int tpm2_init_space(struct tpm_space *space);
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size);
- void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
- void tpm2_flush_space(struct tpm_chip *chip);
- int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -38,18 +38,21 @@ static void tpm2_flush_sessions(struct t
- 	}
- }
- 
--int tpm2_init_space(struct tpm_space *space)
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size)
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3623,7 +3623,13 @@ ALC1220_VB_DESKTOP(0x26ce, 0x0a01), /* A
+  * with.
+  */
  {
--	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->context_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (!space->context_buf)
- 		return -ENOMEM;
- 
--	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->session_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (space->session_buf == NULL) {
- 		kfree(space->context_buf);
-+		/* Prevent caller getting a dangling pointer. */
-+		space->context_buf = NULL;
- 		return -ENOMEM;
- 	}
- 
-+	space->buf_size = buf_size;
- 	return 0;
- }
- 
-@@ -311,8 +314,10 @@ int tpm2_prepare_space(struct tpm_chip *
- 	       sizeof(space->context_tbl));
- 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
--	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-+	memcpy(chip->work_space.context_buf, space->context_buf,
-+	       space->buf_size);
-+	memcpy(chip->work_space.session_buf, space->session_buf,
-+	       space->buf_size);
- 
- 	rc = tpm2_load_space(chip);
- 	if (rc) {
-@@ -492,7 +497,7 @@ static int tpm2_save_space(struct tpm_ch
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->context_tbl[i],
--				       space->context_buf, PAGE_SIZE,
-+				       space->context_buf, space->buf_size,
- 				       &offset);
- 		if (rc == -ENOENT) {
- 			space->context_tbl[i] = 0;
-@@ -509,9 +514,8 @@ static int tpm2_save_space(struct tpm_ch
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->session_tbl[i],
--				       space->session_buf, PAGE_SIZE,
-+				       space->session_buf, space->buf_size,
- 				       &offset);
--
- 		if (rc == -ENOENT) {
- 			/* handle error saving session, just forget it */
- 			space->session_tbl[i] = 0;
-@@ -557,8 +561,10 @@ int tpm2_commit_space(struct tpm_chip *c
- 	       sizeof(space->context_tbl));
- 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
--	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-+	memcpy(space->context_buf, chip->work_space.context_buf,
-+	       space->buf_size);
-+	memcpy(space->session_buf, chip->work_space.session_buf,
-+	       space->buf_size);
- 
- 	return 0;
- out:
---- a/drivers/char/tpm/tpmrm-dev.c
-+++ b/drivers/char/tpm/tpmrm-dev.c
-@@ -21,7 +21,7 @@ static int tpmrm_open(struct inode *inod
- 	if (priv == NULL)
- 		return -ENOMEM;
- 
--	rc = tpm2_init_space(&priv->space);
-+	rc = tpm2_init_space(&priv->space, TPM2_SPACE_BUFFER_SIZE);
- 	if (rc) {
- 		kfree(priv);
- 		return -ENOMEM;
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -96,6 +96,7 @@ struct tpm_space {
- 	u8 *context_buf;
- 	u32 session_tbl[3];
- 	u8 *session_buf;
-+	u32 buf_size;
- };
- 
- struct tpm_bios_log {
+-	USB_DEVICE(0x534d, 0x2109),
++	.match_flags = USB_DEVICE_ID_MATCH_DEVICE |
++		       USB_DEVICE_ID_MATCH_INT_CLASS |
++		       USB_DEVICE_ID_MATCH_INT_SUBCLASS,
++	.idVendor = 0x534d,
++	.idProduct = 0x2109,
++	.bInterfaceClass = USB_CLASS_AUDIO,
++	.bInterfaceSubClass = USB_SUBCLASS_AUDIOCONTROL,
+ 	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
+ 		.vendor_name = "MacroSilicon",
+ 		.product_name = "MS2109",
 
 
