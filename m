@@ -2,106 +2,101 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F17AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F2B2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB002063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WW6BjLlH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nD24KhF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgHQI1f (ORCPT
+        id S1727996AbgHQI2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52716 "EHLO
+        Mon, 17 Aug 2020 04:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgHQI0T (ORCPT
+        with ESMTP id S1728172AbgHQI1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:26:19 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8943EC06138A
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:26:19 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id i26so11598341edv.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:26:19 -0700 (PDT)
+        Mon, 17 Aug 2020 04:27:46 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB55C06138A
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f1so14076138wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EB784NjPICkYR6SWnOZXgVJnpSq6x26Bh+bf4QaSgmE=;
-        b=WW6BjLlHMZolL6jV9wGUJ2Nqna4uXwJlebSkTA9urlIi6Sa4Pa/NFLVlhsaFlRrn9E
-         XQngChT6EYMcGX3cA8zMULqnTs8j60bTV+lfjDankwdHtdAkUKN1PbSGAMxLTWewd3c0
-         abf5dN1kL9l6jxvEgxS3raK9zw14TFbm9RQxo=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/MeQgobB67Kfom3s+YkCdvLeiREa8hjlhCt5MNPwpVY=;
+        b=nD24KhF8r6AcrSKMIX6irVZl79yTcBlQd36rEnuhaZo8d/9DFl3/aWhsHqODTW4dWE
+         6bgjKA+PPn5QUM0eCBPRQsPM/gQbhn2G4vworT+IQsHnZt8JcW5ITsjGcs0Q0Cvt9kJf
+         JM7CHEZvaRVRrjhLXofuMnBMXAh4oFIgfQ7tHdIl5VNtE9ose8Ul7M52HH03GPs1agwo
+         RoePHIwq+FOy5078Qlj0rHuGiCxu7Mlz3mx0xqhgi8eG+kfXDUigxkMJvGWK17Vd9Gs8
+         IqISumd0XG8U/L5gHxzmIEealTXEGjAzqIqMvhXS7hpPV33Wvl5zSjp+74t+N+UpZftC
+         P1wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EB784NjPICkYR6SWnOZXgVJnpSq6x26Bh+bf4QaSgmE=;
-        b=qPyfn9E1M3kSW6IJgsqg0C0HmP5iYtsC2svwhg25eyCanvYRr4jGI9Xtkjv3rusNYL
-         pajjQXkpCKqIEbzQ1lieMCjuXyhLgkgaiI9Hl5ccNSRYRa2MQfHHfr9proImTBWXCW38
-         jiX/zW0XnubcPupKC+Bz0cgUrgOnaMTHXWJCwO/VEcba18bxkZiK68V2m7U5PTJ3IUUh
-         H+t6T8D9aArgMxMejP/8PTbqfK4g1N6DRD4L5BHCVeOAKg/3VWYW9gkwdEpLzVKaZ4n6
-         zj+5iram3352DtG7PEje+kFlKGhrfgsyRFsg8yDcyNzTobvwdf+2Zju7knohGQNjtSR/
-         G6Uw==
-X-Gm-Message-State: AOAM533hVAYrnvP7DEdqjvyDWEB1hBpnkh87XZ7/FGAf8LGrs9+/AbLI
-        Pi6yByJkvtiQCodf24VsxqYQUQ==
-X-Google-Smtp-Source: ABdhPJxsKL8nm53WAnCAbGQdXqx/yIadsPW7nUTLAsMfgGi8OvTQ7NHOoDONUkkkyNaMHrIoZuYVvQ==
-X-Received: by 2002:a50:c3c4:: with SMTP id i4mr13899573edf.244.1597652778082;
-        Mon, 17 Aug 2020 01:26:18 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id v13sm14170727edl.9.2020.08.17.01.26.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 01:26:17 -0700 (PDT)
-Subject: Re: [PATCH 08/30] net: wireless: ath: carl9170: Mark 'ar9170_qmap' as
- __maybe_unused
-To:     Christian Lamparter <chunkeey@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <20200814113933.1903438-9-lee.jones@linaro.org>
- <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <9776eb47-6b83-a891-f057-dd34d14ea16e@rasmusvillemoes.dk>
-Date:   Mon, 17 Aug 2020 10:26:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/MeQgobB67Kfom3s+YkCdvLeiREa8hjlhCt5MNPwpVY=;
+        b=IQY5w1Vd+aB0Phv6NyV0J2dfO/C6uJBiJ1Ri3zNODu8RzKbanoFp9WWEtjuUnprKwd
+         xO0FQNRYjbrZyKCKzh80VQ3WSShVhn7I9PnVge1Ww2dL9bRP1oosjKc3LM/OQIcRVdZu
+         UNQT3DraLNDQhZcuSLXvD+EtSRwbztTATeXdi0tXwj1+RhO3V7c5dCKp2/O36I7BW91N
+         9kzHGrw7ZMiEoKKvlpRNJNs4+bnvQfwx4Y7NUfTRHPAFvCN67sHgUt8Nwrj8FNfSbg4d
+         gJgLyUDPo3tSgFaS1G48B4fXzk3BoNO6rdIoCy9SxdSYfCN+hT3tCTF6v6/Fk9XENnLT
+         kmIg==
+X-Gm-Message-State: AOAM530jX/eCc38UnskjpmLMHCjqxlSUXSqXGPsF3IIco3GCdavN6UFK
+        05+JpcGixmpY0gyMFkZ94WMcGw==
+X-Google-Smtp-Source: ABdhPJxRASNZ/4Ci1xX88rgpdzZo6Ubi7BbRnlcmzgqWzruYtPmJ7w373dxouwOPYL109NNb6CuO7A==
+X-Received: by 2002:adf:ca06:: with SMTP id o6mr13656275wrh.181.1597652864488;
+        Mon, 17 Aug 2020 01:27:44 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id h5sm33270888wrc.97.2020.08.17.01.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:27:43 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Elliot Berman <eberman@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 0/2] Venus - fix firmware load failure
+Date:   Mon, 17 Aug 2020 11:27:21 +0300
+Message-Id: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2020 17.14, Christian Lamparter wrote:
-> On 2020-08-14 13:39, Lee Jones wrote:
->> 'ar9170_qmap' is used in some source files which include carl9170.h,
->> but not all of them.  Mark it as __maybe_unused to show that this is
->> not only okay, it's expected.
->>
->> Fixes the following W=1 kernel build warning(s)
-> 
-> Is this W=1 really a "must" requirement? I find it strange having
-> __maybe_unused in header files as this "suggests" that the
-> definition is redundant.
+Hi,
 
-In this case it seems one could replace the table lookup with a
+Changes since v1:
+ * Move the new scm call above assign mem - Elliot Berman
 
-static inline u8 ar9170_qmap(u8 idx) { return 3 - idx; }
+v1 can be found at [1].
 
-gcc doesn't warn about unused static inline functions (or one would have
-a million warnings to deal with). Just my $0.02.
+regards,
+Stan
 
-Rasmus
+[1] https://lkml.org/lkml/2020/7/9/472
+
+Stanimir Varbanov (2):
+  firmware: qcom_scm: Add memory protect virtual address ranges
+  venus: firmware: Set virtual address ranges
+
+ drivers/firmware/qcom_scm.c                  | 24 ++++++++++++++++++++
+ drivers/firmware/qcom_scm.h                  |  1 +
+ drivers/media/platform/qcom/venus/core.c     |  4 ++++
+ drivers/media/platform/qcom/venus/core.h     |  4 ++++
+ drivers/media/platform/qcom/venus/firmware.c | 18 ++++++++++++++-
+ include/linux/qcom_scm.h                     |  8 ++++++-
+ 6 files changed, 57 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
