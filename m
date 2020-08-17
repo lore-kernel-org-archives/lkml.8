@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76741C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412FC20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232A420738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688514;
-	bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
+	s=default; t=1597688518;
+	bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=deP0N76f9wMK5BHAuVad51Q7GB/h4GEmn0L89OiJNSTU0FFO/jbNmIenmdql0eKMT
-	 IN0rrpzqw/AbKPogVLCqLpeWPZJ7hraTKC+aYSTE6eG6lRhjefUCd3bZFswW1r6qd3
-	 dLQNDUX/xeP80n8F2egYo8xtJeg9OmvodC4O24kU=
+	b=PsW2oD4iPZq2rBhfIScEskkLM46HtNS++jBAbrHx6LVqzzeOtMSzmZAAC3TKTC3Ik
+	 4tYGMNoCVLKb505dPh8yl3u5GGQ6Ii5GzpL0fVDd/BZSMbrUdFl75WvVPp+hPbi+iD
+	 tW259Fh8Q92hB1n7URYLoTBH8HkfpwJ3GSGsJmIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390902AbgHQSVu (ORCPT
+        id S2390914AbgHQSVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbgHQQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:03:54 -0400
+        id S2388255AbgHQQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BB920729;
-        Mon, 17 Aug 2020 16:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 204B4206FA;
+        Mon, 17 Aug 2020 16:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680233;
-        bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
+        s=default; t=1597680220;
+        bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAny6X7oYmoyWHia/YMff1gDK04OwHXY3PdyN1o27b6x4eG4gTF9KbNeQjm7JtYEB
-         UgXgP5L2KbeGjHyb1EQt4YsU5eH7uPxKQHDAncTEkv5+J3K9IrNnLyspFbL3zkQdl7
-         V5sPbQ2lITmnXT/c0vua9Q14uHWVXTEtdlKbjb9E=
+        b=ePs8SNWi5E8vq3w3+F8yI0P08Z6iJ3saecNfdL616WTb2ZveBZobOVtfYVhWrmZkA
+         jlMbSjgZ1b+Nn7Qdi3Z41adGDFBBRuF6SZTlaj9GYbJ9M5EEbp59pS7yY6JlS4rJRA
+         rU5k7R9CY3MSXN34Vq6wQnZwl87RPfex7W5tGwSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 105/270] leds: lm355x: avoid enum conversion warning
-Date:   Mon, 17 Aug 2020 17:15:06 +0200
-Message-Id: <20200817143801.012141646@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 059/270] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Mon, 17 Aug 2020 17:14:20 +0200
+Message-Id: <20200817143758.713045200@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -59,58 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+hi3660-hikey960.dts:
+  Define a 'ports' node for 'adv7533: adv7533@39' and the
+  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+  binding.
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+  This fills the requirements to meet the binding requirements,
+  remote endpoints are not defined.
 
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
+hi6220-hikey.dts:
+  Change property name s/pd-gpio/pd-gpios, gpio properties should be
+  plural. This is just a cosmetic change.
 
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index a5abb499574b8..129f475aebf29 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -165,18 +165,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e035cf195b19a..8c4bfbaf3a806 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+ 		reg = <0x39>;
++		adi,dsi-lanes = <4>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
+ 	};
+ };
  
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index c14205cd6bf5c..3e47150c05ec2 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -516,7 +516,7 @@ adv7533: adv7533@39 {
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <1 2>;
+-		pd-gpio = <&gpio0 4 0>;
++		pd-gpios = <&gpio0 4 0>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
+ 
 -- 
 2.25.1
 
