@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE902C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56569C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4C520758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A0820758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTaQvUr+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1cZQ4ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgHQI5c (ORCPT
+        id S1728615AbgHQI5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        Mon, 17 Aug 2020 04:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgHQI51 (ORCPT
+        with ESMTP id S1728562AbgHQI5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:57:27 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E209EC061388
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:26 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c6so7495631pje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:26 -0700 (PDT)
+        Mon, 17 Aug 2020 04:57:31 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF06C061388
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g15so3273298plj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 01:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Th97jQWizU+MR3H8KsmSgYMMcn/Wb6U+3t12llCRyTA=;
-        b=MTaQvUr+9I4xHzCOKxRhJIanXnw2ADB+kr39T+fF3C6zzpdo9HLs+qL1IBLzK3SWKB
-         kFHMeMi42mIMhCMgjlyKh1EueKFLpcVlc8KJaH9AsB2CgfbL8z1QOikA4G/51O3uLe77
-         DBNBkRaC4c9aHaiHeJRkntRZzD6pcFUC4LRM0rBw9zBPm9uYhdb+O+8U/f3j32qtI0ni
-         jvm1avJSfp92oDURGAVXZ7Ca2+81BpCwthDzlFy+8XwoIPTqoj0wjs9XosDd8C3xwMjg
-         Hl1KkmqbTOv/c8leI+BpaR/Yf26jJfnLHHYd9+Vvmj7bzbmoK6NGqZopyx27BtqEJESx
-         Z2bA==
+        bh=GYPUX223cEk7sfseKTxO6Wl2a86PZnTF5NOlEuFwhHI=;
+        b=e1cZQ4ubmOyb/7m500QwlXNssWIHPs/Q6N0IXUiEuPicA0waQPM4rXDUgS7oGR1Qi5
+         SxkjfKNWKAdDGf6wQs8A5OntcwIGD6wJ5R4FQSDrNtT46ITVL+EnIO0dBjRhPZ31NI+9
+         xcBpGocniVNBTR3H6kqL1Om6YbYXsebwlyln067CWz+8PoKojJEszmQQbUKxcEP459M2
+         iBXIB5ZyzBj56xcaODPTZYpADcPDMshAIby+J/sslm3j9yQN7gB6mhZ2XsW+ifVENTAz
+         BLGumgFxMoG1PEiJKxXhZH7jwu32FIbUgdIGMW2GH6TsGWDQB5JTr1WO/Xy+NbOkTUR5
+         mxUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Th97jQWizU+MR3H8KsmSgYMMcn/Wb6U+3t12llCRyTA=;
-        b=mme1b8nV6bLqxqkD7F/bkwOreOsa/XqUhzrVMFfU6nrm4/CE5q2W2KLEDf6pHNMLMF
-         pGq3MIvuJHB1Y4tmcFab2sSaM/R7rHAMW6FyS9ku+cP80pSTiy6OZUrBWE4vumsNznQM
-         PSA8dQTaP7EkfCRYKs+yvBTZ9/lsonT6wVzctGZ+vXebIvXjGAeMztB7HjHDhmPo+NcM
-         kADBi2isHs24m6H1joODy3gsFg1qEYruB7dlULpZ8DvNT9wMMZO9ztcryZFzBWwIgn40
-         8cK1we8eqW32fVhiXQjBfi5hsCxTcySPLXJDWawzsHkZMkZh+cFJ9vJvgL3USsidwVTZ
-         jgGg==
-X-Gm-Message-State: AOAM531HX+jJ7DEKcCdO1YummiQ1G0uFMmn26LG0Zqcao/eLDYYsZpIY
-        yK1eSk9E5PBLLOA8CwzaD7c=
-X-Google-Smtp-Source: ABdhPJw65ZcmjWOmkFF4uogzLH35eLQ8onzgQaFSgowQsSRLWB/e35uC7LQ7y1Dc63+SWTav/W5nlA==
-X-Received: by 2002:a17:902:323:: with SMTP id 32mr2946718pld.59.1597654646463;
-        Mon, 17 Aug 2020 01:57:26 -0700 (PDT)
+        bh=GYPUX223cEk7sfseKTxO6Wl2a86PZnTF5NOlEuFwhHI=;
+        b=WgX8QRA4eFlkmTMm8SguDFyAhh0tw4qXbodj+YlzFtdHPp1XwOEYorR/sI6SmoS/6s
+         IUxm/Y6XG7O4sK8Q5AjLgGjinU0NoQwyUvndq2kGRxQqIb3o+53I+rPeLf8QLsiSecct
+         iT7tuxC/FLVhAT6wnU7RmpgDH/s+JPqTIFYDKhpy9DpsyuBdoWdFMfjdGIV1ZX956nyi
+         dsJf60ofrjgw+ILJ9JEmNC0J93OGpD8M7EspD+i5GOO5pNrwLBeFbiP8NPrUfZignppx
+         e+ooMVk+C7v5zhHUnX8fAavSnz3jnhrHEyGXXUrPBckogsYBsk4bARcEbYlxQynlOuBP
+         brow==
+X-Gm-Message-State: AOAM531NE8xt1f6ngUNz2ZDg87e8Uz5e/6lTX/ig4HqqGRTILtmRfoBi
+        NnNiscDaIY66LoolieY+ovw=
+X-Google-Smtp-Source: ABdhPJwIJG3YXsNl5fJt9BlQ6Vtf6Rc8gfiB60iBmkaUop2zKiVr9jOHcWia3jkqjMEsJzNj8Bm4+w==
+X-Received: by 2002:a17:902:9e04:: with SMTP id d4mr10015126plq.296.1597654650775;
+        Mon, 17 Aug 2020 01:57:30 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id j5sm19057245pfg.80.2020.08.17.01.57.22
+        by smtp.gmail.com with ESMTPSA id j5sm19057245pfg.80.2020.08.17.01.57.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:57:25 -0700 (PDT)
+        Mon, 17 Aug 2020 01:57:30 -0700 (PDT)
 From:   Allen Pais <allen.cryptic@gmail.com>
 To:     perex@perex.cz, tiwai@suse.com, clemens@ladisch.de,
         o-takashi@sakamocchi.jp, timur@kernel.org, nicoleotsuka@gmail.com,
@@ -67,9 +67,9 @@ Cc:     keescook@chromium.org, alsa-devel@alsa-project.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 02/10] sound: firewire: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:26:55 +0530
-Message-Id: <20200817085703.25732-3-allen.cryptic@gmail.com>
+Subject: [PATCH 03/10] sound: asihpi: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:26:56 +0530
+Message-Id: <20200817085703.25732-4-allen.cryptic@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817085703.25732-1-allen.cryptic@gmail.com>
 References: <20200817085703.25732-1-allen.cryptic@gmail.com>
@@ -88,43 +88,37 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- sound/firewire/amdtp-stream.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/pci/asihpi/asihpi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/sound/firewire/amdtp-stream.c b/sound/firewire/amdtp-stream.c
-index f8586f75441d..ee1c428b1fd3 100644
---- a/sound/firewire/amdtp-stream.c
-+++ b/sound/firewire/amdtp-stream.c
-@@ -64,7 +64,7 @@
- #define IT_PKT_HEADER_SIZE_CIP		8 // For 2 CIP header.
- #define IT_PKT_HEADER_SIZE_NO_CIP	0 // Nothing.
- 
--static void pcm_period_tasklet(unsigned long data);
-+static void pcm_period_tasklet(struct tasklet_struct *t);
- 
- /**
-  * amdtp_stream_init - initialize an AMDTP stream structure
-@@ -94,7 +94,7 @@ int amdtp_stream_init(struct amdtp_stream *s, struct fw_unit *unit,
- 	s->flags = flags;
- 	s->context = ERR_PTR(-1);
- 	mutex_init(&s->mutex);
--	tasklet_init(&s->period_tasklet, pcm_period_tasklet, (unsigned long)s);
-+	tasklet_setup(&s->period_tasklet, pcm_period_tasklet);
- 	s->packet_index = 0;
- 
- 	init_waitqueue_head(&s->callback_wait);
-@@ -441,9 +441,9 @@ static void update_pcm_pointers(struct amdtp_stream *s,
- 	}
+diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
+index 023c35a2a951..35e76480306e 100644
+--- a/sound/pci/asihpi/asihpi.c
++++ b/sound/pci/asihpi/asihpi.c
+@@ -921,10 +921,10 @@ static void snd_card_asihpi_timer_function(struct timer_list *t)
+ 		add_timer(&dpcm->timer);
  }
  
--static void pcm_period_tasklet(unsigned long data)
-+static void pcm_period_tasklet(struct tasklet_struct *t)
+-static void snd_card_asihpi_int_task(unsigned long data)
++static void snd_card_asihpi_int_task(struct tasklet_struct *t)
  {
--	struct amdtp_stream *s = (void *)data;
-+	struct amdtp_stream *s = from_tasklet(s, t, period_tasklet);
- 	struct snd_pcm_substream *pcm = READ_ONCE(s->pcm);
+-	struct hpi_adapter *a = (struct hpi_adapter *)data;
+-	struct snd_card_asihpi *asihpi;
++	struct snd_card_asihpi *asihpi = from_tasklet(asihpi, t, t);
++	struct hpi_adapter *a = asihpi->hpi;
  
- 	if (pcm)
+ 	WARN_ON(!a || !a->snd_card || !a->snd_card->private_data);
+ 	asihpi = (struct snd_card_asihpi *)a->snd_card->private_data;
+@@ -2871,8 +2871,7 @@ static int snd_asihpi_probe(struct pci_dev *pci_dev,
+ 	if (hpi->interrupt_mode) {
+ 		asihpi->pcm_start = snd_card_asihpi_pcm_int_start;
+ 		asihpi->pcm_stop = snd_card_asihpi_pcm_int_stop;
+-		tasklet_init(&asihpi->t, snd_card_asihpi_int_task,
+-			(unsigned long)hpi);
++		tasklet_setup(&asihpi->t, snd_card_asihpi_int_task);
+ 		hpi->interrupt_callback = snd_card_asihpi_isr;
+ 	} else {
+ 		asihpi->pcm_start = snd_card_asihpi_pcm_timer_start;
 -- 
 2.17.1
 
