@@ -2,110 +2,136 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB36FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70890206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbABWtb8"
+	by mail.kernel.org (Postfix) with ESMTP id A9DE020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597684912;
+	bh=bt8auQMASs61Uors6Csh903y3WqUBEQ+mJDO41OeRX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R27BHdYELAnCpQG01TAadJ5vUiC9su/eTgtsFt5D3tF+t8pDpfzdD29KGWIDfGjKR
+	 m6LUC3Qk3Wk1wBg3pl3M8fwOJe4VKYK+yE8kuZBC7hUlQFRl7tE8ptkkbMKadrDAJo
+	 WSEDQ9L3BOZTqn1WaMdIYxtANkwRlqFQq5QP3DxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389632AbgHQRUx (ORCPT
+        id S2389537AbgHQRVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387696AbgHQQWR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:22:17 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CAEC061389;
-        Mon, 17 Aug 2020 09:22:17 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id u10so7767822plr.7;
-        Mon, 17 Aug 2020 09:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LMklsHHTMxijqDeAVwRgPfCmNnVtewqnmZOiIx8IoQs=;
-        b=RbABWtb8XXpDsj3fj6OykBcPLZ5s6mzXo5+8O5lLzibS4H/7sSSbJxgK232d3ZHNl1
-         b9OzjD8Evbx+rgydLEzlQePAE9vfUy5L6WAd/HPRFwk/FX68hop3CG7mzh3ZM81mv6Sx
-         syKtTcwlb9dGPXkYfbADlIa/5LOrPQHNFDoPCojDFrab605RRle/eZNq65gZHtMmMWrU
-         V0k8w/Htzxgdw5ge65ajA54zbKU9mqntHLqH2bMvqPu/STQuBK6D5VB8TdOgcvrSTl2F
-         ssnNqEgnzGyi/N+mbujL5peAmlxByvmEpZg6BnM7T5YM+fbbsqtTUqQQ8HBqO++dG3Np
-         sTNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LMklsHHTMxijqDeAVwRgPfCmNnVtewqnmZOiIx8IoQs=;
-        b=RKF7co9JYCShv/xVHQ6LNjbpkgHxdilaA6b5RtU0LGdRbARfmv5c2NIxd+mbskhIaA
-         /volxc3MsSAOJufVPXTiND1jaaiwhbkeKL7gdb8KXXopacthtC6RuSTe9Qrf90nT7sm/
-         WKsyqLTZFyfj+fQrrHBkytIpOwZJN7X7iv6TBlNYc2QDJVDGuoUjbCb9OZABoO0CxjsF
-         SjU2uXSn6Dc9+zGWTRe95Eaappb+ymR2ne2+7Aam8NlQ9KVp5+pCy43Bs5NvAQHAnoOA
-         uEZRxeE50sWxYjSU1kNwoWc4VGqJZS+m1VGgWTzoGkQCwP8Q6PJbLLxhocdMe3zjOCwA
-         yhpw==
-X-Gm-Message-State: AOAM532LqqqiQ6gGX89k91T9f3z+8hXl1wfZcV1z+FPsMMP/ajSPy8EL
-        tWfrR6q+2gfsGPHfLxcMjKo=
-X-Google-Smtp-Source: ABdhPJxZqVKsxln0UatgdMDzqUQzs7RKNdYGMqEbSpKXAB2AkdX/2A4LN0FQkPSE/xgeFXUS77iQIw==
-X-Received: by 2002:a17:902:7616:: with SMTP id k22mr12281766pll.25.1597681336661;
-        Mon, 17 Aug 2020 09:22:16 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id w16sm20513732pfq.13.2020.08.17.09.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 09:22:15 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/gpu: make ringbuffer readonly
-Date:   Mon, 17 Aug 2020 09:23:09 -0700
-Message-Id: <20200817162309.362032-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 17 Aug 2020 13:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730752AbgHQQWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:22:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D6C02063A;
+        Mon, 17 Aug 2020 16:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597681371;
+        bh=bt8auQMASs61Uors6Csh903y3WqUBEQ+mJDO41OeRX8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BsdV5+swurJnpwiMu+96tzx7cgZ4BuNmSQ0jSLzhF5k5sFvj2UFTAW2e7hSy2t4dp
+         6ZnLQ28n8Oc+gFoEgZJXnPpxKvo+cxYIS+cj3SQVPmv2E7St+8JYqs1Jw/t35cKehI
+         +Fx7MPQYVzw/BiClKvdjnymBgmdKF/7rb77mED34=
+Date:   Mon, 17 Aug 2020 17:48:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        h.peter.anvin@intel.com, tglx@linutronix.de, corbet@lwn.net,
+        linux-spdx@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] [v2] Documentation: clarify driver licensing rules
+Message-ID: <20200817154831.GF699147@kroah.com>
+References: <20200814145625.8B708079@viggo.jf.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814145625.8B708079@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Fri, Aug 14, 2020 at 07:56:25AM -0700, Dave Hansen wrote:
+> 
+> From: Dave Hansen <dave.hansen@linux.intel.com>
+> 
+> Greg has challenged some recent driver submitters on their license
+> choices. He was correct to do so, as the choices in these instances
+> did not always advance the aims of the submitters.
+> 
+> But, this left submitters (and the folks who help them pick licenses)
+> a bit confused. They have read things like
+> Documentation/process/license-rules.rst which says:
+> 
+> 	individual source files can have a different license
+> 	which is required to be compatible with the GPL-2.0
+> 
+> and Documentation/process/submitting-drivers.rst:
+> 
+> 	We don't insist on any kind of exclusive GPL licensing,
+> 	and if you wish ... you may well wish to release under
+> 	multiple licenses.
+> 
+> As written, these appear a _bit_ more laissez faire than we've been in
+> practice lately. It sounds like we at least expect submitters to make
+> a well-reasoned license choice and to explain their rationale. It does
+> not appear that we blindly accept anything that is simply
+> GPLv2-compatible.
+> 
+> Drivers appear to be the most acute source of misunderstanding, so fix
+> the driver documentation first. Update it to clarify expectations.
+> 
+> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: H. Peter Anvin <h.peter.anvin@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-spdx@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> --
+> 
+> Changes from v1:
+>  * Remove mention of maintainers enforcing particular license
+>    choices.
+>  * Change the wording to ensure that folks understand that the
+>    trigger that requires an explanation is not multiple
+>    licenses per se, but non-GPL licenses.  You could argue that
+>    GPLv2-or-later is multiple liceses, for instance.
+> ---
+> 
+>  b/Documentation/process/submitting-drivers.rst |    9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff -puN Documentation/process/submitting-drivers.rst~clarify-dual-licensing Documentation/process/submitting-drivers.rst
+> --- a/Documentation/process/submitting-drivers.rst~clarify-dual-licensing	2020-08-14 07:42:06.300480229 -0700
+> +++ b/Documentation/process/submitting-drivers.rst	2020-08-14 07:53:10.373478573 -0700
+> @@ -60,10 +60,11 @@ What Criteria Determine Acceptance
+>  
+>  Licensing:
+>  		The code must be released to us under the
+> -		GNU General Public License. We don't insist on any kind
+> -		of exclusive GPL licensing, and if you wish the driver
+> -		to be useful to other communities such as BSD you may well
+> -		wish to release under multiple licenses.
+> +		GNU General Public License. If you wish the driver to be
+> +		useful to other communities such as BSD you may release
+> +		under multiple licenses. If you choose to release under
+> +		licenses other than the GPL, you should include your
+> +		rationale for your license choices in your cover letter.
+>  		See accepted licenses at include/linux/module.h
+>  
+>  Copyright:
+> _
 
-The GPU has no business writing into the ringbuffer, let's make it
-readonly to the GPU.
+Looks good, thanks for the modifications:
 
-Fixes: 7198e6b03155 ("drm/msm: add a3xx gpu support")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/msm_ringbuffer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.c b/drivers/gpu/drm/msm/msm_ringbuffer.c
-index e397c44cc011..39ecb5a18431 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.c
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.c
-@@ -27,7 +27,8 @@ struct msm_ringbuffer *msm_ringbuffer_new(struct msm_gpu *gpu, int id,
- 	ring->id = id;
- 
- 	ring->start = msm_gem_kernel_new(gpu->dev, MSM_GPU_RINGBUFFER_SZ,
--		MSM_BO_WC, gpu->aspace, &ring->bo, &ring->iova);
-+		MSM_BO_WC | MSM_BO_GPU_READONLY, gpu->aspace, &ring->bo,
-+		&ring->iova);
- 
- 	if (IS_ERR(ring->start)) {
- 		ret = PTR_ERR(ring->start);
--- 
-2.26.2
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
