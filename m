@@ -2,131 +2,163 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1562072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvMzuAxS"
+	by mail.kernel.org (Postfix) with ESMTP id C2FB12072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597691571;
+	bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dPlvXCAkvmtC0GgJJ2BnVAtG/E9qyrgDNrBSiQz5YwP+PA8x0YVnRqemaJUfMnRBV
+	 uaFhQmFiLGjGqRv9llVotASj0dAQmItBsIXEjofbuZRJfl210Ssou824S/r0sV22UY
+	 XxzcXA6yCly9X+7XwbLquWKx/niQvN2Ks+3ibHsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392046AbgHQTMe (ORCPT
+        id S2392134AbgHQTMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730690AbgHQTM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:12:26 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C642FC061389;
-        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q14so15501476ilj.8;
-        Mon, 17 Aug 2020 12:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
-        b=GvMzuAxS6elmKSXxwtmwDg4ZABKQ94RBoIywyhmFuxzOvYj70kocfV6jjnvsD6xJUG
-         TDoxSm0valHIzQ+TX5vr9M31BeFGUFSufYX4P6oEOMp0EM+3WgULq2SPTUHCgsOIRxuI
-         fDyMPGMz+v+4byLbGWFj/UVM5255nK7fua7CeNib7oKaPFCl1EXmMDRODEX3VnP75fLd
-         grnlAHLzvu/8yvLB6wGOmLG/dhoY8pJbKuZoJFz1OrzTsTTMBng+mF7Yb3wcndmk68im
-         uw4FgY0JdtfocFKOeNcsRmidTCINPH/bEXdOXIZv0ihpFzBXEJoD1Qtei9Vvrm3Cod6j
-         Eglg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NnKCBhQp2Gdr4n0TX2Bi3YpuER7JXpHBIDQP8R6n9AI=;
-        b=VWAHb/g8D5UURwdhTs2KJ3iPt66p3RPHgiSwFuTRl6+q2LEhQVFLlqk1wuR66+8KpB
-         06KL1LRdLwwxwbyLcS8Ou/j4EhmIhrpPt6Qj+dgkNbhT05jBfmtgUqowKE05yA0CgLU1
-         UCA/QDq9ATyXYc/pL1wtA/58rqkilEA+iXOg6BJSk90xA9TS7ljmD44O+2twcekHMG/7
-         iMw4sjqJZx/IhPeWhXKdZrtwMg11nG/VliCxHK22Q3tyYSyiEj5DjVfIQZj5emz1VrEh
-         0Ru2u3M1v1Okae6XLll76NauQa0BlEjMfKiaf4rgBAjakw9WVBrrNoWP9EN88TRC+wYz
-         2FuQ==
-X-Gm-Message-State: AOAM532D8bjdrDJMSznm/TotFkZy+GZH+iJo0LZaFO2okhm+PrnkbpHB
-        YbwIYpQCjFEp8/zW6DfiDf1JiehC0Ps7T5Fv80c=
-X-Google-Smtp-Source: ABdhPJzXgU+DNHNKO8z9tSqkcxA+YPlJ5aCtnpEUqz2sSEapV34xuQepCaVuriNJ1z06vI0ZEuk2ZLoKyfGEp42KQIo=
-X-Received: by 2002:a05:6e02:5c7:: with SMTP id l7mr15394166ils.268.1597691543350;
- Mon, 17 Aug 2020 12:12:23 -0700 (PDT)
+        Mon, 17 Aug 2020 15:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730514AbgHQPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6A0207DA;
+        Mon, 17 Aug 2020 15:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597678834;
+        bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R/hMtUwfybdowiNpskRpLM90qEtHbnaM03JPONb+r0G4OCaxu0nD9yW/4GtyluO2t
+         bSXc+VVwlOvy0PM7x/PkjBTDWp+y9GcHlAOupELiwc0SBVcoq69P22ZRF4qy9oliFb
+         s5vAkOImIa1rebG9YeZ7+EjGdTamusPPVjSUP2kg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 457/464] s390/dasd: fix inability to use DASD with DIAG driver
+Date:   Mon, 17 Aug 2020 17:16:50 +0200
+Message-Id: <20200817143855.666222705@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200816071518.6964-1-colyli@suse.de> <CAM_iQpUFtZdrhfUbuYYODNeSVqPOqx8mio6Znp6v3Q5iDZeyqg@mail.gmail.com>
- <20200817054538.GA11705@lst.de>
-In-Reply-To: <20200817054538.GA11705@lst.de>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 17 Aug 2020 12:12:12 -0700
-Message-ID: <CAM_iQpWnzm=cQZvZMcjKXez1L55tSVfWyadP3d0CUaT=D4nOhw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] net: introduce helper sendpage_ok() in include/linux/net.h
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Vlastimil Babka <vbabka@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 10:45 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Sun, Aug 16, 2020 at 10:55:09AM -0700, Cong Wang wrote:
-> > On Sun, Aug 16, 2020 at 1:36 AM Coly Li <colyli@suse.de> wrote:
-> > >
-> > > The original problem was from nvme-over-tcp code, who mistakenly uses
-> > > kernel_sendpage() to send pages allocated by __get_free_pages() without
-> > > __GFP_COMP flag. Such pages don't have refcount (page_count is 0) on
-> > > tail pages, sending them by kernel_sendpage() may trigger a kernel panic
-> > > from a corrupted kernel heap, because these pages are incorrectly freed
-> > > in network stack as page_count 0 pages.
-> > >
-> > > This patch introduces a helper sendpage_ok(), it returns true if the
-> > > checking page,
-> > > - is not slab page: PageSlab(page) is false.
-> > > - has page refcount: page_count(page) is not zero
-> > >
-> > > All drivers who want to send page to remote end by kernel_sendpage()
-> > > may use this helper to check whether the page is OK. If the helper does
-> > > not return true, the driver should try other non sendpage method (e.g.
-> > > sock_no_sendpage()) to handle the page.
-> >
-> > Can we leave this helper to mm subsystem?
-> >
-> > I know it is for sendpage, but its implementation is all about some
-> > mm details and its two callers do not belong to net subsystem either.
-> >
-> > Think this in another way: who would fix it if it is buggy? I bet mm people
-> > should. ;)
->
-> No.  This is all about a really unusual imitation in sendpage, which
+From: Stefan Haberland <sth@linux.ibm.com>
 
-So netdev people will have to understand and support PageSlab() or
-page_count()?
+commit 9f4aa52387c68049403b59939df5c0dd8e3872cc upstream.
 
-If it is unusual even for mm people, how could netdev people suppose
-to understand this unusual mm bug? At least not any better.
+During initialization of the DASD DIAG driver a request is issued
+that has a bio structure that resides on the stack. With virtually
+mapped kernel stacks this bio address might be in virtual storage
+which is unsuitable for usage with the diag250 call.
+In this case the device can not be set online using the DIAG
+discipline and fails with -EOPNOTSUP.
+In the system journal the following error message is presented:
 
-> is pretty much unexpected.  In fact the best thing would be to make
-> sock_sendpage do the right thing and call sock_no_sendpage based
-> on this condition, so that driver writers don't have to worry at all.
+dasd: X.X.XXXX Setting the DASD online with discipline DIAG failed
+with rc=-95
 
-Agreed, but kernel_sendpage() still relies on mm to provide a helper
-to make the decision and ensure this helper is always up-to-date.
+Fix by allocating the bio structure instead of having it on the stack.
 
-In short, it is all about ownership.
+Fixes: ce3dc447493f ("s390: add support for virtually mapped kernel stacks")
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: stable@vger.kernel.org #4.20
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks.
+---
+ drivers/s390/block/dasd_diag.c |   25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+--- a/drivers/s390/block/dasd_diag.c
++++ b/drivers/s390/block/dasd_diag.c
+@@ -319,7 +319,7 @@ dasd_diag_check_device(struct dasd_devic
+ 	struct dasd_diag_characteristics *rdc_data;
+ 	struct vtoc_cms_label *label;
+ 	struct dasd_block *block;
+-	struct dasd_diag_bio bio;
++	struct dasd_diag_bio *bio;
+ 	unsigned int sb, bsize;
+ 	blocknum_t end_block;
+ 	int rc;
+@@ -395,29 +395,36 @@ dasd_diag_check_device(struct dasd_devic
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
++	bio = kzalloc(sizeof(*bio), GFP_KERNEL);
++	if (bio == NULL)  {
++		DBF_DEV_EVENT(DBF_WARNING, device, "%s",
++			      "No memory to allocate initialization bio");
++		rc = -ENOMEM;
++		goto out_label;
++	}
+ 	rc = 0;
+ 	end_block = 0;
+ 	/* try all sizes - needed for ECKD devices */
+ 	for (bsize = 512; bsize <= PAGE_SIZE; bsize <<= 1) {
+ 		mdsk_init_io(device, bsize, 0, &end_block);
+-		memset(&bio, 0, sizeof (struct dasd_diag_bio));
+-		bio.type = MDSK_READ_REQ;
+-		bio.block_number = private->pt_block + 1;
+-		bio.buffer = label;
++		memset(bio, 0, sizeof(*bio));
++		bio->type = MDSK_READ_REQ;
++		bio->block_number = private->pt_block + 1;
++		bio->buffer = label;
+ 		memset(&private->iob, 0, sizeof (struct dasd_diag_rw_io));
+ 		private->iob.dev_nr = rdc_data->dev_nr;
+ 		private->iob.key = 0;
+ 		private->iob.flags = 0;	/* do synchronous io */
+ 		private->iob.block_count = 1;
+ 		private->iob.interrupt_params = 0;
+-		private->iob.bio_list = &bio;
++		private->iob.bio_list = bio;
+ 		private->iob.flaga = DASD_DIAG_FLAGA_DEFAULT;
+ 		rc = dia250(&private->iob, RW_BIO);
+ 		if (rc == 3) {
+ 			pr_warn("%s: A 64-bit DIAG call failed\n",
+ 				dev_name(&device->cdev->dev));
+ 			rc = -EOPNOTSUPP;
+-			goto out_label;
++			goto out_bio;
+ 		}
+ 		mdsk_term_io(device);
+ 		if (rc == 0)
+@@ -427,7 +434,7 @@ dasd_diag_check_device(struct dasd_devic
+ 		pr_warn("%s: Accessing the DASD failed because of an incorrect format (rc=%d)\n",
+ 			dev_name(&device->cdev->dev), rc);
+ 		rc = -EIO;
+-		goto out_label;
++		goto out_bio;
+ 	}
+ 	/* check for label block */
+ 	if (memcmp(label->label_id, DASD_DIAG_CMS1,
+@@ -457,6 +464,8 @@ dasd_diag_check_device(struct dasd_devic
+ 			(rc == 4) ? ", read-only device" : "");
+ 		rc = 0;
+ 	}
++out_bio:
++	kfree(bio);
+ out_label:
+ 	free_page((long) label);
+ out:
+
+
