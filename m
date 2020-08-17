@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E11C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39DA2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593D12065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679154;
-	bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
+	s=default; t=1597679169;
+	bh=KvOPUuswtjEN64kyvtbe3DNP5BXjGHn9igwDSi8vjr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyDCzIieRFHqiVPiSo/YCqso+ZrIuEt+tSPZuxXD0Q0zYgdGho5SqDsGj8cP+cx2X
-	 7zap7yFmiaDon4Njt56IicijHRm1XWyWAik+CcDy+VdM4EP62BWSRLIluzJhOnYLS8
-	 qO+Nqs3g93uC0h3S3jZVRv6TVu1M9Y8Jap+pabFM=
+	b=tM8xlcnjJdjiZ73el7oYMXhkKnHTbQY6bQR2tvxxFws5zR6GkJl0yFoMGt66HYGLo
+	 6PhCNKJ4iB/Fm9Op/Ft3TlNSVF1tsEecSOMSEcwm1Xozj/CXJYBTlMM7ytMuqxmErf
+	 Y48VL4DLuwVk/+RmRYpFkevZhiGSpY1KZ3YbnepU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387733AbgHQPpw (ORCPT
+        id S1730765AbgHQPp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbgHQPiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:21 -0400
+        id S1730598AbgHQPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A22D208E4;
-        Mon, 17 Aug 2020 15:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B5422DD6;
+        Mon, 17 Aug 2020 15:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678701;
-        bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
+        s=default; t=1597678704;
+        bh=KvOPUuswtjEN64kyvtbe3DNP5BXjGHn9igwDSi8vjr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjrqfWEZLe/yk0+QgipK6FrIy2tax7WY4Qut3UzPyGLwVVfjwng1bphuncp0RZBvB
-         IO3GabpgiaQb6Umohe1w7/BrhH2z6oXS8c6SkI0aKgizJ/qq8JPxqF50wteS23U0EG
-         WyajWUAF+P7/mWNnd3DYYKQsyJMRPPnujWpFSR58=
+        b=jTOACrsaquC7JkNBj3K9iYZFlj8EwCv+GrFH2zfEhOILDZmZbUqooHpysRokGHb7V
+         HtI7N0fBaDq63a5pdmchSg765s8AbAyDg4QsFKmCvnqInth51ik6uM/2nqc8CZKmWZ
+         Cm73gbxU5sTcDT0yXvFy0f+gaKunN84dHTDepKZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
-        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 417/464] fs/minix: dont allow getting deleted inodes
-Date:   Mon, 17 Aug 2020 17:16:10 +0200
-Message-Id: <20200817143853.753734174@linuxfoundation.org>
+        syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 426/464] io_uring: fail poll arm on queue proc failure
+Date:   Mon, 17 Aug 2020 17:16:19 +0200
+Message-Id: <20200817143854.182187054@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -65,59 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit facb03dddec04e4aac1bb2139accdceb04deb1f3 upstream.
+commit a36da65c46565d2527eec3efdb546251e38253fd upstream.
 
-If an inode has no links, we need to mark it bad rather than allowing it
-to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink() when
-doing directory operations on a fuzzed filesystem.
+Check the ipt.error value, it must have been either cleared to zero or
+set to another error than the default -EINVAL if we don't go through the
+waitqueue proc addition. Just give up on poll at that point and return
+failure, this will fallback to async work.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
-Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-3-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+io_poll_add() doesn't suffer from this failure case, as it returns the
+error value directly.
+
+Cc: stable@vger.kernel.org # v5.7+
+Reported-by: syzbot+a730016dc0bdce4f6ff5@syzkaller.appspotmail.com
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/inode.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ fs/io_uring.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -468,6 +468,13 @@ static struct inode *V1_minix_iget(struc
- 		iget_failed(inode);
- 		return ERR_PTR(-EIO);
- 	}
-+	if (raw_inode->i_nlinks == 0) {
-+		printk("MINIX-fs: deleted inode referenced: %lu\n",
-+		       inode->i_ino);
-+		brelse(bh);
-+		iget_failed(inode);
-+		return ERR_PTR(-ESTALE);
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
-@@ -501,6 +508,13 @@ static struct inode *V2_minix_iget(struc
- 		iget_failed(inode);
- 		return ERR_PTR(-EIO);
- 	}
-+	if (raw_inode->i_nlinks == 0) {
-+		printk("MINIX-fs: deleted inode referenced: %lu\n",
-+		       inode->i_ino);
-+		brelse(bh);
-+		iget_failed(inode);
-+		return ERR_PTR(-ESTALE);
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4483,7 +4483,7 @@ static bool io_arm_poll_handler(struct i
+ 
+ 	ret = __io_arm_poll_handler(req, &apoll->poll, &ipt, mask,
+ 					io_async_wake);
+-	if (ret) {
++	if (ret || ipt.error) {
+ 		io_poll_remove_double(req, apoll->double_poll);
+ 		spin_unlock_irq(&ctx->completion_lock);
+ 		if (req->flags & REQ_F_WORK_INITIALIZED)
 
 
