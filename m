@@ -2,77 +2,101 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 01:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3159DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 01:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44082075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 01:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121EB2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 01:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHQBbW (ORCPT
+        id S1726691AbgHQBeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 21:31:22 -0400
-Received: from smtp21.cstnet.cn ([159.226.251.21]:50142 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726221AbgHQBbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 21:31:21 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-01 (Coremail) with SMTP id qwCowABH50QO2zlfcVw9AQ--.9269S2;
-        Mon, 17 Aug 2020 09:19:10 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     axboe@kernel.dk, linux-ide@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] ata: ahci: use ata_link_info() instead of ata_link_printk()
-Date:   Mon, 17 Aug 2020 01:18:54 +0000
-Message-Id: <20200817011854.9668-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: qwCowABH50QO2zlfcVw9AQ--.9269S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrWF15tF1kZFW5ZrWkGrW7urg_yoWxWrb_uF
-        y8Aw47Wr1FyF98Zr17Ja13ZF9Yy3Wvvr1kXFyIganxur1Uuw4fJrW0q3W5X34qqw4IkF98
-        t3yUJFy5Crn8XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6w4l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbb_-PUUUUU==
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAwsLA13qZTas9gAAs+
+        Sun, 16 Aug 2020 21:34:24 -0400
+Received: from smtprelay0230.hostedemail.com ([216.40.44.230]:59522 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgHQBeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 21:34:23 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 607B5180A7FEF;
+        Mon, 17 Aug 2020 01:34:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: queen59_160526327012
+X-Filterd-Recvd-Size: 3007
+Received: from joe-laptop.perches.com (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 17 Aug 2020 01:34:20 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     ceph-devel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH V2 0/6] ceph: Use more generic logging
+Date:   Sun, 16 Aug 2020 18:34:03 -0700
+Message-Id: <cover.1597626802.git.joe@perches.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using ata_link_info() instead of ata_link_printk().
+Convert the dout macro to the normal pr_debug.
+Convert embedded function names in these changes to %s, __func__
+Remove the dout macro definitions
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/ata/ahci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Joe Perches (6):
+  ceph: Use generic debugging facility
+  ceph: Remove embedded function names from pr_debug uses
+  net: ceph:  Use generic debugging facility
+  net: ceph: Remove embedded function names from pr_debug uses
+  rbd: Use generic debugging facility
+  ceph_debug: Remove now unused dout macro definitions
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 0c0a736eb861..9d72d907b4ee 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -807,7 +807,7 @@ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
- 				(sstatus & 0xf) != 1)
- 			break;
- 
--		ata_link_printk(link, KERN_INFO, "avn bounce port%d\n",
-+		ata_link_info(link,  "avn bounce port%d\n",
- 				port);
- 
- 		pci_read_config_word(pdev, 0x92, &val);
+ drivers/block/rbd.c             | 231 +++++++-------
+ fs/ceph/addr.c                  | 266 ++++++++--------
+ fs/ceph/cache.c                 |  22 +-
+ fs/ceph/caps.c                  | 533 ++++++++++++++++----------------
+ fs/ceph/debugfs.c               |   4 +-
+ fs/ceph/dir.c                   | 141 ++++-----
+ fs/ceph/export.c                |  36 +--
+ fs/ceph/file.c                  | 170 +++++-----
+ fs/ceph/inode.c                 | 338 ++++++++++----------
+ fs/ceph/ioctl.c                 |   6 +-
+ fs/ceph/locks.c                 |  42 +--
+ fs/ceph/mds_client.c            | 374 +++++++++++-----------
+ fs/ceph/mdsmap.c                |  16 +-
+ fs/ceph/metric.c                |   4 +-
+ fs/ceph/quota.c                 |   4 +-
+ fs/ceph/snap.c                  | 135 ++++----
+ fs/ceph/super.c                 |  67 ++--
+ fs/ceph/xattr.c                 |  64 ++--
+ include/linux/ceph/ceph_debug.h |  30 --
+ include/linux/ceph/messenger.h  |   2 +-
+ net/ceph/auth.c                 |  21 +-
+ net/ceph/auth_none.c            |   4 +-
+ net/ceph/auth_x.c               |  85 ++---
+ net/ceph/buffer.c               |   6 +-
+ net/ceph/ceph_common.c          |  18 +-
+ net/ceph/cls_lock_client.c      |  32 +-
+ net/ceph/crypto.c               |   8 +-
+ net/ceph/debugfs.c              |   4 +-
+ net/ceph/messenger.c            | 330 ++++++++++----------
+ net/ceph/mon_client.c           |  99 +++---
+ net/ceph/msgpool.c              |  14 +-
+ net/ceph/osd_client.c           | 393 ++++++++++++-----------
+ net/ceph/osdmap.c               | 101 +++---
+ net/ceph/pagevec.c              |  10 +-
+ 34 files changed, 1835 insertions(+), 1775 deletions(-)
+
 -- 
-2.17.1
+2.26.0
 
