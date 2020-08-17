@@ -2,118 +2,84 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D04C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B8E206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tbfi4l6E"
+	by mail.kernel.org (Postfix) with ESMTP id 2616720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 06:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgHQF7f (ORCPT
+        id S1726599AbgHQGDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHQF7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:59:34 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22F6C061388;
-        Sun, 16 Aug 2020 22:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HZyl5q+jnCvX1fyjf0e5q25W96mTDQeUnBuw8XcBjho=; b=Tbfi4l6EOYQY5R4kZrucj5ihlG
-        Pa24jwPDsNSiAcgBzp880XtY4ytb+tBXkFJnRNQvQfJxkOr0Nii6011LKqUcs35/fhyQYn+b4XwNL
-        CltUqh8GD4Ww7OiU3tQ5DHo8fMtqzAY7U4++7NisYLeFiwnKcSoMObWYX1x25O1Xigkc=;
-Received: from p200300ccff0cdf001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:df00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k7YAy-0004Iy-4D; Mon, 17 Aug 2020 07:59:20 +0200
-Date:   Mon, 17 Aug 2020 07:59:18 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
-        leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine
- 2 HD
-Message-ID: <20200817075918.4e53e6b8@aktux>
-In-Reply-To: <20200816155751.GB103070@latitude>
-References: <20200815193336.21598-1-andreas@kemnade.info>
-        <20200815193336.21598-3-andreas@kemnade.info>
-        <20200816125247.GA103070@latitude>
-        <20200816165058.3a17d97a@aktux>
-        <20200816155751.GB103070@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Aug 2020 02:03:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:56638 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726235AbgHQGD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 02:03:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BVNkx5rrnz9tytr;
+        Mon, 17 Aug 2020 08:03:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id a2ctUOMGwIQc; Mon, 17 Aug 2020 08:03:21 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BVNkx4sC7z9tytq;
+        Mon, 17 Aug 2020 08:03:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8DF3B8B772;
+        Mon, 17 Aug 2020 08:03:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 93TIwSvksR9Z; Mon, 17 Aug 2020 08:03:26 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6D7D48B75B;
+        Mon, 17 Aug 2020 08:03:26 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 63DD665CDD; Mon, 17 Aug 2020 06:03:26 +0000 (UTC)
+Message-Id: <996184974d674ff984643778cf1cdd7fe58cc065.1597644194.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc/fixmap: Fix the size of the early debug area
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 17 Aug 2020 06:03:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit ("03fd42d458fb powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when
+page size is 256k") reworked the setup of the early debug area and
+mistakenly replaced 128 * 1024 by SZ_128.
 
-On Sun, 16 Aug 2020 17:57:51 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+Change to SZ_128K to restore the original 128 kbytes size of the area.
 
-> On Sun, Aug 16, 2020 at 04:50:58PM +0200, Andreas Kemnade wrote:
-> > Hi,
-> >=20
-> > Seems that we have different hardware, so the first question is
-> > first the most interesting thing: how much does the hw actually differ,
-> > especially do they require different device trees?
-> >=20
-> > Can you provide me a photo of your hardware?
-> > Or is it a Shine 3? =20
->=20
-> It is a Shine 2HD
->=20
-> >=20
-> > Mine is at https://misc.andi.de1.cc/tolino2.jpg =20
->=20
-> Mine:
->=20
-> https://raw.githubusercontent.com/wiki/neuschaefer/linux/Tolino-Shine2HD.=
-jpg
->=20
->=20
-> It appears to be the next PCB revision (+4A3 instead of +4A2), but I
-> think the PCB layout looks the same. The Realtek-based Wifi module is
-> exactly where the CyberTan WC121 was.
->=20
+Fixes: 03fd42d458fb ("powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/fixmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-=46rom other sources I also think these revisions are same besides wifi.
+diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+index 925cf89cbf4b..6bfc87915d5d 100644
+--- a/arch/powerpc/include/asm/fixmap.h
++++ b/arch/powerpc/include/asm/fixmap.h
+@@ -52,7 +52,7 @@ enum fixed_addresses {
+ 	FIX_HOLE,
+ 	/* reserve the top 128K for early debugging purposes */
+ 	FIX_EARLY_DEBUG_TOP = FIX_HOLE,
+-	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128, PAGE_SIZE)/PAGE_SIZE)-1,
++	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128K, PAGE_SIZE)/PAGE_SIZE)-1,
+ #ifdef CONFIG_HIGHMEM
+ 	FIX_KMAP_BEGIN,	/* reserved pte's for temporary kernel mappings */
+ 	FIX_KMAP_END = FIX_KMAP_BEGIN+(KM_TYPE_NR*NR_CPUS)-1,
+-- 
+2.25.0
 
-So the only thing warranting separate dtbs might be the OOB IRQ thing.
-In the Tolino sources there is the function dhd_customer_oob_irq_map in
-the bcmdhd driver, and it gets its number from this:
-drivers/net/wireless/bcmdhd/Makefile:	-DCUSTOMER_HW2 -DCUSTOM_OOB_GPIO_NUM=
-=3D127 -DOOB_INTR_ONLY -DHW_OOB
-
-The brcmfmac driver is upstream and has devicetree support, but the
-rtl8189fs is not. For the Clara I am using this one:
-https://github.com/jwrdegoede/rtl8189ES_linux.git (branch 8189fs)
-It has no devicetree support, so things cannot be defined anyway.
-
-On one hand the hardware should be described in the devicetree as good
-as possible but on the other hand the OOB IRQ is not mandatory.
-
-Regards,
-Andreas
