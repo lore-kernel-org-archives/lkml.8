@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4839C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8791E2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C81720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686895;
-	bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+	s=default; t=1597686904;
+	bh=5GDMueqNpv673QiI73sCw3/yXTsCns+lReg0nfYIfr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjDjN02ZZMLm3/7nP0R6w6FgByKA1R043Q3JfWSUlmyujUWUaZR+lOQ0vsI5C6y+d
-	 GUrw6C511R+NKVrrCH0IrrOA9VHh7tHpw5CvIT+vM7dcb+ps9D5nnzBLw49yRzWZYm
-	 MkI2ALZD37pCZ00Q7uJajnNcxpN5+p8c95XBuGN4=
+	b=QczCKM25UMM38XswAlwn6ns3ionyrPRhgRxUNgpfWcIuA7tBh7aScSjpvZewXiiIy
+	 hqM2+q2VgHxV0ka+gFZfcwEfXZ6VYNCt1/6r6xw3nKXDKGCMzBBZHmbWvr/4o+ebI3
+	 ERsS5vvpuzsxQ7FDWIDziD7KxNcEqm+YPcTdIStw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbgHQRyx (ORCPT
+        id S2388608AbgHQRy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38394 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:54:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388582AbgHQQLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:11:00 -0400
+        id S2388589AbgHQQLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:11:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C9520578;
-        Mon, 17 Aug 2020 16:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34BC22BF5;
+        Mon, 17 Aug 2020 16:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680659;
-        bh=tu5BHVgGfCYGAiaqVkbBFErksR4pdIG1CSJuZ8WnQyw=;
+        s=default; t=1597680664;
+        bh=5GDMueqNpv673QiI73sCw3/yXTsCns+lReg0nfYIfr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBvOYRb5WXgXynZujJM2nV0LK71Z51BAJa8qlFUekRbGG/6XcKsiAPK8+StmuhSH3
-         m53ECa26UQmAyJ2HitqjqSkgSvSv1Mi1WO96tPoV1uvCUOm0ZDLeT4uR4u/S9G/T5r
-         yRstnDB1jNBeYMhkz2i1AxaOfonGYoGmDGQOIoaY=
+        b=oeZ2CbUYN5twaDEgZ3s6JL4LHk7Tsi4Q2C+UV8TyQq46lQGYE9C9mj6KQSklW9Jch
+         4ydtEpukOW7US+ytcFWO5tHVQ8BQmm0aQHSZBYIdeGDXiHvdWVQ7ZvuwYrwGp0+T//
+         dZ+Lp9oREmGyHwy1SUqWNY/ppx+zbFa7CvvAJSOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
-        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
-        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 264/270] fs/minix: reject too-large maximum file size
-Date:   Mon, 17 Aug 2020 17:17:45 +0200
-Message-Id: <20200817143808.966403367@linuxfoundation.org>
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.4 266/270] xen/balloon: make the balloon wait interruptible
+Date:   Mon, 17 Aug 2020 17:17:47 +0200
+Message-Id: <20200817143809.060064975@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -66,76 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
+commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
 
-If the minix filesystem tries to map a very large logical block number to
-its on-disk location, block_to_path() can return offsets that are too
-large, causing out-of-bounds memory accesses when accessing indirect index
-blocks.  This should be prevented by the check against the maximum file
-size, but this doesn't work because the maximum file size is read directly
-from the on-disk superblock and isn't validated itself.
+So it can be killed, or else processes can get hung indefinitely
+waiting for balloon pages.
 
-Fix this by validating the maximum file size at mount time.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
-Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
-Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/inode.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/xen/balloon.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -150,6 +150,23 @@ static int minix_remount (struct super_b
- 	return 0;
- }
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -570,11 +570,13 @@ static int add_ballooned_pages(int nr_pa
+ 	if (xen_hotplug_unpopulated) {
+ 		st = reserve_additional_memory();
+ 		if (st != BP_ECANCELED) {
++			int rc;
++
+ 			mutex_unlock(&balloon_mutex);
+-			wait_event(balloon_wq,
++			rc = wait_event_interruptible(balloon_wq,
+ 				   !list_empty(&ballooned_pages));
+ 			mutex_lock(&balloon_mutex);
+-			return 0;
++			return rc ? -ENOMEM : 0;
+ 		}
+ 	}
  
-+static bool minix_check_superblock(struct minix_sb_info *sbi)
-+{
-+	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
-+		return false;
-+
-+	/*
-+	 * s_max_size must not exceed the block mapping limitation.  This check
-+	 * is only needed for V1 filesystems, since V2/V3 support an extra level
-+	 * of indirect blocks which places the limit well above U32_MAX.
-+	 */
-+	if (sbi->s_version == MINIX_V1 &&
-+	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
-+		return false;
-+
-+	return true;
-+}
-+
- static int minix_fill_super(struct super_block *s, void *data, int silent)
- {
- 	struct buffer_head *bh;
-@@ -228,11 +245,12 @@ static int minix_fill_super(struct super
- 	} else
- 		goto out_no_fs;
- 
-+	if (!minix_check_superblock(sbi))
-+		goto out_illegal_sb;
-+
- 	/*
- 	 * Allocate the buffer map to keep the superblock small.
- 	 */
--	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
--		goto out_illegal_sb;
- 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
- 	map = kzalloc(i, GFP_KERNEL);
- 	if (!map)
 
 
