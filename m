@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F638C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46FF622CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378E822CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679005;
-	bh=RPEiQDy6a3Jp0/Ow1vYnPqNQ//IIH6hyciHaIjsqhoE=;
+	s=default; t=1597679011;
+	bh=AqcUg/PlyETWKVRqrV5LzpZlEdM9LDlWmBGMYiYKR/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyjLlKVqvydpfTPrQvmBwUDwW9sMV0qrsTU5PzFOB35hw12lXBbg6c1bhUjzJlUFr
-	 TH/TnNcVDyPZhnLoC7cfGY10wYiR9f54ip2CsvR1BxVaZBCt6VtB5GRx7FV4V9aroA
-	 GGIk0OypA02Kqh5CYPycIJ32nQIZAb8h6AtZMaL4=
+	b=kstC62EELpSsqPlWfQgjck0Mn/ewj3CP101mdVPz3oDlQpLw6Hsqnty65Qg7QHW16
+	 O5mAIdVUm9nwb5JW8rJVcv82pI/iE4B++ToXf21qdZyro8PA+K5bCHPZqDbIvd8qsy
+	 PDOh2El+H5RT7rUL6GwQIOmRzhVKS6LXWJYgJtQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387638AbgHQPnX (ORCPT
+        id S2387629AbgHQPn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:43:23 -0400
+        Mon, 17 Aug 2020 11:43:28 -0400
 Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730188AbgHQPhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:37:23 -0400
+        id S1730551AbgHQPh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:37:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12BE23120;
-        Mon, 17 Aug 2020 15:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2860222C9F;
+        Mon, 17 Aug 2020 15:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678639;
-        bh=RPEiQDy6a3Jp0/Ow1vYnPqNQ//IIH6hyciHaIjsqhoE=;
+        s=default; t=1597678647;
+        bh=AqcUg/PlyETWKVRqrV5LzpZlEdM9LDlWmBGMYiYKR/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avsa6ZDi/p0b8Vzaeo3rD4HYjxsNNfwo9SNa4kLqHtuqzM8s1AmyFlERjRVJQ+Wze
-         m3Ul3ibg3XlHJuWj6qMNVEz7dZw0ozbyPp7B0GsT6y0J8sZrQOt6IpL6joxFCObCdk
-         4I6xu8edythlOJ60c4AY12p1J+01NBf2NFmJzu8Q=
+        b=FqHm/TrtiKDO5UOqRIZZmwyHo2o1xW2iMycWNFeGnNJOtdnIOVs+GPI7Xn7MG9i2f
+         gltVL5QEKtMpRGUNLB9v/xxs2gKL5Ld6EgYZXFIMneWDQzI1FKFTYxNRZ25a+Fxdkz
+         /yzXNXlBUhASvMDBU6OnsGU+YXeVTslsKI9B53xE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 5.8 403/464] ALSA: hda - reverse the setting value in the micmute_led_set
-Date:   Mon, 17 Aug 2020 17:15:56 +0200
-Message-Id: <20200817143853.084754257@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 406/464] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
+Date:   Mon, 17 Aug 2020 17:15:59 +0200
+Message-Id: <20200817143853.227266255@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,58 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit 404690649e6a52ee39817168f2d984726412e091 upstream.
+commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
 
-Before the micmute_led_set() is introduced, the function of
-alc_gpio_micmute_update() will set the gpio value with the
-!micmute_led.led_value, and the machines have the correct micmute led
-status. After the micmute_led_set() is introduced, it sets the gpio
-value with !!micmute_led.led_value, so the led status is not correct
-anymore, we need to set micmute_led_polarity = 1 to workaround it.
+Further investigation of the L-R swap problem on the MS2109 reveals that
+the problem isn't that the channels are swapped, but rather that they
+are swapped and also out of phase by one sample. In other words, the
+issue is actually that the very first frame that comes from the hardware
+is a half-frame containing only the right channel, and after that
+everything becomes offset.
 
-Now we fix the micmute_led_set() and remove micmute_led_polarity = 1.
+So introduce a new quirk field to drop the very first 2 bytes that come
+in after the format is configured and a capture stream starts. This puts
+the channels in phase and in the correct order.
 
-Fixes: 87dc36482cab ("ALSA: hda/realtek - Add LED class support for micmute LED")
-Reported-and-suggested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200811122430.6546-1-hui.wang@canonical.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ sound/usb/card.h   |    1 +
+ sound/usb/pcm.c    |    6 ++++++
+ sound/usb/quirks.c |    3 +++
+ sound/usb/stream.c |    1 +
+ 4 files changed, 11 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4118,7 +4118,7 @@ static int micmute_led_set(struct led_cl
- 	struct alc_spec *spec = codec->spec;
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -137,6 +137,7 @@ struct snd_usb_substream {
+ 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
+ 	unsigned int fmt_type;		/* USB audio format type (1-3) */
+ 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
++	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
  
- 	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
--			    spec->micmute_led_polarity, !!brightness);
-+			    spec->micmute_led_polarity, !brightness);
- 	return 0;
+ 	unsigned int running: 1;	/* running status */
+ 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1420,6 +1420,12 @@ static void retire_capture_urb(struct sn
+ 			// continue;
+ 		}
+ 		bytes = urb->iso_frame_desc[i].actual_length;
++		if (subs->stream_offset_adj > 0) {
++			unsigned int adj = min(subs->stream_offset_adj, bytes);
++			cp += adj;
++			bytes -= adj;
++			subs->stream_offset_adj -= adj;
++		}
+ 		frames = bytes / stride;
+ 		if (!subs->txfr_quirk)
+ 			bytes = frames * stride;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1495,6 +1495,9 @@ void snd_usb_set_format_quirk(struct snd
+ 	case USB_ID(0x2b73, 0x000a): /* Pioneer DJ DJM-900NXS2 */
+ 		pioneer_djm_set_format_quirk(subs);
+ 		break;
++	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
++		subs->stream_offset_adj = 2;
++		break;
+ 	}
  }
  
-@@ -4173,8 +4173,6 @@ static void alc285_fixup_hp_gpio_led(str
- {
- 	struct alc_spec *spec = codec->spec;
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -94,6 +94,7 @@ static void snd_usb_init_substream(struc
+ 	subs->tx_length_quirk = as->chip->tx_length_quirk;
+ 	subs->speed = snd_usb_get_speed(subs->dev);
+ 	subs->pkt_offset_adj = 0;
++	subs->stream_offset_adj = 0;
  
--	spec->micmute_led_polarity = 1;
--
- 	alc_fixup_hp_gpio_led(codec, action, 0x04, 0x01);
- }
+ 	snd_usb_set_pcm_ops(as->pcm, stream);
  
-@@ -4426,7 +4424,6 @@ static void alc233_fixup_lenovo_line2_mi
- {
- 	struct alc_spec *spec = codec->spec;
- 
--	spec->micmute_led_polarity = 1;
- 	alc_fixup_hp_gpio_led(codec, action, 0, 0x04);
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		spec->init_amp = ALC_INIT_DEFAULT;
 
 
