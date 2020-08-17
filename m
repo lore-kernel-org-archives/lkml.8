@@ -2,131 +2,139 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B067C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B5D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597704315;
-	bh=BLNiL+DLsRVFIcOkeCwPvYUOudP2ncDTYkPeW/BHm2Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vyAJWEg0bn8JKFrcZ6R1sUm1Jibq5X+fBLSqd1nvOoCXP3g2mjXZf99+XieoYsQRG
-	 qS2MRoP/JTBBx9Hj5Hg94rv3pAX1jT3Rvm/O15tlCGRtrTItwRUusZyJkupxSQjtnP
-	 ZCTWls2Roy4aHLtuGqXWkgc1wm2SR4010/ctdmCg=
+	by mail.kernel.org (Postfix) with ESMTP id 7D0AD2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fFw7iaFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgHQWpN (ORCPT
+        id S1730830AbgHQWpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729273AbgHQWpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:45:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A11C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:44:54 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t6so19248290ljk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D4oCLwSFAMfX0jUk1zRXnY7OWQRSXzVnX6hrYGZa4vs=;
-        b=Ot97LDuE1VQD/tFXQHGZ9kal3BL+Bs8jJUmcjt3HaQFhxwhsmdVZmU7bqaxx6SHCOi
-         Am2J3ry3DoqYNnlkX0YdsYu0rNFw9zoYcgEwV5ZpYnntndFXmS3jFlz+g59jSMMLNjLs
-         FbV6xSzh8EqoGh9CvhAN6frNL/9IP9BgJF/YE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D4oCLwSFAMfX0jUk1zRXnY7OWQRSXzVnX6hrYGZa4vs=;
-        b=YTjel9vpdQmD25Un+sQrv6WzTNnrINs8YrIj08+1uqjKlHW5ZBXxKOqY9sIwlpp3J3
-         JjhBtTkOuCE2aPqEfCfs0b4Qfn14Tq48K3viq+L6yKodbZeV6l4dsRSWesLzkGnQNEsN
-         EEBy698T2v0jG1VR+fU8123b2Nr2ft50XJNOrX0jdpmdkT4O9nMG94DEiLzF3cRIQS8n
-         OejZp2RRyJQMnsNI/KElHdy6YMXc/Ze1IDpV+sA155h25DrqOpg/yxs1RJqebuNe6kCQ
-         efETpAccAqD7elnECvLW1bh6mWOiSyHdhaxR8BIEFvOxxsIbpkypv5IyIrw3KFcDQ4lc
-         Spxw==
-X-Gm-Message-State: AOAM533Je7hYDknno1y8z4vUocZMb1T2YXVIUn2VXXmMBlSo4B97pnwG
-        hS12cI99eSuT75bECXxLEbSc5hZVlsCyzw==
-X-Google-Smtp-Source: ABdhPJw0v/MfgOaWqOab1ZXKPNkvdIuDaQ3MP/aWRJWULvS/NvTXzAvalZzQ6ZhGC+sYcPN5bRnKWw==
-X-Received: by 2002:a2e:851a:: with SMTP id j26mr7706918lji.251.1597704288577;
-        Mon, 17 Aug 2020 15:44:48 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id k12sm5867689lfe.68.2020.08.17.15.44.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 15:44:46 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id i10so19280182ljn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 15:44:45 -0700 (PDT)
-X-Received: by 2002:a2e:2e04:: with SMTP id u4mr8046290lju.102.1597704285617;
- Mon, 17 Aug 2020 15:44:45 -0700 (PDT)
+        Mon, 17 Aug 2020 18:45:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48771 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730732AbgHQWpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:45:10 -0400
+Received: from hanvin-mobl2.amr.corp.intel.com (jfdmzpr03-ext.jf.intel.com [134.134.139.72])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 07HMiW422418579
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 17 Aug 2020 15:44:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 07HMiW422418579
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020072401; t=1597704275;
+        bh=UcsjupZ0JA2RpPNCd/O00y25ozkP4PEzUv+SeMit95Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fFw7iaFIjOTNkyvMiTi6MGZ1QKRqloYm27Hjeqslbjuje3JHcveUFWxZ13s0xYxGL
+         Pq1ExKfPYkv2sexFEJB1hIocLvmRNjVJtwloT35gujDTd+OXSRHE1cnLSD9IYBA9Vu
+         fzJXyAfOqRLkIZ/xT9bMfg9qbVD/DSfoEC4Z7LDmT07itHKLK5rdn0/7/vG+vwrjtz
+         DFO/Zq97GNALaq2XrP26/hUvUSLd9XpcnOAClKJ13Cd15ifmv/qAT1F7rtvPbSx53E
+         zHhqVOWOP6IWH5Hvg+pP/m4sJM3HmN83qsYrwv0pLaMkD+Ei3kbgruX0KTVvmZxPcG
+         iyP2A+4BGi7gg==
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
+Date:   Mon, 17 Aug 2020 15:44:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
-In-Reply-To: <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 17 Aug 2020 15:44:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
-Message-ID: <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200817220212.338670-1-ndesaulniers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:15 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So it has this very complex "random structures of random things"
-> implementation. It's a huge sign of over-design and "I don't know what
-> the hell I want to expose, so I'll make this generic thing that can
-> expose anything, and then I start adding random fields".
+On 2020-08-17 15:02, Nick Desaulniers wrote:
+> -ffreestanding typically inhibits "libcall optimizations" where calls to
+> certain library functions can be replaced by the compiler in certain
+> cases to calls to other library functions that may be more efficient.
+> This can be problematic for embedded targets that don't provide full
+> libc implementations.
+> 
+> -ffreestanding inhibits all such optimizations, which is the safe
+> choice, but generally we want the optimizations that are performed. The
+> Linux kernel does implement a fair amount of libc routines. Instead of
+> -ffreestanding (which makes more sense in smaller images like kexec's
+> purgatory image), prefer -fno-builtin-* flags to disable the compiler
+> from emitting calls to functions which may not be defined.
+> 
+> If you see a linkage failure due to a missing symbol that's typically
+> defined in a libc, and not explicitly called from the source code, then
+> the compiler may have done such a transform.  You can either implement
+> such a function (ie. in lib/string.c) or disable the transform outright
+> via -fno-builtin-* flag (where * is the name of the library routine, ie.
+> -fno-builtin-bcmp).
+> 
 
-You can see the overdesign in other places too: that "time
-granularity" is some very odd stuff. It doesn't actually even match
-the kernel granularity rules, so that fsinfo interface is basically
-exporting random crap that doesn't match reality.
+This is arguably exactly the wrong way around.
 
-In the kernel, we give the granularity in nsec, but for some reason
-that fsinfo stuff gives it in some hand-written pseudo-floating-point
-format. Why? Don't ask me.
+The way this *should* be done is by opt-in, not opt-out, which by almost
+definition ends up being a game of whack-a-mole, like in this case
+stpcpy(). Furthermore, it is unlikely that people will remember what
+options to flip when and if stpcpy() happens to be implemented in the
+kernel.
 
-And do we really want to have that whole odd Nth/Mth thing?
-Considering that it cannot be consistent or atomic, and the complaint
-against the /proc interfaces have been about that part, it really
-smells completely bogus.
+The problem here is twofold:
 
-So please. Can we just make a simple extended statfs() and be done
-with it, instead of this hugely complex thing that does five different
-things with the same interface and makes it really odd as a result?
+1. The user would be expected to know what kind of the optimizations the
+compiler can do on what function, which is private knowledge to the
+compiler.
 
-                  Linus
-So honestly,  there's a
+2. The only way to override -fno-builtin is by a header file with macros
+overriding the function names with __builtin, but that doesn't tell the
+compiler proper anything about the execution environment.
+
+So the Right Thing is for the compiler authors to change the way
+-ffreestanding works.  -ffreestanding means, by definition, that there
+are no library calls (other than libgcc or whatever else is supplied
+with the compiler) that the compiler can call. That is currently an
+all-or-nothing choice, or at least one choice per C standard implemented.
+
+Instead, a compile job with -ffreestanding should be able to provide a
+list of standard C functions that the compiler may call, and thus the
+compiler actually can do the right thing depending on which exact
+functions it would consider calling. This list is probably most easily
+supplied in the form of a header file with #pragma directives.
+
+	-hpa
+
+
