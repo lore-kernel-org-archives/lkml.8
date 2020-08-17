@@ -2,53 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7C6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D81C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA836204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCF1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691869;
-	bh=PEIF5s5bOK0Rz4QWL+fmZFTs5nPWRTg7RKyh87EV3ZU=;
+	s=default; t=1597691879;
+	bh=swImfievPesAStz558lESv0TN9slHitkpVUG0OYPY6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQcW/4LXAzwT6QkNs+52nEtEoUgCGBhNKsFn1sLJsuqicL8xOz9BpcBLVozFETQtq
-	 nv1QGQqSAarUpzWLqyF8pQ6bimfm9F9gLThvgxWPs0+0s//yMpTGipaqiaos0H7ctt
-	 Ea/QKcGd+C0ROQFDlK11QV4T9SQVgUubKjKLnSVI=
+	b=ffvgHyQ9e7WlFBeLc4Llg693coNsR6UmINDWa+exQghZmAEo3j0oKS7y791Rl9yNC
+	 wbNz0f3Umnb0L0pZssGGiUlfEXbXpvY52VUAVFMAjbVrd3gAy60Q6kNZH4tZDlOxNk
+	 OiK5v1tgnjA5Qi5LlnK3UwHaS29x9+NATeST2qXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgHQPiV (ORCPT
+        id S2392245AbgHQTR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58716 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730065AbgHQPcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:08 -0400
+        id S1730575AbgHQPiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0430B22D00;
-        Mon, 17 Aug 2020 15:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E7522CB3;
+        Mon, 17 Aug 2020 15:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678327;
-        bh=PEIF5s5bOK0Rz4QWL+fmZFTs5nPWRTg7RKyh87EV3ZU=;
+        s=default; t=1597678695;
+        bh=swImfievPesAStz558lESv0TN9slHitkpVUG0OYPY6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RORcg7bQ4rCkmj1Z5Xl3XTvgxnEF17Lsxz5EYVhc6NawkcMVZcrKzkw/Gb4thIqZu
-         vE6akshZb/4H2O8ZLSV5BmKGQTBXf6u9AZWWNfBD3SpD5/lkdaBD+RofdsYRwRkeQe
-         4PvyATr141+smrQFRWswqoYjqUCkx1a6Hc9JSMMI=
+        b=0B0C/IIiLAtJdBgAldgki4u4Dqoowa2lqTpuI1iVR/qVZhC2+ebq2cmRAbtEWrloc
+         gfedndwMrVqIqLet0aH/DynURLupyWFV9HXzqpCi0LyNtHKsXfpjqqgCtjtbmGy34Z
+         xw17BT5GGfy8hfrpT1GEY665kA+dFgPF+oZasbDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 296/464] macintosh/via-macii: Access autopoll_devs when inside lock
-Date:   Mon, 17 Aug 2020 17:14:09 +0200
-Message-Id: <20200817143847.961540513@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 392/464] net: refactor bind_bucket fastreuse into helper
+Date:   Mon, 17 Aug 2020 17:15:45 +0200
+Message-Id: <20200817143852.557814725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,48 +61,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-[ Upstream commit 59ea38f6b3af5636edf541768a1ed721eeaca99e ]
+[ Upstream commit 62ffc589abb176821662efc4525ee4ac0b9c3894 ]
 
-The interrupt handler should be excluded when accessing the autopoll_devs
-variable.
+Refactor the fastreuse update code in inet_csk_get_port into a small
+helper function that can be called from other places.
 
-Fixes: d95fd5fce88f0 ("m68k: Mac II ADB fixes") # v5.0+
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/5952dd8a9bc9de90f1acc4790c51dd42b4c98065.1593318192.git.fthain@telegraphics.com.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/macintosh/via-macii.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ include/net/inet_connection_sock.h |    4 +
+ net/ipv4/inet_connection_sock.c    |   97 ++++++++++++++++++++-----------------
+ 2 files changed, 57 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/macintosh/via-macii.c b/drivers/macintosh/via-macii.c
-index ac824d7b2dcfc..6aa903529570d 100644
---- a/drivers/macintosh/via-macii.c
-+++ b/drivers/macintosh/via-macii.c
-@@ -270,15 +270,12 @@ static int macii_autopoll(int devs)
- 	unsigned long flags;
- 	int err = 0;
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -316,6 +316,10 @@ int inet_csk_compat_getsockopt(struct so
+ int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
+ 			       char __user *optval, unsigned int optlen);
  
-+	local_irq_save(flags);
++/* update the fast reuse flag when adding a socket */
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk);
 +
- 	/* bit 1 == device 1, and so on. */
- 	autopoll_devs = devs & 0xFFFE;
+ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
  
--	if (!autopoll_devs)
--		return 0;
--
--	local_irq_save(flags);
--
--	if (current_req == NULL) {
-+	if (autopoll_devs && !current_req) {
- 		/* Send a Talk Reg 0. The controller will repeatedly transmit
- 		 * this as long as it is idle.
- 		 */
--- 
-2.25.1
-
+ #define TCP_PINGPONG_THRESH	3
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -296,6 +296,57 @@ static inline int sk_reuseport_match(str
+ 				    ipv6_only_sock(sk), true, false);
+ }
+ 
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk)
++{
++	kuid_t uid = sock_i_uid(sk);
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
++
++	if (hlist_empty(&tb->owners)) {
++		tb->fastreuse = reuse;
++		if (sk->sk_reuseport) {
++			tb->fastreuseport = FASTREUSEPORT_ANY;
++			tb->fastuid = uid;
++			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++			tb->fast_ipv6_only = ipv6_only_sock(sk);
++			tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++		} else {
++			tb->fastreuseport = 0;
++		}
++	} else {
++		if (!reuse)
++			tb->fastreuse = 0;
++		if (sk->sk_reuseport) {
++			/* We didn't match or we don't have fastreuseport set on
++			 * the tb, but we have sk_reuseport set on this socket
++			 * and we know that there are no bind conflicts with
++			 * this socket in this tb, so reset our tb's reuseport
++			 * settings so that any subsequent sockets that match
++			 * our current socket will be put on the fast path.
++			 *
++			 * If we reset we need to set FASTREUSEPORT_STRICT so we
++			 * do extra checking for all subsequent sk_reuseport
++			 * socks.
++			 */
++			if (!sk_reuseport_match(tb, sk)) {
++				tb->fastreuseport = FASTREUSEPORT_STRICT;
++				tb->fastuid = uid;
++				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
++				tb->fast_ipv6_only = ipv6_only_sock(sk);
++				tb->fast_sk_family = sk->sk_family;
++#if IS_ENABLED(CONFIG_IPV6)
++				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
++#endif
++			}
++		} else {
++			tb->fastreuseport = 0;
++		}
++	}
++}
++
+ /* Obtain a reference to a local port for the given sock,
+  * if snum is zero it means select any available local port.
+  * We try to allocate an odd port (and leave even ports for connect())
+@@ -308,7 +359,6 @@ int inet_csk_get_port(struct sock *sk, u
+ 	struct inet_bind_hashbucket *head;
+ 	struct net *net = sock_net(sk);
+ 	struct inet_bind_bucket *tb = NULL;
+-	kuid_t uid = sock_i_uid(sk);
+ 	int l3mdev;
+ 
+ 	l3mdev = inet_sk_bound_l3mdev(sk);
+@@ -345,49 +395,8 @@ tb_found:
+ 			goto fail_unlock;
+ 	}
+ success:
+-	if (hlist_empty(&tb->owners)) {
+-		tb->fastreuse = reuse;
+-		if (sk->sk_reuseport) {
+-			tb->fastreuseport = FASTREUSEPORT_ANY;
+-			tb->fastuid = uid;
+-			tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-			tb->fast_ipv6_only = ipv6_only_sock(sk);
+-			tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-			tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	} else {
+-		if (!reuse)
+-			tb->fastreuse = 0;
+-		if (sk->sk_reuseport) {
+-			/* We didn't match or we don't have fastreuseport set on
+-			 * the tb, but we have sk_reuseport set on this socket
+-			 * and we know that there are no bind conflicts with
+-			 * this socket in this tb, so reset our tb's reuseport
+-			 * settings so that any subsequent sockets that match
+-			 * our current socket will be put on the fast path.
+-			 *
+-			 * If we reset we need to set FASTREUSEPORT_STRICT so we
+-			 * do extra checking for all subsequent sk_reuseport
+-			 * socks.
+-			 */
+-			if (!sk_reuseport_match(tb, sk)) {
+-				tb->fastreuseport = FASTREUSEPORT_STRICT;
+-				tb->fastuid = uid;
+-				tb->fast_rcv_saddr = sk->sk_rcv_saddr;
+-				tb->fast_ipv6_only = ipv6_only_sock(sk);
+-				tb->fast_sk_family = sk->sk_family;
+-#if IS_ENABLED(CONFIG_IPV6)
+-				tb->fast_v6_rcv_saddr = sk->sk_v6_rcv_saddr;
+-#endif
+-			}
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+-	}
++	inet_csk_update_fastreuse(tb, sk);
++
+ 	if (!inet_csk(sk)->icsk_bind_hash)
+ 		inet_bind_hash(sk, tb, port);
+ 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
 
 
