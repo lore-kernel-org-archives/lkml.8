@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F19C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42FE20758
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2F82072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1rw46Ln"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX4S+d8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgHQIfo (ORCPT
+        id S1727950AbgHQIfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54208 "EHLO
+        Mon, 17 Aug 2020 04:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgHQIfi (ORCPT
+        with ESMTP id S1726987AbgHQIfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:35:38 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D366AC061388;
-        Mon, 17 Aug 2020 01:35:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 17so7877418pfw.9;
-        Mon, 17 Aug 2020 01:35:37 -0700 (PDT)
+        Mon, 17 Aug 2020 04:35:48 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A0DC061389;
+        Mon, 17 Aug 2020 01:35:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t10so7139120plz.10;
+        Mon, 17 Aug 2020 01:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V+IY+0oce77n1O9F863vvzmAh9cNOoW4gGZxQ9nHc9A=;
-        b=e1rw46Ln24gbKIg1ppq0fzzVXv+VpHghXbf9lAKfxsr2UawmfLW2T3Xl68u/n+z6UG
-         Yk6eKFTOewcDwbK7nj37Yi28tnPWUMuM8Zdi4LhoBtd/xVsrG4qMTxyDZMRuAFByZDT8
-         pO3mIG7wYETBil7GuCzpqOCMZ5OL3obKg7vcxk1RHnAaWZqzoW8eoW4NIXeChY/nwTBL
-         dt+GgPbOBnmtOVgUsKR2Mpa3w7qYVsJy7/pzvaPTEqwLHImusixvOmei2RLFxo1E5vcx
-         O5Na8zNOJ910dHmJggjQYKZfa+cfdwTQD5a6v03q8SDH4/5kD98zLOYkNu4O5y7z9+fg
-         X1Jg==
+        bh=IwFOYY367ULZT1BN2OrQmrKwLru5AbIHU/lvBoUtbvI=;
+        b=PX4S+d8SSzqmcDvaTTsGyA2ivQ3CN5X25wDtmjJVfFwuC6bz5NXD3ayhO28oMCUbDO
+         MUqFNlrjccbTVa7mJEjGjRjoKHHDjjb+sFzt4o1G4Hxsvv/AqTP3OMgAhUaz79u9aB8Z
+         Gr79ENBofDZokJfNqjT+lmbmlNmUlR0ZZOw12uQXnw0fGlYkn7xD9QZjZ6NsGUHKSfRa
+         cyMpT73GX9xDM53F+/nqaSYDLHmLabAJJ7rTdp+WL2aSNwO1f0GfwwpZGiV0oxAVM8EW
+         4pYtF71te6SFr2uNpao8D98UE3ueunxEu56vEUuGDYzn0sUPXGemS9DgUSWJ/i3hQEbT
+         /DXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=V+IY+0oce77n1O9F863vvzmAh9cNOoW4gGZxQ9nHc9A=;
-        b=hnDYnOK1obVuWZfT5Aj2q/oZepkzpOMYIf1b99otDmA+ue6uE5BbQgMC8lCF3Zr5Uo
-         jD8yToI9aY3qqAO5laQmDjUc670yuIMeFZzWl941THabeHbSvferkCWxSRCuRJ6nV84R
-         e84JU9Pu1MJ5ZLNMVPlBvRYWg236RTOfGs3JjWzSAHQksfEjWUkiufvBNPszPcqDuMEn
-         r5uFfa4QSCMqLQmOTG8BqgWxc9dISMmBgWELEq8rqQ8PN3WjimkN96mx6ius/Jkm/iNX
-         ymy1JTtEiaQMSaZqGiQGg84yTO4V/zAeII5aOyPnBdbpSpkAlhNCNVesKFJk4dr0yFPf
-         cWeQ==
-X-Gm-Message-State: AOAM5338W8OzyCfDBbjEKjuw3dOV3vr2IFcZgSlcj8Fyjw++6akW6QA8
-        EEew97AdikSLbT+HXOBW3qE=
-X-Google-Smtp-Source: ABdhPJxdR0X4pzjphQ0xJ24hWd4Gij3HiSYXjTekxa2x2+d2jVKzh0raQSM/vy36I48/+J21wkO35g==
-X-Received: by 2002:a63:2fc3:: with SMTP id v186mr9030009pgv.158.1597653337480;
-        Mon, 17 Aug 2020 01:35:37 -0700 (PDT)
+        bh=IwFOYY367ULZT1BN2OrQmrKwLru5AbIHU/lvBoUtbvI=;
+        b=WZV/dXv6jMmVOboHg/i2QVS3gAwsiPwXzdH6PeRpRRmSbfmz1fs+pcgz8+6oxhS0wp
+         Ku2EMcYvhjLZacXyS2JbnPQPSD/4K9ilcE7Sw8n7B435WAbtKRPRibDYWVXNuzR6Rv51
+         Ui46qSLP2J8suFQu80g9n59eB9g+WQYvBWy7cLITMRNvS7dT54+FFouVxVNN5we5+VCT
+         a9viKxez1B/QOh9ul5Sj4OGCanEEsjYO2WuCsH1xx/M63B/FHvNpYRSdu9t8jugUfrbm
+         8PVlFN97vxhIClgwtE1GuKJN5OXZ3A27fNcAa20x4c7v4kjW1u4ttCkVIK3fXdTtp5Ch
+         ZHLw==
+X-Gm-Message-State: AOAM530sP4QySvBE6fvAYt7EnPuDog4UnZKr43JvMXh3+W0PluHgVi24
+        jPkbeuPCe2IBAypeAZI8BMc=
+X-Google-Smtp-Source: ABdhPJzuuZWms7RUMkI6+RPWhuqqeB3lLRfxRvIP7v4EbXz/ZUmf08sunStIEL/0sx81A2cvBjvJvw==
+X-Received: by 2002:a17:902:441:: with SMTP id 59mr10581843ple.282.1597653347062;
+        Mon, 17 Aug 2020 01:35:47 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id h5sm18434068pfq.146.2020.08.17.01.35.33
+        by smtp.gmail.com with ESMTPSA id h5sm18434068pfq.146.2020.08.17.01.35.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:35:37 -0700 (PDT)
+        Mon, 17 Aug 2020 01:35:46 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     ludovic.desroches@microchip.com, ulf.hansson@linaro.org,
         manuel.lauss@gmail.com, mirq-linux@rere.qmqm.pl,
@@ -69,9 +69,9 @@ Cc:     keescook@chromium.org, inux-mmc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 03/10] mmc: cb710: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:05:01 +0530
-Message-Id: <20200817083508.22657-4-allen.lkml@gmail.com>
+Subject: [PATCH 05/10] mmc: omap: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:05:03 +0530
+Message-Id: <20200817083508.22657-6-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817083508.22657-1-allen.lkml@gmail.com>
 References: <20200817083508.22657-1-allen.lkml@gmail.com>
@@ -88,40 +88,35 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/mmc/host/cb710-mmc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/mmc/host/omap.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mmc/host/cb710-mmc.c b/drivers/mmc/host/cb710-mmc.c
-index e84ed84ea4cc..3e8fd2850794 100644
---- a/drivers/mmc/host/cb710-mmc.c
-+++ b/drivers/mmc/host/cb710-mmc.c
-@@ -646,11 +646,12 @@ static int cb710_mmc_irq_handler(struct cb710_slot *slot)
- 	return 1;
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index 33d7af7c7762..9852263cef4d 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -878,9 +878,9 @@ static void mmc_omap_cover_timer(struct timer_list *t)
+ 	tasklet_schedule(&slot->cover_tasklet);
  }
  
--static void cb710_mmc_finish_request_tasklet(unsigned long data)
-+static void cb710_mmc_finish_request_tasklet(struct tasklet_struct *t)
+-static void mmc_omap_cover_handler(unsigned long param)
++static void mmc_omap_cover_handler(struct tasklet_struct *t)
  {
--	struct mmc_host *mmc = (void *)data;
--	struct cb710_mmc_reader *reader = mmc_priv(mmc);
-+	struct cb710_mmc_reader *reader = from_tasklet(reader, t,
-+						       finish_req_tasklet);
- 	struct mmc_request *mrq = reader->mrq;
-+	struct mmc_host *mmc = mrq->host;
+-	struct mmc_omap_slot *slot = (struct mmc_omap_slot *)param;
++	struct mmc_omap_slot *slot = from_tasklet(slot, t, cover_tasklet);
+ 	int cover_open = mmc_omap_cover_is_open(slot);
  
- 	reader->mrq = NULL;
- 	mmc_request_done(mmc, mrq);
-@@ -718,8 +719,8 @@ static int cb710_mmc_init(struct platform_device *pdev)
+ 	mmc_detect_change(slot->mmc, 0);
+@@ -1269,8 +1269,7 @@ static int mmc_omap_new_slot(struct mmc_omap_host *host, int id)
  
- 	reader = mmc_priv(mmc);
+ 	if (slot->pdata->get_cover_state != NULL) {
+ 		timer_setup(&slot->cover_timer, mmc_omap_cover_timer, 0);
+-		tasklet_init(&slot->cover_tasklet, mmc_omap_cover_handler,
+-			     (unsigned long)slot);
++		tasklet_setup(&slot->cover_tasklet, mmc_omap_cover_handler);
+ 	}
  
--	tasklet_init(&reader->finish_req_tasklet,
--		cb710_mmc_finish_request_tasklet, (unsigned long)mmc);
-+	tasklet_setup(&reader->finish_req_tasklet,
-+		      cb710_mmc_finish_request_tasklet);
- 	spin_lock_init(&reader->irq_lock);
- 	cb710_dump_regs(chip, CB710_DUMP_REGS_MMC);
- 
+ 	r = mmc_add_host(mmc);
 -- 
 2.17.1
 
