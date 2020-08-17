@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE312C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95D4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DFA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBAE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689804;
-	bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+	s=default; t=1597689809;
+	bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naEEsoOgaVTt+gtkvGsYZ1vYreQi/6qV1l6kj+cQA709BWukCh0a+QnHH0ZBYDaKz
-	 yW4bOyILoLtrTOPn9B3m3mNf1bCMsWHPPft8OONLYAJr/WLilztLnFLZppxo+QgCTf
-	 3VLp165rQKmzm6BajEsIQWOnH8e/EVMUqRDGd+zY=
+	b=PaNdlEgj6Fzy1K7nC7oMMEFxIy5FmMkr7Q7ahH2Q4XVdGIbaz2X9kqHr9WM3svn5b
+	 p94Q5Kk0Hju+O4lEkjsK6GrxGIrFTNdyls0z7Uv9ljBrHg1QaEFY1KA+rFRkEEL2YA
+	 iaDQbUjSkhtH7hgCMGvprmQkLMuqLACxbPCJSkwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391479AbgHQSnR (ORCPT
+        id S2389580AbgHQSnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388094AbgHQP47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:56:59 -0400
+        id S2388104AbgHQP5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:57:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2906320882;
-        Mon, 17 Aug 2020 15:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E14208C7;
+        Mon, 17 Aug 2020 15:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679818;
-        bh=O130pITfkEZjlbweqZvbhuI2bgX0PeT8PhsHPXZuxYg=;
+        s=default; t=1597679829;
+        bh=pfviu27H9hD2OYEl1DDN8ZQ7SZqNjtL9YSu3pGx/A6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XtmrHlOIvKkSAqi36P4na6Zp+0hPEvKAIFkzvDtp1j6KVh5aJU3BW72uG1S92iLiG
-         so5ZK8JR+w6PCF117RkZR62SiyFTwRnfulWcGLkQx9SF8GZ6sFkwX+RJbc6SHyVGk6
-         MWomtfmGg5L5DK9ElJ+RiV2X1Ls1hpCUGwVewuVQ=
+        b=ZxVqyqrJIAa6jrc+7bHPaa5Mp9rBKqe+qBzKlUO6vwFvLinZZZibOqfrvqBufR3Pr
+         H/G9FatSmI1+NfpGooyU2YNWXw0ClFwEUMhCV4XpewLAdVz/9a9NiUWaUvYrWsIoCZ
+         mRKaayPA72PaUZkiLHfgDBb1VZesSmoLyqCkNrFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.7 344/393] crypto: cpt - dont sleep of CRYPTO_TFM_REQ_MAY_SLEEP was not specified
-Date:   Mon, 17 Aug 2020 17:16:34 +0200
-Message-Id: <20200817143836.286203305@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
+        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 348/393] fs/minix: dont allow getting deleted inodes
+Date:   Mon, 17 Aug 2020 17:16:38 +0200
+Message-Id: <20200817143836.481172582@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -59,103 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 9e27c99104707f083dccd3b4d79762859b5a0614 upstream.
+commit facb03dddec04e4aac1bb2139accdceb04deb1f3 upstream.
 
-There is this call chain:
-cvm_encrypt -> cvm_enc_dec -> cptvf_do_request -> process_request -> kzalloc
-where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
-was not specified.
+If an inode has no links, we need to mark it bad rather than allowing it
+to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink() when
+doing directory operations on a fuzzed filesystem.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org	# v4.11+
-Fixes: c694b233295b ("crypto: cavium - Add the Virtual Function driver for CPT")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-3-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/cavium/cpt/cptvf_algs.c       |    1 +
- drivers/crypto/cavium/cpt/cptvf_reqmanager.c |   12 ++++++------
- drivers/crypto/cavium/cpt/request_manager.h  |    2 ++
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ fs/minix/inode.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
---- a/drivers/crypto/cavium/cpt/cptvf_algs.c
-+++ b/drivers/crypto/cavium/cpt/cptvf_algs.c
-@@ -200,6 +200,7 @@ static inline int cvm_enc_dec(struct skc
- 	int status;
- 
- 	memset(req_info, 0, sizeof(struct cpt_request_info));
-+	req_info->may_sleep = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) != 0;
- 	memset(fctx, 0, sizeof(struct fc_context));
- 	create_input_list(req, enc, enc_iv_len);
- 	create_output_list(req, enc_iv_len);
---- a/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
-+++ b/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
-@@ -133,7 +133,7 @@ static inline int setup_sgio_list(struct
- 
- 	/* Setup gather (input) components */
- 	g_sz_bytes = ((req->incnt + 3) / 4) * sizeof(struct sglist_component);
--	info->gather_components = kzalloc(g_sz_bytes, GFP_KERNEL);
-+	info->gather_components = kzalloc(g_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->gather_components) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -150,7 +150,7 @@ static inline int setup_sgio_list(struct
- 
- 	/* Setup scatter (output) components */
- 	s_sz_bytes = ((req->outcnt + 3) / 4) * sizeof(struct sglist_component);
--	info->scatter_components = kzalloc(s_sz_bytes, GFP_KERNEL);
-+	info->scatter_components = kzalloc(s_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->scatter_components) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -167,7 +167,7 @@ static inline int setup_sgio_list(struct
- 
- 	/* Create and initialize DPTR */
- 	info->dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
--	info->in_buffer = kzalloc(info->dlen, GFP_KERNEL);
-+	info->in_buffer = kzalloc(info->dlen, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->in_buffer) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -195,7 +195,7 @@ static inline int setup_sgio_list(struct
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -468,6 +468,13 @@ static struct inode *V1_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
  	}
- 
- 	/* Create and initialize RPTR */
--	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, GFP_KERNEL);
-+	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->out_buffer) {
- 		ret = -ENOMEM;
- 		goto scatter_gather_clean;
-@@ -421,7 +421,7 @@ int process_request(struct cpt_vf *cptvf
- 	struct cpt_vq_command vq_cmd;
- 	union cpt_inst_s cptinst;
- 
--	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	info = kzalloc(sizeof(*info), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (unlikely(!info)) {
- 		dev_err(&pdev->dev, "Unable to allocate memory for info_buffer\n");
- 		return -ENOMEM;
-@@ -443,7 +443,7 @@ int process_request(struct cpt_vf *cptvf
- 	 * Get buffer for union cpt_res_s response
- 	 * structure and its physical address
- 	 */
--	info->completion_addr = kzalloc(sizeof(union cpt_res_s), GFP_KERNEL);
-+	info->completion_addr = kzalloc(sizeof(union cpt_res_s), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (unlikely(!info->completion_addr)) {
- 		dev_err(&pdev->dev, "Unable to allocate memory for completion_addr\n");
- 		ret = -ENOMEM;
---- a/drivers/crypto/cavium/cpt/request_manager.h
-+++ b/drivers/crypto/cavium/cpt/request_manager.h
-@@ -62,6 +62,8 @@ struct cpt_request_info {
- 	union ctrl_info ctrl; /* User control information */
- 	struct cptvf_request req; /* Request Information (Core specific) */
- 
-+	bool may_sleep;
-+
- 	struct buf_ptr in[MAX_BUF_CNT];
- 	struct buf_ptr out[MAX_BUF_CNT];
- 
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -501,6 +508,13 @@ static struct inode *V2_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
 
 
