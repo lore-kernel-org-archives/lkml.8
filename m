@@ -2,91 +2,242 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28AAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D90204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4CD20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cwPg6sKS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IXeW+oo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgHQUAE (ORCPT
+        id S2387422AbgHQUAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:00:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgHQUAD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:00:03 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE55C061389;
-        Mon, 17 Aug 2020 13:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JvFsJsVah9hNUUBcuUOzHtwAbnw84m6c+Ym/sqopwyg=; b=cwPg6sKS99k7Z/W8H7CydeRAtI
-        mrv1duiZdj1i7d7qoQdL6kyezw0sauPEQkcqm6lMBqJT/uYsmWXLN9VGTRYqT+722nBMx4OAT33B0
-        cSS0N1xGekrFlj+hOUdSgJInOPrIql34bC+BGt99DFuuAx42MFiNAW2dsD+hk/xm+tdM=;
-Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k7lIQ-0004uS-5Y; Mon, 17 Aug 2020 21:59:54 +0200
-Date:   Mon, 17 Aug 2020 21:59:53 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-omap@vger.kernel.org, aford@beaconembedded.com,
-        =?UTF-8?B?QmVu?= =?UTF-8?B?b8OudA==?= Cousson 
-        <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hns@goldelico.com
-Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
- omap34/36 families
-Message-ID: <20200817215953.59607c11@aktux>
-In-Reply-To: <20200817133931.11785-1-aford173@gmail.com>
-References: <20200817133931.11785-1-aford173@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Aug 2020 16:00:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31982 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729118AbgHQUAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 16:00:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597694439; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=NdD48skVszuOItAKskoiRELtYxmKvKcR/jrt0QNwEyM=;
+ b=IXeW+oo/324jPKzsbDGmP5tMz9HpSaOvtelLusVJRvBDJnICoGsvTHfUna+kaTkYtZ60vZTF
+ +N2PkmTsB6ElB9Djrd0f5CfhiZiZXEUe9TmLk/KflTwp43GxYDWkcDpQLalImUBnPgyuDTB3
+ y26SPDeO42ZilGxskgRI9vmNino=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3ae1dd46ed996674f549fa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 20:00:29
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 966F7C43391; Mon, 17 Aug 2020 20:00:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02D87C433CA;
+        Mon, 17 Aug 2020 20:00:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Aug 2020 13:00:26 -0700
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Jonathan Marek <jonathan@marek.ca>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL
+ driver
+In-Reply-To: <CAF6AEGt+NV-T7Qo_-gLM981QBWy3865Vbj518sd-4XQJccX_WA@mail.gmail.com>
+References: <20200812044223.19279-1-tanmay@codeaurora.org>
+ <20200812044223.19279-4-tanmay@codeaurora.org>
+ <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
+ <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
+ <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
+ <CAF6AEGt+NV-T7Qo_-gLM981QBWy3865Vbj518sd-4XQJccX_WA@mail.gmail.com>
+Message-ID: <544ff63864a06f70f7b4541b913180bf@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 08:39:31 -0500
-Adam Ford <aford173@gmail.com> wrote:
+On 2020-08-15 15:45, Rob Clark wrote:
+> On Sat, Aug 15, 2020 at 2:21 PM Jonathan Marek <jonathan@marek.ca> 
+> wrote:
+>> 
+>> On 8/15/20 4:20 PM, Rob Clark wrote:
+>> > On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
+>> > <dmitry.baryshkov@linaro.org> wrote:
+>> >>
+>> >>
+>> >> On 12/08/2020 07:42, Tanmay Shah wrote:
+>> >>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
+>> >>   >
+>> >>   > Add the needed DP PLL specific files to support
+>> >>   > display port interface on msm targets.
+>> >>
+>> >> [skipped]
+>> >>
+>> >>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>> >> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>> >>   > new file mode 100644
+>> >>   > index 000000000000..475ba6ed59ab
+>> >>   > --- /dev/null
+>> >>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>> >>   > @@ -0,0 +1,98 @@
+>> >>   > +/* SPDX-License-Identifier: GPL-2.0-only */
+>> >>   > +/*
+>> >>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights
+> reserved.
+>> >>   > + */
+>> >>   > +
+>> >>   > +#ifndef __DP_PLL_10NM_H
+>> >>   > +#define __DP_PLL_10NM_H
+>> >>   > +
+>> >>   > +#include "dp_pll.h"
+>> >>   > +#include "dp_reg.h"
+>> >>   > +
+>> >>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
+>> >>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
+>> >>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
+>> >>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
+>> >>   > +
+>> >>   > +#define NUM_DP_CLOCKS_MAX            6
+>> >>   > +
+>> >>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
+>> >>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
+>> >>   > +
+>> >>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
+>> >>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
+>> >>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
+>> >>   > +
+>> >>   > +struct dp_pll_vco_clk {
+>> >>   > +    struct clk_hw hw;
+>> >>   > +    unsigned long    rate;        /* current vco rate */
+>> >>   > +    u64        min_rate;    /* min vco rate */
+>> >>   > +    u64        max_rate;    /* max vco rate */
+>> >>   > +    void        *priv;
+>> >>   > +};
+>> >>   > +
+>> >>   > +struct dp_pll_db {
+>> >>
+>> >> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
+>> >> example, will use slightly different structure.
+>> >
+>> > Note that sboyd has a WIP series to move all of the pll code out to a
+>> > phy driver.  If there is work already happening on 7nm support, it
+>> > might be better to go with the separate phy driver approach?  I'm
+>> > still a bit undecided about whether to land the dp code initially with
+>> > the pll stuff in drm, and then continue refactoring to move to
+>> > separate phy driver upstream, or to strip out the pll code from the
+>> > beginning.  If you/someone is working on 7nm support, then feedback
+>> > about which approach is easier is welcome.
+>> >
+>> >
+> https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.
+> org/
+>> >
+>> 
+>> I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, 
+>> and
+>> I have done something similar, with the PLL driver in the QMP phy,
+>> although not based on sboyd's series (along with some typec changes to
+>> negotiate the DP alt mode and get HPD events, etc.). I don't think
+>> having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't 
+>> need
+>> to be aware of the DP PLL/PHY driver, it only needs to set the
+>> link/pixel clock rates which are in dispcc (and those then have the 
+>> PLL
+>> clocks as a parent).
+> 
+> yeah, in the dp case, having phy split out makes a ton of sense.. it
+> would maybe be a nice cleanup in other cases (dsi, hdmi) but the
+> combination of usb+dp makes burying this in drm not so great..
+> 
+> It would be good if you could work w/ sboyd on this.. based on what
+> I've seen on previous gens, it is probably a different phy driver for
+> 7nm vs 10nm, but I think where we want to end up upstream is with phy
+> split out of drm.
+> 
+>> FYI, since it sounds you are considering landing this: it is 
+>> completely
+>> broken, for example:
+>> - ioremap()'s to #define'd addresses in the PLL driver
+>> - main DP driver reading/writing to registers in the PHY region, but
+>> getting the base address from devicetree was removed since earlier
+>> revisions, so it just fails completely. Look at usb3_dp_com (for
+>> example), which in dp_catalog_ctrl_usb_reset() would be used to
+>> overwrite registers already being driven by the qmp phy driver - but 
+>> now
+>> the usb3_dp_com.base is never initialized.
+> 
+> Yeah, the idea to land dp isn't that it is perfect (or even not
+> broken), so much as having something upstream gives a common base for
+> others to work against.. maybe we should make the dp parts 'depends on
+> STAGING'?
+> 
+> I could keep a separate msm-next-dp branch that I rebase, to give a
+> common point for folks working dp support for various different gens
+> to coordinate work on.. that kinda sounds like a bunch of extra work
+> for me, so might as well land what we have somehow and work together
+> from there ;-)
+> 
+> But it does sound like you are making the case for including the patch
+> to drop the pll stuff and use phy framework as part of what initially
+> goes upstream.
+> 
 
-> The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
-> depending on commercial or industrial temperature ratings.
-> 
-> This patch expands the thermal information to include the limits of 90
-> and 105C for alert and critical.  It sets the coolings-cells for the
-> 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
-> 
-> For boards who never use industrial temperatures, these can be
-> changed on their respective device trees with something like:
-> 
-> &cpu_alert0 {
-> 	temperature = <85000>; /* millicelsius */
-> };
-> 
-> &cpu_crit {
-> 	temperature = <90000>; /* millicelsius */
-> };
-> 
-> OMAP3_THERMAL will need to be enabled.  It is off by default.
-> 
-hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
-got stuck somewhere. It still seems not to work. Shouldn't that patch
-be applied first?
+I agree with Rob on landing what we have in DP driver. Of course, by 
+addressing any outstanding comments. That would help in setting base 
+functional code for DisplayPort
+Bring-up. Other features such as PHY compliance and DP audio are 
+dependent on these changes.
 
-Regards,
-Andreas
+We don't want to keep PLL code in drm/msm directory and so we have 
+removed bindings of PLL from DP node. Once base driver is merged, we can 
+rebase Stephen's QMP PHY changes and merge them. Stephen's changes are 
+removing PLL code from drm/msm directory already.
+
+Other dependent patches for DisplayPort driver on msm are posted here:
+https://lore.kernel.org/dri-devel/20200810232315.18707-1-khsieh@codeaurora.org/
+https://lore.kernel.org/dri-devel/20200813015439.4174-2-abhinavk@codeaurora.org/
+
+
+> BR,
+> -R
+> 
+>> 
+>> -Jonathan
+>> 
+>> > BR,
+>> > -R
+>> > _______________________________________________
+>> > Freedreno mailing list
+>> > Freedreno@lists.freedesktop.org
+>> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+>> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
