@@ -7,70 +7,93 @@ X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04624C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEAF42087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4006C2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 03:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BvINO9nn"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="utWOu3oN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHQDH0 (ORCPT
+        id S1726996AbgHQDJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60098 "EHLO
+        Sun, 16 Aug 2020 23:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgHQDH0 (ORCPT
+        with ESMTP id S1726235AbgHQDJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:07:26 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A76C061388
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:07:25 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d22so7528096pfn.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:07:25 -0700 (PDT)
+        Sun, 16 Aug 2020 23:09:00 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7CABC061385
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:09:00 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id n128so9782482oif.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Aug 2020 20:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/y3+sIpziI5i2x/IrsZTj9dc44wN9fN2Q4/rOL2VgUc=;
-        b=BvINO9nn5tfb50yh6jKlnRihWrRMuT6XhZAD/8h6S8XRIIl93QpNwoycR/MeMYym08
-         uD0zC8BOchR0VuTWgqhI5Jto7pkZ1ZS61S+3wO4FFUe+xeufo3kHKJ1xpQAXE4oZjEOA
-         mEN5C/u75TR6ZXCF700os5SN475dlm6t7r1m3aOMVwOxY27wnIJzq9evFjUrOEWYi2Ca
-         Qw2OTr6lJ+FRAayUrxECsUmIfmYbpuiGW5ergC+OQSqVBr56FjgGVeS478gWUzyLZ95X
-         G7c7G5ic10fnKaeiLxMijuNIklPoPVtIqCO7VTX9ikSB5CfM/w2T6RA3R1DOF/yYOSWf
-         nGIg==
+        bh=VUwWPfMFaK7Ua27x+BYsqt8qSqzZlNaS/aMpIL7yuSw=;
+        b=utWOu3oN3/U852PBbErO0/SQKSZMtH2sdGg1SUoskWjy9SksHhb0eu0x0JYcfw1POE
+         ayUgUEDG1Jsc1X/GUVJQs9A4GiSI2wEPEw+F9b1Dp4PwLgNCerDA2M37LxkEnYO3mAJp
+         DWiqaJB88/LLC5nEz68evEbKCN2vW82kQvA4UIaAYcWHHi0QS3trlukqHjPO0Tlyfdh5
+         t9GG7oWgpbHDgjH9eyPmP3IkpprYSY55PgPRT83d+BY/Udgy7SDispFvkXeK8qy/w3Jv
+         S20hk8VzedN5H9DYESHpm6qJQO9h0Rs2AfYMyvUEx8XDUGQ4+4uLb/pkuRb5Zwy5WGhr
+         9x4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/y3+sIpziI5i2x/IrsZTj9dc44wN9fN2Q4/rOL2VgUc=;
-        b=Sx1nO+Sb/h/dlNWZAiyM+/h4yhoMfRqJj1aHohU2iOnCn/UqI3pLGUc6vPIsj8008j
-         eL7AEf/0uZ4eHUvUVs5BKNo9PxjdFndjhOnYA458a7g8bBhhq2l/3XAsPE0h0WQnmS5V
-         lkeVOAtGjGgMEGhcX4SnlOvJZxnkOuhTAjTLbWF64hT91cXfKvjmr5PzrG5Ktb4f6MGA
-         3fTseIrvY1ges62hqT2MAF1gl5AK9QHOq+053WAk36cLYdps2MzLA2b0EYMA7glbb7Or
-         RAuJpgOsyTq9NfhmgNWpbjd5hr91om3DNHlpVCKBnArhjS+NYMqvrXBXS8ftOZoxmJsF
-         NnLQ==
-X-Gm-Message-State: AOAM530sh3YfDa5hT2CALBoc7WjEL+ZXXFkm9sOfC+Xe5Oo2Z8hIvFEq
-        miS8DXZlxJscTe0JJmN2XxB318siwTO5/g==
-X-Google-Smtp-Source: ABdhPJy8AHV8k/93PskJpi0rA9JuD7vXvSvbRHrZ8o/IR6+gZ82f73n70Vt5ocBfZ+4dfTaRG0kMxg==
-X-Received: by 2002:a63:e703:: with SMTP id b3mr8596103pgi.39.1597633644187;
-        Sun, 16 Aug 2020 20:07:24 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:ea1b:63b0:364:3a3b? ([2605:e000:100e:8c61:ea1b:63b0:364:3a3b])
-        by smtp.gmail.com with ESMTPSA id w16sm15710766pjd.50.2020.08.16.20.07.23
+        bh=VUwWPfMFaK7Ua27x+BYsqt8qSqzZlNaS/aMpIL7yuSw=;
+        b=PKNtjBSOcFBTCCFWfY74PnLT3xhaJ70sCuLvO3W66IEzeysHgZqoyCPA0ZkspGDygE
+         vx2ooIiARiue2tL/tc60BtNERCyCEdn7RolVC/i/kfiN3qTMPxmvjbL1Jajy2NNWNC0n
+         34E5cBeKzVuUYw+81lY5okdv9MbvKOctrV+ZVTBLUVv+MTTQrTlyZ8uEqnrW6NcD8w4V
+         LwrsZXIgRfOAC+cATFZE1F+K0B3jETVGVtBgF4dhLakp1/CSYp3uEGvHa0BY/qDNYWcA
+         xA2F/88jLJiSqLGCyx7ssmBUe/WvtD1GhD/CpIbqY/WbVJQYTU/z5shhUy+sg7mtaSmw
+         Y17A==
+X-Gm-Message-State: AOAM533dhHAPdAaNhxDcX69qs+NX2xcEeVNOvBAs1ah2acWin6T7b9o6
+        G3+F0JLI/IJR3oyvs4dQWXogSQ==
+X-Google-Smtp-Source: ABdhPJySdNxP09FGzCeHqqHEHRixrNk5nzHWEtuld881QXLgXnsHG18H633vGJGzwpOn5PQv38Bznw==
+X-Received: by 2002:aca:eb84:: with SMTP id j126mr8262398oih.30.1597633740038;
+        Sun, 16 Aug 2020 20:09:00 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id g34sm1701273ooi.31.2020.08.16.20.08.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Aug 2020 20:07:23 -0700 (PDT)
-Subject: Re: [PATCH] bsg-lib: convert comma to semicolon
-To:     Xu Wang <vulab@iscas.ac.cn>, linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200817021649.9922-1-vulab@iscas.ac.cn>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b17a63b2-ed72-66b9-6157-38636d4a7316@kernel.dk>
-Date:   Sun, 16 Aug 2020 20:07:22 -0700
+        Sun, 16 Aug 2020 20:08:59 -0700 (PDT)
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+ <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
+ <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
+ <CA+V-a8vPn_z_j1Vwr_1F=dCw8H=g5UMWvWxgRqBeVR7dzHPz8Q@mail.gmail.com>
+ <CAMuHMdWc9q9NjQuAuy5M=v_x=i8XxVg5JZHswjvPsgNzhHfO0w@mail.gmail.com>
+ <CAMuHMdUyV58t3eihBJv2xex5gW1Oef37Jo3FHoJstU=SspmpHA@mail.gmail.com>
+ <CAMuHMdU0EiQuk_bWx1yrmbBTXg8mL-PeN2=P61xQ5Ucb5QmYYg@mail.gmail.com>
+ <OSBPR01MB50485F5DA2F82E455DCA6B56AA5E0@OSBPR01MB5048.jpnprd01.prod.outlook.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <b384543f-c80d-aa63-63a6-1b5dbc47885d@landley.net>
+Date:   Sun, 16 Aug 2020 22:17:48 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200817021649.9922-1-vulab@iscas.ac.cn>
+In-Reply-To: <OSBPR01MB50485F5DA2F82E455DCA6B56AA5E0@OSBPR01MB5048.jpnprd01.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,11 +102,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/16/20 7:16 PM, Xu Wang wrote:
-> Replace a comma between expression statements by a semicolon.
+On 8/16/20 11:22 AM, Prabhakar Mahadev Lad wrote:
+>> FTR, I gave it a try on the SH7751R-based I-O DATA USL-5P aka Landisk:
+>> SCIF is affected, and fixed by commit 3dc4db3662366306 ("serial: sh-sci:
+>> Make sure status register SCxSR is read in correct sequence").
+>>
+> Thank you Geert.
+> 
+> Cheers,
+> Prabhakar
 
-Thanks, applied.
+Did we ever figure out how to get linux to talk to the _first_ serial port on
+the qemu-system-sh4 r2d board? I'm still doing:
 
--- 
-Jens Axboe
+  qemu-system-sh4 -M r2d -serial null -serial mon:stdio
 
+Because I can only get a working console on the _second_ serial port. (SCI vs
+SCIF I think?)
+
+Rob
