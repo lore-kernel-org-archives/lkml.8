@@ -2,154 +2,158 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83110C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA9C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A2720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686509;
-	bh=gOa0eYxDEsJl2GQzrDLlhSJ5bJ/ZSXUtDonvSlh0ISI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZW5qArHT+zYCoU8Ojaf8bv+yIBwUTLmUrUJWcNORgCla8mY4ALLN+VHntOvGjm+5m
-	 1mOBClOEsyJNKADVGZCrfWSmVowkXzQJjdNeUNdP7heN9TiSA1YH4Zmrd0nXFgl0A+
-	 x/Pue2aAZIGfcjJOzAAOXRYF2hu2+2pb5UaiBZa8=
+	by mail.kernel.org (Postfix) with ESMTP id 812D92067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbgHQRs1 (ORCPT
+        id S2390101AbgHQRsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388746AbgHQQNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:12 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E72C820882;
-        Mon, 17 Aug 2020 16:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680791;
-        bh=gOa0eYxDEsJl2GQzrDLlhSJ5bJ/ZSXUtDonvSlh0ISI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vLRATeCcDCX/WCszaMIH4H6QE5Q8qaxo+6lOPhJY3rU/qC3/KnPHOgpGDtINee7Gq
-         VcWIayKF3Q5vcKl+04xcwMH7/dbSBKTxAP7wJHZxqdCIaZTaY9H7oqkp8AkQMziwc8
-         C466cFsSL7D9DSNpN4oisiuWqbgpp5MlAwUUJYj4=
-Received: by mail-ot1-f43.google.com with SMTP id h22so13818866otq.11;
-        Mon, 17 Aug 2020 09:13:10 -0700 (PDT)
-X-Gm-Message-State: AOAM531NhY7Wt0pAoz/CGBobj3yGVukH2RMWCgIJe/MsLh2Zs4iCYRgU
-        XEGus4Y64M0JWEZhp8O1r0TWjGYLEjztDfWyJw==
-X-Google-Smtp-Source: ABdhPJyXcxsLxb+WyZgDqUvX+ZXB5O5RvpOgmleI0+UY8O6F4IJdy3paAveojUJFPRMuv9DQhsNQTGig0iW3qRkFcQI=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr11916864otp.192.1597680790121;
- Mon, 17 Aug 2020 09:13:10 -0700 (PDT)
+        Mon, 17 Aug 2020 13:48:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39198 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390094AbgHQRsU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 13:48:20 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k7jEY-0000AV-7b; Mon, 17 Aug 2020 17:47:46 +0000
+Date:   Mon, 17 Aug 2020 19:47:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrei Vagin <avagin@gmail.com>, adobriyan@gmail.com,
+        viro@zeniv.linux.org.uk, davem@davemloft.net,
+        akpm@linux-foundation.org, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+Message-ID: <20200817174745.jssxjdcwoqxeg5pu@wittgenstein>
+References: <2d65ca28-bcfa-b217-e201-09163640ebc2@virtuozzo.com>
+ <20200810173431.GA68662@gmail.com>
+ <33565447-9b97-a820-bc2c-a4ff53a7675a@virtuozzo.com>
+ <20200812175338.GA596568@gmail.com>
+ <8f3c9414-9efc-cc01-fb2a-4d83266e96b2@virtuozzo.com>
+ <20200814011649.GA611947@gmail.com>
+ <0af3f2fa-f2c3-fb7d-b57e-9c41fe94ca58@virtuozzo.com>
+ <20200814192102.GA786465@gmail.com>
+ <56ed1fb9-4f1f-3528-3f09-78478b9dfcf2@virtuozzo.com>
+ <87d03pb7f2.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
- <87pn7qnabq.wl-maz@kernel.org>
-In-Reply-To: <87pn7qnabq.wl-maz@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 17 Aug 2020 10:12:58 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
-Message-ID: <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
- property in DT
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87d03pb7f2.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Sun, 16 Aug 2020 00:22:28 +0100,
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
-> > > Recent changes to the DT PCI bus parsing made it mandatory for
-> > > device tree nodes describing a PCI controller to have the
-> > > 'device_type = "pci"' property for the node to be matched.
-> > >
-> > > Although this follows the letter of the specification, it
-> > > breaks existing device-trees that have been working fine
-> > > for years.  Rockchip rk3399-based systems are a prime example
-> > > of such collateral damage, and have stopped discovering their
-> > > PCI bus.
-> > >
-> > > In order to paper over the blunder, let's add a workaround
-> > > to the pcie-rockchip driver, adding the missing property when
-> > > none is found at boot time. A warning will hopefully nudge the
-> > > user into updating their DT to a fixed version if they can, but
-> > > the insentive is obviously pretty small.
-> >
-> > s/insentive/incentive/ (Lorenzo or I can fix this up)
-> >
-> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
-> >
-> > s/Roh/Rob/ (similarly)
->
-> Clearly not my day when it comes to proofreading commit messages.
-> Thanks for pointing this out, and in advance for fixing it up.
->
-> >
-> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >
-> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
-> > during the v5.9 merge window, right?
->
-> Absolutely.
->
-> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
-> > checker has already looked?
->
-> I've just managed to run the checker, which comes up with all kinds of
-> goodies. Apart from the above, it also spots the following:
->
-> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
->   in its main PCIe node, but not in the child nodes. It isn't obvious
->   to me whether that's a violation or not (the spec doesn't say
->   whether the property should be set on a per-port basis). Rob?
+On Mon, Aug 17, 2020 at 10:48:01AM -0500, Eric W. Biederman wrote:
+> 
+> Creating names in the kernel for namespaces is very difficult and
+> problematic.  I have not seen anything that looks like  all of the
+> problems have been solved with restoring these new names.
+> 
+> When your filter for your list of namespaces is user namespace creating
+> a new directory in proc is highly questionable.
+> 
+> As everyone uses proc placing this functionality in proc also amplifies
+> the problem of creating names.
+> 
+> 
+> Rather than proc having a way to mount a namespace filesystem filter by
+> the user namespace of the mounter likely to have many many fewer
+> problems.  Especially as we are limiting/not allow new non-process
+> things and ideally finding a way to remove the non-process things.
+> 
+> 
+> Kirill you have a good point that taking the case where a pid namespace
+> does not exist in a user namespace is likely quite unrealistic.
+> 
+> Kirill mentioned upthread that the list of namespaces are the list that
+> can appear in a container.  Except by discipline in creating containers
+> it is not possible to know which namespaces may appear in attached to a
+> process.  It is possible to be very creative with setns, and violate any
+> constraint you may have.  Which means your filtered list of namespaces
+> may not contain all of the namespaces used by a set of processes.  This
 
-The rule is bridge nodes should have 'device_type = "pci"'. But what's
-needed to fix these cases is setting device_type where we are parsing
-ranges or dma-ranges which we're not doing on the child ndes.
-Otherwise, I don't think it matters in this case unless you have child
-(grandchild here) nodes for PCI devices. If you did have child nodes,
-the address translation was already broken before this change.
+Indeed. We use setns() quite creatively when intercepting syscalls and
+when attaching to a container.
 
-> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
->   PCIe nodes has the device_type property, probably broken similarly
->   to rk3399.
+> further argues that attaching the list of namespaces to proc does not
+> make sense.
+> 
+> Andrei has a good point that placing the names in a hierarchy by
+> user namespace has the potential to create more freedom when
+> assigning names to namespaces, as it means the names for namespaces
+> do not need to be globally unique, and while still allowing the names
+> to stay the same.
+> 
+> 
+> To recap the possibilities for names for namespaces that I have seen
+> mentioned in this thread are:
+>   - Names per mount
+>   - Names per user namespace
+> 
+> I personally suspect that names per mount are likely to be so flexibly
+> they are confusing, while names per user namespace are likely to be
+> rigid, possibly too rigid to use.
+> 
+> It all depends upon how everything is used.  I have yet to see a
+> complete story of how these names will be generated and used.  So I can
+> not really judge.
 
-The only upstream board is DB820c, so probably not as wide an impact...
+So I haven't fully understood either what the motivation for this
+patchset is.
+I can just speak to the use-case I had when I started prototyping
+something similar: We needed a way to get a view on all namespaces
+that exist on the system because we wanted a way to do namespace
+debugging on a live system. This interface could've easily lived in
+debugfs. The main point was that it should contain all namespaces.
+Note, that it wasn't supposed to be a hierarchical format it was only
+mean to list all namespaces and accessible to real root.
+The interface here is way more flexible/complex and I haven't yet
+figured out what exactly it is supposed to be used for.
 
-There are also 92 (lots of duplicates due to multiple boards) more
-cases in arch/arm/. A log is here[1].
+> 
+> 
+> Let me add another take on this idea that might give this work a path
+> forward. If I were solving this I would explore giving nsfs directories
+> per user namespace, and a way to mount it that exposed the directory of
+> the mounters current user namespace (something like btrfs snapshots).
+> 
+> Hmm.  For the user namespace directory I think I would give it a file
+> "ns" that can be opened to get a file handle on the user namespace.
+> Plus a set of subdirectories "cgroup", "ipc", "mnt", "net", "pid",
+> "user", "uts") for each type of namespace.  In each directory I think
+> I would just have a 64bit counter and each new entry I would assign the
+> next number from that counter.
+> 
+> The restore could either have the ability to rename files or simply the
+> ability to bump the counter (like we do with pids) so the names of the
+> namespaces can be restored.
+> 
+> That winds up making a user namespace the namespace of namespaces, so
+> I am not 100% about the idea. 
 
-> I could move the workaround to drivers/pci/of.c, and have it called
-> from the individual drivers. I don't have the HW to test those though.
->
-> Thoughts?
+I think you're right that we need to understand better what the use-case
+is. If I understand your suggestion correctly it wouldn't allow to show
+nested user namespaces if the nsfs mount is per-user namespace.
 
-I think we should go with my other suggestion of looking at the node
-name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
-I don't see any cases.
+Let me throw in a crazy idea: couldn't we just make the ioctl_ns() walk
+a namespace hierarchy? For example, you could pass in a user namespace
+fd and then you'd get back a struct with handles for fds for the
+namespaces owned by that user namespace and then you could use
+NS_GET_USERNS/NS_GET_PARENT to walk upwards from the user namespace fd
+passed in initially and so on? Or something similar/simpler. This would
+also decouple this from procfs somewhat.
 
-Rob
-
-[1] https://gitlab.com/robherring/linux-dt-bindings/-/jobs/688752562
+Christian
