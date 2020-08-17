@@ -2,99 +2,140 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE8DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2EDC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A46204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689748;
-	bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2jXWfj7rQ8vWRAHoG0kiri+gGjxw71fb7gUlvEte2PMZ3tn7Pdz5TweH2m1uGMG3B
-	 mAGobV3eI2oOSI0APFepq3laGzUJhdsHefb61LpELtgHQDCa2wYYIU0XV0wO2ZBybT
-	 p5DKZDUtkwMcDXiLWk4ygcxSdH1TDzHqPx8kdidQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2EC39204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390791AbgHQSmQ (ORCPT
+        id S1731713AbgHQSme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:42:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5457 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgHQSlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:41:45 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6055220578;
-        Mon, 17 Aug 2020 18:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597689704;
-        bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lv2IgNnZkzv+mgS45C9KIxlOTvkSf7h5MH8+Iv2FkzTFNjx3mof2bkTNavcAtcIfL
-         e+cXrZwa+NHWgNQ1SFZ4cqU9Gk5AL4YjEN0uavWL8VEnpEfU1e8ISYgOdZmBq6HTfp
-         SUaGcskUd1ARRz1e73RekcSM0nCSqpLWRklimvOk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 2/2] MAINTAINERS: Add linux-mips mailing list to JZ47xx entries
-Date:   Mon, 17 Aug 2020 20:41:31 +0200
-Message-Id: <20200817184131.907-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817184131.907-1-krzk@kernel.org>
-References: <20200817184131.907-1-krzk@kernel.org>
+        id S2391029AbgHQSm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:42:29 -0400
+IronPort-SDR: trug3E0GuLUiuYiFVbVJGT5EkJJPsCyDrtDq/nelkRkhq/tB2kKlAp0ofI9qsNS4frvPa7/GfL
+ 46bzta7+w5rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239598593"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="239598593"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:42:28 -0700
+IronPort-SDR: cN77Q3ljGTc6aUVV1f5QieMS4soR0R8SKKcql3u2UTdzm0IpTqLqxbN8GC3Qh+aoTsMsSzG2w1
+ OGgqemmETuqQ==
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="319807735"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:42:28 -0700
+Date:   Mon, 17 Aug 2020 11:42:26 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: fix access code passed to gva_to_gpa
+Message-ID: <20200817184226.GJ22407@linux.intel.com>
+References: <20200817180042.32264-1-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817180042.32264-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The entries for JZ47xx SoCs and its drivers lacked MIPS mailing list.
-Only MTD NAND driver pointed linux-mtd.  Add linux-mips so the relevant
-patches will get attention of MIPS developers.
+On Mon, Aug 17, 2020 at 02:00:42PM -0400, Paolo Bonzini wrote:
+> The PK bit of the error code is computed dynamically in permission_fault
+> and therefore need not be passed to gva_to_gpa: only the access bits
+> (fetch, user, write) need to be passed down.
+> 
+> Not doing so causes a splat in the pku test:
+> 
+>    WARNING: CPU: 25 PID: 5465 at arch/x86/kvm/mmu.h:197 paging64_walk_addr_generic+0x594/0x750 [kvm]
+>    Hardware name: Intel Corporation WilsonCity/WilsonCity, BIOS WLYDCRB1.SYS.0014.D62.2001092233 01/09/2020
+>    RIP: 0010:paging64_walk_addr_generic+0x594/0x750 [kvm]
+>    Code: <0f> 0b e9 db fe ff ff 44 8b 43 04 4c 89 6c 24 30 8b 13 41 39 d0 89
+>    RSP: 0018:ff53778fc623fb60 EFLAGS: 00010202
+>    RAX: 0000000000000001 RBX: ff53778fc623fbf0 RCX: 0000000000000007
+>    RDX: 0000000000000001 RSI: 0000000000000002 RDI: ff4501efba818000
+>    RBP: 0000000000000020 R08: 0000000000000005 R09: 00000000004000e7
+>    R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000007
+>    R13: ff4501efba818388 R14: 10000000004000e7 R15: 0000000000000000
+>    FS:  00007f2dcf31a700(0000) GS:ff4501f1c8040000(0000) knlGS:0000000000000000
+>    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>    CR2: 0000000000000000 CR3: 0000001dea475005 CR4: 0000000000763ee0
+>    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>    PKRU: 55555554
+>    Call Trace:
+>     paging64_gva_to_gpa+0x3f/0xb0 [kvm]
+>     kvm_fixup_and_inject_pf_error+0x48/0xa0 [kvm]
+>     handle_exception_nmi+0x4fc/0x5b0 [kvm_intel]
+>     kvm_arch_vcpu_ioctl_run+0x911/0x1c10 [kvm]
+>     kvm_vcpu_ioctl+0x23e/0x5d0 [kvm]
+>     ksys_ioctl+0x92/0xb0
+>     __x64_sys_ioctl+0x16/0x20
+>     do_syscall_64+0x3e/0xb0
+>     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>    ---[ end trace d17eb998aee991da ]---
+> 
+> Reported-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Fixes: 897861479c064 ("KVM: x86: Add helper functions for illegal GPA checking and page fault injection")
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 2db369a64f29..a6e42ce607ca 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -10743,9 +10743,13 @@ EXPORT_SYMBOL_GPL(kvm_spec_ctrl_test_value);
+>  void kvm_fixup_and_inject_pf_error(struct kvm_vcpu *vcpu, gva_t gva, u16 error_code)
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+Side topic, 'struct x86_exception' really should be using a u32 for the
+error code.  Practically speaking, I expect bits 31:16 will be reserved in
+perpetuity, but it's jarring to see 'u16 error_code', and it leads to
+pointless discrepancies, e.g. 'u32 access' in ->gva_to_gpa().
 
----
+>  {
+>  	struct x86_exception fault;
+> +	const unsigned access_mask =
+> +		PFERR_WRITE_MASK | PFERR_FETCH_MASK | PFERR_USER_MASK;
 
-Changes since v1:
-1. Do not update DMA driver entry
-2. Add ack
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Don't suppose you'd be in the mood to kill the bare 'unsigned'?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9ab3a7fd6451..33d0ea35d8b4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8583,11 +8583,13 @@ F:	samples/bpf/ibumad_user.c
- INGENIC JZ4780 NAND DRIVER
- M:	Harvey Hunt <harveyhuntnexus@gmail.com>
- L:	linux-mtd@lists.infradead.org
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/ingenic/
- 
- INGENIC JZ47xx SoCs
- M:	Paul Cercueil <paul@crapouillou.net>
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/ingenic/
- F:	arch/mips/include/asm/mach-jz4740/
--- 
-2.17.1
+  WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
 
+>  
+>  	if (!(error_code & PFERR_PRESENT_MASK) ||
+> -	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, error_code, &fault) != UNMAPPED_GVA) {
+> +	    vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva,
+> +					    error_code & access_mask,
+> +					    &fault) != UNMAPPED_GVA) {
+
+Alternatively, what about capturing the result in a new variable (instead of
+defining the mask) to make the wrap suck less (or just overflow like the
+current code), e.g.:
+
+        u32 access = error_code &
+                     (PFERR_WRITE_MASK | PFERR_FETCH_MASK | PFERR_USER_MASK);
+
+        if (!(error_code & PFERR_PRESENT_MASK) ||
+            vcpu->arch.walk_mmu->gva_to_gpa(vcpu, gva, access, &fault) != UNMAPPED_GVA) {
+
+
+>  		/*
+>  		 * If vcpu->arch.walk_mmu->gva_to_gpa succeeded, the page
+>  		 * tables probably do not match the TLB.  Just proceed
+> -- 
+> 2.26.2
+> 
