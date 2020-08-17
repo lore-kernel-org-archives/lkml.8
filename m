@@ -7,97 +7,87 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A52AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3442C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 280402075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2202078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqBwkRXC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFOABJHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgHQNpI (ORCPT
+        id S1728827AbgHQNpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
+        Mon, 17 Aug 2020 09:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgHQNpD (ORCPT
+        with ESMTP id S1728698AbgHQNpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:45:03 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FC3C061389;
+        Mon, 17 Aug 2020 09:45:04 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 826DBC061342;
         Mon, 17 Aug 2020 06:45:03 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id k18so12357014qtm.10;
-        Mon, 17 Aug 2020 06:45:02 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id i19so8386736lfj.8;
+        Mon, 17 Aug 2020 06:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BYJ6ca7y4RKW7kdRQd9V6HMHJ7pUR25Ii4WZRZxcIwA=;
-        b=jqBwkRXCUC2G9tzWrb6k8xJwhu64G95QxJ+276oiE+WfiVbbRP9Mcmt16c2SWy+X2y
-         YMWGxufPGHwh4aa8WRz19RAZfhV1Yc7fJzjqdprRB4EQ4WTnBXCjLzwo/1jkL2r+ytlv
-         Up5vZ1xlMeHGhDcUNrmnU1z9dqmRdNb3VYhVZgcgQLe1UGgf1wDIfl0RL7EzdJdPm8Ay
-         ANX9YQHM4RtY8cwXrV/RcD2d3UpOHML3qRiWBqt7d5mxip+K93nHDHK87UVLkyI/HTxA
-         4ewYk/HqUpw4M1nKUIRCoJ9/SQycMaHbmqpMW9Gb+z36MIW/zmOul+K9AFjxbCrLv4p4
-         OiBA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q/iBDacXcX7OwSA4OUPrTWuLWUns2JSALVFoWN0Hnw4=;
+        b=jFOABJHtVyh8OD9ILSob0+1xRPgF2W3DKcjOLbosWx6OaSMc26YMNNoTZvEjsPDxkh
+         ZJPvHpzWDDiJw2SpU+JU3dfw6TNLTMbFomyhyT1DIfpXWi4k5sEQv6gJ5Q60323mnuYj
+         t2kobuIwRi0oHcEkQZ92MvE0mR4c0GP1nDyI8quVESDKMjD5hl2Lkks1DLcQfivVZ+ne
+         DbYaBd7+yGMaI5xYVZM1lzBUuTJlvBYll1OohFF2efbCIL3vxjGELcmZhPXrXfHv14cY
+         X/j4xqfdlynUZx+WIAgwBeWSR7N42cVvdS96Va6RiTS30OLxj4914yJ0H/hKKeIW0acI
+         U2rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BYJ6ca7y4RKW7kdRQd9V6HMHJ7pUR25Ii4WZRZxcIwA=;
-        b=tDorWHX5P4mlijcZRUv3J8QFt0sFCPcrk5paVjlPNIhbf6y4AFh5JBs/Aan2rgcPBk
-         1hH13Sr/yIoelzUTvutNVmy+sUql4PBNcXDBFjqkT575IdoPQbho+quZH9CNkEPYmq64
-         tSVsN0TwTnZC6iQPGU/kUVyRYC+4RW1KQEYxkmmihyVZA3x0lti0xbDhUEaC9k3iQJoZ
-         X2qWFqtvx0NU+xXutewknRhbof5zjs7LkYEofnQJF6zbQcH0wdydNmyfywIFItmXrd08
-         /+sNVLoWs5owGiTt0DKmlHxDNLpgCGyEN99f2mNSHkqo+QDunJiyCxYO+GB0HZFFPQNc
-         chPA==
-X-Gm-Message-State: AOAM532LuiydQjv7SXvNc0xy9mXs7jr3Ohj9m5Qgf9Tk5tiTaFi+rFUr
-        avGSTkZ5YOe3c0pdwVyDAk8=
-X-Google-Smtp-Source: ABdhPJyVqyIxhKwzuWhEe9Z0A6G83FMUAjQN9TNfQx9T7rOXVPvoCVDoIVpCxe5GOOe0TAXHlptsKQ==
-X-Received: by 2002:ac8:42ca:: with SMTP id g10mr13849675qtm.219.1597671901652;
-        Mon, 17 Aug 2020 06:45:01 -0700 (PDT)
-Received: from localhost.localdomain ([138.204.24.86])
-        by smtp.gmail.com with ESMTPSA id j72sm17283270qke.20.2020.08.17.06.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 06:45:01 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 6E1CFC355F; Mon, 17 Aug 2020 10:44:57 -0300 (-03)
-Date:   Mon, 17 Aug 2020 10:44:57 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     linux-sctp@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Oops on current Raspian when closing an SCTP connection
-Message-ID: <20200817134457.GG3399@localhost.localdomain>
-References: <20200816230624.GB2865@minyard.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q/iBDacXcX7OwSA4OUPrTWuLWUns2JSALVFoWN0Hnw4=;
+        b=K90UPM29jAAG32tCG4w6mBIboNCz4XhWLcHDCEnyNAvQctADfGDTsQQcoanaGQ/8s7
+         O6hHHD8mR1D8fI7hjiceFtGN/pHCMA9ugYB4QlTT5k1BCHTbfZjvdfUJTwaOejgSM8Ff
+         A1aS69JaUVlnQc39fznOgCQVJi07qb+msobeYlt82RKUORwKaIOLJlEHfF3aw17rQXmQ
+         LidmzcluWE4nfL+vbBIUAc1OQ6RGn98Bkj2txGooHahcVbEjwMGUqGQT6MS0pu/PSVCf
+         21ZjH6qOHepozxmJQZSgj+qvT6V8hb8/CGzGU64doQVg9kYoYOTx6TY4rQkOC/mObaMi
+         umpQ==
+X-Gm-Message-State: AOAM533xdPZJB2Ko184gesChkX2KJj5SElA8aWgpUDtpNpG+8NVhjU1B
+        IqoQ+6ewPUQiE68da3OAiKGr7oxBMswuouNv6Ic=
+X-Google-Smtp-Source: ABdhPJwH3ISurMR9Wexl6Jrj+lYrPT9IVRF5Hy/PJbqMIWyYWCnenIUGOmWF9TY6ZSmytMyUmfkz6bsdzHECzikGJk8=
+X-Received: by 2002:a05:6512:3156:: with SMTP id s22mr7566533lfi.140.1597671901506;
+ Mon, 17 Aug 2020 06:45:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200816230624.GB2865@minyard.net>
+References: <1596714617-16387-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <1596714617-16387-1-git-send-email-shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 17 Aug 2020 10:44:50 -0300
+Message-ID: <CAOMZO5AjRB7BCdJvE64=W+uxXnOOWzrD1Ahvyk=5Rukpdy8-0A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 06:06:24PM -0500, Corey Minyard wrote:
-> I'm seeing the following when an SCTP connection terminates.  This is on
-> Raspian on a Raspberry Pi, version is Linux version 5.4.51-v7+.  That's
-> 32-bit ARM.
-> 
-> I haven't looked into it yet, I thought I would report before trying to
-> chase anything down.  I'm not seeing it on 5.4 x86_64 systems.
-> 
-> Aug 16 17:59:00 access kernel: [510640.326415] Unable to handle kernel NULL pointer dereference at virtual address 00000008
-> Aug 16 17:59:00 access kernel: [510640.341624] pgd = c00fc16c
-> Aug 16 17:59:00 access kernel: [510640.347834] [00000008] *pgd=355ef835, *pte=00000000, *ppte=00000000
-> Aug 16 17:59:00 access kernel: [510640.357731] Internal error: Oops: 17 [#22] SMP ARM
-> Aug 16 17:59:01 access kernel: [510640.365931] Modules linked in: md5 sctp ftdi_sio cp210x usbserial raspberrypi_hwmon bcm2835_codec(C) v4l2_mem2mem bcm2835_isp(C) bcm2835_v4l2(C) bcm2835_mmal_vchiq(C) videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 snd_bcm2835(C) videobuf2_common i2c_bcm2835 snd_pcm snd_timer videodev snd mc vc_sm_cma(C) uio_pdrv_genirq uio fixed nf_nat_pptp nf_conntrack_pptp nf_nat nf_conntrack nf_defrag_ipv4 rtc_ds1307 regmap_i2c i2c_dev ip_tables x_tables ipv6 nf_defrag_ipv6
-> Aug 16 17:59:01 access kernel: [510640.425420] CPU: 1 PID: 4592 Comm: gtlsshd Tainted: G      D  C        5.4.51-v7+ #1327
-> Aug 16 17:59:01 access kernel: [510640.438008] Hardware name: BCM2835
-> Aug 16 17:59:01 access kernel: [510640.443823] PC is at sctp_ulpevent_free+0x38/0xa0 [sctp]
-> Aug 16 17:59:01 access kernel: [510640.451498] LR is at sctp_queue_purge_ulpevents+0x34/0x50 [sctp]
+Hi Shengjiu,
 
-Not ringing a bell here. Can you pinpoint on which line this crash
-was? It seems, by the 0x8 offset and these function offsets, that this
-could be when it was trying to access event->rmem_len, but if event
-was NULL then it should have crashed earlier.
+On Thu, Aug 6, 2020 at 8:55 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
 
-  Marcelo
+>  &iomuxc {
+>         imx6x-sdb {
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_hog>;
+
+Instead of adding a hog group, please add the headphone detect GPIO
+under the audmux group like you did in the imx6sl-evk patch.
+
+Thanks
