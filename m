@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6832072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167AC2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOndhxRJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiM7kKQG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHQIdH (ORCPT
+        id S1726896AbgHQIdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:33:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53770 "EHLO
+        Mon, 17 Aug 2020 04:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728364AbgHQIcw (ORCPT
+        with ESMTP id S1727797AbgHQIck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:32:52 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0312C061388;
-        Mon, 17 Aug 2020 01:32:52 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id i92so7644337pje.0;
-        Mon, 17 Aug 2020 01:32:52 -0700 (PDT)
+        Mon, 17 Aug 2020 04:32:40 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F064EC061389;
+        Mon, 17 Aug 2020 01:32:39 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so7354335pjb.2;
+        Mon, 17 Aug 2020 01:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BpUIfyiY1033QwITtcsFngj/BQQY04YlOMIFJZLa7+8=;
-        b=ZOndhxRJ3kEbaFup5uwE3vRCh/fWHZK/tTXskLR+/ZHLmu2kJ6agoy8gcsU8BZgSbQ
-         bNx+AiqivgU2wITRcKzE6YwQOFztZ+p5H6AWYfOGLc9MJkukU+jiVY2Db0tb+smV09Xb
-         pFEC3viI/CDZFUzGwEsXRQm27W37vYPaM9vMxJdwMqjL79GhfzUjjug9fWzEe7wl4fQ5
-         lVSJ+ALfHyMuXyDOR3awBvGAqPX62bNsMpC23qq/nVCDllUu5DgKd1ICkUt7Qk/PQ67F
-         GtWE3HdpmEzQTDxHoW+ss2rkANsti/yv4L3PIgXpwW/FdOD5apQZWgjwj5pCPZraRxGP
-         yBDw==
+        bh=evlrKxSaL3VCX/rnaXC9Z1AuYwNMsmnef16/xHaNLkY=;
+        b=XiM7kKQGvEDYEWbFL/Mq6Q9BGZdpAV8zIYWA4SZCu/QG1NxDaNrBk+gmwsZaimHx/W
+         whR3YKb0mb2/haPbA+IoLIa9yQO4eyhUzXOnK+Npfc9HuAsa92i/PnTDsqmzly5AGnsH
+         BYQLYQaZeNtcs3F2w+lt0koPEC1pQdx4mdX29hvhR+wWTiP0aocJFGfV18le4P+T00OT
+         RiMpFeOg+nb5yziknywMjFVgGDyXtyG+oq40twQbO7UdmfjwuTea7oS4yy/IOR4AZFGp
+         EL9Cbh+0woowtm+3epEs6iz32Qr27p6YNa1JlVBwJaFncBzCbbgOigL757gfKKntvGlr
+         Xb7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BpUIfyiY1033QwITtcsFngj/BQQY04YlOMIFJZLa7+8=;
-        b=FEjkldx3zP+W3AubP0vy0qaBYdn/GeMTw5r5eF5rJ/8/01j3tARTNsypbHuhUIjyyA
-         wKKw9omtP9IvcwrjBxxL+IkSQRopI+O82MzCd/NZKAN1j4/x/nuqxq19tIJsMa1AwBLo
-         u9mPcN65IPu17AQtenD+j8qZMEKAIIUmkS75Oq4eXLdJT0ntY4EP9NZLHqCyNrPjcEf1
-         aQw3aEW6LNEr6sjvLW3xX4hv1aO9sx9Kv4F8XzW6LljOoCZxpvNr06lrERch5WWSJvSe
-         5QYQa4fxNw2jAQxN+hPwQdxl3Az749/IQ2K7laHzlRpnfgZpipsSKqWkpXbrOPSNC0SG
-         eWXg==
-X-Gm-Message-State: AOAM530dRCiC41KqezXpM3CL/qn+KZmk5zzy/teJdqg6uHuF5s7aV6x0
-        HBmhmwAu5WN+0xPtn3Piop0=
-X-Google-Smtp-Source: ABdhPJwaWkqCYqUBJJSToCQOkC6GsGzRFgolzc1uotq1Pm6RULRT8DqLVDN3+wpVySp9QLmAIY3Wmg==
-X-Received: by 2002:a17:902:968a:: with SMTP id n10mr10479044plp.67.1597653172452;
-        Mon, 17 Aug 2020 01:32:52 -0700 (PDT)
+        bh=evlrKxSaL3VCX/rnaXC9Z1AuYwNMsmnef16/xHaNLkY=;
+        b=OJ6q3DVJMtOF/zVB9rA7QAHttYW1v5ZlO3/MK5j0Ptoe0bzwhR67r6i/Z3hcNmIZsY
+         1ctYb7vYwRh3qlvaAIidgz41t+mY26xpBCmOQpSSNvlHhaFQAMiTUa7VsYaqja50fDoy
+         FlxtkAil09+vYOpDY18BBajBUNw+Zrv4dszhHzNMjhIxSR5uBK6VCKfkmdLsq7tpntSP
+         PrEn/KEu4Zu09EyjLMqa6FegWmvgGUxZ1U/0eXsQ4B4JKD5Ih/l4wCBiAQDdD7/mdPoM
+         N0KSruz0FHHhW16KgFtKp2EIX8G6itnfi/p1wHoyGr5JT3fbIHl8NlToUZ+iXWnpAxyr
+         d2aQ==
+X-Gm-Message-State: AOAM532SiduMrsat99lHXw2Qc043Bqhrf+QzxSwF9rGSy5Khsizd37kA
+        4ZEQCYGX1OxrDQZUAwxHVkzt+e3fPpu1wQ==
+X-Google-Smtp-Source: ABdhPJz4PEYfP1FEGnR3KB0zo1YmJDTwWrbYngPxGyBv1e4zvnZP+Kyse9nY2LYHZr7Y/7TGqcSIlw==
+X-Received: by 2002:a17:90a:db87:: with SMTP id h7mr12083211pjv.51.1597653159607;
+        Mon, 17 Aug 2020 01:32:39 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.202.98])
-        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.47
+        by smtp.gmail.com with ESMTPSA id b15sm18448351pft.116.2020.08.17.01.32.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 01:32:52 -0700 (PDT)
+        Mon, 17 Aug 2020 01:32:39 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     mchehab@kernel.org, maintainers@bluecherrydvr.com,
         patrice.chotard@st.com
@@ -66,9 +66,9 @@ Cc:     keescook@chromium.org, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 11/11] media: ttusb-dec: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 17 Aug 2020 14:01:53 +0530
-Message-Id: <20200817083153.22218-12-allen.lkml@gmail.com>
+Subject: [PATCH 08/11] media: pxa_camera: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 14:01:50 +0530
+Message-Id: <20200817083153.22218-9-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817083153.22218-1-allen.lkml@gmail.com>
 References: <20200817083153.22218-1-allen.lkml@gmail.com>
@@ -85,35 +85,34 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/media/usb/ttusb-dec/ttusb_dec.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/media/platform/pxa_camera.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/ttusb-dec/ttusb_dec.c b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-index b8d39b2f777f..df6c5e4a0f05 100644
---- a/drivers/media/usb/ttusb-dec/ttusb_dec.c
-+++ b/drivers/media/usb/ttusb-dec/ttusb_dec.c
-@@ -769,9 +769,9 @@ static void ttusb_dec_process_urb_frame(struct ttusb_dec *dec, u8 *b,
+diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
+index 6dce33f35041..ae317a900ce6 100644
+--- a/drivers/media/platform/pxa_camera.c
++++ b/drivers/media/platform/pxa_camera.c
+@@ -1186,9 +1186,9 @@ static void pxa_camera_deactivate(struct pxa_camera_dev *pcdev)
+ 	clk_disable_unprepare(pcdev->clk);
+ }
+ 
+-static void pxa_camera_eof(unsigned long arg)
++static void pxa_camera_eof(struct tasklet_struct *t)
+ {
+-	struct pxa_camera_dev *pcdev = (struct pxa_camera_dev *)arg;
++	struct pxa_camera_dev *pcdev = from_tasklet(pcdev, t, task_eof);
+ 	unsigned long cifr;
+ 	struct pxa_buffer *buf;
+ 
+@@ -2478,7 +2478,7 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 		goto exit_free_dma;
  	}
- }
  
--static void ttusb_dec_process_urb_frame_list(unsigned long data)
-+static void ttusb_dec_process_urb_frame_list(struct tasklet_struct *t)
- {
--	struct ttusb_dec *dec = (struct ttusb_dec *)data;
-+	struct ttusb_dec *dec = from_tasklet(dec, t, urb_tasklet);
- 	struct list_head *item;
- 	struct urb_frame *frame;
- 	unsigned long flags;
-@@ -1209,8 +1209,7 @@ static void ttusb_dec_init_tasklet(struct ttusb_dec *dec)
- {
- 	spin_lock_init(&dec->urb_frame_list_lock);
- 	INIT_LIST_HEAD(&dec->urb_frame_list);
--	tasklet_init(&dec->urb_tasklet, ttusb_dec_process_urb_frame_list,
--		     (unsigned long)dec);
-+	tasklet_setup(&dec->urb_tasklet, ttusb_dec_process_urb_frame_list);
- }
+-	tasklet_init(&pcdev->task_eof, pxa_camera_eof, (unsigned long)pcdev);
++	tasklet_setup(&pcdev->task_eof, pxa_camera_eof);
  
- static int ttusb_init_rc( struct ttusb_dec *dec)
+ 	pxa_camera_activate(pcdev);
+ 
 -- 
 2.17.1
 
