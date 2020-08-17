@@ -2,294 +2,100 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505ACC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC30C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8F2204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692541;
-	bh=eekNIuZ6/aK9xcI4E2AMDCl3Y/zTwLLCRt5O9x2Jkzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4d12Rfviw2bOnWxcK3JspM/XlGEv0/Yi5oDuLT0KfTJndg/e/WG+v7wg16te3GAl
-	 5Idrbg3mqWCiguxEpZJtKe7sCUDmQDKgkoux8oIRMv6r7i3KGZvrlBi8eYcYZzjtp7
-	 HyCdR6BeTohnaQjxxoq31mb37UFrjK95PVsBtK/I=
+	by mail.kernel.org (Postfix) with ESMTP id CE66D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lfkmiNvf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbgHQT2u (ORCPT
+        id S1732221AbgHQT2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730319AbgHQPcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:32:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BEA123441;
-        Mon, 17 Aug 2020 15:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678356;
-        bh=eekNIuZ6/aK9xcI4E2AMDCl3Y/zTwLLCRt5O9x2Jkzw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MwwjEBjUokQ4q/x76hkV86W5cwGp5vxItd1nYFe4oR/nz9Pp35ibKC/0EiftfPk0M
-         GFE5u6oNLdW143VqwlH/5Mo4D0YoKDjp42/UQ22Tj6qhz0PwUvG/Cx/yuTluiot1CX
-         m4EB3+aex90OB1ZiVmftJJUKYl/iBfQyjAQ34MkA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Wi=C5=9Bniewski?= <brylozketrzyn@gmail.com>,
-        Mike Johnson <yuyuyak@gmail.com>,
-        Ricardo Rodrigues <ekatonb@gmail.com>,
-        "M.Hanny Sabbagh" <mhsabbagh@outlook.com>,
-        Oussama BEN BRAHIM <b.brahim.oussama@gmail.com>,
-        Ismael Ferreras Morezuelas <swyterzone@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 305/464] Bluetooth: btusb: Fix and detect most of the Chinese Bluetooth controllers
-Date:   Mon, 17 Aug 2020 17:14:18 +0200
-Message-Id: <20200817143848.414965727@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Aug 2020 15:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732190AbgHQT2P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 15:28:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5904EC061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:28:15 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so8123140pju.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 12:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/K/jgK8f2b3gfIxZCz2aodMs51/j1UmWIbA0xQ4Rg4o=;
+        b=lfkmiNvf7aWyMq4W/ABS66AbSGwPDK4/gSe7KpUo1u+V3ZDzJYaa4SZCJM35LFoSeq
+         uypWUeCVnbtPuTlC6Lv32YnGX41etwb0Tro5sTqJv62MgvvHNClJfRyjsQ85Ou5LahfA
+         L3x2mLvPon1Pa5RiuLmxjerV4ytCXX9sKlZ2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/K/jgK8f2b3gfIxZCz2aodMs51/j1UmWIbA0xQ4Rg4o=;
+        b=IRH7ii17nMoMbUywfh8pp1Od86qEN4e0PxeqSK7OyZuIQEaFsBvrFfWZBi4npd8VF/
+         YJ6iyZk4N2ZHFkcVfKMqw3akwwJDrQDKJW9QX9gCHTJtXM7I3EPy8hGOh1vRDgqELVic
+         1iZqlDqHQViB12VJMo1Ent+6G6cHwgW6bAhyV3Pffjy3lgHIJNozNIWLyB3QGM+bnj0n
+         Ias9xRO0UL5QKHZJ2Xhuw+8Qljt5q5bNFo/Z+boh+TyNiCQNqt4z0a5WKbUUvrylZOY+
+         DPMUphFnXTs4/dQbJ3pdqjGpebYbLR/xULNNJw9uBd2wwh6A6DiLE8NEG8HygJYUEBK7
+         ImGg==
+X-Gm-Message-State: AOAM5329hiVsAXrlUbB8ASx1jgSHfAqGGXY88bGdTdyVtAnf+6jFDwbm
+        9NpbJK1kOYRE+4qHJh9CMpwKFA==
+X-Google-Smtp-Source: ABdhPJxQXWN+Ph7ND4lvHYfqN6PVhgPAKtkPfn8HjEia6Dm6hV0gw3K3eYh80/xzuqoQhRxCjmbyAw==
+X-Received: by 2002:a17:902:8210:: with SMTP id x16mr12901228pln.166.1597692494753;
+        Mon, 17 Aug 2020 12:28:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b25sm20700960pft.134.2020.08.17.12.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:28:13 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 12:28:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, martin.petersen@oracle.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, Allen Pais <allen.lkml@gmail.com>
+Subject: Re: [PATCH 0/8] scsi: convert tasklets to use new tasklet_setup()
+Message-ID: <202008171227.D3A4F454D8@keescook>
+References: <20200817085409.25268-1-allen.cryptic@gmail.com>
+ <1597675318.4475.11.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597675318.4475.11.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ismael Ferreras Morezuelas <swyterzone@gmail.com>
+On Mon, Aug 17, 2020 at 07:41:58AM -0700, James Bottomley wrote:
+> On Mon, 2020-08-17 at 14:24 +0530, Allen Pais wrote:
+> > From: Allen Pais <allen.lkml@gmail.com>
+> > 
+> > Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
+> > introduced a new tasklet initialization API. This series converts 
+> > all the scsi drivers to use the new tasklet_setup() API
+> 
+> I've got to say I agree with Jens, this was a silly obfuscation:
+> 
+> +#define from_tasklet(var, callback_tasklet, tasklet_fieldname) \
+> +       container_of(callback_tasklet, typeof(*var), tasklet_fieldname)
+> 
+> Just use container_of directly since we all understand what it does.
 
-[ Upstream commit cde1a8a992875a7479c4321b2a4a190c2e92ec2a ]
+But then the lines get really long, wrapped, etc. This is what the
+timer_struct conversion did too (added a container_of wrapper), so I
+think it makes sense here too.
 
-For some reason they tend to squat on the very first CSR/
-Cambridge Silicon Radio VID/PID instead of paying fees.
-
-This is an extremely common problem; the issue goes as back as 2013
-and these devices are only getting more popular, even rebranded by
-reputable vendors and sold by retailers everywhere.
-
-So, at this point in time there are hundreds of modern dongles reusing
-the ID of what originally was an early Bluetooth 1.1 controller.
-
-Linux is the only place where they don't work due to spotty checks
-in our detection code. It only covered a minimum subset.
-
-So what's the big idea? Take advantage of the fact that all CSR
-chips report the same internal version as both the LMP sub-version and
-HCI revision number. It always matches, couple that with the manufacturer
-code, that rarely lies, and we now have a good idea of who is who.
-
-Additionally, by compiling a list of user-reported HCI/lsusb dumps, and
-searching around for legit CSR dongles in similar product ranges we can
-find what CSR BlueCore firmware supported which Bluetooth versions.
-
-That way we can narrow down ranges of fakes for each of them.
-
-e.g. Real CSR dongles with LMP subversion 0x73 are old enough that
-     support BT 1.1 only; so it's a dead giveaway when some
-     third-party BT 4.0 dongle reuses it.
-
-So, to sum things up; there are multiple classes of fake controllers
-reusing the same 0A12:0001 VID/PID. This has been broken for a while.
-
-Known 'fake' bcdDevices: 0x0100, 0x0134, 0x1915, 0x2520, 0x7558, 0x8891
-  IC markings on 0x7558: FR3191AHAL 749H15143 (???)
-
-https://bugzilla.kernel.org/show_bug.cgi?id=60824
-
-Fixes: 81cac64ba258ae (Deal with USB devices that are faking CSR vendor)
-Reported-by: Michał Wiśniewski <brylozketrzyn@gmail.com>
-Tested-by: Mike Johnson <yuyuyak@gmail.com>
-Tested-by: Ricardo Rodrigues <ekatonb@gmail.com>
-Tested-by: M.Hanny Sabbagh <mhsabbagh@outlook.com>
-Tested-by: Oussama BEN BRAHIM <b.brahim.oussama@gmail.com>
-Tested-by: Ismael Ferreras Morezuelas <swyterzone@gmail.com>
-Signed-off-by: Ismael Ferreras Morezuelas <swyterzone@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/bluetooth/btusb.c         | 74 ++++++++++++++++++++++++++-----
- include/net/bluetooth/bluetooth.h |  2 +
- include/net/bluetooth/hci.h       | 11 +++++
- net/bluetooth/hci_core.c          |  6 ++-
- 4 files changed, 81 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 61ffe185e0e49..a5fef9aa419fd 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -1720,6 +1720,7 @@ static int btusb_setup_csr(struct hci_dev *hdev)
- {
- 	struct hci_rp_read_local_version *rp;
- 	struct sk_buff *skb;
-+	bool is_fake = false;
- 
- 	BT_DBG("%s", hdev->name);
- 
-@@ -1739,18 +1740,69 @@ static int btusb_setup_csr(struct hci_dev *hdev)
- 
- 	rp = (struct hci_rp_read_local_version *)skb->data;
- 
--	/* Detect controllers which aren't real CSR ones. */
-+	/* Detect a wide host of Chinese controllers that aren't CSR.
-+	 *
-+	 * Known fake bcdDevices: 0x0100, 0x0134, 0x1915, 0x2520, 0x7558, 0x8891
-+	 *
-+	 * The main thing they have in common is that these are really popular low-cost
-+	 * options that support newer Bluetooth versions but rely on heavy VID/PID
-+	 * squatting of this poor old Bluetooth 1.1 device. Even sold as such.
-+	 *
-+	 * We detect actual CSR devices by checking that the HCI manufacturer code
-+	 * is Cambridge Silicon Radio (10) and ensuring that LMP sub-version and
-+	 * HCI rev values always match. As they both store the firmware number.
-+	 */
- 	if (le16_to_cpu(rp->manufacturer) != 10 ||
--	    le16_to_cpu(rp->lmp_subver) == 0x0c5c) {
-+	    le16_to_cpu(rp->hci_rev) != le16_to_cpu(rp->lmp_subver))
-+		is_fake = true;
-+
-+	/* Known legit CSR firmware build numbers and their supported BT versions:
-+	 * - 1.1 (0x1) -> 0x0073, 0x020d, 0x033c, 0x034e
-+	 * - 1.2 (0x2) ->                 0x04d9, 0x0529
-+	 * - 2.0 (0x3) ->         0x07a6, 0x07ad, 0x0c5c
-+	 * - 2.1 (0x4) ->         0x149c, 0x1735, 0x1899 (0x1899 is a BlueCore4-External)
-+	 * - 4.0 (0x6) ->         0x1d86, 0x2031, 0x22bb
-+	 *
-+	 * e.g. Real CSR dongles with LMP subversion 0x73 are old enough that
-+	 *      support BT 1.1 only; so it's a dead giveaway when some
-+	 *      third-party BT 4.0 dongle reuses it.
-+	 */
-+	else if (le16_to_cpu(rp->lmp_subver) <= 0x034e &&
-+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_1_1)
-+		is_fake = true;
-+
-+	else if (le16_to_cpu(rp->lmp_subver) <= 0x0529 &&
-+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_1_2)
-+		is_fake = true;
-+
-+	else if (le16_to_cpu(rp->lmp_subver) <= 0x0c5c &&
-+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_2_0)
-+		is_fake = true;
-+
-+	else if (le16_to_cpu(rp->lmp_subver) <= 0x1899 &&
-+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_2_1)
-+		is_fake = true;
-+
-+	else if (le16_to_cpu(rp->lmp_subver) <= 0x22bb &&
-+		 le16_to_cpu(rp->hci_ver) > BLUETOOTH_VER_4_0)
-+		is_fake = true;
-+
-+	if (is_fake) {
-+		bt_dev_warn(hdev, "CSR: Unbranded CSR clone detected; adding workarounds...");
-+
-+		/* Generally these clones have big discrepancies between
-+		 * advertised features and what's actually supported.
-+		 * Probably will need to be expanded in the future;
-+		 * without these the controller will lock up.
-+		 */
-+		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
-+		set_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks);
-+
- 		/* Clear the reset quirk since this is not an actual
- 		 * early Bluetooth 1.1 device from CSR.
- 		 */
- 		clear_bit(HCI_QUIRK_RESET_ON_CLOSE, &hdev->quirks);
--
--		/* These fake CSR controllers have all a broken
--		 * stored link key handling and so just disable it.
--		 */
--		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
-+		clear_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 	}
- 
- 	kfree_skb(skb);
-@@ -4015,11 +4067,13 @@ static int btusb_probe(struct usb_interface *intf,
- 		if (bcdDevice < 0x117)
- 			set_bit(HCI_QUIRK_RESET_ON_CLOSE, &hdev->quirks);
- 
-+		/* This must be set first in case we disable it for fakes */
-+		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-+
- 		/* Fake CSR devices with broken commands */
--		if (bcdDevice <= 0x100 || bcdDevice == 0x134)
-+		if (le16_to_cpu(udev->descriptor.idVendor)  == 0x0a12 &&
-+		    le16_to_cpu(udev->descriptor.idProduct) == 0x0001)
- 			hdev->setup = btusb_setup_csr;
--
--		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 	}
- 
- 	if (id->driver_info & BTUSB_SNIFFER) {
-diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bluetooth.h
-index 18190055374c9..155019220c47b 100644
---- a/include/net/bluetooth/bluetooth.h
-+++ b/include/net/bluetooth/bluetooth.h
-@@ -41,6 +41,8 @@
- #define BLUETOOTH_VER_1_1	1
- #define BLUETOOTH_VER_1_2	2
- #define BLUETOOTH_VER_2_0	3
-+#define BLUETOOTH_VER_2_1	4
-+#define BLUETOOTH_VER_4_0	6
- 
- /* Reserv for core and drivers use */
- #define BT_SKB_RESERVE	8
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 16ab6ce878834..1c321b6d1ed85 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -227,6 +227,17 @@ enum {
- 	 * supported.
- 	 */
- 	HCI_QUIRK_VALID_LE_STATES,
-+
-+	/* When this quirk is set, then erroneous data reporting
-+	 * is ignored. This is mainly due to the fact that the HCI
-+	 * Read Default Erroneous Data Reporting command is advertised,
-+	 * but not supported; these controllers often reply with unknown
-+	 * command and tend to lock up randomly. Needing a hard reset.
-+	 *
-+	 * This quirk can be set before hci_register_dev is called or
-+	 * during the hdev->setup vendor callback.
-+	 */
-+	HCI_QUIRK_BROKEN_ERR_DATA_REPORTING,
- };
- 
- /* HCI device flags */
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 83ce665d3cbfb..2a0968be22bff 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -606,7 +606,8 @@ static int hci_init3_req(struct hci_request *req, unsigned long opt)
- 	if (hdev->commands[8] & 0x01)
- 		hci_req_add(req, HCI_OP_READ_PAGE_SCAN_ACTIVITY, 0, NULL);
- 
--	if (hdev->commands[18] & 0x04)
-+	if (hdev->commands[18] & 0x04 &&
-+	    !test_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks))
- 		hci_req_add(req, HCI_OP_READ_DEF_ERR_DATA_REPORTING, 0, NULL);
- 
- 	/* Some older Broadcom based Bluetooth 1.2 controllers do not
-@@ -851,7 +852,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
- 	/* Set erroneous data reporting if supported to the wideband speech
- 	 * setting value
- 	 */
--	if (hdev->commands[18] & 0x08) {
-+	if (hdev->commands[18] & 0x08 &&
-+	    !test_bit(HCI_QUIRK_BROKEN_ERR_DATA_REPORTING, &hdev->quirks)) {
- 		bool enabled = hci_dev_test_flag(hdev,
- 						 HCI_WIDEBAND_SPEECH_ENABLED);
- 
 -- 
-2.25.1
-
-
-
+Kees Cook
