@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89851C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B237C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A712072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC0D20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693678;
-	bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+	s=default; t=1597693686;
+	bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6S8SnVA5DlJ+moeY9dlENl331QU5/mbObdo0/X4Ky4lvBSDqptSJesHtC2h23Pjm
-	 ljM68Z6VyE5W4dFOwJJ8oNTLZreQkdg7MmXtbIzwWGkJgE1Hb5xqV1roVZR7ita1bT
-	 clIF4Je/97bDatYkuzEaV4Onx0Vrd0hhvRnKxuqo=
+	b=014EUP+aGxWKpVlNctmJH83V92SRoLeXA7W+nRwC06QrHinBZhqY7Lgn4LRyxB9qS
+	 QbpwMdMkruDjjpRKZyni4MxPKX1bPSNE2Il85LOidadLgi57utkrbBKYHEd1G0HEVl
+	 mTfvCdLJHM820Y4ebBcMq6cmWExbZgNagt3ylCDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbgHQTru (ORCPT
+        id S1732733AbgHQTsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42354 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:48:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbgHQPUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:20:30 -0400
+        id S1729279AbgHQPUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:20:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5703B20716;
-        Mon, 17 Aug 2020 15:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07267206FA;
+        Mon, 17 Aug 2020 15:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677629;
-        bh=ijLv8baprODevFJjA62UKt0f4cZ3pmjZbBlZNqDOh+k=;
+        s=default; t=1597677624;
+        bh=IHgBT8Vjik3BbIgxDcxrZBpBmFQ3aLVlSzGsnPVE574=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XN48Fv7TzT70NqMgfY1V15DWehafgMBCYUxQaaN10OCpU+B48odZhdfV7zbbziTuL
-         xzxtdpW4fYzTKACC7U14YD7kV7xUOrFxcqqDqRpzfxlyVqsU+MDCKMKjoUBgBuzYFL
-         yMXgRZ4rbnX93FAwwmnHg6dzNeKnfxfBgkrj/+C8=
+        b=Rkzk0BZmMOyLcmT8ErNAkGUaJlEjqlNHWQErKzf0ZmdPm0W3YDcDIlXwB80ESyGM4
+         cuU16mOQ3gbV/P57Q8+cSTxVRQKGzYLMVpXdlkMlrNhHTjvljFsLTwP3mDOsfa0A3H
+         UmFQ57NAAQd5GTRDvUXVniORuiZPPBY1z1fbgZuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory Herrero <gregory.herrero@oracle.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 050/464] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
-Date:   Mon, 17 Aug 2020 17:10:03 +0200
-Message-Id: <20200817143836.156521743@linuxfoundation.org>
+Subject: [PATCH 5.8 048/464] crypto: x86/crc32c - fix building with clang ias
+Date:   Mon, 17 Aug 2020 17:10:01 +0200
+Message-Id: <20200817143836.060176492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,80 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory Herrero <gregory.herrero@oracle.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ea0eada45632f4807b2f49de951072283e2d781c ]
+[ Upstream commit 44623b2818f4a442726639572f44fd9b6d0ef68c ]
 
-Currently, if a section has a relocation to '_mcount' symbol, a new
-__mcount_loc entry will be added whatever the relocation type is.
-This is problematic when a relocation to '_mcount' is in the middle of a
-section and is not a call for ftrace use.
+The clang integrated assembler complains about movzxw:
 
-Such relocation could be generated with below code for example:
-    bool is_mcount(unsigned long addr)
-    {
-        return (target == (unsigned long) &_mcount);
-    }
+arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
 
-With this snippet of code, ftrace will try to patch the mcount location
-generated by this code on module load and fail with:
+It seems that movzwq is the mnemonic that it expects instead,
+and this is what objdump prints when disassembling the file.
 
-    Call trace:
-     ftrace_bug+0xa0/0x28c
-     ftrace_process_locs+0x2f4/0x430
-     ftrace_module_init+0x30/0x38
-     load_module+0x14f0/0x1e78
-     __do_sys_finit_module+0x100/0x11c
-     __arm64_sys_finit_module+0x28/0x34
-     el0_svc_common+0x88/0x194
-     el0_svc_handler+0x38/0x8c
-     el0_svc+0x8/0xc
-    ---[ end trace d828d06b36ad9d59 ]---
-    ftrace failed to modify
-    [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
-     actual:   66:a9:3c:90
-    Initializing ftrace call sites
-    ftrace record flags: 2000000
-     (0)
-    expected tramp: ffffa2dc6cf66724
-
-So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-recordmcount.
-
-Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
-Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/r/20200717143338.19302-1-gregory.herrero@oracle.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 7225107a9aafe..e59022b3f1254 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
- 	return 1;
- }
+diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+index 8501ec4532f4f..442599cbe7960 100644
+--- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
++++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+@@ -170,7 +170,7 @@ continue_block:
  
-+static int arm64_is_fake_mcount(Elf64_Rel const *rp)
-+{
-+	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
-+}
-+
- /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
-  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
-  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
-@@ -547,6 +552,7 @@ static int do_file(char const *const fname)
- 		make_nop = make_nop_arm64;
- 		rel_type_nop = R_AARCH64_NONE;
- 		ideal_nop = ideal_nop4_arm64;
-+		is_fake_mcount64 = arm64_is_fake_mcount;
- 		break;
- 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
- 	case EM_MIPS:	/* reltype: e_class    */ break;
+ 	## branch into array
+ 	lea	jump_table(%rip), %bufp
+-	movzxw  (%bufp, %rax, 2), len
++	movzwq  (%bufp, %rax, 2), len
+ 	lea	crc_array(%rip), %bufp
+ 	lea     (%bufp, len, 1), %bufp
+ 	JMP_NOSPEC bufp
 -- 
 2.25.1
 
