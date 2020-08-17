@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0044C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4BF2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156BD221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679188;
-	bh=vlHt9tpYNwGZ4ENADltlfg5pqYoTKoHP+nArZuNnC+Y=;
+	s=default; t=1597679210;
+	bh=VxGE96xVX8mqRT56wQqLgk6r5LrYyc4XB8oho4I7MnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EI/tCydRyR4SOauzyTjFNz5wgMYdPPSCuzgYofjojLnXRItJfU91udGvHTzA2k2Rg
-	 ImFrkbA9LzLGbmiFId1+l3zB0ts7u1iuc6TsV+6uturWpqjZoFU+t5K/Zte7fdRxrC
-	 jblE4Ktn3l5BUfoAei7PLCk0bqud/t+lzEEBOXVk=
+	b=lgS6CTXL8mGdMwwD8pYrnlHwDDKkPrgZ5e4yI7Mxp9PAm1JzpsnlCXhGt5W9ycg6C
+	 Fftq3L3HOfsNIEq0X4N9CvwYkpJZN+uPcOrfRza2bmib8k2r0tXJFbXdq/EDLg4aX4
+	 WX2Szvg04iaXR7gzAK4BHwdcqYHuG7stTnS4cnjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgHQPqV (ORCPT
+        id S2387611AbgHQPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46564 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387413AbgHQPia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:30 -0400
+        id S2387415AbgHQPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B91CE208E4;
-        Mon, 17 Aug 2020 15:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B74A22CB3;
+        Mon, 17 Aug 2020 15:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678710;
-        bh=vlHt9tpYNwGZ4ENADltlfg5pqYoTKoHP+nArZuNnC+Y=;
+        s=default; t=1597678713;
+        bh=VxGE96xVX8mqRT56wQqLgk6r5LrYyc4XB8oho4I7MnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwSDlYuvvOVH1Fe0AJVoNHALBaOJa+/qOXMBEwvavJzaUKhhZdYv4CBJdmDvKwn+G
-         ZYaWqpijdVF3FLay2EJTxabcDiFMmRnXNrjHnO5dGKA3+qcFoYICsuDtqxaI24776m
-         ro7MG7aAsKmkWTWuSGv1qY+LShBkcTCpXJC1+gr8=
+        b=UT3RRxfSTjbPlzoomvZeFltdRi4MYYchCzRhVCLD+ZgXO0x7vOghSnSufpd2XcH17
+         yZ3uFmMHK74I0MJmLzdKCu3U32HSH+zYx6yzpEoN2l9Pv4t8awfiC9ZWhbYuAV30l4
+         IVKOxcR13QcayHmA0rsycZCP17WSznwcDF1qe9Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.8 428/464] NFS: Dont move layouts to plh_return_segs list while in use
-Date:   Mon, 17 Aug 2020 17:16:21 +0200
-Message-Id: <20200817143854.280804520@linuxfoundation.org>
+Subject: [PATCH 5.8 429/464] NFS: Dont return layout segments that are in use
+Date:   Mon, 17 Aug 2020 17:16:22 +0200
+Message-Id: <20200817143854.329798837@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,48 +61,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit ff041727e9e029845857cac41aae118ead5e261b upstream.
+commit d474f96104bd4377573526ebae2ee212205a6839 upstream.
 
-If the layout segment is still in use for a read or a write, we should
-not move it to the layout plh_return_segs list. If we do, we can end
-up returning the layout while I/O is still in progress.
+If the NFS_LAYOUT_RETURN_REQUESTED flag is set, we want to return the
+layout as soon as possible, meaning that the affected layout segments
+should be marked as invalid, and should no longer be in use for I/O.
 
-Fixes: e0b7d420f72a ("pNFS: Don't discard layout segments that are marked for return")
+Fixes: f0b429819b5f ("pNFS: Ignore non-recalled layouts in pnfs_layout_need_return()")
 Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |   12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ fs/nfs/pnfs.c |   34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
 --- a/fs/nfs/pnfs.c
 +++ b/fs/nfs/pnfs.c
-@@ -2392,16 +2392,6 @@ out_forget:
- 	return ERR_PTR(-EAGAIN);
+@@ -1226,31 +1226,27 @@ out:
+ 	return status;
  }
  
--static int
--mark_lseg_invalid_or_return(struct pnfs_layout_segment *lseg,
--		struct list_head *tmp_list)
--{
--	if (!mark_lseg_invalid(lseg, tmp_list))
--		return 0;
--	pnfs_cache_lseg_for_layoutreturn(lseg->pls_layout, lseg);
--	return 1;
--}
++static bool
++pnfs_layout_segments_returnable(struct pnfs_layout_hdr *lo,
++				enum pnfs_iomode iomode,
++				u32 seq)
++{
++	struct pnfs_layout_range recall_range = {
++		.length = NFS4_MAX_UINT64,
++		.iomode = iomode,
++	};
++	return pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
++					       &recall_range, seq) != -EBUSY;
++}
++
+ /* Return true if layoutreturn is needed */
+ static bool
+ pnfs_layout_need_return(struct pnfs_layout_hdr *lo)
+ {
+-	struct pnfs_layout_segment *s;
+-	enum pnfs_iomode iomode;
+-	u32 seq;
 -
- /**
-  * pnfs_mark_matching_lsegs_return - Free or return matching layout segments
-  * @lo: pointer to layout header
-@@ -2438,7 +2428,7 @@ pnfs_mark_matching_lsegs_return(struct p
- 				lseg, lseg->pls_range.iomode,
- 				lseg->pls_range.offset,
- 				lseg->pls_range.length);
--			if (mark_lseg_invalid_or_return(lseg, tmp_list))
-+			if (mark_lseg_invalid(lseg, tmp_list))
- 				continue;
- 			remaining++;
- 			set_bit(NFS_LSEG_LAYOUTRETURN, &lseg->pls_flags);
+ 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
+ 		return false;
+-
+-	seq = lo->plh_return_seq;
+-	iomode = lo->plh_return_iomode;
+-
+-	/* Defer layoutreturn until all recalled lsegs are done */
+-	list_for_each_entry(s, &lo->plh_segs, pls_list) {
+-		if (seq && pnfs_seqid_is_newer(s->pls_seq, seq))
+-			continue;
+-		if (iomode != IOMODE_ANY && s->pls_range.iomode != iomode)
+-			continue;
+-		if (test_bit(NFS_LSEG_LAYOUTRETURN, &s->pls_flags))
+-			return false;
+-	}
+-
+-	return true;
++	return pnfs_layout_segments_returnable(lo, lo->plh_return_iomode,
++					       lo->plh_return_seq);
+ }
+ 
+ static void pnfs_layoutreturn_before_put_layout_hdr(struct pnfs_layout_hdr *lo)
 
 
