@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6905C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C11E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF22620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692868;
-	bh=xQk7ht4cPTsZR/FeIbsKIFsxjiGGKtE9EyT6lV99ffo=;
+	s=default; t=1597692885;
+	bh=mE9Cv2gDprxIhiW8xNiatgrYr6zEmkc5sLn2LDuaYG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aj8pnHLW6n8e7rTeOsmYQvV1EDaorL5hkxQ2KT+qA9ZWjTEIwvQe4dpkFh/gUKENp
-	 AJzkRzE/uiA/HEm9DS1wStLqDXlpqiBxNBpgdA41Pl7jJijDQbSygeI+sCpviYRWGM
-	 VmK6VKCROyMVnjMvD+rTgWv+tw4TAckT7JBCSVZ8=
+	b=AxrzYR2aKmJlNjaVMzmuqhBqwGJr4nDBI/ZNqdDohXGukDMHbkZ0L4SXnjElgsQSG
+	 z108G2v+y43KbACgYp5pglLxN8FKfa6DJdc0CNaIBWbjHUbAYlYoic+tKvh83CbcMJ
+	 65vf8MAl1xAyQnYlFkPtrXDe74VT10ujUAm2i++I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbgHQTe0 (ORCPT
+        id S1732327AbgHQTem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbgHQPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:30:08 -0400
+        id S1730164AbgHQPaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:30:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A826D23C2D;
-        Mon, 17 Aug 2020 15:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A28E023C43;
+        Mon, 17 Aug 2020 15:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678207;
-        bh=xQk7ht4cPTsZR/FeIbsKIFsxjiGGKtE9EyT6lV99ffo=;
+        s=default; t=1597678204;
+        bh=mE9Cv2gDprxIhiW8xNiatgrYr6zEmkc5sLn2LDuaYG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pnv6DZARgNwAEkmGcCE51ZZ/Gv2DEJtb/Vn9VXBFq3g9UgKzrvd5QAIl0P6wtKiH7
-         2QBYq0qKUUYMrt0Kq4nukztIfjqEyjbL+NaieUO72fQknsrVO0tZA/JUXKcWbitcrR
-         m3qNTxcLomFnUiszACRsPx3UcMMGDkzggu7tmtaU=
+        b=QhDNrWE39sKaDalheo9t38yn2HQjRTsd6VWZopfLhZW7iOygc+wdYGWuy+008cvHt
+         WjODVvTBczUX77f7jzH+lBr2JOy7rTZ1M6BX2HdolYw1GHdES4RAndQ9I04urUS8ZP
+         3l8UCEJNhu2j/iGkPIHSvVvrOdxX99X5hxe0ucQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 224/464] phy: exynos5-usbdrd: Calibrating makes sense only for USB2.0 PHY
-Date:   Mon, 17 Aug 2020 17:12:57 +0200
-Message-Id: <20200817143844.527219489@linuxfoundation.org>
+Subject: [PATCH 5.8 223/464] dt-bindings: phy: uniphier: Fix incorrect clocks and clock-names for PXs3 usb3-hsphy
+Date:   Mon, 17 Aug 2020 17:12:56 +0200
+Message-Id: <20200817143844.479110912@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,38 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit dcbabfeb17c3c2fdb6bc92a3031ecd37df1834a8 ]
+[ Upstream commit 03815930c162561a5c204494b4160d6ccf631b0b ]
 
-PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
-calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
+The usb3-hsphy for PXs3 SoC needs to accept 3 clocks like usb3-ssphy.
 
-Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200708133800.3336-1-m.szyprowski@samsung.com
+Fixes: 134ab2845acb ("dt-bindings: phy: Convert UniPhier USB3-PHY conroller to json-schema")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Link: https://lore.kernel.org/r/1594198664-29381-1-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../bindings/phy/socionext,uniphier-usb3hs-phy.yaml       | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index e510732afb8b0..7f6279fb4f8fa 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -714,7 +714,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
- 	struct phy_usb_instance *inst = phy_get_drvdata(phy);
- 	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
+index f88d36207b87e..c871d462c9523 100644
+--- a/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-usb3hs-phy.yaml
+@@ -31,12 +31,16 @@ properties:
  
--	return exynos5420_usbdrd_phy_calibrate(phy_drd);
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
-+		return exynos5420_usbdrd_phy_calibrate(phy_drd);
-+	return 0;
- }
+   clocks:
+     minItems: 1
+-    maxItems: 2
++    maxItems: 3
  
- static const struct phy_ops exynos5_usbdrd_phy_ops = {
+   clock-names:
+     oneOf:
+       - const: link          # for PXs2
+-      - items:               # for PXs3
++      - items:               # for PXs3 with phy-ext
++        - const: link
++        - const: phy
++        - const: phy-ext
++      - items:               # for others
+         - const: link
+         - const: phy
+ 
 -- 
 2.25.1
 
