@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2603C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB9CE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67895204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690173;
-	bh=mHp6ZsqzH9SBdhzTJtoNllssucJjMrlq2tRy/eT2H7A=;
+	s=default; t=1597690180;
+	bh=HwaHmUt9yFDxV9f7tvtlwHuf9YjdCfv+ZUog+KE0Z8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hAL3Rma6sswFA1088k/SIVubbdkMI32ka3uUxxbAuoedYrXoW/UKgAnlX7gcMKxiS
-	 ly2y0x5RYrV2/r4ZZBqQ72gTXwyR3a0iA4u62YNuZla4/2O91rGRz6+UZlH+B9baoa
-	 2ZFULOK1C/MFyh7rU/VVhz339+dANS/wPP0GG0lw=
+	b=GBWL/ISmUpzVUyGxGyjNd974qxZq9ljlsZ+jeZMGjj++pkdDip4EusZjbA2PWl372
+	 rc89IgwEEwL5XwzzE5LNexNYmLSo/NN0KDi4bBv1dgKEiHfsY3OKyqRSC/t1c9Q4Gl
+	 kpQdyHRYeloaPmf1iNvBayylCDn6KF7AWEQWV1So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391691AbgHQStc (ORCPT
+        id S2391697AbgHQStg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387984AbgHQPyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:23 -0400
+        id S2387988AbgHQPy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871272063A;
-        Mon, 17 Aug 2020 15:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 400E720729;
+        Mon, 17 Aug 2020 15:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679663;
-        bh=mHp6ZsqzH9SBdhzTJtoNllssucJjMrlq2tRy/eT2H7A=;
+        s=default; t=1597679668;
+        bh=HwaHmUt9yFDxV9f7tvtlwHuf9YjdCfv+ZUog+KE0Z8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXquvG7VIFDTPb1FXASjbbZafN+YkW7xDlaCtWpiiogpeZyd+0aHUvGTiVu8Hw0yY
-         L6NKgiiboQba+A6ZaQ1b2WBmEHQ4sdA9Xb0OVjfA1n2nqBt4xkxdfB6HQ1UCm63DkJ
-         jnryGHLqZxSAvSteNBwd1fU4QbiCiztUahyWxypA=
+        b=f1F8nvbkQ5hoy3YTtZ6tBd1nMfCN2M6ZjbH+lOQBx6fYSLWEKplyMsu8Yl+6M71tT
+         F36pULLoN0bmRpnVGnUOXAiY215DqbyNI7RyMJD87TV3k6bc8I58cL4+RxE4hDXKac
+         oTLg2iAJJMYXSxJfrqYavYGak2X/8+aCZaKgRWdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 260/393] Bluetooth: hci_qca: Stop collecting memdump again for command timeout during SSR
-Date:   Mon, 17 Aug 2020 17:15:10 +0200
-Message-Id: <20200817143832.222977492@linuxfoundation.org>
+Subject: [PATCH 5.7 252/393] RDMA/core: Fix return error value in _ib_modify_qp() to negative
+Date:   Mon, 17 Aug 2020 17:15:02 +0200
+Message-Id: <20200817143831.845193427@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,63 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit 58789a1990c1a849a461ac912e72a698a771951a ]
+[ Upstream commit 47fda651d5af2506deac57d54887cf55ce26e244 ]
 
-Setting memdump state to idle prior to setting of callback function
-pointer for command timeout to NULL,causing the issue.Now moved the
-initialisation of memdump state to qca_setup().
+The error codes in _ib_modify_qp() are supposed to be negative errno.
 
-Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 7a5c938b9ed0 ("IB/core: Check for rdma_protocol_ib only after validating port_num")
+Link: https://lore.kernel.org/r/1595645787-20375-1-git-send-email-liheng40@huawei.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/infiniband/core/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 9869ae0f7b71e..6a3c80e1b19cd 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1633,6 +1633,8 @@ static int qca_setup(struct hci_uart *hu)
- 	bt_dev_info(hdev, "setting up %s",
- 		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME");
- 
-+	qca->memdump_state = QCA_MEMDUMP_IDLE;
-+
- retry:
- 	ret = qca_power_on(hdev);
- 	if (ret)
-@@ -1776,9 +1778,6 @@ static void qca_power_shutdown(struct hci_uart *hu)
- 	qca_flush(hu);
- 	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
- 
--	hu->hdev->hw_error = NULL;
--	hu->hdev->cmd_timeout = NULL;
--
- 	/* Non-serdev device usually is powered by external power
- 	 * and don't need additional action in driver for power down
- 	 */
-@@ -1800,6 +1799,9 @@ static int qca_power_off(struct hci_dev *hdev)
- 	struct qca_data *qca = hu->priv;
- 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
- 
-+	hu->hdev->hw_error = NULL;
-+	hu->hdev->cmd_timeout = NULL;
-+
- 	/* Stop sending shutdown command if soc crashes. */
- 	if (qca_is_wcn399x(soc_type)
- 		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
-@@ -1807,7 +1809,6 @@ static int qca_power_off(struct hci_dev *hdev)
- 		usleep_range(8000, 10000);
+diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
+index 56a71337112c5..cf45fd704671f 100644
+--- a/drivers/infiniband/core/verbs.c
++++ b/drivers/infiniband/core/verbs.c
+@@ -1659,7 +1659,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct ib_qp_attr *attr,
+ 		if (!(rdma_protocol_ib(qp->device,
+ 				       attr->alt_ah_attr.port_num) &&
+ 		      rdma_protocol_ib(qp->device, port))) {
+-			ret = EINVAL;
++			ret = -EINVAL;
+ 			goto out;
+ 		}
  	}
- 
--	qca->memdump_state = QCA_MEMDUMP_IDLE;
- 	qca_power_shutdown(hu);
- 	return 0;
- }
 -- 
 2.25.1
 
