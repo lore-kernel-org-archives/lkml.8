@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F467C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 298A92067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187E02063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686910;
-	bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
+	s=default; t=1597686937;
+	bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWr2fkgkyxllEdwyJkNQuazbiBToHVPxUhCezjkdPs2XtkhdReQNnVAfi23isg4M6
-	 wFw/a8BSDz237JxOY8pVYi0b5AN0wLtkRxL1DUzlbUkMF8YY5a/9CFsl1OL/bcUANJ
-	 NGR8mITL33z9ChEX/i5pooMdKcYB1jCXCy7KTr8I=
+	b=ZUeDWgScH/+XqVcLrjV5O0hSl+/Cy3pSW34SYGILXffMlQpepR9P7KEaLeo+rxIp2
+	 KwsiZ9cWo+WUhVorVsoysS2+rndX+seWtOdaDEo75NZO4wq8eH6QF+hALVxChET8ek
+	 HFCf+PpWB8S35liFrH6g0ZHpr3Qbhnobe6YUclSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388697AbgHQRzJ (ORCPT
+        id S2388734AbgHQRze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388577AbgHQQKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:10:55 -0400
+        id S2388374AbgHQQKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C9BE22D3E;
-        Mon, 17 Aug 2020 16:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B39E20748;
+        Mon, 17 Aug 2020 16:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680654;
-        bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
+        s=default; t=1597680642;
+        bh=/cuD2ZRHke61dcElaO4+21/PDcRJpbABFxPbMOpsJZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvvdsCJ8ZbxDF10SsWWoGIS+GKpHY4pP/DJBn+j3s6CNvq7PV+p0I/X4zPwDM4o+g
-         QwZOyUNS7yYieZ7DQ8GwmGp9XSobsUXRl9xqsqkebbNNV5aKa/175cYmUlQPhg9jQn
-         feGFegKwWHbK0Sen3n+AaEEkxuSsCn1/ks3e2oa0=
+        b=S2oUXpx63GSEwVIjdCdo/AnsDJtD6EloYj0zcYrJ7JMKg1r/jzhmDYqDoTOWoxDt0
+         +wtRSpELXUKkK/k6qiY3uoURgZNL4Rb3/WP8vkMvmb8IKeUPMO5EogRrKA3OtaYNRm
+         CqljBQtpYDGxVhEl3XZ3lCe5auAzuqAj0yRxUVII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 262/270] fs/minix: check return value of sb_getblk()
-Date:   Mon, 17 Aug 2020 17:17:43 +0200
-Message-Id: <20200817143808.868521773@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.4 269/270] s390/gmap: improve THP splitting
+Date:   Mon, 17 Aug 2020 17:17:50 +0200
+Message-Id: <20200817143809.204796062@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -64,78 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
 
-commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
+commit ba925fa35057a062ac98c3e8138b013ce4ce351c upstream.
 
-Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
+During s390_enable_sie(), we need to take care of splitting all qemu user
+process THP mappings. This is currently done with follow_page(FOLL_SPLIT),
+by simply iterating over all vma ranges, with PAGE_SIZE increment.
 
-This series fixes all syzbot bugs in the minix filesystem:
+This logic is sub-optimal and can result in a lot of unnecessary overhead,
+especially when using qemu and ASAN with large shadow map. Ilya reported
+significant system slow-down with one CPU busy for a long time and overall
+unresponsiveness.
 
-	KASAN: null-ptr-deref Write in get_block
-	KASAN: use-after-free Write in get_block
-	KASAN: use-after-free Read in get_block
-	WARNING in inc_nlink
-	KMSAN: uninit-value in get_block
-	WARNING in drop_nlink
+Fix this by using walk_page_vma() and directly calling split_huge_pmd()
+only for present pmds, which greatly reduces overhead.
 
-It also fixes the minix filesystem to set s_maxbytes correctly, so that
-userspace sees the correct behavior when exceeding the max file size.
-
-This patch (of 6):
-
-sb_getblk() can fail, so check its return value.
-
-This fixes a NULL pointer dereference.
-
-Originally from Qiujun Huang.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org> # v5.4+
+Reported-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Tested-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/itree_common.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/s390/mm/gmap.c |   27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -75,6 +75,7 @@ static int alloc_branch(struct inode *in
- 	int n = 0;
- 	int i;
- 	int parent = minix_new_block(inode);
-+	int err = -ENOSPC;
- 
- 	branch[0].key = cpu_to_block(parent);
- 	if (parent) for (n = 1; n < num; n++) {
-@@ -85,6 +86,11 @@ static int alloc_branch(struct inode *in
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, nr);
-+			err = -ENOMEM;
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
-@@ -103,7 +109,7 @@ static int alloc_branch(struct inode *in
- 		bforget(branch[i].bh);
- 	for (i = 0; i < n; i++)
- 		minix_free_block(inode, block_to_cpu(branch[i].key));
--	return -ENOSPC;
-+	return err;
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -2485,23 +2485,36 @@ void gmap_sync_dirty_log_pmd(struct gmap
  }
+ EXPORT_SYMBOL_GPL(gmap_sync_dirty_log_pmd);
  
- static inline int splice_branch(struct inode *inode,
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static int thp_split_walk_pmd_entry(pmd_t *pmd, unsigned long addr,
++				    unsigned long end, struct mm_walk *walk)
++{
++	struct vm_area_struct *vma = walk->vma;
++
++	split_huge_pmd(vma, pmd, addr);
++	return 0;
++}
++
++static const struct mm_walk_ops thp_split_walk_ops = {
++	.pmd_entry	= thp_split_walk_pmd_entry,
++};
++
+ static inline void thp_split_mm(struct mm_struct *mm)
+ {
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	struct vm_area_struct *vma;
+-	unsigned long addr;
+ 
+ 	for (vma = mm->mmap; vma != NULL; vma = vma->vm_next) {
+-		for (addr = vma->vm_start;
+-		     addr < vma->vm_end;
+-		     addr += PAGE_SIZE)
+-			follow_page(vma, addr, FOLL_SPLIT);
+ 		vma->vm_flags &= ~VM_HUGEPAGE;
+ 		vma->vm_flags |= VM_NOHUGEPAGE;
++		walk_page_vma(vma, &thp_split_walk_ops, NULL);
+ 	}
+ 	mm->def_flags |= VM_NOHUGEPAGE;
+-#endif
+ }
++#else
++static inline void thp_split_mm(struct mm_struct *mm)
++{
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ /*
+  * Remove all empty zero pages from the mapping for lazy refaulting
 
 
