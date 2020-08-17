@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA32DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E3920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9FB20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684791;
-	bh=OtTp3PyblAUp8Wp+dnJEmCKgocH/UUyepd5ozcYHdiY=;
+	s=default; t=1597684795;
+	bh=is69ImNRcNiBKuUbEI854UhHxLPj5gMAjcNEEvXt4g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vgSC7eJSQdzQydVK6Qe/HtEjscpEInt3bx8a/bV32r94Iy/8Zm2CvVqSxURCYSmuJ
-	 RrTIQ4mLxHKOnNsc/Igeqm+onadSn8z1UhnrIpSejdhNc1i20zRMf3he7xU0r1SqgV
-	 6u9+IfXWFTYolLl8Io5hzZsGHLijIXssZvXlNRg4=
+	b=HMJfqNmH+lBJsKGTWR/7Ka08UCPCYVb5U3IDvH8VxvBD7tea7BzowTlbDPUHoOVIY
+	 K4P+8xukCTZ1D5DZ8oPJrKOyPHLDWn8PM52ndQyhHdVJdNbK6gK781FY+cZgyfSku/
+	 9MQ8Wu2DmEmBozs1J2kpT+t+pEqxpIdp1CwVnF+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbgHQRTt (ORCPT
+        id S1731414AbgHQRTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbgHQQQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:01 -0400
+        id S1731088AbgHQQQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:16:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C60A20658;
-        Mon, 17 Aug 2020 16:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4813620825;
+        Mon, 17 Aug 2020 16:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680942;
-        bh=OtTp3PyblAUp8Wp+dnJEmCKgocH/UUyepd5ozcYHdiY=;
+        s=default; t=1597680946;
+        bh=is69ImNRcNiBKuUbEI854UhHxLPj5gMAjcNEEvXt4g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHltiM7LoZAAaRUnZuTl+pn5quMKxjQ9GT5WQV0KCqNAz7w0qbbFnSNfiNHeUVhPt
-         c70qjJg0lzCGoPNof+lyTafJuVxLcy/tZzeziB2ntokyFEYEo9zknM+XMkrVV2noYL
-         +q2/OjgahVjSVUrrs0TSexo8nCNCdPTC99CcZ3fc=
+        b=vjTRPdx02h2giOrqwgXSNW+rozI1DPVEZ1eyUJJMooE954Kb2xwhLcoAU9HzooFMD
+         GAI9q6mEp6eDQOXuUv2n5LI9SphZDtHRMZznpC5M1/+uy9d7ifJOFiuI2C6NNz0rP8
+         iUIe8Vs5YlttZTDxk7VbrmwvbIV/Esf9UoJ5dm1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Florinel Iordache <florinel.iordache@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 119/168] net: spider_net: Fix the size used in a dma_free_coherent() call
-Date:   Mon, 17 Aug 2020 17:17:30 +0200
-Message-Id: <20200817143739.620295702@linuxfoundation.org>
+Subject: [PATCH 4.19 121/168] fsl/fman: fix dereference null return value
+Date:   Mon, 17 Aug 2020 17:17:32 +0200
+Message-Id: <20200817143739.722458622@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -61,37 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit 36f28f7687a9ce665479cce5d64ce7afaa9e77ae ]
+[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
 
-Update the size used in 'dma_free_coherent()' in order to match the one
-used in the corresponding 'dma_alloc_coherent()', in
-'spider_net_init_chain()'.
+Check before using returned value to avoid dereferencing null pointer.
 
-Fixes: d4ed8f8d1fb7 ("Spidernet DMA coalescing")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
+Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/toshiba/spider_net.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 23417266b7ecc..e66014e0427f7 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -296,8 +296,8 @@ spider_net_free_chain(struct spider_net_card *card,
- 		descr = descr->next;
- 	} while (descr != chain->ring);
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index ee82ee1384eb3..47f6fee1f3964 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1756,6 +1756,7 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 	struct fman_port *port;
+ 	struct fman *fman;
+ 	struct device_node *fm_node, *port_node;
++	struct platform_device *fm_pdev;
+ 	struct resource res;
+ 	struct resource *dev_res;
+ 	u32 val;
+@@ -1780,8 +1781,14 @@ static int fman_port_probe(struct platform_device *of_dev)
+ 		goto return_err;
+ 	}
  
--	dma_free_coherent(&card->pdev->dev, chain->num_desc,
--	    chain->hwring, chain->dma_addr);
-+	dma_free_coherent(&card->pdev->dev, chain->num_desc * sizeof(struct spider_net_hw_descr),
-+			  chain->hwring, chain->dma_addr);
- }
- 
- /**
+-	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
++	fm_pdev = of_find_device_by_node(fm_node);
+ 	of_node_put(fm_node);
++	if (!fm_pdev) {
++		err = -EINVAL;
++		goto return_err;
++	}
++
++	fman = dev_get_drvdata(&fm_pdev->dev);
+ 	if (!fman) {
+ 		err = -EINVAL;
+ 		goto return_err;
 -- 
 2.25.1
 
