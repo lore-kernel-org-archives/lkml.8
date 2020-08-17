@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC165C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC111C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856F42065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB22B20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692699;
-	bh=a7E2beN0GPmKTpYoQDTwY7mJKGFsxlXkNeufTEdGSfE=;
+	s=default; t=1597692701;
+	bh=wITwGc/iA9hZ7809WDDKU8at8eq9U1abe8a8Alu0yAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCM+sumBeGsncCLEdi4t4SWKS7n7nt3PkVSFWSnxu5zxwMsIyzT0N9UPsAI6Km/zj
-	 YSYX24sEmasU1smCYdfo9O0ttToDC/rdKMadishbH1dMU/sDHCKRS2C65U2i3unJ4i
-	 pPHb2XCJcBX1j6RD17V7ifOOHyY/yQ+PMZ2vzaHE=
+	b=tsNzBv0xcCeWrnI+fzrSJ31mhdapglolNzEuVYiFAPk14yN9bj7FEu28I27vJ4dz6
+	 Uu0ZGmOn6DuImaVQp4WmHw/L4lJt6h2oC2VrdwzNq2N6jPGOy8GzGW/st7x/ajcw2q
+	 lq7JjrrF7I1mjaQZlnfK/LU6J5YUJi8KMtft8E0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbgHQTbh (ORCPT
+        id S1732280AbgHQTbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgHQPbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:31:47 -0400
+        id S1730293AbgHQPbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F43B22CF7;
-        Mon, 17 Aug 2020 15:31:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AB020709;
+        Mon, 17 Aug 2020 15:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678307;
-        bh=a7E2beN0GPmKTpYoQDTwY7mJKGFsxlXkNeufTEdGSfE=;
+        s=default; t=1597678304;
+        bh=wITwGc/iA9hZ7809WDDKU8at8eq9U1abe8a8Alu0yAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxMc7YFamfPgThzadtiAEfaqgmKT0xmS/3Z1XFvECOex9BonnFFx45oYXkyyAt1ux
-         xNqnS6N+ky6Buheg2Qg0Jql2Taeioms882+LxLhm+3X/GyakRfTkpboXq2nvfrGOia
-         IREX0JAoqBRy+0zUMM0/XuNg4kTkDaZAt/Ceqf4M=
+        b=MZdGVzSk2I4v4yywXQW7uUSmheSKBspvYH05AtkJ1FNYZn4kh0i3eE/VAqn1pJlm7
+         o4g4RlGj9ZnpdHXy3DJd5Z+ezO9roDLrFinQebnIa/dhjmo7zlMIOMi1Z9SPsfOuT9
+         NuJNEHYufp/M7BWvr8foSWIfcItkrWnVbouQaRWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 258/464] USB: serial: iuu_phoenix: fix led-activity helpers
-Date:   Mon, 17 Aug 2020 17:13:31 +0200
-Message-Id: <20200817143846.149969515@linuxfoundation.org>
+Subject: [PATCH 5.8 257/464] PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+Date:   Mon, 17 Aug 2020 17:13:30 +0200
+Message-Id: <20200817143846.102226905@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,68 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit de37458f8c2bfc465500a1dd0d15dbe96d2a698c ]
+[ Upstream commit 14110af606965ce07abe4d121c100241c2e73b86 ]
 
-The set-led command is eight bytes long and starts with a command byte
-followed by six bytes of RGB data and ends with a byte encoding a
-frequency (see iuu_led() and iuu_rgbf_fill_buffer()).
+According to the datasheet of Loongson LS7A bridge chip, the old version
+of Loongson LS7A PCIE port has a wrong value about PCI class which is
+0x060000, the correct value should be 0x060400, this bug can be fixed by
+"dev->class = PCI_CLASS_BRIDGE_PCI << 8;" at the software level and it
+was fixed in hardware in the latest LS7A versions.
 
-The led activity helpers had a few long-standing bugs which corrupted
-the command packets by inserting a second command byte and thereby
-offsetting the RGB data and dropping the frequency in non-xmas mode.
+In order to maintain downward compatibility, use DECLARE_PCI_FIXUP_EARLY
+instead of DECLARE_PCI_FIXUP_HEADER for bridge_class_quirk() to fix it as
+early as possible.
 
-In xmas mode, a related off-by-one error left the frequency field
-uninitialised.
+Otherwise, in the function pci_setup_device(), the related code about
+"dev->class" such as "class = dev->class >> 8;" and "dev->transparent
+= ((dev->class & 0xff) == 1);" maybe get wrong value without EARLY fixup.
 
-Fixes: 60a8fc017103 ("USB: add iuu_phoenix driver")
-Reported-by: George Spelvin <lkml@sdf.org>
-Link: https://lore.kernel.org/r/20200716085056.31471-1-johan@kernel.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/1595065176-460-1-git-send-email-yangtiezhu@loongson.cn
+Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/iuu_phoenix.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pci-loongson.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/serial/iuu_phoenix.c b/drivers/usb/serial/iuu_phoenix.c
-index b8dfeb4fb2ed6..ffbb2a8901b2b 100644
---- a/drivers/usb/serial/iuu_phoenix.c
-+++ b/drivers/usb/serial/iuu_phoenix.c
-@@ -353,10 +353,11 @@ static void iuu_led_activity_on(struct urb *urb)
- 	struct usb_serial_port *port = urb->context;
- 	int result;
- 	char *buf_ptr = port->write_urb->transfer_buffer;
--	*buf_ptr++ = IUU_SET_LED;
-+
- 	if (xmas) {
--		get_random_bytes(buf_ptr, 6);
--		*(buf_ptr+7) = 1;
-+		buf_ptr[0] = IUU_SET_LED;
-+		get_random_bytes(buf_ptr + 1, 6);
-+		buf_ptr[7] = 1;
- 	} else {
- 		iuu_rgbf_fill_buffer(buf_ptr, 255, 255, 0, 0, 0, 0, 255);
- 	}
-@@ -374,13 +375,14 @@ static void iuu_led_activity_off(struct urb *urb)
- 	struct usb_serial_port *port = urb->context;
- 	int result;
- 	char *buf_ptr = port->write_urb->transfer_buffer;
-+
- 	if (xmas) {
- 		iuu_rxcmd(urb);
- 		return;
--	} else {
--		*buf_ptr++ = IUU_SET_LED;
--		iuu_rgbf_fill_buffer(buf_ptr, 0, 0, 255, 255, 0, 0, 255);
- 	}
-+
-+	iuu_rgbf_fill_buffer(buf_ptr, 0, 0, 255, 255, 0, 0, 255);
-+
- 	usb_fill_bulk_urb(port->write_urb, port->serial->dev,
- 			  usb_sndbulkpipe(port->serial->dev,
- 					  port->bulk_out_endpointAddress),
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 459009c8a4a02..58b862aaa6e94 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+ {
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_0, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_1, bridge_class_quirk);
+-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_PCIE_PORT_2, bridge_class_quirk);
+ 
+ static void system_bus_quirk(struct pci_dev *pdev)
 -- 
 2.25.1
 
