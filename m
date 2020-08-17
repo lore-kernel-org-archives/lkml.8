@@ -2,67 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D93F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCE720674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693308;
+	bh=u7LJ+6e/2RuN3iPKQN1Z468NNxSIyzVHmukKgUVZ9hg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KGiuiD9LAzl6Qfv11VwlMqPdRHkvy0cGinDSpiaUrDoK2iqQ5CzWAgT0IhkzIP9p1
+	 KeJBs+7BMFJ0vxvmgmRihYeNvhaQ9EtGyCAlUx2A12awDjoZfszn+xuCIv02GfaTIq
+	 03ncDsHZMZGKm8pLzGvLr6Wz+i5lW5WR0nG7Kh4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404307AbgHQTlk (ORCPT
+        id S1729667AbgHQTlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:41:40 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:58775 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729708AbgHQPZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:13 -0400
-Received: (qmail 113589 invoked by uid 1000); 17 Aug 2020 11:25:07 -0400
-Date:   Mon, 17 Aug 2020 11:25:07 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Jim Baxter <jim_baxter@mentor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-usb@vger.kernel.org,
-        "Resch Carsten \(CM/ESO6\)" <Carsten.Resch@de.bosch.com>,
-        "Rosca, Eugeniu \(ADITG/ESB\)" <erosca@de.adit-jv.com>
-Subject: Re: PROBLEM: Long Workqueue delays.
-Message-ID: <20200817152507.GC112820@rowland.harvard.edu>
-References: <71aafe68-7fe0-6b77-ea8e-83edd3f16c8d@mentor.com>
+        Mon, 17 Aug 2020 15:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729683AbgHQPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:25:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABBC22B4B;
+        Mon, 17 Aug 2020 15:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677900;
+        bh=u7LJ+6e/2RuN3iPKQN1Z468NNxSIyzVHmukKgUVZ9hg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vcHq5W7wPXR54WETEpLzF4lxJVSEl62R6w0k+vAs++RBdDAE4UQYb6pYuJhXn4hJA
+         MFiyEQhGvVxsZzKjLXl2C6uBzaqnPtI5esUHX68anbppQSfEJkGameDwojkvHtVQl0
+         Z0pV4BULj9zH/KxMSkBGin2AptQ/nerzPB+Urh/o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 148/464] btmrvl: Fix firmware filename for sd8997 chipset
+Date:   Mon, 17 Aug 2020 17:11:41 +0200
+Message-Id: <20200817143840.899557428@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71aafe68-7fe0-6b77-ea8e-83edd3f16c8d@mentor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:40:03PM +0100, Jim Baxter wrote:
-> We have issues with the workqueue of the kernel overloading the CPU 0 
-> when we we disconnect a USB stick.
+From: Pali Rohár <pali@kernel.org>
 
-Do you unmount the stick before disconnecting it?
+[ Upstream commit 00eb0cb36fad53315047af12e83c643d3a2c2e49 ]
 
-> This results in other items on the shared workqueue being delayed by
-> around 6.5 seconds with a default kernel configuration and 2.3 seconds
-> on a config tailored for our RCar embedded platform.
-> 
-> I am aware there will be delays on the shared workqueue, are the delays
-> we are seeing considered normal?
+Firmware for sd8997 chipset is distributed by Marvell package and also as
+part of the linux-firmware repository in filename sdsd8997_combo_v4.bin.
 
-Assuming the workqueue delay is caused by the USB subsystem, you may be 
-able to get more information by turning on USB dynamic debugging:
+This patch fixes mwifiex driver to load correct firmware file for sd8997.
 
-	echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
+Fixes: f0ef67485f591 ("Bluetooth: btmrvl: add sd8997 chipset support")
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/bluetooth/btmrvl_sdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-and seeing what shows up in the dmesg log.
+diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+index fa11c3443583a..64ee799c17612 100644
+--- a/drivers/bluetooth/btmrvl_sdio.c
++++ b/drivers/bluetooth/btmrvl_sdio.c
+@@ -346,7 +346,7 @@ static const struct btmrvl_sdio_device btmrvl_sdio_sd8987 = {
+ 
+ static const struct btmrvl_sdio_device btmrvl_sdio_sd8997 = {
+ 	.helper         = NULL,
+-	.firmware       = "mrvl/sd8997_uapsta.bin",
++	.firmware       = "mrvl/sdsd8997_combo_v4.bin",
+ 	.reg            = &btmrvl_reg_8997,
+ 	.support_pscan_win_report = true,
+ 	.sd_blksz_fw_dl = 256,
+@@ -1833,4 +1833,4 @@ MODULE_FIRMWARE("mrvl/sd8887_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sd8897_uapsta.bin");
+ MODULE_FIRMWARE("mrvl/sdsd8977_combo_v2.bin");
+ MODULE_FIRMWARE("mrvl/sd8987_uapsta.bin");
+-MODULE_FIRMWARE("mrvl/sd8997_uapsta.bin");
++MODULE_FIRMWARE("mrvl/sdsd8997_combo_v4.bin");
+-- 
+2.25.1
 
-One long-running job should not normally be enough to delay an entire 
-workqueues.  Workqueues are allowed to spawn multiple threads; they are 
-supposed to resize themselves dynamically as required.
 
-Alan Stern
+
