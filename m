@@ -2,208 +2,172 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C250C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1105A2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553C42072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 21:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mu5RMyAB"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="rAS9sIp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHQVFa (ORCPT
+        id S1727790AbgHQVGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 17:05:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHQVFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 17:05:25 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06A7C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:05:24 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id n25so9009855vsq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9PmqgIYzOOImZZLBY3kQUVlBb5GYyirm8BR71dJiqw=;
-        b=Mu5RMyAB30MGUDbsENNdXuRiV4xyLY//ASCMKcHhT9b9pGdREc4oXNbsUG5hi805D4
-         rgj+nxZBF8TrqjPsyn+0qTpc1hJHy6OSRmvOr5sp2Wrt+vSwYI9sp+9kyolCkSWUAuCT
-         2J8ztk9CcxehsHLwobsEvxlggS0Lv/GmrU8xM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9PmqgIYzOOImZZLBY3kQUVlBb5GYyirm8BR71dJiqw=;
-        b=H9CTErZFce13uqJv3kZOwx7eD3AGJDzyVrFBzL9hcA+469i0wW3peIF33iPNtKP2Ek
-         j0S7yD5guXpRroSxK2c/7u6FXlLV9NMqhgHKjyH8jgZtm2cr8znri/oaNKKyUAcAJgmE
-         j2g1l5nuQYyUHSGdmQR1CJVCrjxmZHVl5GGIRvzulSlgTLN9Lz42XF8xudl1cR4GaQDo
-         Ypd1ZE1k6aWDVEK6Ao0Z/4KHk5TAllvePv5c/zNxwy3NFMy3VWSLI51n3VJ8GhXNc955
-         yd2GT/7yJ9q5hWUemljDFF9sP99Dkiflxyt6/Fgur7EGHfZHROYN06kaKgZzt0v3jbO7
-         1Nqg==
-X-Gm-Message-State: AOAM531e0ovgMKygDKD2hY4OjaPMm92Z+BGpQSdzmNaefjxMzoXAvWL3
-        fqbsheMrOls8D7POow96/vvoo8WLJzCmww==
-X-Google-Smtp-Source: ABdhPJykiOcAjnfL/F5gI54Xqrt+yjuN0P8bJGJxyrOACqvu07ojpRpiQuZHiBzNBZL8C9+fcH1SOQ==
-X-Received: by 2002:a67:cd0c:: with SMTP id u12mr9426804vsl.15.1597698323155;
-        Mon, 17 Aug 2020 14:05:23 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id n123sm3693375vkf.41.2020.08.17.14.05.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 14:05:22 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id g11so5179048ual.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 14:05:22 -0700 (PDT)
-X-Received: by 2002:a9f:2b89:: with SMTP id y9mr9057188uai.0.1597698321704;
- Mon, 17 Aug 2020 14:05:21 -0700 (PDT)
+        Mon, 17 Aug 2020 17:06:32 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:37102 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgHQVGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 17:06:30 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id 7mKkkX3u85b7l7mKmkHbuV; Mon, 17 Aug 2020 15:06:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1597698387; bh=w1JQC+7BHe1UBg4sceDdsbCzHYwBzcssB/FvTOGriz4=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=rAS9sIp3vV52fD0nNxi+appewT7Nx1CJtgQGGLkOUGrnwyIqaD4EonvFtSh824zgK
+         ypvBeJVOGYt8aoc1McGG1UYJDrfXMxa6xWLWVznjTUqofH6kNS878NbYZuYZ6l+rCV
+         UJ9V7HofUwjOSrlaTVUczZIYSIDoBSigv4FUvQwfsJfVTh1kjf3k7SzwSl8qUg6woR
+         usdwiskAGVRZsEUSALYCTcuvsgVBb4mbf+o+8zPeI59bckLnKxOonhK4sCBKW70lHQ
+         JGKoAgDwQohr4aesbwKZ9Dr8ECk7XghPm7fOAScxBmZepgiNGPSsY0jL+O3SaqRGLA
+         H3v6YF2ozKEbA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=YPHhNiOx c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=8RpStYJGi7BMQs3j73kA:9
+ a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <3226770.pJcYkdRNc2@kreacher> <122847018.uQ7iJ9lzrg@kreacher>
+In-Reply-To: <122847018.uQ7iJ9lzrg@kreacher>
+Subject: RE: [PATCH v7] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Mon, 17 Aug 2020 14:06:21 -0700
+Message-ID: <000901d674da$4521bda0$cf6538e0$@net>
 MIME-Version: 1.0
-References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 17 Aug 2020 14:05:10 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
-Message-ID: <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
-Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdZsF+Ny9o2RVgG1QuO4ZJYAcV1MWgIFjVRQ
+X-CMAE-Envelope: MS4wfFySA2QGM8mG30cHRJd1Wj1kfqMD3F2zODxcj2cwjNO5a/+/SOT2UmVspNrVRiHzRGtJFha2e0jq+KzeCZHm20awAASAP2NRIa73VqlOfD5QPiqfZNgn
+ iYNK+tfXZ3Kpz4gBfjVJOSL4GgB0+2pd1LmXGLMkAvcMvaZIKotHdVklR4+fiEDZaRS4PMdmGWgYtHo6ejl3+Rjui9IEc3CS39ZVjT0KzpAwyZKfClS26wAO
+ AdrAbvV28Mhv0NWQH0Ta9x2TMH+aAy1Z0gnGjSlj4ooG9JxizfP9b+vE9MvfFbJ6zXehAkiQVP9H7ZV63h18VrQ75WCjtudOzNUkeME3pr48848GiFQXWX05
+ g4zfmNN5FW5KeOZ5KkLHtXHi37uMWuGG3VOM+PIjAZhxAv20/SHNhEDF5871fxPlhylBXDRQMUQH8f2s7WT/hvfyTDgqWZPzf7m+Y1Kr1e5MEJmqTJs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020.08.06 05:04 Rafael J. Wysocki wrote:
 
-On Mon, Aug 17, 2020 at 7:47 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
->
-> Older chipsets may not be allowed to configure certain LLCC registers
-> as that is handled by the secure side software. However, this is not
-> the case for newer chipsets and they must configure these registers
-> according to the contents of the SCT table, while keeping in mind that
-> older targets may not have these capabilities. So add support to allow
-> such configuration of registers to enable capacity based allocation
-> and power collapse retention for capable chipsets.
+> Allow intel_pstate to work in the passive mode with HWP enabled and
+> make it set the HWP minimum performance limit (HWP floor) to the
+> P-state value given by the target frequency supplied by the cpufreq
+> governor, so as to prevent the HWP algorithm and the CPU scheduler
+> from working against each other, at least when the schedutil governor
+> is in use, and update the intel_pstate documentation accordingly.
 
-I have very little idea about what the above means.  That being said,
-what's broken that this patch fixes?  Please include this in the CL
-description.  It should answer, in the very least, the following two
-questions:
+...
 
-a) Were existing attempts to do capacity based allocation failing, or
-is capacity based allocation a new whizbang feature that a future
-patch will add and you need this one to land first?
+Hi Rafael,
 
-b) Why was it bad not to enable power collapse retention?  Was this
-causing things to get corrupted after resume?  Was this causing us to
-fail to suspend?  Were we burning too little power in S3 and the
-battery vendors are looking for an excuse to sell bigger batteries?
+You may or may not recall, I mentioned my further feedback would be
+delayed, as I wanted to work on reducing the labour content of my
+most basic CPU frequency scaler test.
 
-I'm not very smart and am also lacking documentation for what the heck
-all this is, so I'm looking for the "why" of your patch.
+I have tested kernel 5.9-rc1 for pretty much every intel_pstate
+variant and governor, and also the acpi-cpufreq driver.
 
+Other than changing governors, changes were only made via
+grub command line options and re-boot. EPP or EPB were never
+modified, they were always whatever default.
 
-> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> (sai: use table instead of dt property and minor commit msg change)
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->
-> Changes in v2:
->  * Fix build errors reported by kernel test robot.
->
-> ---
->  drivers/soc/qcom/llcc-qcom.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-> index 429b5a60a1ba..865f607cf502 100644
-> --- a/drivers/soc/qcom/llcc-qcom.c
-> +++ b/drivers/soc/qcom/llcc-qcom.c
-> @@ -45,6 +45,9 @@
->  #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
->  #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
->
-> +#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
-> +#define LLCC_TRP_PCB_ACT              0x21F04
-> +
->  #define BANK_OFFSET_STRIDE           0x80000
->
->  /**
-> @@ -318,6 +321,11 @@ size_t llcc_get_slice_size(struct llcc_slice_desc *desc)
->  }
->  EXPORT_SYMBOL_GPL(llcc_get_slice_size);
->
-> +static const struct of_device_id __maybe_unused qcom_llcc_configure_of_match[] = {
-> +       { .compatible = "qcom,sc7180-llcc" },
-> +       { }
-> +};
+performance governor: (left mostly blank, on purpose.)
+acpi-cpufreq:
+intel_cpufreq hwp: good
+intel_cpufreq no hwp:
+intel_pstate hwp:
+intel_pstate no hwp:
 
-Why are you introducing a whole second table?  Shouldn't you just add
-a field to "struct qcom_llcc_config" ?
+ondemand governor:
+acpi-cpufreq: good
+intel_cpufreq hwp: bad
+intel_cpufreq no hwp: good
 
+conservative governor:
+acpi-cpufreq: good
+intel_cpufreq hwp: good
+intel_cpufreq no hwp: good
 
-> +
->  static int qcom_llcc_cfg_program(struct platform_device *pdev)
->  {
->         int i;
-> @@ -327,13 +335,17 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
->         u32 attr0_val;
->         u32 max_cap_cacheline;
->         u32 sz;
-> +       u32 disable_cap_alloc = 0, retain_pc = 0;
+schedutil governor:
+acpi-cpufreq: good
+intel_cpufreq hwp: bad
+intel_cpufreq no hwp: good
 
-Don't init to 0.  See below.
+powersave governor:
+acpi-cpufreq: good
+intel_cpufreq hwp: bad
+intel_cpufreq no hwp: good
 
+active-powersave governor:
+intel_pstate hwp: ? not smooth, suffers from the broken HWP issue.
+intel_pstate no hwp: good.
+Intel_pstate hwp, idle state 2 disabled: Better but still worse for power.
 
->         int ret = 0;
->         const struct llcc_slice_config *llcc_table;
->         struct llcc_slice_desc desc;
-> +       const struct of_device_id *llcc_configure;
->
->         sz = drv_data->cfg_size;
->         llcc_table = drv_data->cfg;
->
-> +       llcc_configure = of_match_node(qcom_llcc_configure_of_match, pdev->dev.of_node);
-> +
+Now, we don't actually care about CPU frequency, we care about power:
 
-As per above, just use the existing config.
+ondemand governor:
 
+periodic workflow at 347 hertz.
+~58% load at 4.60 GHz (where hwp operates)
+~76% load at 3.5 GHz (where no hwp operates)
 
->         for (i = 0; i < sz; i++) {
->                 attr1_cfg = LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
->                 attr0_cfg = LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
-> @@ -369,6 +381,21 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
->                                         attr0_val);
->                 if (ret)
->                         return ret;
-> +
-> +               if (llcc_configure) {
-> +                       disable_cap_alloc |= llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
+intel_cpufreq hwp: 14.3 processor package watts. 51.5 watts on the mains to the computer.
+intel_cpufreq no hwp: 9.1 processor package watts. 45.5 watts on the mains to the computer. 
 
-Don't "|=".  You're the only place touching this variable.  Just set it.
+schedutil governor:
+
+periodic workflow at 347 hertz.
+~36% load at 4.60 GHz (where hwp operates)
+~55% load at 3.2 GHz (where no hwp operates)
+
+intel_cpufreq hwp: 9.6 processor package watts. 45.8 watts on the mains to the computer.
+intel_cpufreq no hwp: ~6 processor package watts. ~41 watts on the mains to the computer. (noisy)
+
+powersave governor:
+
+periodic workflow at 347 hertz.
+~39.8% load at 2.00 GHz (where hwp operates)
+~92.5% load at 0.8 GHz (where no hwp operates)
+
+intel_cpufreq hwp: 2.6 processor package watts. 38 watts on the mains to the computer.
+intel_cpufreq no hwp: 1.9 processor package watts. 36 watts on the mains to the computer.
+
+active-powersave governor:
+
+periodic workflow at 347 hertz.
+~58% load at 4.60 GHz (where hwp operates)
+~72% load at 3.88 GHz (where no hwp operates) 
+
+intel_pstate hwp: 14.2 processor package watts. 52 watts on the mains to the computer.
+intel_pstate no hwp: 10.1 processor package watts. 48 watts on the mains to the computer.
+
+Link to web page with much of this same content which, in turn, links to various graphs.
+Coded, to avoid the barrage of bots:
+
+double u double u double u dot smythies dot com /~doug/linux/s18/hwp/v7/
+ 
+... Doug
 
 
-> +                       ret = regmap_write(drv_data->bcast_regmap,
-> +                                               LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
-> +                       if (ret)
-> +                               return ret;
-> +
-> +                       retain_pc |= llcc_table[i].retain_on_pc << llcc_table[i].slice_id;
-
-Don't "|=".  You're the only place touching this variable.  Just set it.
-
-
--Doug
