@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEDFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B1D20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D702075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691896;
-	bh=1MCbLa/2FROptC0TWFoBxOWO79n1UkwvKYg/ofYlKiY=;
+	s=default; t=1597691909;
+	bh=j9gokI0807gcfx9hcDzVT8BvWJdqUqiHwpDy1hJIToE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yEYtWzQYlHsxuy/zsNrozNb5QKO0yPUWPV5fZYzusma2x4Nl5wd1/5DoIeJneavKe
-	 ygAjcdXSYbCjVHkoxNT7xEqkU9SSUTIot4q0/rnaYRQgMIPxGHBKy9WOsS45PAEjsy
-	 NLKCRxm6N03gEcBZo91BDe+KCVxwHPqFGj/aJdPQ=
+	b=WCslH1OGoeBWdyB+SOSsXZRbGSGPtHXyGMsrYIk7QJPFRpEOTg6U4IGldBdD6MIcn
+	 c4o2olDzsqw5AYEfwH/NkCJMnInRMxvau7uuQyN4extJDeecx9uXmgn3vPnrt53BVq
+	 Natj93k+9QOEw4EXOJGBvkYmhp6X+cET3uhYzERQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgHQTSO (ORCPT
+        id S2392259AbgHQTSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45832 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbgHQPiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:03 -0400
+        id S1730378AbgHQPiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12CD023134;
-        Mon, 17 Aug 2020 15:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A862522CB3;
+        Mon, 17 Aug 2020 15:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678680;
-        bh=1MCbLa/2FROptC0TWFoBxOWO79n1UkwvKYg/ofYlKiY=;
+        s=default; t=1597678689;
+        bh=j9gokI0807gcfx9hcDzVT8BvWJdqUqiHwpDy1hJIToE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cklv+5HAKEkal5vZdE5K1TftXutHsBhu59vfNV5qvZRF+tegWFOIYNk4KTF3JNd1I
-         Ge4+1y7AV4u4S7xRBof68/C4R1Ow4sXt7al9jBahE3UhVf0+yiBldEzIoHMCe/Vhi9
-         YgkZlIQMGV4KkVmDqXiqduGbZhGkEnen9YD+ggc0=
+        b=lR/DzyaDmimM3rA+15A0UaUI0wOkgJmjRuTt6l8YlqtNkbodQc71KwzIhq5onwNTP
+         K4/4uvuq1y03onuaaQ11B/edwdIxvbY2+8SZ3ATrfG55aVza7wEjKgBxNEDEAzPI6d
+         7RLiE4QTo3miYKv0FvB7NFoaTlfhHxM/llRRg3as=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 387/464] net: phy: fix memory leak in device-create error path
-Date:   Mon, 17 Aug 2020 17:15:40 +0200
-Message-Id: <20200817143852.318634090@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 5.8 390/464] tcp: correct read of TFO keys on big endian systems
+Date:   Mon, 17 Aug 2020 17:15:43 +0200
+Message-Id: <20200817143852.460572048@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,46 +62,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit d02cbc46136105cf86f84ac355e16f04696f538d ]
+[ Upstream commit f19008e676366c44e9241af57f331b6c6edf9552 ]
 
-A recent commit introduced a late error path in phy_device_create()
-which fails to release the device name allocated by dev_set_name().
+When TFO keys are read back on big endian systems either via the global
+sysctl interface or via getsockopt() using TCP_FASTOPEN_KEY, the values
+don't match what was written.
 
-Fixes: 13d0ab6750b2 ("net: phy: check return code when requesting PHY driver module")
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+For example, on s390x:
+
+# echo "1-2-3-4" > /proc/sys/net/ipv4/tcp_fastopen_key
+# cat /proc/sys/net/ipv4/tcp_fastopen_key
+02000000-01000000-04000000-03000000
+
+Instead of:
+
+# cat /proc/sys/net/ipv4/tcp_fastopen_key
+00000001-00000002-00000003-00000004
+
+Fix this by converting to the correct endianness on read. This was
+reported by Colin Ian King when running the 'tcp_fastopen_backup_key' net
+selftest on s390x, which depends on the read value matching what was
+written. I've confirmed that the test now passes on big and little endian
+systems.
+
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Fixes: 438ac88009bc ("net: fastopen: robustness and endianness fixes for SipHash")
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Reported-and-tested-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/phy_device.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/net/tcp.h          |    2 ++
+ net/ipv4/sysctl_net_ipv4.c |   16 ++++------------
+ net/ipv4/tcp.c             |   16 ++++------------
+ net/ipv4/tcp_fastopen.c    |   23 +++++++++++++++++++++++
+ 4 files changed, 33 insertions(+), 24 deletions(-)
 
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -616,7 +616,9 @@ struct phy_device *phy_device_create(str
- 	if (c45_ids)
- 		dev->c45_ids = *c45_ids;
- 	dev->irq = bus->irq[addr];
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1664,6 +1664,8 @@ void tcp_fastopen_destroy_cipher(struct
+ void tcp_fastopen_ctx_destroy(struct net *net);
+ int tcp_fastopen_reset_cipher(struct net *net, struct sock *sk,
+ 			      void *primary_key, void *backup_key);
++int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *icsk,
++			    u64 *key);
+ void tcp_fastopen_add_skb(struct sock *sk, struct sk_buff *skb);
+ struct sock *tcp_try_fastopen(struct sock *sk, struct sk_buff *skb,
+ 			      struct request_sock *req,
+--- a/net/ipv4/sysctl_net_ipv4.c
++++ b/net/ipv4/sysctl_net_ipv4.c
+@@ -301,24 +301,16 @@ static int proc_tcp_fastopen_key(struct
+ 	struct ctl_table tbl = { .maxlen = ((TCP_FASTOPEN_KEY_LENGTH *
+ 					    2 * TCP_FASTOPEN_KEY_MAX) +
+ 					    (TCP_FASTOPEN_KEY_MAX * 5)) };
+-	struct tcp_fastopen_context *ctx;
+-	u32 user_key[TCP_FASTOPEN_KEY_MAX * 4];
+-	__le32 key[TCP_FASTOPEN_KEY_MAX * 4];
++	u32 user_key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u32)];
++	__le32 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(__le32)];
+ 	char *backup_data;
+-	int ret, i = 0, off = 0, n_keys = 0;
++	int ret, i = 0, off = 0, n_keys;
+ 
+ 	tbl.data = kmalloc(tbl.maxlen, GFP_KERNEL);
+ 	if (!tbl.data)
+ 		return -ENOMEM;
+ 
+-	rcu_read_lock();
+-	ctx = rcu_dereference(net->ipv4.tcp_fastopen_ctx);
+-	if (ctx) {
+-		n_keys = tcp_fastopen_context_len(ctx);
+-		memcpy(&key[0], &ctx->key[0], TCP_FASTOPEN_KEY_LENGTH * n_keys);
+-	}
+-	rcu_read_unlock();
+-
++	n_keys = tcp_fastopen_get_cipher(net, NULL, (u64 *)key);
+ 	if (!n_keys) {
+ 		memset(&key[0], 0, TCP_FASTOPEN_KEY_LENGTH);
+ 		n_keys = 1;
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3694,22 +3694,14 @@ static int do_tcp_getsockopt(struct sock
+ 		return 0;
+ 
+ 	case TCP_FASTOPEN_KEY: {
+-		__u8 key[TCP_FASTOPEN_KEY_BUF_LENGTH];
+-		struct tcp_fastopen_context *ctx;
+-		unsigned int key_len = 0;
++		u64 key[TCP_FASTOPEN_KEY_BUF_LENGTH / sizeof(u64)];
++		unsigned int key_len;
+ 
+ 		if (get_user(len, optlen))
+ 			return -EFAULT;
+ 
+-		rcu_read_lock();
+-		ctx = rcu_dereference(icsk->icsk_accept_queue.fastopenq.ctx);
+-		if (ctx) {
+-			key_len = tcp_fastopen_context_len(ctx) *
+-					TCP_FASTOPEN_KEY_LENGTH;
+-			memcpy(&key[0], &ctx->key[0], key_len);
+-		}
+-		rcu_read_unlock();
+-
++		key_len = tcp_fastopen_get_cipher(net, icsk, key) *
++				TCP_FASTOPEN_KEY_LENGTH;
+ 		len = min_t(unsigned int, len, key_len);
+ 		if (put_user(len, optlen))
+ 			return -EFAULT;
+--- a/net/ipv4/tcp_fastopen.c
++++ b/net/ipv4/tcp_fastopen.c
+@@ -108,6 +108,29 @@ out:
+ 	return err;
+ }
+ 
++int tcp_fastopen_get_cipher(struct net *net, struct inet_connection_sock *icsk,
++			    u64 *key)
++{
++	struct tcp_fastopen_context *ctx;
++	int n_keys = 0, i;
 +
- 	dev_set_name(&mdiodev->dev, PHY_ID_FMT, bus->id, addr);
-+	device_initialize(&mdiodev->dev);
- 
- 	dev->state = PHY_DOWN;
- 
-@@ -650,10 +652,8 @@ struct phy_device *phy_device_create(str
- 		ret = phy_request_driver_module(dev, phy_id);
- 	}
- 
--	if (!ret) {
--		device_initialize(&mdiodev->dev);
--	} else {
--		kfree(dev);
-+	if (ret) {
-+		put_device(&mdiodev->dev);
- 		dev = ERR_PTR(ret);
- 	}
- 
++	rcu_read_lock();
++	if (icsk)
++		ctx = rcu_dereference(icsk->icsk_accept_queue.fastopenq.ctx);
++	else
++		ctx = rcu_dereference(net->ipv4.tcp_fastopen_ctx);
++	if (ctx) {
++		n_keys = tcp_fastopen_context_len(ctx);
++		for (i = 0; i < n_keys; i++) {
++			put_unaligned_le64(ctx->key[i].key[0], key + (i * 2));
++			put_unaligned_le64(ctx->key[i].key[1], key + (i * 2) + 1);
++		}
++	}
++	rcu_read_unlock();
++
++	return n_keys;
++}
++
+ static bool __tcp_fastopen_cookie_gen_cipher(struct request_sock *req,
+ 					     struct sk_buff *syn,
+ 					     const siphash_key_t *key,
 
 
