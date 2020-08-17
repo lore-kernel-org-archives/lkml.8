@@ -2,52 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5640C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2110AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBFA2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061C52072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597687581;
-	bh=sEXgLNETWRnYr2UqSnDJpMZ7mhrKfcrWV3ANRgsVbAw=;
+	s=default; t=1597687584;
+	bh=4CFGfsTcuLmf6c/2l3yQniiMu66wdLCJlBLj0T632xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTiLYpneRpuaQyE7MLu9GCrYD/9APUwtu/GvAmDSAQVc6VMbia9zz3tpwDsyoe3g2
-	 7Wujh4/FSb2ScsdsHGd5Ud2zFlGYhxLEjHXw0BtVqBdvTlvGiyBhLcBscrmsKpSE6+
-	 0fDvG3hJzu9PZSefU+2O6ldsvkM1p83671xFvTag=
+	b=fXkAJC7sYKkjx7ukV3JiLH/5NTFm3nVtIsnSQnrBUblObLx+ctJ6BARcCpAxT4RuI
+	 TuKktvu5a7/SVrYqPVK5NcIdL/RQJohr2BOhnoDmO4e3cH7PUVeM/NWTJVhiwtCEFC
+	 hYS9IXVglUjcsvdzzcdhez+oBtoQ7CKd4uNe7rCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390285AbgHQSGT (ORCPT
+        id S2390180AbgHQSGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58952 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbgHQQIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:08:54 -0400
+        id S2388489AbgHQQI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81AD20888;
-        Mon, 17 Aug 2020 16:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA307207FB;
+        Mon, 17 Aug 2020 16:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680533;
-        bh=sEXgLNETWRnYr2UqSnDJpMZ7mhrKfcrWV3ANRgsVbAw=;
+        s=default; t=1597680538;
+        bh=4CFGfsTcuLmf6c/2l3yQniiMu66wdLCJlBLj0T632xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ff6Hzxl4TzF5Fpa1MrFayNWC9l2asMi1Y4cSIKFI1LmCHq15GVfFcu4MqvknKysmv
-         tFJdUYToSAGP2YCsWqX49hIkPI2VXiJztgYgtSJD6OMJKN2bEl76YnLBoKBshOkwjy
-         uID4XqtA+1xnEYttIX/5BemyhonIAvUS0rumhfQ0=
+        b=i/Bg6JGZAv+sH0hJorHy2xTPTLT9rM+sd60BonZRC+aG/d7XVjiccFeVE5r2ksxGF
+         ofZXi5nDBq2Y3bcG6TyUKie6l2bHAHazc0bIbbIW4bJu25BFwHjk0MmeFjCNREh8c2
+         WcjZEQ+0bD1vxQn+f/p2Ko8EnaCE4SMq+6Q14GIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 223/270] net/tls: Fix kmap usage
-Date:   Mon, 17 Aug 2020 17:17:04 +0200
-Message-Id: <20200817143806.877325542@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 196/270] wl1251: fix always return 0 error
+Date:   Mon, 17 Aug 2020 17:16:37 +0200
+Message-Id: <20200817143805.551798139@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,43 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit b06c19d9f827f6743122795570bfc0c72db482b0 ]
+[ Upstream commit 20e6421344b5bc2f97b8e2db47b6994368417904 ]
 
-When MSG_OOB is specified to tls_device_sendpage() the mapped page is
-never unmapped.
+wl1251_event_ps_report() should not always return 0 because
+wl1251_ps_set_mode() may fail. Change it to return 'ret'.
 
-Hold off mapping the page until after the flags are checked and the page
-is actually needed.
-
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200730073939.33704-1-wanghai38@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tls/tls_device.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ti/wl1251/event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -549,7 +549,7 @@ int tls_device_sendpage(struct sock *sk,
- {
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	struct iov_iter	msg_iter;
--	char *kaddr = kmap(page);
-+	char *kaddr;
- 	struct kvec iov;
- 	int rc;
- 
-@@ -564,6 +564,7 @@ int tls_device_sendpage(struct sock *sk,
- 		goto out;
+diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
+index 850864dbafa11..e6d426edab56b 100644
+--- a/drivers/net/wireless/ti/wl1251/event.c
++++ b/drivers/net/wireless/ti/wl1251/event.c
+@@ -70,7 +70,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
+ 		break;
  	}
  
-+	kaddr = kmap(page);
- 	iov.iov_base = kaddr + offset;
- 	iov.iov_len = size;
- 	iov_iter_kvec(&msg_iter, WRITE, &iov, 1, size);
+-	return 0;
++	return ret;
+ }
+ 
+ static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
+-- 
+2.25.1
+
 
 
