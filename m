@@ -2,95 +2,143 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F6720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="wjS/YEdd"
+	by mail.kernel.org (Postfix) with ESMTP id 03CEB20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693353;
+	bh=I4DTYmsf4Ie6Pvy2AwZnwahqayBuUFUZyeolksFCTwU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zn0TaheaEA2cADQTr/CQd2L+H1InOTHeWud3HwcZKntqGjAqFtxtUb20jC7UT7CHv
+	 ae6QTTEz6EGMZCDM+YAlnxzfpg4jdYKz8PoEzhMKRVKJYZwpcQ+fPrwo+3uNb9RMWI
+	 EdorTCvgRWnAmoTW5ciU/E/rHlNjRZgW9bwoRTcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732473AbgHQTmW (ORCPT
+        id S1729441AbgHQPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729298AbgHQPYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:22 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700F8C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:24:22 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id o22so12632405qtt.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 08:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wpjFdhMNWCz1OoEOw1sNOB2ATr37xxpA0VcQ/rpzNt8=;
-        b=wjS/YEddcrTt0TwUl4STi3hdSDfKMwHDJPmkG2duqqroVErfzpgY9a6M9JQrj0fUcz
-         DvNR5qx5szPuyrB3gvn5LmcLiLCLuQFZaGvnDx6hpJ70ppgRqX71P8K/RCLcTroKaAxY
-         pyJ/0rnC/yMvdOiQwxA38L54so/duzrQyLns0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wpjFdhMNWCz1OoEOw1sNOB2ATr37xxpA0VcQ/rpzNt8=;
-        b=H1HxihPRq34AQnKOmY4Xbgg+JS+MZJ/pKi5zEK3NqtDa2zmPID6A8cN4/sWeI0+hvC
-         Dvd1AVlogNEQ/N4uUtts7mXuMxmZZph3zT/6GWYFgBRVBUJDfRUnPVoMxG0FZxI2RD7Q
-         Mrgb7r1aVtv+DfTwfacTtz2ViQ8tMAf/d3gL7bpylq8SMKTUtWoI0SJaobbC6uFevU8/
-         cpxRrXuqv/uhM7/8bq7c97UTG73sHvjgBb0/uf88arxya8kfiBP1TTd7WYneCOtfDBHb
-         yFjCTjQj4Sg5KSo7ss55k6mbIx489mXwi9GDXju5Yi9TnZv2cVWWIZO8FmAL52YvaLWw
-         RYNQ==
-X-Gm-Message-State: AOAM533LfD/G/rc8XbYC0SHgSFe6q6gnMkNTth5iR1XwY1omsM62vKWj
-        C9UasFe5XM+dlL8bsMH5Ne7HnSVFOhbEvdalgPU=
-X-Google-Smtp-Source: ABdhPJxMUZ+gCnSCq5ix1mrxrPzEKdVJXy8XJC/J+jB54EdKD6pxTu3QP5svxJbvGB+0IZHl4HoYlw==
-X-Received: by 2002:ac8:614b:: with SMTP id d11mr13837585qtm.271.1597677860987;
-        Mon, 17 Aug 2020 08:24:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:47cc])
-        by smtp.gmail.com with ESMTPSA id 15sm17368296qkm.112.2020.08.17.08.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 08:24:20 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 16:24:18 +0100
-From:   Chris Down <chris@chrisdown.name>
+        Mon, 17 Aug 2020 11:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729520AbgHQPXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:23:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F96822DBF;
+        Mon, 17 Aug 2020 15:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597677791;
+        bh=I4DTYmsf4Ie6Pvy2AwZnwahqayBuUFUZyeolksFCTwU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OKQk/WximNMlkAdg+w5z2DKw+R4NQPt8zXkNhcuylSoscoc/A4uoQMO4OYyO2sMas
+         y7vE4TJvKjpyCL6YUa6LEAWR0oGTGzWXEC8tRlX+BnELnn3HmIXHacWhAMuFnqCCiP
+         q5cOqnWcQ8yRPRYOgFaOlJHvU9AEmZrKxYqjmitk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Jakub Kicinski <kuba@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-        sean.j.christopherson@intel.com, tony.luck@intel.com,
-        torvalds@linux-foundation.org, x86@kernel.org
-Subject: [PATCH 0/2] a couple of userspace MSR filtering improvements
-Message-ID: <cover.1597677395.git.chris@chrisdown.name>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 109/464] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Mon, 17 Aug 2020 17:11:02 +0200
+Message-Id: <20200817143839.021623585@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
+References: <20200817143833.737102804@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.14.6 (2020-07-11)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As discussed in Message-ID <20200714165621.GA3622@nazgul.tnic>.
+From: Paul E. McKenney <paulmck@kernel.org>
 
-We all agree that userspace MSR twiddling is non-ideal, but we should be
-a bit cautious of taking up too much kmsg buffer if applications do
-repeated writes. `allow_writes=1` is possible, but is non-ideal (see
-patch 1 changelog).
+[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
 
-Also added pid information to the message, since it makes identification
-of the source (more or less) unambiguous.
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-Chris Down (2):
-  x86: Prevent userspace MSR access from dominating the console
-  x86: Make source of unrecognised MSR writes unambiguous
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  	(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
- arch/x86/kernel/msr.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
 
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 8c7ca737a19b3..dcdab2675a21a 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3171,6 +3171,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
+ 	}
+ 	vm_unacct_memory(nr_accounted);
+ }
 -- 
-2.28.0
+2.25.1
+
+
 
