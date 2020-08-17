@@ -2,97 +2,125 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88262C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C41C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5956020658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7557220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0e4OPRP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWiqS0Nj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgHQIW6 (ORCPT
+        id S1727946AbgHQIXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        Mon, 17 Aug 2020 04:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgHQIWs (ORCPT
+        with ESMTP id S1728115AbgHQIWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:22:48 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C160C061388;
-        Mon, 17 Aug 2020 01:22:48 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f24so16713856ejx.6;
-        Mon, 17 Aug 2020 01:22:48 -0700 (PDT)
+        Mon, 17 Aug 2020 04:22:51 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B33C061389;
+        Mon, 17 Aug 2020 01:22:51 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a79so7857601pfa.8;
+        Mon, 17 Aug 2020 01:22:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4vvUS3MsWiDgWXcdNJuKrD06TaaumHLEcVAY3eJQqbI=;
-        b=Z0e4OPRPwxORMLo/h2Jx5AMLsngyx/pXUhtSkZkqTuBNK6AKh2lwQ4I1lcZuUI7SlN
-         ff3cNA7Sk+QHsq9C+khSBjpZesdJEcHH9Y4xILlrbd3Vkpdg9cjydTS8XzCrT+ntfFxn
-         rxAyK0nItr2Ptll37DxIFkMe/NfxpI/8jK/kSzuhBpMoHetsmwGijoYRMjqRINRJty7N
-         ZD3bXKynFlrXWijEcaq5telZXkARlgQ3m2TMBAE7+aB5ExXriSJm1s4BZEr/849tlZBq
-         wbDfVCD4Avjfk5NqjCDpgrYhA/Qy1psnHFvT5EyNjJY80ONA0QGaCwgRIBT2nyGWLPA+
-         KWrA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=K7Q+JLR8+W/rWkKJtwswByUgPhPynE2pfcWEkcTUtiM=;
+        b=RWiqS0NjR5pWuZhqmNoy+E4MnkeCIRO+ngM8BUOuKzwEHQm28K+TNu8Ql/pRFZ6o+a
+         ig71ooeNimb8NNb5hxmNUoHadcZFXlatv8afTGeclF7DVGLEl80zM/xxnAVWDzsf+dFk
+         Rs+OzW2zsNgWc8xXYp+nyR4jVXwg/5yC22ILxI3bR8cwHvUfWrpmq8TL2qs0YLF03qXk
+         YgVJHokzq0jyIA0G8zVPl/GYmss8dGHDb6V6PyDjOE6w3wlutcco45Ds1cqfAwtbLiUc
+         zdRxDLHzVTLNT3NpC2QUjzqte7NvzHvs1y6EcCXkzJbVcBfGlphRWACjnn+s6JAnsYjO
+         l9Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4vvUS3MsWiDgWXcdNJuKrD06TaaumHLEcVAY3eJQqbI=;
-        b=j3sYSyaNgamu+f5fi0/B5ML54Cq3gidiZM4jONhhQSQGzGaSIzreitt9PMHLKwwO/c
-         AE8H7avA1BG+Q7qzWaDrNg1YIJQeZVxv9KElyGXjAOkLjvBBIoAY+MLxWfcxwF/I2v0i
-         9ySjcrLM9lQVRe/E+NN8CkPqRD67v5TAzfjVjd90VzP9Eh+pyYJomnxxHJd3llz7BHZp
-         KzuAcWVK/i3eKU8RZcrlZBxoVFFuhdwmPErYN+W4xwbQ/0cb+blM9QyH4kDwYjfrHVJ0
-         9mV2dxUUrE1V/Aem4a6/bRhsGvvFU17iQmibbCXkvVEjPUa+FISTsPR4sLARbq5BTy3u
-         v3AQ==
-X-Gm-Message-State: AOAM531s9kV3+ZL7+jomDmwU8UcOa8mVv8vfHaMEr5wvLtfgbTO4CZ6a
-        yppB/NExyx+DK+fk9UnVtC1Rk9B9oCof8VqreX0=
-X-Google-Smtp-Source: ABdhPJynJYGy6+mtTZDN2BR36xcy5HcTLNM0YlY7cyrY0gq/xOcmt/zLd8HraV/Nj1cBiSyb//rwsLCQkG9ypFrXiuI=
-X-Received: by 2002:a17:907:7090:: with SMTP id yj16mr13634256ejb.73.1597652566928;
- Mon, 17 Aug 2020 01:22:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-11-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1597406966-13740-11-git-send-email-abel.vesa@nxp.com>
-From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Mon, 17 Aug 2020 16:07:41 +0800
-Message-ID: <CAA+hA=S980MzGYn+TS56JnOJb_Sazc2eH1XUU++bYNQdrxU+MQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/17] Documentation: bindings: clk: Add bindings for
- i.MX BLK_CTRL
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=K7Q+JLR8+W/rWkKJtwswByUgPhPynE2pfcWEkcTUtiM=;
+        b=BCix5UEGB5hlhqecGfQ6mAixUvU4Urqixkp716y/v/9FQ/xvfPIOhKA/IwdIxWEQe1
+         j55ls9zFGMT2guaAjRaTB/6fnc1dHg/yuD0aX1KRJz9s4VVyGxFqwbTP35UWgMAi3VHT
+         ZwackyCwV0YhwLHbDEFKkTweSVw+rcIkRLTK5v7p19JKx2/8pUSF9JtantBhgp1LzphY
+         juVXMckQVyHG+zp4EY88Cwi0avBnnxBTxyGdERVbPiLd2sfipO/ArqhlAKl+sXC7Fpmb
+         uGbnDK1C51C+iDFwTA4da9Y5K2SAbMsjp3xAYPLFIW8br62VjSXb7XD2Cm/QNcCwWzAc
+         5fwA==
+X-Gm-Message-State: AOAM532uYYZXHAHMkATrCncxoFO8SIiqYrJ63VV1Oned9+L+ID32VmXD
+        ifSFjOlVSAX6g8Mg3CVTmRg=
+X-Google-Smtp-Source: ABdhPJwJDGhQfZ+pLbcNjt9w+RQvcAMUzKo2R1igy7gIEXDlsJaWZHPSR5xpse+9lSMXYCtYc+wF6g==
+X-Received: by 2002:a63:4c57:: with SMTP id m23mr8909063pgl.77.1597652570727;
+        Mon, 17 Aug 2020 01:22:50 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.202.98])
+        by smtp.gmail.com with ESMTPSA id d93sm16735334pjk.44.2020.08.17.01.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 01:22:50 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, baohua@kernel.org, mripard@kernel.org,
+        wens@csie.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        michal.simek@xilinx.com, matthias.bgg@gmail.com
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH 31/35] dma: xgene: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 17 Aug 2020 13:47:22 +0530
+Message-Id: <20200817081726.20213-32-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817081726.20213-1-allen.lkml@gmail.com>
+References: <20200817081726.20213-1-allen.lkml@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 8:14 PM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> Document the i.MX BLK_CTRL with its devicetree properties.
->
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/dma/xgene-dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Regards
-Aisheng
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index 4f733d37a22e..3589b4ef50b8 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -975,9 +975,9 @@ static enum dma_status xgene_dma_tx_status(struct dma_chan *dchan,
+ 	return dma_cookie_status(dchan, cookie, txstate);
+ }
+ 
+-static void xgene_dma_tasklet_cb(unsigned long data)
++static void xgene_dma_tasklet_cb(struct tasklet_struct *t)
+ {
+-	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
++	struct xgene_dma_chan *chan = from_tasklet(chan, t, tasklet);
+ 
+ 	/* Run all cleanup for descriptors which have been completed */
+ 	xgene_dma_cleanup_descriptors(chan);
+@@ -1539,8 +1539,7 @@ static int xgene_dma_async_register(struct xgene_dma *pdma, int id)
+ 	INIT_LIST_HEAD(&chan->ld_pending);
+ 	INIT_LIST_HEAD(&chan->ld_running);
+ 	INIT_LIST_HEAD(&chan->ld_completed);
+-	tasklet_init(&chan->tasklet, xgene_dma_tasklet_cb,
+-		     (unsigned long)chan);
++	tasklet_setup(&chan->tasklet, xgene_dma_tasklet_cb);
+ 
+ 	chan->pending = 0;
+ 	chan->desc_pool = NULL;
+-- 
+2.17.1
+
