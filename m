@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BAE20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAC7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692255;
-	bh=0ay/RrJGtz7p5JCeEL2riGtfbb08ca11TFjXDHxvjic=;
+	s=default; t=1597692260;
+	bh=dHoB6WN7dMe7me8nFYFb2Na5SEj5aIZg5J6VQssDatI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGSB6phcP2m6fPz2k+wVWZmfjElAVphX0bsCTOg4jKMm7DHcLEVjXbJm3qvU9AyhY
-	 V4VSpwCIZJ6vVblVegXwQheqiM02cvUGB40GwZhlP9sRwJ709UHQxJyBFGZ46i2tSb
-	 hnlsiQgettFOUM/Lw23833VhT7rj9CdqFmTUCKtY=
+	b=vbGdFJ6eE0Sd4uLX8BLNrF1ev9CFw3QNnG2lIWmUDzlePahrYNQMBwooKSklOLrhD
+	 c2kSzBljtwyVWEh0GGv1V6uV8cSheIeVWjZ1U6lb82TT/lvkFR7Q7tn95muCUYI57P
+	 wDj5m4RQd6Xl2hIamYil6LPBCM48WWEz7WvyQXNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgHQTYJ (ORCPT
+        id S1731960AbgHQTYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:24:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgHQPeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:34:50 -0400
+        id S1729796AbgHQPen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD22E22BEF;
-        Mon, 17 Aug 2020 15:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4B220882;
+        Mon, 17 Aug 2020 15:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678489;
-        bh=0ay/RrJGtz7p5JCeEL2riGtfbb08ca11TFjXDHxvjic=;
+        s=default; t=1597678483;
+        bh=dHoB6WN7dMe7me8nFYFb2Na5SEj5aIZg5J6VQssDatI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RHNZ9JgpD1HlX+aDCDbhgyjQdHYT19n04f2F8OnCZPohWY7y6vA9gQ3HQP3yJ7GbG
-         F6rMG7QDa4A5X9m0COBIM3oBQhoeLx3OobZ0vlj1YGIiexAKrgT4FB/nueiO22FFX8
-         Z+lRXgFflluE5MMHSWH7eH9AmNUgZRENo6K2/di8=
+        b=yHKm1KpIciKJvMk4SMmu9cf6YKRxum1HzPYBVzRXQm+7OmybcxeDjlqMIos0dvSiZ
+         Coytc+MNJzoOcT/kLAUB3HGNJzdpXDVBYO49drWQSNqAO4DDXxGVZZNuaz4soq+QZb
+         Trc3sBM1UlND9RR5jugL+RCMpwUYC1nQ68PDUbZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        Md Haris Iqbal <haris.iqbal@cloud.ionos.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Sergey Matyukevich <geomatsi@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 320/464] RDMA/rtrs-clt: add an additional random 8 seconds before reconnecting
-Date:   Mon, 17 Aug 2020 17:14:33 +0200
-Message-Id: <20200817143849.125018827@linuxfoundation.org>
+Subject: [PATCH 5.8 348/464] qtnfmac: Missing platform_device_unregister() on error in qtnf_core_mac_alloc()
+Date:   Mon, 17 Aug 2020 17:15:01 +0200
+Message-Id: <20200817143850.440841711@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,68 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danil Kipnis <danil.kipnis@cloud.ionos.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 09e0dbbeed82e35ce2cd21e086a6fac934163e2a ]
+[ Upstream commit 141bc9abbbffa89d020957caa9ac4a61d0ef1e26 ]
 
-In order to avoid all the clients to start reconnecting at the same time
-schedule the reconnect dwork with a random jitter of +[0,8] seconds.
+Add the missing platform_device_unregister() before return from
+qtnf_core_mac_alloc() in the error handling case.
 
-Fixes: 6a98d71daea1 ("RDMA/rtrs: client: main functionality")
-Link: https://lore.kernel.org/r/20200724111508.15734-2-haris.iqbal@cloud.ionos.com
-Signed-off-by: Danil Kipnis <danil.kipnis@cloud.ionos.com>
-Signed-off-by: Md Haris Iqbal <haris.iqbal@cloud.ionos.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 616f5701f4ab ("qtnfmac: assign each wiphy to its own virtual platform device")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Reviewed-by: Sergey Matyukevich <geomatsi@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200730064910.37589-1-wanghai38@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/rtrs/rtrs-clt.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/wireless/quantenna/qtnfmac/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/rtrs/rtrs-clt.c b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-index 564388a85603f..5b31d3b03737c 100644
---- a/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-+++ b/drivers/infiniband/ulp/rtrs/rtrs-clt.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/module.h>
- #include <linux/rculist.h>
-+#include <linux/random.h>
- 
- #include "rtrs-clt.h"
- #include "rtrs-log.h"
-@@ -23,6 +24,12 @@
-  * leads to "false positives" failed reconnect attempts
-  */
- #define RTRS_RECONNECT_BACKOFF 1000
-+/*
-+ * Wait for additional random time between 0 and 8 seconds
-+ * before starting to reconnect to avoid clients reconnecting
-+ * all at once in case of a major network outage
-+ */
-+#define RTRS_RECONNECT_SEED 8
- 
- MODULE_DESCRIPTION("RDMA Transport Client");
- MODULE_LICENSE("GPL");
-@@ -306,7 +313,8 @@ static void rtrs_rdma_error_recovery(struct rtrs_clt_con *con)
- 		 */
- 		delay_ms = clt->reconnect_delay_sec * 1000;
- 		queue_delayed_work(rtrs_wq, &sess->reconnect_dwork,
--				   msecs_to_jiffies(delay_ms));
-+				   msecs_to_jiffies(delay_ms +
-+						    prandom_u32() % RTRS_RECONNECT_SEED));
- 	} else {
- 		/*
- 		 * Error can happen just on establishing new connection,
-@@ -2503,7 +2511,9 @@ static void rtrs_clt_reconnect_work(struct work_struct *work)
- 		sess->stats->reconnects.fail_cnt++;
- 		delay_ms = clt->reconnect_delay_sec * 1000;
- 		queue_delayed_work(rtrs_wq, &sess->reconnect_dwork,
--				   msecs_to_jiffies(delay_ms));
-+				   msecs_to_jiffies(delay_ms +
-+						    prandom_u32() %
-+						    RTRS_RECONNECT_SEED));
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/core.c b/drivers/net/wireless/quantenna/qtnfmac/core.c
+index eea777f8acea5..6aafff9d4231b 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/core.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/core.c
+@@ -446,8 +446,11 @@ static struct qtnf_wmac *qtnf_core_mac_alloc(struct qtnf_bus *bus,
  	}
- }
+ 
+ 	wiphy = qtnf_wiphy_allocate(bus, pdev);
+-	if (!wiphy)
++	if (!wiphy) {
++		if (pdev)
++			platform_device_unregister(pdev);
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	mac = wiphy_priv(wiphy);
  
 -- 
 2.25.1
