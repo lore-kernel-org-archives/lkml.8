@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C512EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E826920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF7A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692231;
-	bh=NgurdkAyS3ZCan68jj+yrGYmGwZI9CQBOjFPTO0lW1w=;
+	s=default; t=1597692243;
+	bh=Zhr72qCloKmSKihEzvvhRpi+WqP9C5JQJiJVztuEjV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiyJXQZPTvp/Ut81/u63yJt/wh/GFYJeRBrQxfXjRlkALwb7U0xHENx7D2FauKuSZ
-	 1LePeiVqrJxqvQR83onbnveMt9+xbkYZVkBzJvN2Ev4CySJx4NyG3f/vA8XFCkgp28
-	 It2rL+5B2IsKAm83GEDrNQFc2iDKPlRJ610d2FKI=
+	b=kOfrE+l/cB9WDKqWRuGzzzVQTR8fArZBQ+WuhSbmbTD0eEeKhMcXLK+YpRlQrwIYV
+	 jVAN5UozPhfwC28aXpbpIGDHF65MCvq89qGfMnwNPiF5etmzCDB47beiemCTwWSAtt
+	 rdd1fNmd5ZWHaXGOS+SvdnZaOMusP9FtBMUpuqB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392240AbgHQTXh (ORCPT
+        id S2392313AbgHQTYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:23:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbgHQPfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:35:00 -0400
+        id S1729817AbgHQPez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:34:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D9E20882;
-        Mon, 17 Aug 2020 15:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E56F23359;
+        Mon, 17 Aug 2020 15:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678500;
-        bh=NgurdkAyS3ZCan68jj+yrGYmGwZI9CQBOjFPTO0lW1w=;
+        s=default; t=1597678494;
+        bh=Zhr72qCloKmSKihEzvvhRpi+WqP9C5JQJiJVztuEjV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6y1gmQkGyMhhuLsgLVj6DUqLJs7i3yQp6aGJJ+g1IGzxkbNaMtZGyRtObW383iwZ
-         N52Ustqab1ED6xP53QE92xDnqniai36Eqq9cYgr3soeTrbRJOKRXP2UuOg5Ea+WHF2
-         3d96iG7viyJ84/dK75oydZkHt73MtXNBegxCz3EI=
+        b=AkoRMolELjGBrCoPyVyFjv/+DbqngbsI1tNxfZZB8iDV6wJKZUiHhRq5XO0mP5vXm
+         3hh+Z6jE8TKs25WK1l7bkMDCBE/RA5t72b/jOPWT6BAmoxjs/60iriXKhdyx0/5D1w
+         G9L9aUv5me6+CIM+H89VbzMUPZvU9a/XlecTxkto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 324/464] cpufreq: ap806: fix cpufreq driver needs ap cpu clk
-Date:   Mon, 17 Aug 2020 17:14:37 +0200
-Message-Id: <20200817143849.312255244@linuxfoundation.org>
+Subject: [PATCH 5.8 322/464] RDMA/netlink: Remove CAP_NET_RAW check when dump a raw QP
+Date:   Mon, 17 Aug 2020 17:14:35 +0200
+Message-Id: <20200817143849.217422069@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,36 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Auhagen <sven.auhagen@voleatech.de>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 8c37ad2f523396e15cf002b29f8f796447c71932 ]
+[ Upstream commit 1d70ad0f85435a7262de802b104e49e6598c50ff ]
 
-The Armada 8K cpufreq driver needs the Armada AP CPU CLK
-to work. This dependency is currently not satisfied and
-the ARMADA_AP_CPU_CLK can not be selected independently.
+When dumping QPs bound to a counter, raw QPs should be allowed to dump
+without the CAP_NET_RAW privilege. This is consistent with what "rdma res
+show qp" does.
 
-Add it to the cpufreq Armada8k driver.
-
-Fixes: f525a670533d ("cpufreq: ap806: add cpufreq driver for Armada 8K")
-Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: c4ffee7c9bdb ("RDMA/netlink: Implement counter dumpit calback")
+Link: https://lore.kernel.org/r/20200727095828.496195-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/Kconfig.arm | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/core/nldev.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index c6cbfc8baf724..a967894c4613e 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -41,6 +41,7 @@ config ARM_ARMADA_37XX_CPUFREQ
- config ARM_ARMADA_8K_CPUFREQ
- 	tristate "Armada 8K CPUFreq driver"
- 	depends on ARCH_MVEBU && CPUFREQ_DT
-+	select ARMADA_AP_CPU_CLK
- 	help
- 	  This enables the CPUFreq driver support for Marvell
- 	  Armada8k SOCs.
+diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
+index e16105be2eb23..98cd6403ca602 100644
+--- a/drivers/infiniband/core/nldev.c
++++ b/drivers/infiniband/core/nldev.c
+@@ -738,9 +738,6 @@ static int fill_stat_counter_qps(struct sk_buff *msg,
+ 	xa_lock(&rt->xa);
+ 	xa_for_each(&rt->xa, id, res) {
+ 		qp = container_of(res, struct ib_qp, res);
+-		if (qp->qp_type == IB_QPT_RAW_PACKET && !capable(CAP_NET_RAW))
+-			continue;
+-
+ 		if (!qp->counter || (qp->counter->id != counter->id))
+ 			continue;
+ 
 -- 
 2.25.1
 
