@@ -2,152 +2,159 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0EE2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C942075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 13:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BoZDT5r/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7UH5rrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgHQNOo (ORCPT
+        id S1728725AbgHQNPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:14:44 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:44636 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728471AbgHQNNm (ORCPT
+        Mon, 17 Aug 2020 09:15:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54217 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728781AbgHQNMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 09:13:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597670022; x=1629206022;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6YI3EwlP0gXnpO1U7PwzG0Q7DKDFtmgrYc94LiTchSQ=;
-  b=BoZDT5r/F1T8XRYZFJxDQ1IO/1hWHNqrg6zkX/HQQp+IsvAWq+EkJygH
-   N1lDQ6JVbElg5NT7vHEnykHdyH2uIqfbx/wSsXc88gtNHYWxa7Q6VjSD0
-   JX0grtUeH5bTbnAekS41ogtP+iOw2kunCpuXltPOVeD0z4CfY9/OnzJ+y
-   0=;
-X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="60331119"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 17 Aug 2020 13:13:26 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id E3761A2098;
-        Mon, 17 Aug 2020 13:13:23 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:13:22 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 13:13:13 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v7 18/18] MAINTAINERS: Add entry for the Nitro Enclaves driver
-Date:   Mon, 17 Aug 2020 16:10:03 +0300
-Message-ID: <20200817131003.56650-19-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200817131003.56650-1-andraprs@amazon.com>
-References: <20200817131003.56650-1-andraprs@amazon.com>
+        Mon, 17 Aug 2020 09:12:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597669950;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LoX/isK9XCVgjAah4bBlopo8zuCeI4gV5UtNPCvDo3s=;
+        b=F7UH5rrW2p0FrrBtim9H9MbCDtyMV5qicJ6zL+OzurIZOmVEycNbVmsvNxtuQ94M8aTi77
+        T1LPBoFqfjTotyQ29bYMS2F/anfVL9UddZ9nCIVkVkiJE4K3+dvuTVmAFX1/oiC80XajWr
+        TzzvQpCZgNYHSXGCO0jlsRLsrNtAbv8=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-531-lrRnGjEnO_eqmm17buq5pA-1; Mon, 17 Aug 2020 09:12:29 -0400
+X-MC-Unique: lrRnGjEnO_eqmm17buq5pA-1
+Received: by mail-io1-f72.google.com with SMTP id z25so9804936ioh.21
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 06:12:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LoX/isK9XCVgjAah4bBlopo8zuCeI4gV5UtNPCvDo3s=;
+        b=cajjtxVCNAZZU7UrBKQnmqSI5SRuEPbMsmmaUirYXYalhJSvcitiH06tYHFWG3yyx+
+         y0lMJ6vBchQZUHQ/Z9OXWcVTmS8zs0wlaJfoBLcWpvJAdvVnPOqtyBA3Kyp6vIde/5E+
+         soZLmPgaYM3ULzy4bcnFqR49drIwse7oyj7cnzOAm7ppnqJiy5xTYpQT3xFKOglWQead
+         iInM3WNYSxmqNLwh6VY7U/g/q377XMRbbi2GUabuBs7huhgHl3Y9M/X2WYIDQvjKPm15
+         2ANFhCRrVKwMxp05EJQ3SLH9ouNphFocIwMGZBM0VNwgmUSS/6QKplHLIWjsLINbJUDk
+         HFZg==
+X-Gm-Message-State: AOAM532MX8vQ/3oi+4OKNymjtviz4xu5RAmkOqDo6tkVNxDvPd4c6j0x
+        eUN6ntcZrlSjsJx16mGr+aoBdjDrnYwvOhpOaus4u7RMacMyzyA0/nApKMKo3SBp8AFgcz2GP5N
+        BfSkw4P2dFQErZItIrJLOKNpGJbHto4qS2NqcaT1O
+X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr15049767jaj.7.1597669948415;
+        Mon, 17 Aug 2020 06:12:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJySWz11lucPGQHNkEw8pyo3c3ZZxi7eKspfGM76zBLQPdq7Ia5uS7PYukYTNWDcCWDz6duzJWXOVY4bGUKMnCI=
+X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr15049731jaj.7.1597669948084;
+ Mon, 17 Aug 2020 06:12:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D03UWA001.ant.amazon.com (10.43.160.141) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com> <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
+In-Reply-To: <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Mon, 17 Aug 2020 09:12:17 -0400
+Message-ID: <CAOASepOFh-vOrNZEVDFrDSuHs+9GEzzpXUTG-fZMuyjWAkpRWw@mail.gmail.com>
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, Borislav Petkov <bp@alien8.de>,
+        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
+        Christian Ludloff <ludloff@google.com>,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
----
-Changelog
+On Mon, Aug 10, 2020 at 7:09 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Thu, Aug 6, 2020 at 7:55 AM Nathaniel McCallum <npmccallum@redhat.com> wrote:
+> >
+> > In a past revision of this patch, I had requested a void *misc
+> > parameter that could be passed through vdso_sgx_enter_enclave_t into
+> > sgx_enclave_exit_handler_t. This request encountered some push back
+> > and I dropped the issue. However, I'd like to revisit it or something
+> > similar.
+>
+> Why do you need an exit handler at all?  IIRC way back when I
+> suggested that we simply not support it at all.  If you want to
+> call__vdso_sgx_enter_enclave() in a loop, call it in a loop.  If you
+> want to wrap it intelligently in Rust, you don't want a callback
+> anyway -- that forces you have an FFI (or non-Rust, anyway) frame on
+> the stack, which interacts poorly with panic handling and prevents you
+> from using await in your Rust callback handler.  If, on the other
+> hand, you just call __vdso_sg_enter_enclave() in a loop, all these
+> problems go away and, if you really want, you can pass in a callback
+> in Rust and call the callback from Rust.
+>
+> What am I missing?  I still don't really understand why we are
+> supporting this mechanism at all.  Just the asm code to invoke the
+> callback seems to be about half of the entire function.
 
-v6 -> v7
+There are three ways to pass state between the enclave and the outside world:
+1. A pre-allocated memory block at enclave creation time.
+2. A contract for pushing values onto the stack during entry/exit.
+3. All registers and flags besides rax, rbx, and rcx.
 
-* No changes.
+Under the current vDSO function:
 
-v5 -> v6
+#1 is completely possible without a handler. The challenge is how to
+communicate the address of this memory to the enclave. This can be
+accomplished by a parameter in a measured block or by convention.
+Otherwise, it needs to use #2 or #3 to communicate the address of the
+block.
 
-* No changes.
+#2 requires a handler written in assembly. The semantics are well known.
 
-v4 -> v5
+#3 is possible without a handler, but only for the subset of the
+registers allowed by the calling convention. However, with a handler
+written in assembly you can pass both in and out the full range of
+registers. To do this, the assembly handler needs a pointer to a
+buffer to save the registers into. How does it get said pointer?
+Currently: offsetof, which Rust doesn't support.
 
-* No changes.
+So when I want to write a general purpose library to expose this,
+which method should I expose? In particular, I want to give a single
+"best practice" workflow to library consumers so that the startup
+process is easy. Since #1 requires #3 to avoid a bad developer
+experience, I'm inclined to provide #3.
 
-v3 -> v4
+I can provide the calling convention registers easily. But this limits
+the output registers to two (practically, one for a variety of
+reasons). I might just accept that. But with a misc pointer to the
+handler, I could expand the one or two return registers to 11 (rdi,
+rsi, rdx, r8-r15).
 
-* No changes.
-
-v2 -> v3
-
-* Update file entries to be in alphabetical order.
-
-v1 -> v2
-
-* No changes.
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index deaafb617361..06247ca41e5e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12268,6 +12268,19 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
- F:	arch/nios2/
- 
-+NITRO ENCLAVES (NE)
-+M:	Andra Paraschiv <andraprs@amazon.com>
-+M:	Alexandru Vasile <lexnv@amazon.com>
-+M:	Alexandru Ciobotaru <alcioa@amazon.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Supported
-+W:	https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-+F:	Documentation/nitro_enclaves/
-+F:	drivers/virt/nitro_enclaves/
-+F:	include/linux/nitro_enclaves.h
-+F:	include/uapi/linux/nitro_enclaves.h
-+F:	samples/nitro_enclaves/
-+
- NOHZ, DYNTICKS SUPPORT
- M:	Frederic Weisbecker <fweisbec@gmail.com>
- M:	Thomas Gleixner <tglx@linutronix.de>
--- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+Put simply: I think the one extra line of assembly is worth the
+flexibility it gives to consumers of this interface. In particular, it
+improves the FFI experience greatly since one doesn't have to resort
+to offsetof tricks to get some additional context into the handler.
 
