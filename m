@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D5AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E59C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F23B20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BFF20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688385;
-	bh=rqmP99AHGvwcPBfPitoztSTKcjwxWhsrxcWsAhEXPIk=;
+	s=default; t=1597688389;
+	bh=Z6wxDB/kNNPoBu4IE1f6YOWOpB/XzsTJije4bwfd+5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wHuqNA2YRurw4RLSOeTxATmgdiDQ7F9mkN/L75mgJZLvoTXvRKxcaetq3thwb46u6
-	 s8fiIrqC+AJ02wnWdBm4kw+53UxUPuul5YoxjsUi1JqcEE8wY73FLMl1rCE2WcCuBL
-	 k3DEg2wX7B2kWEkFLqaEqhFDxlMnI08ocaVL+l64=
+	b=aAEuTDQ3lSJ+Dh0/9GS6ff1/i0BjTETFRUjDyk+rvj7SfTmfUcpGvc7Q/5v8UQ5xA
+	 AYxrbWZY+A0UEBVITGrq53DWIDJMXBOOhVlWT2qpLKExF87K/2LloUaEXbnccPVN2i
+	 SBEB1VZypvO3OxTSrsno+uXnJFU81CnvEkDAgGjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390787AbgHQSTm (ORCPT
+        id S2390790AbgHQSTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388191AbgHQQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:24 -0400
+        id S2387902AbgHQQFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C8520829;
-        Mon, 17 Aug 2020 16:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1D6207FF;
+        Mon, 17 Aug 2020 16:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680307;
-        bh=rqmP99AHGvwcPBfPitoztSTKcjwxWhsrxcWsAhEXPIk=;
+        s=default; t=1597680304;
+        bh=Z6wxDB/kNNPoBu4IE1f6YOWOpB/XzsTJije4bwfd+5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fXbIbNPOAU6oL3TUcyBZ0aCLwYh8JdSzZ/u0B6p0TzifvXurdlpoN8YuETxjVlEqW
-         Xsbm93++Qlqz9elU0ZqFxlmrAhl7lR+e2tEmh5FjYhJ4bAbIdW8e2/UP7AlGZA0Cst
-         ydSow/N+y/h5ok0rna0QYDtvXElh2D0krc2H20pc=
+        b=T8NAFZLUIlvZZH/RYSVWsh4Y/1d6+QorEXvC+2KEE2AqXt4UJkV956UNgLM9vaAvn
+         sy2tjoLg0hrEowC2jQImDZqFWhF9AWtsgsAbW23wnI0P+PbpwOnJxsfrYctlIqGKIn
+         2YvysJuYOL3TUDOijrA6ZtiQ6+MuoadCXubhHAPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Dariusz Marcinkiewicz <darekm@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 135/270] drm: panel: simple: Fix bpc for LG LB070WV8 panel
-Date:   Mon, 17 Aug 2020 17:15:36 +0200
-Message-Id: <20200817143802.518344995@linuxfoundation.org>
+Subject: [PATCH 5.4 126/270] media: cros-ec-cec: do not bail on device_init_wakeup failure
+Date:   Mon, 17 Aug 2020 17:15:27 +0200
+Message-Id: <20200817143802.057347794@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,35 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+From: Dariusz Marcinkiewicz <darekm@google.com>
 
-[ Upstream commit a6ae2fe5c9f9fd355a48fb7d21c863e5b20d6c9c ]
+[ Upstream commit 6f01dfb760c027d5dd6199d91ee9599f2676b5c6 ]
 
-The LG LB070WV8 panel incorrectly reports a 16 bits per component value,
-while the panel uses 8 bits per component. Fix it.
+Do not fail probing when device_init_wakeup fails.
 
-Fixes: dd0150026901 ("drm/panel: simple: Add support for LG LB070WV8 800x480 7" panel")
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200711225317.28476-1-laurent.pinchart+renesas@ideasonboard.com
+device_init_wakeup fails when the device is already enabled as wakeup
+device. Hence, the driver fails to probe the device if:
+- The device has already been enabled for wakeup (by e.g. sysfs)
+- The driver has been unloaded and is being loaded again.
+
+This goal of the patch is to fix the above cases.
+
+Overwhelming majority of the drivers do not check device_init_wakeup
+return code.
+
+Fixes: cd70de2d356ee ("media: platform: Add ChromeOS EC CEC driver")
+Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/cros-ec-cec/cros-ec-cec.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 8abb31f83ffc7..6d9656323a3f4 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1935,7 +1935,7 @@ static const struct drm_display_mode lg_lb070wv8_mode = {
- static const struct panel_desc lg_lb070wv8 = {
- 	.modes = &lg_lb070wv8_mode,
- 	.num_modes = 1,
--	.bpc = 16,
-+	.bpc = 8,
- 	.size = {
- 		.width = 151,
- 		.height = 91,
+diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+index 4a3b3810fd895..31390ce2dbf2d 100644
+--- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
++++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+@@ -278,11 +278,7 @@ static int cros_ec_cec_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, cros_ec_cec);
+ 	cros_ec_cec->cros_ec = cros_ec;
+ 
+-	ret = device_init_wakeup(&pdev->dev, 1);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to initialize wakeup\n");
+-		return ret;
+-	}
++	device_init_wakeup(&pdev->dev, 1);
+ 
+ 	cros_ec_cec->adap = cec_allocate_adapter(&cros_ec_cec_ops, cros_ec_cec,
+ 						 DRV_NAME,
 -- 
 2.25.1
 
