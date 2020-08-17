@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3E4B20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8B52053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597680253;
-	bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
+	s=default; t=1597680269;
+	bh=REczOt4TXKPZcId4XYB6HQe/95cS7RHQwDga/Y9APWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdAP/DM9gnjE+kvG5/w0Ek7q85HRn2Awa7KxjA/36lG8zIkNF8+v79piIEAaXL/Y3
-	 F8zutVhgre4v4+iZxgAGBHC0J+BBEAEDbBRsvNQv5NE4K+5ifuxYAHKW984i1JcO3f
-	 bpISycfb34jAkPqTQlWz9UprVGMNmSTkknpfS0iw=
+	b=T3BrkBtaRwVDrbmOPN56C0Q0pNk0iLhzRtZk0BI4663bG6v2MRruBHcM8U7JxXKze
+	 /PXT5n55zVNEm5dLKit4WGf+3i+Sx8PihENXmcUEEwgkZx0XCvfVVDEBgegI2f2fi1
+	 DhpXMHmR0Tu/wuZwGZJ+iOab2octvtU5rHD7ch5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbgHQQEL (ORCPT
+        id S2388300AbgHQQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730488AbgHQPoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:44:30 -0400
+        id S2387690AbgHQPoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:44:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 010F122CAE;
-        Mon, 17 Aug 2020 15:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6217B2075B;
+        Mon, 17 Aug 2020 15:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679069;
-        bh=hbh2onNfrYZWgzJOpBJ8qUnoyWuTiPcRne0L8EkdyiI=;
+        s=default; t=1597679078;
+        bh=REczOt4TXKPZcId4XYB6HQe/95cS7RHQwDga/Y9APWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+pb6tZXeCxFDo9XrBbvq0yrING26XE6+ABZUsCIvtwxTPq7JwYHI2gHlG8ch2ItD
-         DR2YlfVRR85F/Ru1oXiUX9iQpBwPZhuiq4zCzL6tD+I5g2EZW9UKfajXEycudU17Iy
-         rCBhRxbOeAF8lJy0KVeEquWbb9Mc4v3kRa0ffYSs=
+        b=aqVKpWSAGw8jy9DgiRr3/tP52PupFNgVBAKxf/ncSZDLTnwoEXQCERZmmLdbH3hIv
+         5lydJsEjmFYry14ERCLig/V8qKX8JWfGKwqHaYwByEqZ5IqsZJjFAymBiQZq/f/6fv
+         VjDrxt5TFuhsjjbqYym6lVAYlimYWKhgL78DSAzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 084/393] mmc: sdhci-cadence: do not use hardware tuning for SD mode
-Date:   Mon, 17 Aug 2020 17:12:14 +0200
-Message-Id: <20200817143823.704932164@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 058/393] nvme-tcp: fix controller reset hang during traffic
+Date:   Mon, 17 Aug 2020 17:11:48 +0200
+Message-Id: <20200817143822.430709851@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,193 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit adc40a5179df30421a5537bfeb4545100ab97d5e ]
+[ Upstream commit 2875b0aecabe2f081a8432e2bc85b85df0529490 ]
 
-As commit ef6b75671b5f ("mmc: sdhci-cadence: send tune request twice to
-work around errata") stated, this IP has an errata. This commit applies
-the second workaround for the SD mode.
+commit fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+exposed an issue where we may hang trying to wait for queue freeze
+during I/O. We call blk_mq_update_nr_hw_queues which in case of multiple
+queue maps (which we have now for default/read/poll) is attempting to
+freeze the queue. However we never started queue freeze when starting the
+reset, which means that we have inflight pending requests that entered the
+queue that we will not complete once the queue is quiesced.
 
-Due to the errata, it is not possible to use the hardware tuning provided
-by SDHCI_HOST_CONTROL2.
+So start a freeze before we quiesce the queue, and unfreeze the queue
+after we successfully connected the I/O queues (and make sure to call
+blk_mq_update_nr_hw_queues only after we are sure that the queue was
+already frozen).
 
-Use the software-controlled tuning like the eMMC mode.
+This follows to how the pci driver handles resets.
 
-Set sdhci_host_ops::platform_execute_tuning instead of overriding
-mmc_host_ops::execute_tuning.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lore.kernel.org/r/20200720061141.172944-1-yamada.masahiro@socionext.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: fe35ec58f0d3 ("block: update hctx map when use multiple maps")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-cadence.c | 123 ++++++++++++++++---------------
- 1 file changed, 62 insertions(+), 61 deletions(-)
+ drivers/nvme/host/tcp.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 6da6d4fb5edd7..07a4cb989a68a 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -194,57 +194,6 @@ static u32 sdhci_cdns_get_emmc_mode(struct sdhci_cdns_priv *priv)
- 	return FIELD_GET(SDHCI_CDNS_HRS06_MODE, tmp);
- }
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 26461bf3fdcc3..99eaa0474e10b 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1753,15 +1753,20 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
+ 			ret = PTR_ERR(ctrl->connect_q);
+ 			goto out_free_tag_set;
+ 		}
+-	} else {
+-		blk_mq_update_nr_hw_queues(ctrl->tagset,
+-			ctrl->queue_count - 1);
+ 	}
  
--static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
--					 unsigned int timing)
--{
--	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
--	u32 mode;
--
--	switch (timing) {
--	case MMC_TIMING_MMC_HS:
--		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
--		break;
--	case MMC_TIMING_MMC_DDR52:
--		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
--		break;
--	case MMC_TIMING_MMC_HS200:
--		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
--		break;
--	case MMC_TIMING_MMC_HS400:
--		if (priv->enhanced_strobe)
--			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
--		else
--			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
--		break;
--	default:
--		mode = SDHCI_CDNS_HRS06_MODE_SD;
--		break;
--	}
--
--	sdhci_cdns_set_emmc_mode(priv, mode);
--
--	/* For SD, fall back to the default handler */
--	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
--		sdhci_set_uhs_signaling(host, timing);
--}
--
--static const struct sdhci_ops sdhci_cdns_ops = {
--	.set_clock = sdhci_set_clock,
--	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
--	.set_bus_width = sdhci_set_bus_width,
--	.reset = sdhci_reset,
--	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
--};
--
--static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
--	.ops = &sdhci_cdns_ops,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
--};
--
--static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
--	.ops = &sdhci_cdns_ops,
--};
--
- static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
- {
- 	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
-@@ -278,23 +227,24 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
- 	return 0;
- }
+ 	ret = nvme_tcp_start_io_queues(ctrl);
+ 	if (ret)
+ 		goto out_cleanup_connect_q;
  
--static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+/*
-+ * In SD mode, software must not use the hardware tuning and instead perform
-+ * an almost identical procedure to eMMC.
-+ */
-+static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
- {
--	struct sdhci_host *host = mmc_priv(mmc);
- 	int cur_streak = 0;
- 	int max_streak = 0;
- 	int end_of_streak = 0;
- 	int i;
- 
- 	/*
--	 * This handler only implements the eMMC tuning that is specific to
--	 * this controller.  Fall back to the standard method for SD timing.
-+	 * Do not execute tuning for UHS_SDR50 or UHS_DDR50.
-+	 * The delay is set by probe, based on the DT properties.
- 	 */
--	if (host->timing != MMC_TIMING_MMC_HS200)
--		return sdhci_execute_tuning(mmc, opcode);
--
--	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
--		return -EINVAL;
-+	if (host->timing != MMC_TIMING_MMC_HS200 &&
-+	    host->timing != MMC_TIMING_UHS_SDR104)
-+		return 0;
- 
- 	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
- 		if (sdhci_cdns_set_tune_val(host, i) ||
-@@ -317,6 +267,58 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
- }
- 
-+static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
-+					 unsigned int timing)
-+{
-+	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
-+	u32 mode;
-+
-+	switch (timing) {
-+	case MMC_TIMING_MMC_HS:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
-+		break;
-+	case MMC_TIMING_MMC_DDR52:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
-+		break;
-+	case MMC_TIMING_MMC_HS200:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
-+		break;
-+	case MMC_TIMING_MMC_HS400:
-+		if (priv->enhanced_strobe)
-+			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400ES;
-+		else
-+			mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
-+		break;
-+	default:
-+		mode = SDHCI_CDNS_HRS06_MODE_SD;
-+		break;
++	if (!new) {
++		nvme_start_queues(ctrl);
++		nvme_wait_freeze(ctrl);
++		blk_mq_update_nr_hw_queues(ctrl->tagset,
++			ctrl->queue_count - 1);
++		nvme_unfreeze(ctrl);
 +	}
 +
-+	sdhci_cdns_set_emmc_mode(priv, mode);
-+
-+	/* For SD, fall back to the default handler */
-+	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
-+		sdhci_set_uhs_signaling(host, timing);
-+}
-+
-+static const struct sdhci_ops sdhci_cdns_ops = {
-+	.set_clock = sdhci_set_clock,
-+	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
-+	.set_bus_width = sdhci_set_bus_width,
-+	.reset = sdhci_reset,
-+	.platform_execute_tuning = sdhci_cdns_execute_tuning,
-+	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
-+};
-+
-+static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
-+	.ops = &sdhci_cdns_ops,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-+};
-+
-+static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
-+	.ops = &sdhci_cdns_ops,
-+};
-+
- static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
- 					     struct mmc_ios *ios)
+ 	return 0;
+ 
+ out_cleanup_connect_q:
+@@ -1866,6 +1871,7 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
  {
-@@ -377,7 +379,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	priv->hrs_addr = host->ioaddr;
- 	priv->enhanced_strobe = false;
- 	host->ioaddr += SDHCI_CDNS_SRS_BASE;
--	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
- 	host->mmc_host_ops.hs400_enhanced_strobe =
- 				sdhci_cdns_hs400_enhanced_strobe;
- 	sdhci_enable_v4_mode(host);
+ 	if (ctrl->queue_count <= 1)
+ 		return;
++	nvme_start_freeze(ctrl);
+ 	nvme_stop_queues(ctrl);
+ 	nvme_tcp_stop_io_queues(ctrl);
+ 	if (ctrl->tagset) {
 -- 
 2.25.1
 
