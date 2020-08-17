@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17908C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39EC20855
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284B223372
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677828;
-	bh=9SWCTvbJ98KOQ9GVIu50Cbq1XurQ6Ach9phYfuzlA6U=;
+	s=default; t=1597677835;
+	bh=hNul+hpMOhhwF35fU5uL+jxA8siVHVf4No5zO0w65EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGmSNt6wamN5eGI4A0+MAfra8jqdrMOfp2L9WREsF7t4ba1S2ktrvkrMCRlksPgi2
-	 fFVo+iwD2KiHxg65UJZ1RWcWnWbnJzewicyAmhntPM6YTH+D7OHChd0Web+pxz4MlK
-	 A1KywznG2lbc/+eJH+tLkEIltkCDYI2z/do7l+j8=
+	b=UECdDvL6p4S7cjSEn+Nno4di9ZUTCbTyCZGY17rzXHL29Z/Poo1IPsXCsQSo2BWZp
+	 xiieYJuMEVSK1ZLyuqxESI+WKUnJPMu/pWjaXfybW98TN5uyZEBn0uv4p9lGJT/UaN
+	 wV9AAcf5eoKrxMhaZvAfYPsgiTrTNfRXNiAxsACw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgHQPXm (ORCPT
+        id S1729564AbgHQPXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729219AbgHQPWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:22:21 -0400
+        id S1729467AbgHQPWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:22:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0334520888;
-        Mon, 17 Aug 2020 15:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB3A223135;
+        Mon, 17 Aug 2020 15:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677741;
-        bh=9SWCTvbJ98KOQ9GVIu50Cbq1XurQ6Ach9phYfuzlA6U=;
+        s=default; t=1597677755;
+        bh=hNul+hpMOhhwF35fU5uL+jxA8siVHVf4No5zO0w65EM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOnfwM6p3Rv+eRL85obHIRIbwiTSRcfD9ZT5tVXm4urnKRLR1Z9TJfVUqKVIBs2hF
-         sT5uRJ0ypQy7hKoV83hh6/F1Auqm3FErOnNUt0E33DI0l5S7KqbKOg+WbHgp7w02VF
-         tDr3LTdPtWIfdpMCLOENENw1mP8oLSpRXR/Xh+fE=
+        b=1SV/hNxZESH1fh2JhDtSsrEmCXDp3cjCU5kiASU8klqb/KJOwjvW6c2QL9t+E19IN
+         jmUb+wgJ/W/cGgAVmRJ05u/Py4dhuj9SFauMZZI82Q30029SnfqP55tWUjxlTrqgkE
+         7NvNrazhJ6Nvhm6r9FTEupPCZUIzUWhj9hzN58Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 060/464] irqchip/ti-sci-inta: Fix return value about devm_ioremap_resource()
-Date:   Mon, 17 Aug 2020 17:10:13 +0200
-Message-Id: <20200817143836.639682960@linuxfoundation.org>
+Subject: [PATCH 5.8 097/464] memory: samsung: exynos5422-dmc: Do not ignore return code of regmap_read()
+Date:   Mon, 17 Aug 2020 17:10:50 +0200
+Message-Id: <20200817143838.439060749@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,36 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 4b127a14cb1385dd355c7673d975258d5d668922 ]
+[ Upstream commit c4f16e96d8fdd62ef12898fc0965c42093bed237 ]
 
-When call function devm_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+Check for regmap_read() return code before using the read value in
+following write in exynos5_switch_timing_regs().  Pass reading error
+code to the callers.
 
-Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Link: https://lore.kernel.org/r/1591437017-5295-2-git-send-email-yangtiezhu@loongson.cn
+This does not introduce proper error handling for such failed reads (and
+obviously regmap_write() error is still ignored) because the driver
+ignored this in all places.  Therefor it only fixes reported issue while
+matching current driver coding style:
+
+       drivers/memory/samsung/exynos5422-dmc.c: In function 'exynos5_switch_timing_regs':
+    >> drivers/memory/samsung/exynos5422-dmc.c:216:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-ti-sci-inta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/memory/samsung/exynos5422-dmc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index 7e3ebf6ed2cd1..be0a35d917962 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -572,7 +572,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	inta->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(inta->base))
--		return -ENODEV;
-+		return PTR_ERR(inta->base);
+diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+index 25196d6268e21..85b31d3de57ad 100644
+--- a/drivers/memory/samsung/exynos5422-dmc.c
++++ b/drivers/memory/samsung/exynos5422-dmc.c
+@@ -270,12 +270,14 @@ static int find_target_freq_idx(struct exynos5_dmc *dmc,
+  * This function switches between these banks according to the
+  * currently used clock source.
+  */
+-static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
++static int exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
+ {
+ 	unsigned int reg;
+ 	int ret;
  
- 	domain = irq_domain_add_linear(dev_of_node(dev),
- 				       ti_sci_get_num_resources(inta->vint),
+ 	ret = regmap_read(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, &reg);
++	if (ret)
++		return ret;
+ 
+ 	if (set)
+ 		reg |= EXYNOS5_TIMING_SET_SWI;
+@@ -283,6 +285,8 @@ static void exynos5_switch_timing_regs(struct exynos5_dmc *dmc, bool set)
+ 		reg &= ~EXYNOS5_TIMING_SET_SWI;
+ 
+ 	regmap_write(dmc->clk_regmap, CDREX_LPDDR3PHY_CON3, reg);
++
++	return 0;
+ }
+ 
+ /**
+@@ -516,7 +520,7 @@ exynos5_dmc_switch_to_bypass_configuration(struct exynos5_dmc *dmc,
+ 	/*
+ 	 * Delays are long enough, so use them for the new coming clock.
+ 	 */
+-	exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
++	ret = exynos5_switch_timing_regs(dmc, USE_MX_MSPLL_TIMINGS);
+ 
+ 	return ret;
+ }
+@@ -577,7 +581,9 @@ exynos5_dmc_change_freq_and_volt(struct exynos5_dmc *dmc,
+ 
+ 	clk_set_rate(dmc->fout_bpll, target_rate);
+ 
+-	exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
++	ret = exynos5_switch_timing_regs(dmc, USE_BPLL_TIMINGS);
++	if (ret)
++		goto disable_clocks;
+ 
+ 	ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
+ 	if (ret)
 -- 
 2.25.1
 
