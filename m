@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E09EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C866205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24ACE204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597681956;
-	bh=EXzeOTHPIzPxT19jkvKZyyanh+VKXO8I23xTbKj1mVw=;
+	s=default; t=1597682005;
+	bh=Xejuo/PMfWacrzkPzkq/7Z+s+R9YIMiwyxD9Qvi0SFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIuTZ/avsvxMzoeFW4UbbScyj4mMtiph+D9ZOQ8UsT2Hhd7V/6f4XrIXjlCInSgKv
-	 5alPjmH9YQ4hRBAOAjoxqGXuz+POJOi6g4shtiI/HQCH4e34F5ZcdzA0blpwLAesd0
-	 KvgcAqN8IV0OEdiQlloH8cZhcW1I3p2+AdxQgAEE=
+	b=UfR5W+5LhGzEQb7fMxPrrP86ny9N25nXWjPQH/UNo01t2bTQ8o5w8JNgzUqNXAKkf
+	 hdATpVye2R14q6zBeu87QZF/Mp/Toyt5lGYrNnr1GF8wuW9ZhhjeZCUSznpcKcSaro
+	 0t0ABoraZHwGFEbpyHp/AZ1u6Hnet68femR6RrKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbgHQQcd (ORCPT
+        id S1731209AbgHQQdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388004AbgHQPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:54:49 -0400
+        id S2387739AbgHQPzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:55:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86AEF208B3;
-        Mon, 17 Aug 2020 15:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AEBC20729;
+        Mon, 17 Aug 2020 15:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679689;
-        bh=EXzeOTHPIzPxT19jkvKZyyanh+VKXO8I23xTbKj1mVw=;
+        s=default; t=1597679700;
+        bh=Xejuo/PMfWacrzkPzkq/7Z+s+R9YIMiwyxD9Qvi0SFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLTR2EMK8ESYlrRXVvSpncdcfpxlejdAVnDHLep4e76G7MQofGOA6xx+Uk4d6qSRP
-         AdUqzmZUSu+0eRcwujIGQJXUAzqQA1kvXez5f+2DGNpYD3A5B/x+1SwGzxYPBgGQEk
-         5ppQnh3idMUGKdrnzowxaqvmiaBwLuqx1IwkEFRQ=
+        b=KTW7GpX2773d+WzYe5MvSNvWAvL7M1kjt8HFNUFY3QStV5+1p31WsfcJ3HH9GY4DZ
+         KZI8mnEjGVhbOO3buegT08QmJIXWWHEDk+wMyO/thXi60f3IdpxtcQoplbEjnmWZcF
+         okr0AKMbQSCBfGn0YqT4Xu7fei3E7NWKs7Ip/+O8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 301/393] fsl/fman: fix dereference null return value
-Date:   Mon, 17 Aug 2020 17:15:51 +0200
-Message-Id: <20200817143834.216276087@linuxfoundation.org>
+Subject: [PATCH 5.7 305/393] gpio: dont use same lockdep class for all devm_gpiochip_add_data users
+Date:   Mon, 17 Aug 2020 17:15:55 +0200
+Message-Id: <20200817143834.409569764@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,48 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florinel Iordache <florinel.iordache@nxp.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
+[ Upstream commit 5f402bb17533113c21d61c2d4bc4ef4a6fa1c9a5 ]
 
-Check before using returned value to avoid dereferencing null pointer.
+Commit 959bc7b22bd2 ("gpio: Automatically add lockdep keys") documents
+in its commits message its intention to "create a unique class key for
+each driver".
 
-Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It does so by having gpiochip_add_data add in-place the definition of
+two static lockdep classes for LOCKDEP use. That way, every caller of
+the macro adds their gpiochip with unique lockdep classes.
+
+There are many indirect callers of gpiochip_add_data, however, via
+use of devm_gpiochip_add_data. devm_gpiochip_add_data has external
+linkage and all its users will share the same lockdep classes, which
+probably is not intended.
+
+Fix this by replicating the gpio_chip_add_data statics-in-macro for
+the devm_ version as well.
+
+Fixes: 959bc7b22bd2 ("gpio: Automatically add lockdep keys")
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Link: https://lore.kernel.org/r/20200731123835.8003-1-a.fatoum@pengutronix.de
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib-devres.c | 13 ++++++++-----
+ include/linux/gpio/driver.h   | 13 +++++++++++--
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
-index 87b26f063cc82..c27df153f8959 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.c
-@@ -1767,6 +1767,7 @@ static int fman_port_probe(struct platform_device *of_dev)
- 	struct fman_port *port;
- 	struct fman *fman;
- 	struct device_node *fm_node, *port_node;
-+	struct platform_device *fm_pdev;
- 	struct resource res;
- 	struct resource *dev_res;
- 	u32 val;
-@@ -1791,8 +1792,14 @@ static int fman_port_probe(struct platform_device *of_dev)
- 		goto return_err;
- 	}
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 5c91c4365da1f..7dbce4c4ebdf4 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -487,10 +487,12 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+ }
  
--	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
-+	fm_pdev = of_find_device_by_node(fm_node);
- 	of_node_put(fm_node);
-+	if (!fm_pdev) {
-+		err = -EINVAL;
-+		goto return_err;
-+	}
-+
-+	fman = dev_get_drvdata(&fm_pdev->dev);
- 	if (!fman) {
- 		err = -EINVAL;
- 		goto return_err;
+ /**
+- * devm_gpiochip_add_data() - Resource managed gpiochip_add_data()
++ * devm_gpiochip_add_data_with_key() - Resource managed gpiochip_add_data_with_key()
+  * @dev: pointer to the device that gpio_chip belongs to.
+  * @gc: the GPIO chip to register
+  * @data: driver-private data associated with this chip
++ * @lock_key: lockdep class for IRQ lock
++ * @request_key: lockdep class for IRQ request
+  *
+  * Context: potentially before irqs will work
+  *
+@@ -501,8 +503,9 @@ static void devm_gpio_chip_release(struct device *dev, void *res)
+  * gc->base is invalid or already associated with a different chip.
+  * Otherwise it returns zero as a success code.
+  */
+-int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+-			   void *data)
++int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
++				    struct lock_class_key *lock_key,
++				    struct lock_class_key *request_key)
+ {
+ 	struct gpio_chip **ptr;
+ 	int ret;
+@@ -512,7 +515,7 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 
+-	ret = gpiochip_add_data(gc, data);
++	ret = gpiochip_add_data_with_key(gc, data, lock_key, request_key);
+ 	if (ret < 0) {
+ 		devres_free(ptr);
+ 		return ret;
+@@ -523,4 +526,4 @@ int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(devm_gpiochip_add_data);
++EXPORT_SYMBOL_GPL(devm_gpiochip_add_data_with_key);
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index b8fc92c177eba..e4a00bb42427c 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -496,8 +496,16 @@ extern int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		gpiochip_add_data_with_key(gc, data, &lock_key, \
+ 					   &request_key);	  \
+ 	})
++#define devm_gpiochip_add_data(dev, gc, data) ({ \
++		static struct lock_class_key lock_key;	\
++		static struct lock_class_key request_key;	  \
++		devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
++					   &request_key);	  \
++	})
+ #else
+ #define gpiochip_add_data(gc, data) gpiochip_add_data_with_key(gc, data, NULL, NULL)
++#define devm_gpiochip_add_data(dev, gc, data) \
++	devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
+ #endif /* CONFIG_LOCKDEP */
+ 
+ static inline int gpiochip_add(struct gpio_chip *gc)
+@@ -505,8 +513,9 @@ static inline int gpiochip_add(struct gpio_chip *gc)
+ 	return gpiochip_add_data(gc, NULL);
+ }
+ extern void gpiochip_remove(struct gpio_chip *gc);
+-extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *gc,
+-				  void *data);
++extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc, void *data,
++					   struct lock_class_key *lock_key,
++					   struct lock_class_key *request_key);
+ 
+ extern struct gpio_chip *gpiochip_find(void *data,
+ 			      int (*match)(struct gpio_chip *gc, void *data));
 -- 
 2.25.1
 
