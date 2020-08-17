@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67505C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750E42072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF2C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648414;
-	bh=ljY4hNkAYHQQVlNsazJvW+CoA58hsPice7owmwah8F4=;
+	s=default; t=1597648417;
+	bh=HP5c4pMcQnOetCk8v9KU+0cPVWG87EAigo+u/SeMoXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFiSwjbhyhTt2AcSk2weNHHnZ9JoFMVIqUV9j77t8GcV3ye29vyJfkkk4T9jOVO9v
-	 j5uC42/t938XJQQkefeXPclCpqwuWYud6g2rwpG5J9mhYIp5KYSqtaKReegOEWDj+W
-	 m6RRjakfE1kqHqvLfbXaC+S/fZC+eyq/HWLD8Yvk=
+	b=b471WZZwkTVK3gb5FVidUSUfqVa6IRyt4szZRzh8epQFDwC/OpXUcV+1enxWKiIfV
+	 r2S8ZuTSKCNZT5ljvnFKfzFegR3+BGglXcfKDyFpFaa0IVVea2VqI33kSasnB/KzR8
+	 VmejqUvdPCceMLOgcsg9jefGoKBvvjWyck0+YFX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgHQHNd (ORCPT
+        id S1727821AbgHQHNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgHQHLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:11:48 -0400
+        id S1726897AbgHQHLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:11:49 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 958B822EBE;
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB7723100;
         Mon, 17 Aug 2020 07:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597648278;
-        bh=ljY4hNkAYHQQVlNsazJvW+CoA58hsPice7owmwah8F4=;
+        bh=HP5c4pMcQnOetCk8v9KU+0cPVWG87EAigo+u/SeMoXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weJFB2dykeTzL4E2BzfsT+GmE7RVQ9oe4XudMt001kyS1aYQghz91NlAn9Q/BrI9Y
-         Ca/Gk6yuSNQHL/MI1tSJXnouSYWzRFOtMlMF4oqp160qXSAGScfim0FWQWzCgE+Oh2
-         leh5mO7b8NIl442glG0xaLE1AxW3f173F00QjGHA=
+        b=SCfekgau7FI20vpcs/XFGSh4x8RdKxf+7ZJP7jdTTrCGLetk6hCqFxRN9TLTqjmMm
+         ElUaCPIEyRjoMLXOHD7jqwbdyIHYwavFS8oI/P5yJwWMv70ISDK8MUkc6NZOi+4AAA
+         pWYX0TQTCenol+ZM/bSzA8JEAQXa2XJ22+6JsHPY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIa-00BdlG-Mi; Mon, 17 Aug 2020 09:11:16 +0200
+        id 1k7ZIa-00BdlK-Ow; Mon, 17 Aug 2020 09:11:16 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and mfd/regulator properties
-Date:   Mon, 17 Aug 2020 09:11:02 +0200
-Message-Id: <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 44/44] dt: hisilicon: add support for the PMIC found on Hikey 970
+Date:   Mon, 17 Aug 2020 09:11:03 +0200
+Message-Id: <e35acbb1b39e7b0578934ae0e1e79ccced1884b4.1597647359.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
@@ -63,266 +63,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the properties needed by the HiSilicon
-6421v600 driver, and by the SPMI controller used to access
-the chipset.
+Add a device tree for the HiSilicon 6421v600 SPMI PMIC, used
+on HiKey970 board.
+
+As we now have support for it, change the fixed regulators
+used by the SD I/O to use the proper LDO supplies.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
- .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
- 2 files changed, 236 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+ .../boot/dts/hisilicon/hi3670-hikey970.dts    |  22 +-
+ .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++++++++++++
+ 2 files changed, 203 insertions(+), 19 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
 
-diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
+index 01234a175dcd..a9ad90e769ad 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
+@@ -12,6 +12,7 @@
+ 
+ #include "hi3670.dtsi"
+ #include "hikey970-pinctrl.dtsi"
++#include "hikey970-pmic.dtsi"
+ 
+ / {
+ 	model = "HiKey970";
+@@ -39,23 +40,6 @@ memory@0 {
+ 		reg = <0x0 0x0 0x0 0x0>;
+ 	};
+ 
+-	sd_1v8: regulator-1v8 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-1.8V";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-always-on;
+-	};
+-
+-	sd_3v3: regulator-3v3 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-3.3V";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-	};
+-
+ 	wlan_en: wlan-en-1-8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan-en-regulator";
+@@ -402,8 +386,8 @@ &dwmmc1 {
+ 	pinctrl-0 = <&sd_pmx_func
+ 		     &sd_clk_cfg_func
+ 		     &sd_cfg_func>;
+-	vmmc-supply = <&sd_3v3>;
+-	vqmmc-supply = <&sd_1v8>;
++	vmmc-supply = <&ldo16>;
++	vqmmc-supply = <&ldo9>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
 new file mode 100644
-index 000000000000..95494114554d
+index 000000000000..2a6c366d9be6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-@@ -0,0 +1,182 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
+@@ -0,0 +1,200 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * dts file for Hi6421v600 SPMI PMIC used at the HiKey970 Development Board
++ *
++ * Copyright (C) 2020, Huawei Tech. Co., Ltd.
++ */
 +
-+title: HiSilicon 6421v600 SPMI PMIC
++/ {
++	spmi: spmi@fff24000 {
++		compatible = "hisilicon,spmi-controller";
++		#address-cells = <2>;
++		#size-cells = <0>;
++		status = "ok";
++		reg = <0x0 0xfff24000 0x0 0x1000>;
++		spmi-channel = <2>;
 +
-+maintainers:
-+  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
++		pmic: pmic@0 {
++			compatible = "hisilicon,hi6421-spmi-pmic";
++			slave_id = <0>;
++			reg = <0 0>;
 +
-+description: |
-+  HiSilicon 6421v600 uses a MIPI System Power Management (SPMI) bus in order
-+  to provide interrupts and power supply.
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			gpios = <&gpio28 0 0>;
++			irq-num = <16>;
++			irq-array = <2>;
++			irq-mask-addr = <0x202 2>;
++			irq-addr = <0x212 2>;
 +
-+  The GPIO and interrupt settings are represented as part of the top-level PMIC
-+  node.
++			regulators {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+  The SPMI controller part is provided by
-+  Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml.
++				ldo3: ldo3@16 {
++					reg = <0x16>;
++					vsel-reg = <0x51>;
 +
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]"
++					regulator-name = "ldo3";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-boot-on;
 +
-+  compatible:
-+    const: hisilicon,hi6421-spmi-pmic
++					enable-mask = <0x01>;
 +
-+  reg:
-+    maxItems: 1
++					voltage-table = <1500000>, <1550000>,
++							<1600000>, <1650000>,
++							<1700000>, <1725000>,
++							<1750000>, <1775000>,
++							<1800000>, <1825000>,
++							<1850000>, <1875000>,
++							<1900000>, <1925000>,
++							<1950000>, <2000000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
 +
-+  spmi-channel:
-+    description: number of the SPMI channel where the PMIC is connected
++				ldo4: ldo4@17 { /* 40 PIN */
++					reg = <0x17>;
++					vsel-reg = <0x52>;
 +
-+  '#interrupt-cells':
-+    const: 2
++					regulator-name = "ldo4";
++					regulator-min-microvolt = <1725000>;
++					regulator-max-microvolt = <1900000>;
++					regulator-boot-on;
 +
-+  interrupt-controller:
-+    description:
-+      Identify that the PMIC is capable of behaving as an interrupt controller.
++					enable-mask = <0x01>;
++					idle-mode-mask = <0x10>;
++					eco-microamp = <10000>;
 +
-+  gpios:
-+    maxItems: 1
++					hi6421-vsel = <0x52 0x07>;
++					voltage-table = <1725000>, <1750000>,
++							<1775000>, <1800000>,
++							<1825000>, <1850000>,
++							<1875000>, <1900000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
 +
-+  irq-num:
-+    description: Interrupt request number
++				ldo9: ldo9@1C { /* SDCARD I/O */
++					reg = <0x1C>;
++					vsel-reg = <0x57>;
 +
-+  'irq-array':
-+    description: Interrupt request array
++					regulator-name = "ldo9";
++					regulator-min-microvolt = <1750000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-boot-on;
 +
-+  'irq-mask-addr':
-+    description: Address for the interrupt request mask
++					enable-mask = <0x01>;
++					idle-mode-mask = <0x10>;
++					eco-microamp = <10000>;
 +
-+  'irq-addr':
-+    description: Address for the interrupt request
++					voltage-table = <1750000>, <1800000>,
++							<1825000>, <2800000>,
++							<2850000>, <2950000>,
++							<3000000>, <3300000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <360>;
++				};
 +
-+  regulators:
-+    type: object
++				ldo15: ldo15@21 { /* UFS */
++					reg = <0x21>;
++					vsel-reg = <0x5c>;
 +
-+    properties:
-+      '#address-cells':
-+        const: 1
++					regulator-name = "ldo15";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
 +
-+      '#size-cells':
-+        const: 0
++					enable-mask = <0x01>;
++					idle-mode-mask = <0x10>;
++					eco-microamp = <10000>;
 +
-+    patternProperties:
-+      '^ldo@[0-9]+$':
-+        type: object
++					voltage-table = <1800000>, <1850000>,
++							<2400000>, <2600000>,
++							<2700000>, <2850000>,
++							<2950000>, <3000000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
 +
-+        $ref: "/schemas/regulator/regulator.yaml#"
++				ldo16: ldo16@22 { /* SD */
++					reg = <0x22>;
++					vsel-reg = <0x5d>;
 +
-+        properties:
-+          reg:
-+            description: Enable register.
++					regulator-name = "ldo16";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
 +
-+          '#address-cells':
-+            const: 1
++					enable-mask = <0x01>;
++					idle-mode-mask = <0x10>;
++					eco-microamp = <10000>;
 +
-+          '#size-cells':
-+            const: 0
++					voltage-table = <1800000>, <1850000>,
++							<2400000>, <2600000>,
++							<2700000>, <2850000>,
++							<2950000>, <3000000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <360>;
++				};
 +
-+          vsel-reg:
-+            description: Voltage selector register.
++				ldo17: ldo17@23 {
++					reg = <0x23>;
++					vsel-reg = <0x5e>;
 +
-+          enable-mask:
-+            description: Bitmask used to enable the regulator.
++					regulator-name = "ldo17";
++					regulator-min-microvolt = <2500000>;
++					regulator-max-microvolt = <3300000>;
 +
-+          voltage-table:
-+            description: Table with the selector items for the voltage regulator.
-+            minItems: 2
-+            maxItems: 16
++					enable-mask = <0x01>;
++					idle-mode-mask = <0x10>;
++					eco-microamp = <10000>;
 +
-+          off-on-delay-us:
-+            description: Time required for changing state to enabled in microseconds.
++					voltage-table = <2500000>, <2600000>,
++							<2700000>, <2800000>,
++							<3000000>, <3100000>,
++							<3200000>, <3300000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
 +
-+          startup-delay-us:
-+            description: Startup time in microseconds.
++				ldo33: ldo33@32 { /* PEX8606 */
++					reg = <0x32>;
++					vsel-reg = <0x6d>;
++					regulator-name = "ldo33";
++					regulator-min-microvolt = <2500000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-boot-on;
 +
-+          idle-mode-mask:
-+            description: Bitmask used to put the regulator on idle mode.
++					enable-mask = <0x01>;
 +
-+          eco-microamp:
-+            description: Maximum current while on idle mode.
++					voltage-table = <2500000>, <2600000>,
++							<2700000>, <2800000>,
++							<3000000>, <3100000>,
++							<3200000>, <3300000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
 +
-+        required:
-+          - reg
-+          - vsel-reg
-+          - enable-mask
-+          - voltage-table
-+          - off-on-delay-us
-+          - startup-delay-us
++				ldo34: ldo34@33 { /* GPS AUX IN VDD */
++					reg = <0x33>;
++					vsel-reg = <0x6e>;
 +
-+required:
-+  - compatible
-+  - reg
-+  - regulators
++					regulator-name = "ldo34";
++					regulator-min-microvolt = <2600000>;
++					regulator-max-microvolt = <3300000>;
 +
-+examples:
-+  - |
-+    /* pmic properties */
++					enable-mask = <0x01>;
 +
-+    pmic: pmic@0 {
-+      compatible = "hisilicon,hi6421-spmi-pmic";
-+      slave_id = <0>;
-+      reg = <0 0>;
-+
-+      #interrupt-cells = <2>;
-+      interrupt-controller;
-+      gpios = <&gpio28 0 0>;
-+      irq-num = <16>;
-+      irq-array = <2>;
-+      irq-mask-addr = <0x202 2>;
-+      irq-addr = <0x212 2>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      regulators {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+        ldo3: ldo3@16 {
-+          reg = <0x16>;
-+          vsel-reg = <0x51>;
-+
-+          regulator-name = "ldo3";
-+          regulator-min-microvolt = <1500000>;
-+          regulator-max-microvolt = <2000000>;
-+          regulator-boot-on;
-+
-+          enable-mask = <0x01>;
-+
-+          voltage-table = <1500000>, <1550000>, <1600000>, <1650000>,
-+                          <1700000>, <1725000>, <1750000>, <1775000>,
-+                          <1800000>, <1825000>, <1850000>, <1875000>,
-+                          <1900000>, <1925000>, <1950000>, <2000000>;
-+          off-on-delay-us = <20000>;
-+          startup-delay-us = <120>;
-+        };
-+
-+        ldo4: ldo4@17 { /* 40 PIN */
-+          reg = <0x17>;
-+          vsel-reg = <0x52>;
-+
-+          regulator-name = "ldo4";
-+          regulator-min-microvolt = <1725000>;
-+          regulator-max-microvolt = <1900000>;
-+          regulator-boot-on;
-+
-+          enable-mask = <0x01>;
-+          idle-mode-mask = <0x10>;
-+          eco-microamp = <10000>;
-+
-+          hi6421-vsel = <0x52 0x07>;
-+          voltage-table = <1725000>, <1750000>, <1775000>, <1800000>,
-+                          <1825000>, <1850000>, <1875000>, <1900000>;
-+          off-on-delay-us = <20000>;
-+          startup-delay-us = <120>;
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-new file mode 100644
-index 000000000000..5aeb2ae12024
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spmi/hisilicon,hisi-spmi-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon SPMI controller
-+
-+maintainers:
-+  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-+
-+description: |
-+  The HiSilicon SPMI controller is found on some Kirin-based designs.
-+  It is a MIPI System Power Management (SPMI) controller.
-+
-+  The PMIC part is provided by
-+  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
-+
-+properties:
-+  $nodename:
-+    pattern: "spmi@[0-9a-f]"
-+
-+  compatible:
-+    const: hisilicon,spmi-controller
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 0
-+
-+  spmi-channel:
-+    description: number of the SPMI channel where the PMIC is connected
-+
-+patternProperties:
-+  "^pmic@[0-9a-f]$":
-+    $ref: "/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#"
-+
-+examples:
-+  - |
-+    spmi: spmi@fff24000 {
-+      compatible = "hisilicon,spmi-controller";
-+      #address-cells = <2>;
-+      #size-cells = <0>;
-+      status = "ok";
-+      reg = <0x0 0xfff24000 0x0 0x1000>;
-+      spmi-channel = <2>;
-+
-+      /* pmic properties */
-+
-+    };
++					voltage-table = <2600000>, <2700000>,
++							<2800000>, <2900000>,
++							<3000000>, <3100000>,
++							<3200000>, <3300000>;
++					off-on-delay-us = <20000>;
++					startup-delay-us = <120>;
++				};
++			};
++		};
++	};
++};
 -- 
 2.26.2
 
