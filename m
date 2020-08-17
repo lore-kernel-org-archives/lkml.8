@@ -2,105 +2,107 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70085C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DFE207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lOAIwZ6C"
+	by mail.kernel.org (Postfix) with ESMTP id 183D720758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 08:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgHQIGr (ORCPT
+        id S1726730AbgHQIH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:06:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbgHQIGp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:06:45 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07H81U6S088239;
-        Mon, 17 Aug 2020 04:06:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : mime-version : message-id :
- content-type : content-transfer-encoding; s=pp1;
- bh=X07FvFb0QfIASln5B97rfeHj9PpOEHmY/M1fLCCLXdI=;
- b=lOAIwZ6C5ugZiiO3+2bAGdPZ6gPHdgi/WYlBdSRf756AdpK0Qag9rE/qT/i1uQIFQPB9
- T589z/740xkaqxnKhl1aBjkTFbqF5whV2ZW66vFVsofpQW9mPdpuECQhN4EuZOrrD5Pp
- i7aBaHzgvd2KLIN3pO1UxD7QMzUSXnkjVrF8xYJ7GK+bHcpsQeaASc7BTA6UuhIOpowY
- U43AWTU051ED4WSTgNMlqzuumABr84U1Y5aNTqndTTb4VoazWdkVzVGcDrTRZMLke/2k
- sP5px7yJdb9Mxk8OeHgGku2uJdquP091k5+/13PP+UcXE4pmRQpvZW5lRzHJftfRLJFb AA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32y5s7acmt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Aug 2020 04:06:11 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07H85gdc004000;
-        Mon, 17 Aug 2020 08:05:45 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 32x7b8208b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Aug 2020 08:05:45 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07H85hf922413736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 08:05:43 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E051F4203F;
-        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 884E442045;
-        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
-Received: from localhost (unknown [9.102.3.68])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Aug 2020 08:05:42 +0000 (GMT)
-Date:   Mon, 17 Aug 2020 13:35:42 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v1] powerpc/process: Remove unnecessary #ifdef
- CONFIG_FUNCTION_GRAPH_TRACER
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <9d11143d4e27ba8274369a926968756917584868.1597643153.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <9d11143d4e27ba8274369a926968756917584868.1597643153.git.christophe.leroy@csgroup.eu>
+        Mon, 17 Aug 2020 04:07:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4979 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgHQIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:07:26 -0400
+IronPort-SDR: g8VbzN/3k8gkn+U8de9XFeyrvQNgA8AYHCnjm5HExa4oqR7uiqdEpF/kqsGz+UEDOCbZY/Sxm4
+ PtbFqJCAbOqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134714646"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="134714646"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 01:07:26 -0700
+IronPort-SDR: UprZgQpDHZHN14fzFVEaiHymPDrfMsQnr0c7TfR/wV0ycE/rljC7OUHhOmc9FZ24iLIM0W/Jtw
+ fNMHYcNHnY+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="400121917"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 17 Aug 2020 01:07:23 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 17 Aug 2020 11:07:23 +0300
+Date:   Mon, 17 Aug 2020 11:07:23 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        USB <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2 v3] tcpm: During PR_SWAP, source caps should be sent
+ only after tSwapSourceStart
+Message-ID: <20200817080723.GB1448906@kuha.fi.intel.com>
+References: <20200812022934.568134-1-badhri@google.com>
+ <20200813082507.GE1169992@kuha.fi.intel.com>
+ <CAPTae5KUdTN5fVn45xFwhWS5Gy_xFJ91gAObb7qMk2KA+n72yQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Message-Id: <1597651522.loa8bqu8s9.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-17_02:2020-08-17,2020-08-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- clxscore=1011 bulkscore=0 priorityscore=1501 mlxlogscore=879
- suspectscore=0 malwarescore=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008170059
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPTae5KUdTN5fVn45xFwhWS5Gy_xFJ91gAObb7qMk2KA+n72yQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy wrote:
-> ftrace_graph_ret_addr() is always defined and returns 'ip' when
-> CONFIG_FUNCTION GRAPH_TRACER is not set.
->=20
-> So the #ifdef is not needed, remove it.
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/kernel/process.c | 4 ----
->  1 file changed, 4 deletions(-)
+On Thu, Aug 13, 2020 at 12:40:04PM -0700, Badhri Jagan Sridharan wrote:
+> Hi Heikki,
+> 
+> Sure. Same as the other patch I will try to address your question here
+> and will update the commit description once you are satisfied with the
+> description.
+> 
+> Subject:
+> During PR_SWAP, source caps should be sent only after tSwapSourceStart
+> 
+> Commit description:
+> The patch addresses the compliance test failures while running
+> TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 of the "Deterministic PD
+> Compliance MOI" test plan published in https://www.usb.org/usbc.
+> For a product to be Type-C compliant, it's expected that these tests
+> are run on usb.org certified Type-C compliance tester as mentioned in
+> https://www.usb.org/usbc.
+> 
+> The purpose of the tests TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 is to
+> verify the PR_SWAP response of the device. While doing so, the test
+> asserts that Source Capabilities message is NOT received from the test
+> device within tSwapSourceStart min (20 ms) from the time the last bit
+> of GoodCRC corresponding to the RS_RDY message sent by the UUT was
+> sent. If it does then the test fails.
+> 
+> This is in line with the requirements from the USB Power Delivery
+> Specification Revision 3.0, Version 1.2:
+> "6.6.8.1 SwapSourceStartTimer
+> The SwapSourceStartTimer Shall be used by the new Source, after a
+> Power Role Swap or Fast Role Swap, to ensure that it does not send
+> Source_Capabilities Message before the new Sink is ready to receive
+> the
+> Source_Capabilities Message. The new Source Shall Not send the
+> Source_Capabilities Message earlier than tSwapSourceStart after the
+> last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
+> Message sent by the new Source indicating that its power supply is
+> ready."
+> 
+> The patch makes sure that TCPM does not send the Source_Capabilities
+> Message within tSwapSourceStart(20ms) by transitioning into
+> SRC_STARTUP only after  tSwapSourceStart(20ms).
 
-LGTM.
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+That looks good to me. Thanks.
 
-- Naveen
+Br,
 
+-- 
+heikki
