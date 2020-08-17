@@ -2,154 +2,200 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9395EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B9FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC462078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70392078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 02:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y5P7UBdU"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="sXyWCwue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHQCHo (ORCPT
+        id S1726784AbgHQCM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Aug 2020 22:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgHQCHm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Aug 2020 22:07:42 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06BAC061786;
-        Sun, 16 Aug 2020 19:07:41 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BVHVt2tgsz9sTK;
-        Mon, 17 Aug 2020 12:07:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597630055;
-        bh=NUVL7wCS3C8AjNkO2+T076Su0229oneQ8GpXoq1sVvU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y5P7UBdUOrLfq15c3+yrX4hNJWlKwBdrKEbO8tlxw0ZVi2cZFHtIr+yJ4e8YPwmzR
-         g46Pt4KUM4u7jB+Mv9FqHIDw1vwRlBY7kasTmjYHk0L5KQRHDJz/qG1FQh+pDLwZ6D
-         W6aVMYc/yWy9CLPsDlep0dlgdut718OAA4BgbZqLhKZ3y/CNVKrH0/hZ/nxdGf/v25
-         qBIJqNXV+/Y254JsnPQD0UU8KReuWTA5iQ4icYxTxEsyWRrtleh0QpEVOFpDKdUnG3
-         H2IIqDFGIVPF8tlY6sUHJFalhjnD3/cImvI4GJNx2bwyDYu9tPq4IoXediWbO4L4y1
-         N97kpC0IJMJJQ==
-Date:   Mon, 17 Aug 2020 12:07:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Amol Grover <frextrite@gmail.com>, James Morris <jmorris@namei.org>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH RESEND] device_cgroup: Fix RCU list debugging warning
-Message-ID: <20200817120731.218e1bc5@canb.auug.org.au>
-In-Reply-To: <20200608041734.GA10911@mail.hallyn.com>
-References: <20200406105950.GA2285@workstation-kernel-dev>
-        <20200607062340.7be7e8d5@canb.auug.org.au>
-        <20200607190840.GG4455@paulmck-ThinkPad-P72>
-        <20200608041734.GA10911@mail.hallyn.com>
+        Sun, 16 Aug 2020 22:12:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48970 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgHQCM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Aug 2020 22:12:56 -0400
+IronPort-SDR: KSkSoYR4chvZP7gSTv7x8j1SVkKc9bAFT+BgIs5D9VHYM48QH9UJl9/4nGZEUeMtIB0V4eFqwO
+ B5xX7wWrkRqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="172677203"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="172677203"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 19:12:56 -0700
+IronPort-SDR: 9ipYxT8Pn5lg+60KITjwmE4sViwsRl3doUC2/3ZF820G9KvYCsntBANKL++w2zBHri0ieVC1ZL
+ 00IRtOgsj85w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="370428437"
+Received: from unknown (HELO fmsmsx604.amr.corp.intel.com) ([10.18.84.214])
+  by orsmga001.jf.intel.com with ESMTP; 16 Aug 2020 19:12:55 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 16 Aug 2020 19:12:52 -0700
+Received: from fmsmsx103.amr.corp.intel.com (10.18.124.201) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 16 Aug 2020 19:12:52 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 16 Aug 2020 19:12:51 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Sun, 16 Aug 2020 19:12:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R1K8oV+qYr3UEUWiaPRp/5+lEqpVVWmnAfpT+IzG3kpim0XLGf7dPR+GdGFr6jvKWuq59bLYbwhmQf4X5jEIezDpcjCAdzyzaBkoxMW2S4cecCBksqSB+BKoeIcNQAp6A2o9ak7Xl5/CXygJ0L358yJN02O+UDsmMbVB6Di5m3/y7+Hzo3/W1KFBtWLy4EHuVKtmHpV5stLcLPi/b80NqFdsGczoWl++I28qMtWWC88XRTuaiUhUpiw3pHs9uUfBAs/ANPdCbkhL7YwVP9KFJZVgHgMY/PlZnJHXvyaAxxn7shF18yWBp3uRZ5XOLiSAU9jirTT/1xRcOgW3l+uSTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rpRcjphMc/8RrOhtA7SllUEb1auoZ0lLAdbGViWnv3I=;
+ b=Jpa96gvFlonCH/CCRo+NAz4dkHf6zr+9ggsLMZyQ7sTwrJsxNKxCyqCqpWm91qzj9p/4Gd5nUgI2cDoOhkGUlginhwLr1Ip1xlRfBjttYsjw8mTiEBKWR7fll8V/lyYFtc9adBwwWld4u4sEF09Qk5OSkFnu5NThlZkaekZtVpQNNalgJU7dgUeSl/hsW16F3sogpXEoXuyBL/Zv2UagZbmzHpPh8OoWyLgWum5lQWQ9uW6bg7W1qOj2pg04NWwERWIGJJMjh46UBbKfvlY8W3QrhWPtF8XB/5JkJj+Tg3YE2VACXwGMkJUMYtofworoRZhBqCfyNW/3n4xXZK5V/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rpRcjphMc/8RrOhtA7SllUEb1auoZ0lLAdbGViWnv3I=;
+ b=sXyWCwueiNwlhOksOVG8fCTUvkm9SOgoTl37tr3nvSGukbpQyZjhDqNfa3iziNAr9Ouy3yhH4xwlbhG13DjK/WvtoUDm8p55/vLhbQU9QEOu4ld/oypTV0xjKoomS9DrVN/NVMioxIfjPnjEwVYGIkKUemmusXqA5mB6LFf05gs=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR1101MB2094.namprd11.prod.outlook.com (2603:10b6:301:4e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Mon, 17 Aug
+ 2020 02:12:44 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
+ 02:12:44 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Thread-Topic: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Thread-Index: AQHWX3hut2htBlMVB0qfW0Pa+gZbC6kSPbuAgABwW8CAAzMrAIAUgAoAgAJJ4oCABDO9YIAG4akAgAPzRxA=
+Date:   Mon, 17 Aug 2020 02:12:44 +0000
+Message-ID: <MWHPR11MB16456D49F2F2E9646F0841488C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200814133522.GE1152540@nvidia.com>
+In-Reply-To: <20200814133522.GE1152540@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d5401b0f-19c5-4679-b40d-08d842530749
+x-ms-traffictypediagnostic: MWHPR1101MB2094:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1101MB2094538ECCBA3D4EEB0157D18C5F0@MWHPR1101MB2094.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3qw3iICC0+BJ6GMZZB1vRDw/4SNE732NzDG3OycrjPfYfQ0GT+9eJfR5LCDP6jq9rtNT17Co28VVrkdRf2yIxtd6o0DROBb2bqgV3lMdEkcHofMOBWsN68JW8HDraP+nFmABL8ka3U0t+cADiazo41PkAWt6POLVXb3XibWKc7XS3p7CmZZmqwcCIIuVaCdXu3GJzG9zGv04usfzsCq4iawjQofnE1XIWoO9/bVkR+a4rd29b6wqd/pMsGFkLopGYFJEvXS6pgjX8r0eHqSsPXvyXmgXMlN6T6HrevVV7awNo1TxyBworDZyZ2SygghxqLvrJzt2+in6w/1Yb91mpg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(396003)(136003)(346002)(39860400002)(6506007)(478600001)(26005)(6916009)(7416002)(7696005)(4326008)(9686003)(186003)(2906002)(8936002)(66946007)(64756008)(76116006)(66476007)(66446008)(55016002)(8676002)(54906003)(86362001)(33656002)(71200400001)(66556008)(52536014)(5660300002)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: RMF+B6Kvg11cV7qWbUZkjoeWpAlIOENJZqw8IauDu2ppxlGhiQoUp1gWozs5PmKVAQSxCn8hvhcmahCUamNhOWw8z9sTyIJKT7RuqhvugjJZl0s7/BL0JWimwGyziPADeBcdzc9OJGA98dozxWaiDxLkClaqZphKSoPJf7bX8vccnCMoyL8IIk86GylWN/fITXRGgSDPExUQ//eAWVhFFlRGwUFB/0k9WaCXy12ndI62v10G6SigIFttQPjds1Lg7ZW1NLQYdUxC42b4thADRwTy4Ir4RnavablvoA0uOraWz0lXhsGIl1YCbiQVY9CFSZ6S0BAADTXwHAAP1WVXclBpiYx4naPcx0011rjMCZdshdEetU7Hu6x0u/4E/hPxjvi91+9hxIpUv/XK3wULDReIEVwNAyoroKurDlMDGH89h8ogV0YZS8/ragZKlqJTGYRMMWFcihf3CqcvlTemWoauapVIfk/LvmG5hMjSY6+PVc+f7f4mW+qEXD+/ZpKO1j9s5taBdQOjDhM25XhazO+4aGuIPX4bhYKlDltBvskjO2qVvufU9SyfMIunMM0e5yrTDGctrEbPygyl9vRx+SRPEOvby7D4gGkzusOri7Hr1RB3+X6rA7RA2GzoLadmqQFizmP/RL6yRtth67k9hA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//6LbZg5fP0ZKmOnWMaIHeAu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5401b0f-19c5-4679-b40d-08d842530749
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 02:12:44.2635
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bKJx4V4JxaYDTDFJNAnA/5Sc+VQuBvKpXXkfLFj0nVqb9cpNC/JqgNLU5P4vkJu14oAlzP0/Ey20hXtOqap08g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2094
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//6LbZg5fP0ZKmOnWMaIHeAu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Sun, 7 Jun 2020 23:17:34 -0500 "Serge E. Hallyn" <serge@hallyn.com> wrot=
-e:
-> On Sun, Jun 07, 2020 at 12:08:40PM -0700, Paul E. McKenney wrote:
-> > On Sun, Jun 07, 2020 at 06:23:40AM +1000, Stephen Rothwell wrote: =20
-> > >=20
-> > > On Mon, 6 Apr 2020 16:29:50 +0530 Amol Grover <frextrite@gmail.com> w=
-rote: =20
-> > > >
-> > > > exceptions may be traversed using list_for_each_entry_rcu()
-> > > > outside of an RCU read side critical section BUT under the
-> > > > protection of decgroup_mutex. Hence add the corresponding
-> > > > lockdep expression to fix the following false-positive
-> > > > warning:
-> > > >=20
-> > > > [    2.304417] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > [    2.304418] WARNING: suspicious RCU usage
-> > > > [    2.304420] 5.5.4-stable #17 Tainted: G            E
-> > > > [    2.304422] -----------------------------
-> > > > [    2.304424] security/device_cgroup.c:355 RCU-list traversed in n=
-on-reader section!!
-> > > >=20
-> > > > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > > > ---
-> > > >  security/device_cgroup.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-> > > > index 7d0f8f7431ff..b7da9e0970d9 100644
-> > > > --- a/security/device_cgroup.c
-> > > > +++ b/security/device_cgroup.c
-> > > > @@ -352,7 +352,8 @@ static bool match_exception_partial(struct list=
-_head *exceptions, short type,
-> > > >  {
-> > > >  	struct dev_exception_item *ex;
-> > > > =20
-> > > > -	list_for_each_entry_rcu(ex, exceptions, list) {
-> > > > +	list_for_each_entry_rcu(ex, exceptions, list,
-> > > > +				lockdep_is_held(&devcgroup_mutex)) {
-> > > >  		if ((type & DEVCG_DEV_BLOCK) && !(ex->type & DEVCG_DEV_BLOCK))
-> > > >  			continue;
-> > > >  		if ((type & DEVCG_DEV_CHAR) && !(ex->type & DEVCG_DEV_CHAR))
-> > >=20
-> > > I have been carrying the above patch in linux-next for some time now.
-> > > I have been carrying it because it fixes problems for syzbot (see the
-> > > third warning in
-> > > https://lore.kernel.org/linux-next/CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_m=
-vKHf--Z80Z3wkyK1Q@mail.gmail.com/).
-> > > Is there some reason it has not been applied to some tree? =20
-> >=20
-> > The RCU changes on which this patch depends have long since made it to
-> > mainline, so it can go up any tree.  I can take it if no one else will,
-> > but it might be better going in via the security tree.
+> From: Jason Gunthorpe
+> Sent: Friday, August 14, 2020 9:35 PM
 >=20
-> James, do you mind pulling it in?
+> On Mon, Aug 10, 2020 at 07:32:24AM +0000, Tian, Kevin wrote:
+>=20
+> > > I would prefer to see that the existing userspace interface have the
+> > > extra needed bits for virtualization (eg by having appropriate
+> > > internal kernel APIs to make this easy) and all the emulation to buil=
+d
+> > > the synthetic PCI device be done in userspace.
+> >
+> > In the end what decides the direction is the amount of changes that
+> > we have to put in kernel, not whether we call it 'emulation'.
+>=20
+> No, this is not right. The decision should be based on what will end
+> up more maintable in the long run.
+>=20
+> Yes it would be more code to dis-aggregate some of the things
+> currently only bundled as uAPI inside VFIO (eg your vSVA argument
+> above) but once it is disaggregated the maintability of the whole
+> solution will be better overall, and more drivers will be able to use
+> this functionality.
+>=20
 
-I am still carrying this patch.  Has it been superceded, or is it still
-necessary?
+Disaggregation is an orthogonal topic to the main divergence in=20
+this thread, which is passthrough vs. userspace DMA. I gave detail
+explanation about the difference between the two in last reply.
+the possibility of dis-aggregating something between passthrough
+frameworks (e.g. VFIO and vDPA) is not the reason for growing=20
+every userspace DMA framework to be a passthrough framework.
+Doing that is instead hurting maintainability in general...
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//6LbZg5fP0ZKmOnWMaIHeAu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl855mMACgkQAVBC80lX
-0Gz3+Qf7B8fFdkNeo/Cqcxhz3GWuAnNd4IeG9m8dsl67F77sOJ7U8WNnX95ZsmAw
-TWCTwMDVm07rUAoqBu6uz3GxgpYTpP8lM/j4Q37kSuR3xVb6spXMyIM4J3hHC2Tz
-J9pHZyBomsYrRdcAMIY2WumPPo2euve4S1MesruCJLvcA7kRrgsO3VMtPMdY72LC
-5xFffg3NVRvkrJb4njqABLk9SgQObnMzBQdXYpKEy3b2XTGtQHb0T8JMc101xrnA
-PxlA2JQP2T7h/HEDuK4+Nm2PbeNonAviErZjnTvRpAP6krQ9YM0wdxPVmfaFjoa3
-5X0NEOx5ikRI+XktkfuPmLUeiAzmYQ==
-=Nz8C
------END PGP SIGNATURE-----
-
---Sig_//6LbZg5fP0ZKmOnWMaIHeAu--
+Thanks
+Kevin
