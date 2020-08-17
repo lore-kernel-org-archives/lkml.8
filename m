@@ -2,54 +2,52 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C322C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C82492173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F1520882
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678460;
-	bh=05iKHycDZmcIvSow2mGu/p3lmoFOWIEpyO5G7US79J0=;
+	s=default; t=1597678481;
+	bh=XugmzUNp+yDZbPuVILCbUKm0S2q7YDvtvt0tPgBwu04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFGJdAwNfRXLEMnTE+xm8cEGOs/yozs8B0KSeroN/oaOz5xvnrPJqg8gswc6H8OeC
-	 x4J4ok/DbUmi40Y0OnMwFVx4rRBeJUy/+BMpoh8QB1RuxY3wTBHCpAidZZR1GmnMLn
-	 hWUmjMiVSmLCQ4UjXZ384vgl50oq31sDdVVW5Jvo=
+	b=Ski6V7khiyyvfHeoozHIkiMEw4Qd4UL1uRGR0eNw1yqvvr3HTg5T9pQuyJNAf9Ewu
+	 oZpHCde9ns5Bt5Bh1V8akDzQ68rNN3DNEiYboeml80qAlhLeVFL9ZwllMyVCbYuEYo
+	 w395hOeNNnpzRIq1X4SBAQLjDgZry1Crg6YWlgiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgHQPeI (ORCPT
+        id S1730252AbgHQPek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49990 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbgHQP34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:29:56 -0400
+        id S1730161AbgHQPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:30:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6281723D3C;
-        Mon, 17 Aug 2020 15:29:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95EB423B70;
+        Mon, 17 Aug 2020 15:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678195;
-        bh=05iKHycDZmcIvSow2mGu/p3lmoFOWIEpyO5G7US79J0=;
+        s=default; t=1597678201;
+        bh=XugmzUNp+yDZbPuVILCbUKm0S2q7YDvtvt0tPgBwu04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u9ugcQn2mEY1TyCvBZaYUjNFo+G+l1Vh0vzgJEEcecRB/1z6haF2qa6RZ8rYeJUC3
-         T7cTuySIij8RVz0iHpKGHitRzBpqgabbR8kjhrN0fsH0+FZ/e/OIVXSe1FPfgJg7ij
-         q5jS2OPQRXh4MlQ18ysVl6Br/JBvjbgcDCKa85IA=
+        b=mdzAgTKT9X7ZDbX3xao0gD2DPN2lx00lA9NksxiMRLSxSL73JAt5YgQ8Xhn7uXGC6
+         6NpWnPaWpLuhI0SE5psYyL6gcnihEXR8ZMYWwwoKRKq9AL7Q4iPO62b13cP2M8Ydp4
+         uOl6GbD7fZ3S6xMmKB8JmQD9LN5g2dX/ob3C604o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 249/464] media: s5p-g2d: Fix a memory leak in an error handling path in g2d_probe()
-Date:   Mon, 17 Aug 2020 17:13:22 +0200
-Message-Id: <20200817143845.723289831@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 222/464] phy: cadence: salvo: fix wrong bit definition
+Date:   Mon, 17 Aug 2020 17:12:55 +0200
+Message-Id: <20200817143844.431489756@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,84 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 94b9ce6870f9c90ac92505482689818b254312f7 ]
+[ Upstream commit 270ff6048f45759d31a7b62d3983b084153837f5 ]
 
-Memory allocated with 'v4l2_m2m_init()' must be freed by a corresponding
-call to 'v4l2_m2m_release()'
+It fixes RX detect wakeup using USB3 device, otherwise, the USB3
+device can't wakeup USB PHY when the PHY is in 32Khz clock.
 
-Also reorder the code at the end of the probe function so that
-'video_register_device()' is called last.
-Update the error handling path accordingly.
-
-Fixes: 5ce60d790a24 ("[media] s5p-g2d: Add DT based discovery support")
-Fixes: 918847341af0 ("[media] v4l: add G2D driver for s5p device family")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: checkpatch: align with parenthesis]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 50d35aa8c15f ("phy: cadence: salvo: add salvo phy driver")
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200703064600.14181-1-peter.chen@nxp.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-g2d/g2d.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/phy/cadence/phy-cadence-salvo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-index 6932fd47071b0..15bcb7f6e113c 100644
---- a/drivers/media/platform/s5p-g2d/g2d.c
-+++ b/drivers/media/platform/s5p-g2d/g2d.c
-@@ -695,21 +695,13 @@ static int g2d_probe(struct platform_device *pdev)
- 	vfd->lock = &dev->mutex;
- 	vfd->v4l2_dev = &dev->v4l2_dev;
- 	vfd->device_caps = V4L2_CAP_VIDEO_M2M | V4L2_CAP_STREAMING;
--	ret = video_register_device(vfd, VFL_TYPE_VIDEO, 0);
--	if (ret) {
--		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
--		goto rel_vdev;
--	}
--	video_set_drvdata(vfd, dev);
--	dev->vfd = vfd;
--	v4l2_info(&dev->v4l2_dev, "device registered as /dev/video%d\n",
--								vfd->num);
-+
- 	platform_set_drvdata(pdev, dev);
- 	dev->m2m_dev = v4l2_m2m_init(&g2d_m2m_ops);
- 	if (IS_ERR(dev->m2m_dev)) {
- 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem device\n");
- 		ret = PTR_ERR(dev->m2m_dev);
--		goto unreg_video_dev;
-+		goto rel_vdev;
- 	}
+diff --git a/drivers/phy/cadence/phy-cadence-salvo.c b/drivers/phy/cadence/phy-cadence-salvo.c
+index 1ecbb964cd216..016514e4aa549 100644
+--- a/drivers/phy/cadence/phy-cadence-salvo.c
++++ b/drivers/phy/cadence/phy-cadence-salvo.c
+@@ -88,7 +88,7 @@
+ #define TB_ADDR_TX_RCVDETSC_CTRL	        0x4124
  
- 	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
-@@ -717,14 +709,24 @@ static int g2d_probe(struct platform_device *pdev)
- 	of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
- 	if (!of_id) {
- 		ret = -ENODEV;
--		goto unreg_video_dev;
-+		goto free_m2m;
- 	}
- 	dev->variant = (struct g2d_variant *)of_id->data;
+ /* TB_ADDR_TX_RCVDETSC_CTRL */
+-#define RXDET_IN_P3_32KHZ			BIT(1)
++#define RXDET_IN_P3_32KHZ			BIT(0)
  
-+	ret = video_register_device(vfd, VFL_TYPE_VIDEO, 0);
-+	if (ret) {
-+		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
-+		goto free_m2m;
-+	}
-+	video_set_drvdata(vfd, dev);
-+	dev->vfd = vfd;
-+	v4l2_info(&dev->v4l2_dev, "device registered as /dev/video%d\n",
-+		  vfd->num);
-+
- 	return 0;
- 
--unreg_video_dev:
--	video_unregister_device(dev->vfd);
-+free_m2m:
-+	v4l2_m2m_release(dev->m2m_dev);
- rel_vdev:
- 	video_device_release(vfd);
- unreg_v4l2_dev:
+ struct cdns_reg_pairs {
+ 	u16 val;
 -- 
 2.25.1
 
