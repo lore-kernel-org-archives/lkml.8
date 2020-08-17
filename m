@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C760C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90E22053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C962020758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688992;
-	bh=POih9G7UqkC5Ul1MYzi3N3eD1nRn5F7/aPLt0IzppNQ=;
+	s=default; t=1597688999;
+	bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZamhvJbZcqrbbtDaTJCx8CTnz31ryu9SPf3Pvvb1MkuSLCTsB6GFums4tCAibiG91
-	 9rScM1WMys9J7KOUjCb4kOmubsCrXrhl2ZnUAnqqlsdy563mKn56B0hekct6R4lFzG
-	 Ki/sXn1SMYKkC3Ar4q6S/LimwM2aDDChPRSPq0UM=
+	b=lgt+dxyBTZyufxytFdclwBGYMQnlRfchKGey/NT58oipWT277dgXQ77X3458GzJ9z
+	 u1v8/s6x27IVWiX5YJyAtGG7dsYrqFhTz9IOv8gz/T1jDQ9SWyiQcvIOxSnt25OUG0
+	 su2VQNClXiqvHC2pdgHwYVEMRK3cl5UkmZ3O+WLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391038AbgHQS3t (ORCPT
+        id S2391043AbgHQS3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49086 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbgHQQBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388159AbgHQQBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:01:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 628B320829;
-        Mon, 17 Aug 2020 16:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3D88208B3;
+        Mon, 17 Aug 2020 16:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680098;
-        bh=POih9G7UqkC5Ul1MYzi3N3eD1nRn5F7/aPLt0IzppNQ=;
+        s=default; t=1597680106;
+        bh=F4dYMtwK5w3J8NhmlmET/YjqVLzljBMDVXmN+hu/rYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zogNlOEbEwmvDCwc6UTB3H1KB8GPlROBQapTJvzIhxnRS2FuBqnfjwFOP30OLXerW
-         VO7VbIXEjqT1ASSBNUCR0DmzMzeKumWDATeDXET2nQTtr59uGuF9Pigi40RJg/xHVA
-         2HLUyHxdgGszG8maune5oQenFPFqp0YJ5iWjFeG0=
+        b=aJZVmY5NuuVARW3MCJ5osxl+Tb2W22L1qCnNhfqvEErvGHavQvy2Twb2mrUP5R9TA
+         1Sfasa7OgfJl5zG3l1MWjhlTjzYyWbR4KRConWxTyWTiJhNF1iHau6SV+z0Thzzgts
+         Sa3oMAcpOIyTEDaASEiTayrpFnedS+cqm0Vf6kKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Xiao <Jack.Xiao@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/270] drm/amdgpu: avoid dereferencing a NULL pointer
-Date:   Mon, 17 Aug 2020 17:14:12 +0200
-Message-Id: <20200817143758.319695268@linuxfoundation.org>
+Subject: [PATCH 5.4 054/270] video: fbdev: savage: fix memory leak on error handling path in probe
+Date:   Mon, 17 Aug 2020 17:14:15 +0200
+Message-Id: <20200817143758.472185725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,74 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Xiao <Jack.Xiao@amd.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 55611b507fd6453d26030c0c0619fdf0c262766d ]
+[ Upstream commit e8d35898a78e34fc854ed9680bc3f9caedab08cd ]
 
-Check if irq_src is NULL to avoid dereferencing a NULL pointer,
-for MES ring is uneccessary to recieve an interrupt notification.
+savagefb_probe() calls savage_init_fb_info() that can successfully
+allocate memory for info->pixmap.addr but then fail when
+fb_alloc_cmap() fails. savagefb_probe() goes to label failed_init and
+does not free allocated memory. It is not valid to go to label
+failed_mmio since savage_init_fb_info() can fail during memory
+allocation as well. So, the patch free allocated memory on the error
+handling path in savage_init_fb_info() itself.
 
-Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Antonino Daplas <adaplas@gmail.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200619162136.9010-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/video/fbdev/savage/savagefb_driver.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-index 23085b352cf2d..c212d5fc665c6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-@@ -404,7 +404,9 @@ int amdgpu_fence_driver_start_ring(struct amdgpu_ring *ring,
- 		ring->fence_drv.gpu_addr = adev->uvd.inst[ring->me].gpu_addr + index;
+diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
+index 512789f5f8848..d5d22d9c0f562 100644
+--- a/drivers/video/fbdev/savage/savagefb_driver.c
++++ b/drivers/video/fbdev/savage/savagefb_driver.c
+@@ -2158,6 +2158,8 @@ static int savage_init_fb_info(struct fb_info *info, struct pci_dev *dev,
+ 			info->flags |= FBINFO_HWACCEL_COPYAREA |
+ 				       FBINFO_HWACCEL_FILLRECT |
+ 				       FBINFO_HWACCEL_IMAGEBLIT;
++		else
++			kfree(info->pixmap.addr);
  	}
- 	amdgpu_fence_write(ring, atomic_read(&ring->fence_drv.last_seq));
--	amdgpu_irq_get(adev, irq_src, irq_type);
-+
-+	if (irq_src)
-+		amdgpu_irq_get(adev, irq_src, irq_type);
- 
- 	ring->fence_drv.irq_src = irq_src;
- 	ring->fence_drv.irq_type = irq_type;
-@@ -539,8 +541,9 @@ void amdgpu_fence_driver_fini(struct amdgpu_device *adev)
- 			/* no need to trigger GPU reset as we are unloading */
- 			amdgpu_fence_driver_force_completion(ring);
- 		}
--		amdgpu_irq_put(adev, ring->fence_drv.irq_src,
--			       ring->fence_drv.irq_type);
-+		if (ring->fence_drv.irq_src)
-+			amdgpu_irq_put(adev, ring->fence_drv.irq_src,
-+				       ring->fence_drv.irq_type);
- 		drm_sched_fini(&ring->sched);
- 		del_timer_sync(&ring->fence_drv.fallback_timer);
- 		for (j = 0; j <= ring->fence_drv.num_fences_mask; ++j)
-@@ -576,8 +579,9 @@ void amdgpu_fence_driver_suspend(struct amdgpu_device *adev)
- 		}
- 
- 		/* disable the interrupt */
--		amdgpu_irq_put(adev, ring->fence_drv.irq_src,
--			       ring->fence_drv.irq_type);
-+		if (ring->fence_drv.irq_src)
-+			amdgpu_irq_put(adev, ring->fence_drv.irq_src,
-+				       ring->fence_drv.irq_type);
- 	}
- }
- 
-@@ -603,8 +607,9 @@ void amdgpu_fence_driver_resume(struct amdgpu_device *adev)
- 			continue;
- 
- 		/* enable the interrupt */
--		amdgpu_irq_get(adev, ring->fence_drv.irq_src,
--			       ring->fence_drv.irq_type);
-+		if (ring->fence_drv.irq_src)
-+			amdgpu_irq_get(adev, ring->fence_drv.irq_src,
-+				       ring->fence_drv.irq_type);
- 	}
- }
- 
+ #endif
+ 	return err;
 -- 
 2.25.1
 
