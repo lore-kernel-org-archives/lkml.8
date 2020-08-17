@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC3320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DED220716
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686102;
-	bh=/Zg3SNKr8mCaJ1cJBZAHpHQDtg5B/8uF8qGbcJ2YRhQ=;
+	s=default; t=1597686110;
+	bh=h6Fj3ETpMGOpPRh1EYAIBRsMwJkRuf4kml+PDi+3WTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JB+0U3NgzwtwoL0UBglYhCtEI1ciV0AUSW7uKJb+r+HB6bUR61RbthE+S6WmyiI/I
-	 lf/2Hfh+iyfVuXTnUg3MNaEJT+1NjUy+2rHOQfwu921/y+IdgbpE+dSMzHsjVfYn44
-	 EKFR26BW1xPj3FFNfqNdpw4Riw9uH5i/lbpqTZG0=
+	b=IWPUdcM3+2I2TQLBYV4akI/Pd4Ordc/KAcZD6e2fz1XqwFslucFsG9air7vNTo+SK
+	 ao7ANgtyaDbKalgb0mkxCkMQtS3lWIyLUgosfi5ZrFWOzcQ88Hfqbq53iV540gNM9p
+	 yLsgBUNlHiIkNF+/3djbuN3nIPKYCnbhaO2t0/dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731320AbgHQRlk (ORCPT
+        id S1731519AbgHQRlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55792 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731079AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731078AbgHQQQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8331820748;
-        Mon, 17 Aug 2020 16:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5102722CAF;
+        Mon, 17 Aug 2020 16:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680959;
-        bh=/Zg3SNKr8mCaJ1cJBZAHpHQDtg5B/8uF8qGbcJ2YRhQ=;
+        s=default; t=1597680956;
+        bh=h6Fj3ETpMGOpPRh1EYAIBRsMwJkRuf4kml+PDi+3WTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRtKbDKbCSqdP+SK9eVZAV/djfu89+5b9/1zXvrvmcCAzMi66DSdoGeKher1OkEuf
-         LeEZMjLq7bel5ecIh526GgfiZMm9wSBnTF8zurxArcSWFHXPd5LqiON2TmX6u3iVbf
-         ZFsun0ls3NnTOHaH5RoM51scyH6gt3DH9qLQ2N/g=
+        b=O/QURIUEos7AxRnk4nqQQIseSB8gsgqq4B6DnhTAv22rdoCXoJm8g8gfXkP+ibPOv
+         5/49toUdvNv2NdWCWETX4ESwg8Ts3Q5nUJH8ExswgcQAjCs4p3qdbY0Dtjf+yz41v0
+         oe6fEYNI+bslap3USnnNr12Lt0iuUL2/lJ0tUR/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Pavel Machek (CIP)" <pavel@denx.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 126/168] ocfs2: fix unbalanced locking
-Date:   Mon, 17 Aug 2020 17:17:37 +0200
-Message-Id: <20200817143739.979067917@linuxfoundation.org>
+Subject: [PATCH 4.19 125/168] dlm: Fix kobject memleak
+Date:   Mon, 17 Aug 2020 17:17:36 +0200
+Message-Id: <20200817143739.928348964@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -67,54 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Machek <pavel@ucw.cz>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 57c720d4144a9c2b88105c3e8f7b0e97e4b5cc93 ]
+[ Upstream commit 0ffddafc3a3970ef7013696e7f36b3d378bc4c16 ]
 
-Based on what fails, function can return with nfs_sync_rwlock either
-locked or unlocked. That can not be right.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Always return with lock unlocked on error.
+Set do_unreg = 1 before kobject_init_and_add() to ensure that
+kobject_put() can be called in its error patch.
 
-Fixes: 4cd9973f9ff6 ("ocfs2: avoid inode removal while nfsd is accessing it")
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Link: http://lkml.kernel.org/r/20200724124443.GA28164@duo.ucw.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 901195ed7f4b ("Kobject: change GFS2 to use kobject_init_and_add")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlmglue.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/dlm/lockspace.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index c141b06811a6c..8149fb6f1f0d2 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -2867,9 +2867,15 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index f1261fa0af8a1..244b87e4dfe7f 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -633,6 +633,9 @@ static int new_lockspace(const char *name, const char *cluster,
+ 	wait_event(ls->ls_recover_lock_wait,
+ 		   test_bit(LSFL_RECOVER_LOCK, &ls->ls_flags));
  
- 	status = ocfs2_cluster_lock(osb, lockres, ex ? LKM_EXMODE : LKM_PRMODE,
- 				    0, 0);
--	if (status < 0)
-+	if (status < 0) {
- 		mlog(ML_ERROR, "lock on nfs sync lock failed %d\n", status);
- 
-+		if (ex)
-+			up_write(&osb->nfs_sync_rwlock);
-+		else
-+			up_read(&osb->nfs_sync_rwlock);
-+	}
++	/* let kobject handle freeing of ls if there's an error */
++	do_unreg = 1;
 +
- 	return status;
- }
+ 	ls->ls_kobj.kset = dlm_kset;
+ 	error = kobject_init_and_add(&ls->ls_kobj, &dlm_ktype, NULL,
+ 				     "%s", ls->ls_name);
+@@ -640,9 +643,6 @@ static int new_lockspace(const char *name, const char *cluster,
+ 		goto out_recoverd;
+ 	kobject_uevent(&ls->ls_kobj, KOBJ_ADD);
  
+-	/* let kobject handle freeing of ls if there's an error */
+-	do_unreg = 1;
+-
+ 	/* This uevent triggers dlm_controld in userspace to add us to the
+ 	   group of nodes that are members of this lockspace (managed by the
+ 	   cluster infrastructure.)  Once it's done that, it tells us who the
 -- 
 2.25.1
 
