@@ -2,55 +2,57 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0897C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FB12072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79302072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691571;
-	bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+	s=default; t=1597691578;
+	bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dPlvXCAkvmtC0GgJJ2BnVAtG/E9qyrgDNrBSiQz5YwP+PA8x0YVnRqemaJUfMnRBV
-	 uaFhQmFiLGjGqRv9llVotASj0dAQmItBsIXEjofbuZRJfl210Ssou824S/r0sV22UY
-	 XxzcXA6yCly9X+7XwbLquWKx/niQvN2Ks+3ibHsA=
+	b=dKu7Zafove58t4wFXw1wGAUgLyGkv/UJe0JZw95v/EPzi8GaE8QQCRc6Zof+e0wih
+	 IJRM1Hpm+n9r4mhxJoTIEywvWENokvX6eWNQu4QOBc/I1jKigX2sn+i9ohWemzFJa0
+	 TVZ5Q/AHem8HNeAhHkPS+lu6MoYFYuyBdfgOgSUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392134AbgHQTMt (ORCPT
+        id S2392123AbgHQTMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730514AbgHQPkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:40:41 -0400
+        id S1730384AbgHQPkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:40:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F6A0207DA;
-        Mon, 17 Aug 2020 15:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA26E20760;
+        Mon, 17 Aug 2020 15:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678834;
-        bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+        s=default; t=1597678845;
+        bh=4ZMcA9lxt25C+CH9qI2a6HgE43khl92nn/Elyq4fcy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/hMtUwfybdowiNpskRpLM90qEtHbnaM03JPONb+r0G4OCaxu0nD9yW/4GtyluO2t
-         bSXc+VVwlOvy0PM7x/PkjBTDWp+y9GcHlAOupELiwc0SBVcoq69P22ZRF4qy9oliFb
-         s5vAkOImIa1rebG9YeZ7+EjGdTamusPPVjSUP2kg=
+        b=ZHkpE/owcQ85ZLpFEYRNJNPhKFlvV4nO9I14Zzkb5+QrsKT0L+u6oKfbbfeeqlsww
+         c4LJPRtMYdelRUESmWBgrukccYTUTsQ1zhGMEttaSZ+WtIaufl99KXgDgU2qXRU+X9
+         oLYJlG2Uu7A0MJhpQJJeHb8oIEz9RjCprYizro78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 457/464] s390/dasd: fix inability to use DASD with DIAG driver
-Date:   Mon, 17 Aug 2020 17:16:50 +0200
-Message-Id: <20200817143855.666222705@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Liu <iwtbavbm@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 010/393] sched/fair: Fix NOHZ next idle balance
+Date:   Mon, 17 Aug 2020 17:11:00 +0200
+Message-Id: <20200817143820.097729241@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
-References: <20200817143833.737102804@linuxfoundation.org>
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,105 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit 9f4aa52387c68049403b59939df5c0dd8e3872cc upstream.
+[ Upstream commit 3ea2f097b17e13a8280f1f9386c331b326a3dbef ]
 
-During initialization of the DASD DIAG driver a request is issued
-that has a bio structure that resides on the stack. With virtually
-mapped kernel stacks this bio address might be in virtual storage
-which is unsuitable for usage with the diag250 call.
-In this case the device can not be set online using the DIAG
-discipline and fails with -EOPNOTSUP.
-In the system journal the following error message is presented:
+With commit:
+  'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+rebalance_domains of the local cfs_rq happens before others idle cpus have
+updated nohz.next_balance and its value is overwritten.
 
-dasd: X.X.XXXX Setting the DASD online with discipline DIAG failed
-with rc=-95
+Move the update of nohz.next_balance for other idles cpus before balancing
+and updating the next_balance of local cfs_rq.
 
-Fix by allocating the bio structure instead of having it on the stack.
+Also, the nohz.next_balance is now updated only if all idle cpus got a
+chance to rebalance their domains and the idle balance has not been aborted
+because of new activities on the CPU. In case of need_resched, the idle
+load balance will be kick the next jiffie in order to address remaining
+ilb.
 
-Fixes: ce3dc447493f ("s390: add support for virtually mapped kernel stacks")
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: stable@vger.kernel.org #4.20
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
+Reported-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Link: https://lkml.kernel.org/r/20200609123748.18636-1-vincent.guittot@linaro.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_diag.c |   25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ kernel/sched/fair.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -319,7 +319,7 @@ dasd_diag_check_device(struct dasd_devic
- 	struct dasd_diag_characteristics *rdc_data;
- 	struct vtoc_cms_label *label;
- 	struct dasd_block *block;
--	struct dasd_diag_bio bio;
-+	struct dasd_diag_bio *bio;
- 	unsigned int sb, bsize;
- 	blocknum_t end_block;
- 	int rc;
-@@ -395,29 +395,36 @@ dasd_diag_check_device(struct dasd_devic
- 		rc = -ENOMEM;
- 		goto out;
- 	}
-+	bio = kzalloc(sizeof(*bio), GFP_KERNEL);
-+	if (bio == NULL)  {
-+		DBF_DEV_EVENT(DBF_WARNING, device, "%s",
-+			      "No memory to allocate initialization bio");
-+		rc = -ENOMEM;
-+		goto out_label;
-+	}
- 	rc = 0;
- 	end_block = 0;
- 	/* try all sizes - needed for ECKD devices */
- 	for (bsize = 512; bsize <= PAGE_SIZE; bsize <<= 1) {
- 		mdsk_init_io(device, bsize, 0, &end_block);
--		memset(&bio, 0, sizeof (struct dasd_diag_bio));
--		bio.type = MDSK_READ_REQ;
--		bio.block_number = private->pt_block + 1;
--		bio.buffer = label;
-+		memset(bio, 0, sizeof(*bio));
-+		bio->type = MDSK_READ_REQ;
-+		bio->block_number = private->pt_block + 1;
-+		bio->buffer = label;
- 		memset(&private->iob, 0, sizeof (struct dasd_diag_rw_io));
- 		private->iob.dev_nr = rdc_data->dev_nr;
- 		private->iob.key = 0;
- 		private->iob.flags = 0;	/* do synchronous io */
- 		private->iob.block_count = 1;
- 		private->iob.interrupt_params = 0;
--		private->iob.bio_list = &bio;
-+		private->iob.bio_list = bio;
- 		private->iob.flaga = DASD_DIAG_FLAGA_DEFAULT;
- 		rc = dia250(&private->iob, RW_BIO);
- 		if (rc == 3) {
- 			pr_warn("%s: A 64-bit DIAG call failed\n",
- 				dev_name(&device->cdev->dev));
- 			rc = -EOPNOTSUPP;
--			goto out_label;
-+			goto out_bio;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5c31875a7d9dc..e44332b829b4d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10033,7 +10033,12 @@ static void kick_ilb(unsigned int flags)
+ {
+ 	int ilb_cpu;
+ 
+-	nohz.next_balance++;
++	/*
++	 * Increase nohz.next_balance only when if full ilb is triggered but
++	 * not if we only update stats.
++	 */
++	if (flags & NOHZ_BALANCE_KICK)
++		nohz.next_balance = jiffies+1;
+ 
+ 	ilb_cpu = find_new_ilb();
+ 
+@@ -10351,6 +10356,14 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
  		}
- 		mdsk_term_io(device);
- 		if (rc == 0)
-@@ -427,7 +434,7 @@ dasd_diag_check_device(struct dasd_devic
- 		pr_warn("%s: Accessing the DASD failed because of an incorrect format (rc=%d)\n",
- 			dev_name(&device->cdev->dev), rc);
- 		rc = -EIO;
--		goto out_label;
-+		goto out_bio;
  	}
- 	/* check for label block */
- 	if (memcmp(label->label_id, DASD_DIAG_CMS1,
-@@ -457,6 +464,8 @@ dasd_diag_check_device(struct dasd_devic
- 			(rc == 4) ? ", read-only device" : "");
- 		rc = 0;
- 	}
-+out_bio:
-+	kfree(bio);
- out_label:
- 	free_page((long) label);
- out:
+ 
++	/*
++	 * next_balance will be updated only when there is a need.
++	 * When the CPU is attached to null domain for ex, it will not be
++	 * updated.
++	 */
++	if (likely(update_next_balance))
++		nohz.next_balance = next_balance;
++
+ 	/* Newly idle CPU doesn't need an update */
+ 	if (idle != CPU_NEWLY_IDLE) {
+ 		update_blocked_averages(this_cpu);
+@@ -10371,14 +10384,6 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
+ 	if (has_blocked_load)
+ 		WRITE_ONCE(nohz.has_blocked, 1);
+ 
+-	/*
+-	 * next_balance will be updated only when there is a need.
+-	 * When the CPU is attached to null domain for ex, it will not be
+-	 * updated.
+-	 */
+-	if (likely(update_next_balance))
+-		nohz.next_balance = next_balance;
+-
+ 	return ret;
+ }
+ 
+-- 
+2.25.1
+
 
 
