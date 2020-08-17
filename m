@@ -2,208 +2,95 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F236C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDB752072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vso+itO3"
+	by mail.kernel.org (Postfix) with ESMTP id 1294D2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 07:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgHQH4b (ORCPT
+        id S1726593AbgHQH4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgHQH43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:56:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F70C061388;
-        Mon, 17 Aug 2020 00:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YFe2M9qNEESzBDrGBKXESj8fKVBytShtkStVuIOD0aA=; b=vso+itO36itlX33V0OujrEVXWQ
-        XWOCxai+RblU2HPFcG4y0Jc/Kkch/9519feMu5s/JjVi8kTLvzWVt8mnTUGqV4Cb0+I7Er/hrvthc
-        R5N5OM5tAoW96hS2ye5pIEl5nQyNJqrubGMtqCszVVtBspv2srl07dDEa0F0G5/gUA8aGKzpkXLYw
-        k2FAT2VzLtDegOEIEu/RnyZWL67Q6tIa0g3HdMf5fJsLoy7kJpkCWoMxdwZAeVACFh2c1TNo70QSF
-        RrBuxRTwIiQOv2qfehbS/TwK0O9StnS8IXlzcdtzsMWBP0oe9HCdG02oaTJxZC/LAuCvtA74Y4YvV
-        PaxCkggg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7ZzV-0002Uv-HF; Mon, 17 Aug 2020 07:55:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 892D0303271;
-        Mon, 17 Aug 2020 09:55:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5DF642BFDE0AB; Mon, 17 Aug 2020 09:55:33 +0200 (CEST)
-Date:   Mon, 17 Aug 2020 09:55:33 +0200
-From:   peterz@infradead.org
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        WANG Xuerui <git@xen0n.name>,
-        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, Peter Xu <peterx@redhat.com>,
-        Sergey Korolev <s.korolev@ndmsystems.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Marc Zyngier <maz@kernel.org>, Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Steven Price <steven.price@arm.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 1/7] MIPS: sync-r4k: Rework to be many cores firendly
-Message-ID: <20200817075533.GI2674@hirez.programming.kicks-ass.net>
-References: <20200817034701.3515721-1-jiaxun.yang@flygoat.com>
- <20200817034701.3515721-2-jiaxun.yang@flygoat.com>
+        Mon, 17 Aug 2020 03:56:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62698 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgHQH42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:56:28 -0400
+IronPort-SDR: Q1kXtXqJdmQggvM2jQNZh21ddspQAT1gfb08JkKlFx3OLeowNxsuvsIosIYj9P6OXa9jRyHS5L
+ Ayg8HJ76EdVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="142279040"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="142279040"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 00:56:27 -0700
+IronPort-SDR: GIV0e/9tzlgXRX2LtHPbhmGQ2CMRs69Hd8rw2avnvcnBmzE/cTsA1VRPY2bJ74sbvq8ueoMHo+
+ 5+7zQN0U0KLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="440790871"
+Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 17 Aug 2020 00:56:25 -0700
+Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k7a0H-0000QX-Ax; Mon, 17 Aug 2020 07:56:25 +0000
+Date:   Mon, 17 Aug 2020 15:55:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>, axboe@kernel.dk
+Cc:     kbuild-all@lists.01.org, ming.lei@redhat.com, hch@lst.de,
+        baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: fix boolconv.cocci warnings
+Message-ID: <20200817075559.GA149398@7edacc24721b>
+References: <5b932aa51fc2b46c381d7b83d591a6ddbf05b199.1597637287.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817034701.3515721-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <5b932aa51fc2b46c381d7b83d591a6ddbf05b199.1597637287.git.baolin.wang@linux.alibaba.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:46:40AM +0800, Jiaxun Yang wrote:
-> Here we reworked the whole procdure. Now the synchronise event on CPU0
-> is triggered by smp call function, and we won't touch the count on CPU0
-> at all.
+From: kernel test robot <lkp@intel.com>
 
-Are you telling me, that in 2020 you're building chips that need
-horrible crap like this ?!?
+block/blk-mq-sched.c:404:39-44: WARNING: conversion to bool not needed here
 
-> +#define MAX_LOOPS	1000
-> +
-> +void synchronise_count_master(void *unused)
->  {
->  	unsigned long flags;
-> +	long delta;
-> +	int i;
->  
-> +	if (atomic_read(&sync_stage) != STAGE_START)
-> +		BUG();
+ Remove unneeded conversion to bool
 
-	BUG_ON(atomic_read(&sync_state) != STAGE_START);
+Semantic patch information:
+ Relational and logical operators evaluate to bool,
+ explicit conversion is overly verbose and unneeded.
 
->  
->  	local_irq_save(flags);
+Generated by: scripts/coccinelle/misc/boolconv.cocci
 
-That's silly, replace with: lockdep_assert_hardirqs_disabled().
+CC: Baolin Wang <baolin.wang@linux.alibaba.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
 
->  
-> +	cur_count = read_c0_count();
-> +	smp_wmb();
-> +	atomic_inc(&sync_stage); /* inc to STAGE_MASTER_READY */
+url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/Some-clean-ups-for-bio-merge/20200817-121114
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
 
-memory barriers require a comment that describes the ordering. This
-includes at least 2 variables and at least 2 code paths (*) -- afaict
-your code does NOT have a matching barrier, see below.
+Please take the patch only if it's a positive warning. Thanks!
 
->  
-> +	for (i = 0; i < MAX_LOOPS; i++) {
-> +		cur_count = read_c0_count();
->  		smp_wmb();
-> -		atomic_inc(&count_count_stop);
-> +		if (atomic_read(&sync_stage) == STAGE_SLAVE_SYNCED)
-> +			break;
->  	}
-> +
-> +	delta = read_c0_count() - fini_count;
->  
->  	local_irq_restore(flags);
->  
-> +	if (i == MAX_LOOPS)
-> +		pr_err("sync-r4k: Master: synchronise timeout\n");
-> +	else
-> +		pr_info("sync-r4k: Master: synchronise succeed, maximum delta: %ld\n", delta);
-> +
-> +	return;
->  }
->  
->  void synchronise_count_slave(int cpu)
->  {
->  	int i;
->  	unsigned long flags;
-> +	call_single_data_t csd;
->  
-> +	raw_spin_lock(&sync_r4k_lock);
+ blk-mq-sched.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why should this be a raw_spnilock_t ?
-
->  
-> +	/* Let variables get attention from cache */
-> +	for (i = 0; i < MAX_LOOPS; i++) {
-> +		cur_count++;
-> +		fini_count += cur_count;
-> +		cur_count += fini_count;
->  	}
-
-What does this actually do? You're going to bounce those variables
-between this CPU and CPU-0.
-
-> +
-> +	atomic_set(&sync_stage, STAGE_START);
-> +	csd.func = synchronise_count_master;
-> +
-> +	/* Master count is always CPU0 */
-> +	if (smp_call_function_single_async(0, &csd)) {
-
-This is diguisting.
-
-It also requires a comment on how the on-stack csd is correct (it is,
-but it really needs a comment).
-
-> +		pr_err("sync-r4k: Salve: Failed to call master\n");
-> +		raw_spin_unlock(&sync_r4k_lock);
-> +		return;
-> +	}
-> +
-> +	local_irq_save(flags);
-> +
-> +	/* Wait until master ready */
-> +	while (atomic_read(&sync_stage) != STAGE_MASTER_READY)
-> +		cpu_relax();
-
-This really wants to be:
-
-	atomic_cond_read_acquire(&&sync_stage, VAL == STAGE_MASTER_READY);
-
-Because, afaict the smp_wmb() (*) in synchronize_count_master() order
-against this here and we need to guarantee we read @sync_stage _before_
-@cur_count.
-
-> +
-> +	write_c0_count(cur_count);
-> +	fini_count = read_c0_count();
-> +	smp_wmb();
-> +	atomic_inc(&sync_stage); /* inc to STAGE_SLAVE_SYNCED */
->  
->  	local_irq_restore(flags);
-> +
-> +	raw_spin_unlock(&sync_r4k_lock);
->  }
-
-
-Furthermore, afaict there isn't actually any concurrency on @sync_stage,
-so atomic_t isn't required, Using smp_store_release() to change state
-might be far more natural.
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -401,7 +401,7 @@ bool blk_mq_bio_list_merge(struct reques
+ 		if (merge == BIO_MERGE_NONE)
+ 			continue;
+ 
+-		return merge == BIO_MERGE_OK ? true: false;
++		return merge == BIO_MERGE_OK;
+ 	}
+ 
+ 	return false;
