@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB85C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B939C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D51620716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1319420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693073;
-	bh=xPQ55l8TgbrNEJVWJSK3Tk8/hsvVC1iKAIUrDRUITfo=;
+	s=default; t=1597693074;
+	bh=oNeBCv8ItFrue9lWTMGqDB+sAfUUQCb7GaGg120hWAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExntgFS/xkjMlm3+oHWKhDnILzh9z6TKNtfN6kdpRb9jWJPTUQgeyG9jGMWpSZgAC
-	 AZ026YefodgrUWJ68B5IIIYnYlgHg1YuQNHZ30Ub/VDSZqrMq1kmOPJfwIsh4eihyE
-	 FhV/x81+OXZ76SdMbLD0zrM+CAc9UjtEpIA+PoF8=
+	b=Egsqbo7M9d3KXdCj9I36fX8O2KSu11kW81KA2nFPVUIox+EWPOlA3AWpS2LJU+mps
+	 h/vXeTi9NKnScH+LN1i906WtSWDNCm8UXtRDl3VE9TRjNCpOt5p3+jzFJ9sIOeD7Lb
+	 rmcVjNYIIU7fwB6zmecIJhoY8ut/wkhg6ldfywFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgHQP1a (ORCPT
+        id S1732429AbgHQThx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgHQPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:25:30 -0400
+        id S1729903AbgHQP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:27:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A7BF23110;
-        Mon, 17 Aug 2020 15:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EB922DBF;
+        Mon, 17 Aug 2020 15:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677929;
-        bh=xPQ55l8TgbrNEJVWJSK3Tk8/hsvVC1iKAIUrDRUITfo=;
+        s=default; t=1597678050;
+        bh=oNeBCv8ItFrue9lWTMGqDB+sAfUUQCb7GaGg120hWAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xkeEoLC98/PnLMGfWuddQHllXAWfWux2IhjCdv4LtFIOkO49Ln8t5GtwAzFrzISPL
-         uJmdr+/F1sP0Ki6rHsGueo14YS4+k84/qZYbbfIwoRQ+CbXOGhENyFZcB5Th0oBEqu
-         9G+ZXfTMx0A+pnRkWCNNpKxiaP7xnNg/+gQtyMtc=
+        b=IQact6wFtGk9VxVVkserP+Gf+gZ6MyCd35sll1WySeOU9yIRDfAPNxe6L6JvIm+3A
+         nBpzrZSXr7VyaGK4TDJ19ryUxpQOEj8aPnNJ8ey6KXjk4CawenSP2MArYMcuuRvwTU
+         mpn4dsuqe7O0jr7CKSJVU/p6jC1T0BPcyCnQeS/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 152/464] Bluetooth: hci_qca: Fix an error pointer dereference
-Date:   Mon, 17 Aug 2020 17:11:45 +0200
-Message-Id: <20200817143841.092975291@linuxfoundation.org>
+Subject: [PATCH 5.8 202/464] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
+Date:   Mon, 17 Aug 2020 17:12:35 +0200
+Message-Id: <20200817143843.497713662@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,65 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 4c07a5d7aeb39f559b29aa58ec9a8a5ab4282cb0 ]
+[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
 
-When a function like devm_clk_get_optional() function returns both error
-pointers on error and NULL then the NULL return means that the optional
-feature is deliberately disabled.  It is a special sort of success and
-should not trigger an error message.  The surrounding code should be
-written to check for NULL and not crash.
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-On the other hand, if we encounter an error, then the probe from should
-clean up and return a failure.
-
-In this code, if devm_clk_get_optional() returns an error pointer then
-the kernel will crash inside the call to:
-
-	clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-
-The error handling must be updated to prevent that.
-
-Fixes: 77131dfec6af ("Bluetooth: hci_qca: Replace devm_gpiod_get() with devm_gpiod_get_optional()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/scsi/arm/eesox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 3788ec7a4ad6b..25659b8b0c0c8 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1994,17 +1994,17 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		}
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index 6e204a2e0c8d7..591ae2a6dd74f 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -571,7 +571,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
- 		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
--		if (!qcadev->susclk) {
-+		if (IS_ERR(qcadev->susclk)) {
- 			dev_warn(&serdev->dev, "failed to acquire clk\n");
--		} else {
--			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
--			if (err)
--				return err;
--
--			err = clk_prepare_enable(qcadev->susclk);
--			if (err)
--				return err;
-+			return PTR_ERR(qcadev->susclk);
- 		}
-+		err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-+		if (err)
-+			return err;
-+
-+		err = clk_prepare_enable(qcadev->susclk);
-+		if (err)
-+			return err;
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
  
- 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
- 		if (err) {
+  out_remove:
+ 	fas216_remove(host);
 -- 
 2.25.1
 
