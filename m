@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA67C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB31C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8692072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820852072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690897;
-	bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
+	s=default; t=1597690900;
+	bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VbNMmGa9+N7b8P9YPNR1djl8C2l0bGHbsY0KwpuNu2s8t8u1DGGanH7RsebIAM9U1
-	 2aWmk2YXIGZ9P2ql6n/Cjzw6GLZDvJ2QeNax7Q8zR99ZuYXbGNy+sGnHcHKPTbjeDs
-	 eZbsTzqSoF6GJXHMC7dVA99v7sVXttBBL0WoiWuA=
+	b=1FPH4CPEIaQcDb+Wv/2Yf+zEJV5V+nKsZEGOQveAXtIJEvPatGqfhV4SqYK08FFc/
+	 5wzIucgycvs3o//YeftuUlpDMHulMHkG3oyA/bj00Gx1k1eBJ7bnGE72F5rMWv3gTn
+	 FTvN/gep1SH0BmR0v/CCfzOKOS5p7bV42aNEy0MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404017AbgHQTBg (ORCPT
+        id S2404026AbgHQTBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:01:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59754 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbgHQPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:47:41 -0400
+        id S1730212AbgHQPri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAAB92067C;
-        Mon, 17 Aug 2020 15:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEFE2075B;
+        Mon, 17 Aug 2020 15:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679260;
-        bh=VPk1/68gAeSbr4dY1na6HaYHqUTOTZcN9LqH9WMmFag=;
+        s=default; t=1597679257;
+        bh=n+4mjzhZOD0dhZ5FpubvJtXCZana5ujBHbrb6imTBqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AmnxeODPRdaDfkVvgcoyjM0rpKLqUMSTr6yXGP1fusFJfhX76VG4VyoxRaVfDppbt
-         tM/hOXfcT4odZQUNg9XJ5UA69LpTgWlXSwRcNLCy3BPuTNNoH5VIBPRgWcJyAAslFs
-         Nc0/QKvijgnnpdOzcQ5SKHYmuW8PBrhUOf+EWqwQ=
+        b=tq/bEPg6X9S19ckrTFjl298NX5fqwv+0u9aPtOKZs4OAnuG0Kl/pAREE/kFkqUEnW
+         pS1ORR3Cy29y72pogZkTTw6HpefyYUG7IjbSsiqSrxiPrchFCOpRNLhkMIhSpxYAeO
+         V93m7HDl9mxNBpBIHo1bpZSBQ/9jt+/2GQl+4TfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 123/393] drm/bridge: ti-sn65dsi86: Clear old error bits before AUX transfers
-Date:   Mon, 17 Aug 2020 17:12:53 +0200
-Message-Id: <20200817143825.576027194@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 149/393] leds: lm355x: avoid enum conversion warning
+Date:   Mon, 17 Aug 2020 17:13:19 +0200
+Message-Id: <20200817143826.841853150@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -61,44 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit baef4d56195b6d6e0f681f6eac03d8c6db011d34 ]
+[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
 
-The AUX channel transfer error bits in the status register are latched
-and need to be cleared.  Clear them before doing our transfer so we
-don't see old bits and get confused.
+clang points out that doing arithmetic between diffent enums is usually
+a mistake:
 
-Without this patch having a single failure would mean that all future
-transfers would look like they failed.
+drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
 
-Fixes: b814ec6d4535 ("drm/bridge: ti-sn65dsi86: Implement AUX channel")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200508163314.1.Idfa69d5d3fc9623083c0ff78572fea87dccb199c@changeid
+In this driver, it is intentional, so add a cast to hide the false-positive
+warning. It appears to be the only instance of this warning at the moment.
+
+Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/leds/leds-lm355x.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 6ad688b320aee..d865cc2565bc0 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -827,6 +827,12 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *aux,
- 				     buf[i]);
- 	}
+diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+index a5abb499574b8..129f475aebf29 100644
+--- a/drivers/leds/leds-lm355x.c
++++ b/drivers/leds/leds-lm355x.c
+@@ -165,18 +165,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+ 	/* input and output pins configuration */
+ 	switch (chip->type) {
+ 	case CHIP_LM3554:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+ 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-		reg_val = pdata->pass_mode;
++		reg_val = (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+ 		break;
  
-+	/* Clear old status bits before start so we don't get confused */
-+	regmap_write(pdata->regmap, SN_AUX_CMD_STATUS_REG,
-+		     AUX_IRQ_STATUS_NAT_I2C_FAIL |
-+		     AUX_IRQ_STATUS_AUX_RPLY_TOUT |
-+		     AUX_IRQ_STATUS_AUX_SHORT);
-+
- 	regmap_write(pdata->regmap, SN_AUX_CMD_REG, request_val | AUX_CMD_SEND);
- 
- 	ret = regmap_read_poll_timeout(pdata->regmap, SN_AUX_CMD_REG, val,
+ 	case CHIP_LM3556:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
++		          (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+ 		if (ret < 0)
+ 			goto out;
 -- 
 2.25.1
 
