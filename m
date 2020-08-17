@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7662067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6D82067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686457;
-	bh=9yVwg4WAktTBB30aeq6M64461BaC5KXD3aoP3K+mqe4=;
+	s=default; t=1597686462;
+	bh=Lku+gDRWSUsZj4toPjdUE+w1MoKn2apFGGxz/rj4Xkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzAUdpGyMeBT3/sIPuXd+AfFsoiJwoVT99XmA7H0MJtBvBRavud4Qtm3rf5w7WEl2
-	 39HMRIeNdPh8mpRqGG2u6jbWTJ5Hb4oLWsTg0MG/LTz5B49HkhwXMJt5FXnUS47VHt
-	 2zhudd75Xz4tO74ujfpJNBITQ6XXeY+DAo8+mklU=
+	b=usWpAvRC7jGteoyrGR9TqbtVL9aeEVXcVrAm3V3LwBdhgeOmshcnYLeUU9URxXij2
+	 ynNqeVclfrcpyVE2b16y/9BI3sYjqZ5clGBZNOBxXoKAMCcGk9lhi8q3zZgqcvAR4r
+	 3IuW1NSPhhIN6tleH919HCqVnPwQZWmlWl9nfmSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390057AbgHQRrg (ORCPT
+        id S2390066AbgHQRrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:47:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388750AbgHQQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:13:38 -0400
+        id S2388752AbgHQQNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7217722CBE;
-        Mon, 17 Aug 2020 16:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E9B622D08;
+        Mon, 17 Aug 2020 16:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680795;
-        bh=9yVwg4WAktTBB30aeq6M64461BaC5KXD3aoP3K+mqe4=;
+        s=default; t=1597680813;
+        bh=Lku+gDRWSUsZj4toPjdUE+w1MoKn2apFGGxz/rj4Xkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xES7RF/aNJhfJ9CYmF4YEolJsA/qwg/MaOOaxLUKHD7dWBcQu51J2kGfnfY2EbrIE
-         gxCA/Ouei+l50st5hXslkTV3fiU4AcsrT6W7f7jMD5RTH/XCRBg3PTZdTdClrKQw00
-         T/hz2n6lqd5EjsApxT9zciHfgqFSH4WG2FFLYtic=
+        b=q4w4Z/V6Mo71q7CqpQQKfxdBXqS/i16OVMd2elp1nAmCAYCLskIDuSqXwA5HGpgNW
+         jBSsupm/hDvg0+PeEJMUB+dhzZj/XqjuuhrzioLcbHBuyj65pgJ02+wNy83uNV+Gb2
+         y3+hHy1Pjit3P+zrv2aHXJrruAzNd7UtH6+XejeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/168] iio: improve IIO_CONCENTRATION channel type description
-Date:   Mon, 17 Aug 2020 17:16:31 +0200
-Message-Id: <20200817143736.742930144@linuxfoundation.org>
+Subject: [PATCH 4.19 037/168] drm/nouveau: fix multiple instances of reference count leaks
+Date:   Mon, 17 Aug 2020 17:16:08 +0200
+Message-Id: <20200817143735.625688036@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -62,41 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
+[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
 
-IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
-raw concentrations of pollutants. Raw value should be meaningless
-before being properly scaled. Because of that description shouldn't
-mention raw value unit whatsoever.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+ref count before returning the error.
 
-Fix this by rephrasing existing description so it follows conventions
-used throughout IIO ABI docs.
-
-Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 8127a08e366d8..d10bcca6c3fb8 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1559,7 +1559,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
- KernelVersion:	4.3
- Contact:	linux-iio@vger.kernel.org
- Description:
--		Raw (unscaled no offset etc.) percentage reading of a substance.
-+		Raw (unscaled no offset etc.) reading of a substance. Units
-+		after application of scale and offset are percents.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 2b7a54cc3c9ef..81999bed1e4a5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -899,8 +899,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
  
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+ 	/* need to bring up power immediately if opening device */
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	get_task_comm(tmpname, current);
+ 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
+@@ -980,8 +982,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	long ret;
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
+ 	case DRM_NOUVEAU_NVIF:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index b56524d343c3e..791f970714ed6 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -46,8 +46,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (WARN_ON(ret < 0 && ret != -EACCES))
++	if (WARN_ON(ret < 0 && ret != -EACCES)) {
++		pm_runtime_put_autosuspend(dev);
+ 		return;
++	}
+ 
+ 	if (gem->import_attach)
+ 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
