@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C64C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8456A20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDEA20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693551;
-	bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+	s=default; t=1597693562;
+	bh=EuYOFVLnvPo1+2S5w/3/GkQEHKQPzj6YFWOX9TrrUfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+9UhEDFJ31Hi2xMD1ltOPkyhxkGJ40aVWYAIlJVSqKYS0SZTNDgG2M/EN6UAXiai
-	 x0HGFWOHoknQA1zyf7jSouLck8Q5IK0s4KvSqeGuuidFlWkI99ODC1HI+ns/zDYU0p
-	 IAz7yKOxoa41m2BS+5irBTVSiMOdxTQBAksGJCz8=
+	b=huiK4xhD59XtlH0ZxNsV/YfmdIeFEt6O6EkyUC2EdgMQq8Z3Fsa7WGEWK+J9i5jBO
+	 LMqrnA2cM8N0QxHTrSYr7RBUHZwwctX2jQycF14exy4WvVn29Pg67s9kxXGj1nZAH0
+	 h+gQGKF1uJBB6lkCEGC0Q5C2HnMDg7a35RoT+05g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404388AbgHQTpr (ORCPT
+        id S1729385AbgHQPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44622 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbgHQPVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:21:50 -0400
+        id S1729330AbgHQPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:21:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B7820716;
-        Mon, 17 Aug 2020 15:21:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6859E207DE;
+        Mon, 17 Aug 2020 15:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677708;
-        bh=hA1h9wZ8IJcr0MIhQYceFwDgSJwUNP7M6s/QAIjJbUk=;
+        s=default; t=1597677672;
+        bh=EuYOFVLnvPo1+2S5w/3/GkQEHKQPzj6YFWOX9TrrUfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yPCxnQ//gy4y67TqFr+t1yWdHDbCKgFCt3mk/TNVoaMxykmU0zej4+XVCZNVbQYWT
-         /P0FXtfI10Ucg/mOtEW+P+ZCgBlCkH447isQgX6lwgSwE1glyDH6ENjaeqKM5IlCPb
-         L0f9s2GpAY4adi8IECccXnisDmV3Lg8bCrN+ZtTc=
+        b=jOA8i4Wddzal5OHQBgdTB2Rc/ZQaZHCNCcxPyWR8xKAZHzCFpA1CKgN3QPghWn1I1
+         WfuRWwhP7r8XqvrfDzRzR858EmptSLlPp8n/XPXSMzBGaPuZ+JiSBQFdQOfiqLDCqW
+         cu//ItxOoB5QZ2b7l/k+gTQaVrs9SQpxfExTy7ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 079/464] net: mscc: ocelot: fix encoding destination ports into multicast IPv4 address
-Date:   Mon, 17 Aug 2020 17:10:32 +0200
-Message-Id: <20200817143837.564359473@linuxfoundation.org>
+Subject: [PATCH 5.8 067/464] kunit: tool: fix broken default args in unit tests
+Date:   Mon, 17 Aug 2020 17:10:20 +0200
+Message-Id: <20200817143836.975721587@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -60,115 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit 0897ecf7532577bda3dbcb043ce046a96948889d ]
+[ Upstream commit 6816fe61bda8c819c368ad2002cd27172ecb79de ]
 
-The ocelot hardware designers have made some hacks to support multicast
-IPv4 and IPv6 addresses. Normally, the MAC table matches on MAC
-addresses and the destination ports are selected through the DEST_IDX
-field of the respective MAC table entry. The DEST_IDX points to a Port
-Group ID (PGID) which contains the bit mask of ports that frames should
-be forwarded to. But there aren't a lot of PGIDs (only 80 or so) and
-there are clearly many more IP multicast addresses than that, so it
-doesn't scale to use this PGID mechanism, so something else was done.
-Since the first portion of the MAC address is known, the hack they did
-was to use a single PGID for _flooding_ unknown IPv4 multicast
-(PGID_MCIPV4 == 62), but for known IP multicast, embed the destination
-ports into the first 3 bytes of the MAC address recorded in the MAC
-table.
+Commit ddbd60c779b4 ("kunit: use --build_dir=.kunit as default") changed
+the default build directory for KUnit tests, but failed to update
+associated unit tests for kunit_tool, so update them.
 
-The VSC7514 datasheet explains it like this:
-
-    3.9.1.5 IPv4 Multicast Entries
-
-    MAC table entries with the ENTRY_TYPE = 2 settings are interpreted
-    as IPv4 multicast entries.
-    IPv4 multicasts entries match IPv4 frames, which are classified to
-    the specified VID, and which have DMAC = 0x01005Exxxxxx, where
-    xxxxxx is the lower 24 bits of the MAC address in the entry.
-    Instead of a lookup in the destination mask table (PGID), the
-    destination set is programmed as part of the entry MAC address. This
-    is shown in the following table.
-
-    Table 78: IPv4 Multicast Destination Mask
-
-        Destination Ports            Record Bit Field
-        ---------------------------------------------
-        Ports 10-0                   MAC[34-24]
-
-    Example: All IPv4 multicast frames in VLAN 12 with MAC 01005E112233 are
-    to be forwarded to ports 3, 8, and 9. This is done by inserting the
-    following entry in the MAC table entry:
-    VALID = 1
-    VID = 12
-    MAC = 0x000308112233
-    ENTRY_TYPE = 2
-    DEST_IDX = 0
-
-But this procedure is not at all what's going on in the driver. In fact,
-the code that embeds the ports into the MAC address looks like it hasn't
-actually been tested. This patch applies the procedure described in the
-datasheet.
-
-Since there are many other fixes to be made around multicast forwarding
-until it works properly, there is no real reason for this patch to be
-backported to stable trees, or considered a real fix of something that
-should have worked.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ddbd60c779b4 ("kunit: use --build_dir=.kunit as default")
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/testing/kunit/kunit_tool_test.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index f17da67a4622e..d0b79cca51840 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -1605,14 +1605,14 @@ static int ocelot_port_obj_add_mdb(struct net_device *dev,
- 	addr[0] = 0;
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index f9eeaea94cad1..ee942d80bdd02 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -258,14 +258,14 @@ class KUnitMainTest(unittest.TestCase):
+ 	def test_build_passes_args_pass(self):
+ 		kunit.main(['build'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 0
+-		self.linux_source_mock.build_um_kernel.assert_called_once_with(False, 8, '', None)
++		self.linux_source_mock.build_um_kernel.assert_called_once_with(False, 8, '.kunit', None)
+ 		assert self.linux_source_mock.run_kernel.call_count == 0
  
- 	if (!new) {
--		addr[2] = mc->ports << 0;
--		addr[1] = mc->ports << 8;
-+		addr[1] = mc->ports >> 8;
-+		addr[2] = mc->ports & 0xff;
- 		ocelot_mact_forget(ocelot, addr, vid);
- 	}
+ 	def test_exec_passes_args_pass(self):
+ 		kunit.main(['exec'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 0
+ 		assert self.linux_source_mock.run_kernel.call_count == 1
+-		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='.kunit', timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
  
- 	mc->ports |= BIT(port);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
+ 	def test_run_passes_args_pass(self):
+@@ -273,7 +273,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+ 		assert self.linux_source_mock.run_kernel.call_count == 1
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(
+-			build_dir='', timeout=300)
++			build_dir='.kunit', timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
  
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
-@@ -1636,9 +1636,9 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return -ENOENT;
+ 	def test_exec_passes_args_fail(self):
+@@ -313,7 +313,7 @@ class KUnitMainTest(unittest.TestCase):
+ 	def test_exec_timeout(self):
+ 		timeout = 3453
+ 		kunit.main(['exec', '--timeout', str(timeout)], self.linux_source_mock)
+-		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='.kunit', timeout=timeout)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
  
- 	memcpy(addr, mc->addr, ETH_ALEN);
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
- 	addr[0] = 0;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 	ocelot_mact_forget(ocelot, addr, vid);
+ 	def test_run_timeout(self):
+@@ -321,7 +321,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(
+-			build_dir='', timeout=timeout)
++			build_dir='.kunit', timeout=timeout)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
  
- 	mc->ports &= ~BIT(port);
-@@ -1648,8 +1648,8 @@ static int ocelot_port_obj_del_mdb(struct net_device *dev,
- 		return 0;
- 	}
- 
--	addr[2] = mc->ports << 0;
--	addr[1] = mc->ports << 8;
-+	addr[1] = mc->ports >> 8;
-+	addr[2] = mc->ports & 0xff;
- 
- 	return ocelot_mact_learn(ocelot, 0, addr, vid, ENTRYTYPE_MACv4);
- }
+ 	def test_run_builddir(self):
 -- 
 2.25.1
 
