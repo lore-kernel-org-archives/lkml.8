@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C2020716
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF6820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597688392;
-	bh=pPGflhWf9CToCkrIk7EKW0g3pL6oyUS7nKayUPweHrk=;
+	s=default; t=1597688397;
+	bh=htBl/A/Kkxb6Lyw01Gao7qGjF9EKdU+6Qk+idagbRTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GXIfHhPE5ztH8b64dn929H3eGYUhrwZCbbvS0DwjMf8pAKhIT1taBV4DaIb2oMem0
-	 Xz4gtEZxbD6p/X/d+G5euw0f5aART7Rez9mK+CTWSRBThz5vwGmBYMUhKkab468ZlE
-	 4XXNzJE/U/r6OX10ZHks8nlJIB79sALLbaX4e7wY=
+	b=NrAtQGxx/8b4HpJnvxsAh6AOGOo4w4nF04Xmoz5scGiuGRTAlv9Gm8y7qtGyjBcXs
+	 1PoNnQKy1ySB7z71wdHv2qXwTb/9+yteqlcb32qA8dRg9cvWXIRlW+J9zM20uYJ2yU
+	 NC7ZS764POUt90P1qsMFOZ14cTc8w1pKBDLke+Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbgHQSTv (ORCPT
+        id S2390804AbgHQST4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53238 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388358AbgHQQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:24 -0400
+        id S2388352AbgHQQFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE97D208B3;
-        Mon, 17 Aug 2020 16:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208CD207FB;
+        Mon, 17 Aug 2020 16:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680312;
-        bh=pPGflhWf9CToCkrIk7EKW0g3pL6oyUS7nKayUPweHrk=;
+        s=default; t=1597680299;
+        bh=htBl/A/Kkxb6Lyw01Gao7qGjF9EKdU+6Qk+idagbRTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9oEYMMPpF/MnQyGOZTgGDZ0J/p4+5hWjZu2PA8jL+zrj6XgjmOCVQVXsO4zsLtwF
-         IlivlZH7pWPYhMVMklgljTObSVyoz1Kr2TBMZeFG1Bp6K4nTy/T2yqeaTHRxjcKBjA
-         PmG4RpcoXCWJpSRldvjOwayD1Bxr+93tGsQF5rxw=
+        b=M3CCfKjjtsjM8n9d4cuQDcYPtAvJHzE44/Tlr1z11EFNZEH2LbGps56g5dw0IftNK
+         hStug5Vr/XFW1Q9IKCYtBJr4LrvgLPnijy6nx1oLCo5nOsjEFMH8O0LfdCZOkWJDZi
+         RhGTEr28OqAvohMdKzPH3J1SKUkDapIWiQKEMqlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 137/270] drm/bridge: sil_sii8620: initialize return of sii8620_readb
-Date:   Mon, 17 Aug 2020 17:15:38 +0200
-Message-Id: <20200817143802.617348399@linuxfoundation.org>
+Subject: [PATCH 5.4 101/270] iio: improve IIO_CONCENTRATION channel type description
+Date:   Mon, 17 Aug 2020 17:15:02 +0200
+Message-Id: <20200817143800.815333725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -62,47 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 
-[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
+[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
 
-clang static analysis flags this error
+IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
+raw concentrations of pollutants. Raw value should be meaningless
+before being properly scaled. Because of that description shouldn't
+mention raw value unit whatsoever.
 
-sil-sii8620.c:184:2: warning: Undefined or garbage value
-  returned to caller [core.uninitialized.UndefReturn]
-        return ret;
-        ^~~~~~~~~~
+Fix this by rephrasing existing description so it follows conventions
+used throughout IIO ABI docs.
 
-sii8620_readb calls sii8620_read_buf.
-sii8620_read_buf can return without setting its output
-pararmeter 'ret'.
-
-So initialize ret.
-
-Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
+Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-index bd3165ee53541..04431dbac4a4f 100644
---- a/drivers/gpu/drm/bridge/sil-sii8620.c
-+++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-@@ -177,7 +177,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 680451695422a..c3767d4d01a6f 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1566,7 +1566,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+ KernelVersion:	4.3
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		Raw (unscaled no offset etc.) percentage reading of a substance.
++		Raw (unscaled no offset etc.) reading of a substance. Units
++		after application of scale and offset are percents.
  
- static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
- {
--	u8 ret;
-+	u8 ret = 0;
- 
- 	sii8620_read_buf(ctx, addr, &ret, 1);
- 	return ret;
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
 -- 
 2.25.1
 
