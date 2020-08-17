@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC167C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED329C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B0E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C602E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683596;
-	bh=FRCL61IC4KkMCwsvHbvzfLirFPw0GAkt4ULtxNsZt5o=;
+	s=default; t=1597683602;
+	bh=Wu7bjlen7VaDzAEZ30fkPJc0jKth6xZTnBln8GLVJdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBX2joonnxBDFxEIoEjAkFgG3uKCDwIrHtqt2ZQ6kh2bYTVXORgiNBBy98Pf/d5Yx
-	 CQNhGQA/rBZ3133jeZp+RkSxRtpoKrph+nlX70Lk1VVjkr31ApM2KzklMrgBmBGgXN
-	 28cTIS0alTrKFsrwCT1a079GToMwa9nq4gxQoi38=
+	b=nN499ftOGX5v56fQQFVtuBDtzgAOtvQ9StkHJQ2RyHml3Fk7PWcShSTiEqIvRoA94
+	 tCYbsbMInqImoySN6ILuY9TyBVo9h0UK3z3CMsIbgOdfsnm8bysPMTNDGJL4cAw/lI
+	 37Kdr5XE8N3RvzY1kUbYpNrZ5LxkeGl4cQAXBSWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389193AbgHQQ7y (ORCPT
+        id S1729316AbgHQQ77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:59:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53418 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388228AbgHQQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:05:35 -0400
+        id S2388389AbgHQQF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:05:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39AD20657;
-        Mon, 17 Aug 2020 16:05:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1EC20882;
+        Mon, 17 Aug 2020 16:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680329;
-        bh=FRCL61IC4KkMCwsvHbvzfLirFPw0GAkt4ULtxNsZt5o=;
+        s=default; t=1597680356;
+        bh=Wu7bjlen7VaDzAEZ30fkPJc0jKth6xZTnBln8GLVJdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiDB9hBf+kGlKfAJZUG+qYPJKYOzzc6aRc6Do36pPIYoSeAiLWeCT9Y06c9C9DgPY
-         RzJzKco9q1wQv+6M4Sv87nr4sv9DdaT6B2huzOsD1y4Vo4Q93PzmbGc9YYEwtsMOBG
-         6Io2OAxKr0cbCNNDwGqXury+9nwwLbHN8r0d7RK4=
+        b=lTFITjQ5lcxctN2+WB86iCUS24O3gE7LL4urIUUS01LukGYGoDLs+pvJyRXArQeGn
+         MoSIde24hkKLMWfJA9JZaUW5dn3XtBV6jdoBzQ4Zw0rQdzelUp1iWNSg8P0ZdLMu0l
+         kl7k0pr311G39qPA+ZIW5WSr7cEMWqZayY/IpuHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikhail Malygin <m.malygin@yadro.com>,
-        Sergey Kojushev <s.kojushev@yadro.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 144/270] RDMA/rxe: Prevent access to wr->next ptr afrer wr is posted to send queue
-Date:   Mon, 17 Aug 2020 17:15:45 +0200
-Message-Id: <20200817143802.974793631@linuxfoundation.org>
+Subject: [PATCH 5.4 154/270] spi: lantiq-ssc: Fix warning by using WQ_MEM_RECLAIM
+Date:   Mon, 17 Aug 2020 17:15:55 +0200
+Message-Id: <20200817143803.501300258@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -61,58 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikhail Malygin <m.malygin@yadro.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
 
-[ Upstream commit 5f0b2a6093a4d9aab093964c65083fe801ef1e58 ]
+[ Upstream commit ba3548cf29616b58c93bbaffc3d636898d009858 ]
 
-rxe_post_send_kernel() iterates over linked list of wr's, until the
-wr->next ptr is NULL.  However if we've got an interrupt after last wr is
-posted, control may be returned to the code after send completion callback
-is executed and wr memory is freed.
+The lantiq-ssc driver uses internally an own workqueue to wait till the
+data is not only written out of the FIFO but really written to the wire.
+This workqueue is flushed while the SPI subsystem is working in some
+other system workqueue.
 
-As a result, wr->next pointer may contain incorrect value leading to
-panic. Store the wr->next on the stack before posting it.
+The system workqueue is marked as WQ_MEM_RECLAIM, but the workqueue in
+the lantiq-ssc driver does not use WQ_MEM_RECLAIM for now. Add this flag
+too to prevent this warning.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Link: https://lore.kernel.org/r/20200716190340.23453-1-m.malygin@yadro.com
-Signed-off-by: Mikhail Malygin <m.malygin@yadro.com>
-Signed-off-by: Sergey Kojushev <s.kojushev@yadro.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+This fixes the following warning:
+[    2.975956] WARNING: CPU: 1 PID: 17 at kernel/workqueue.c:2614 check_flush_dependency+0x168/0x184
+[    2.984752] workqueue: WQ_MEM_RECLAIM kblockd:blk_mq_run_work_fn is flushing !WQ_MEM_RECLAIM 1e100800.spi:0x0
+
+Fixes: 891b7c5fbf61 ("mtd_blkdevs: convert to blk-mq")
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Link: https://lore.kernel.org/r/20200717215648.20522-1-hauke@hauke-m.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/spi/spi-lantiq-ssc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
-index 623129f27f5a1..71358b0b8910c 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-@@ -679,6 +679,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
- 	unsigned int mask;
- 	unsigned int length = 0;
- 	int i;
-+	struct ib_send_wr *next;
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index 55394bdbc5a30..f9bc1705c0d4d 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -917,7 +917,7 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(2, 8) |
+ 				     SPI_BPW_MASK(16) | SPI_BPW_MASK(32);
  
- 	while (wr) {
- 		mask = wr_opcode_mask(wr->opcode, qp);
-@@ -695,6 +696,8 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
- 			break;
- 		}
- 
-+		next = wr->next;
-+
- 		length = 0;
- 		for (i = 0; i < wr->num_sge; i++)
- 			length += wr->sg_list[i].length;
-@@ -705,7 +708,7 @@ static int rxe_post_send_kernel(struct rxe_qp *qp, const struct ib_send_wr *wr,
- 			*bad_wr = wr;
- 			break;
- 		}
--		wr = wr->next;
-+		wr = next;
- 	}
- 
- 	rxe_run_task(&qp->req.task, 1);
+-	spi->wq = alloc_ordered_workqueue(dev_name(dev), 0);
++	spi->wq = alloc_ordered_workqueue(dev_name(dev), WQ_MEM_RECLAIM);
+ 	if (!spi->wq) {
+ 		err = -ENOMEM;
+ 		goto err_clk_put;
 -- 
 2.25.1
 
