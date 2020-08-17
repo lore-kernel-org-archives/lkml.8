@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB51C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E18204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4F5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597690103;
-	bh=epOxAWj3C6DUTPwZ1Pr6rDKvdzHlGJpjgFWKmRk7ZRQ=;
+	s=default; t=1597690126;
+	bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V89Q6b9ihegImFwaSmgAH1lDb7ATmvN1eH7wGcAactoeBHu2K/6tygt6l6j3xb7n4
-	 jopsa0ghlE8g8XmTLIp2DCIVgmAQR5XfkU+WcyTg9as37llw8gRlkuT5tZWxW5j1/E
-	 svQ6N4COnPCG3gwpb4Sz1eU7gfAi3csikH34TMiQ=
+	b=yfhbacrAcJhQC4KeLrLnainJqqPVp3W/J4EkDv1sHdJgPlrhzZyxmFbadt3BAqCXr
+	 hyFCgV9yAWzazNPkEleu1t1lCLzGFEbK44PQI78a6FAgGaxm9C0BlWTIFhEQT0SGdT
+	 851SbS8m3/YKI/85IhrOVvCuPxXqlTYszpgKcJLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391654AbgHQSsW (ORCPT
+        id S2391671AbgHQSso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:48:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42838 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388021AbgHQPz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:55:28 -0400
+        id S2387730AbgHQPy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:54:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6140208C7;
-        Mon, 17 Aug 2020 15:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D6720885;
+        Mon, 17 Aug 2020 15:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679721;
-        bh=epOxAWj3C6DUTPwZ1Pr6rDKvdzHlGJpjgFWKmRk7ZRQ=;
+        s=default; t=1597679698;
+        bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0/KtLOTPa9QmolS/T5SjiH6KLtLZYmbdBCIlWbOW9RFF3AAs+2ueWSnDbnG2Sp0G
-         y7NC+8RMJSSH3B+fnYIN6PbVhT1eyKZ2mlx7pU05qOwpVYI5Sjh5ojqUQu5qLd07XE
-         ZsYXJHlof86xSC8DZHKgx20iTTIptfbEl4fj1cK0=
+        b=KXfj7U+LtA9Ng+vnWK9p5WS83iZPJgijvicEYfZzG+H+8bia6aAwtkDN3Ys7JF9+Y
+         nog8F27w6F5+zRbZO08WLkPtkDXPwrKFhNzLMN1efyomahjGX0p1mTNT+LRVlVX4DU
+         PnnnWWGRnC6x5Af1t+L7RClj6oN4ooipkPBDO8uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 311/393] mtd: rawnand: brcmnand: Dont default to edu transfer
-Date:   Mon, 17 Aug 2020 17:16:01 +0200
-Message-Id: <20200817143834.696473791@linuxfoundation.org>
+Subject: [PATCH 5.7 304/393] fsl/fman: fix eth hash table allocation
+Date:   Mon, 17 Aug 2020 17:15:54 +0200
+Message-Id: <20200817143834.360940257@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -60,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Dasu <kdasu.kdev@gmail.com>
+From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit bee3ab8bdd3b13faf08e5b6e0218f59b0a49fcc3 ]
+[ Upstream commit 3207f715c34317d08e798e11a10ce816feb53c0f ]
 
-When flash-dma is absent do not default to using flash-edu.
-Make sure flash-edu is enabled before setting EDU transfer
-function.
+Fix memory allocation for ethernet address hash table.
+The code was wrongly allocating an array for eth hash table which
+is incorrect because this is the main structure for eth hash table
+(struct eth_hash_t) that contains inside a number of elements.
 
-Fixes: a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200612212902.21347-2-kdasu.kdev@gmail.com
+Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
+Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fman/fman_mac.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 968ff77039256..cdae2311a3b69 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -2960,8 +2960,9 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- 		if (ret < 0)
- 			goto err;
+diff --git a/drivers/net/ethernet/freescale/fman/fman_mac.h b/drivers/net/ethernet/freescale/fman/fman_mac.h
+index dd6d0526f6c1f..19f327efdaff3 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_mac.h
++++ b/drivers/net/ethernet/freescale/fman/fman_mac.h
+@@ -252,7 +252,7 @@ static inline struct eth_hash_t *alloc_hash_table(u16 size)
+ 	struct eth_hash_t *hash;
  
--		/* set edu transfer function to call */
--		ctrl->dma_trans = brcmnand_edu_trans;
-+		if (has_edu(ctrl))
-+			/* set edu transfer function to call */
-+			ctrl->dma_trans = brcmnand_edu_trans;
- 	}
+ 	/* Allocate address hash table */
+-	hash = kmalloc_array(size, sizeof(struct eth_hash_t *), GFP_KERNEL);
++	hash = kmalloc(sizeof(*hash), GFP_KERNEL);
+ 	if (!hash)
+ 		return NULL;
  
- 	/* Disable automatic device ID config, direct addressing */
 -- 
 2.25.1
 
