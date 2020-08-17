@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB770C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E11FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDA4D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A932065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692789;
-	bh=cMWAhRBaEveQmsRcNSuNfgdblNS22Db2KlEA8uckwjs=;
+	s=default; t=1597692798;
+	bh=GcF9Oe8I5nbSA24PxJyVGNRfg6ycr/7DGFIS9wrAiJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N09IcyHNJ3PmtXA0ukMfFeiURc5ozGGP//Id2ZraHSgvdvk/hfLIHxuvcbSqV2Zok
-	 49I82xkS9hbAKQ5tn5CwxBbiO8OqoMEl8nWXbB0krSx6JTRmXtqUF/N/Drtd7Y2/EI
-	 m54B8nhnkoZTooZiAhItJsxSXgSv1/MzlqvJQMxk=
+	b=Jlu5Y62q8xpcjJMZYlnU5uhwyyajLKQEMNOS2890Yxz4WjmPC8qnfJb2xxWRSbEjn
+	 797ZEVZTiFo3IJ/n7XQb2pwJseokUj1rmIumLBhBwQ0Je9PLugyEbk/9dPBroSNZMP
+	 GUAy6lwrRQXPqzC6pn2vBoAZjH+Y4jGUZh/ltSGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392117AbgHQTc7 (ORCPT
+        id S2404237AbgHQTdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbgHQPbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:31:21 -0400
+        id S1730256AbgHQPbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:31:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EDE323F27;
-        Mon, 17 Aug 2020 15:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3072E22BEF;
+        Mon, 17 Aug 2020 15:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678280;
-        bh=cMWAhRBaEveQmsRcNSuNfgdblNS22Db2KlEA8uckwjs=;
+        s=default; t=1597678262;
+        bh=GcF9Oe8I5nbSA24PxJyVGNRfg6ycr/7DGFIS9wrAiJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHRzx3XqAYZ3xZfaVhGtw6kt6ObSE6I/EmUkfFaH82ckTr8VKU8P337xHIrZCAolF
-         oJfQz/g6G2mueFzjxpNxQYazKYSYxNcCOl+GUhhXc5PrhCANXRF+S1U78M/gxjux3q
-         E4yo3tcphvT7QJLG3Yyd8FWBOGtPRNZPc0h0ru4o=
+        b=bfjKkb5K8EIvJCB0S78pWRy/L4CMB41Q4+L5lloiZkYJ1jOwBNTyJisIc7M+nQWy+
+         p9Tk8E/3+1vhltJSkxe9dt1JPqjOwsJMPW72k7uno8mHJ4u9w0P8jtXuAzKEV1457D
+         IjELZ1kcWu6wto3MhoLVUEEEjt0VfTzZDB3BmVJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Kalderon <mkalderon@marvell.com>,
-        Yuval Basson <ybason@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 279/464] qed: Fix ILT and XRCD bitmap memory leaks
-Date:   Mon, 17 Aug 2020 17:13:52 +0200
-Message-Id: <20200817143847.123172922@linuxfoundation.org>
+Subject: [PATCH 5.8 273/464] phy: armada-38x: fix NETA lockup when repeatedly switching speeds
+Date:   Mon, 17 Aug 2020 17:13:46 +0200
+Message-Id: <20200817143846.857053651@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -61,52 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Basson <ybason@marvell.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit d4eae993fc45398526aed683e225d6fa713f8ddf ]
+[ Upstream commit 1dea06cd643da38931382ebdc151efced201ffad ]
 
-- Free ILT lines used for XRC-SRQ's contexts.
-- Free XRCD bitmap
+The mvneta hardware appears to lock up in various random ways when
+repeatedly switching speeds between 1G and 2.5G, which involves
+reprogramming the COMPHY.  It is not entirely clear why this happens,
+but best guess is that reprogramming the COMPHY glitches mvneta clocks
+causing the hardware to fail.  It seems that rebooting resolves the
+failure, but not down/up cycling the interface alone.
 
-Fixes: b8204ad878ce7 ("qed: changes to ILT to support XRC")
-Fixes: 7bfb399eca460 ("qed: Add XRC to RoCE")
-Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
-Signed-off-by: Yuval Basson <ybason@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Various other approaches have been tried, such as trying to cleanly
+power down the COMPHY and then take it back through the power up
+initialisation, but this does not seem to help.
+
+It was finally noticed that u-boot's last step when configuring a
+COMPHY for "SGMII" mode was to poke at a register described as
+"GBE_CONFIGURATION_REG", which is undocumented in any external
+documentation.  All that we have is the fact that u-boot sets a bit
+corresponding to the "SGMII" lane at the end of COMPHY initialisation.
+
+Experimentation shows that if we clear this bit prior to changing the
+speed, and then set it afterwards, mvneta does not suffer this problem
+on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
+
+This problem was found while script-testing phylink.
+
+This fix also requires the corresponding change to DT to be effective.
+See "ARM: dts: armada-38x: fix NETA lockup when repeatedly switching
+speeds".
+
+Fixes: 14dc100b4411 ("phy: armada38x: add common phy support")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Link: https://lore.kernel.org/r/E1jxtRj-0003Tz-CG@rmk-PC.armlinux.org.uk
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c  | 5 +++++
- drivers/net/ethernet/qlogic/qed/qed_rdma.c | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/phy/marvell/phy-armada38x-comphy.c | 45 ++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index d13ec88313c38..eb70fdddddbfe 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -2355,6 +2355,11 @@ qed_cxt_free_ilt_range(struct qed_hwfn *p_hwfn,
- 		elem_size = SRQ_CXT_SIZE;
- 		p_blk = &p_cli->pf_blks[SRQ_BLK];
- 		break;
-+	case QED_ELEM_XRC_SRQ:
-+		p_cli = &p_hwfn->p_cxt_mngr->clients[ILT_CLI_TSDM];
-+		elem_size = XRC_SRQ_CXT_SIZE;
-+		p_blk = &p_cli->pf_blks[SRQ_BLK];
-+		break;
- 	case QED_ELEM_TASK:
- 		p_cli = &p_hwfn->p_cxt_mngr->clients[ILT_CLI_CDUT];
- 		elem_size = TYPE1_TASK_CXT_SIZE(p_hwfn);
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index 19c0c8864da13..4ad5f21de79ea 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -404,6 +404,7 @@ static void qed_rdma_resc_free(struct qed_hwfn *p_hwfn)
- 	qed_rdma_bmap_free(p_hwfn, &p_hwfn->p_rdma_info->srq_map, 1);
- 	qed_rdma_bmap_free(p_hwfn, &p_hwfn->p_rdma_info->real_cid_map, 1);
- 	qed_rdma_bmap_free(p_hwfn, &p_hwfn->p_rdma_info->xrc_srq_map, 1);
-+	qed_rdma_bmap_free(p_hwfn, &p_hwfn->p_rdma_info->xrcd_map, 1);
+diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
+index 6960dfd8ad8c9..0fe4089643342 100644
+--- a/drivers/phy/marvell/phy-armada38x-comphy.c
++++ b/drivers/phy/marvell/phy-armada38x-comphy.c
+@@ -41,6 +41,7 @@ struct a38x_comphy_lane {
  
- 	kfree(p_rdma_info->port);
- 	kfree(p_rdma_info->dev);
+ struct a38x_comphy {
+ 	void __iomem *base;
++	void __iomem *conf;
+ 	struct device *dev;
+ 	struct a38x_comphy_lane lane[MAX_A38X_COMPHY];
+ };
+@@ -54,6 +55,21 @@ static const u8 gbe_mux[MAX_A38X_COMPHY][MAX_A38X_PORTS] = {
+ 	{ 0, 0, 3 },
+ };
+ 
++static void a38x_set_conf(struct a38x_comphy_lane *lane, bool enable)
++{
++	struct a38x_comphy *priv = lane->priv;
++	u32 conf;
++
++	if (priv->conf) {
++		conf = readl_relaxed(priv->conf);
++		if (enable)
++			conf |= BIT(lane->port);
++		else
++			conf &= ~BIT(lane->port);
++		writel(conf, priv->conf);
++	}
++}
++
+ static void a38x_comphy_set_reg(struct a38x_comphy_lane *lane,
+ 				unsigned int offset, u32 mask, u32 value)
+ {
+@@ -97,6 +113,7 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
+ {
+ 	struct a38x_comphy_lane *lane = phy_get_drvdata(phy);
+ 	unsigned int gen;
++	int ret;
+ 
+ 	if (mode != PHY_MODE_ETHERNET)
+ 		return -EINVAL;
+@@ -115,13 +132,20 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
+ 		return -EINVAL;
+ 	}
+ 
++	a38x_set_conf(lane, false);
++
+ 	a38x_comphy_set_speed(lane, gen, gen);
+ 
+-	return a38x_comphy_poll(lane, COMPHY_STAT1,
+-				COMPHY_STAT1_PLL_RDY_TX |
+-				COMPHY_STAT1_PLL_RDY_RX,
+-				COMPHY_STAT1_PLL_RDY_TX |
+-				COMPHY_STAT1_PLL_RDY_RX);
++	ret = a38x_comphy_poll(lane, COMPHY_STAT1,
++			       COMPHY_STAT1_PLL_RDY_TX |
++			       COMPHY_STAT1_PLL_RDY_RX,
++			       COMPHY_STAT1_PLL_RDY_TX |
++			       COMPHY_STAT1_PLL_RDY_RX);
++
++	if (ret == 0)
++		a38x_set_conf(lane, true);
++
++	return ret;
+ }
+ 
+ static const struct phy_ops a38x_comphy_ops = {
+@@ -174,14 +198,21 @@ static int a38x_comphy_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+ 	priv->dev = &pdev->dev;
+ 	priv->base = base;
+ 
++	/* Optional */
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
++	if (res) {
++		priv->conf = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(priv->conf))
++			return PTR_ERR(priv->conf);
++	}
++
+ 	for_each_available_child_of_node(pdev->dev.of_node, child) {
+ 		struct phy *phy;
+ 		int ret;
 -- 
 2.25.1
 
