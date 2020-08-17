@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF33C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B294206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADFC207FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 16:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597683172;
-	bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+	s=default; t=1597683177;
+	bh=dKrMHON5WHDYvhzpQyR3cOpLkKILpGjs3K0fz8kF4lI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2ez2YsZ26929NysGCYX6zUZnJWkweMer5ysJ4VV6pcSE2KoATDFUaBnHbqA+O8JG
-	 L2EKJZ04C9YCP3b4nUgAj5e4z2nTZlrEPkE62j+8UbrpMKvZ19+eEzSScarXU/EJ8k
-	 nlJSjK/y6te2+l+OpCMcx61sMXiEZgh/ETCzJdQ8=
+	b=JK88pWrBSVZdMtk7ZVNvKjGKEJmr2J89ggp6KkMNX/caaUDnC2V5QHLcILD6OKcIf
+	 UB0q6S0zbSnfmYXkeIDLHxQcx0oTaoW4blS5NAx83joKZtojaRTeYhS8edb/whgWRk
+	 8myBalviP4xRcJqZ1OaFjrADk+xPeeUdJFoCTLsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389079AbgHQQwl (ORCPT
+        id S2389088AbgHQQw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 12:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 12:52:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730891AbgHQQCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:02:55 -0400
+        id S1731035AbgHQQDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:03:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AA282053B;
-        Mon, 17 Aug 2020 16:02:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD3E20772;
+        Mon, 17 Aug 2020 16:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680172;
-        bh=jWqRiW4I0WKBGrfTOQRfUOvpMlfAxLk4XnkZZTMCiq8=;
+        s=default; t=1597680180;
+        bh=dKrMHON5WHDYvhzpQyR3cOpLkKILpGjs3K0fz8kF4lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kg88YTxNdSCihKGH0xUKYBUPXhA+ZPIr4rGx6T6GKEvOSrR7k/RsnN5lUxWX/X+x+
-         kYQXYXlfVLtwi8wyNN8ToI6y0BfXT1FZkOp9M5305YAhBHqF6J4xBTVPBM0ScLoaXB
-         32oAN6uvPzTPBNXiYmBPK78cEZVwmvwQpBGGhJlc=
+        b=MZ8HD+yGtdtoVUCvmJhibMkGjA1+TZCb4P9UX8APwOMlY4Csd5MhGTeuCdiWke9/g
+         II9+4UK/IT7QXRoZQwS3M4wdNmYmV3vmwsk5Jjm5QUK4Aqeu/Mznp1VEQOatqB0VDq
+         FlGbUOlzcPgQtGa2spcaFXX+NISR1CUiFPr8A3Ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/270] gpu: host1x: debug: Fix multiple channels emitting messages simultaneously
-Date:   Mon, 17 Aug 2020 17:14:41 +0200
-Message-Id: <20200817143759.752045633@linuxfoundation.org>
+Subject: [PATCH 5.4 083/270] usb: gadget: net2280: fix memory leak on probe error handling paths
+Date:   Mon, 17 Aug 2020 17:14:44 +0200
+Message-Id: <20200817143759.909983371@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143755.807583758@linuxfoundation.org>
 References: <20200817143755.807583758@linuxfoundation.org>
@@ -60,51 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 35681862808472a0a4b9a8817ae2789c0b5b3edc ]
+[ Upstream commit 2468c877da428ebfd701142c4cdfefcfb7d4c00e ]
 
-Once channel's job is hung, it dumps the channel's state into KMSG before
-tearing down the offending job. If multiple channels hang at once, then
-they dump messages simultaneously, making the debug info unreadable, and
-thus, useless. This patch adds mutex which allows only one channel to emit
-debug messages at a time.
+Driver does not release memory for device on error handling paths in
+net2280_probe() when gadget_release() is not registered yet.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+The patch fixes the bug like in other similar drivers.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/udc/net2280.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/host1x/debug.c b/drivers/gpu/host1x/debug.c
-index c0392672a8421..1b4997bda1c79 100644
---- a/drivers/gpu/host1x/debug.c
-+++ b/drivers/gpu/host1x/debug.c
-@@ -16,6 +16,8 @@
- #include "debug.h"
- #include "channel.h"
- 
-+static DEFINE_MUTEX(debug_lock);
-+
- unsigned int host1x_debug_trace_cmdbuf;
- 
- static pid_t host1x_debug_force_timeout_pid;
-@@ -52,12 +54,14 @@ static int show_channel(struct host1x_channel *ch, void *data, bool show_fifo)
- 	struct output *o = data;
- 
- 	mutex_lock(&ch->cdma.lock);
-+	mutex_lock(&debug_lock);
- 
- 	if (show_fifo)
- 		host1x_hw_show_channel_fifo(m, ch, o);
- 
- 	host1x_hw_show_channel_cdma(m, ch, o);
- 
-+	mutex_unlock(&debug_lock);
- 	mutex_unlock(&ch->cdma.lock);
- 
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 51efee21915ff..7c616d7641c6d 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -3782,8 +3782,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  	return 0;
+ 
+ done:
+-	if (dev)
++	if (dev) {
+ 		net2280_remove(pdev);
++		kfree(dev);
++	}
+ 	return retval;
+ }
+ 
 -- 
 2.25.1
 
