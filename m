@@ -2,125 +2,218 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38851C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC627C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154EC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OD6CK52y"
+	by mail.kernel.org (Postfix) with ESMTP id A2512204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgHQWZ4 (ORCPT
+        id S1729034AbgHQW05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgHQWZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:25:54 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83CFC061389;
-        Mon, 17 Aug 2020 15:18:58 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g15so4351026plj.6;
-        Mon, 17 Aug 2020 15:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IC+PLCb5BjjrXT4nXK1CE0auHVxv7INrZUJfLM7s8b0=;
-        b=OD6CK52yqlmbuPU8ShWjTmv4dQV5QdmDq4dADEWii8Heu1Da/BEe7At9MszRnoWCOx
-         hUaieFOvUxFCRy+B9DdomVp+HqDXZDPA3BWKjnN1mVJfh6Xnf4JqT5ISkGLcCxGIx0m2
-         vwAcYUpDSo10bFh+ZI7oHpopC4o0DvT63jh5aoU3x+RN1CCHy7ufqeihU/pBIG8sWwxt
-         GeCdXS/kMnuQpx0d3wq9sFOC914V1nqt6cI+it2iU/zmCyhwKCIsj2Qkb+KTF3fBrZiP
-         +M9Iz6ERW7HgndpieUliURMrXbK7GZ6VWZFOUGuDHf0EcPsCqo4bqIottMTyxt0ZesXT
-         KYUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IC+PLCb5BjjrXT4nXK1CE0auHVxv7INrZUJfLM7s8b0=;
-        b=O8A7ZFZbIe1esNmPGumd4IxWSgBBsKLHIaEzCCqiDABAAGioYrDtMv9ftjDbb3jJO1
-         7gt4wU1D+l5KrQqKS9l0Mw9Jd0waJFPGtT+D81P0CB6shssis2Wa/eNzj5mfyYLICUGl
-         VLUbt/BneJtPcPPw+njok48wUV91ieqrAC1mxumriV/05LPaKficXbeAvB2eK0ZO/IEe
-         vYJZ8jQ/MC8xF00NGf8yaUEmGAVM1NOR36X9WWw8F/+5TEPIbcZ6ANoigClFfX9/HlLG
-         uwSu0mvjsveGBDdqroxHPXbeJfe2TpxrZGxSjQD150d4gO6oq0tPWRVRHlN+jejbxXfg
-         7ueg==
-X-Gm-Message-State: AOAM530X/iWi6pzDiXTeixxk4nvXIbddY5xHNU8C3vesnxKFlgGLrbbO
-        N61ryzrfwkZcWHDnOXZJlR7+xJnnMoc=
-X-Google-Smtp-Source: ABdhPJzd5z+TE/voo9ADy7aHL82gwXxsBXcvXOFCGJrwqsqSaKtsgR7Wd9hBDKiXtMq2vaUdyX07IQ==
-X-Received: by 2002:a17:902:b28a:: with SMTP id u10mr13206624plr.195.1597702737909;
-        Mon, 17 Aug 2020 15:18:57 -0700 (PDT)
-Received: from [0.0.0.0] ([149.28.25.175])
-        by smtp.gmail.com with ESMTPSA id 198sm20828568pfz.120.2020.08.17.15.18.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 15:18:57 -0700 (PDT)
-Subject: Re: [PATCH] of/fdt: Remove duplicate check in
- early_init_dt_scan_memory()
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200814225637.702584-1-arch0.zheng@gmail.com>
- <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
-From:   Qi Zheng <arch0.zheng@gmail.com>
-Message-ID: <f2d32b47-cf84-4e09-a8a1-08a323ddd134@gmail.com>
-Date:   Tue, 18 Aug 2020 06:18:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 18:26:57 -0400
+Received: from mail.v3.sk ([167.172.186.51]:54082 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726315AbgHQW0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:26:54 -0400
+X-Greylist: delayed 1078 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 18:26:52 EDT
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 04D41DF92E;
+        Mon, 17 Aug 2020 22:08:03 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id UuIVB_sZDDOv; Mon, 17 Aug 2020 22:08:01 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 9005ADFA54;
+        Mon, 17 Aug 2020 22:08:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id b8tZ_xavN7PF; Mon, 17 Aug 2020 22:08:01 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 5892ADF880;
+        Mon, 17 Aug 2020 22:08:01 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 2/4] media: marvell-ccic: mmp: get rid of mmpcam_devices list
+Date:   Tue, 18 Aug 2020 00:08:48 +0200
+Message-Id: <20200817220850.401287-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200817220850.401287-1-lkundrak@v3.sk>
+References: <20200817220850.401287-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/18 上午2:21, Rob Herring wrote:
-> On Fri, Aug 14, 2020 at 4:57 PM Qi Zheng <arch0.zheng@gmail.com> wrote:
->>
->> When the value of the first reg is not NULL, there will be
->> two repeated checks. So modify it.
-> 
-> I prefer the way it was. I'm sure the compiler is smart enough to
-> throw out the 2nd check. Plus, 'linux,usable-memory' being present is
-> the exception, so usually 'reg' will be NULL.
+The solemn reason for this was so that it would be possible to get a
+mmp_camera from a platform_device in suspend/resume/remove hooks, because
+drvdata used to be used by the v4l core.
 
-I got it, and thanks for your review.
-Please ignore this patch.
+Since commit 95db3a60e065 ("[media] v4l: Add a media_device pointer to th=
+e
+v4l2_device structure") it is no longer case and thus we can make things
+a great deal simpler.
 
-> 
->> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
->> ---
->>   drivers/of/fdt.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 4602e467ca8b..f54412c00642 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -1002,10 +1002,11 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->>                  return 0;
->>
->>          reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
->> -       if (reg == NULL)
->> +       if (reg == NULL) {
->>                  reg = of_get_flat_dt_prop(node, "reg", &l);
->> -       if (reg == NULL)
->> -               return 0;
->> +               if (reg == NULL)
->> +                       return 0;
->> +       }
->>
->>          endp = reg + (l / sizeof(__be32));
->>          hotpluggable = of_get_flat_dt_prop(node, "hotpluggable", NULL);
->> --
->> 2.25.1
->>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+Changes since v1:
+- Added this patch
+
+ .../media/platform/marvell-ccic/mmp-driver.c  | 78 ++-----------------
+ 1 file changed, 8 insertions(+), 70 deletions(-)
+
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index 92b92255dac66..f04c01bced2f0 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -46,49 +46,6 @@ static inline struct mmp_camera *mcam_to_cam(struct mc=
+am_camera *mcam)
+ 	return container_of(mcam, struct mmp_camera, mcam);
+ }
+=20
+-/*
+- * A silly little infrastructure so we can keep track of our devices.
+- * Chances are that we will never have more than one of them, but
+- * the Armada 610 *does* have two controllers...
+- */
+-
+-static LIST_HEAD(mmpcam_devices);
+-static struct mutex mmpcam_devices_lock;
+-
+-static void mmpcam_add_device(struct mmp_camera *cam)
+-{
+-	mutex_lock(&mmpcam_devices_lock);
+-	list_add(&cam->devlist, &mmpcam_devices);
+-	mutex_unlock(&mmpcam_devices_lock);
+-}
+-
+-static void mmpcam_remove_device(struct mmp_camera *cam)
+-{
+-	mutex_lock(&mmpcam_devices_lock);
+-	list_del(&cam->devlist);
+-	mutex_unlock(&mmpcam_devices_lock);
+-}
+-
+-/*
+- * Platform dev remove passes us a platform_device, and there's
+- * no handy unused drvdata to stash a backpointer in.  So just
+- * dig it out of our list.
+- */
+-static struct mmp_camera *mmpcam_find_device(struct platform_device *pde=
+v)
+-{
+-	struct mmp_camera *cam;
+-
+-	mutex_lock(&mmpcam_devices_lock);
+-	list_for_each_entry(cam, &mmpcam_devices, devlist) {
+-		if (cam->pdev =3D=3D pdev) {
+-			mutex_unlock(&mmpcam_devices_lock);
+-			return cam;
+-		}
+-	}
+-	mutex_unlock(&mmpcam_devices_lock);
+-	return NULL;
+-}
+-
+ /*
+  * calc the dphy register values
+  * There are three dphy registers being used.
+@@ -227,6 +184,7 @@ static int mmpcam_probe(struct platform_device *pdev)
+ 	cam =3D devm_kzalloc(&pdev->dev, sizeof(*cam), GFP_KERNEL);
+ 	if (cam =3D=3D NULL)
+ 		return -ENOMEM;
++	platform_set_drvdata(pdev, cam);
+ 	cam->pdev =3D pdev;
+ 	INIT_LIST_HEAD(&cam->devlist);
+=20
+@@ -313,11 +271,10 @@ static int mmpcam_probe(struct platform_device *pde=
+v)
+ 	cam->irq =3D res->start;
+ 	ret =3D devm_request_irq(&pdev->dev, cam->irq, mmpcam_irq, IRQF_SHARED,
+ 					"mmp-camera", mcam);
+-	if (ret =3D=3D 0) {
+-		mmpcam_add_device(cam);
+-		return 0;
+-	}
++	if (ret)
++		goto out;
+=20
++	return 0;
+ out:
+ 	fwnode_handle_put(mcam->asd.match.fwnode);
+ 	mccic_shutdown(mcam);
+@@ -330,14 +287,13 @@ static int mmpcam_remove(struct mmp_camera *cam)
+ {
+ 	struct mcam_camera *mcam =3D &cam->mcam;
+=20
+-	mmpcam_remove_device(cam);
+ 	mccic_shutdown(mcam);
+ 	return 0;
+ }
+=20
+ static int mmpcam_platform_remove(struct platform_device *pdev)
+ {
+-	struct mmp_camera *cam =3D mmpcam_find_device(pdev);
++	struct mmp_camera *cam =3D platform_get_drvdata(pdev);
+=20
+ 	if (cam =3D=3D NULL)
+ 		return -ENODEV;
+@@ -351,7 +307,7 @@ static int mmpcam_platform_remove(struct platform_dev=
+ice *pdev)
+=20
+ static int mmpcam_suspend(struct platform_device *pdev, pm_message_t sta=
+te)
+ {
+-	struct mmp_camera *cam =3D mmpcam_find_device(pdev);
++	struct mmp_camera *cam =3D platform_get_drvdata(pdev);
+=20
+ 	if (state.event !=3D PM_EVENT_SUSPEND)
+ 		return 0;
+@@ -361,7 +317,7 @@ static int mmpcam_suspend(struct platform_device *pde=
+v, pm_message_t state)
+=20
+ static int mmpcam_resume(struct platform_device *pdev)
+ {
+-	struct mmp_camera *cam =3D mmpcam_find_device(pdev);
++	struct mmp_camera *cam =3D platform_get_drvdata(pdev);
+=20
+ 	return mccic_resume(&cam->mcam);
+ }
+@@ -387,22 +343,4 @@ static struct platform_driver mmpcam_driver =3D {
+ 	}
+ };
+=20
+-
+-static int __init mmpcam_init_module(void)
+-{
+-	mutex_init(&mmpcam_devices_lock);
+-	return platform_driver_register(&mmpcam_driver);
+-}
+-
+-static void __exit mmpcam_exit_module(void)
+-{
+-	platform_driver_unregister(&mmpcam_driver);
+-	/*
+-	 * platform_driver_unregister() should have emptied the list
+-	 */
+-	if (!list_empty(&mmpcam_devices))
+-		printk(KERN_ERR "mmp_camera leaving devices behind\n");
+-}
+-
+-module_init(mmpcam_init_module);
+-module_exit(mmpcam_exit_module);
++module_platform_driver(mmpcam_driver);
+--=20
+2.26.2
+
