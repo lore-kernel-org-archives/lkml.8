@@ -2,55 +2,53 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5700C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9246EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC245207DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599CA206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597677644;
-	bh=Wjh1zmTtqnm8XeYUSPfbp2YVMtHTpJQyH8Z6DM5I+dg=;
+	s=default; t=1597677656;
+	bh=VLP/nBpUSkz4WWAdRvAhTstnn307YSe6AuseI60IAGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aY54d8tZFe38VBF5PshqDxwotZ2UTEjO0QQOkSQFaqNZjK7TD5e1Vdgu3VNVVqq9D
-	 M/BK2hBCNvhRyPe5PZwebeiv5YnTQ3gwD7FcJFsQtn0Rf4+4VAlKfNJ47fCcP5IhHt
-	 ruP/Nx2+ecSk1LemH/WALLFKeX1/BtWKS2fvYC94=
+	b=wLzVEGllBkuW77rdUG5qBRiJQr/u4WNp3SkOL8WAG5/ADf/TcihvhIM8Bcs22W0HD
+	 noFAMWExg56K5i+FnOJvh/f1V+VHVWSy9FxYLc3g/gttyLrDE06RvZqf14VwlZN/d/
+	 DGZF5WmOhXxNLys8/9/4Aqso4vPq7VAYNzHQ4L8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgHQPUZ (ORCPT
+        id S1729295AbgHQPUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbgHQPTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:19:01 -0400
+        id S1729209AbgHQPTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:19:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8002065C;
-        Mon, 17 Aug 2020 15:19:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79D8B20716;
+        Mon, 17 Aug 2020 15:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677540;
-        bh=Wjh1zmTtqnm8XeYUSPfbp2YVMtHTpJQyH8Z6DM5I+dg=;
+        s=default; t=1597677550;
+        bh=VLP/nBpUSkz4WWAdRvAhTstnn307YSe6AuseI60IAGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJ6KPeBLi93Ykfls0G+eyvFlPYxwD1TFddLmLUaQsjMyCQwMngjz6awTAe95d7HRC
-         xc1+HvIRTPeEWQC8ncbiA4WsYT85Kzy6QpATubE+B5clvqPn5Or25UN16OJ+hmM7qI
-         EcgcKhOh16IlgFwhVT7PUuzCLcOORc2VXknW/5Og=
+        b=YCnwaOgdWXD3d47qc+RswFeZhUlQfz0YZ2FqrETnlLtqXqanTYFqhHax2elctoAOT
+         Cue2sQv8gxgQXtCL6KnU7tapSHk0mzd7FGJfa+fr7jGsoMY/+JAW3wIKCsZBNyFMuo
+         krAvl4Clq4HU83UJ7BVvi/WOFFxT9prXHdGBAYoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>,
-        Darren Hart <darren@dvhart.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.8 004/464] HID: input: Fix devices that return multiple bytes in battery report
-Date:   Mon, 17 Aug 2020 17:09:17 +0200
-Message-Id: <20200817143833.954014117@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 007/464] x86/mce/inject: Fix a wrong assignment of i_mce.status
+Date:   Mon, 17 Aug 2020 17:09:20 +0200
+Message-Id: <20200817143834.098171185@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,61 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grant Likely <grant.likely@secretlab.ca>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-commit 4f57cace81438cc873a96f9f13f08298815c9b51 upstream.
+[ Upstream commit 5d7f7d1d5e01c22894dee7c9c9266500478dca99 ]
 
-Some devices, particularly the 3DConnexion Spacemouse wireless 3D
-controllers, return more than just the battery capacity in the battery
-report. The Spacemouse devices return an additional byte with a device
-specific field. However, hidinput_query_battery_capacity() only
-requests a 2 byte transfer.
+The original code is a nop as i_mce.status is or'ed with part of itself,
+fix it.
 
-When a spacemouse is connected via USB (direct wire, no wireless dongle)
-and it returns a 3 byte report instead of the assumed 2 byte battery
-report the larger transfer confuses and frightens the USB subsystem
-which chooses to ignore the transfer. Then after 2 seconds assume the
-device has stopped responding and reset it. This can be reproduced
-easily by using a wired connection with a wireless spacemouse. The
-Spacemouse will enter a loop of resetting every 2 seconds which can be
-observed in dmesg.
-
-This patch solves the problem by increasing the transfer request to 4
-bytes instead of 2. The fix isn't particularly elegant, but it is simple
-and safe to backport to stable kernels. A further patch will follow to
-more elegantly handle battery reports that contain additional data.
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Darren Hart <darren@dvhart.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: stable@vger.kernel.org
-Tested-by: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a1300e505297 ("x86/ras/mce_amd_inj: Trigger deferred and thresholding errors interrupts")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20200611023238.3830-1-zhenzhong.duan@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -350,13 +350,13 @@ static int hidinput_query_battery_capaci
- 	u8 *buf;
- 	int ret;
- 
--	buf = kmalloc(2, GFP_KERNEL);
-+	buf = kmalloc(4, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 2,
-+	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 4,
- 				 dev->battery_report_type, HID_REQ_GET_REPORT);
--	if (ret != 2) {
-+	if (ret < 2) {
- 		kfree(buf);
- 		return -ENODATA;
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 0593b192eb8fa..7843ab3fde099 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -511,7 +511,7 @@ static void do_inject(void)
+ 	 */
+ 	if (inj_type == DFR_INT_INJ) {
+ 		i_mce.status |= MCI_STATUS_DEFERRED;
+-		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
++		i_mce.status &= ~MCI_STATUS_UC;
  	}
+ 
+ 	/*
+-- 
+2.25.1
+
 
 
