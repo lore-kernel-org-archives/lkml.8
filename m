@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F40C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4EA20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2482072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693170;
-	bh=XQvguJYpqzHHuNq99nf21rgDry64Bxh3rtWSa+3nf7c=;
+	s=default; t=1597693172;
+	bh=7zefk5AnHsO0CJkvNYQwHaA5V3ogPlSFdGnb5lfCmhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQLbxhMZIXL61G2yyuyPvpsQ4jlOuVI3SAN5TpKn0+71FJR2Vzo+g74kYTS2Cvz/0
-	 cOXzb2ze85V4D8StYOXhjz8h25GgFkFPNhGIFvXHGOwbgAlorK9sd25aZFVfUmEXHq
-	 GrgQRKtXqLBLaDRVQRsHu8l69JmIevUPX+6LN+HY=
+	b=p09Y461dr4skBxgK0IMWqMmraOHhktf054l7IkMdC95noiuPsgvbRaQLZyfme0cXV
+	 85zuyGhi6I50NVEJOiwqH247zsTsq4LnA1nlqJp1lV0JCtzyJJErCUgzL11kqBGjp1
+	 TQH1yu1glgmHH7Gr4vW3l/xiccA5S3Wu3jIbbZGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbgHQTj3 (ORCPT
+        id S1732509AbgHQTj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:39:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbgHQP0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:23 -0400
+        id S1729813AbgHQP0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2C18205CB;
-        Mon, 17 Aug 2020 15:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B95323718;
+        Mon, 17 Aug 2020 15:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677980;
-        bh=XQvguJYpqzHHuNq99nf21rgDry64Bxh3rtWSa+3nf7c=;
+        s=default; t=1597677991;
+        bh=7zefk5AnHsO0CJkvNYQwHaA5V3ogPlSFdGnb5lfCmhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/wzl4ErdxV3EIiqtU8EUtq/CSKk1/q8CrqDKWNGa6nBqpE8GVkBXZQmcVti5dWWh
-         3jCgWX+TCPEra8XB4yM8cK6nfOlCmuuo6ATytzgqVeO6ErSxVHZC2tVd0AUPgquy1v
-         qWmb7bIL+vTxseaLUXTGVZVjufBLgoI/MzmYkJEk=
+        b=XzyjD7sABwZ7QHGRH7dzBHIP3AZyz2o+X2lHpFg4Y9e9+YwMQ1JarmWfx4sWJWlPR
+         qeorOi5mjT+ESLkbMuvSvac+j7hWC7euNxQ24QNWEHmuw4b2ZAUBH14mR5Lt0VIaqb
+         GnbdYO+ZYZNVdbY6RnOJU0Ef09EgRggTcI9pPc9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 177/464] ASoC: SOF: nocodec: add missing .owner field
-Date:   Mon, 17 Aug 2020 17:12:10 +0200
-Message-Id: <20200817143842.297630354@linuxfoundation.org>
+Subject: [PATCH 5.8 154/464] Bluetooth: hci_qca: Only remove TX clock vote after TX is completed
+Date:   Mon, 17 Aug 2020 17:11:47 +0200
+Message-Id: <20200817143841.189648230@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,40 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 8753889e2720c1ef7ebf03370e384f5bf5ff4fab ]
+[ Upstream commit eff981f6579d5797d68d27afc0eede529ac8778a ]
 
-This field is required for ASoC cards. Not setting it will result in a
-module->name pointer being NULL and generate problems such as
+qca_suspend() removes the vote for the UART TX clock after
+writing an IBS sleep request to the serial buffer. This is
+not a good idea since there is no guarantee that the request
+has been sent at this point. Instead remove the vote after
+successfully entering IBS sleep. This also fixes the issue
+of the vote being removed in case of an aborted suspend due
+to a failure of entering IBS sleep.
 
-cat /proc/asound/modules
- 0 (efault)
-
-Fixes: 8017b8fd37bf ('ASoC: SOF: Add Nocodec machine driver support')
-Reported-by: Jaroslav Kysela <perex@perex.cz>
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200625191308.3322-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 41d5b25fed0a0 ("Bluetooth: hci_qca: add PM support")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/nocodec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bluetooth/hci_qca.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
-index d03b5be31255b..9e922df6a7101 100644
---- a/sound/soc/sof/nocodec.c
-+++ b/sound/soc/sof/nocodec.c
-@@ -14,6 +14,7 @@
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 25659b8b0c0c8..328919b79f7b9 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2115,8 +2115,6 @@ static int __maybe_unused qca_suspend(struct device *dev)
  
- static struct snd_soc_card sof_nocodec_card = {
- 	.name = "nocodec", /* the sof- prefix is added by the core */
-+	.owner = THIS_MODULE
- };
+ 		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
+ 		qca->ibs_sent_slps++;
+-
+-		qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
+ 		break;
  
- static int sof_nocodec_bes_setup(struct device *dev,
+ 	case HCI_IBS_TX_ASLEEP:
+@@ -2144,8 +2142,10 @@ static int __maybe_unused qca_suspend(struct device *dev)
+ 			qca->rx_ibs_state == HCI_IBS_RX_ASLEEP,
+ 			msecs_to_jiffies(IBS_BTSOC_TX_IDLE_TIMEOUT_MS));
+ 
+-	if (ret > 0)
++	if (ret > 0) {
++		qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
+ 		return 0;
++	}
+ 
+ 	if (ret == 0)
+ 		ret = -ETIMEDOUT;
 -- 
 2.25.1
 
