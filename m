@@ -2,114 +2,135 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651822072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0217E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 20:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tu3HPHWa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM/nc4nJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHQUPi (ORCPT
+        id S1728029AbgHQUQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
+        Mon, 17 Aug 2020 16:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgHQUPi (ORCPT
+        with ESMTP id S1726228AbgHQUQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:15:38 -0400
-X-Greylist: delayed 934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Aug 2020 13:15:37 PDT
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F23C061389;
-        Mon, 17 Aug 2020 13:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MQxwrtyOSC0pqe1VevhdSFunt/8xuDEPA6IOemddH4o=; b=Tu3HPHWaEXY96Wq4yxc3gzDq4d
-        m39dWE3VGFrwZ+xgRjkiplje1pfUG92mS0Nf9FEQq9/mCI6ldmIMUC+djq/pu/7CAIgVwOGLihIbc
-        Bs/8i/xz7FtV6zZTn9ZWhOZZJurqYSPdirLVVF14700DDi6oKYlNpZuiqrM9GuMrmQSM=;
-Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k7lXa-000549-1W; Mon, 17 Aug 2020 22:15:34 +0200
-Date:   Mon, 17 Aug 2020 22:15:32 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
- omap34/36 families
-Message-ID: <20200817221532.5d150648@aktux>
-In-Reply-To: <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
-References: <20200817133931.11785-1-aford173@gmail.com>
-        <20200817215953.59607c11@aktux>
-        <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Aug 2020 16:16:30 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684E7C061389;
+        Mon, 17 Aug 2020 13:16:30 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dd12so8456539qvb.0;
+        Mon, 17 Aug 2020 13:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mQx+fbQmT+1EgP70ieKWRjPUs6RmQ8tZtrxojwR/uWk=;
+        b=NM/nc4nJZy1iiJGzonqS+Dy0ZNXqznNIAF92ubQ1Uhi7iP2yUMY5gLPiADCNzJDMki
+         HbHwC5e2ZgQz6RpG9pwRgFlErzFYBJOjK7xT8Ta70Rw9wqWN5GGJjLcxuhQ7RpRzNvgw
+         u3hqsq+erFtFZA72IBc9O7V/ZjyFHWETyn/Ym+mVVqezHlk05HlQfvj8tt/x78s6z8US
+         MfRxe42Jv8kAnEASwrT/duqJlJWCp95v8P3cLH6xnehVWQnoq2j0TAiqvsOUoGz4KCJG
+         gdZroCzeI2rDVVnZ6sh8RuZa3N20//dqh5azI9IS1BXwfL5X0mH7dW58pOgoZBO9y2xQ
+         wQmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mQx+fbQmT+1EgP70ieKWRjPUs6RmQ8tZtrxojwR/uWk=;
+        b=oH3XEHXOGml1PZmpkpcYKr2gc2VssPc7baD4k09y0l5NEH+B7U3O7rXZvp6MiRN5Ek
+         dxZlU1Jj6BsP1M6TBlQD3lu0Z5EGU2KXWJsdbb15xeOnPX7ctruh8OQlEoZgwtyNnEW4
+         b8nKA2qaDrV38dieMT4iCKDBFsN8UmB6AWn24YiE1TDqHtkEnED2jm0IDN5PRLvQ8SgN
+         EK0BJVsLGVeDWd4AFo/1h4QEp771tvDfE2MCy9C1oO5vgm21dtqGZrkbd1g2sy0IliiS
+         HLM4+6uzWUa15AZPq2Rh8h21aoJufo0Feicc2sC9ATQy/4AdfKQbATqh+p4p8A5dI7is
+         nXOg==
+X-Gm-Message-State: AOAM532SNa9Sp6k2LCqDpvisIh9uBl660W30LxAq0O/vt38fZ5QFPXAy
+        rkm4iEz4SnvVfX8cfk7oVwOGMjYTcdI=
+X-Google-Smtp-Source: ABdhPJxnWbTgWhvO6SgB2BW2St4DBhERb+V3Zog82ZrZRFy3VQYe18bLAGXrNvOkqUG8pULy2tBKqw==
+X-Received: by 2002:ad4:54b2:: with SMTP id r18mr16054029qvy.92.1597695389472;
+        Mon, 17 Aug 2020 13:16:29 -0700 (PDT)
+Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
+        by smtp.gmail.com with ESMTPSA id o2sm18206353qkh.102.2020.08.17.13.16.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 13:16:29 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        selinux@vger.kernel.org
+References: <20200817170729.2605279-1-tweek@google.com>
+ <20200817170729.2605279-4-tweek@google.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com>
+Date:   Mon, 17 Aug 2020 16:16:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200817170729.2605279-4-tweek@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 15:02:27 -0500
-Adam Ford <aford173@gmail.com> wrote:
+On 8/17/20 1:07 PM, Thiébaud Weksteen wrote:
 
-> On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
-> >
-> > On Mon, 17 Aug 2020 08:39:31 -0500
-> > Adam Ford <aford173@gmail.com> wrote:
-> >  
-> > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
-> > > depending on commercial or industrial temperature ratings.
-> > >
-> > > This patch expands the thermal information to include the limits of 90
-> > > and 105C for alert and critical.  It sets the coolings-cells for the
-> > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
-> > >
-> > > For boards who never use industrial temperatures, these can be
-> > > changed on their respective device trees with something like:
-> > >
-> > > &cpu_alert0 {
-> > >       temperature = <85000>; /* millicelsius */
-> > > };
-> > >
-> > > &cpu_crit {
-> > >       temperature = <90000>; /* millicelsius */
-> > > };
-> > >
-> > > OMAP3_THERMAL will need to be enabled.  It is off by default.
-> > >  
-> > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
-> > got stuck somewhere. It still seems not to work. Shouldn't that patch
-> > be applied first?  
-> 
-> I rebased the idle stuff, and now I get errors, so I haven't pushed it
-> yet.  I put a note that OMAP3_THERMAL is off by default, but this
-> patch would at least get the framing in there.  I know at least two of
-> us that use 1GHZ processors which are not supposed to run at that
-> speed above 90MHz, so the idea was to tolerate the higher current for
-> now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
-> default.
-> 
-yes, makes sense, so with this patch we have the choice to either
-optimize for low speeds and currents (by disabling OMAP3_THERMAL and
-1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
+> From: Peter Enderborg <peter.enderborg@sony.com>
+>
+> In the print out add permissions, it will look like:
+>      <...>-1042  [007] ....   201.965142: selinux_audited:
+>      requested=0x4000000 denied=0x4000000 audited=0x4000000
+>      result=-13
+>      scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
+>      tcontext=system_u:object_r:bin_t:s0
+>      tclass=file permissions={ !entrypoint }
+>
+> This patch is adding the "permissions={ !entrypoint }".
+> The permissions preceded by "!" have been denied and the permissions
+> without have been accepted.
+>
+> Note that permission filtering is done on the audited, denied or
+> requested attributes.
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Reviewed-by: Thiébaud Weksteen <tweek@google.com>
+> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> ---
+>   include/trace/events/avc.h | 11 +++++++++--
+>   security/selinux/avc.c     | 36 ++++++++++++++++++++++++++++++++++++
+>   2 files changed, 45 insertions(+), 2 deletions(-)
+>
+> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+> index 7de5cc5169af..d585b68c2a50 100644
+> --- a/security/selinux/avc.c
+> +++ b/security/selinux/avc.c
+> @@ -695,6 +695,7 @@ static void avc_audit_pre_callback(struct audit_buffer *ab, void *a)
+>   	audit_log_format(ab, " } for ");
+>   }
+>   
+> +
+>   /**
+>    * avc_audit_post_callback - SELinux specific information
+>    * will be called by generic audit code
 
-Regards,
-Andreas
+Also, drop the spurious whitespace change above.
+
+
