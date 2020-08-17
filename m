@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87026C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62ACE20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D215520760
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597684807;
-	bh=hPo0V38jnWsNMAydRHO7trBV7uIaBeU/p2KnrRXXULM=;
+	s=default; t=1597684811;
+	bh=QdKk8iwX/fHrtIZ3mMKs136zx9HoLanBzPKWskM4QaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKdj4kYJPJz39aVDzA4Wh6HTvv9q3d3MKJYz4GFU3OyOw9eqJIirbwilfEXq14QRg
-	 5uXGSeh6nFzm24VD9UvZG2VZe6ap4jSBqm3zA8Xlzv0DyxNwtcqpIIeKOOckaQ0xcX
-	 T2sEJv1AN8aaCz5INyC5dnQEc00BA0+vCVFLm4fg=
+	b=uWYxwcY+30CPP/ll2Xk25VtLNfx6lgYFCY3WZLW43HHycAqBtPE+x2WIH6JZeAOjU
+	 mRP7AU//IyodcC6g9IQXDu2fLLwU7tGhjWpRuXLjjRDOxmImhWpDevzQGsMM0/oMQx
+	 YlTjbw5ftXBlg58eRVDZQduUOhs642Jfey87tR8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbgHQRUF (ORCPT
+        id S2389604AbgHQRUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731125AbgHQQQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:16:43 -0400
+        id S1730120AbgHQQRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:17:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E0DA20772;
-        Mon, 17 Aug 2020 16:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89F0F22CB1;
+        Mon, 17 Aug 2020 16:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680999;
-        bh=hPo0V38jnWsNMAydRHO7trBV7uIaBeU/p2KnrRXXULM=;
+        s=default; t=1597681066;
+        bh=QdKk8iwX/fHrtIZ3mMKs136zx9HoLanBzPKWskM4QaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Riw4kPNPOvsGcmm2o9+1wsu432u85ZjJu/RcgmLZAgq8wG1igxiCoJ9XGzzC8rv7u
-         XgLQ3iAcNJcQkO0p0RwX+9lXLSTt1vCmhXcjut49hFg3e4VOcQ/im4Ve3zheaRjfiW
-         OaztLVXfmSECOexCEK9PKgjaqF9bB3oXdIrg1urE=
+        b=kPlZf2eS+fFObYyy7rpTNnV86WGkZQiQ/8OUNPzX66bcUHzXI7Wxmrr/j9mBH0MSd
+         5RK2rLkEIoiDxBa04K6ZjPqTXkGGzHjAf3G/0+YKwa88F/+d3Bk8GUg6YAaPvUTAzJ
+         6wqmunVJ9pqIxZWF9ZZa257kc2XsUYG7As38Epi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 143/168] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
-Date:   Mon, 17 Aug 2020 17:17:54 +0200
-Message-Id: <20200817143740.824601407@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 137/168] net: initialize fastreuse on inet_inherit_port
+Date:   Mon, 17 Aug 2020 17:17:48 +0200
+Message-Id: <20200817143740.538666476@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -59,80 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
+[ Upstream commit d76f3351cea2d927fdf70dd7c06898235035e84e ]
 
-Further investigation of the L-R swap problem on the MS2109 reveals that
-the problem isn't that the channels are swapped, but rather that they
-are swapped and also out of phase by one sample. In other words, the
-issue is actually that the very first frame that comes from the hardware
-is a half-frame containing only the right channel, and after that
-everything becomes offset.
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
-So introduce a new quirk field to drop the very first 2 bytes that come
-in after the format is configured and a capture stream starts. This puts
-the channels in phase and in the correct order.
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
+
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
+
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
+
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
+
+Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the
+listen socket.
+
+Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/card.h   |    1 +
- sound/usb/pcm.c    |    6 ++++++
- sound/usb/quirks.c |    3 +++
- sound/usb/stream.c |    1 +
- 4 files changed, 11 insertions(+)
+ net/ipv4/inet_hashtables.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -129,6 +129,7 @@ struct snd_usb_substream {
- 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
- 	unsigned int fmt_type;		/* USB audio format type (1-3) */
- 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-+	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
- 
- 	unsigned int running: 1;	/* running status */
- 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1387,6 +1387,12 @@ static void retire_capture_urb(struct sn
- 			// continue;
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -161,6 +161,7 @@ int __inet_inherit_port(const struct soc
+ 				return -ENOMEM;
+ 			}
  		}
- 		bytes = urb->iso_frame_desc[i].actual_length;
-+		if (subs->stream_offset_adj > 0) {
-+			unsigned int adj = min(subs->stream_offset_adj, bytes);
-+			cp += adj;
-+			bytes -= adj;
-+			subs->stream_offset_adj -= adj;
-+		}
- 		frames = bytes / stride;
- 		if (!subs->txfr_quirk)
- 			bytes = frames * stride;
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1166,6 +1166,9 @@ void snd_usb_set_format_quirk(struct snd
- 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
- 		set_format_emu_quirk(subs, fmt);
- 		break;
-+	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
-+		subs->stream_offset_adj = 2;
-+		break;
++		inet_csk_update_fastreuse(tb, child);
  	}
- }
- 
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -99,6 +99,7 @@ static void snd_usb_init_substream(struc
- 	subs->tx_length_quirk = as->chip->tx_length_quirk;
- 	subs->speed = snd_usb_get_speed(subs->dev);
- 	subs->pkt_offset_adj = 0;
-+	subs->stream_offset_adj = 0;
- 
- 	snd_usb_set_pcm_ops(as->pcm, stream);
- 
+ 	inet_bind_hash(child, tb, port);
+ 	spin_unlock(&head->lock);
 
 
