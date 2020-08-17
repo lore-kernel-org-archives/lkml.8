@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315BC23B89
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C1723B43
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597678077;
-	bh=f/0xQXnoIu068crQhuUc/3oebvyspQdCHqf8GvIepZs=;
+	s=default; t=1597678084;
+	bh=wsIZr4khLOrQVSCHZdAE2wCu6oqsMvIEc+uEO6aHUXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AbEn5QIpssZIBW96FQ/pzP+pAbdApMK1BFGWAwa1eIIbGiuNBgeZSwO00BfmTc6J+
-	 AhpjGR+/rA0CJb/Yy0Sz/9mAxSpgH8RvjkJ5sU1I8Z2mmkD4fbwjO9t25fjXjKhRek
-	 +wYClwRR/6bJGhbznDIxGFk6Bsp23C357khNLO7g=
+	b=XmMr/mbHUYh4wQtPMifcLs2BVijkifi5TARIlmOKzGyBkIHF889zLqFXlYsGijdZE
+	 pl4QweYODwbCeFT444a7puFAHZR02jMVSSlYOLRmn/bdoLcqhvUxir7WEXgSW1uZxK
+	 GLyub6IzdhewpWAWB4WyNdNS9YgRV7+c4YZ/Votc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgHQP1v (ORCPT
+        id S1729674AbgHQP2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbgHQP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:26:12 -0400
+        id S1729799AbgHQP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9EB205CB;
-        Mon, 17 Aug 2020 15:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9134823109;
+        Mon, 17 Aug 2020 15:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677971;
-        bh=f/0xQXnoIu068crQhuUc/3oebvyspQdCHqf8GvIepZs=;
+        s=default; t=1597677977;
+        bh=wsIZr4khLOrQVSCHZdAE2wCu6oqsMvIEc+uEO6aHUXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbD5c2QRPbCZ/jKKxeaOXDU1dO+EEOnqeGpmOWIEgX6xRs2RmQjZ38J9Tcu09DqFt
-         kcZWLoGguHXkEHehbX/8vGtq+MKl4jhHxMLIXtOK+UY1jLRb0KimQB1eAZ8qcs6VgO
-         gcA4D5Q7zzXX7YfVpw2ScP86INYI8d6Um1p5x+/0=
+        b=ARW0xVdMQdPfh3lMgTxju/O9BNLiO0g1kxINesDwHzU77WTrOygWIgrEmYyXbie0x
+         XZIGGUAnUFtqqdfQVqhb+Cd2IEcFrK9xKtZzRmH7nH3g16jnOuK/AIDfwtmrw4BNQg
+         tE+gmkI04/A9hkHo2Rk4Uwx6s/G4zqJ8glHB3k/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 174/464] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
-Date:   Mon, 17 Aug 2020 17:12:07 +0200
-Message-Id: <20200817143842.151654932@linuxfoundation.org>
+Subject: [PATCH 5.8 176/464] dpaa2-eth: fix condition for number of buffer acquire retries
+Date:   Mon, 17 Aug 2020 17:12:09 +0200
+Message-Id: <20200817143842.249705710@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,46 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
+[ Upstream commit 0e5ad75b02d9341eb9ca22627247f9a02cc20d6f ]
 
-preview_init_entities() does not call v4l2_ctrl_handler_free() when
-it fails.
-Add the missed function to fix it.
+We should keep retrying to acquire buffers through the software portals
+as long as the function returns -EBUSY and the number of retries is
+__below__ DPAA2_ETH_SWP_BUSY_RETRIES.
 
-Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: ef17bd7cc0c8 ("dpaa2-eth: Avoid unbounded while loops")
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/isppreview.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
-index 4dbdf3180d108..607b7685c982f 100644
---- a/drivers/media/platform/omap3isp/isppreview.c
-+++ b/drivers/media/platform/omap3isp/isppreview.c
-@@ -2287,7 +2287,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	me->ops = &preview_media_ops;
- 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
- 	if (ret < 0)
--		return ret;
-+		goto error_handler_free;
- 
- 	preview_init_formats(sd, NULL);
- 
-@@ -2320,6 +2320,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	omap3isp_video_cleanup(&prev->video_in);
- error_video_in:
- 	media_entity_cleanup(&prev->subdev.entity);
-+error_handler_free:
-+	v4l2_ctrl_handler_free(&prev->ctrls);
- 	return ret;
- }
- 
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 0998ceb1a26ea..89c43401f2889 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -1109,7 +1109,7 @@ static void drain_bufs(struct dpaa2_eth_priv *priv, int count)
+ 					       buf_array, count);
+ 		if (ret < 0) {
+ 			if (ret == -EBUSY &&
+-			    retries++ >= DPAA2_ETH_SWP_BUSY_RETRIES)
++			    retries++ < DPAA2_ETH_SWP_BUSY_RETRIES)
+ 				continue;
+ 			netdev_err(priv->net_dev, "dpaa2_io_service_acquire() failed\n");
+ 			return;
 -- 
 2.25.1
 
