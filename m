@@ -2,96 +2,163 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFCFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EAB20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D45220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 18:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689340;
-	bh=efnazQJyYFXbFFmxwCywbfRIFdsYbexbqOQazavp5Ho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KVbsP8nya6xCl+xV5FOi8GjSLR5RJBjJgwQJtrkyvSF0WTpQT5Rhh0dfxFFFsQ+2t
-	 SI7vwP2J0vZ5UOhHYRt8HR9HML+YzaIN6PCCA3Vw3wwkQBtbiqTFhoC3KNl3GzDEsB
-	 VeDz+BaksMSjIbPAAKhVowCB5OfC0cHdHF1My00U=
+	s=default; t=1597689352;
+	bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xzXyZgEgwrGlcbMxt8YWvaYtS4/3pp6gPWiA5JZNV/v/8fC4XQZF9gna0aKVIek0D
+	 EN3imaQeP+LitHwh7fTxypfq1lG29Boo2DwQLg3qfNjyMnou5dkVSJZOCMwOFvJVMP
+	 PJm6P6S07IUumzm782JJdZJiAY7cqHOlvhEg2ROU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391308AbgHQSfi (ORCPT
+        id S2391254AbgHQSfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:35:38 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:46810 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390374AbgHQSfB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:35:01 -0400
-Received: by mail-ej1-f65.google.com with SMTP id p24so18935064ejf.13;
-        Mon, 17 Aug 2020 11:35:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=25dZbMPgS/dtX0tq95S1y5hallw1pJ+BnZq8+l7yBBk=;
-        b=WYZcZMl9jD5emUqCpQZt3EZusuXtp17UCd0skHCOSOtDPRe9X6yef4DN0OCh7DH/S6
-         AlUnTKv+BYUSqUeuwL2puXIjPoVvQ7F5AnKxJidlgB8ijtzr2N6Y7WrSKq/SIl0qpYwQ
-         eu9+TNX7MK7W/LejGZgg267PLX0AwTJGRwQnUGxrsL4q+qwTgVdRqOzJlgdHOvVv8/QG
-         KuYvgVOirejZ2twNSLQmIEdaBO5IRikifWfUbmVUSpbVi9bkSIgLxszFhvvA2XJnHnoA
-         CDC+0yFmZWUJ3/lIJIT8+9sQVanU6nQmutgnNBtEUpQXB2H6ScRtVDtW/eb5s4/hY7xu
-         rgBQ==
-X-Gm-Message-State: AOAM533Lx+XgtTECEfgy0BXWWHIXujcDVd3VqdJoomQaWkdF1b33wY0x
-        JBgSWVWDiaZ83bbPzDBai/M=
-X-Google-Smtp-Source: ABdhPJyLwBm/IdtA1+1RvI4nnmFl21DUBXRImbwx4HPFsqBpPheiL+AX326IMCdzdk7su3JgiDNiww==
-X-Received: by 2002:a17:906:4dc8:: with SMTP id f8mr16772438ejw.257.1597689299521;
-        Mon, 17 Aug 2020 11:34:59 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id a18sm14817191ejt.69.2020.08.17.11.34.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Aug 2020 11:34:58 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 20:34:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 24/29] memory: tegra: tegra210-emc: Fix indentation
-Message-ID: <20200817183456.GF3464@kozik-lap>
-References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-25-krzk@kernel.org>
+        Mon, 17 Aug 2020 14:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730979AbgHQP7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:59:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B007C206FA;
+        Mon, 17 Aug 2020 15:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597679982;
+        bh=cNyIhF9xGuChpYRKI4UxdpDeXRQU1HRs8qXk0u2UPFA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NzMvq6lKFrl4O+qqeLMu0kyBy5UBt4GMSpzjxCthfY4hzHujyH7QNEOxDvLZRjR+U
+         GvayliPL0/D1K2Nl5zD5RRRoyTHLan6Wz6Smf8vwygGsZCrzWHvPtUgWdOQXLA04iV
+         h26yM5a8TN9Hm1+eriHrfNXLKjAoyygVeD8DvJow=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Haberland <sth@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 385/393] s390/dasd: fix inability to use DASD with DIAG driver
+Date:   Mon, 17 Aug 2020 17:17:15 +0200
+Message-Id: <20200817143838.274411923@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
+References: <20200817143819.579311991@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724074038.5597-25-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:40:33AM +0200, Krzysztof Kozlowski wrote:
-> Use tabs instead of spaces for indentation.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/tegra/tegra210-emc-cc-r21021.c | 2 +-
+From: Stefan Haberland <sth@linux.ibm.com>
 
-Applied.
+commit 9f4aa52387c68049403b59939df5c0dd8e3872cc upstream.
 
-Best regards,
-Krzysztof
+During initialization of the DASD DIAG driver a request is issued
+that has a bio structure that resides on the stack. With virtually
+mapped kernel stacks this bio address might be in virtual storage
+which is unsuitable for usage with the diag250 call.
+In this case the device can not be set online using the DIAG
+discipline and fails with -EOPNOTSUP.
+In the system journal the following error message is presented:
+
+dasd: X.X.XXXX Setting the DASD online with discipline DIAG failed
+with rc=-95
+
+Fix by allocating the bio structure instead of having it on the stack.
+
+Fixes: ce3dc447493f ("s390: add support for virtually mapped kernel stacks")
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: stable@vger.kernel.org #4.20
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/s390/block/dasd_diag.c |   25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+--- a/drivers/s390/block/dasd_diag.c
++++ b/drivers/s390/block/dasd_diag.c
+@@ -319,7 +319,7 @@ dasd_diag_check_device(struct dasd_devic
+ 	struct dasd_diag_characteristics *rdc_data;
+ 	struct vtoc_cms_label *label;
+ 	struct dasd_block *block;
+-	struct dasd_diag_bio bio;
++	struct dasd_diag_bio *bio;
+ 	unsigned int sb, bsize;
+ 	blocknum_t end_block;
+ 	int rc;
+@@ -395,29 +395,36 @@ dasd_diag_check_device(struct dasd_devic
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
++	bio = kzalloc(sizeof(*bio), GFP_KERNEL);
++	if (bio == NULL)  {
++		DBF_DEV_EVENT(DBF_WARNING, device, "%s",
++			      "No memory to allocate initialization bio");
++		rc = -ENOMEM;
++		goto out_label;
++	}
+ 	rc = 0;
+ 	end_block = 0;
+ 	/* try all sizes - needed for ECKD devices */
+ 	for (bsize = 512; bsize <= PAGE_SIZE; bsize <<= 1) {
+ 		mdsk_init_io(device, bsize, 0, &end_block);
+-		memset(&bio, 0, sizeof (struct dasd_diag_bio));
+-		bio.type = MDSK_READ_REQ;
+-		bio.block_number = private->pt_block + 1;
+-		bio.buffer = label;
++		memset(bio, 0, sizeof(*bio));
++		bio->type = MDSK_READ_REQ;
++		bio->block_number = private->pt_block + 1;
++		bio->buffer = label;
+ 		memset(&private->iob, 0, sizeof (struct dasd_diag_rw_io));
+ 		private->iob.dev_nr = rdc_data->dev_nr;
+ 		private->iob.key = 0;
+ 		private->iob.flags = 0;	/* do synchronous io */
+ 		private->iob.block_count = 1;
+ 		private->iob.interrupt_params = 0;
+-		private->iob.bio_list = &bio;
++		private->iob.bio_list = bio;
+ 		private->iob.flaga = DASD_DIAG_FLAGA_DEFAULT;
+ 		rc = dia250(&private->iob, RW_BIO);
+ 		if (rc == 3) {
+ 			pr_warn("%s: A 64-bit DIAG call failed\n",
+ 				dev_name(&device->cdev->dev));
+ 			rc = -EOPNOTSUPP;
+-			goto out_label;
++			goto out_bio;
+ 		}
+ 		mdsk_term_io(device);
+ 		if (rc == 0)
+@@ -427,7 +434,7 @@ dasd_diag_check_device(struct dasd_devic
+ 		pr_warn("%s: Accessing the DASD failed because of an incorrect format (rc=%d)\n",
+ 			dev_name(&device->cdev->dev), rc);
+ 		rc = -EIO;
+-		goto out_label;
++		goto out_bio;
+ 	}
+ 	/* check for label block */
+ 	if (memcmp(label->label_id, DASD_DIAG_CMS1,
+@@ -457,6 +464,8 @@ dasd_diag_check_device(struct dasd_devic
+ 			(rc == 4) ? ", read-only device" : "");
+ 		rc = 0;
+ 	}
++out_bio:
++	kfree(bio);
+ out_label:
+ 	free_page((long) label);
+ out:
+
 
