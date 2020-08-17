@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10366C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156BD221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D2D20855
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 15:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597679210;
-	bh=VxGE96xVX8mqRT56wQqLgk6r5LrYyc4XB8oho4I7MnA=;
+	s=default; t=1597679251;
+	bh=tUg0ufDbgldg0Nz5MOqtxis8bznVshMzTik0MI4PymY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lgS6CTXL8mGdMwwD8pYrnlHwDDKkPrgZ5e4yI7Mxp9PAm1JzpsnlCXhGt5W9ycg6C
-	 Fftq3L3HOfsNIEq0X4N9CvwYkpJZN+uPcOrfRza2bmib8k2r0tXJFbXdq/EDLg4aX4
-	 WX2Szvg04iaXR7gzAK4BHwdcqYHuG7stTnS4cnjU=
+	b=PiPhFcoeFO4TrrSawRfDgxxyxP4v2SyeQIHPmok+Q68jGzKvmgOgJ0e+4qjEYOH3b
+	 n2hInTJXUajVN0Js2TUxLFlxpoCiRgJ5agJW/3115ny+MzrN0J30CEwU9sbZNiPllg
+	 OtEt2TFfv9Bl3dLIYYbmzcxwRGszqFRRIq2A/1FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbgHQPqi (ORCPT
+        id S2387755AbgHQPqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 11:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387415AbgHQPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:38:33 -0400
+        id S1730274AbgHQPik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:38:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B74A22CB3;
-        Mon, 17 Aug 2020 15:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C5622C9F;
+        Mon, 17 Aug 2020 15:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597678713;
-        bh=VxGE96xVX8mqRT56wQqLgk6r5LrYyc4XB8oho4I7MnA=;
+        s=default; t=1597678719;
+        bh=tUg0ufDbgldg0Nz5MOqtxis8bznVshMzTik0MI4PymY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UT3RRxfSTjbPlzoomvZeFltdRi4MYYchCzRhVCLD+ZgXO0x7vOghSnSufpd2XcH17
-         yZ3uFmMHK74I0MJmLzdKCu3U32HSH+zYx6yzpEoN2l9Pv4t8awfiC9ZWhbYuAV30l4
-         IVKOxcR13QcayHmA0rsycZCP17WSznwcDF1qe9Bw=
+        b=MQUTkzeuXF2qanupwFryL1p9+CE2fNNDQTPWdjEd/U6aunqBaAUPDdKmE/vhkHznB
+         lbyqu79UPvyvfO1BT1xy6uYMlJelTzRpfBQpG+C+wZyNIoTi2CNbyjJ97vFprYXzrr
+         1BxlL1ilujEbpQzjeaEtGz3cP1ja6PL0SVC68huo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.8 429/464] NFS: Dont return layout segments that are in use
-Date:   Mon, 17 Aug 2020 17:16:22 +0200
-Message-Id: <20200817143854.329798837@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 5.8 431/464] cpufreq: dt: fix oops on armada37xx
+Date:   Mon, 17 Aug 2020 17:16:24 +0200
+Message-Id: <20200817143854.426668767@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -59,71 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
 
-commit d474f96104bd4377573526ebae2ee212205a6839 upstream.
+commit 10470dec3decaf5ed3c596f85debd7c42777ae12 upstream.
 
-If the NFS_LAYOUT_RETURN_REQUESTED flag is set, we want to return the
-layout as soon as possible, meaning that the affected layout segments
-should be marked as invalid, and should no longer be in use for I/O.
+Commit 0c868627e617e43a295d8 (cpufreq: dt: Allow platform specific
+intermediate callbacks) added two function pointers to the
+struct cpufreq_dt_platform_data. However, armada37xx_cpufreq_driver_init()
+has this struct (pdata) located on the stack and uses only "suspend"
+and "resume" fields. So these newly added "get_intermediate" and
+"target_intermediate" pointers are uninitialized and contain arbitrary
+non-null values, causing all kinds of trouble.
 
-Fixes: f0b429819b5f ("pNFS: Ignore non-recalled layouts in pnfs_layout_need_return()")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+For instance, here is an oops on espressobin after an attempt to change
+the cpefreq governor:
+
+[   29.174554] Unable to handle kernel execute from non-executable memory at virtual address ffff00003f87bdc0
+...
+[   29.269373] pc : 0xffff00003f87bdc0
+[   29.272957] lr : __cpufreq_driver_target+0x138/0x580
+...
+
+Fixed by zeroing out pdata before use.
+
+Cc: <stable@vger.kernel.org> # v5.7+
+Signed-off-by: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |   34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+ drivers/cpufreq/armada-37xx-cpufreq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1226,31 +1226,27 @@ out:
- 	return status;
- }
+--- a/drivers/cpufreq/armada-37xx-cpufreq.c
++++ b/drivers/cpufreq/armada-37xx-cpufreq.c
+@@ -456,6 +456,7 @@ static int __init armada37xx_cpufreq_dri
+ 	/* Now that everything is setup, enable the DVFS at hardware level */
+ 	armada37xx_cpufreq_enable_dvfs(nb_pm_base);
  
-+static bool
-+pnfs_layout_segments_returnable(struct pnfs_layout_hdr *lo,
-+				enum pnfs_iomode iomode,
-+				u32 seq)
-+{
-+	struct pnfs_layout_range recall_range = {
-+		.length = NFS4_MAX_UINT64,
-+		.iomode = iomode,
-+	};
-+	return pnfs_mark_matching_lsegs_return(lo, &lo->plh_return_segs,
-+					       &recall_range, seq) != -EBUSY;
-+}
-+
- /* Return true if layoutreturn is needed */
- static bool
- pnfs_layout_need_return(struct pnfs_layout_hdr *lo)
- {
--	struct pnfs_layout_segment *s;
--	enum pnfs_iomode iomode;
--	u32 seq;
--
- 	if (!test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
- 		return false;
--
--	seq = lo->plh_return_seq;
--	iomode = lo->plh_return_iomode;
--
--	/* Defer layoutreturn until all recalled lsegs are done */
--	list_for_each_entry(s, &lo->plh_segs, pls_list) {
--		if (seq && pnfs_seqid_is_newer(s->pls_seq, seq))
--			continue;
--		if (iomode != IOMODE_ANY && s->pls_range.iomode != iomode)
--			continue;
--		if (test_bit(NFS_LSEG_LAYOUTRETURN, &s->pls_flags))
--			return false;
--	}
--
--	return true;
-+	return pnfs_layout_segments_returnable(lo, lo->plh_return_iomode,
-+					       lo->plh_return_seq);
- }
++	memset(&pdata, 0, sizeof(pdata));
+ 	pdata.suspend = armada37xx_cpufreq_suspend;
+ 	pdata.resume = armada37xx_cpufreq_resume;
  
- static void pnfs_layoutreturn_before_put_layout_hdr(struct pnfs_layout_hdr *lo)
 
 
