@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49237C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73172063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB432063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597685875;
-	bh=0twkCdG4JqCbSm6fsCcGK0oLqz8tjy0hd07lO6A9CZw=;
+	s=default; t=1597685889;
+	bh=298ivzhcBLRyRA38lYcnrq2YKbioF13wTBksvqrIRYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LPVS/gSAB+25ghPy918AYu8zfWhagkFdCZp9wCxROL2hl7sXyLzjiS5ZKBNpWOk0A
-	 TJdXiOrlPk2VkHv1e6AuI8239lj/AbU1Pd+Nsp1AwD6Y466hjJoobuEoNG8MhKBaJi
-	 /CNMn8O1dM5NPfC0ROB8rETjbG5jRZg9kz5dhuCY=
+	b=fAcjO/DdgO/w3Zb3bHNRHZtv6yiGcSuyomQRhSxjAhG9jg7ObwkYMpfN8Kua9QnN7
+	 whqZhOQs8kKP35vNE+DswQoomDWkeAEMJkyuibc4bZ1o+BeJEWlScRJo0uPfi7N7tf
+	 3x1+gdBo05llPc9qGoMwGmvduspK1CTu9gDfR/Sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387924AbgHQRhs (ORCPT
+        id S2388089AbgHQRiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731130AbgHQQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Aug 2020 12:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9840220658;
-        Mon, 17 Aug 2020 16:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1329A207D3;
+        Mon, 17 Aug 2020 16:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597681031;
-        bh=0twkCdG4JqCbSm6fsCcGK0oLqz8tjy0hd07lO6A9CZw=;
+        s=default; t=1597681008;
+        bh=298ivzhcBLRyRA38lYcnrq2YKbioF13wTBksvqrIRYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lTtgPmYoUJiBAu2xYVHwjOZgGaoFtHG2X6cP5kWswNymSBxBRJ1X02aUbcChgQHpL
-         WRlAivTA1doB9N+X/caV10rpdKeyDGKhRHvsxVqpxb7z5bHq4y4QLZyI5AuchF286V
-         8R8iXC8OdptY34pH3oupfxcMC6ncxWMRgs1K8CAg=
+        b=eXRLfHoGLHxDZuZv1r4z7akOThCudtAzOTOKVpjMEn4H4V947ASh7GsUGur3XJy5/
+         IsgHOIXUZhn4l20+iGgH66w33fg+rlR15asAoWQUJHoCI4Kb8LjxcYGmqNeHkGt01C
+         K8qHwxGLoj1VAH0qxINpD87s8Bm9DVXeGx9deLfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 4.19 155/168] drm/ttm/nouveau: dont call tt destroy callback on alloc failure.
-Date:   Mon, 17 Aug 2020 17:18:06 +0200
-Message-Id: <20200817143741.411673981@linuxfoundation.org>
+        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 147/168] crypto: ccp - Fix use of merged scatterlists
+Date:   Mon, 17 Aug 2020 17:17:58 +0200
+Message-Id: <20200817143741.005610101@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,73 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: John Allen <john.allen@amd.com>
 
-commit 5de5b6ecf97a021f29403aa272cb4e03318ef586 upstream.
+commit 8a302808c60d441d9884cb00ea7f2b534f2e3ca5 upstream.
 
-This is confusing, and from my reading of all the drivers only
-nouveau got this right.
+Running the crypto manager self tests with
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
+when using the ccp-crypto driver:
 
-Just make the API act under driver control of it's own allocation
-failing, and don't call destroy, if the page table fails to
-create there is nothing to cleanup here.
+alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
 
-(I'm willing to believe I've missed something here, so please
-review deeply).
+alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200728041736.20689-1-airlied@gmail.com
+alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
+
+These errors are the result of improper processing of scatterlists mapped
+for DMA.
+
+Given a scatterlist in which entries are merged as part of mapping the
+scatterlist for DMA, the DMA length of a merged entry will reflect the
+combined length of the entries that were merged. The subsequent
+scatterlist entry will contain DMA information for the scatterlist entry
+after the last merged entry, but the non-DMA information will be that of
+the first merged entry.
+
+The ccp driver does not take this scatterlist merging into account. To
+address this, add a second scatterlist pointer to track the current
+position in the DMA mapped representation of the scatterlist. Both the DMA
+representation and the original representation of the scatterlist must be
+tracked as while most of the driver can use just the DMA representation,
+scatterlist_map_and_copy() must use the original representation and
+expects the scatterlist pointer to be accurate to the original
+representation.
+
+In order to properly walk the original scatterlist, the scatterlist must
+be walked until the combined lengths of the entries seen is equal to the
+DMA length of the current entry being processed in the DMA mapped
+representation.
+
+Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
+Signed-off-by: John Allen <john.allen@amd.com>
+Cc: stable@vger.kernel.org
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/nouveau_sgdma.c |    9 +++------
- drivers/gpu/drm/ttm/ttm_tt.c            |    3 ---
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ drivers/crypto/ccp/ccp-dev.h |    1 +
+ drivers/crypto/ccp/ccp-ops.c |   37 ++++++++++++++++++++++++++-----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sgdma.c
-@@ -96,12 +96,9 @@ nouveau_sgdma_create_ttm(struct ttm_buff
- 	else
- 		nvbe->ttm.ttm.func = &nv50_sgdma_backend;
+--- a/drivers/crypto/ccp/ccp-dev.h
++++ b/drivers/crypto/ccp/ccp-dev.h
+@@ -471,6 +471,7 @@ struct ccp_sg_workarea {
+ 	unsigned int sg_used;
  
--	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags))
--		/*
--		 * A failing ttm_dma_tt_init() will call ttm_tt_destroy()
--		 * and thus our nouveau_sgdma_destroy() hook, so we don't need
--		 * to free nvbe here.
--		 */
-+	if (ttm_dma_tt_init(&nvbe->ttm, bo, page_flags)) {
-+		kfree(nvbe);
- 		return NULL;
-+	}
- 	return &nvbe->ttm.ttm;
+ 	struct scatterlist *dma_sg;
++	struct scatterlist *dma_sg_head;
+ 	struct device *dma_dev;
+ 	unsigned int dma_count;
+ 	enum dma_data_direction dma_dir;
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -67,7 +67,7 @@ static u32 ccp_gen_jobid(struct ccp_devi
+ static void ccp_sg_free(struct ccp_sg_workarea *wa)
+ {
+ 	if (wa->dma_count)
+-		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
++		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
+ 
+ 	wa->dma_count = 0;
  }
---- a/drivers/gpu/drm/ttm/ttm_tt.c
-+++ b/drivers/gpu/drm/ttm/ttm_tt.c
-@@ -241,7 +241,6 @@ int ttm_tt_init(struct ttm_tt *ttm, stru
- 	ttm_tt_init_fields(ttm, bo, page_flags);
+@@ -96,6 +96,7 @@ static int ccp_init_sg_workarea(struct c
+ 		return 0;
  
- 	if (ttm_tt_alloc_page_directory(ttm)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
-@@ -265,7 +264,6 @@ int ttm_dma_tt_init(struct ttm_dma_tt *t
+ 	wa->dma_sg = sg;
++	wa->dma_sg_head = sg;
+ 	wa->dma_dev = dev;
+ 	wa->dma_dir = dma_dir;
+ 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
+@@ -108,14 +109,28 @@ static int ccp_init_sg_workarea(struct c
+ static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
+ {
+ 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
++	unsigned int sg_combined_len = 0;
  
- 	INIT_LIST_HEAD(&ttm_dma->pages_list);
- 	if (ttm_dma_tt_alloc_page_directory(ttm_dma)) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
+ 	if (!wa->sg)
+ 		return;
+ 
+ 	wa->sg_used += nbytes;
+ 	wa->bytes_left -= nbytes;
+-	if (wa->sg_used == wa->sg->length) {
+-		wa->sg = sg_next(wa->sg);
++	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
++		/* Advance to the next DMA scatterlist entry */
++		wa->dma_sg = sg_next(wa->dma_sg);
++
++		/* In the case that the DMA mapped scatterlist has entries
++		 * that have been merged, the non-DMA mapped scatterlist
++		 * must be advanced multiple times for each merged entry.
++		 * This ensures that the current non-DMA mapped entry
++		 * corresponds to the current DMA mapped entry.
++		 */
++		do {
++			sg_combined_len += wa->sg->length;
++			wa->sg = sg_next(wa->sg);
++		} while (wa->sg_used > sg_combined_len);
++
+ 		wa->sg_used = 0;
  	}
-@@ -287,7 +285,6 @@ int ttm_sg_tt_init(struct ttm_dma_tt *tt
- 	else
- 		ret = ttm_dma_tt_alloc_page_directory(ttm_dma);
- 	if (ret) {
--		ttm_tt_destroy(ttm);
- 		pr_err("Failed allocating page table\n");
- 		return -ENOMEM;
- 	}
+ }
+@@ -304,7 +319,7 @@ static unsigned int ccp_queue_buf(struct
+ 	/* Update the structures and generate the count */
+ 	buf_count = 0;
+ 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
+-		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
++		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
+ 			     dm_wa->length - buf_count);
+ 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
+ 
+@@ -336,11 +351,11 @@ static void ccp_prepare_data(struct ccp_
+ 	 * and destination. The resulting len values will always be <= UINT_MAX
+ 	 * because the dma length is an unsigned int.
+ 	 */
+-	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
++	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
+ 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
+ 
+ 	if (dst) {
+-		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
++		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
+ 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
+ 		op_len = min(sg_src_len, sg_dst_len);
+ 	} else {
+@@ -370,7 +385,7 @@ static void ccp_prepare_data(struct ccp_
+ 		/* Enough data in the sg element, but we need to
+ 		 * adjust for any previously copied data
+ 		 */
+-		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
++		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
+ 		op->src.u.dma.offset = src->sg_wa.sg_used;
+ 		op->src.u.dma.length = op_len & ~(block_size - 1);
+ 
+@@ -391,7 +406,7 @@ static void ccp_prepare_data(struct ccp_
+ 			/* Enough room in the sg element, but we need to
+ 			 * adjust for any previously used area
+ 			 */
+-			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
++			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
+ 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
+ 			op->dst.u.dma.length = op->src.u.dma.length;
+ 		}
+@@ -2034,7 +2049,7 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 	dst.sg_wa.sg_used = 0;
+ 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
+ 		if (!dst.sg_wa.sg ||
+-		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
++		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
+ 			ret = -EINVAL;
+ 			goto e_dst;
+ 		}
+@@ -2060,8 +2075,8 @@ ccp_run_passthru_cmd(struct ccp_cmd_queu
+ 			goto e_dst;
+ 		}
+ 
+-		dst.sg_wa.sg_used += src.sg_wa.sg->length;
+-		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
++		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
++		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
+ 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
+ 			dst.sg_wa.sg_used = 0;
+ 		}
 
 
