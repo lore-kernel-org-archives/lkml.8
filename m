@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF22C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B972C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6D2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A0F20758
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 10:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="laNY22kG"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lMDEyYIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgHQK4b (ORCPT
+        id S1727049AbgHQK4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:56:31 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24588 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgHQKzZ (ORCPT
+        Mon, 17 Aug 2020 06:56:35 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:44041 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbgHQK4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 06:55:25 -0400
+        Mon, 17 Aug 2020 06:56:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597661724; x=1629197724;
+  t=1597661764; x=1629197764;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=6NvUzrujb89qsZsHyhVnjbsbayGnmDOoQYD6DeYjvPw=;
-  b=laNY22kGvW4MS++B9GdMIu5tnnBDUepMBgGKyRosrinKx9FcExIbjnlm
-   D5T8a0dzkdD1NEmTQo3w0MMau3uDGqcGiHbh+ALueXEueqZDe4Xhah29g
-   RLC0Z7DrYshl7w8qtQ4sekIMOs3NnA89U9Idl8kAvoHnXfR2wWetRJA7K
-   Q=;
+  bh=KcjXBRoSeaBzlmTOkaWaNRYAUTMpxxwSd6cag9EUwC0=;
+  b=lMDEyYIhy6TQwEVB77pXrPnzZdsAEdqeYJ2jFJRwVbtho5mh4FsYcqL7
+   rPk+a+RSUmH4DkT6racdVm67D2vZL/Il6blHc3nRiUYGCqNusIHSCyOKB
+   jW7uDOAuodR3ruhI0Oves9cTUMt0aiE9Ep83dGJQDZ+xIF6+0kEsze05H
+   g=;
 X-IronPort-AV: E=Sophos;i="5.76,322,1592870400"; 
-   d="scan'208";a="48182204"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 17 Aug 2020 10:55:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id 72382C06EF;
-        Mon, 17 Aug 2020 10:55:12 +0000 (UTC)
+   d="scan'208";a="60303487"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 17 Aug 2020 10:56:01 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id 0A530A243E;
+        Mon, 17 Aug 2020 10:55:57 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:55:11 +0000
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:55:57 +0000
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.192) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 17 Aug 2020 10:54:54 +0000
+ id 15.0.1497.2; Mon, 17 Aug 2020 10:55:40 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v20 08/15] mm/damon: Add a tracepoint
-Date:   Mon, 17 Aug 2020 12:51:30 +0200
-Message-ID: <20200817105137.19296-9-sjpark@amazon.com>
+Subject: [PATCH v20 10/15] damon/debugfs: Support pidfd target id
+Date:   Mon, 17 Aug 2020 12:51:32 +0200
+Message-ID: <20200817105137.19296-11-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200817105137.19296-1-sjpark@amazon.com>
 References: <20200817105137.19296-1-sjpark@amazon.com>
@@ -85,90 +85,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit adds a tracepoint for DAMON.  It traces the monitoring
-results of each region for each aggregation interval.  Using this, DAMON
-can easily integrated with tracepoints supporting tools such as perf.
+DAMON programming interface users are safe from pid recycling problem
+since it uses 'struct pid *' as target id.  However, debugfs interface
+users might still get the problem since they should describe the target
+ids with pid numbers.
+
+This commit makes the debugfs interface to support pidfd target ids.
+Using it, debugfs interface users can also easily be safe from the
+races.  That said, the pid numbers are stil supported for the simple
+command line uses.
+
+The pid numbers target ids usages are same to the old one.  Therefore,
+old users don't need to change anything.  To use pidfd target ids, users
+should add a prefix, 'pidfd ' in front of the numbers.  Because pidfd is
+process private, reading 'target_ids' file again will show pid numbers
+of the target processes.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
- mm/damon.c                   |  4 ++++
- 2 files changed, 47 insertions(+)
- create mode 100644 include/trace/events/damon.h
+ mm/damon.c | 37 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-new file mode 100644
-index 000000000000..2f422f4f1fb9
---- /dev/null
-+++ b/include/trace/events/damon.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM damon
-+
-+#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_DAMON_H
-+
-+#include <linux/damon.h>
-+#include <linux/types.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(damon_aggregated,
-+
-+	TP_PROTO(struct damon_target *t, struct damon_region *r,
-+		unsigned int nr_regions),
-+
-+	TP_ARGS(t, r, nr_regions),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, target_id)
-+		__field(unsigned int, nr_regions)
-+		__field(unsigned long, start)
-+		__field(unsigned long, end)
-+		__field(unsigned int, nr_accesses)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->target_id = t->id;
-+		__entry->nr_regions = nr_regions;
-+		__entry->start = r->ar.start;
-+		__entry->end = r->ar.end;
-+		__entry->nr_accesses = r->nr_accesses;
-+	),
-+
-+	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u",
-+			__entry->target_id, __entry->nr_regions,
-+			__entry->start, __entry->end, __entry->nr_accesses)
-+);
-+
-+#endif /* _TRACE_DAMON_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
 diff --git a/mm/damon.c b/mm/damon.c
-index fed35f7b3879..e52e107c90fd 100644
+index 92159aaf8b07..ddae98cac8ac 100644
 --- a/mm/damon.c
 +++ b/mm/damon.c
-@@ -32,6 +32,9 @@
- #include <linux/sched/task.h>
- #include <linux/slab.h>
+@@ -1529,11 +1529,32 @@ static unsigned long *str_to_target_ids(const char *str, ssize_t len,
+ 	return ids;
+ }
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/damon.h>
++/* Returns pid for the given pidfd if it's valid, or NULL otherwise. */
++static struct pid *damon_get_pidfd_pid(unsigned int pidfd)
++{
++	struct fd f;
++	struct pid *pid;
 +
- /* Minimal region size.  Every damon_region is aligned by this. */
- #define MIN_REGION PAGE_SIZE
++	f = fdget(pidfd);
++	if (!f.file)
++		return NULL;
++
++	pid = pidfd_pid(f.file);
++	if (!IS_ERR(pid))
++		get_pid(pid);
++	else
++		pid = NULL;
++
++	fdput(f);
++	return pid;
++}
++
+ static ssize_t debugfs_target_ids_write(struct file *file,
+ 		const char __user *buf, size_t count, loff_t *ppos)
+ {
+ 	struct damon_ctx *ctx = &damon_user_ctx;
+-	char *kbuf;
++	char *kbuf, *nrs;
++	bool received_pidfds = false;
+ 	unsigned long *targets;
+ 	ssize_t nr_targets;
+ 	ssize_t ret = count;
+@@ -1544,13 +1565,23 @@ static ssize_t debugfs_target_ids_write(struct file *file,
+ 	if (IS_ERR(kbuf))
+ 		return PTR_ERR(kbuf);
  
-@@ -870,6 +873,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 			damon_write_rbuf(c, &r->ar.end, sizeof(r->ar.end));
- 			damon_write_rbuf(c, &r->nr_accesses,
- 					sizeof(r->nr_accesses));
-+			trace_damon_aggregated(t, r, nr);
- 			r->nr_accesses = 0;
- 		}
+-	targets = str_to_target_ids(kbuf, ret, &nr_targets);
++	nrs = kbuf;
++	if (!strncmp(kbuf, "pidfd ", 6)) {
++		received_pidfds = true;
++		nrs = &kbuf[6];
++	}
++
++	targets = str_to_target_ids(nrs, ret, &nr_targets);
+ 	if (!targets) {
+ 		ret = -ENOMEM;
+ 		goto out;
  	}
+ 
+-	if (targetid_is_pid(ctx)) {
++	if (received_pidfds) {
++		for (i = 0; i < nr_targets; i++)
++			targets[i] = (unsigned long)damon_get_pidfd_pid(
++					(unsigned int)targets[i]);
++	} else if (targetid_is_pid(ctx)) {
+ 		for (i = 0; i < nr_targets; i++)
+ 			targets[i] = (unsigned long)find_get_pid(
+ 					(int)targets[i]);
 -- 
 2.17.1
 
