@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2C6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03049207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7682063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 17:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597686579;
-	bh=JmPjiIGxttXu3Rqp7YXhR5qsOFbfyP+St63b9kRYUfQ=;
+	s=default; t=1597686588;
+	bh=FMih3/NXQq2ch2XERRB4MAPKDg5dZDiGVAUyMNS6M6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YsJ81PrA25LSWTG27KDPj8+WxdUfJb5P0CNkDM7thTjpcNhPn8cPLwjbi5sA6wJ7l
-	 ss6FnJpfuKEDCh1Y3g46rNd6YBaE2NtPpaBOmWCj5r0mtACWAAjzwa/6i7SFYLarOb
-	 4PHFCbkf7nLGhBLITwAL+zXC4ZuuPujv0vmoagA4=
+	b=e76x5DpI0jTRxH/4c07HeRw6Bn77WKPds496AnEJOTF0qSk9k2+nMvaY9OMiObCw5
+	 zSJNhVloBZbaJ3dcWCREU1OeU+AYefBGPjcifujYqEfd27FQMLw71rHRJWZlBbyqwZ
+	 YEVTvgAHEDb6H0XA9/iTo7QdBGD9YChErp4ad81w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389917AbgHQRtg (ORCPT
+        id S2390153AbgHQRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:49:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45660 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 13:49:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388726AbgHQQMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 12:12:52 -0400
+        id S2388699AbgHQQMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:12:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39CB6207DE;
-        Mon, 17 Aug 2020 16:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3F522D6F;
+        Mon, 17 Aug 2020 16:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597680771;
-        bh=JmPjiIGxttXu3Rqp7YXhR5qsOFbfyP+St63b9kRYUfQ=;
+        s=default; t=1597680747;
+        bh=FMih3/NXQq2ch2XERRB4MAPKDg5dZDiGVAUyMNS6M6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5RjeRtrylxLSeTR9kJjKBBhU1h2fg8afeLKUXzKojlLP1cHI+HQHtNjlOdJedyPj
-         2pgnBGxb+vD1s1+D1BPlIT3+usu+5arX2AwHNyl8Cd2CnVy1uQUAX7ZN/+l67WKlP1
-         idLFvgayQ42aNtmhYsgAfH1d7G12JEBCfmPBxeXQ=
+        b=t772cQbQD749Lw+QanV+YVTingH54CxflfwVnfFWSHEQndtnx4KSmKUCDSHqBATAm
+         J4aaM4EcGs5vAbmbcq712wPXg8orqyGNUohgEhLLZu+1xHJojaBY2CRi1plamMkWfc
+         J2ST8z8yZZMB0GaIjosc8SXm1gyESfHwKFdKlGqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, jbaron@akamai.com,
-        Jim Cromie <jim.cromie@gmail.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/168] dyndbg: fix a BUG_ON in ddebug_describe_flags
-Date:   Mon, 17 Aug 2020 17:16:22 +0200
-Message-Id: <20200817143736.291298404@linuxfoundation.org>
+Subject: [PATCH 4.19 033/168] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
+Date:   Mon, 17 Aug 2020 17:16:04 +0200
+Message-Id: <20200817143735.410807719@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
 References: <20200817143733.692105228@linuxfoundation.org>
@@ -60,99 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Cromie <jim.cromie@gmail.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
+[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
 
-ddebug_describe_flags() currently fills a caller provided string buffer,
-after testing its size (also passed) in a BUG_ON.  Fix this by
-replacing them with a known-big-enough string buffer wrapped in a
-struct, and passing that instead.
+neofb_probe() calls neo_scan_monitor() that can successfully allocate a
+memory for info->monspecs.modedb and proceed to case 0x03. There it does
+not free the memory and returns -1. neofb_probe() goes to label
+err_scan_monitor, thus, it does not free this memory through calling
+fb_destroy_modedb() as well. We can not go to label err_init_hw since
+neo_scan_monitor() can fail during memory allocation. So, the patch frees
+the memory directly for case 0x03.
 
-Also simplify ddebug_describe_flags() flags parameter from a struct to
-a member in that struct, and hoist the member deref up to the caller.
-This makes the function reusable (soon) where flags are unpacked.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Acked-by: <jbaron@akamai.com>
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-Link: https://lore.kernel.org/r/20200719231058.1586423-8-jim.cromie@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_debug.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/video/fbdev/neofb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index dbf2b457e47e6..9305ff43fc155 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
- 	{ _DPRINTK_FLAGS_NONE, '_' },
- };
- 
-+struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
-+
- /* format a string into buf[] which describes the _ddebug's flags */
--static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
--				    size_t maxlen)
-+static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
- {
--	char *p = buf;
-+	char *p = fb->buf;
- 	int i;
- 
--	BUG_ON(maxlen < 6);
- 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
--		if (dp->flags & opt_array[i].flag)
-+		if (flags & opt_array[i].flag)
- 			*p++ = opt_array[i].opt_char;
--	if (p == buf)
-+	if (p == fb->buf)
- 		*p++ = '_';
- 	*p = '\0';
- 
--	return buf;
-+	return fb->buf;
- }
- 
- #define vpr_info(fmt, ...)					\
-@@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *query,
- 	struct ddebug_table *dt;
- 	unsigned int newflags;
- 	unsigned int nfound = 0;
--	char flagbuf[10];
-+	struct flagsbuf fbuf;
- 
- 	/* search for matching ddebugs */
- 	mutex_lock(&ddebug_lock);
-@@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *query,
- 			vpr_info("changed %s:%d [%s]%s =%s\n",
- 				 trim_prefix(dp->filename), dp->lineno,
- 				 dt->mod_name, dp->function,
--				 ddebug_describe_flags(dp, flagbuf,
--						       sizeof(flagbuf)));
-+				 ddebug_describe_flags(dp->flags, &fbuf));
- 		}
- 	}
- 	mutex_unlock(&ddebug_lock);
-@@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- {
- 	struct ddebug_iter *iter = m->private;
- 	struct _ddebug *dp = p;
--	char flagsbuf[10];
-+	struct flagsbuf flags;
- 
- 	vpr_info("called m=%p p=%p\n", m, p);
- 
-@@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	seq_printf(m, "%s:%u [%s]%s =%s \"",
- 		   trim_prefix(dp->filename), dp->lineno,
- 		   iter->table->mod_name, dp->function,
--		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
-+		   ddebug_describe_flags(dp->flags, &flags));
- 	seq_escape(m, dp->format, "\t\r\n\"");
- 	seq_puts(m, "\"\n");
- 
+diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
+index 5d3a444083f74..2018e1ca33eb6 100644
+--- a/drivers/video/fbdev/neofb.c
++++ b/drivers/video/fbdev/neofb.c
+@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
+ #else
+ 		printk(KERN_ERR
+ 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
++		kfree(info->monspecs.modedb);
+ 		return -1;
+ #endif
+ 	default:
 -- 
 2.25.1
 
