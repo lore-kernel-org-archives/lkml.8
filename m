@@ -2,147 +2,137 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC24C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA446C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9923520658
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB6220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9iPFtT3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o3bJlhjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgHQT4S (ORCPT
+        id S1730012AbgHQT56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgHQT4P (ORCPT
+        Mon, 17 Aug 2020 15:57:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729118AbgHQT55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 15:56:15 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DE3C061389;
-        Mon, 17 Aug 2020 12:56:15 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t13so15569609ile.9;
-        Mon, 17 Aug 2020 12:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nR+WkSUvbjxRjE6e2Fq7UBkBLxbfa9F+C6jcTtMzcUQ=;
-        b=Y9iPFtT3joyWZ/8aR73+KEvr4w5jepU+7JLHLPeFYT1u7Rz7VeHVsSdpLrRotq7zGA
-         xSwqqkJqu4I78a4uxGybJclpVxmFwf7K/q6Ttllq6ChOHXVUWvKdDTTd4+FNq90M3pzq
-         /xdzyOwshDVNfJSHOyV4S1IKhWywCXQXpGH0VHMjEKA8hcU2qDwDSkjuclT/O3XJckFQ
-         STvqYk/sNTt97hG82crvvhGj59+OwmkQQ5owknrHotZ6CYPSnCFvq++zn5Z2/WD5vzwr
-         cVrrbI83t7LQeDX1q0e88vTJcMmE2mMMlsxj9zbpEcMnpepyZPPozCCO146QaltgQbH8
-         EV/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nR+WkSUvbjxRjE6e2Fq7UBkBLxbfa9F+C6jcTtMzcUQ=;
-        b=gxjwRcHBqwNPyyWyAYop8lCIpbufYGAIZJjGm1nxMPnzsKJs85QW/7NR9w0MeFil8L
-         iNZf7JKZ7snx286p45meocB0psh/0k6RTqcy1+JbOFOPB3tZDX1o5iPBLY7AKThZnEzq
-         U5DTb65jFKPLy+aqkoRobM88yfOmd5qKub+V19meVTM5ruZxzlI2Ds4XU3D3ICKVeGws
-         V2gqXpSe7ZyoclQkoPxemIXTyusbG0HNSD19HeLWwbxznqjbioMqSDKq9pjZFQOUCjVT
-         +22lQKNakoaustFZvaYXOgSQSIa54I0CdFiZ2qdCAgpU4kIx7pD9vSVc339G6apNz0eA
-         j7dw==
-X-Gm-Message-State: AOAM532F44QMNfsshMCpvr1YpsuJvurAh2VcOqIcEj4uXdWWMY5WV0R0
-        sWarQ3fNJ0PfKZHBnMjZTycL04wTHDFcvl4XkY8=
-X-Google-Smtp-Source: ABdhPJxVyDjSo3EBTH/ouaNLR17TNwro2twQeA0S6xYCisC3BE+1X81TVzPs+v1S6btGnMXHwU79t/MmzmcXpljTCKA=
-X-Received: by 2002:a92:40cb:: with SMTP id d72mr14785856ill.116.1597694174791;
- Mon, 17 Aug 2020 12:56:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817143833.737102804@linuxfoundation.org> <20200817143844.062314049@linuxfoundation.org>
-In-Reply-To: <20200817143844.062314049@linuxfoundation.org>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Mon, 17 Aug 2020 21:56:02 +0200
-Message-ID: <CAHpGcMJPQjfabb0_9n=rVBZXQqdnhvcaA3rgbNBemb4OqSYYgA@mail.gmail.com>
-Subject: Re: [PATCH 5.8 214/464] iomap: Make sure iomap_end is called after iomap_begin
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
+        Mon, 17 Aug 2020 15:57:57 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07HJVarS069185;
+        Mon, 17 Aug 2020 15:57:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : reply-to : to : cc : date : in-reply-to : references : content-type
+ : mime-version : content-transfer-encoding; s=pp1;
+ bh=QXJRfHN9mmsNDk6QsxgcWobeI8TPkD80t9GisADyH1o=;
+ b=o3bJlhjDSSSEg4dGq9I4xGGrKMsrAoSBn41x6Llja9uWHRqZro1eS3ir0chvo9yl73GM
+ QICyBow0LVqNyrgllx9sZHk4OUUVncBWVBWr6P9tHLQgTOYlkdSi265KWBJLHsEbj3mG
+ 7iAEoK6D5aeallb/jHWED5ghWzWHAFlrVH6Lf2QFS5zDEKKOVZadYgBvoZOEzYGjbbqr
+ OALsAKxmd3To6cp1GT3u1ktlaefTZ1QmRo9TevoftrOb+qByAmG3x84MnJLU67/sV5ww
+ IXpfATGvrAxCKTLUbu2loUgZR7LsSDiJ1PuzTkZViDdUfByh9Ayu4wZhzV9HAI24Lkhy IA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32y7nhdu77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 15:57:41 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07HJVcGI069350;
+        Mon, 17 Aug 2020 15:57:40 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32y7nhdu6v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 15:57:40 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07HJsWfR004287;
+        Mon, 17 Aug 2020 19:57:39 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma05wdc.us.ibm.com with ESMTP id 32x7b8ued3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Aug 2020 19:57:39 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07HJvaiW62718344
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 19:57:36 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1676378060;
+        Mon, 17 Aug 2020 19:57:39 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D176F78066;
+        Mon, 17 Aug 2020 19:57:33 +0000 (GMT)
+Received: from [153.66.254.174] (unknown [9.80.233.55])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Aug 2020 19:57:33 +0000 (GMT)
+Message-ID: <1597694252.22390.12.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/8] scsi: convert tasklets to use new tasklet_setup()
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, martin.petersen@oracle.com,
+        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com,
+        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, Allen Pais <allen.lkml@gmail.com>
+Date:   Mon, 17 Aug 2020 12:57:32 -0700
+In-Reply-To: <202008171227.D3A4F454D8@keescook>
+References: <20200817085409.25268-1-allen.cryptic@gmail.com>
+         <1597675318.4475.11.camel@linux.ibm.com> <202008171227.D3A4F454D8@keescook>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-17_14:2020-08-17,2020-08-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008170131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gerg,
+On Mon, 2020-08-17 at 12:28 -0700, Kees Cook wrote:
+> On Mon, Aug 17, 2020 at 07:41:58AM -0700, James Bottomley wrote:
+> > On Mon, 2020-08-17 at 14:24 +0530, Allen Pais wrote:
+> > > From: Allen Pais <allen.lkml@gmail.com>
+> > > 
+> > > Commit 12cc923f1ccc ("tasklet: Introduce new initialization
+> > > API")' introduced a new tasklet initialization API. This series
+> > > converts all the scsi drivers to use the new tasklet_setup() API
+> > 
+> > I've got to say I agree with Jens, this was a silly obfuscation:
+> > 
+> > +#define from_tasklet(var, callback_tasklet, tasklet_fieldname) \
+> > +       container_of(callback_tasklet, typeof(*var),
+> > tasklet_fieldname)
+> > 
+> > Just use container_of directly since we all understand what it
+> > does.
+> 
+> But then the lines get really long, wrapped, etc.
 
-Am Mo., 17. Aug. 2020 um 21:39 Uhr schrieb Greg Kroah-Hartman
-<gregkh@linuxfoundation.org>:
-> From: Andreas Gruenbacher <agruenba@redhat.com>
->
-> [ Upstream commit 856473cd5d17dbbf3055710857c67a4af6d9fcc0 ]
->
-> Make sure iomap_end is always called when iomap_begin succeeds.
->
-> Without this fix, iomap_end won't be called when a filesystem's
-> iomap_begin operation returns an invalid mapping, bypassing any
-> unlocking done in iomap_end.  With this fix, the unlocking will still
-> happen.
->
-> This bug was found by Bob Peterson during code review.  It's unlikely
-> that such iomap_begin bugs will survive to affect users, so backporting
-> this fix seems unnecessary.
+I really don't think that's a problem but if you want to add a new
+generic container_of that does typeof instead of insisting on the type,
+I'd be sort of OK with that ... provided you don't gratuitously alter
+the argument order.
 
-this doesn't need to be backported.
+The thing I object to is that this encourages everyone to roll their
+own unnecessary container_of type macros in spite of the fact that it's
+function is wholly generic.  It's fine if you're eliminating one of the
+arguments, or actually making the macro specific to the type, but in
+this case you're not, you're making a completely generic macro where
+the name is the only thing that's specific to this case.
 
-Thanks,
-Andreas
+>  This is what the timer_struct conversion did too (added a
+> container_of wrapper), so I think it makes sense here too.
 
+I didn't see that one to object to it ...
 
-> Fixes: ae259a9c8593 ("fs: introduce iomap infrastructure")
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/iomap/apply.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
-> index 76925b40b5fd2..26ab6563181fc 100644
-> --- a/fs/iomap/apply.c
-> +++ b/fs/iomap/apply.c
-> @@ -46,10 +46,14 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
->         ret = ops->iomap_begin(inode, pos, length, flags, &iomap, &srcmap);
->         if (ret)
->                 return ret;
-> -       if (WARN_ON(iomap.offset > pos))
-> -               return -EIO;
-> -       if (WARN_ON(iomap.length == 0))
-> -               return -EIO;
-> +       if (WARN_ON(iomap.offset > pos)) {
-> +               written = -EIO;
-> +               goto out;
-> +       }
-> +       if (WARN_ON(iomap.length == 0)) {
-> +               written = -EIO;
-> +               goto out;
-> +       }
->
->         trace_iomap_apply_dstmap(inode, &iomap);
->         if (srcmap.type != IOMAP_HOLE)
-> @@ -80,6 +84,7 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
->         written = actor(inode, pos, length, data, &iomap,
->                         srcmap.type != IOMAP_HOLE ? &srcmap : &iomap);
->
-> +out:
->         /*
->          * Now the data has been copied, commit the range we've copied.  This
->          * should not fail unless the filesystem has had a fatal error.
-> --
-> 2.25.1
->
->
->
+James
+
