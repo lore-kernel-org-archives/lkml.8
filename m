@@ -2,104 +2,103 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2046C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E93CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB952063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NideZf0r"
+	by mail.kernel.org (Postfix) with ESMTP id 433DF2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 11:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgHQLlc (ORCPT
+        id S1726777AbgHQLou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHQLlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 07:41:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB37C061389;
-        Mon, 17 Aug 2020 04:41:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w25so17051984ljo.12;
-        Mon, 17 Aug 2020 04:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:date:from:to:cc:message-id:in-reply-to:references;
-        bh=DSSLi1nehUTQX9TtZXEIyfRv/D0dGZ+iJs4E1Ou7Qcg=;
-        b=NideZf0rdtwhnk/2DLL2h/tN4nIJigxAXTwVunWJ/2iZlkC6iYjtZFlYqAiFOkVK3M
-         IOjCAjTf+tJ1b7GJxOon5Op8gz1jelr/6ynZs61yhv+0IR1HbPSb9KTCMwretc+uF+rs
-         BIlIrb1L3CJYzVoTo+X8HcH9qLJuIVPdG2Rm5Vm4bVZ59oiHYvovRc/vlInvxPMdfbuK
-         Z1+JqRY20CrPGwE/R+3FSGfXd26zqbEQAZUf7RCthAbqf5Id+D6sHmJkx3A0JvJFQGHB
-         hDI7056ESRegVF0RvZoibRoLBW8FNjrmJnqM3cZfVxlhqGe/wj01RKzBooicgnnwHcwR
-         OBhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
-         :references;
-        bh=DSSLi1nehUTQX9TtZXEIyfRv/D0dGZ+iJs4E1Ou7Qcg=;
-        b=lIpv32OtSMZ0nlw152khVh901OWp1KbVa4e5tbQBcN2KBFXZnvbEMfZ3pSOD/QEoSZ
-         tkRZQZ/043rhj8WX4jY/Vw3Dlx4SrIpXDQILYUcSAvshyKgexTgjD4ObGBsrFJPVgxna
-         wkrTeHKMGDNGsUfTxolgViS7Zyj/2FWoyCul1hr/EVlD4+sVRQl4iMj8GqGv4ri9RVt1
-         /Pm9WRGrqYjCd9O9X7xJfoE1p7EOMda/G3MKz/yp/2w2ItZhSclV3H2+1LniATXumdBp
-         8rE7XzzGlUcJoNBTYiddp+fBoscWQrfYmBQRS6Ik2uWggF7Nvul6IdW1Pg82AqVSesF0
-         w5BQ==
-X-Gm-Message-State: AOAM533DNBNyjkW146zeFTnaQSMIWIT80ks/OZHkw9hC3OrE2/6U8gqo
-        8n9LFNYUb7gXF/rvUqx4iHE=
-X-Google-Smtp-Source: ABdhPJwp39koeVrx4TtarDgGWDwWaUuSXr8IRhxum7G4BJWH5Zlqanfj105FthIkqYB0dqD6MPnmTg==
-X-Received: by 2002:a2e:71a:: with SMTP id 26mr3343239ljh.198.1597664476777;
-        Mon, 17 Aug 2020 04:41:16 -0700 (PDT)
-Received: from gmail.com ([217.170.206.146])
-        by smtp.gmail.com with ESMTPSA id u5sm5456598lfr.3.2020.08.17.04.41.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 04:41:16 -0700 (PDT)
-Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
-Date:   Mon, 17 Aug 2020 11:40:00 -0000
-From:   Michael Witten <mfwitten@gmail.com>
+        Mon, 17 Aug 2020 07:44:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33588 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgHQLos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:44:48 -0400
+IronPort-SDR: F5tImus1N4GBNkLglbn4Ctg0jpjMPxiUOoorL/f6LNyq2DNoR0/i2HMYRMSEPhTsMtRCemkfNo
+ 8f8eXV9S2lfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="134199126"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="134199126"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 04:44:44 -0700
+IronPort-SDR: bHApQlytgHJ6jq4V5bD6qw1c6k+ZY506s+KQj12iysHBxz7oQMzh1q8f6HPp17WTGF6XLOWLww
+ Z9NOH4giSXgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="326385168"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 04:44:42 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k7dZB-009IwK-Gv; Mon, 17 Aug 2020 14:44:41 +0300
+Date:   Mon, 17 Aug 2020 14:44:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Joe Perches <joe@perches.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-Message-ID: <04721d8183af49b793952d2d63c72add@gmail.com>
-In-Reply-To: <7d0be10602e31e334ff41299c06f537880c55bd0.camel@perches.com>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
-  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
-  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
-  <7d0be10602e31e334ff41299c06f537880c55bd0.camel@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [RFC PATCH] vsprintf: Add %pv extension replacement for
+ print_vma_addr
+Message-ID: <20200817114441.GK1891694@smile.fi.intel.com>
+References: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <09f11651f0e913e159b955ac447cd8cadf36cb0d.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches (Sun, 16 Aug 2020 10:56:53 -0700):
+On Fri, Aug 14, 2020 at 10:53:03AM -0700, Joe Perches wrote:
+> There is a print_vma_addr function used several places
+> that requires KERN_CONT use.
+> 
+> Add a %pv mechanism to avoid the need for KERN_CONT.
 
-> On Mon, 2020-08-17 at 03:37 +0000, Michael Witten wrote:
->> Matters  of style  should  probably not  be enforced  by
->> the  build infrastructure;  style  is a  matter for  the
->> maintainer to enforce:
->
-> I rather doubt style advice  should be taken from someone
-> who right justifies fixed pitch block text.
->
-> cheers, Joe
+I like the idea, but I would accent the selling point to make code
+(in the user call sites) nicer.
 
-Clearly, I never offered style advice.
+> An example conversion is arch/x86/kernel/signal.c
+> 
+> from:
+> 	if (show_unhandled_signals && printk_ratelimit()) {
+> 		printk("%s"
+> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx",
+> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
+> 		       me->comm, me->pid, where, frame,
+> 		       regs->ip, regs->sp, regs->orig_ax);
+> 		print_vma_addr(KERN_CONT " in ", regs->ip);
+> 		pr_cont("\n");
+> to:
+> 		printk("%s"
+> 		       "%s[%d] bad frame in %s frame:%p ip:%lx sp:%lx orax:%lx in %pv\n",
+> 		       task_pid_nr(current) > 1 ? KERN_INFO : KERN_EMERG,
+> 		       me->comm, me->pid, where, frame,
+> 		       regs->ip, regs->sp, regs->orig_ax, (void *)regs->ip);
 
-Indeed, the very first sentence I wrote in this thread was:
+...
 
-  > This is not just a matter of style; this is a matter of
-  > semantics[.]
+> +#else
+> +	buf = string_nocheck(buf, end, "CONFIG_MMU=n", default_str_spec);
+> +#endif
 
-Sincerely,
-Michael Witten
+Can we avoid this spammy message? Really it's quite long and fills valuable
+space in kernel buffer. I would rather print the hashed pointer as it's done
+for the rest of %pXXX.
 
-As an  aside, the  venerable 'man' program  justifies fixed
-pitch text, at least by default.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
