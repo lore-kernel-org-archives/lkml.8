@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F203C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00649C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7729C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D935E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597691117;
-	bh=WjVelzmhMMwyehM7ehdWPo305YSvnE48zEuooK9dnmU=;
+	s=default; t=1597691121;
+	bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7upgL2jMnmg9x6M0/do0VAm0slPQtjYtvgfb1IKf108lLuY1dyxI4zk/5ITMwygV
-	 WPqnQKi90IIK7qO12FPeBh0kxo1Q9WdLHthlml8VSbpZNB49oD9bhK9CiH34BQod0T
-	 Te3fLwnCfb8nBs76mwf/PFLNMrAAsYmluBA/va1U=
+	b=WoBKoYDnAVBsc2J4yjWSe+5ZLqQFM7jE9KHsjF38eCWH8RWaX8IoDqTxPXMiadq9Q
+	 TZDH1FR0UpaTN8UEKl8YSAgcuHIH46ur0rmfMbTME4VepjmzC6Nvsk0uhHjttCGybd
+	 Us7pEGZ4f9bzDkxhqo7DH2jWrG8MZJFBBE3F1dOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbgHQTFQ (ORCPT
+        id S1731819AbgHQTFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbgHQPpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:45:13 -0400
+        id S1730578AbgHQPpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6C222D02;
-        Mon, 17 Aug 2020 15:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7DC222D01;
+        Mon, 17 Aug 2020 15:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597679113;
-        bh=WjVelzmhMMwyehM7ehdWPo305YSvnE48zEuooK9dnmU=;
+        s=default; t=1597679107;
+        bh=15qDq60fpjZ7HW0bZaWJ+geijTtQUm7ianQRg3nvz3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wODCu4jdS+6/T1cdvDsOhFgj/0V9yI/rMSLEIDpeiWydmeu9czixEyW0SG9LoVrVQ
-         zfRxLYpQo0umwMeXM6O7mUtO4/HW4RrhfBQlChS+MNe1J37Port7Lorn6KMqsqsSEs
-         Pw45Grhati1aUx4eVVi2/2vNK7cR4o0kWQscYum8=
+        b=OT97ZJNgT7DPD0sFgb9iL7lBVIF7nhC34VS5ldP2MhrCSrRFq75wBOE7ddfUz/1K7
+         6nRo7fYBY1BKdOBdQsLgoo35Z0VmkiVgNmKoh0ILjW6qz1PU0R5Ebsjo3xEpFHhr77
+         jfTkH/SAWcHekLKfMCp2+YLw8gqK3PtgsE2CNOjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 101/393] brcmfmac: To fix Bss Info flag definition Bug
-Date:   Mon, 17 Aug 2020 17:12:31 +0200
-Message-Id: <20200817143824.513060430@linuxfoundation.org>
+Subject: [PATCH 5.7 099/393] Bluetooth: hci_qca: Bug fixes for SSR
+Date:   Mon, 17 Aug 2020 17:12:29 +0200
+Message-Id: <20200817143824.419459119@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143819.579311991@linuxfoundation.org>
 References: <20200817143819.579311991@linuxfoundation.org>
@@ -63,37 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+From: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 
-[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
+[ Upstream commit 3344537f614b966f726c1ec044d1c70a8cabe178 ]
 
-Bss info flag definition need to be fixed from 0x2 to 0x4
-This flag is for rssi info received on channel.
-All Firmware branches defined as 0x4 and this is bug in brcmfmac.
+1.During SSR for command time out if BT SoC goes to inresponsive
+state, power cycling of BT SoC was not happening. Given the fix by
+sending hw error event to reset the BT SoC.
 
-Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
+2.If SSR is triggered then ignore the transmit data requests to
+BT SoC until SSR is completed.
+
+Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/hci_qca.c | 40 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-index de0ef1b545c4f..2e31cc10c1954 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-@@ -19,7 +19,7 @@
- #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 0b1036e5e963c..14e4d2eaf8959 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -71,7 +71,8 @@ enum qca_flags {
+ 	QCA_DROP_VENDOR_EVENT,
+ 	QCA_SUSPENDING,
+ 	QCA_MEMDUMP_COLLECTION,
+-	QCA_HW_ERROR_EVENT
++	QCA_HW_ERROR_EVENT,
++	QCA_SSR_TRIGGERED
+ };
  
- #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
--#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
-+#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
  
- #define BRCMF_STA_BRCM			0x00000001	/* Running a Broadcom driver */
- #define BRCMF_STA_WME			0x00000002	/* WMM association */
+@@ -854,6 +855,13 @@ static int qca_enqueue(struct hci_uart *hu, struct sk_buff *skb)
+ 	BT_DBG("hu %p qca enq skb %p tx_ibs_state %d", hu, skb,
+ 	       qca->tx_ibs_state);
+ 
++	if (test_bit(QCA_SSR_TRIGGERED, &qca->flags)) {
++		/* As SSR is in progress, ignore the packets */
++		bt_dev_dbg(hu->hdev, "SSR is in progress");
++		kfree_skb(skb);
++		return 0;
++	}
++
+ 	/* Prepend skb with frame type */
+ 	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
+ 
+@@ -1085,6 +1093,7 @@ static int qca_controller_memdump_event(struct hci_dev *hdev,
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	struct qca_data *qca = hu->priv;
+ 
++	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
+ 	skb_queue_tail(&qca->rx_memdump_q, skb);
+ 	queue_work(qca->workqueue, &qca->ctrl_memdump_evt);
+ 
+@@ -1445,6 +1454,7 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
+ 	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
+ 	char *memdump_buf = NULL;
+ 
++	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
+ 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
+ 	bt_dev_info(hdev, "mem_dump_status: %d", qca->memdump_state);
+ 
+@@ -1489,10 +1499,30 @@ static void qca_cmd_timeout(struct hci_dev *hdev)
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	struct qca_data *qca = hu->priv;
+ 
+-	if (qca->memdump_state == QCA_MEMDUMP_IDLE)
++	set_bit(QCA_SSR_TRIGGERED, &qca->flags);
++	if (qca->memdump_state == QCA_MEMDUMP_IDLE) {
++		set_bit(QCA_MEMDUMP_COLLECTION, &qca->flags);
+ 		qca_send_crashbuffer(hu);
+-	else
+-		bt_dev_info(hdev, "Dump collection is in process");
++		qca_wait_for_dump_collection(hdev);
++	} else if (qca->memdump_state == QCA_MEMDUMP_COLLECTING) {
++		/* Let us wait here until memory dump collected or
++		 * memory dump timer expired.
++		 */
++		bt_dev_info(hdev, "waiting for dump to complete");
++		qca_wait_for_dump_collection(hdev);
++	}
++
++	mutex_lock(&qca->hci_memdump_lock);
++	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
++		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
++		if (!test_bit(QCA_HW_ERROR_EVENT, &qca->flags)) {
++			/* Inject hw error event to reset the device
++			 * and driver.
++			 */
++			hci_reset_dev(hu->hdev);
++		}
++	}
++	mutex_unlock(&qca->hci_memdump_lock);
+ }
+ 
+ static int qca_wcn3990_init(struct hci_uart *hu)
+@@ -1603,6 +1633,8 @@ static int qca_setup(struct hci_uart *hu)
+ 	if (ret)
+ 		return ret;
+ 
++	clear_bit(QCA_SSR_TRIGGERED, &qca->flags);
++
+ 	if (qca_is_wcn399x(soc_type)) {
+ 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+ 
 -- 
 2.25.1
 
