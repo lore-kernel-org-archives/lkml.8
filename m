@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75287C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4751620674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441B820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693369;
-	bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+	s=default; t=1597693375;
+	bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TlprHOyJd8ZHWISa/iQKRrQHmKGFUE8BSJmEVp9zs3cthw0S7jYLhMgIeNNuI8uC+
-	 GuUfd9WJsbEio/My3Ia0k7Viys0qZpoQO3UbHXPAubKlRl1n2uXwEnOABXeWfNrRJ7
-	 BaGreUW6/R47e23wT75hBgJHBdq2OtBGR00DS/wo=
+	b=P2k2NFSMjCKYLoSLf/xV8r3d4fvtBjvl1vyc5pb0WyzvuuNQZzZdaTbdqz65WzYzj
+	 Ko8VwMggDY4BloJklwRuYn6vskS4HlVKHRC0fyeRrX+iLw2ZSk14tgmMpV8FaWHrQp
+	 zY3Gqh3Gb4Idjn/wdlVk/RJL2cR63pdgZTTq6D8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbgHQTmp (ORCPT
+        id S2404343AbgHQTmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbgHQPYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:07 -0400
+        id S1729358AbgHQPYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B849923442;
-        Mon, 17 Aug 2020 15:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C805620825;
+        Mon, 17 Aug 2020 15:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677847;
-        bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
+        s=default; t=1597677841;
+        bh=SNx4u4/k2IbtAP3EPJ8PZIqvxZtBKRyULR07bQ8PFZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1P2IxHbCkZkXFW0yZkP4Ad7MBw8Xv2FCvLguMMtAVi1jJetZZBvWmdJ/J+GfzKRp9
-         oTSy2SW35LNTV0FbMNVqB79OQnKg4ytkT/fcK0VAolhbyRQ3qCT7uPDCem2Ka5taLs
-         o3jWXisYEJOo5/d2E/KbLCeQcRqEdWsMQcUREXL4=
+        b=qfOCr27f3UMatbgw03JKjM9YjI7noc6u+pRyLe1PT7XEW9ACRPgSvMVlYi8WG0LRc
+         vRl58h56BcqWrkkCrXTeptMpywNrV3WeL4tM5Ym3QUbN49y4EoXrJR6vNn6ILcjl2G
+         1MDRBN0jeV2YOfMCylldQVKiBLIh9cp2pso+thL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Danesh Petigara <danesh.petigara@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 130/464] usb: bdc: Halt controller on suspend
-Date:   Mon, 17 Aug 2020 17:11:23 +0200
-Message-Id: <20200817143840.040292115@linuxfoundation.org>
+Subject: [PATCH 5.8 128/464] usb: gadget: net2280: fix memory leak on probe error handling paths
+Date:   Mon, 17 Aug 2020 17:11:21 +0200
+Message-Id: <20200817143839.943085106@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -63,49 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Danesh Petigara <danesh.petigara@broadcom.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
+[ Upstream commit 2468c877da428ebfd701142c4cdfefcfb7d4c00e ]
 
-GISB bus error kernel panics have been observed during S2 transition
-tests on the 7271t platform. The errors are a result of the BDC
-interrupt handler trying to access BDC register space after the
-system's suspend callbacks have completed.
+Driver does not release memory for device on error handling paths in
+net2280_probe() when gadget_release() is not registered yet.
 
-Adding a suspend hook to the BDC driver that halts the controller before
-S2 entry thus preventing unwanted access to the BDC register space during
-this transition.
+The patch fixes the bug like in other similar drivers.
 
-Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/net2280.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 5fde5a8b065c1..2dca11f0a7444 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -603,9 +603,14 @@ static int bdc_remove(struct platform_device *pdev)
- static int bdc_suspend(struct device *dev)
- {
- 	struct bdc *bdc = dev_get_drvdata(dev);
-+	int ret;
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 5eff85eeaa5a0..7530bd9a08c43 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -3781,8 +3781,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
  
--	clk_disable_unprepare(bdc->clk);
--	return 0;
-+	/* Halt the controller */
-+	ret = bdc_stop(bdc);
-+	if (!ret)
-+		clk_disable_unprepare(bdc->clk);
-+
-+	return ret;
+ done:
+-	if (dev)
++	if (dev) {
+ 		net2280_remove(pdev);
++		kfree(dev);
++	}
+ 	return retval;
  }
  
- static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
