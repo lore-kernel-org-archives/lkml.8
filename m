@@ -2,417 +2,136 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB87BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00154C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88DA82065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:41:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xh5dDas6"
+	by mail.kernel.org (Postfix) with ESMTP id D06ED2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597707778;
+	bh=x2x17PXByjmc5GL+cpiiMIiGtoeX2KrAjZvn4MxGmjM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Gxu5VS7miVtTEEO8xkPhbeL9G62xE77wWgjKrttHph+skhZSVDbXVjjVa7GeJkD+X
+	 BD9ohaIxYyKuBCRFds3W+sIXY1mXjP4Q/uC04GdsI8ZfZI/xLNQE9gk/x5LZni6yaQ
+	 4zLZDWtntsK9Tfp5+oHE7qBsPxxhvFd6Rh/I+k/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgHQXls (ORCPT
+        id S1726886AbgHQXm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:41:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgHQXlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:41:37 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318D0C061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:41:37 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id w2so8669263qvh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 16:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OjLZL6pXZJKfrMzeTCsr7M9TbDtf9BfsdFN8OvCLknA=;
-        b=Xh5dDas6HZxGQxGox2dCRTXKrAX8blW/qQWCM4iBSRk8aaOIzpklKLaLJ75aHZygHD
-         1CBwzY9eeG+AlnvcQoyqS2GTd8zKZ87lk217NK+z91GIWy33Xa+y6qG7nfSKi76kWIwT
-         0frvSagCEw/ZJKYUhnEAt5hPqP3pcTStEfD1fMDQyyI9AFC1PpnNwGyHfJqhEaw5EGqW
-         NP3AhBKs2ZwbWdFA44JJklCs6mHkb6CjV2NMfMPbX45ldMDjUg7CbCt4qf17UZv4yoMx
-         XZ+7u51X6xR3CmVnhT7DJeImwFsFCFPFRSAAIVBYg+G2SC2WAT5IqbuTOKxfvSLfi/nR
-         WgTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OjLZL6pXZJKfrMzeTCsr7M9TbDtf9BfsdFN8OvCLknA=;
-        b=D/WU4BwB42ARlnI3TDbkNdYcG0XqU7ImCSsg0DL1AUwbQa32Jf0T8MtB9rS0tth/Ug
-         b6/yZ+/BiHHQ8Hr/bk8OlsWxXO2xFHKPMPKB2JgtF2M9BVYffvYXZQsHibqrd2L44uWa
-         jP/xZZA5rAAawySxVElJqLzTwpiEwUOFEqOlKt1HlKHl9ctMvtt4lx7zESj83IZTGVVs
-         ojLYI7Eff6wAAm/0g/x9Zs27paUBJ1oBJ2i9Kk9282vnHnY/F1mkR/+V5Z3fmuqmWaYH
-         CSPM1PupglTTo9sDn0fK17QnyClhY/NRv+LXY/s6qRqQBrx4tNjO2/T9OOdgcLy1Vnvu
-         EItQ==
-X-Gm-Message-State: AOAM532UNQvvb3GlU6TRP0K3Ii9c3spnKg5CgJHZEjaai5bTch2V2O0w
-        nUrBvUArmKRBbHVXhjSeG4SR4TgZT7w=
-X-Google-Smtp-Source: ABdhPJytAfpXnKST6bwLu+l9iB2yfT8W20lkOrNEA3HkSxqjWod0TU894IbFyeg0RmopK/4UCeTcQw==
-X-Received: by 2002:ad4:4c0a:: with SMTP id bz10mr15988352qvb.78.1597707696320;
-        Mon, 17 Aug 2020 16:41:36 -0700 (PDT)
-Received: from LeoBras.ibmuc.com ([177.35.193.93])
-        by smtp.gmail.com with ESMTPSA id w58sm22342868qth.95.2020.08.17.16.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 16:41:35 -0700 (PDT)
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 10/10] powerpc/pseries/iommu: Rename "direct window" to "dma window"
-Date:   Mon, 17 Aug 2020 20:40:33 -0300
-Message-Id: <20200817234033.442511-11-leobras.c@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200817234033.442511-1-leobras.c@gmail.com>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
+        Mon, 17 Aug 2020 19:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgHQXm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 19:42:56 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8693F2072E;
+        Mon, 17 Aug 2020 23:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597707775;
+        bh=x2x17PXByjmc5GL+cpiiMIiGtoeX2KrAjZvn4MxGmjM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jc/vz+UQzZaY3RWlTnKJ/1TkiZZistwAP8D5Rbr8gGMvQbCioL9ezZGWDCLTThzMQ
+         I5yeRps1Ms1E0aACHi+zxzWiY6evzagCBlM0RQAdSbsnhAHBIiYPfeCGeWc7+3eOqs
+         dR1K0IcG7QqNsmy+9iOB1VtJ8Sl6Xkug3njoTXFI=
+Received: by mail-ej1-f43.google.com with SMTP id jp10so19918105ejb.0;
+        Mon, 17 Aug 2020 16:42:55 -0700 (PDT)
+X-Gm-Message-State: AOAM533+bJjEgTqAcpo1nZ2COO7AFuTb8WGdmgRyuKBHHG1Fk6mjC0aa
+        TUjKmE21vn1y50E7QApIp2CobQiRmshgzSJ15Q==
+X-Google-Smtp-Source: ABdhPJz1blTGXowp+NNEIdFVKpxsWzYUxZj6C7dOmrD54k7lOK5kU33K3omXAVdbUpjCWHkbhkIeIAutfvc+KMgeqYw=
+X-Received: by 2002:a17:906:d92c:: with SMTP id rn12mr16958911ejb.187.1597707774145;
+ Mon, 17 Aug 2020 16:42:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200817130640.18021-1-jitao.shi@mediatek.com>
+In-Reply-To: <20200817130640.18021-1-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 18 Aug 2020 07:42:38 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
+Message-ID: <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/mediatek: dsi: fix scrolling of panel with small
+ hfp or hbp
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous change introduced the usage of DDW as a bigger indirect DMA
-mapping when the DDW available size does not map the whole partition.
+Hi, Jitao:
 
-As most of the code that manipulates direct mappings was reused for
-indirect mappings, it's necessary to rename all names and debug/info
-messages to reflect that it can be used for both kinds of mapping.
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8817=E6=
+=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:07=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> horizontal_backporch_byte should be hbp * bpp - hbp extra bytes.
+> So remove the wrong subtraction 10.
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
+k/mtk_dsi.c
+> index 270bf22c98fe..5d031e634571 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -473,14 +473,13 @@ static void mtk_dsi_config_vdo_timing(struct mtk_ds=
+i *dsi)
+>         horizontal_sync_active_byte =3D (vm->hsync_len * dsi_tmp_buf_bpp =
+- 10);
 
-Also, defines DEFAULT_DMA_WIN as "ibm,dma-window" to document that
-it's the name of the default DMA window.
+So this subtraction 10 is correct?
 
-Those changes are not supposed to change how the code works in any
-way, just adjust naming.
+Regards,
+Chun-Kuang.
 
-Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
----
- arch/powerpc/platforms/pseries/iommu.c | 110 +++++++++++++------------
- 1 file changed, 57 insertions(+), 53 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 9544e3c91ced..c1454f9cd254 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -355,7 +355,7 @@ struct dynamic_dma_window_prop {
- 
- #define DDW_FLAGS_DIRECT	0x01
- 
--struct direct_window {
-+struct dma_win {
- 	struct device_node *device;
- 	const struct dynamic_dma_window_prop *prop;
- 	struct list_head list;
-@@ -375,12 +375,13 @@ struct ddw_create_response {
- 	u32 addr_lo;
- };
- 
--static LIST_HEAD(direct_window_list);
-+static LIST_HEAD(dma_win_list);
- /* prevents races between memory on/offline and window creation */
--static DEFINE_SPINLOCK(direct_window_list_lock);
-+static DEFINE_SPINLOCK(dma_win_list_lock);
- /* protects initializing window twice for same device */
--static DEFINE_MUTEX(direct_window_init_mutex);
-+static DEFINE_MUTEX(dma_win_init_mutex);
- #define DMA64_PROPNAME "linux,dma64-ddr-window-info"
-+#define DEFAULT_DMA_WIN "ibm,dma-window"
- 
- static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
- 					unsigned long num_pfn, const void *arg)
-@@ -713,15 +714,18 @@ static void pci_dma_bus_setup_pSeriesLP(struct pci_bus *bus)
- 	pr_debug("pci_dma_bus_setup_pSeriesLP: setting up bus %pOF\n",
- 		 dn);
- 
--	/* Find nearest ibm,dma-window, walking up the device tree */
-+	/*
-+	 * Find nearest ibm,dma-window (default DMA window), walking up the
-+	 * device tree
-+	 */
- 	for (pdn = dn; pdn != NULL; pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window != NULL)
- 			break;
- 	}
- 
- 	if (dma_window == NULL) {
--		pr_debug("  no ibm,dma-window property !\n");
-+		pr_debug("  no %s property !\n", DEFAULT_DMA_WIN);
- 		return;
- 	}
- 
-@@ -819,11 +823,11 @@ static void remove_dma_window(struct device_node *np, u32 *ddw_avail,
- 
- 	ret = rtas_call(ddw_avail[DDW_REMOVE_PE_DMA_WIN], 1, 1, NULL, liobn);
- 	if (ret)
--		pr_warn("%pOF: failed to remove direct window: rtas returned "
-+		pr_warn("%pOF: failed to remove dma window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
- 			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
- 	else
--		pr_debug("%pOF: successfully removed direct window: rtas returned "
-+		pr_debug("%pOF: successfully removed dma window: rtas returned "
- 			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
- 			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
- }
-@@ -851,36 +855,36 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
- 
- 	ret = of_remove_property(np, win);
- 	if (ret)
--		pr_warn("%pOF: failed to remove direct window property: %d\n",
-+		pr_warn("%pOF: failed to remove dma window property: %d\n",
- 			np, ret);
- }
- 
- static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr, bool *direct_mapping)
- {
--	struct direct_window *window;
--	const struct dynamic_dma_window_prop *direct64;
-+	struct dma_win *window;
-+	const struct dynamic_dma_window_prop *dma64;
- 	bool found = false;
- 
--	spin_lock(&direct_window_list_lock);
-+	spin_lock(&dma_win_list_lock);
- 	/* check if we already created a window and dupe that config if so */
--	list_for_each_entry(window, &direct_window_list, list) {
-+	list_for_each_entry(window, &dma_win_list, list) {
- 		if (window->device == pdn) {
--			direct64 = window->prop;
--			*dma_addr = be64_to_cpu(direct64->dma_base);
--			*direct_mapping = be32_to_cpu(direct64->flags) & DDW_FLAGS_DIRECT;
-+			dma64 = window->prop;
-+			*dma_addr = be64_to_cpu(dma64->dma_base);
-+			*direct_mapping = be32_to_cpu(dma64->flags) & DDW_FLAGS_DIRECT;
- 			found = true;
- 			break;
- 		}
- 	}
--	spin_unlock(&direct_window_list_lock);
-+	spin_unlock(&dma_win_list_lock);
- 
- 	return found;
- }
- 
--static struct direct_window *ddw_list_add(struct device_node *pdn,
--					  const struct dynamic_dma_window_prop *dma64)
-+static struct dma_win *ddw_list_add(struct device_node *pdn,
-+				    const struct dynamic_dma_window_prop *dma64)
- {
--	struct direct_window *window;
-+	struct dma_win *window;
- 
- 	window = kzalloc(sizeof(*window), GFP_KERNEL);
- 	if (!window)
-@@ -888,9 +892,9 @@ static struct direct_window *ddw_list_add(struct device_node *pdn,
- 
- 	window->device = pdn;
- 	window->prop = dma64;
--	spin_lock(&direct_window_list_lock);
--	list_add(&window->list, &direct_window_list);
--	spin_unlock(&direct_window_list_lock);
-+	spin_lock(&dma_win_list_lock);
-+	list_add(&window->list, &dma_win_list);
-+	spin_unlock(&dma_win_list_lock);
- 
- 	return window;
- }
-@@ -899,19 +903,19 @@ static int find_existing_ddw_windows(void)
- {
- 	int len;
- 	struct device_node *pdn;
--	struct direct_window *window;
--	const struct dynamic_dma_window_prop *direct64;
-+	struct dma_win *window;
-+	const struct dynamic_dma_window_prop *dma64;
- 
- 	if (!firmware_has_feature(FW_FEATURE_LPAR))
- 		return 0;
- 
- 	for_each_node_with_property(pdn, DMA64_PROPNAME) {
--		direct64 = of_get_property(pdn, DMA64_PROPNAME, &len);
--		if (!direct64)
-+		dma64 = of_get_property(pdn, DMA64_PROPNAME, &len);
-+		if (!dma64)
- 			continue;
- 
--		window = ddw_list_add(pdn, direct64);
--		if (!window || len < sizeof(*direct64)) {
-+		window = ddw_list_add(pdn, dma64);
-+		if (!window || len < sizeof(*dma64)) {
- 			kfree(window);
- 			remove_ddw(pdn, true);
- 		}
-@@ -1203,17 +1207,17 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	u64 max_addr, win_addr;
- 	struct device_node *dn;
- 	u32 ddw_avail[DDW_APPLICABLE_SIZE];
--	struct direct_window *window;
-+	struct dma_win *window;
- 	struct property *win64 = NULL;
- 	struct failed_ddw_pdn *fpdn;
- 	bool default_win_removed = false, maps_whole_partition = false;
- 	struct pci_dn *pci = PCI_DN(pdn);
- 	struct iommu_table *tbl = pci->table_group->tables[0];
- 
--	mutex_lock(&direct_window_init_mutex);
-+	mutex_lock(&dma_win_init_mutex);
- 
- 	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset, &maps_whole_partition)) {
--		mutex_unlock(&direct_window_init_mutex);
-+		mutex_unlock(&dma_win_init_mutex);
- 		return maps_whole_partition;
- 	}
- 
-@@ -1264,7 +1268,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 		struct property *default_win;
- 		int reset_win_ext;
- 
--		default_win = of_find_property(pdn, "ibm,dma-window", NULL);
-+		default_win = of_find_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (!default_win)
- 			goto out_failed;
- 
-@@ -1293,8 +1297,8 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	} else if (query.page_size & 1) {
- 		page_shift = 12; /* 4kB */
- 	} else {
--		dev_dbg(&dev->dev, "no supported direct page size in mask %x",
--			  query.page_size);
-+		dev_dbg(&dev->dev, "no supported page size in mask %x",
-+			query.page_size);
- 		goto out_failed;
- 	}
- 
-@@ -1349,7 +1353,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 		ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
- 					    win64->value, tce_setrange_multi_pSeriesLP_walk);
- 		if (ret) {
--			dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
-+			dev_info(&dev->dev, "failed to map DMA window for %pOF: %d\n",
- 				 dn, ret);
- 			goto out_free_window;
- 		}
-@@ -1369,9 +1373,9 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	goto out_unlock;
- 
- out_free_window:
--	spin_lock(&direct_window_list_lock);
-+	spin_lock(&dma_win_list_lock);
- 	list_del(&window->list);
--	spin_unlock(&direct_window_list_lock);
-+	spin_unlock(&dma_win_list_lock);
- 
- 	kfree(window);
- 
-@@ -1399,7 +1403,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	list_add(&fpdn->list, &failed_ddw_pdn_list);
- 
- out_unlock:
--	mutex_unlock(&direct_window_init_mutex);
-+	mutex_unlock(&dma_win_init_mutex);
- 	return win64 && maps_whole_partition;
- }
- 
-@@ -1423,7 +1427,7 @@ static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
- 
- 	for (pdn = dn; pdn && PCI_DN(pdn) && !PCI_DN(pdn)->table_group;
- 	     pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window)
- 			break;
- 	}
-@@ -1474,7 +1478,7 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- 	 */
- 	for (pdn = dn; pdn && PCI_DN(pdn) && !PCI_DN(pdn)->table_group;
- 			pdn = pdn->parent) {
--		dma_window = of_get_property(pdn, "ibm,dma-window", NULL);
-+		dma_window = of_get_property(pdn, DEFAULT_DMA_WIN, NULL);
- 		if (dma_window)
- 			break;
- 	}
-@@ -1488,29 +1492,29 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
- 		void *data)
- {
--	struct direct_window *window;
-+	struct dma_win *window;
- 	struct memory_notify *arg = data;
- 	int ret = 0;
- 
- 	switch (action) {
- 	case MEM_GOING_ONLINE:
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			ret |= tce_setrange_multi_pSeriesLP(arg->start_pfn,
- 					arg->nr_pages, window->prop);
- 			/* XXX log error */
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	case MEM_CANCEL_ONLINE:
- 	case MEM_OFFLINE:
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			ret |= tce_clearrange_multi_pSeriesLP(arg->start_pfn,
- 					arg->nr_pages, window->prop);
- 			/* XXX log error */
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	default:
- 		break;
-@@ -1531,7 +1535,7 @@ static int iommu_reconfig_notifier(struct notifier_block *nb, unsigned long acti
- 	struct of_reconfig_data *rd = data;
- 	struct device_node *np = rd->dn;
- 	struct pci_dn *pci = PCI_DN(np);
--	struct direct_window *window;
-+	struct dma_win *window;
- 
- 	switch (action) {
- 	case OF_RECONFIG_DETACH_NODE:
-@@ -1547,15 +1551,15 @@ static int iommu_reconfig_notifier(struct notifier_block *nb, unsigned long acti
- 			iommu_pseries_free_group(pci->table_group,
- 					np->full_name);
- 
--		spin_lock(&direct_window_list_lock);
--		list_for_each_entry(window, &direct_window_list, list) {
-+		spin_lock(&dma_win_list_lock);
-+		list_for_each_entry(window, &dma_win_list, list) {
- 			if (window->device == np) {
- 				list_del(&window->list);
- 				kfree(window);
- 				break;
- 			}
- 		}
--		spin_unlock(&direct_window_list_lock);
-+		spin_unlock(&dma_win_list_lock);
- 		break;
- 	default:
- 		err = NOTIFY_DONE;
--- 
-2.25.4
-
+>
+>         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+> -               horizontal_backporch_byte =3D
+> -                       (vm->hback_porch * dsi_tmp_buf_bpp - 10);
+> +               horizontal_backporch_byte =3D vm->hback_porch * dsi_tmp_b=
+uf_bpp;
+>         else
+> -               horizontal_backporch_byte =3D ((vm->hback_porch + vm->hsy=
+nc_len) *
+> -                       dsi_tmp_buf_bpp - 10);
+> +               horizontal_backporch_byte =3D (vm->hback_porch + vm->hsyn=
+c_len) *
+> +                                           dsi_tmp_buf_bpp;
+>
+>         data_phy_cycles =3D timing->lpx + timing->da_hs_prepare +
+> -                         timing->da_hs_zero + timing->da_hs_exit + 3;
+> +                         timing->da_hs_zero + timing->da_hs_exit;
+>
+>         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+>                 if ((vm->hfront_porch + vm->hback_porch) * dsi_tmp_buf_bp=
+p >
+> --
+> 2.12.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
