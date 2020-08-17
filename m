@@ -2,91 +2,105 @@ Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A8CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C289CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA242063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D74C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 22:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZzTWlTEm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qC67EZfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbgHQWpY (ORCPT
+        id S1730550AbgHQWpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:45:24 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53108 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730836AbgHQWpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 18:45:19 -0400
-Received: from [192.168.86.21] (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 592E620B4908;
-        Mon, 17 Aug 2020 15:45:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 592E620B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597704318;
-        bh=ELoXb6y6fs1Pm42OwyGovpUZV/jZUL94FH6q7n8Pm6Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZzTWlTEmfu2arW//OlcDcI2WJQYzZxYk3z4tAGkyeI7c24YTcoIUAvJQNSxRQjbj0
-         Z9yN86YZYVU/WV8gjcL3FoDYtpioxmE7NkjO8zpfkkpl10NUZpxDuMeteWq/9n2JPp
-         /YCOOYhalpCe8kIdD7Uxlxp51ezf445oPkQnDb4g=
-Subject: Re: [PATCH 0/2] dm-devel:dm-crypt: infrastructure for measurement of
- DM target data using IMA
-To:     Mimi Zohar <zohar@linux.ibm.com>, agk@redhat.com,
-        snitzer@redhat.com, gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-References: <20200816210250.11506-1-tusharsu@linux.microsoft.com>
- <5f12cc89c535ccfc6c3d63efa2bf716a1fdd966d.camel@linux.ibm.com>
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Message-ID: <f252a595-7b6a-9e20-bf08-97f102c41c01@linux.microsoft.com>
-Date:   Mon, 17 Aug 2020 15:45:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 18:45:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:16791 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730239AbgHQWpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:45:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597704337; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=QHnpMKHzC7+yvTWFxmZI2JScuBtzKLvqMeZlKO1uvCI=; b=qC67EZfjZos6fdlU8IosfHU0O9d5Qyd7BQ1WKCIrPV+XOV2VnOlUCixdukD/A2bNMlQu86fd
+ BAKnw8mzfs13FDQZd/l9riNkzpbCb6yGl0EsBUWgnSxyD7e1y4QtKISkSP8gOurHy2eYdprD
+ vN5dG8352UIMwl0aR9VVhpQG5as=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f3b08902b87d66049a61a91 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 22:45:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2E1A6C433A0; Mon, 17 Aug 2020 22:45:36 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5BBFC433CB;
+        Mon, 17 Aug 2020 22:45:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5BBFC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     swboyd@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v1] arm64: dts: qcom: sc7180: Add DisplayPort HPD pin dt node
+Date:   Mon, 17 Aug 2020 15:45:27 -0700
+Message-Id: <20200817224527.28532-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <5f12cc89c535ccfc6c3d63efa2bf716a1fdd966d.camel@linux.ibm.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This node defines alternate DP HPD functionality of GPIO.
 
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On 2020-08-17 2:46 p.m., Mimi Zohar wrote:
-> On Sun, 2020-08-16 at 14:02 -0700, Tushar Sugandhi wrote:
->> There are several device-mapper targets which contribute to verify
->> the integrity of the mapped devices e.g. dm-integrity, dm-verity,
->> dm-crypt etc.
->>
->> But they do not use the capabilities provided by kernel integrity
->> subsystem (IMA). For instance, the IMA capability that measures several
->> in-memory constructs and files to detect if they have been accidentally
->> or maliciously altered, both remotely and locally. IMA also has the
->> capability to include these measurements in the IMA measurement list and
->> use them to extend a TPM PCR so that it can be quoted.
-> 
-> "both remotely" refers to measurement and attestation, while "locally"
-> refers to integrity enforcement, based on hashes or signatures.  Is
-> this patch set adding both IMA-measurement and IMA-appraisal?
-> 
-> Mimi
-> 
-Thanks Mimi for looking at this patch set.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index bf2f2bb1aa79..9f97cf5dd9ab 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1457,6 +1457,20 @@ pinconf-sd-cd {
+ 					drive-strength = <2>;
+ 				};
+ 			};
++
++			dp_hot_plug_det: dp-hot-plug-det {
++				pinmux {
++					pins = "gpio117";
++					function = "dp_hot";
++				};
++
++				config {
++					pins = "gpio117";
++					bias-disable;
++					input-enable;
++					drive-strength = <2>;
++				};
++			};
+ 		};
+ 
+ 		gpu: gpu@5000000 {
 
-I added both "remotely" and "locally" in the description, so that
-people less familiar with IMA would get a general overview of whats
-possible with IMA.
+base-commit: 62975d27d647a40c58d3b96c29b911fc4f33c310
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-In this patch set we are only adding support for measurement and
-attestation. In the next iteration, I will remove the references to
-"local" detection.
-~Tushar
-<snip>
