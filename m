@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75287C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48A920674
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4751620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 19:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693361;
-	bh=4ahkpOyKAGgfVCvR1RwqgzewWqDUjEgSsq+3XtlIIlw=;
+	s=default; t=1597693369;
+	bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7SJtkKTpsWAxZSv1uykhn/oqlpynVhyYq2laqYt1zn+TQZKH8Bt2ErJgxybyd3JA
-	 v9YhhVabMktmI+Ll0ejEbnp8IAFr1u3asYjhUui/Vi0AvvEAH0CFW8SPpYv3FhdrCv
-	 vglgyfTiDfisy59Y/KyWsqM4BopBfPzZGCvXlpW8=
+	b=TlprHOyJd8ZHWISa/iQKRrQHmKGFUE8BSJmEVp9zs3cthw0S7jYLhMgIeNNuI8uC+
+	 GuUfd9WJsbEio/My3Ia0k7Viys0qZpoQO3UbHXPAubKlRl1n2uXwEnOABXeWfNrRJ7
+	 BaGreUW6/R47e23wT75hBgJHBdq2OtBGR00DS/wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404338AbgHQTmi (ORCPT
+        id S1732568AbgHQTmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 15:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgHQPYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 11:24:16 -0400
+        id S1729621AbgHQPYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 11:24:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8855B235FF;
-        Mon, 17 Aug 2020 15:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B849923442;
+        Mon, 17 Aug 2020 15:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597677856;
-        bh=4ahkpOyKAGgfVCvR1RwqgzewWqDUjEgSsq+3XtlIIlw=;
+        s=default; t=1597677847;
+        bh=qCjkvgmmU7mm/aDr1MGFWcs+iVYgV6a/xKFymDiO9U4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVJqbn7PGBJDv4A1Cwmb5EKb4FW0NEY+ERCaJjZQ9aCT7tca+N6gJxTnM20o5/2Gl
-         mDTLZu4ybgcByto2IAVwN8rX5iUYaiqfxvwTLvogSUc/Gc5zhoVEmbjN6jc/M0aLDm
-         /pFHRNRVWQG/uT79jdXqP/eCj2p6uUhZnR7i/bRA=
+        b=1P2IxHbCkZkXFW0yZkP4Ad7MBw8Xv2FCvLguMMtAVi1jJetZZBvWmdJ/J+GfzKRp9
+         oTSy2SW35LNTV0FbMNVqB79OQnKg4ytkT/fcK0VAolhbyRQ3qCT7uPDCem2Ka5taLs
+         o3jWXisYEJOo5/d2E/KbLCeQcRqEdWsMQcUREXL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Doucha <martin.doucha@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        Anand Jain <anand.jain@oracle.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 133/464] btrfs: allow btrfs_truncate_block() to fallback to nocow for data space reservation
-Date:   Mon, 17 Aug 2020 17:11:26 +0200
-Message-Id: <20200817143840.184731163@linuxfoundation.org>
+Subject: [PATCH 5.8 130/464] usb: bdc: Halt controller on suspend
+Date:   Mon, 17 Aug 2020 17:11:23 +0200
+Message-Id: <20200817143840.040292115@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817143833.737102804@linuxfoundation.org>
 References: <20200817143833.737102804@linuxfoundation.org>
@@ -62,198 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
-[ Upstream commit 6d4572a9d71d5fc2affee0258d8582d39859188c ]
+[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
 
-[BUG]
-When the data space is exhausted, even if the inode has NOCOW attribute,
-we will still refuse to truncate unaligned range due to ENOSPC.
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
 
-The following script can reproduce it pretty easily:
-  #!/bin/bash
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
 
-  dev=/dev/test/test
-  mnt=/mnt/btrfs
-
-  umount $dev &> /dev/null
-  umount $mnt &> /dev/null
-
-  mkfs.btrfs -f $dev -b 1G
-  mount -o nospace_cache $dev $mnt
-  touch $mnt/foobar
-  chattr +C $mnt/foobar
-
-  xfs_io -f -c "pwrite -b 4k 0 4k" $mnt/foobar > /dev/null
-  xfs_io -f -c "pwrite -b 4k 0 1G" $mnt/padding &> /dev/null
-  sync
-
-  xfs_io -c "fpunch 0 2k" $mnt/foobar
-  umount $mnt
-
-Currently this will fail at the fpunch part.
-
-[CAUSE]
-Because btrfs_truncate_block() always reserves space without checking
-the NOCOW attribute.
-
-Since the writeback path follows NOCOW bit, we only need to bother the
-space reservation code in btrfs_truncate_block().
-
-[FIX]
-Make btrfs_truncate_block() follow btrfs_buffered_write() to try to
-reserve data space first, and fall back to NOCOW check only when we
-don't have enough space.
-
-Such always-try-reserve is an optimization introduced in
-btrfs_buffered_write(), to avoid expensive btrfs_check_can_nocow() call.
-
-This patch will export check_can_nocow() as btrfs_check_can_nocow(), and
-use it in btrfs_truncate_block() to fix the problem.
-
-Reported-by: Martin Doucha <martin.doucha@suse.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h |  2 ++
- fs/btrfs/file.c  | 12 ++++++------
- fs/btrfs/inode.c | 44 +++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 45 insertions(+), 13 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index d404cce8ae406..7c8efa0c3ee65 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -2982,6 +2982,8 @@ int btrfs_dirty_pages(struct inode *inode, struct page **pages,
- 		      size_t num_pages, loff_t pos, size_t write_bytes,
- 		      struct extent_state **cached);
- int btrfs_fdatawrite_range(struct inode *inode, loff_t start, loff_t end);
-+int btrfs_check_can_nocow(struct btrfs_inode *inode, loff_t pos,
-+			  size_t *write_bytes, bool nowait);
- 
- /* tree-defrag.c */
- int btrfs_defrag_leaves(struct btrfs_trans_handle *trans,
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index b0d2c976587e5..1523aa4eaff07 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1532,8 +1532,8 @@ lock_and_cleanup_extent_if_need(struct btrfs_inode *inode, struct page **pages,
- 	return ret;
- }
- 
--static noinline int check_can_nocow(struct btrfs_inode *inode, loff_t pos,
--				    size_t *write_bytes, bool nowait)
-+int btrfs_check_can_nocow(struct btrfs_inode *inode, loff_t pos,
-+			  size_t *write_bytes, bool nowait)
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 5fde5a8b065c1..2dca11f0a7444 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -603,9 +603,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
  {
- 	struct btrfs_fs_info *fs_info = inode->root->fs_info;
- 	struct btrfs_root *root = inode->root;
-@@ -1648,8 +1648,8 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
- 		if (ret < 0) {
- 			if ((BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
- 						      BTRFS_INODE_PREALLOC)) &&
--			    check_can_nocow(BTRFS_I(inode), pos,
--					    &write_bytes, false) > 0) {
-+			    btrfs_check_can_nocow(BTRFS_I(inode), pos,
-+						  &write_bytes, false) > 0) {
- 				/*
- 				 * For nodata cow case, no need to reserve
- 				 * data space.
-@@ -1928,8 +1928,8 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
- 		 */
- 		if (!(BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
- 					      BTRFS_INODE_PREALLOC)) ||
--		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes,
--				    true) <= 0) {
-+		    btrfs_check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes,
-+					  true) <= 0) {
- 			inode_unlock(inode);
- 			return -EAGAIN;
- 		}
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 6862cd7e21a99..3f77ec5de8ec7 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4511,11 +4511,13 @@ int btrfs_truncate_block(struct inode *inode, loff_t from, loff_t len,
- 	struct extent_state *cached_state = NULL;
- 	struct extent_changeset *data_reserved = NULL;
- 	char *kaddr;
-+	bool only_release_metadata = false;
- 	u32 blocksize = fs_info->sectorsize;
- 	pgoff_t index = from >> PAGE_SHIFT;
- 	unsigned offset = from & (blocksize - 1);
- 	struct page *page;
- 	gfp_t mask = btrfs_alloc_write_mask(mapping);
-+	size_t write_bytes = blocksize;
- 	int ret = 0;
- 	u64 block_start;
- 	u64 block_end;
-@@ -4527,11 +4529,27 @@ int btrfs_truncate_block(struct inode *inode, loff_t from, loff_t len,
- 	block_start = round_down(from, blocksize);
- 	block_end = block_start + blocksize - 1;
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
  
--	ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
--					   block_start, blocksize);
--	if (ret)
--		goto out;
- 
-+	ret = btrfs_check_data_free_space(inode, &data_reserved, block_start,
-+					  blocksize);
-+	if (ret < 0) {
-+		if ((BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
-+					      BTRFS_INODE_PREALLOC)) &&
-+		    btrfs_check_can_nocow(BTRFS_I(inode), block_start,
-+					  &write_bytes, false) > 0) {
-+			/* For nocow case, no need to reserve data space */
-+			only_release_metadata = true;
-+		} else {
-+			goto out;
-+		}
-+	}
-+	ret = btrfs_delalloc_reserve_metadata(BTRFS_I(inode), blocksize);
-+	if (ret < 0) {
-+		if (!only_release_metadata)
-+			btrfs_free_reserved_data_space(inode, data_reserved,
-+					block_start, blocksize);
-+		goto out;
-+	}
- again:
- 	page = find_or_create_page(mapping, index, mask);
- 	if (!page) {
-@@ -4600,14 +4618,26 @@ int btrfs_truncate_block(struct inode *inode, loff_t from, loff_t len,
- 	set_page_dirty(page);
- 	unlock_extent_cached(io_tree, block_start, block_end, &cached_state);
- 
-+	if (only_release_metadata)
-+		set_extent_bit(&BTRFS_I(inode)->io_tree, block_start,
-+				block_end, EXTENT_NORESERVE, NULL, NULL,
-+				GFP_NOFS);
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
 +
- out_unlock:
--	if (ret)
--		btrfs_delalloc_release_space(inode, data_reserved, block_start,
--					     blocksize, true);
-+	if (ret) {
-+		if (only_release_metadata)
-+			btrfs_delalloc_release_metadata(BTRFS_I(inode),
-+					blocksize, true);
-+		else
-+			btrfs_delalloc_release_space(inode, data_reserved,
-+					block_start, blocksize, true);
-+	}
- 	btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize);
- 	unlock_page(page);
- 	put_page(page);
- out:
-+	if (only_release_metadata)
-+		btrfs_drew_write_unlock(&BTRFS_I(inode)->root->snapshot_lock);
- 	extent_changeset_free(data_reserved);
- 	return ret;
++	return ret;
  }
+ 
+ static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
