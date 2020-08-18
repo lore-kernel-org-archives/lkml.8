@@ -2,132 +2,114 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A187EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D58C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6D7204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5292075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EsPj6jpa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jbMgxGY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgHYNls convert rfc822-to-8bit (ORCPT
+        id S1726799AbgHYNmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:41:48 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38022 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726985AbgHYNjC (ORCPT
+        Tue, 25 Aug 2020 09:42:49 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41051 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726611AbgHYNlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:39:02 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-120-Q2tOW2ynOK-Wf1K_ok_aug-1; Tue, 25 Aug 2020 14:38:57 +0100
-X-MC-Unique: Q2tOW2ynOK-Wf1K_ok_aug-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 14:38:57 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Aug 2020 14:38:57 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Petr Mladek' <pmladek@suse.com>
-CC:     John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] printk: implement pr_cont_t
-Thread-Topic: [RFC PATCH 1/5] printk: implement pr_cont_t
-Thread-Index: AQHWdtr1XzVvufyPxEOt+PNltcCbQKlA7OUQgAfW5YCAABOKsA==
-Date:   Tue, 25 Aug 2020 13:38:57 +0000
-Message-ID: <0f3e3efffad64739a223273cc7c738bc@AcuMS.aculab.com>
-References: <20200819232632.13418-1-john.ogness@linutronix.de>
- <20200819232632.13418-2-john.ogness@linutronix.de>
- <20200820101625.GE4353@alley>
- <fb47baa77ff940e99224feac85a2f2d7@AcuMS.aculab.com>
- <20200825131041.GV4353@alley>
-In-Reply-To: <20200825131041.GV4353@alley>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 25 Aug 2020 09:41:40 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 2CB90BDB;
+        Tue, 25 Aug 2020 09:35:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=OB6C5rBdrsWYefSK+JPJv5u1Nkg
+        G5sD9y7dak5b46mg=; b=EsPj6jpasoYSP0YKt7mLyaiMGUGgtLvGKfqEaGYBUmp
+        6F8sYCCBPYEDXPhGBwdqATRn6G/s74WQmRxDZlfC2AtCmoTzDMZlkadxLNQcel1h
+        hVn+ydQYlQ8DAhH4UgiZMGT+0dOXDOg++qArL7XGXUCIaufkYafOiKyJ/vYJYi5K
+        n8Fi2+QciSv+fYUVTXT8eALX9oC2HI1a2vKhfbpRr9erniSKhxgOGFpyrqnTelX3
+        L+toz7iBjRrFZarLGA/TfwttmrwYdNxAHqudpMGRxJqBZEZx+VjnpBU8vICMQtT6
+        ieM03Pts2nTOU7pvtaNpycP/N0pqkSiWsd23XsUugwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OB6C5r
+        BdrsWYefSK+JPJv5u1NkgG5sD9y7dak5b46mg=; b=jbMgxGY8XZUU3NoJVcHFeq
+        3x9sPixGdxeuJBfUbpTiYbcG7z4m7sZOTNjI4RBi/fCHGzGUV5YUjQ7+nSBDThE+
+        61SsJZ3irmvDzt7bv69kz6baYEVwyOoQVyxlXnlSdLzkmHYivRCgVhIaAxql8EpM
+        B6mkmwYC7p8a6EFM4YwXe+Jx21cqPPyX8smGD7ifY+L258IwUIj8iPJiywQoFCXZ
+        TPhRrGalxT2y3PbWkPVpw1hUk7WeclJWIczmX5BxRuNKVrBLu4ZBwk5d9eBWjEPi
+        VBt3/ByFS8eTzO44AUFdJCKFEtHWnKO2uFUzNrFvKG95Ne87pvSOuDuLy+gZCCiQ
+        ==
+X-ME-Sender: <xms:nhNFX4NDcLveTBRdwVWoTEJZAxBQlCGZWOvkK46EMgAU_r2pnUyKNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:nhNFX--MLspTHky8cfdWSXoscLxGcU7RJlqIvHUsZjGMLCahO_oJww>
+    <xmx:nhNFX_QTJQ60vvWpQxCnSEURmFXFXtC7FkeZkzbd1gxzVdQmsl-6Dg>
+    <xmx:nhNFXwsjipdACMGmSyrbzjaiMN8-D1xpIHKfkaZFCMFbM7G-4vgpkw>
+    <xmx:nxNFX_6AsWog0CaOOUJVClBK0jcBKewTziwomVM9CpcA0radMDWdiw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EA9CF30600A3;
+        Tue, 25 Aug 2020 09:35:25 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 10:49:06 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     wens@csie.org, jernej.skrabec@siol.net, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/sun4i: Constify static structs
+Message-ID: <20200818084906.lhuzwqdoyqzapjsx@gilmour.lan>
+References: <20200804215337.54594-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7xomoy5wll6xmvne"
+Content-Disposition: inline
+In-Reply-To: <20200804215337.54594-1-rikard.falkeborn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek
-> Sent: 25 August 2020 14:11
-> 
-> On Thu 2020-08-20 12:33:23, David Laight wrote:
-> > From: Petr Mladek
-> > > Sent: 20 August 2020 11:16
-> > ...
-> > > Now that I think about it. This is the biggest problem with any temporary buffer
-> > > for pr_cont() lines. I am more and more convinced that we should just
-> > > _keep the current behavior_. It is not ideal. But sometimes mixed
-> > > messages are always better than lost ones.
-> >
-> > Maybe a marker to say 'more expected' might be useful.
-> > OTOH lack of a trailing '\n' probably signifies that a
-> > pr_cont() is likely to be next.
-> 
-> The problem is the "probably". Lack of trailing '\n' might also mean
-> that the author did not care. Note that newline is not strictly
-> required at the moment. The next message is concatenated only when
-> pr_cont() is used from the same process.
 
-Thinks.... (smoke comes out of ears...):
-If the 'trace entry' contained the pid and whether it was a pr_cont
-then the trace reader could merge continuation lines even if
-there was a small number of interleaved other traces.
+--7xomoy5wll6xmvne
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So anything reading continuously might break a continuation
-(as might happen if there is a trace from an ISR).
-But the output from dmesg and /var/log/messages will
-almost always be correct.
+Hi,
 
-This moves all the complexity away from the trace writing code.
+On Tue, Aug 04, 2020 at 11:53:37PM +0200, Rikard Falkeborn wrote:
+> A number of static variables are not modified and can be made const to
+> allow the compiler to put them in read-only memory.
+>=20
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-> I would personally hate printk when I debugged some hard-to-reproduce
-> bug, finally succeeded, and some message was missing just because
-> of a missing newline.
+Applied, thanks!
+Maxime
 
-My annoyance is that I want printk() to come out on the console
-(like it used to 30 years ago).
-I don't want the console output to be from a syslogd process.
-On SYSV killing syslogd (mostly) did the trick.
-x86 is annoying because you need to have setup a serial console
-(or have a high speed camera pointing at the vga monitor).
+--7xomoy5wll6xmvne
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > Unexpected pr_cont() could be output with a leading "... "
-> > to help indicate the message is a continuation.
-> 
-> Interesting idea. It might help to catch broken code. Well, I am still
-> not sure that people would appreciate this printk() behavior.
+-----BEGIN PGP SIGNATURE-----
 
-I was thinking of just catching the case where pr_cont()
-data can't be appended to the earlier line.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXzuWAgAKCRDj7w1vZxhR
+xeMiAP9ZL9rjwDAjy7IbU3HboVfFI4FAP7eQZPgomHMvsL0ToAD/Z2CtUjH4lak/
+EVZ2tUz2sOcYWfa9U+uzNZ0Cj4EOIgg=
+=uQCW
+-----END PGP SIGNATURE-----
 
-For direct tty output this would happen if an intervening
-printk() had to add an extra '\n' to terminate the partial line.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+--7xomoy5wll6xmvne--
