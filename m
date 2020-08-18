@@ -2,209 +2,160 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C96C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8551BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA9120706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFED20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEPxTmEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgHRDk3 (ORCPT
+        id S1726599AbgHRDmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:40:29 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:44740 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgHRDkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:40:12 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3EDC7200DE3;
-        Tue, 18 Aug 2020 05:40:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3943C2000ED;
-        Tue, 18 Aug 2020 05:40:04 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AF45B402C3;
-        Tue, 18 Aug 2020 05:39:56 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, gregkh@linuxfoundation.org,
-        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 3/5] dt-bindings: serial: Convert i.MX uart to json-schema
-Date:   Tue, 18 Aug 2020 11:34:43 +0800
-Message-Id: <1597721685-9280-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597721685-9280-1-git-send-email-Anson.Huang@nxp.com>
-References: <1597721685-9280-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 17 Aug 2020 23:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgHRDmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 23:42:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5967AC061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 20:42:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 189so8472553pgg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 20:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gP2XQBIW2OlXbQaxhBNI3R+v0ug5AXzB6T8DWxtEbVs=;
+        b=lEPxTmEF7EraOgHtYBxcToel/d9zf/g6f2ZwVSIkTkgPaGvEVoPRnanxHF+OsGwMNO
+         NatkP786/JuJ1wN/H+X59Rs6geSCrMKUy/5N9mG4BcxE9utIudZAbo0l3lnZVtTnAvNu
+         q9R4KXYZ7v8ezQewShjmU84itMGByEOtYWORkInDRpaQmGMF/uB7yYVvlbx2Wv4hLpsY
+         J+rztDMwrLz70/3+XlpJn40BywkiU0eE0gANNf+DZgUughEOGfZk+jjozqovFPkHfOp7
+         UlgWfHeuNhNJrjGD8tOU+dzrvg9RBGrmU4yMzTk7lcZRPIuqNQSmHUpI7S8eop6UcNaZ
+         o4UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gP2XQBIW2OlXbQaxhBNI3R+v0ug5AXzB6T8DWxtEbVs=;
+        b=eA0XheAtx8Hq1C9z2DeJf72GHbe3Qyj4ZnK26UAcUhte1qD2fojR9k/L9mjWh9deQA
+         nvPg7P0+PlIkomvbek1adFVcCsN4xncHAUmS/Na2fLyK6iJlg179L7viJH9APaGrHD83
+         Em+SjJz5/ax+yKdTp8CIEY2vbfetohagODENAZCBsXyEuOTit+Gzp/58QS5G9ERmx+MM
+         AHqaevMC8QDwG7P2oMTIFbdr7GASbLK3TXfj0CLm47UlkwiX4ZY3O7y28bFSIg5b/M79
+         IiM6LrFOnsrcxtw6Qw/yzlwUH1iW6hNw2rPtr1wfB84VmIGi0ZffWQduFOC2i9TdCFow
+         q+Mw==
+X-Gm-Message-State: AOAM533CfQmXjmE4IDg+5vS7fbW/9VAb4K/20Ow49jXkezHX0LPZ6mYV
+        ZxygId8AomTWSBEdPtH/Eqo=
+X-Google-Smtp-Source: ABdhPJzxReQt43p2QNoE1/SLM4Qx0zcr/0WUPFmhikT9oLiZEi/65Lybu8wdi0KcrzJh7+HnS/xOGg==
+X-Received: by 2002:a65:4bcf:: with SMTP id p15mr11478458pgr.81.1597722130885;
+        Mon, 17 Aug 2020 20:42:10 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id a5sm21588786pfi.79.2020.08.17.20.42.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 20:42:10 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v3] mfd: sprd: Add wakeup capability for PMIC irq
+Date:   Tue, 18 Aug 2020 11:41:58 +0800
+Message-Id: <20200818034158.28667-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX uart binding to DT schema format using json-schema.
+From: Baolin Wang <baolin.wang7@gmail.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no change.
----
- .../devicetree/bindings/serial/fsl-imx-uart.txt    | 40 ----------
- .../devicetree/bindings/serial/fsl-imx-uart.yaml   | 92 ++++++++++++++++++++++
- 2 files changed, 92 insertions(+), 40 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+When changing to use suspend-to-idle to save power, the PMIC irq can not
+wakeup the system due to lack of wakeup capability, which will cause
+the sub-irqs (such as power key) of the PMIC can not wake up the system.
+Thus we can add the wakeup capability for PMIC irq to solve this issue,
+as well as removing the IRQF_NO_SUSPEND flag to allow PMIC irq to be
+a wakeup source.
 
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-deleted file mode 100644
-index 9582fc2..0000000
---- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-+++ /dev/null
-@@ -1,40 +0,0 @@
--* Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
--
--Required properties:
--- compatible : Should be "fsl,<soc>-uart"
--- reg : Address and length of the register set for the device
--- interrupts : Should contain uart interrupt
--
--Optional properties:
--- fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
--                  in DCE mode by default.
--- fsl,inverted-tx , fsl,inverted-rx : Indicate that the hardware attached
--  to the peripheral inverts the signal transmitted or received,
--  respectively, and that the peripheral should invert its output/input
--  using the INVT/INVR registers.
--- rs485-rts-delay, rs485-rts-active-low, rs485-rx-during-tx,
--  linux,rs485-enabled-at-boot-time: see rs485.txt. Note that for RS485
--  you must enable either the "uart-has-rtscts" or the "rts-gpios"
--  properties. In case you use "uart-has-rtscts" the signal that controls
--  the transceiver is actually CTS_B, not RTS_B. CTS_B is always output,
--  and RTS_B is input, regardless of dte-mode.
--
--Please check Documentation/devicetree/bindings/serial/serial.yaml
--for the complete list of generic properties.
--
--Note: Each uart controller should have an alias correctly numbered
--in "aliases" node.
--
--Example:
--
--aliases {
--	serial0 = &uart1;
--};
--
--uart1: serial@73fbc000 {
--	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
--	reg = <0x73fbc000 0x4000>;
--	interrupts = <31>;
--	uart-has-rtscts;
--	fsl,dte-mode;
--};
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-new file mode 100644
-index 0000000..cba3f83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/fsl-imx-uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+Reported-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Tested-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+Changes from v2:
+* rebased on v5.9-rc1;
+
+Changes from v1:
+* addressed comments from Lee;
+* added tested-by from Chunyan.
+---
+ drivers/mfd/sprd-sc27xx-spi.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+index f8a8b918c60d..6b7956604a0f 100644
+--- a/drivers/mfd/sprd-sc27xx-spi.c
++++ b/drivers/mfd/sprd-sc27xx-spi.c
+@@ -189,7 +189,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+ 		ddata->irqs[i].mask = BIT(i);
+ 
+ 	ret = devm_regmap_add_irq_chip(&spi->dev, ddata->regmap, ddata->irq,
+-				       IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
++				       IRQF_ONESHOT, 0,
+ 				       &ddata->irq_chip, &ddata->irq_data);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "Failed to add PMIC irq chip %d\n", ret);
+@@ -202,9 +202,34 @@ static int sprd_pmic_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
++	device_init_wakeup(&spi->dev, true);
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int sprd_pmic_suspend(struct device *dev)
++{
++	struct sprd_pmic *ddata = dev_get_drvdata(dev);
 +
-+title: Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
++	if (device_may_wakeup(dev))
++		enable_irq_wake(ddata->irq);
 +
-+maintainers:
-+  - Fabio Estevam <fabio.estevam@nxp.com>
++	return 0;
++}
 +
-+allOf:
-+  - $ref: "serial.yaml"
-+  - $ref: "rs485.yaml"
++static int sprd_pmic_resume(struct device *dev)
++{
++	struct sprd_pmic *ddata = dev_get_drvdata(dev);
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: fsl,imx1-uart
-+      - const: fsl,imx21-uart
-+      - const: fsl,imx53-uart
-+      - const: fsl,imx6q-uart
-+      - items:
-+          - enum:
-+            - fsl,imx25-uart
-+            - fsl,imx27-uart
-+            - fsl,imx31-uart
-+            - fsl,imx35-uart
-+            - fsl,imx50-uart
-+            - fsl,imx51-uart
-+          - const: fsl,imx21-uart
-+      - items:
-+          - enum:
-+            - fsl,imx6sl-uart
-+            - fsl,imx6sll-uart
-+            - fsl,imx6sx-uart
-+            - fsl,imx6ul-uart
-+            - fsl,imx7d-uart
-+          - const: fsl,imx6q-uart
++	if (device_may_wakeup(dev))
++		disable_irq_wake(ddata->irq);
 +
-+  reg:
-+    maxItems: 1
++	return 0;
++}
++#endif
 +
-+  interrupts:
-+    maxItems: 1
++static SIMPLE_DEV_PM_OPS(sprd_pmic_pm_ops, sprd_pmic_suspend, sprd_pmic_resume);
 +
-+  fsl,dte-mode:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      Indicate the uart works in DTE mode. The uart works in DCE mode by default.
-+
-+  fsl,inverted-tx:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      Indicate that the hardware attached to the peripheral inverts the signal
-+      transmitted, and that the peripheral should invert its output using the
-+      INVT registers.
-+
-+  fsl,inverted-rx:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      Indicate that the hardware attached to the peripheral inverts the signal
-+      received, and that the peripheral should invert its input using the
-+      INVR registers.
-+
-+  uart-has-rtscts: true
-+
-+  rs485-rts-delay: true
-+  rs485-rts-active-low: true
-+  rs485-rx-during-tx: true
-+  linux,rs485-enabled-at-boot-time: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    aliases {
-+        serial0 = &uart1;
-+    };
-+
-+    uart1: serial@73fbc000 {
-+        compatible = "fsl,imx51-uart", "fsl,imx21-uart";
-+        reg = <0x73fbc000 0x4000>;
-+        interrupts = <31>;
-+        uart-has-rtscts;
-+        fsl,dte-mode;
-+    };
+ static const struct of_device_id sprd_pmic_match[] = {
+ 	{ .compatible = "sprd,sc2731", .data = &sc2731_data },
+ 	{},
+@@ -215,6 +240,7 @@ static struct spi_driver sprd_pmic_driver = {
+ 	.driver = {
+ 		.name = "sc27xx-pmic",
+ 		.of_match_table = sprd_pmic_match,
++		.pm = &sprd_pmic_pm_ops,
+ 	},
+ 	.probe = sprd_pmic_probe,
+ };
 -- 
-2.7.4
+2.20.1
 
