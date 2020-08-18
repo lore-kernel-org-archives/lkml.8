@@ -2,130 +2,127 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC139C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E806C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0991206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F33206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597754690;
+	bh=r7c1fjd16+AVQMuN7nXJ5UVWTq0jGTKJdJiFf7ffPWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BWNsPxSpQEzX4Fv14ARLBkA040rhGugDXJhesK+gJGvqFvEmPuCA9HA8cfmdTB75V
+	 LMdySmZInvcavl/wkVsalNpMeKk3vHrteXqGfXzKhLuMLnoygLvINzWovR99wwBQP0
+	 FVIbKKGyUE0vctUEDuWGFhKAwpV4e8oSwQNOvttA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgHRMoY convert rfc822-to-8bit (ORCPT
+        id S1726682AbgHRMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:44:24 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42464 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgHRMoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:44:22 -0400
-Received: by mail-il1-f193.google.com with SMTP id t13so17409265ile.9;
-        Tue, 18 Aug 2020 05:44:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DbyHrIOxa4jcO2ErW1gwDHjx1vIFDqRvp0Kn9SISwcw=;
-        b=XuyENUByL1JUnsF5zObVuGHKR7KROlOgpKRZCktZBAPPpV/KukmGJiYI7c73epJIbm
-         x80t7OL2yfrA451ciL89jAW09Fu1z4Nf+4wS1Fh8BC6zv5RL2ozXC6qhqB7T6N2RG0HV
-         ACd2H5QN4MseqK/DYssiiI8Z7f5uv/t+TG0GKSX9jc8e/Xbm5hjoVK1C74U9VD3ZNRVy
-         mlDo6oxzzWkl4AUfqNWnwU4jqv7pLzSNGYnG5teUiTRWuaciD9cLHBWopQUFPBU0YHTS
-         YtVjpcIcGGog0aCXA0rPYPYlUCq+Uo+hQF0jh/HKrCRmOF9U25c++0wVY7WtGhR9gmZO
-         jibA==
-X-Gm-Message-State: AOAM531QoPADDPZhGgYO+40Z3PPVt2VwwTHRJx1i3MKWOPalWVkzkgl/
-        rpTa+5BVR1flFfB6SpbzspHXC3igsT0HqR11GeM=
-X-Google-Smtp-Source: ABdhPJxWpu5n6piEUh6svMsCDBFsjQn4fo2xJvKgUOqpNv5S/bVOK6NyzvRqrLamhlzBRkHImAWk3CSE75v/MIZVCWk=
-X-Received: by 2002:a92:d30a:: with SMTP id x10mr17872887ila.287.1597754661152;
- Tue, 18 Aug 2020 05:44:21 -0700 (PDT)
+        Tue, 18 Aug 2020 08:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbgHRMor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:44:47 -0400
+Received: from quaco.ghostprotocols.net (179.176.9.68.dynamic.adsl.gvt.net.br [179.176.9.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1FBD206B5;
+        Tue, 18 Aug 2020 12:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597754687;
+        bh=r7c1fjd16+AVQMuN7nXJ5UVWTq0jGTKJdJiFf7ffPWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mbwH2LHVgagPDI+1DFHp6p510rDEm15bVLN5Uj6sG37cW5L1AOFcuJ3LOMDuFJLOT
+         X4ILCCCCdUPJzB1lCXPyj9AtUbJooz3Rq+hs31R33J0AQNhoc/YLtLS3XyT6JWdSdC
+         2qkv5nrleGpB85i+a/O3xX2BICSzlMiNuKdEtQUo=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F37CB40D3D; Tue, 18 Aug 2020 09:44:43 -0300 (-03)
+Date:   Tue, 18 Aug 2020 09:44:43 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] perf top: Skip side-band event setup if
+ HAVE_LIBBPF_SUPPORT is not set
+Message-ID: <20200818124443.GB2667554@kernel.org>
+References: <1597753837-16222-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
-In-Reply-To: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Tue, 18 Aug 2020 20:44:09 +0800
-Message-ID: <CAAhV-H5mqDUndoX=mam8S9JKn0nEUHc=NXb7FQJ-0uau=OqoAQ@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of
- enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
-To:     Youling Tang <tangyouling@loongson.cn>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597753837-16222-1-git-send-email-yangtiezhu@loongson.cn>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Youling,
+Em Tue, Aug 18, 2020 at 08:30:37PM +0800, Tiezhu Yang escreveu:
+> When I execute perf top without HAVE_LIBBPF_SUPPORT, there exists the
+> following segmentation fault, skip the side-band event setup to fix it,
+> this is similar with commit 1101c872c8c7 ("perf record: Skip side-band
+> event setup if HAVE_LIBBPF_SUPPORT is not set").
+> 
+> [yangtiezhu@linux perf]$ ./perf top
+> 
+> <SNIP>
+> perf: Segmentation fault
+> Obtained 6 stack frames.
+> ./perf(sighandler_dump_stack+0x5c) [0x12011b604]
+> [0xffffffc010]
+> ./perf(perf_mmap__read_init+0x3e) [0x1201feeae]
+> ./perf() [0x1200d715c]
+> /lib64/libpthread.so.0(+0xab9c) [0xffee10ab9c]
+> /lib64/libc.so.6(+0x128f4c) [0xffedc08f4c]
+> Segmentation fault
+> 
+> I use git bisect to find commit b38d85ef49cf ("perf bpf: Decouple
+> creating the evlist from adding the SB event") is the first bad
+> commit, so also add the Fixes tag.
+> 
+> Fixes: b38d85ef49cf ("perf bpf: Decouple creating the evlist from adding the SB event")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-On Tue, Aug 18, 2020 at 7:35 PM Youling Tang <tangyouling@loongson.cn> wrote:
->
-> After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
->
-> Fix the following build error:
->
-> drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
->   VIRTUAL,
->   ^
-> In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
->                  from ./arch/mips/include/asm/mmzone.h:12,
->                  from ./include/linux/mmzone.h:962,
->                  from ./include/linux/gfp.h:6,
->                  from ./include/linux/slab.h:15,
->                  from ./include/linux/genhd.h:16,
->                  from ./include/linux/blkdev.h:8,
->                  from drivers/md/persistent-data/dm-block-manager.h:11,
->                  from drivers/md/dm-thin-metadata.h:10,
->                  from drivers/md/dm-thin.c:7:
-> ./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
-> definition of ‘VIRTUAL’ was here VIRTUAL = 3
->                                  ^
-> scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
-> make[2]: *** [drivers/md/dm-thin.o] Error 1
->
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Yeah, thanks, applying.
+
+- Arnaldo
+
 > ---
->  arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
->  arch/mips/loongson64/env.c                         | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
-> index afc92b7..a4ef4ac 100644
-> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
-> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-> @@ -195,7 +195,7 @@ struct boot_params {
->  enum loongson_bridge_type {
->         LS7A = 1,
->         RS780E = 2,
-> -       VIRTUAL = 3
-> +       VIRT = 3
->  };
-Thank you for your patch, but I think this problem is because of
-invalid .h file inclusion (arch-dependent .h file should not be
-included in drivers), and Xuerui Wang has investigated it for some
-time. He has a draft patch (haven't sent yet) which I think is a
-better way. So, please wait some time.
-
-Huacai
->
->  struct loongson_system_configuration {
-> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-> index 134cb8e..623b3f1 100644
-> --- a/arch/mips/loongson64/env.c
-> +++ b/arch/mips/loongson64/env.c
-> @@ -180,8 +180,8 @@ void __init prom_init_env(void)
->                 loongson_sysconf.early_config = rs780e_early_config;
->                 break;
->         default:
-> -               pr_info("The bridge chip is VIRTUAL\n");
-> -               loongson_sysconf.bridgetype = VIRTUAL;
-> +               pr_info("The bridge chip is VIRT\n");
-> +               loongson_sysconf.bridgetype = VIRT;
->                 loongson_sysconf.early_config = virtual_early_config;
->                 loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
->                 break;
-> --
+>  tools/perf/builtin-top.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 994c230..7c64134 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1746,6 +1746,7 @@ int cmd_top(int argc, const char **argv)
+>  		goto out_delete_evlist;
+>  	}
+>  
+> +#ifdef HAVE_LIBBPF_SUPPORT
+>  	if (!top.record_opts.no_bpf_event) {
+>  		top.sb_evlist = evlist__new();
+>  
+> @@ -1759,6 +1760,7 @@ int cmd_top(int argc, const char **argv)
+>  			goto out_delete_evlist;
+>  		}
+>  	}
+> +#endif
+>  
+>  	if (perf_evlist__start_sb_thread(top.sb_evlist, target)) {
+>  		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
+> -- 
 > 2.1.0
->
+> 
+
+-- 
+
+- Arnaldo
