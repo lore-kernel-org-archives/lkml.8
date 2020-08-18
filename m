@@ -2,347 +2,144 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C189C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 179152054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YtEnc+zs"
+	by mail.kernel.org (Postfix) with ESMTP id 67EE92054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597763723;
+	bh=oS4H9N77c9RTUfV0WFBdDsZdB594DRNKFt9jHii7/Pk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QYHKpvnAp5wh6WOGZmbezq9LPHuTJpvuEUfc2c4TDhD0DlTwQKtDYPFeBmgKj7EvG
+	 MqrPCc3+jgNPbkwmDmdzeCId0hd4o1sTHOJ6/H1GQMMtzxsQI/X99tpx6sU/YcbDgW
+	 ZZJxzNlGCu6JKRAuritMxN/tOGDP1oIxbG2zJEXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgHRPMm (ORCPT
+        id S1726862AbgHRPPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgHRPMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:12:21 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9198C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:12:18 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id k25so10270044vsm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9cwNj6jiS2head8n5mYo8172HJFHrdfK7H9omFC5dMU=;
-        b=YtEnc+zszperrGv/O+6rOzDigV1yPXEvtKJCEFdkYBKuKUOzLWpWyORAFXSIO136Cd
-         LGqJWm3kFy8SV4qZHA3MOK/0giLMlWI/7vEeqgRd78oUSDFH7HzesX3wzuHor18nRjQt
-         d7fDbV6+J6FFu+lhXhhs5iDVRn0vJBanmJEvc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9cwNj6jiS2head8n5mYo8172HJFHrdfK7H9omFC5dMU=;
-        b=tKQhIX0uKYN2VzI3Bbg71/LA9d212bWkx6C472VNFsLxyW4Ky9fDVkV1gHshQhkXoN
-         S7NNeyMN6esxmv5ApG6RzfURwtT4m0IunooUu+/O0T27f92UUIOdoNslTfMNDcPKajwd
-         WfGEbGcXUBiRneV3E7BkDDoqwceNY63o3a/Co+QAcZ5R+rhqbVXoSPxZbtr5Jpm2+Lyt
-         M5y8Wu2HwIIyxobtBFBMh6AyD8n81kH3s7197UbnbRzBQ0p9X9RQ0Ot/YCU0QN4N7E6T
-         EDSbPwsHuABdRsQx8sLUD6IDAN8hJ0qwS7n4RpTc18LDd2S54w4YZwzWjTEtd0LX1oBz
-         AomA==
-X-Gm-Message-State: AOAM532XFrbKMG+YxpW8kEbJCELbwpIu1xuZdbKy/+FVUBsUf4sHnL43
-        TAIYE8GCKcTCQH7AGHRO69se9iRBKCQ/9g==
-X-Google-Smtp-Source: ABdhPJyqHRZPXWzl3xVcPy4AT6ql4xFIHdJUbSbVR/9MKoGyGkVqrXUx8p7ypsSzqGSSE4hjwoSS4w==
-X-Received: by 2002:a67:7c11:: with SMTP id x17mr12627748vsc.155.1597763537330;
-        Tue, 18 Aug 2020 08:12:17 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id h8sm2753098uab.13.2020.08.18.08.12.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 08:12:17 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id q13so10267986vsn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:12:16 -0700 (PDT)
-X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr11995699vsg.6.1597763534611;
- Tue, 18 Aug 2020 08:12:14 -0700 (PDT)
+        Tue, 18 Aug 2020 11:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgHRPPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:15:12 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A32D2054F;
+        Tue, 18 Aug 2020 15:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597763711;
+        bh=oS4H9N77c9RTUfV0WFBdDsZdB594DRNKFt9jHii7/Pk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YdFq56/b16kAMnBdnZ6baWZABAlJJGBJgOKkjQDMCQfQCSWjWRVfRr+sRvX3gtGyh
+         +SiINg939ZP1cl7qV80GduJeH7HMDA78T/48+EpXglIQvuLzBGINK0Z4PgE6hE9UqX
+         zEHUD6ytaz3AMOI3QG/7T6E18gvUJ+xcMxjz5oHQ=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k83KP-003wAO-M1; Tue, 18 Aug 2020 16:15:09 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh@kernel.org>, Suman Anna <s-anna@ti.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: [GIT PULL] irqchip fixes for 5.9, take #1
+Date:   Tue, 18 Aug 2020 16:14:48 +0100
+Message-Id: <20200818151448.472216-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com> <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
-In-Reply-To: <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 18 Aug 2020 08:12:01 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
-Message-ID: <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
-Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, john.stultz@linaro.org, lokeshvutla@ti.com, nm@ti.com, robh@kernel.org, s-anna@ti.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Thomas,
 
-On Tue, Aug 18, 2020 at 2:40 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi,
->
-> On 2020-08-18 02:35, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Mon, Aug 17, 2020 at 7:47 AM Sai Prakash Ranjan
-> > <saiprakash.ranjan@codeaurora.org> wrote:
-> >>
-> >> From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
-> >>
-> >> Older chipsets may not be allowed to configure certain LLCC registers
-> >> as that is handled by the secure side software. However, this is not
-> >> the case for newer chipsets and they must configure these registers
-> >> according to the contents of the SCT table, while keeping in mind that
-> >> older targets may not have these capabilities. So add support to allow
-> >> such configuration of registers to enable capacity based allocation
-> >> and power collapse retention for capable chipsets.
-> >
-> > I have very little idea about what the above means.  That being said,
-> > what's broken that this patch fixes?  Please include this in the CL
-> > description.  It should answer, in the very least, the following two
-> > questions:
-> >
->
-> As the commit message says about secure software configuring these LLCC
-> registers,
-> usually 2 things can happen in that case.
->
-> 1) Accessing those registers in non secure world like Kernel would
-> result in a
-> fault which is trapped by secure side.
->
-> 2) Access to those registers may be just ignored and there will be no
-> faults.
->
-> So for older chipsets, this is a fix to not allow them to access those
-> registers.
-> For newer chipsets, we follow the recommended settings from HW/SW arch
-> teams.
-> But... upstream llcc driver only supports SDM845 currently which is not
-> required
-> to configure those registers and as per my testing, no crash is observed
-> on SDM845.
-> So we won't need fixes tag.
->
-> > a) Were existing attempts to do capacity based allocation failing, or
-> > is capacity based allocation a new whizbang feature that a future
-> > patch will add and you need this one to land first?
-> >
->
-> Capacity-based allocation and Way-based allocation are cache
-> partitioning
-> schemes/algorithms usually used in shared LLCs. Now which one to use or
-> why
-> one is preferred over the other are decided by HW/SW architecture teams
-> and are
-> recommended by them. So if the question is what is capacity based
-> allocation and
-> how it works, then I am afraid that I will not be able to explain that
-> algorithm
-> just like that.
+As -rc1 is out, here's the first batches of fixes for 5.9. The most
+important one is a fix for a typo that broke modular irqchips using
+the brand new set of macros. Oh hum...
 
-I guess to start, it wasn't obvious (to me) that there were two
-choices and we were picking one.  Mentioning that the other
-alternative was way-based allocation would help a lot.  Even if you
-can't fully explain the differences between the two, adding something
-to the commit message indicating that this is a policy decision (in
-other words, both work but each have their tradeoffs) would help.
-Something like this, if it's correct:
+The rest of it is what I was hinting at when I sent the original 5.9
+pull request, with a bunch of TI updates that deal with the change of
+their firmware interface. The handling of the dependencies was bad
+enough that I couldn't send it before -rc1 was out...
 
-In general we try to enable capacity based allocation (instead of the
-default way based allocation) since that gives us better performance
-with the current software / hardware configuration.
+Please pull,
 
+	M.
 
-> > b) Why was it bad not to enable power collapse retention?  Was this
-> > causing things to get corrupted after resume?  Was this causing us to
-> > fail to suspend?  Were we burning too little power in S3 and the
-> > battery vendors are looking for an excuse to sell bigger batteries?
-> >
-> > I'm not very smart and am also lacking documentation for what the heck
-> > all this is, so I'm looking for the "why" of your patch.
-> >
->
-> That's a fair point. I will try to dig through to find some context for
-> "question b"
-> and check if there were any battery vendors involved in this decision ;)
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
 
-Thanks!
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
 
+are available in the Git repository at:
 
-> >> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> >> (sai: use table instead of dt property and minor commit msg change)
-> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> >> ---
-> >>
-> >> Changes in v2:
-> >>  * Fix build errors reported by kernel test robot.
-> >>
-> >> ---
-> >>  drivers/soc/qcom/llcc-qcom.c | 27 +++++++++++++++++++++++++++
-> >>  1 file changed, 27 insertions(+)
-> >>
-> >> diff --git a/drivers/soc/qcom/llcc-qcom.c
-> >> b/drivers/soc/qcom/llcc-qcom.c
-> >> index 429b5a60a1ba..865f607cf502 100644
-> >> --- a/drivers/soc/qcom/llcc-qcom.c
-> >> +++ b/drivers/soc/qcom/llcc-qcom.c
-> >> @@ -45,6 +45,9 @@
-> >>  #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
-> >>  #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
-> >>
-> >> +#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
-> >> +#define LLCC_TRP_PCB_ACT              0x21F04
-> >> +
-> >>  #define BANK_OFFSET_STRIDE           0x80000
-> >>
-> >>  /**
-> >> @@ -318,6 +321,11 @@ size_t llcc_get_slice_size(struct llcc_slice_desc
-> >> *desc)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(llcc_get_slice_size);
-> >>
-> >> +static const struct of_device_id __maybe_unused
-> >> qcom_llcc_configure_of_match[] = {
-> >> +       { .compatible = "qcom,sc7180-llcc" },
-> >> +       { }
-> >> +};
-> >
-> > Why are you introducing a whole second table?  Shouldn't you just add
-> > a field to "struct qcom_llcc_config" ?
-> >
->
-> This was my 2nd option, first one was to have this based on the version
-> of LLCC
-> which are exposed by hw info registers. But that didn't turn out good
-> since I
-> couldn't find any relation of this property with LLCC version.
->
-> Second option was as you mentioned to have a field to qcom_llcc_config.
-> Now this is good,
-> but then I thought that if we add LLCC support for 20(random number)
-> SoCs of which
-> 10 is capable of supporting cap_based_alloc and rest 10 are not, then we
-> will still be adding
-> 20 more lines to each SoC's llcc_config if we follow this 2nd option.
+  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-fixes-5.9-1
 
-If you do it right, you'd only need to add lines to the SoCs that need
-it.  Linux conventions in general are that it's OK (and encouraged) to
-rely on the fact that if you don't mention a variable in static
-initialization it's initted to 0/False/NULL.  So if the member
-variable is "need_llcc_config" then you only need to add this in
-places where you're setting it to true.  It only needs to be a boolean
-so if later someone really is worried about all the bytes that flags
-like this are taking up we can use a bitfield.  For now (presumably)
-just adding a boolean would be more efficient since (presumably) the
-extra code needed to access a bitfield would be more than the extra
-data bytes used.  In theory this could also be initdata probably, too.
+for you to fetch changes up to 7828a3ef8646fb2e69ed45616c8453a037ca7867:
 
+  irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers (2020-08-17 08:06:11 +0100)
 
-> So why not opt for a 3rd option with the table where you just need to
-> specify only the capable
-> targets which is just 10 in our sample case above.
+----------------------------------------------------------------
+irqchip fixes for Linux 5.9, take #1
 
-Are you trying to save space?  ...or complexity?  Sure a good compiler
-will probably pool the constant string here so you won't need to
-allocate it twice, but IMO having a second match table is more
-complex.  You also need at least a pointer + bool per entry.  Each
-probe will now need to parse through all these strings, too.  None of
-this is a big deal, but I'd bet just adding a field to the existing
-struct is lower overhead all around.
+- Fix an embarassing typo in the new module helpers, leading
+  to the probe failing most of the time
 
+- The promised TI firmware rework that couldn't make it into
+  the merge window due to a very badly managed set of dependency
 
-> Am I just overthinking this too much and should just go with the 2nd
-> option as you mentioned?
+----------------------------------------------------------------
+Lokesh Vutla (13):
+      firmware: ti_sci: Drop the device id to resource type translation
+      firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
+      firmware: ti_sci: Add support for getting resource with subtype
+      dt-bindings: irqchip: ti, sci-intr: Update bindings to drop the usage of gic as parent
+      dt-bindings: irqchip: Convert ti, sci-intr bindings to yaml
+      irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
+      dt-bindings: irqchip: ti, sci-inta: Update docs to support different parent.
+      dt-bindings: irqchip: Convert ti, sci-inta bindings to yaml
+      irqchip/ti-sci-inta: Do not store TISCI device id in platform device id field
+      irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+      arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
+      arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
+      arm64: dts: k3-am65: Update the RM resource types
 
-Someone could feel free to vote against me, but I'd just add to the
-existing config.
+Marc Zyngier (1):
+      irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
 
-
-> >> +
-> >>  static int qcom_llcc_cfg_program(struct platform_device *pdev)
-> >>  {
-> >>         int i;
-> >> @@ -327,13 +335,17 @@ static int qcom_llcc_cfg_program(struct
-> >> platform_device *pdev)
-> >>         u32 attr0_val;
-> >>         u32 max_cap_cacheline;
-> >>         u32 sz;
-> >> +       u32 disable_cap_alloc = 0, retain_pc = 0;
-> >
-> > Don't init to 0.  See below.
-> >
-> >
-> >>         int ret = 0;
-> >>         const struct llcc_slice_config *llcc_table;
-> >>         struct llcc_slice_desc desc;
-> >> +       const struct of_device_id *llcc_configure;
-> >>
-> >>         sz = drv_data->cfg_size;
-> >>         llcc_table = drv_data->cfg;
-> >>
-> >> +       llcc_configure = of_match_node(qcom_llcc_configure_of_match,
-> >> pdev->dev.of_node);
-> >> +
-> >
-> > As per above, just use the existing config.
-> >
->
-> See above explanation.
->
-> >
-> >>         for (i = 0; i < sz; i++) {
-> >>                 attr1_cfg =
-> >> LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
-> >>                 attr0_cfg =
-> >> LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
-> >> @@ -369,6 +381,21 @@ static int qcom_llcc_cfg_program(struct
-> >> platform_device *pdev)
-> >>                                         attr0_val);
-> >>                 if (ret)
-> >>                         return ret;
-> >> +
-> >> +               if (llcc_configure) {
-> >> +                       disable_cap_alloc |=
-> >> llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
-> >
-> > Don't "|=".  You're the only place touching this variable.  Just set
-> > it.
-> >
->
-> Ack, will change.
->
-> >
-> >> +                       ret = regmap_write(drv_data->bcast_regmap,
-> >> +
-> >> LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
-> >> +                       if (ret)
-> >> +                               return ret;
-> >> +
-> >> +                       retain_pc |= llcc_table[i].retain_on_pc <<
-> >> llcc_table[i].slice_id;
-> >
-> > Don't "|=".  You're the only place touching this variable.  Just set
-> > it.
-> >
->
-> Ack, will change.
->
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
+ .../bindings/interrupt-controller/ti,sci-inta.txt  |  66 ---------
+ .../bindings/interrupt-controller/ti,sci-inta.yaml |  98 +++++++++++++
+ .../bindings/interrupt-controller/ti,sci-intr.txt  |  82 -----------
+ .../bindings/interrupt-controller/ti,sci-intr.yaml | 102 ++++++++++++++
+ MAINTAINERS                                        |   4 +-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |  36 +++--
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi            |  12 +-
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi         |   8 +-
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts     |   4 +-
+ .../boot/dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi          |  43 +++---
+ arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi    |  12 +-
+ drivers/firmware/ti_sci.c                          | 155 +++++++++------------
+ drivers/irqchip/irq-ti-sci-inta.c                  |  95 ++++++++++---
+ drivers/irqchip/irq-ti-sci-intr.c                  | 152 ++++++++++++--------
+ drivers/irqchip/irqchip.c                          |   2 +-
+ include/linux/soc/ti/ti_sci_protocol.h             |  13 ++
+ 17 files changed, 517 insertions(+), 377 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
