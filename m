@@ -2,104 +2,73 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A66C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0160C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D492206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597739069;
-	bh=lvoIx6zrtGarVXAFh0+hsNcvEEOGzgbtQEZQV2jEKKQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=2W1zx5KzLOZWgYQ55cw66wU9FeLOHWUKHMYFZWuu/BXoJoVQTbocvMXg2cLB1WgMJ
-	 zH17ZtF/51MuwEjyzLgEuqXBAvYMPVg08wtnwftUW6tt3gj2AMf4R4CN8A+2oPDVb0
-	 +wPfgbT5jOdlcWn/6sQnF3DE0dzmo1P3DV1ilU20=
+	by mail.kernel.org (Postfix) with ESMTP id 84D40206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgHRIY2 (ORCPT
+        id S1726514AbgHRI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:24:28 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46963 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRIY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:24:27 -0400
-Received: by mail-ed1-f67.google.com with SMTP id t15so14524657edq.13;
-        Tue, 18 Aug 2020 01:24:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WG22D/gwZ7xzs/C2AvkIzCxxa5fNF2uLuw1FILLARV8=;
-        b=gTOa0Q7AyzdAfG2XeblskmxdJAPUKwf7K6gc+tadpCuXvEOhvEzt54eauQMcSVcuGE
-         tm7fjmkojuDiMrF4KsEZtZgNhsTlxkTpLAicYkDuWnaH24g043MCkrWgm7g/LWZqFXt8
-         YqGl00EvlpY033V5eBqTV/v/Wf+SKUZpi2yoACO+5lrJ8NAomUEeSAYS0g0DOguVXEj3
-         OTdz/Q3LvMTdiX9JA5aME8fHAGtnSW+2RRXYFHQZEFnoss0fb67e+vlM1zXqvn+d19Wy
-         23SD3Oo6AHRXlfKeHNVExhq5AC4IwxKfP0xkb+HqzoBJAx4TakOy6F2f0Y3FpkEGv4LC
-         QWYQ==
-X-Gm-Message-State: AOAM5310QAltC+12JO+PUPCTfqdu9ryFiLKA6eR7jDtzSaHldaGdi0xC
-        K4moIIc8VwKqcLRrP5/isTJbMGfcM5k=
-X-Google-Smtp-Source: ABdhPJz29GU6yDuS7iEntVoMeX2Yk00xshKe72YBZjf1eLG7m2SSRiqOYxhUKRBAqe9u8irh36qeZQ==
-X-Received: by 2002:a05:6402:17c2:: with SMTP id s2mr18192711edy.188.1597739064422;
-        Tue, 18 Aug 2020 01:24:24 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id v10sm15115731eda.87.2020.08.18.01.24.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 01:24:23 -0700 (PDT)
-Subject: Re: [PATCH] n_gsm: Fix write handling for zero bytes written
-To:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200817135454.28505-1-tony@atomide.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <1b8538a8-d8b6-4287-36e1-aa1e0863ff2d@kernel.org>
-Date:   Tue, 18 Aug 2020 10:24:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 04:26:21 -0400
+Received: from muru.com ([72.249.23.125]:40692 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgHRI0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:26:20 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 602A4810D;
+        Tue, 18 Aug 2020 08:26:18 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 11:26:45 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     santosh.shilimkar@oracle.com
+Cc:     linux-omap@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
+Message-ID: <20200818082645.GM2994@atomide.com>
+References: <20200702154513.31859-1-tony@atomide.com>
+ <20200817065300.GD2994@atomide.com>
+ <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817135454.28505-1-tony@atomide.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17. 08. 20, 15:54, Tony Lindgren wrote:
-> If write returns zero we currently end up removing the message
-> from the queue. Instead of removing the message, we want to just
-> break out of the loop just like we already do for error codes.
+* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [200817 15:25]:
+> On 8/16/20 11:53 PM, Tony Lindgren wrote:
+> > Hi Santosh,
+> > 
+> > * Tony Lindgren <tony@atomide.com> [200702 18:46]:
+> > > Hi all,
+> > > 
+> > > Here's v4 set of patches to add genpd support to the PRM (Power and Reset
+> > > Module) driver.
+> > > 
+> > > Initially we just add one hardware accelerator power domain for sgx,
+> > > and one interconnect instance for l4_abe. The rest of the SoC specific
+> > > domain data is probably best added one SoC at a time based on generated
+> > > data.
+> > 
+> > Care to ack some of these patches? I'd like to get this into Linux next
+> > for v5.10 :)
+> > 
+> Sure,
+> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
 
-When exactly does the only writer (gsmld_output) return zero for
-non-zero len parameter?
+Thanks, I've pushed out this series into omap-for-v5.10/prm-genpd and
+for-next branches.
 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/tty/n_gsm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-> --- a/drivers/tty/n_gsm.c
-> +++ b/drivers/tty/n_gsm.c
-> @@ -691,7 +691,8 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
->  			print_hex_dump_bytes("gsm_data_kick: ",
->  					     DUMP_PREFIX_OFFSET,
->  					     gsm->txframe, len);
-> -		if (gsm->output(gsm, gsm->txframe, len) < 0)
-> +
-> +		if (gsm->output(gsm, gsm->txframe, len) <= 0)
->  			break;
->  		/* FIXME: Can eliminate one SOF in many more cases */
->  		gsm->tx_bytes -= msg->len;
-> 
+Regards,
 
-thanks,
--- 
-js
+Tony
