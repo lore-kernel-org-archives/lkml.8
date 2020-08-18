@@ -2,87 +2,87 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D064C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B707B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:51:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XyxMzEeE"
+	by mail.kernel.org (Postfix) with ESMTP id DCCDE20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgHRMvd (ORCPT
+        id S1726705AbgHRMwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:51:33 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:45009 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726782AbgHRMv3 (ORCPT
+        Tue, 18 Aug 2020 08:52:14 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60680 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHRMwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:51:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597755089; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=2JdOswTmqkhfgTXPI/xi2S0NDW0ZKi6weRpD4CL01pQ=;
- b=XyxMzEeEMeF+GB0s0czwKSwGSUvGV3X21jlpqE7ERKpqsV8wEAZoXT+yzdk7ONTPCwscMRji
- GYMUZV05Sah+WV3LJZZb/vstk1irzfX87Bq2wVzimSBMP0kilSGMr21MmFxQVFbjUAGNslmk
- 2/NXFrZcY6Bg/OLW+Rz0fPAYuVk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3bcecc03528d4024d3c797 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 12:51:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CCD43C4339C; Tue, 18 Aug 2020 12:51:24 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A43EC433CA;
-        Tue, 18 Aug 2020 12:51:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A43EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 18 Aug 2020 08:52:05 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k815n-002tHu-Ks; Tue, 18 Aug 2020 06:51:55 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k815m-0002uy-Vs; Tue, 18 Aug 2020 06:51:55 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        criu@openvz.org, bpf@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
+        "Daniel P. Berrang\?\?" <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
+        <20200817220425.9389-17-ebiederm@xmission.com>
+        <20200818112020.GA17080@infradead.org>
+Date:   Tue, 18 Aug 2020 07:48:21 -0500
+In-Reply-To: <20200818112020.GA17080@infradead.org> (Christoph Hellwig's
+        message of "Tue, 18 Aug 2020 12:20:20 +0100")
+Message-ID: <87blj83ysq.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtw88: fix spelling mistake: "unsupport" -> "unsupported"
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200806120803.60113-1-colin.king@canonical.com>
-References: <20200806120803.60113-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200818125124.CCD43C4339C@smtp.codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:51:24 +0000 (UTC)
+Content-Type: text/plain
+X-XM-SPF: eid=1k815m-0002uy-Vs;;;mid=<87blj83ysq.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19i1uubQLTFHwGCBALZbWaXu5opyhIYahI=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 17/17] file: Rename __close_fd to close_fd and remove the files parameter
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+Christoph Hellwig <hch@infradead.org> writes:
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There are some spelling mistakes in rtw_info messages. Fix these.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Please kill off ksys_close as well while you're at it.
 
-Patch applied to wireless-drivers-next.git, thanks.
+Good point.  ksys_close is just a trivial wrapper around close_fd.  So
+the one caller of ksys_close autofs_dev_ioctl_closemount can be
+trivially changed to call close_fd.
 
-86c96422a3b3 rtw88: fix spelling mistake: "unsupport" -> "unsupported"
-
--- 
-https://patchwork.kernel.org/patch/11704489/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Eric
