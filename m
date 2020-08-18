@@ -2,72 +2,229 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C24C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A7DC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47742065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0052065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:10:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jONCCtl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHRKJf (ORCPT
+        id S1726685AbgHRKKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:09:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37881 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRKJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:09:35 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k7yYf-0000al-2x; Tue, 18 Aug 2020 10:09:33 +0000
-Date:   Tue, 18 Aug 2020 12:09:31 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        criu@openvz.org, bpf@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH 03/17] exec: Remove reset_files_struct
-Message-ID: <20200818100931.oswih4fwmgc3c4nj@wittgenstein>
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
- <20200817220425.9389-3-ebiederm@xmission.com>
+        Tue, 18 Aug 2020 06:10:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60175 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgHRKK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:10:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597745427; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=cMiPEOYAp7lCAutY0bCyWT5k1cICbkV3n89hqvcObrw=; b=jONCCtl0iKL+T33umq+LjgYu9I3dW/2gPMPs2FK4o5MyT2MBW5E+dixQxOujn+oZ+MduHRE7
+ B+zBdYVVgH2b/HSoo0REHvz2kbUOi/rX+DvCM/FQjcw39Cttq5MDh6KpJoutHS5IBZBxmW6q
+ 1vqjwhNsG9pIjbBZADsCbk42Osw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f3ba913f2b697637a2d8bb1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 10:10:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9BD14C433B2; Tue, 18 Aug 2020 10:10:25 +0000 (UTC)
+Received: from [192.168.1.7] (unknown [59.99.218.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akhilpo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08D03C433C6;
+        Tue, 18 Aug 2020 10:10:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08D03C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
+Subject: Re: [PATCH 16/20] drm/msm/a6xx: Add support for per-instance
+ pagetables
+To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Eric Anholt <eric@anholt.net>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200817220238.603465-1-robdclark@gmail.com>
+ <20200817220238.603465-17-robdclark@gmail.com>
+From:   Akhil P Oommen <akhilpo@codeaurora.org>
+Message-ID: <e10e295a-7022-8250-f01d-dbf4ba98e786@codeaurora.org>
+Date:   Tue, 18 Aug 2020 15:40:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817220425.9389-3-ebiederm@xmission.com>
+In-Reply-To: <20200817220238.603465-17-robdclark@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:04:11PM -0500, Eric W. Biederman wrote:
-> Now that exec no longer needs to restore the previous value of current->files
-> on error there are no more callers of reset_files_struct so remove it.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
+Reviewed-by: Akhil P Oommen <akhilpo@codeaurora.org>
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+On 8/18/2020 3:31 AM, Rob Clark wrote:
+> From: Jordan Crouse <jcrouse@codeaurora.org>
+> 
+> Add support for using per-instance pagetables if all the dependencies are
+> available.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 63 +++++++++++++++++++++++++++
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
+>   drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
+>   3 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 5eabb0109577..d7ad6c78d787 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -81,6 +81,49 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+>   	OUT_RING(ring, upper_32_bits(iova));
+>   }
+>   
+> +static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
+> +		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
+> +{
+> +	phys_addr_t ttbr;
+> +	u32 asid;
+> +	u64 memptr = rbmemptr(ring, ttbr0);
+> +
+> +	if (ctx == a6xx_gpu->cur_ctx)
+> +		return;
+> +
+> +	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
+> +		return;
+> +
+> +	/* Execute the table update */
+> +	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
+> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
+> +
+> +	OUT_RING(ring,
+> +		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
+> +		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
+> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
+> +	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
+> +
+> +	/*
+> +	 * Write the new TTBR0 to the memstore. This is good for debugging.
+> +	 */
+> +	OUT_PKT7(ring, CP_MEM_WRITE, 4);
+> +	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
+> +	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
+> +	OUT_RING(ring, lower_32_bits(ttbr));
+> +	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
+> +
+> +	/*
+> +	 * And finally, trigger a uche flush to be sure there isn't anything
+> +	 * lingering in that part of the GPU
+> +	 */
+> +
+> +	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
+> +	OUT_RING(ring, 0x31);
+> +
+> +	a6xx_gpu->cur_ctx = ctx;
+> +}
+> +
+>   static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+>   {
+>   	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
+> @@ -90,6 +133,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+>   	struct msm_ringbuffer *ring = submit->ring;
+>   	unsigned int i;
+>   
+> +	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
+> +
+>   	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
+>   		rbmemptr_stats(ring, index, cpcycles_start));
+>   
+> @@ -696,6 +741,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+>   	/* Always come up on rb 0 */
+>   	a6xx_gpu->cur_ring = gpu->rb[0];
+>   
+> +	a6xx_gpu->cur_ctx = NULL;
+> +
+>   	/* Enable the SQE_to start the CP engine */
+>   	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
+>   
+> @@ -1008,6 +1055,21 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
+>   	return (unsigned long)busy_time;
+>   }
+>   
+> +static struct msm_gem_address_space *
+> +a6xx_create_private_address_space(struct msm_gpu *gpu)
+> +{
+> +	struct msm_gem_address_space *aspace = NULL;
+> +	struct msm_mmu *mmu;
+> +
+> +	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
+> +
+> +	if (!IS_ERR(mmu))
+> +		aspace = msm_gem_address_space_create(mmu,
+> +			"gpu", 0x100000000ULL, 0x1ffffffffULL);
+> +
+> +	return aspace;
+> +}
+> +
+>   static const struct adreno_gpu_funcs funcs = {
+>   	.base = {
+>   		.get_param = adreno_get_param,
+> @@ -1031,6 +1093,7 @@ static const struct adreno_gpu_funcs funcs = {
+>   		.gpu_state_put = a6xx_gpu_state_put,
+>   #endif
+>   		.create_address_space = adreno_iommu_create_address_space,
+> +		.create_private_address_space = a6xx_create_private_address_space,
+>   	},
+>   	.get_timestamp = a6xx_get_timestamp,
+>   };
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+> index 03ba60d5b07f..da22d7549d9b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+> @@ -19,6 +19,7 @@ struct a6xx_gpu {
+>   	uint64_t sqe_iova;
+>   
+>   	struct msm_ringbuffer *cur_ring;
+> +	struct msm_file_private *cur_ctx;
+>   
+>   	struct a6xx_gmu gmu;
+>   };
+> diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> index 7764373d0ed2..0987d6bf848c 100644
+> --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
+> +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
+>   	volatile uint32_t fence;
+>   
+>   	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
+> +	volatile u64 ttbr0;
+>   };
+>   
+>   struct msm_ringbuffer {
+> 
+
