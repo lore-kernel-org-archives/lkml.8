@@ -2,231 +2,123 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E13D5206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="qodT9E7O"
+	by mail.kernel.org (Postfix) with ESMTP id AED7F206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHRPCC (ORCPT
+        id S1727902AbgHRPCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgHRPB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:01:28 -0400
-Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.secure-endpoints.com [IPv6:2001:470:1f07:f77:70f5:c082:a96a:5685])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30CCC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
-        d=auristor.com; s=MDaemon; r=y; t=1597762881; x=1598367681;
-        i=jaltman@auristor.com; q=dns/txt; h=Subject:To:Cc:References:
-        From:Organization:Message-ID:Date:User-Agent:MIME-Version:
-        In-Reply-To:Content-Type; bh=Tcrx0CBuzXKry9+g+roR0MsjkXc6IXhaTNW
-        VyukqMro=; b=qodT9E7OE+FneZ3X9IuxqOAwJPIg8Hau0zhvom5bw6obTBB8Cu1
-        1OS6KvbuMWk9TLaniQu68d9UEFu5vonrQnArVKaSyNIxEpZekwUvklPFVKf3SVdL
-        2s1HnBoA/laPTPF4yqs2b2nfLudaV/Uznd8h7YrydIQxEMTdfwUG8f1k=
-X-MDAV-Result: clean
-X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Tue, 18 Aug 2020 11:01:21 -0400
-Received: from [IPv6:2604:2000:1741:8407:31b2:27ea:a55f:abe6] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v20.0.1) 
-        with ESMTPSA id md5001002630221.msg; Tue, 18 Aug 2020 11:01:19 -0400
-X-MDRemoteIP: 2604:2000:1741:8407:31b2:27ea:a55f:abe6
-X-MDHelo: [IPv6:2604:2000:1741:8407:31b2:27ea:a55f:abe6]
-X-MDArrival-Date: Tue, 18 Aug 2020 11:01:19 -0400
-X-MDOrigin-Country: United States, North America
-X-Authenticated-Sender: jaltman@auristor.com
-X-Return-Path: prvs=1499b3761b=jaltman@auristor.com
-X-Envelope-From: jaltman@auristor.com
-X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     "Linus Torvalds (torvalds@linux-foundation.org)" 
-        <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1842689.1596468469@warthog.procyon.org.uk>
- <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
- <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk>
- <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <679456f1-5867-4017-b1d6-95197d2fa81b@auristor.com>
- <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
-From:   Jeffrey E Altman <jaltman@auristor.com>
-Organization: AuriStor, Inc.
-Message-ID: <cc774343-1782-6479-306b-4b0d7146bb6e@auristor.com>
-Date:   Tue, 18 Aug 2020 11:01:10 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 11:02:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39618 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbgHRPCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:02:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 89C94AFC1;
+        Tue, 18 Aug 2020 15:02:59 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 17:02:32 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200818150232.GQ28270@dhcp22.suse.cz>
+References: <20200814174924.GI3982@worktop.programming.kicks-ass.net>
+ <20200814180224.GQ4295@paulmck-ThinkPad-P72>
+ <875z9lkoo4.fsf@nanos.tec.linutronix.de>
+ <20200814204140.GT4295@paulmck-ThinkPad-P72>
+ <20200814215206.GL3982@worktop.programming.kicks-ass.net>
+ <20200816225655.GA17869@pc636>
+ <20200817082849.GA28270@dhcp22.suse.cz>
+ <20200817222803.GE23602@paulmck-ThinkPad-P72>
+ <20200818074344.GL28270@dhcp22.suse.cz>
+ <20200818135327.GF23602@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070203090704080909030005"
-X-MDCFSigsAdded: auristor.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818135327.GF23602@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On Tue 18-08-20 06:53:27, Paul E. McKenney wrote:
+> On Tue, Aug 18, 2020 at 09:43:44AM +0200, Michal Hocko wrote:
+> > On Mon 17-08-20 15:28:03, Paul E. McKenney wrote:
+> > > On Mon, Aug 17, 2020 at 10:28:49AM +0200, Michal Hocko wrote:
+> > > > On Mon 17-08-20 00:56:55, Uladzislau Rezki wrote:
+> > > 
+> > > [ . . . ]
+> > > 
+> > > > > wget ftp://vps418301.ovh.net/incoming/1000000_kmalloc_kfree_rcu_proc_percpu_pagelist_fractio_is_8.png
+> > > > 
+> > > > 1/8 of the memory in pcp lists is quite large and likely not something
+> > > > used very often.
+> > > > 
+> > > > Both these numbers just make me think that a dedicated pool of page
+> > > > pre-allocated for RCU specifically might be a better solution. I still
+> > > > haven't read through that branch of the email thread though so there
+> > > > might be some pretty convincing argments to not do that.
+> > > 
+> > > To avoid the problematic corner cases, we would need way more dedicated
+> > > memory than is reasonable, as in well over one hundred pages per CPU.
+> > > Sure, we could choose a smaller number, but then we are failing to defend
+> > > against flooding, even on systems that have more than enough free memory
+> > > to be able to do so.  It would be better to live within what is available,
+> > > taking the performance/robustness hit only if there isn't enough.
+> > 
+> > Thomas had a good point that it doesn't really make much sense to
+> > optimize for flooders because that just makes them more effective.
+> 
+> The point is not to make the flooders go faster, but rather for the
+> system to be robust in the face of flooders.  Robust as in harder for
+> a flooder to OOM the system.
 
---------------ms070203090704080909030005
-Content-Type: multipart/mixed;
- boundary="------------15A85830EC70DC04AB47698C"
-Content-Language: en-US
+Do we see this to be a practical problem? I am really confused because
+the initial argument was revolving around an optimization now you are
+suggesting that this is actually system stability measure. And I fail to
+see how allowing an easy way to deplete pcp caches completely solves
+any of that. Please do realize that if allow that then every user who
+relies on pcp caches will have to take a slow(er) path and that will
+have performance consequences. The pool is a global and a scarce
+resource. That's why I've suggested a dedicated preallocated pool and
+use it instead of draining global pcp caches.
 
-This is a multi-part message in MIME format.
---------------15A85830EC70DC04AB47698C
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+> And reducing the number of post-grace-period cache misses makes it
+> easier for the callback-invocation-time memory freeing to keep up with
+> the flooder, thus avoiding (or at least delaying) the OOM.
+> 
+> > > My current belief is that we need a combination of (1) either the
+> > > GFP_NOLOCK flag or Peter Zijlstra's patch and
+> > 
+> > I must have missed the patch?
+> 
+> If I am keeping track, this one:
+> 
+> https://lore.kernel.org/lkml/20200814215206.GL3982@worktop.programming.kicks-ass.net/
 
-On 8/14/2020 1:05 PM, Linus Torvalds (torvalds@linux-foundation.org) wrot=
-e:
-> Honestly, I really think you may want an extended [f]statfs(), not
-> some mount tracking.
->=20
->                  Linus
-
-Linus,
-
-Thank you for the reply.  Perhaps some of the communication disconnect
-is due to which thread this discussion is taking place on.  My
-understanding is that there were two separate pull requests.  One for
-mount notifications and the other for filesystem information.  This
-thread is derived from the pull request entitled "Filesystem
-Information" and my response was a request for use cases.  The
-assumption being that the request was related to the subject.
-
-I apologize for creating unnecessary noise due to my misinterpretation
-of your intended question.  The use cases I described and the types of
-filesystem information required to satisfy them do not require mount
-tracking.
-
-Jeffrey Altman
-
-
---------------15A85830EC70DC04AB47698C
-Content-Type: text/x-vcard; charset=utf-8;
- name="jaltman.vcf"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="jaltman.vcf"
-
-begin:vcard
-fn:Jeffrey Altman
-n:Altman;Jeffrey
-org:AuriStor, Inc.
-adr:;;255 W 94TH ST STE 6B;New York;NY;10025-6985;United States
-email;internet:jaltman@auristor.com
-title:CEO
-tel;work:+1-212-769-9018
-url:https://www.linkedin.com/in/jeffreyaltman/
-version:2.1
-end:vcard
-
-
---------------15A85830EC70DC04AB47698C--
-
---------------ms070203090704080909030005
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-DGswggXSMIIEuqADAgECAhBAAW0B1qVVQ32wvx2EXYU6MA0GCSqGSIb3DQEBCwUAMDoxCzAJ
-BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEy
-MB4XDTE5MDkwNTE0MzE0N1oXDTIyMTEwMTE0MzE0N1owcDEvMC0GCgmSJomT8ixkAQETH0Ew
-MTQxMEMwMDAwMDE2RDAxRDZBNTQwMDAwMDQ0NDcxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
-YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQCY1TC9QeWnUgEoJ81FcAVnhGn/AWuzvkYRUG5/ZyXDdaM212e8
-ybCklgSmZweqNdrfaaHXk9vwjpvpD4YWgb07nJ1QBwlvRV/VPAaDdneIygJJWBCzaMVLttKO
-0VimH/I/HUwFBQT2mrktucCEf2qogdi2P+p5nuhnhIUiyZ71Fo43gF6cuXIMV/1rBNIJDuwM
-Q3H8zi6GL0p4mZFZDDKtbYq2l8+MNxFvMrYcLaJqejQNQRBuZVfv0Fq9pOGwNLAk19baIw3U
-xdwx+bGpTtS63Py1/57MQ0W/ZXE/Ocnt1qoDLpJeZIuEBKgMcn5/iN9+Ro5zAuOBEKg34wBS
-8QCTAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
-BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
-BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
-Mi5wN2MwHwYDVR0jBBgwFoAUpHPa72k1inXMoBl7CDL4a4nkQuwwCQYDVR0TBAIwADCCASsG
-A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
-L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
-bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
-aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
-YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
-ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
-dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTIuY3JsMB8GA1UdEQQY
-MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBR7pHsvL4H5GdzNToI9e5BuzV19
-bzAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAFlm
-JYk4Ff1v/n0foZkv661W4LCRtroBaVykOXetrDDOQNK2N6JdTa146uIZVgBeU+S/0DLvJBKY
-tkUHQ9ovjXJTsuCBmhIIw3YlHoFxbku0wHEpXMdFUHV3tUodFJJKF3MbC8j7dOMkag59/Mdz
-Sjszdvit0av9nTxWs/tRKKtSQQlxtH34TouIke2UgP/Nn901QLOrJYJmtjzVz8DW3IYVxfci
-SBHhbhJTdley5cuEzphELo5NR4gFjBNlxH7G57Hno9+EWILpx302FJMwTgodIBJbXLbPMHou
-xQbOL2anOTUMKO8oH0QdQHCtC7hpgoQa7UJYJxDBI+PRaQ/HObkwggaRMIIEeaADAgECAhEA
-+d5Wf8lNDHdw+WAbUtoVOzANBgkqhkiG9w0BAQsFADBKMQswCQYDVQQGEwJVUzESMBAGA1UE
-ChMJSWRlblRydXN0MScwJQYDVQQDEx5JZGVuVHJ1c3QgQ29tbWVyY2lhbCBSb290IENBIDEw
-HhcNMTUwMjE4MjIyNTE5WhcNMjMwMjE4MjIyNTE5WjA6MQswCQYDVQQGEwJVUzESMBAGA1UE
-ChMJSWRlblRydXN0MRcwFQYDVQQDEw5UcnVzdElEIENBIEExMjCCASIwDQYJKoZIhvcNAQEB
-BQADggEPADCCAQoCggEBANGRTTzPCic0kq5L6ZrUJWt5LE/n6tbPXPhGt2Egv7plJMoEpvVJ
-JDqGqDYymaAsd8Hn9ZMAuKUEFdlx5PgCkfu7jL5zgiMNnAFVD9PyrsuF+poqmlxhlQ06sFY2
-hbhQkVVQ00KCNgUzKcBUIvjv04w+fhNPkwGW5M7Ae5K5OGFGwOoRck9GG6MUVKvTNkBw2/vN
-MOd29VGVTtR0tjH5PS5yDXss48Yl1P4hDStO2L4wTsW2P37QGD27//XGN8K6amWB6F2XOgff
-/PmlQjQOORT95PmLkwwvma5nj0AS0CVp8kv0K2RHV7GonllKpFDMT0CkxMQKwoj+tWEWJTiD
-KSsCAwEAAaOCAoAwggJ8MIGJBggrBgEFBQcBAQR9MHswMAYIKwYBBQUHMAGGJGh0dHA6Ly9j
-b21tZXJjaWFsLm9jc3AuaWRlbnRydXN0LmNvbTBHBggrBgEFBQcwAoY7aHR0cDovL3ZhbGlk
-YXRpb24uaWRlbnRydXN0LmNvbS9yb290cy9jb21tZXJjaWFscm9vdGNhMS5wN2MwHwYDVR0j
-BBgwFoAU7UQZwNPwBovupHu+QucmVMiONnYwDwYDVR0TAQH/BAUwAwEB/zCCASAGA1UdIASC
-ARcwggETMIIBDwYEVR0gADCCAQUwggEBBggrBgEFBQcCAjCB9DBFFj5odHRwczovL3NlY3Vy
-ZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDADAgEB
-GoGqVGhpcyBUcnVzdElEIENlcnRpZmljYXRlIGhhcyBiZWVuIGlzc3VlZCBpbiBhY2NvcmRh
-bmNlIHdpdGggSWRlblRydXN0J3MgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBQb2xpY3kgZm91bmQg
-YXQgaHR0cHM6Ly9zZWN1cmUuaWRlbnRydXN0LmNvbS9jZXJ0aWZpY2F0ZXMvcG9saWN5L3Rz
-L2luZGV4Lmh0bWwwSgYDVR0fBEMwQTA/oD2gO4Y5aHR0cDovL3ZhbGlkYXRpb24uaWRlbnRy
-dXN0LmNvbS9jcmwvY29tbWVyY2lhbHJvb3RjYTEuY3JsMB0GA1UdJQQWMBQGCCsGAQUFBwMC
-BggrBgEFBQcDBDAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0OBBYEFKRz2u9pNYp1zKAZewgy+GuJ
-5ELsMA0GCSqGSIb3DQEBCwUAA4ICAQAN4YKu0vv062MZfg+xMSNUXYKvHwvZIk+6H1pUmivy
-DI4I6A3wWzxlr83ZJm0oGIF6PBsbgKJ/fhyyIzb+vAYFJmyI8I/0mGlc+nIQNuV2XY8cypPo
-VJKgpnzp/7cECXkX8R4NyPtEn8KecbNdGBdEaG4a7AkZ3ujlJofZqYdHxN29tZPdDlZ8fR36
-/mAFeCEq0wOtOOc0Eyhs29+9MIZYjyxaPoTS+l8xLcuYX3RWlirRyH6RPfeAi5kySOEhG1qu
-NHe06QIwpigjyFT6v/vRqoIBr7WpDOSt1VzXPVbSj1PcWBgkwyGKHlQUOuSbHbHcjOD8w8wH
-SDbL+L2he8hNN54doy1e1wJHKmnfb0uBAeISoxRbJnMMWvgAlH5FVrQWlgajeH/6NbYbBSRx
-ALuEOqEQepmJM6qz4oD2sxdq4GMN5adAdYEswkY/o0bRKyFXTD3mdqeRXce0jYQbWm7oapqS
-ZBccFvUgYOrB78tB6c1bxIgaQKRShtWR1zMM0JfqUfD9u8Fg7G5SVO0IG/GcxkSvZeRjhYcb
-TfqF2eAgprpyzLWmdr0mou3bv1Sq4OuBhmTQCnqxAXr4yVTRYHkp5lCvRgeJAme1OTVpVPth
-/O7HJ7VuEP9GOr6kCXCXmjB4P3UJ2oU0NqfoQdcSSSt9hliALnExTEjii20B2nSDojGCAxQw
-ggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMO
-VHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowDQYJYIZIAWUDBAIBBQCgggGXMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMDgxODE1MDExMVow
-LwYJKoZIhvcNAQkEMSIEIAkuzvlXuwfdOk2ODynS1rS+6qt7k5rG3/SoaaFfX13zMF0GCSsG
-AQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UE
-AxMOVHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowXwYLKoZIhvcNAQkQAgsxUKBO
-MDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQg
-Q0EgQTEyAhBAAW0B1qVVQ32wvx2EXYU6MGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEq
-MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwIC
-AUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAeHm9ImgiHtKp
-4+Ufhz7bRRfS2kv1Awy379Cg5bDYVj77f/IbAiPHo4ZD3f8LItjccOmy0nHeoJ2qk2b43IBX
-M/iNhyD46kX8OGvlKuBLW/GCDHVkpMnbo7LyOXUaQ75PDjjZ4LnImtLhYNVJrvbdNsxIju82
-H0cGlcrFbb1XaQobR+2cfYzmC8Wm/jya/kmlIUVNB88GsO5HrkrTP4M+T6+PCtYeHNz3UWMt
-VuTMO38QmW9Ry8FA/TYEUBS+oe1WlTved69Z0oPoKaUpdcAa8n+LVrO5NQG354h4A3M3xuzk
-zF+LJEh+SWzFklndVQ5GCswASXeI46/47TBEQLuaZAAAAAAAAA==
---------------ms070203090704080909030005--
-
+OK, I have certainly noticed that one but didn't react but my response
+would be similar to the dedicated gfp flag. This is less of a hack than
+__GFP_NOLOCK  but it still exposes very internal parts of the allocator
+and I find that a quite problematic from the future maintenance of the
+allocator. The risk of an easy depletion of the pcp pool is also there
+of course.
+-- 
+Michal Hocko
+SUSE Labs
