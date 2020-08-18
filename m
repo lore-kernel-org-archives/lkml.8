@@ -2,37 +2,74 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67BFF2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844A72067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTziVxCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHRLBd (ORCPT
+        id S1726598AbgHRLCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:01:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42614 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgHRLBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:01:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 192E3ABD2;
-        Tue, 18 Aug 2020 11:01:27 +0000 (UTC)
-From:   Oscar Salvador <osalvador@suse.de>
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        vbabka@suse.com, david@redhat.com,
-        Oscar Salvador <osalvador@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH STABLE 4.9] mm: Avoid calling build_all_zonelists_init under hotplug context
-Date:   Tue, 18 Aug 2020 13:00:46 +0200
-Message-Id: <20200818110046.6664-1-osalvador@suse.de>
+        Tue, 18 Aug 2020 07:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRLCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:02:20 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2461EC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:02:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z18so17815311wrm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5V8irRRRxRnwftdg2ujt2Pfnni+sPye5ForxfSVU5CI=;
+        b=lTziVxCtCNaxClvjURD4ZAxeMl9SLrTRlo3tg9crwli+r+Ce+zS9oaxdHt3NdqfTdI
+         5Fa86ptTQwsxUkO9bE4EJHhH7nFgmxcQtRPOtU0SkOeqHJEOYhhX0YrrKOkhCGWsoRWa
+         QKLpz1YxCI5P9F3dR1VL8yg0zvKFYE2imoLJba7ljEc/eaDsx9MtuMlQ6Vu3k7XPobXH
+         K5MO/spovlbi4X6oyPMcjijkDLT5/Y3C/XeU8q9UBIaXMScrHr98IzaxDssaZNSgb74h
+         pr21KG9upxRA892xblwe9bkCDcobrcUbshJgg2vA3e91W4CTOL4/2sHH7XdwqD+bwjfE
+         LTbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5V8irRRRxRnwftdg2ujt2Pfnni+sPye5ForxfSVU5CI=;
+        b=Acu1yomptHJJXHmey4x9f/CsCOTtWG4yd9g3gjjn6Xhv9xTCyt8mI7GUknCur4vINW
+         BF1WMHtP3YCffYticwGFR5CWbwLqRDClLokzItyrggMS1CpW//fBdDLd41bGXSv/FdiF
+         BSn+ITRm0EVpkwEOk4JArF36/FFiyHtPi+dLanPLuPVlBk1FzZbrcJDaHMUDA361Ag2M
+         J7Mnl4i7UHBKTCmW6GXoheHzMpaD6P3cA965AHNxT8qU/MCoZzL5uvO835kYXjQqSQgN
+         mOZxvlzydbczAmMGgW4ucCmtkCuZwFbLdUYIVoPi/FXZwUnAU93bfdmKzN3l7EKiM/N6
+         ISRg==
+X-Gm-Message-State: AOAM533tzLlmJieC4xYkyNyTBaZVTxRoNJtbBa8NRezRPC6MiCrsi5Hp
+        yoNNp25cGttRxDMbk/L02tI=
+X-Google-Smtp-Source: ABdhPJy8DXY4Vbv4PUXnsXfID1NxwZhTns7dkyJ8QzPTWi/bfGBErLVDBAM8XlBbATD4ev3Ku+l+yQ==
+X-Received: by 2002:adf:97d3:: with SMTP id t19mr18635202wrb.138.1597748538730;
+        Tue, 18 Aug 2020 04:02:18 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id k13sm32825220wmj.14.2020.08.18.04.02.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 04:02:10 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] memory: brcmstb_dpfe: Fix memory leak
+Date:   Tue, 18 Aug 2020 12:02:01 +0100
+Message-Id: <20200818110201.69933-1-alex.dewar90@gmail.com>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,166 +78,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently a customer of ours experienced a crash when booting the
-system while enabling memory-hotplug.
+In brcmstb_dpfe_download_firmware(), memory is allocated to variable fw by
+firmware_request_nowarn(), but never released. Fix up to release fw on
+all return paths.
 
-The problem is that Normal zones on different nodes don't get their private
-zone->pageset allocated, and keep sharing the initial boot_pageset.
-The sharing between zones is normally safe as explained by the comment for
-boot_pageset - it's a percpu structure, and manipulations are done with
-disabled interrupts, and boot_pageset is set up in a way that any page placed
-on its pcplist is immediately flushed to shared zone's freelist, because
-pcp->high == 1.
-However, the hotplug operation updates pcp->high to a higher value as it
-expects to be operating on a private pageset.
-
-The problem is in build_all_zonelists(), which is called when the first range
-of pages is onlined for the Normal zone of node X or Y:
-
-	if (system_state == SYSTEM_BOOTING) {
-		build_all_zonelists_init();
-	} else {
-	#ifdef CONFIG_MEMORY_HOTPLUG
-		if (zone)
-			setup_zone_pageset(zone);
-	#endif
-		/* we have to stop all cpus to guarantee there is no user
-		of zonelist */
-		stop_machine(__build_all_zonelists, pgdat, NULL);
-		/* cpuset refresh routine should be here */
-	}
-
-When called during hotplug, it should execute the setup_zone_pageset(zone)
-which allocates the private pageset.
-However, with memhp_default_state=online, this happens early while
-system_state == SYSTEM_BOOTING is still true, hence this step is skipped.
-(and build_all_zonelists_init() is probably unsafe anyway at this point).
-
-Another hotplug operation on the same zone then leads to zone_pcp_update(zone)
-called from online_pages(), which updates the pcp->high for the shared
-boot_pageset to a value higher than 1.
-At that point, pages freed from Node X and Y Normal zones can end up on the same
-pcplist and from there they can be freed to the wrong zone's freelist,
-leading to the corruption and crashes.
-
-Please, note that upstream has fixed that differently (and unintentionally) by
-adding another boot state (SYSTEM_SCHEDULING), which is set before smp_init().
-That should happen before memory hotplug events even with memhp_default_state=online.
-Backporting that would be too intrusive.
-
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Debugged-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- include/linux/mmzone.h |  3 ++-
- init/main.c            |  2 +-
- mm/memory_hotplug.c    | 10 +++++-----
- mm/page_alloc.c        |  7 ++++---
- 4 files changed, 12 insertions(+), 10 deletions(-)
+ drivers/memory/brcmstb_dpfe.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index e3d7754f25f0..5c7645e156a5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -756,7 +756,8 @@ static inline bool is_dev_zone(const struct zone *zone)
- #include <linux/memory_hotplug.h>
- 
- extern struct mutex zonelists_mutex;
--void build_all_zonelists(pg_data_t *pgdat, struct zone *zone);
-+void build_all_zonelists(pg_data_t *pgdat, struct zone *zone,
-+			 bool hotplug_context);
- void wakeup_kswapd(struct zone *zone, int order, enum zone_type classzone_idx);
- bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
- 			 int classzone_idx, unsigned int alloc_flags,
-diff --git a/init/main.c b/init/main.c
-index d47860dbe896..7ad08957dd18 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -512,7 +512,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
- 	boot_cpu_hotplug_init();
- 
--	build_all_zonelists(NULL, NULL);
-+	build_all_zonelists(NULL, NULL, false);
- 	page_alloc_init();
- 
- 	pr_notice("Kernel command line: %s\n", boot_command_line);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 449999657c0b..a4ffe5996317 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1125,7 +1125,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 	mutex_lock(&zonelists_mutex);
- 	if (!populated_zone(zone)) {
- 		need_zonelists_rebuild = 1;
--		build_all_zonelists(NULL, zone);
-+		build_all_zonelists(NULL, zone, true);
- 	}
- 
- 	ret = walk_system_ram_range(pfn, nr_pages, &onlined_pages,
-@@ -1146,7 +1146,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 	if (onlined_pages) {
- 		node_states_set_node(nid, &arg);
- 		if (need_zonelists_rebuild)
--			build_all_zonelists(NULL, NULL);
-+			build_all_zonelists(NULL, NULL, true);
- 		else
- 			zone_pcp_update(zone);
- 	}
-@@ -1220,7 +1220,7 @@ static pg_data_t __ref *hotadd_new_pgdat(int nid, u64 start)
- 	 * to access not-initialized zonelist, build here.
- 	 */
- 	mutex_lock(&zonelists_mutex);
--	build_all_zonelists(pgdat, NULL);
-+	build_all_zonelists(pgdat, NULL, true);
- 	mutex_unlock(&zonelists_mutex);
+diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+index 60e8633b1175..f24a9dc65f3c 100644
+--- a/drivers/memory/brcmstb_dpfe.c
++++ b/drivers/memory/brcmstb_dpfe.c
+@@ -616,7 +616,7 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+ 	const u32 *dmem, *imem;
+ 	struct init_data init;
+ 	const void *fw_blob;
+-	int ret;
++	int ret = 0;
  
  	/*
-@@ -1276,7 +1276,7 @@ int try_online_node(int nid)
+ 	 * Skip downloading the firmware if the DCPU is already running and
+@@ -647,8 +647,10 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+ 		return (ret == -ENOENT) ? -EPROBE_DEFER : ret;
  
- 	if (pgdat->node_zonelists->_zonerefs->zone == NULL) {
- 		mutex_lock(&zonelists_mutex);
--		build_all_zonelists(NULL, NULL);
-+		build_all_zonelists(NULL, NULL, true);
- 		mutex_unlock(&zonelists_mutex);
- 	}
+ 	ret = __verify_firmware(&init, fw);
+-	if (ret)
+-		return -EFAULT;
++	if (ret) {
++		ret = -EFAULT;
++		goto release_fw;
++	}
  
-@@ -2016,7 +2016,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 	if (!populated_zone(zone)) {
- 		zone_pcp_reset(zone);
- 		mutex_lock(&zonelists_mutex);
--		build_all_zonelists(NULL, NULL);
-+		build_all_zonelists(NULL, NULL, true);
- 		mutex_unlock(&zonelists_mutex);
- 	} else
- 		zone_pcp_update(zone);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index de00e0fec484..f394dd87fa03 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4608,7 +4608,7 @@ int numa_zonelist_order_handler(struct ctl_table *table, int write,
- 			user_zonelist_order = oldval;
- 		} else if (oldval != user_zonelist_order) {
- 			mutex_lock(&zonelists_mutex);
--			build_all_zonelists(NULL, NULL);
-+			build_all_zonelists(NULL, NULL, false);
- 			mutex_unlock(&zonelists_mutex);
- 		}
- 	}
-@@ -4988,11 +4988,12 @@ build_all_zonelists_init(void)
-  * (2) call of __init annotated helper build_all_zonelists_init
-  * [protected by SYSTEM_BOOTING].
-  */
--void __ref build_all_zonelists(pg_data_t *pgdat, struct zone *zone)
-+void __ref build_all_zonelists(pg_data_t *pgdat, struct zone *zone,
-+			       bool hotplug_context)
- {
- 	set_zonelist_order();
+ 	__disable_dcpu(priv);
  
--	if (system_state == SYSTEM_BOOTING) {
-+	if (system_state == SYSTEM_BOOTING && !hotplug_context) {
- 		build_all_zonelists_init();
- 	} else {
- #ifdef CONFIG_MEMORY_HOTPLUG
+@@ -667,18 +669,20 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+ 
+ 	ret = __write_firmware(priv->dmem, dmem, dmem_size, is_big_endian);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 	ret = __write_firmware(priv->imem, imem, imem_size, is_big_endian);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 
+ 	ret = __verify_fw_checksum(&init, priv, header, init.chksum);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 
+ 	__enable_dcpu(priv);
+ 
+-	return 0;
++release_fw:
++	release_firmware(fw);
++	return ret;
+ }
+ 
+ static ssize_t generic_show(unsigned int command, u32 response[],
 -- 
-2.26.2
+2.28.0
 
