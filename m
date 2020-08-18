@@ -2,165 +2,143 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB97C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC64C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759C72076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="NJtnJvq8"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE5A2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597738711;
+	bh=U4epaaykPL5fPcTaFEy5MI2492sDRoxjcdYC/9qc3OM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H+SdDvLFoLoJePoeD3CrMs9JeEebg8rO7ZuhqAHkxL9s+8pSR5g+4JVfLZcDKm48P
+	 54eSW3nt9Gh9VycRh3gMNnYnyUYdTFPjTNTxc6shjGRR0z6AT1+v0OyTKeR392x9bd
+	 CR1qqYXdB2HNJFrkAE4Hf58QvFlTvianT4i+56fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHRIR4 (ORCPT
+        id S1726647AbgHRISa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
+        Tue, 18 Aug 2020 04:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRIRz (ORCPT
+        with ESMTP id S1726513AbgHRIS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:17:55 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7927C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:17:54 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 3so16118805wmi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:17:54 -0700 (PDT)
+        Tue, 18 Aug 2020 04:18:26 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11ADC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:18:25 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id v15so9746380lfg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=forissier-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KBMoIX0wDDizUWSV+BZ1wgLVBF7AgO627hD9co2j+K8=;
-        b=NJtnJvq8/z39J3VudGdLJM9ahaPuoBAe+pfv0cKRVhvmDXVHYUltRJIo7XM4Ah9840
-         DtLg1LCLQvEbnPj/jWaWBt8qz2p2MJotiIvPYVomKfINHV+kPCwp4kd4+Ik53tEuTdYH
-         kHFxGZdhnVHdY/09JbZJAroYaOZBHuj1DkxYcUU4uf9Ftc0P9mJahqnRA9J8fdKAOB3t
-         El+4HagOL3BVbHSFUnNi/Zi7+Z+p3RW2qEo/Z77VUp0VPhQNMRts3l/Y345A7iWshHKi
-         GQaPCD4so2tpkUGwyzYLx4HZHP8EYNrPG9zP/tIkR9FePIMJbYO4PRMpdHsEr3s6kofA
-         PefA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ldPLk00zDl2npSmv8Uf+w008g6jg8ITcXg6uW8fPbI=;
+        b=eqS+9xjC9jrTPy363gkpZ79QjRN6vwbFjXLWnrbmOtoQbECfwf8F3MmNNWLOcGXLsj
+         lD8wFsXw7H0WFpfmvhD3Y/1WbazKHmesFqPISyLz0ng3WqcJkAoAFslskN26G18JkPL9
+         MBhIc9KTitsEhfzTiiEcYUBJYgyu4pB9nemZ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KBMoIX0wDDizUWSV+BZ1wgLVBF7AgO627hD9co2j+K8=;
-        b=VMcgj9KR1fViFE2bSUPBuoGUS+3X+O8ay9ykYZpt5YOJzDx5z9U7ulVC87ZX3W1OOq
-         TFw7Uu8XK4CQFDuPNRtddUpYDv+t+796blLDnNDUkRwUa4rNdKMMpe3AQ4OGV9wnR1wI
-         +vA7mL84NMehumpw5vXGJj+laI0Zg6Sc47oa5wXB4ZQx/QLaMniLNwZRFT9/ysImPSY6
-         JZT592+gUDuzZ00XxQ+o/mRtFHKNOvtoOTNXDWJoiDYRuu8VRAD8IbDopO+TRvTCf+d1
-         B9ou05582Hf3b0ZepLz7jsUGTzzIQBJoDx6OXB1wKz2AZ/DPdRrY+1NpgpH/Nw4fKg0q
-         BeMg==
-X-Gm-Message-State: AOAM530gvMS0l3zxdNaESEEDlIIi7s7rGr9k+0vooIvu+M2Vp6ZDB79F
-        JkwfOeQ0kRYG80IDp24tULeQig==
-X-Google-Smtp-Source: ABdhPJxKJF28yU1uBpaF8TUfJ1tQZb/oMyzY8aoLJb7QvVPtrVuksCGg16xpYitkYxzRd9SkGVY6tg==
-X-Received: by 2002:a7b:c056:: with SMTP id u22mr18310189wmc.188.1597738673337;
-        Tue, 18 Aug 2020 01:17:53 -0700 (PDT)
-Received: from matebook.home ([2a01:e0a:3cb:7bb0:8875:d92:eae5:ceb5])
-        by smtp.gmail.com with ESMTPSA id h5sm37443151wrc.97.2020.08.18.01.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 01:17:52 -0700 (PDT)
-From:   Jerome Forissier <jerome@forissier.org>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jerome Forissier <jerome@forissier.org>
-Subject: [PATCH v4] checkpatch: add --kconfig-prefix
-Date:   Tue, 18 Aug 2020 10:17:32 +0200
-Message-Id: <20200818081732.800449-1-jerome@forissier.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200817095056.31001-1-jerome@forissier.org>
-References: <20200817095056.31001-1-jerome@forissier.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ldPLk00zDl2npSmv8Uf+w008g6jg8ITcXg6uW8fPbI=;
+        b=M78nD/P+yE7ZygCW6F35PKM09Y/FaImSPSGV99QR34Atx2KLKqcgYdEQVm2K52iOvb
+         VQVjE2Xl9cQxhh1B2L+IPgaQdAFjZh1C+jifS5acc2muzkCCLNJo4We51KKBK8493VrB
+         TCQj9+9t5eVyNsXzzCARzX7By3tkopsFQzmJTKBT0SUu2T80YTJ2SUKqUHsvB1yB8dNX
+         Nq+jdaUJ1niBbeVuWgHjJN2/7fr+6X9U7sl/0ER+Ddc1c5fD9LxloQ/pXEY31wKBvVYo
+         HzjIhZTD+MGSyKDpmHGT86ONwh/GmcNKJc3Jv3VW0wM1TiJa4cIOy0rOoNDaHv6uN0A5
+         f3SQ==
+X-Gm-Message-State: AOAM533npK3DWsOn27NNn1ESpmwyIg0rOVRXVEZ0U/OkaWc5aDUSeWDN
+        VRKlr+cTwYhuPEjcTUXtYFtkaMlVOLumxw==
+X-Google-Smtp-Source: ABdhPJyL/mRgfBQB8Xyp843k3OiLg/vBr/X5Hm/bdjU2eYhdH4unC06EOCZSIqZHHa0VoqyfrBjnsA==
+X-Received: by 2002:ac2:530e:: with SMTP id c14mr9167328lfh.127.1597738699973;
+        Tue, 18 Aug 2020 01:18:19 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id d14sm6270037lfj.30.2020.08.18.01.18.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 01:18:18 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id y2so11451476ljc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:18:18 -0700 (PDT)
+X-Received: by 2002:a2e:545:: with SMTP id 66mr9791504ljf.285.1597738698039;
+ Tue, 18 Aug 2020 01:18:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200818061239.29091-1-jannh@google.com> <20200818061239.29091-5-jannh@google.com>
+In-Reply-To: <20200818061239.29091-5-jannh@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 Aug 2020 01:18:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiOqR-4jXpPe-5PBKSCwQQFDaiJwkJr6ULwhcN8DJoG0A@mail.gmail.com>
+Message-ID: <CAHk-=wiOqR-4jXpPe-5PBKSCwQQFDaiJwkJr6ULwhcN8DJoG0A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] binfmt_elf, binfmt_elf_fdpic: Use a VMA list snapshot
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kconfig allows to customize the CONFIG_ prefix via the $CONFIG_
-environment variable. Out-of-tree projects may therefore use Kconfig
-with a different prefix, or they may use a custom configuration tool
-which does not use the CONFIG_ prefix at all. Such projects may still
-want to adhere to the Linux kernel coding style and run checkpatch.pl.
+On Mon, Aug 17, 2020 at 11:13 PM Jann Horn <jannh@google.com> wrote:
+>
+>         /*
+>          * If this looks like the beginning of a DSO or executable mapping,
+> +        * we'll check for an ELF header. If we find one, we'll dump the first
+> +        * page to aid in determining what was mapped here.
+> +        * However, we shouldn't sleep on userspace reads while holding the
+> +        * mmap_lock, so we just return a placeholder for now that will be fixed
+> +        * up later in vma_dump_size_fixup().
 
-One example is OP-TEE [1] which does not use Kconfig but does have
-configuration options prefixed with CFG_. It also mostly follows the
-kernel coding style and therefore being able to use checkpatch is quite
-valuable.
+I still don't like this.
 
-To make this possible, add the --kconfig-prefix command line option.
+And I still don't think it's necessary.
 
-[1] https://github.com/OP-TEE/optee_os
+The whole - and only - point of "check if it's an ELF header" is that
+we don't want to dump data that could just be found by looking at the
+original binary.
 
-Signed-off-by: Jerome Forissier <jerome@forissier.org>
-Acked-by: Joe Perches <joe@perches.com>
----
- scripts/checkpatch.pl | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+But by the time we get to this point, we already know that
 
-v4:
-- Add missing link
-- Apply Joe's Acked-by: tag
+ (a) it's a private mapping with file backing, and it's the first page
+of the file
 
-v3:
-- Use ${CONFIG_} instead of $CONFIG_.
-- Expand the commit message to mention OP-TEE.
+ (b) it has never been written to and it's mapped for reading
 
-v2:
-- Use a command-line/.checkpatch.conf option instead of the _CONFIG
-  environment variable.
-- Changed the patch subject (was: "checkpatch: get CONFIG_ prefix from
-  the environment").
+and the choice at this point is "don't dump at all", or "dump just the
+first page".
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 2cbeae6d9aee..fd65f8c774ed 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -65,6 +65,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
- # git output parsing needs US English output, so first set backtick child process LANGUAGE
- my $git_command ='export LANGUAGE=en_US.UTF-8; git';
- my $tabsize = 8;
-+my ${CONFIG_} = "CONFIG_";
- 
- sub help {
- 	my ($exitcode) = @_;
-@@ -127,6 +128,8 @@ Options:
-   --typedefsfile             Read additional types from this file
-   --color[=WHEN]             Use colors 'always', 'never', or only when output
-                              is a terminal ('auto'). Default is 'auto'.
-+  --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
-+                             ${CONFIG_})
-   -h, --help, --version      display this help and exit
- 
- When FILE is - read standard input.
-@@ -235,6 +238,7 @@ GetOptions(
- 	'color=s'	=> \$color,
- 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
- 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
-+	'kconfig-prefix=s'	=> \${CONFIG_},
- 	'h|help'	=> \$help,
- 	'version'	=> \$help
- ) or help(1);
-@@ -6528,16 +6532,16 @@ sub process {
- 		}
- 
- # check for IS_ENABLED() without CONFIG_<FOO> ($rawline for comments too)
--		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^CONFIG_/) {
-+		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^${CONFIG_}/) {
- 			WARN("IS_ENABLED_CONFIG",
--			     "IS_ENABLED($1) is normally used as IS_ENABLED(CONFIG_$1)\n" . $herecurr);
-+			     "IS_ENABLED($1) is normally used as IS_ENABLED(${CONFIG_}$1)\n" . $herecurr);
- 		}
- 
- # check for #if defined CONFIG_<FOO> || defined CONFIG_<FOO>_MODULE
--		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(CONFIG_[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
-+		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(${CONFIG_}[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
- 			my $config = $1;
- 			if (WARN("PREFER_IS_ENABLED",
--				 "Prefer IS_ENABLED(<FOO>) to CONFIG_<FOO> || CONFIG_<FOO>_MODULE\n" . $herecurr) &&
-+				 "Prefer IS_ENABLED(<FOO>) to ${CONFIG_}<FOO> || ${CONFIG_}<FOO>_MODULE\n" . $herecurr) &&
- 			    $fix) {
- 				$fixed[$fixlinenr] = "\+#if IS_ENABLED($config)";
- 			}
--- 
-2.25.1
+And honestly, that whole "check if it has the ELF header" signature
+was always just a heuristic. Nothing should depend on it anyway.
 
+We already skip dumping file data under a lot of other circumstances
+(and perhaps equally importantly, we already decided to dump it all
+under other circumstances).
+
+I think this DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER hackery is worse than
+just changing the heuristic.
+
+So instead, just say "ok, if the file was executable, let's dump the
+first page".
+
+The test might be as simple as jjust checking
+
+       if (file_inode(vma->vm_file)->i_mode & 0111)
+
+and you'd be done. That's likely a _better_ heuristic than the "let's
+go look at the random first word in memory".
+
+Your patches look otherwise fine, but I really really despise that
+DUMP_SIZE_MAYBE_ELFHDR_PLACEHOLDER, and I don't think it's even
+necessary.
+
+             Linus
