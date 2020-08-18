@@ -2,107 +2,90 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEE9206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5865206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="m8vA/J8P"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gQ8gkyFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgHRMlr (ORCPT
+        id S1726696AbgHRMmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:41:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44869 "EHLO ozlabs.org"
+        Tue, 18 Aug 2020 08:42:21 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60313 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgHRMlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:41:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726569AbgHRMmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:42:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597754525; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=Y/RDDb3mAt7QvX6HBbapdibqafkKhm7pXFr4Ti4glJk=;
+ b=gQ8gkyFKgBfUqMky+MoyJ7oD6eJFu0X8sNATKPOdGtUn0Oxk1YXEB5jdu/4i/uwsqKsq6fIw
+ AAMCNgPUMBELRxgNIaYnhIDJXmEbXKPRbsTE5AmMUGHm7kIDs3BeHtkQjgWEsQsqbY2VePpP
+ MsJESlFctnhv6Q0bNKsIT7nWxW4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f3bcc8bd96d28d61efbd3df (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 12:41:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 27D1DC43391; Tue, 18 Aug 2020 12:41:47 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BW9X45kLCz9sTH;
-        Tue, 18 Aug 2020 22:41:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1597754500;
-        bh=92T+JTRUiBj8LogWLq7x8AB1yPnegUccBvHHOB6a+Gg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=m8vA/J8PF5b7d408Wrip0PPk3RfDiYyHPG9Pa2XDrokyFOXkXb2KQGNdcxPQFZOGI
-         jwAXR4Zi80UYXDgSOOipyqeJll5J5d1IeNnAImrSB7vv1uSzMQY+YpkN9vFQsJuMkq
-         D6PMobFVTok+BYfyfMwRb6y56Bzo3FQzO8zw7if8elWEFOKa0yYMR7CjOQGsyM3rTn
-         av4xCmScDPRW9o+gDTQ8kQEYsh1ttLGx6lO9682xnUmrT1Ia4XnFiI0sufMe9bBSxC
-         nYNHzKSIPYGm34xNKKQklPCA4D5CJaXJNlpN3e2u7qgC9iXFnqHcigIrYVKL+Wg4TS
-         E8fL1yIeDE6DQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [powerpc] 5.9.0-rc1 boot failure on POWER9 PowerVM LPAR
-In-Reply-To: <2CD14C97-9145-4D98-8C7C-783B278663A2@linux.vnet.ibm.com>
-References: <2CD14C97-9145-4D98-8C7C-783B278663A2@linux.vnet.ibm.com>
-Date:   Tue, 18 Aug 2020 22:41:39 +1000
-Message-ID: <87a6ysi0sc.fsf@mpe.ellerman.id.au>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96AC0C433CA;
+        Tue, 18 Aug 2020 12:41:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96AC0C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] p54: avoid accessing the data mapped to streaming DMA
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200802132949.26788-1-baijiaju@tsinghua.edu.cn>
+References: <20200802132949.26788-1-baijiaju@tsinghua.edu.cn>
+To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Cc:     chunkeey@googlemail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200818124147.27D1DC43391@smtp.codeaurora.org>
+Date:   Tue, 18 Aug 2020 12:41:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sachin Sant <sachinp@linux.vnet.ibm.com> writes:
-> 5.9.0-rc1 fails to boot on POWER9 PowerVM LPAR with following message
+Jia-Ju Bai <baijiaju@tsinghua.edu.cn> wrote:
 
-Looks like:
+> In p54p_tx(), skb->data is mapped to streaming DMA on line 337:
+>   mapping = pci_map_single(..., skb->data, ...);
+> 
+> Then skb->data is accessed on line 349:
+>   desc->device_addr = ((struct p54_hdr *)skb->data)->req_id;
+> 
+> This access may cause data inconsistency between CPU cache and hardware.
+> 
+> To fix this problem, ((struct p54_hdr *)skb->data)->req_id is stored in
+> a local variable before DMA mapping, and then the driver accesses this
+> local variable instead of skb->data.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
 
-https://lore.kernel.org/linuxppc-dev/20200814150509.225615-1-vaibhav@linux.ibm.com/
+Can someone review this?
 
-cheers
+-- 
+https://patchwork.kernel.org/patch/11696391/
 
->             Starting udev Kernel Device Manager...
-> [  OK  ] Started udev Kernel Device Manager.
-> BUG: Kernel NULL pointer dereference on read at 0x00000188
-> Faulting instruction address: 0xc0000000005417e0
-> Oops: Kernel access of bad area, sig: 11 [#1]
-> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> Modules linked in: papr_scm(+) uio_pdrv_genirq uio sch_fq_codel ip_tables sd_mod t10_pi ibmvscsi scsi_transport_srp ibmveth
-> CPU: 14 PID: 7 Comm: kworker/u32:0 Not tainted 5.9.0-rc1-00085-g06a4ec1d9dc6 #1
-> Workqueue: events_unbound async_run_entry_fn
-> NIP:  c0000000005417e0 LR: c000000000541784 CTR: c000000000871e30
-> REGS: c00000067871b710 TRAP: 0300   Not tainted  (5.9.0-rc1-00085-g06a4ec1d9dc6)
-> MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24822484  XER: 00000000
-> CFAR: c00000000054178c DAR: 0000000000000188 DSISR: 40000000 IRQMASK: 0 
-> GPR00: c000000000541784 c00000067871b9a0 c00000000173cb00 0000000000000000 
-> GPR04: c000000000f9eb50 0000000000000002 0000000000000001 c000000678689000 
-> GPR08: c000000000d45e20 0000000000000180 0000000000000001 0000000000000220 
-> GPR12: c000000000871e30 c00000001ec5ba00 c00000000017ba18 c000000678220e00 
-> GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
-> GPR20: 0000000000000000 0000000000000000 fffffffffffffef7 ffffffffffffee4b 
-> GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000003 
-> GPR28: c0000000037eb018 c00000000166f9e8 c00000066992dd80 c000000000d45f00 
-> NIP [c0000000005417e0] internal_create_group+0x180/0x4e0
-> LR [c000000000541784] internal_create_group+0x124/0x4e0
-> Call Trace:
-> [c00000067871b9a0] [c000000000541784] internal_create_group+0x124/0x4e0 (unreliable)
-> [c00000067871ba60] [c000000000541d70] internal_create_groups.part.4+0x70/0x120
-> [c00000067871bab0] [c0000000008293d0] device_add+0x470/0x970
-> [c00000067871bb70] [c00000000086f028] nd_async_device_register+0x28/0xa0
-> [c00000067871bbe0] [c000000000180fec] async_run_entry_fn+0x7c/0x220
-> [c00000067871bc70] [c000000000170f20] process_one_work+0x260/0x510
-> [c00000067871bd10] [c000000000171258] worker_thread+0x88/0x5e0
-> [c00000067871bdb0] [c00000000017bbb4] kthread+0x1a4/0x1b0
-> [c00000067871be20] [c00000000000d3d0] ret_from_kernel_thread+0x5c/0x6c
-> Instruction dump:
-> 7f07c378 38a00000 7fc3f378 4bffe47d 60000000 7c7a1b79 40820218 e93d0009 
-> 3b7b0001 7f7b07b4 2fa90000 419e0024 <a3490008> 4192ff7c e8890000 38a00000 
-> ---[ end trace c238dab2fca3582d ]---
->
-> Kernel panic - not syncing: Fatal exception
->
-> Have attached config
->
-> thanks
-> -Sachin
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
