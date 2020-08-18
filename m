@@ -2,58 +2,199 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28AC2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CB120772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597780606;
+	bh=neHbT+U3gwRWCIZyKJ4PN/GywWjBDOKx7ZICSN9l69Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=0JIq6Coqon/sDOspqfrarhSxz+r0hSgGn1sJ3irHC4rmfz4ZLXkLsXteWYg3pL/+9
+	 PJy9NCHNZsUi0uLSRXyDSN1uQ8bRvocIRa/lyxWiMz3g6fg5Bnv5xTUrT/uRg2ncGf
+	 X2ETE8Mu47Ugj9HKaRXwBI3eaGt6mzcsOFeBYXs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgHRTzm (ORCPT
+        id S1726825AbgHRT4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:55:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:34922 "EHLO verein.lst.de"
+        Tue, 18 Aug 2020 15:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgHRTzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:55:41 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 61B1668AFE; Tue, 18 Aug 2020 21:55:39 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 21:55:39 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
-Message-ID: <20200818195539.GB32691@lst.de>
-References: <20200817073212.830069-1-hch@lst.de> <20200817073212.830069-9-hch@lst.de> <202008181244.BBDA7DAB@keescook>
+        id S1726632AbgHRT4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:56:43 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796842076E;
+        Tue, 18 Aug 2020 19:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597780602;
+        bh=neHbT+U3gwRWCIZyKJ4PN/GywWjBDOKx7ZICSN9l69Q=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=xQeFkOu9p8kJIUwn34yyUNd4VvuMg10RVUvQwEdYf4bVSAw2YLTMEVFz7dkVfMkcF
+         aUONF2nUsUUtkj6JrGiV7NuO7QTOg9zEX5WlQznyPnhOKoGdG3+r3vEIQv3O5Jf3O5
+         mdlchlUnS9HvFx/tkxA5+PaQ1hyXppwnEMqgntaE=
+Message-ID: <d713ae02fc02ec4cf5edf1a6d0e9be49f00d5371.camel@kernel.org>
+Subject: Re: [PATCH] libceph: Convert to use the preferred fallthrough macro
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Miaohe Lin <linmiaohe@huawei.com>, idryomov@gmail.com,
+        davem@davemloft.net, kuba@kernel.org, grandmaster@al2klimov.de
+Cc:     ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 18 Aug 2020 15:56:40 -0400
+In-Reply-To: <20200818122637.21449-1-linmiaohe@huawei.com>
+References: <20200818122637.21449-1-linmiaohe@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008181244.BBDA7DAB@keescook>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:44:49PM -0700, Kees Cook wrote:
-> On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
-> > For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
+On Tue, 2020-08-18 at 08:26 -0400, Miaohe Lin wrote:
+> Convert the uses of fallthrough comments to fallthrough macro.
 > 
-> typo: thing
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  net/ceph/ceph_hash.c    | 20 ++++++++++----------
+>  net/ceph/crush/mapper.c |  2 +-
+>  net/ceph/messenger.c    |  4 ++--
+>  net/ceph/mon_client.c   |  2 +-
+>  net/ceph/osd_client.c   |  4 ++--
+>  5 files changed, 16 insertions(+), 16 deletions(-)
 > 
-> > need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
-> > definition to escape the explicit unsigned long cast.  This just works
-> > because __PAGE_OFFSET is defined using _AC itself and thus never needs
-> > the cast anyway.
-> 
-> Shouldn't this be folded into the prior patch so there's no bisection
-> problem?
+> diff --git a/net/ceph/ceph_hash.c b/net/ceph/ceph_hash.c
+> index 81e1e006c540..16a47c0eef37 100644
+> --- a/net/ceph/ceph_hash.c
+> +++ b/net/ceph/ceph_hash.c
+> @@ -50,35 +50,35 @@ unsigned int ceph_str_hash_rjenkins(const char *str, unsigned int length)
+>  	switch (len) {
+>  	case 11:
+>  		c = c + ((__u32)k[10] << 24);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 10:
+>  		c = c + ((__u32)k[9] << 16);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 9:
+>  		c = c + ((__u32)k[8] << 8);
+>  		/* the first byte of c is reserved for the length */
+> -		/* fall through */
+> +		fallthrough;
+>  	case 8:
+>  		b = b + ((__u32)k[7] << 24);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 7:
+>  		b = b + ((__u32)k[6] << 16);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 6:
+>  		b = b + ((__u32)k[5] << 8);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 5:
+>  		b = b + k[4];
+> -		/* fall through */
+> +		fallthrough;
+>  	case 4:
+>  		a = a + ((__u32)k[3] << 24);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 3:
+>  		a = a + ((__u32)k[2] << 16);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 2:
+>  		a = a + ((__u32)k[1] << 8);
+> -		/* fall through */
+> +		fallthrough;
+>  	case 1:
+>  		a = a + k[0];
+>  		/* case 0: nothing left to add */
+> diff --git a/net/ceph/crush/mapper.c b/net/ceph/crush/mapper.c
+> index 07e5614eb3f1..7057f8db4f99 100644
+> --- a/net/ceph/crush/mapper.c
+> +++ b/net/ceph/crush/mapper.c
+> @@ -987,7 +987,7 @@ int crush_do_rule(const struct crush_map *map,
+>  		case CRUSH_RULE_CHOOSELEAF_FIRSTN:
+>  		case CRUSH_RULE_CHOOSE_FIRSTN:
+>  			firstn = 1;
+> -			/* fall through */
+> +			fallthrough;
+>  		case CRUSH_RULE_CHOOSELEAF_INDEP:
+>  		case CRUSH_RULE_CHOOSE_INDEP:
+>  			if (wsize == 0)
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index 27d6ab11f9ee..bdfd66ba3843 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -412,7 +412,7 @@ static void ceph_sock_state_change(struct sock *sk)
+>  	switch (sk->sk_state) {
+>  	case TCP_CLOSE:
+>  		dout("%s TCP_CLOSE\n", __func__);
+> -		/* fall through */
+> +		fallthrough;
+>  	case TCP_CLOSE_WAIT:
+>  		dout("%s TCP_CLOSE_WAIT\n", __func__);
+>  		con_sock_state_closing(con);
+> @@ -2751,7 +2751,7 @@ static int try_read(struct ceph_connection *con)
+>  			switch (ret) {
+>  			case -EBADMSG:
+>  				con->error_msg = "bad crc/signature";
+> -				/* fall through */
+> +				fallthrough;
+>  			case -EBADE:
+>  				ret = -EIO;
+>  				break;
+> diff --git a/net/ceph/mon_client.c b/net/ceph/mon_client.c
+> index 3d8c8015e976..d633a0aeaa55 100644
+> --- a/net/ceph/mon_client.c
+> +++ b/net/ceph/mon_client.c
+> @@ -1307,7 +1307,7 @@ static struct ceph_msg *mon_alloc_msg(struct ceph_connection *con,
+>  		 * request had a non-zero tid.  Work around this weirdness
+>  		 * by allocating a new message.
+>  		 */
+> -		/* fall through */
+> +		fallthrough;
+>  	case CEPH_MSG_MON_MAP:
+>  	case CEPH_MSG_MDS_MAP:
+>  	case CEPH_MSG_OSD_MAP:
+> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> index e4fbcad6e7d8..7901ab6c79fd 100644
+> --- a/net/ceph/osd_client.c
+> +++ b/net/ceph/osd_client.c
+> @@ -3854,7 +3854,7 @@ static void scan_requests(struct ceph_osd *osd,
+>  			if (!force_resend && !force_resend_writes)
+>  				break;
+>  
+> -			/* fall through */
+> +			fallthrough;
+>  		case CALC_TARGET_NEED_RESEND:
+>  			cancel_linger_map_check(lreq);
+>  			/*
+> @@ -3891,7 +3891,7 @@ static void scan_requests(struct ceph_osd *osd,
+>  			     !force_resend_writes))
+>  				break;
+>  
+> -			/* fall through */
+> +			fallthrough;
+>  		case CALC_TARGET_NEED_RESEND:
+>  			cancel_map_check(req);
+>  			unlink_request(osd, req);
 
-I didn't see a problem bisecting, do you have something particular in
-mind?
+
+Looks sane. Merged into ceph-client/testing branch.
+
+Thanks!
+-- 
+Jeff Layton <jlayton@kernel.org>
+
