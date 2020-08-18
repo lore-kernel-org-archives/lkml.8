@@ -2,100 +2,153 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE47C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6319C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E0920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17FE207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyXcab8P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBPbIGYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgHRPL4 (ORCPT
+        id S1727859AbgHRPMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
+        Tue, 18 Aug 2020 11:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgHRPLj (ORCPT
+        with ESMTP id S1726873AbgHRPMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:11:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59AEC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:11:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id p20so18637243wrf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:11:38 -0700 (PDT)
+        Tue, 18 Aug 2020 11:12:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CACC061389;
+        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so18602674wrm.12;
+        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/TUviTxTr5RENHKS204/Amvu2wl72islAoTAztRD38o=;
-        b=kyXcab8PtKT5O5lVakr4loj+OMQcj8nCmqIZjBKRtV+t4CcXPuHW4hNfYc5nk6z6bo
-         jirtPaLC5ptB1rQ/DpBkYGJxkb76UeHDHlJBTzYMek/sJoU88ecQi+PibR5IkbCncqHc
-         a1vKyEy4lqWk2wPjbrlKzeVAKyZKsJOEcqyu0a9bi/JJHyCt5oY3wXhRP21/6owQi7al
-         YB9NVxB7eXyr6CAcU8BMCYiCqADWpW0D5BSkCcv6qZBt9BU6qGJvqy6JiFoHEXEk34uY
-         pVOHOtGaNE1OcPlMHgUKo9EQBv6FmzG+7ra/0YjZDVhsoAV+Bzda900niFw6lUowByu6
-         cA2g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
+        b=LBPbIGYQrU0mHziA4nNdl4eE3cXtppYEvfLXZxMFHqUJCC3aPFJcpOX4uJ04qMnssG
+         Ag5clvTZ7KaHp05xI+LCkT46W+mumhbi4uMzTEJ0Zgw7EHw2biiG22cGZvWWi8pxSKUn
+         b+v8CHE4M/CZIj/ImziP2Zwe6Qr+5YWvKJ7VWieX7JGRgV9arfMDfkxkIL/t2jBZldOQ
+         42hgWUG6W+6+Bo9XvCgOGgt9ZRn/D8ze4gVCG8oUASyzK10IQlJx8mGSCfQnykVQkC+J
+         UnF7P+cyJAVXZcDJ/N6ANDnOzFaD1Jc+NLZEKQQKLDOnvlSZiA5g2pYB+cNNfwTlgOBN
+         eWHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/TUviTxTr5RENHKS204/Amvu2wl72islAoTAztRD38o=;
-        b=NbTIqbE2ON58/ZyNG4jJr/yVjCU/0e3q5PelDe8+jpkQxlFvy/cv1RlgzyVn9jWo53
-         CB6kA1bkQaKoviguDmbcRFkwtVLaeq1EIrBqh0D7Jo32Q79mt86yE+Mm7Pj5nQbrY2qp
-         7dDkzelUS+0cYVVxDxYPn4IQzxbEtqjihTjsRJnqUtAxzOeIp4kMp6mAG2U6J1gxEutJ
-         5+lcqQ4o/RvIGpGpNJY9VRAdI1uR/gjN7u6NCMNNmuRDPWRfwxSyosHLysVJuFRhEPfy
-         ifR1uUBJQVWIvS4dUi7ig6hxxzj+XRtdAn9hds4m4g/rJivVnCrSgOsXSSS0YAaQEAvA
-         o3FA==
-X-Gm-Message-State: AOAM5323h9yJfQezqeRqb4740Dlet0QRaCgA0ipvAausVqaIzUuk4RrF
-        zOT3dCcyXo/mG0XenlflsDU=
-X-Google-Smtp-Source: ABdhPJz8jQ2UIZ0e4glv5rwM4+hhWPDfagKdjFGyY2wc2UVtfUyBEuZJPiHY3sdThsZ2Fy6iJYrkRw==
-X-Received: by 2002:a5d:5084:: with SMTP id a4mr21374691wrt.191.1597763497564;
-        Tue, 18 Aug 2020 08:11:37 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id x82sm299863wmb.30.2020.08.18.08.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 08:11:37 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: emxx_udc: Allow for building on !ARM
-Date:   Tue, 18 Aug 2020 16:11:29 +0100
-Message-Id: <20200818151133.583382-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
+        b=er6gUCaHCrHfN1PbVsIjxmS/u6juuPVw8YcHXZ1rhQei1qvymrvY0LoBlXPFz/wYo5
+         qLHeJHbaQBeEVDDKvvqWLvVJVhlvf/tZLTBKWY3grYOqLwI3ZLr8Tbz295tHgmLB31E9
+         FY01AqHCHepiFb+Yj3y/G8GhmYt6fu15DNr+g8dHCwvrwS1MRt+5H5fJ2Ds5YKQKFK2z
+         qNX48zIo2MkiElVW/2YWiQ/ANYnjBPIIUQ5NU2l0GS1dD5SNN7zIy3ehEc8xCv80wdmJ
+         jQeGB+fZkIECnPs8OkQrqqtTCz5vqX4qCvkLVdXqti0lZ3IMMLLVGFfbDR/6z0fgKYRv
+         HSKg==
+X-Gm-Message-State: AOAM533V3dug9xAmRBQwqE9AVnkunX+rnXM82IBoDpEVW4kDfYGIaT1l
+        NBqr53N2HhJxfMwWYtkQXRdFCQabFEiX0gkoWoA=
+X-Google-Smtp-Source: ABdhPJwKdzwEohL5E9SDLCVg0q8nhvUN8RMpxHE73jN/E0C6arJhxxGXiKWPU1nLKhzAjKAWQrer6Yss9Q2RQ13N+mU=
+X-Received: by 2002:adf:f485:: with SMTP id l5mr19243697wro.147.1597763527343;
+ Tue, 18 Aug 2020 08:12:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org> <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
+In-Reply-To: <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 18 Aug 2020 08:12:53 -0700
+Message-ID: <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
+Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the module can only be test built on ARM, although it seems to
-build fine on x86. Change this to allow for broader test coverage.
+On Tue, Aug 18, 2020 at 3:03 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 2020-06-01 16:33, Krishna Manikandan wrote:
+> > Define shutdown callback for display drm driver,
+> > so as to disable all the CRTCS when shutdown
+> > notification is received by the driver.
+> >
+> > This change will turn off the timing engine so
+> > that no display transactions are requested
+> > while mmu translations are getting disabled
+> > during reboot sequence.
+> >
+> > Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> >
+> > Changes in v2:
+> >       - Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+> >       - Change commit text to reflect when this issue
+> >         was uncovered (Sai Prakash Ranjan)
+> > ---
+> >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_drv.c
+> > b/drivers/gpu/drm/msm/msm_drv.c
+> > index e4b750b..94e3963 100644
+> > --- a/drivers/gpu/drm/msm/msm_drv.c
+> > +++ b/drivers/gpu/drm/msm/msm_drv.c
+> > @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct
+> > platform_device *pdev)
+> >       return 0;
+> >  }
+> >
+> > +static void msm_pdev_shutdown(struct platform_device *pdev)
+> > +{
+> > +     struct drm_device *drm = platform_get_drvdata(pdev);
+> > +
+> > +     drm_atomic_helper_shutdown(drm);
+> > +}
+> > +
+> >  static const struct of_device_id dt_match[] = {
+> >       { .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+> >       { .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+> > @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device
+> > *pdev)
+> >  static struct platform_driver msm_platform_driver = {
+> >       .probe      = msm_pdev_probe,
+> >       .remove     = msm_pdev_remove,
+> > +     .shutdown   = msm_pdev_shutdown,
+> >       .driver     = {
+> >               .name   = "msm",
+> >               .of_match_table = dt_match,
+>
+> Any more comments on this patch?
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/staging/emxx_udc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+sorry, I managed to overlook this earlier.. I've pulled it in to msm-next
 
-diff --git a/drivers/staging/emxx_udc/Kconfig b/drivers/staging/emxx_udc/Kconfig
-index ad1478c53e9e..e7a95b3b6a2f 100644
---- a/drivers/staging/emxx_udc/Kconfig
-+++ b/drivers/staging/emxx_udc/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- config USB_EMXX
- 	tristate "EMXX USB Function Device Controller"
--	depends on USB_GADGET && (ARCH_RENESAS || (ARM && COMPILE_TEST))
-+	depends on USB_GADGET && (ARCH_RENESAS || COMPILE_TEST)
- 	help
- 	   The Emma Mobile series of SoCs from Renesas Electronics and
- 	   former NEC Electronics include USB Function hardware.
--- 
-2.28.0
+BR,
+-R
 
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
