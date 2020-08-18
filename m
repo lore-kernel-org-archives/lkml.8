@@ -2,144 +2,179 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0272C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FF7206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E2520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n2mYV4p9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5EREzyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHRVnz (ORCPT
+        id S1726826AbgHRVvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
+        Tue, 18 Aug 2020 17:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgHRVny (ORCPT
+        with ESMTP id S1726366AbgHRVvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 17:43:54 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD9FC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 14:43:54 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id r4so9832961pls.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 14:43:54 -0700 (PDT)
+        Tue, 18 Aug 2020 17:51:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC63C061389;
+        Tue, 18 Aug 2020 14:51:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id p14so295668wmg.1;
+        Tue, 18 Aug 2020 14:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ku6KRkFjfvYlI41FcPQR/35V9YSvyUi25iV14BtdfTo=;
-        b=n2mYV4p9IDfmqgRCbcPjkKKpofadfqoeYOUODnu9wLy3BfSqePwJUViC/LWoyxN9kr
-         mT05BiIcbp1/n4ERJw/glSMLMmofsfin9KK7EfX6eyNi5fkeuF/vF0uk3X4Ok76wOW2B
-         EGQr7JL5zLQVgtRilrwXZ66vdZPS5pJdyqqp81X70Q/UaWva5XgoIHll37nSLopD5gC7
-         sinZLqUerV84mEVE/Nk+10waDSu8uJSJUi1Brd4BrZskzzWRtee4mggIekT526wfJe27
-         XrgghLiG3AQm60+mb13Qcl2h36JU32NSO4XZB+vonSWKiO8R9fN7StajWhAduSKXDqKv
-         ke0w==
+        d=gmail.com; s=20161025;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=BSABekpEbgyR8FIOb3+UbUAwmPio9uloyrrOhgrIEdc=;
+        b=V5EREzyu9AwjVNEDwVVRm+WyiwYmK/38e2TcfeLrHRFr2QcJ0ZBV8smeSpE3GQmXmF
+         BBqctpe/Gy+gZF9WNc9+u/cO0lMOxUQmbYmEcJEjqwyQyTMlLlW896OPYW7ez+jImRqw
+         x7MkV4T+QphRxfKKzVV+L4NEzswScHNXOPDWp6oiCkwLhvIsHxnTiH4hG6rFoLmSvS4d
+         XPT8jiGL4FVqgI+MGyKbz30ikf2zEAvHuzlObt+vHlwqUubWGBRLQXxeiEfG4ePJ3M0m
+         wGBnfSGsFzZnibUCbFN6ur6vJC54JkEJWLXYBKnaL23X5HzOulC9E6/k7BAy+gRBvTPL
+         O6iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ku6KRkFjfvYlI41FcPQR/35V9YSvyUi25iV14BtdfTo=;
-        b=V5QqCthSjLYCTGZ0/SAm5Y7Aq/Z5uFgGZMmoTaWsd4vp7J6Ow4mQeIQCrptDCxIOIG
-         QhvNVrYF7en2S4V4Z8DNXjpJzK8a+gDFnynRAfiaPAxpkIjsCgo+9bm4GwwZk7Hl3zPl
-         84P5cak8zsy8cCjAvYl3Pe8Gtr5F5mALzh3w3PCZV3THU57u/Ih01RDaaT0nF67g+AWM
-         OB1q7rKOMURsL3I42DOLc4SZBdyQhGrj4WoMtKJHRuyicoVMha/llj5kPLqGI8WIZBxf
-         BjarSGGdIXnMaVXUqGVnnTahQQFMrpBt85IzUCcBeHz0Sy3bMKagE6om5ctv9qCsehUW
-         GZfQ==
-X-Gm-Message-State: AOAM531IErBUQX+c9QR15nxtIuXYR/hwDbs61evidp0JJdbJdpVWYcSH
-        lB70SSvjW2Az+Lt7VP0U38V13w==
-X-Google-Smtp-Source: ABdhPJwmdpgyw9mEmAXbMYiRDQ8V3OY0KY5mMDjghqQUNBoJNX0dpUf6Nixy/ZLbKq8JofeU879cpQ==
-X-Received: by 2002:a17:90a:b88c:: with SMTP id o12mr1458935pjr.187.1597787033141;
-        Tue, 18 Aug 2020 14:43:53 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f3sm26170676pfj.206.2020.08.18.14.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 14:43:52 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 15:43:50 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     bjorn.andersson@linaro.org, o.rempel@pengutronix.de,
-        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
-Message-ID: <20200818214350.GA3822080@xps15>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-5-peng.fan@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724080813.24884-5-peng.fan@nxp.com>
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=BSABekpEbgyR8FIOb3+UbUAwmPio9uloyrrOhgrIEdc=;
+        b=N4Kd0Mrih55xPIZj4ajVW8IXB+V1n8RyJE/UABEvL71rQtjdXZ+Hq9mjFXh965awOq
+         yvK5tXfcQ9aaReRwqox7jKj5zpEGhL1qoeND1Jz2pmJj3fm9u+EI+ri8TAll8smE0TdI
+         OBVmyhaKuFoGfqkHCz/S4V7095TJc9fV7H84P+pFBAj0LAj1Li4qpwRKpfOjN8FPs3mA
+         S4EZzJYu/oFaxxyG4Pnozonp/t1BCeSZdCYlcuNyYHoYNuMZCQdjNwsKto4wj6tzcuku
+         LxeiI4WGPgUPGWS+h6k/xwqIiR8h1vRu9dO8CTgmTh1gOnHZQgSsK7FGi9ex59MitQuM
+         eNGQ==
+X-Gm-Message-State: AOAM533scKkcALncA+3TJVqpSECRNnCD2qAojOpgfo0gLGQBqDyC828G
+        39SLUp/4IZMkcM+oVhp6Wjs=
+X-Google-Smtp-Source: ABdhPJyDzIKdttoTMtQ1tDdiApioS6r3Xq/iLT8S9kLBRqZAAPFVsFeIYUZLl8YmZskRlpJduOoc7A==
+X-Received: by 2002:a1c:9e11:: with SMTP id h17mr1783647wme.106.1597787461886;
+        Tue, 18 Aug 2020 14:51:01 -0700 (PDT)
+Received: from [100.64.193.196] ([147.229.117.41])
+        by smtp.gmail.com with ESMTPSA id t14sm35579344wrv.14.2020.08.18.14.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 14:51:00 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   =?utf-8?Q?D=C3=A1vid_Bolvansk=C3=BD?= <david.bolvansky@gmail.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Date:   Tue, 18 Aug 2020 23:51:00 +0200
+Message-Id: <CAB29ED6-DF63-4973-9B02-345E13D38A87@gmail.com>
+References: <20200818214146.GA3196105@rani.riverdale.lan>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+In-Reply-To: <20200818214146.GA3196105@rani.riverdale.lan>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+X-Mailer: iPhone Mail (17F75)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
+So -fno-builtin-stpcpy is not ideal solution then.. gcc may implement this o=
+pt too and here we go again, red builds.
 
-On Fri, Jul 24, 2020 at 04:08:07PM +0800, Peng Fan wrote:
-> Make syscon optional, since i.MX8QM/QXP/7ULP not have SRC to control M4.
-> But currently i.MX8QM/QXP/7ULP not added, so still check regmap
-> when start/stop to avoid unhappy things.
+We should either provide stpcpy implementation or fix few places and do not u=
+se sprintf there.
 
-On the i.MX8QM/QXP/7ULP processors, the remote processors are not handled by the
-remoteproc cores, as implemented in this patch.  In such a scenario how does the
-remoteproc core know the remote processor has crashed and how does it recover
-from such a condition?
+> D=C5=88a 18. 8. 2020 o 23:41 u=C5=BE=C3=ADvate=C4=BE Arvind Sankar <nivedi=
+ta@alum.mit.edu> nap=C3=ADsal:
+>=20
+> =EF=BB=BFOn Tue, Aug 18, 2020 at 01:58:51PM -0700, Nick Desaulniers wrote:=
 
-Thanks,
-Mathieu
+>>> On Tue, Aug 18, 2020 at 1:27 PM Nick Desaulniers
+>>> <ndesaulniers@google.com> wrote:
+>>>=20
+>>> On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.edu> wr=
+ote:
+>>>>=20
+>>>> On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
+>>>>> On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:=
 
-> 
-> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 82594a800a1b..4fad5c0b1c05 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -162,6 +162,9 @@ static int imx_rproc_start(struct rproc *rproc)
->  	struct device *dev = priv->dev;
->  	int ret;
->  
-> +	if (!priv->regmap)
-> +		return -EOPNOTSUPP;
-> +
->  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
->  				 dcfg->src_mask, dcfg->src_start);
->  	if (ret)
-> @@ -177,6 +180,9 @@ static int imx_rproc_stop(struct rproc *rproc)
->  	struct device *dev = priv->dev;
->  	int ret;
->  
-> +	if (!priv->regmap)
-> +		return -EOPNOTSUPP;
-> +
->  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
->  				 dcfg->src_mask, dcfg->src_stop);
->  	if (ret)
-> @@ -325,9 +331,10 @@ static int imx_rproc_probe(struct platform_device *pdev)
->  	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
->  	if (IS_ERR(regmap)) {
->  		dev_err(dev, "failed to find syscon\n");
-> -		return PTR_ERR(regmap);
-> +		regmap = NULL;
-> +	} else {
-> +		regmap_attach_dev(dev, regmap, &config);
->  	}
-> -	regmap_attach_dev(dev, regmap, &config);
->  
->  	/* set some other name then imx */
->  	rproc = rproc_alloc(dev, "imx-rproc", &imx_rproc_ops,
-> -- 
-> 2.16.4
-> 
+>>>>>>=20
+>>>>>> I'm not saying "change the semantics", nor am I saying that playing
+>>>>>> whack-a-mole *for a limited time* is unreasonable. But I would like t=
+o go back
+>>>>>> to the compiler authors and get them to implement such a #pragma: "th=
+is
+>>>>>> freestanding implementation *does* support *this specific library fun=
+ction*,
+>>>>>> and you are free to call it."
+>>>>>=20
+>>>>> I'd much rather just see the library functions as builtins that always=
+
+>>>>> do the right thing (with the fallback being "just call the standard
+>>>>> function").
+>>>>>=20
+>>>>> IOW, there's nothing wrong with -ffreestanding if you then also have
+>>>>> __builtin_memcpy() etc, and they do the sane compiler optimizations
+>>>>> for memcpy().
+>>>>>=20
+>>>>> What we want to avoid is the compiler making *assumptions* based on
+>>>>> standard names, because we may implement some of those things
+>>>>> differently.
+>>>>>=20
+>>>>=20
+>>>> -ffreestanding as it stands today does have __builtin_memcpy and
+>>>> friends. But you need to then use #define memcpy __builtin_memcpy etc,
+>>>> which is messy and also doesn't fully express what you want. #pragma, o=
+r
+>>>> even just allowing -fbuiltin-foo options would be useful.
+>>=20
+>> I do really like the idea of -fbuiltin-foo.  For example, you'd specify:
+>>=20
+>> -ffreestanding -fbuiltin-bcmp
+>>=20
+>> as an example. `-ffreestanding` would opt you out of ALL libcall
+>> optimizations, `-fbuiltin-bcmp` would then opt you back in to
+>> transforms that produce bcmp.  That way you're informing the compiler
+>> more precisely about the environment you'd be targeting.  It feels
+>> symmetric to existing `-fno-` flags (clang makes -f vs -fno- pretty
+>> easy when there is such symmetry).  And it's already convention that
+>> if you specify multiple conflicting compiler flags, then the latter
+>> one specified "wins."  In that sense, turning back on specific
+>> libcalls after disabling the rest looks more ergonomic to me.
+>>=20
+>> Maybe Eli or David have thoughts on why that may or may not be as
+>> ergonomic or possible to implement as I imagine?
+>>=20
+>=20
+> Note that -fno-builtin-foo seems to mean slightly different things in
+> clang and gcc. =46rom experimentation, clang will neither optimize a call
+> to foo, nor perform an optimization that introduces a call to foo. gcc
+> will avoid optimizing calls to foo, but it can still generate new calls
+> to foo while optimizing something else. Which means that
+> -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It's
+> just that gcc doesn't seem to have implemented those optimizations.
