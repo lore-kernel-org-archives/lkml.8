@@ -2,132 +2,131 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73877C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ED8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6D220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="lIIEPHgF"
+	by mail.kernel.org (Postfix) with ESMTP id 3B00A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597771101;
+	bh=BHcNycc4dZBlyvyM2oisP4r82JOuw/+7vT2Hq+RP4rg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=K2KCRoAAuXSrixO/N0wuabrTVzV/S990FxJrb37hc4wNDl88t6T0lwIBBNgp5QZiZ
+	 30hx9Rl+PR1RO0y3a8bQGXVfRsi+qVO30eTooyqeBwxKCEgO2tbQ3Y6Tu3ETEX5cqG
+	 Q67rtAT2C9cjGjIcZ69Yt1wWD9Z3qYhJNN7SxYZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgHRRRG (ORCPT
+        id S1728398AbgHRRSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:17:06 -0400
-Received: from mail-eopbgr60052.outbound.protection.outlook.com ([40.107.6.52]:51363
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727913AbgHRRQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:16:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ldHZt+JDmZ8uGoIaWhVYA4DUct3IUprWsmNHbwc8jrQdw2kd8TRr9PwY8GjKgAigxqBtBu3JwyGXzWcl98Q25Hh+6uLwM5knnABkgwddoYbqpXOtlr6TTimeIrl6wrSmx5CkWICYgJkGMj6csfDfkQqKxuVYnXefYLgBOMAMWKXSmDAAukppiWrLLVfS5dj9EVDiuOEBCa9JiD2NNEK74vttfGR+zSXk+uyaqjUhAZmuhqjuM7LsvR1H6ByGEg2KPOTwHbWKkan7Dz4l/CFjTeMttsD8dgNhb27cigtjg06tENWRRrVtEfYxYinEXEfRQcb4MHfueXCNRKNJ3+elmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VUYNiDEnewyb/Bw4/0rkWxmcdxg0ChaWFdrVErAso4o=;
- b=EJdHeS4SbSvLCrD1a8CZn1/oENaybZrvVqq2T11j0T3kmhbsr6Jat0byuWvOwkbRMNBikzlJ0up08tmO3aAnFETlLVy4eWUmYKRZfqxfabmMN5vLcL+kHd8tZXTQEoF/USGeL40f69ehTkEntj1S1JONeOAippd//UOXH18pQDod39G2MEviQ05RF4CsjlhH/bVN4fTa5Gu2DkULrV/Qtw5ntXosdgFSVPEO23/n9dVDBTIGXSV42AAP/BmnqXCCvvHK4mtuzhAtbhVZmxPQ50gsGnIU2t6Q200wLtEnh7HZ8nlP3j29qq5twYojHz75cGbBmSFSG7siXIxnF32xVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VUYNiDEnewyb/Bw4/0rkWxmcdxg0ChaWFdrVErAso4o=;
- b=lIIEPHgFJJ/hjDBHwXyhr2LyA5hhbwoaYOJ+A3gttXvzEcrvGH+HImeRO7HoWQYzLb10oBWBO0IA846SzczD0NogWbo9l3sSywU9LphIILbWFqkLj++3cIW3DdeSPmoOJz5GK+8p00V2yIsHu1KH+YJnaNeEtNX2tR1bBqmIAMM=
-Received: from DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:13a::19)
- by DB8PR10MB3739.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 18 Aug
- 2020 17:16:49 +0000
-Received: from DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::61f3:d87e:a882:d80a]) by DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::61f3:d87e:a882:d80a%6]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 17:16:49 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     "Zhi, Yong" <yong.zhi@intel.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>
-CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level
- probe/remove
-Thread-Topic: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level
- probe/remove
-Thread-Index: AQHWcAB+3ABTLeJ5E0KRr+mgQ5L1xqk+HByAgAAKNhA=
-Date:   Tue, 18 Aug 2020 17:16:49 +0000
-Message-ID: <DB8PR10MB3642D592D97B7AE6AA3186CF805C0@DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
- <MW3PR11MB4665D9AD35EF41A7F24F5208855C0@MW3PR11MB4665.namprd11.prod.outlook.com>
-In-Reply-To: <MW3PR11MB4665D9AD35EF41A7F24F5208855C0@MW3PR11MB4665.namprd11.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=diasemi.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1aaa5211-19a1-43e6-b045-08d8439a7e3b
-x-ms-traffictypediagnostic: DB8PR10MB3739:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR10MB3739EE8B83C9520625CF11B7A75C0@DB8PR10MB3739.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kIUKck1O+DUMYGBPxFbhRJxrQewTNY+HQly4bp0N4EXzbdA1RCw3u1QCEKMvvQ62dQ4A2mAWzypYLQsyJuFBV5jGRauKz4ces5QFrOyMjI37AWwCI9fk9L2m9mfhEklnpsxPKgp+rll17wabXt+rs6uvPfeOIG6SpoAEbp807SYR1BLOK81Y00Ayxdf9gmOaTkz/cgES9JqG6Jk5WSFL4x2xMgjuWCfqbOFNpY6fSrOCCh+Xv9dUV4kbLUPswQtSlbhfmU6m4H2DfLitzAO0AtNE72Tju1CzKl5fKvEExKfB+2iG132OC5iVsmj6hUUdkrMOmYPBPZ/+6sRbe7pOnA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39850400004)(186003)(53546011)(52536014)(55016002)(9686003)(7696005)(107886003)(478600001)(316002)(76116006)(66946007)(86362001)(64756008)(66556008)(66446008)(66476007)(8936002)(54906003)(55236004)(71200400001)(2906002)(6506007)(110136005)(26005)(4744005)(83380400001)(5660300002)(8676002)(4326008)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UBEsBhkSOBRA8h70xqbj9hUamKmrkSg0vPQG1XCurqVNjDjQ1TrcDEho4ZBX3f/TTDhQHtOzsYxwXz/64f8uHsD2i5UVxe+vdivzKlQ+yp6Gz/TEMX2kl9jUYWimpD9zahn66w5dWHFT4j+EoNDwC++M7gE3jEuTBzhryEKQrpkooPzlztWznTjLIXxXV0x3mttZns6M5WgcKPzz3zd7rdB9N0l7UGYzfCgYkcEUNnoo5fdPiaL/wsewBYTTxgANprOFQjmxB7M9jW2WooX5EoWXJd3uiHz34iFt6r9So63IXarv7e8g5aupGv9ziawBZJF95vfbdZRqqYkTFRIjX/xjh8pBG5USaO8Y+GDznt/8MdXcvMzePIu4toNsD2qW1qaas2bOr2XGaI+yyWSfc7hAUuQqPFZZFVxcuKisaNsd39+rp217UgW4DNhVC5ESWhIcxALBQvd0NhMd9bwi1Qq5zeLK93wwi8Z+ylRwROL1XbZ8IP68H7Dzfpb6KOWfn33xkxj2jA6QLcCpENEmj63x0q8/Bchpc7mbdxSKQ+sLWCASeelpSurAYiQthjem1LxqHq4kgftGuaHu1LoEtjMX9ri+2cDv/7mIYqisKXkNcmCRuzbhJBc4cIvWzUrpBdyMMcEXWf9BVVnLGkZxOA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 13:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726715AbgHRRSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:18:08 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5DF20658;
+        Tue, 18 Aug 2020 17:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597771087;
+        bh=BHcNycc4dZBlyvyM2oisP4r82JOuw/+7vT2Hq+RP4rg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G2uzu5rVo9qgnohWdcmBBqslx+OIONWh7jmdSNIxCGhJ4Bay3lsoZcbgQM3OkW4ML
+         6h6GUghZyHln6EgzKX7X5E3ir5FjBl5F3n78TtDeoWhnxJ5gG5PDMwtCo5y2h5AkcF
+         j5PexCbKO//1QMrK6T71jGVEyED9bPjpCY4aK0ZA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8E6B735228F5; Tue, 18 Aug 2020 10:18:07 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 10:18:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, qiang.zhang@windriver.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
+Message-ID: <20200818171807.GI27891@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200814064557.17365-1-qiang.zhang@windriver.com>
+ <20200814185124.GA2113@pc636>
+ <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR10MB3642.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aaa5211-19a1-43e6-b045-08d8439a7e3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 17:16:49.4044
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wc1hozbt2IyvUdDtHnBLK2d0gGpP0ftEZ5j6KcfBEviGl49zSsAXo9pPSzH7SkMlbippeDi5r9K4VneU+I9fiLuxeaerqUdppR228i/VILg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3739
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18 August 2020 17:39, Zhi, Yong wrote:
-
-> > This patch set reorganises and fixes device and codec level probe/remov=
-e
-> > handling within the driver, to allow clean probe and remove at the code=
-c level.
+On Mon, Aug 17, 2020 at 06:03:54PM -0400, Joel Fernandes wrote:
+> On Fri, Aug 14, 2020 at 2:51 PM Uladzislau Rezki <urezki@gmail.com> wrote:
 > >
-> > This set relates to an issue raised by Yong Zhi where a codec level re-=
-probe
-> > would fail due to clks still being registered from the previous instant=
-iation.
-> > In addition some improvements around regulator handling and soft reset =
-have
-> > also been included.
+> > > From: Zqiang <qiang.zhang@windriver.com>
+> > >
+> > > Due to cpu hotplug. some cpu may be offline after call "kfree_call_rcu"
+> > > func, if the shrinker is triggered at this time, we should drain each
+> > > possible cpu "krcp".
+> > >
+> > > Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+> > > ---
+> > >  kernel/rcu/tree.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 8ce77d9ac716..619ccbb3fe4b 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3443,7 +3443,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+> > >       unsigned long count = 0;
+> > >
+> > >       /* Snapshot count of all CPUs */
+> > > -     for_each_online_cpu(cpu) {
+> > > +     for_each_possible_cpu(cpu) {
+> > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > >
+> > >               count += READ_ONCE(krcp->count);
+> > > @@ -3458,7 +3458,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > >       int cpu, freed = 0;
+> > >       unsigned long flags;
+> > >
+> > > -     for_each_online_cpu(cpu) {
+> > > +     for_each_possible_cpu(cpu) {
+> > >               int count;
+> > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > >
+> > > @@ -3491,7 +3491,7 @@ void __init kfree_rcu_scheduler_running(void)
+> > >       int cpu;
+> > >       unsigned long flags;
+> > >
+> > > -     for_each_online_cpu(cpu) {
+> > > +     for_each_possible_cpu(cpu) {
+> > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > >
+> > >               raw_spin_lock_irqsave(&krcp->lock, flags);
+> > >
+> > I agree that it can happen.
 > >
->=20
-> Just to let you know that I tested this series on the JSL platform, the o=
-riginal issue
-> was resolved, also sanity checked basic use case like plug/unplug and
-> suspend/resume, no regression found.
->=20
-> thanks,
-> yong
+> > Joel, what is your view?
+> 
+> Yes I also think it is possible. The patch LGTM. Another fix could be
+> to drain the caches in the CPU offline path and save the memory. But
+> then it will take hit during __get_free_page(). If CPU
+> offlining/online is not frequent, then it will save the lost memory.
+> 
+> I wonder how other per-cpu caches in the kernel work in such scenarios.
+> 
+> Thoughts?
 
-That's great. Many thanks for verifying your side.
+Do I count this as an ack or a review?  If not, what precisely would
+you like the submitter to do differently?
+
+							Thanx, Paul
