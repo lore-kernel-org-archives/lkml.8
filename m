@@ -2,61 +2,100 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6010C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91DBC206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0330820789
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DGsd0rtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgHRTfx (ORCPT
+        id S1726676AbgHRTjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
+        Tue, 18 Aug 2020 15:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgHRTfv (ORCPT
+        with ESMTP id S1726585AbgHRTjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:35:51 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DCEC061389;
-        Tue, 18 Aug 2020 12:35:51 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DEE0C1279E923;
-        Tue, 18 Aug 2020 12:19:04 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:35:50 -0700 (PDT)
-Message-Id: <20200818.123550.1614770957816770142.davem@davemloft.net>
-To:     vulab@iscas.ac.cn
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rpl_iptunnel: simplify the return expression of
- rpl_do_srh()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200818085454.12224-1-vulab@iscas.ac.cn>
-References: <20200818085454.12224-1-vulab@iscas.ac.cn>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Aug 2020 12:19:05 -0700 (PDT)
+        Tue, 18 Aug 2020 15:39:37 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCABC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s15so10221244pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+piZ95CVdXuEkGHEl46eIFq4d8k/PB4mXonDrPOqmKY=;
+        b=DGsd0rtAn+EKPFELhI752sDGcE5zFP+lMM8VmIoSeKoi6jMm45lvXfr9ws3MF5gc9l
+         ve83Lz6XbS7dssqMUq/Lj8oMpn26ngBCwqg5X60YndlWLYNUsBegqrWnarq5zy/QGoxV
+         hEAeArB2aRBW8ao8Fs7gzHlcJiD2QfQeaGNvc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+piZ95CVdXuEkGHEl46eIFq4d8k/PB4mXonDrPOqmKY=;
+        b=d0GiniIHgX3TaZ8oHca9Zet9xfTJiRgsasX2TBYkLUzSNLPixqdlTsfRARLD4s6Unl
+         iQus5wuAPaObBmvTLXOkOrZA2OfCnTkJFHvhrMFfXH57usHHkDbOmil8gpeuzCWOIRxp
+         GDhi08/y/Z6MwfVXntPXYxxUyQ6aShViLtI8gNUXwHaznnTwSbk2Ax1zmoEZqVi6bucj
+         lKePx126pMTm+ZZoZuea2/I+m7kFrwDnpmZXxuZK/FHb9Bj7beknvNu0aczfIumG4pNO
+         PuSOXopOodFTNn5TZDMP7Oc+O/bIllEd8WJVC1EObctH2knW5uMtjh1b6c/wQ3NU7QO4
+         /dmA==
+X-Gm-Message-State: AOAM531iUHi1UnJfCOaPtX9dX87ASpWfN9fFdlDFJXUrbKbOQ4KmJYyV
+        KqdIzWbWrMwfnNAgwNzUcp2yNQF7qQBj4g==
+X-Google-Smtp-Source: ABdhPJxnDPhmwuColVON9fsNG6lMLA9e0FK5CJwZp+zherGpkgz5W95vJkHLhp5Y28PAYw30OH1SVQ==
+X-Received: by 2002:a63:d1f:: with SMTP id c31mr13717358pgl.27.1597779576171;
+        Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c27sm22083011pgn.86.2020.08.18.12.39.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:39:35 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:39:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 03/11] fs: don't allow splice read/write without explicit
+ ops
+Message-ID: <202008181239.E51B80265@keescook>
+References: <20200817073212.830069-1-hch@lst.de>
+ <20200817073212.830069-4-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817073212.830069-4-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWHUgV2FuZyA8dnVsYWJAaXNjYXMuYWMuY24+DQpEYXRlOiBUdWUsIDE4IEF1ZyAyMDIw
-IDA4OjU0OjU0ICswMDAwDQoNCj4gQEAgLTE5NywxMSArMTk3LDcgQEAgc3RhdGljIGludCBycGxf
-ZG9fc3JoKHN0cnVjdCBza19idWZmICpza2IsIGNvbnN0IHN0cnVjdCBycGxfbHd0ICpybHd0KQ0K
-PiAgDQo+ICAJdGluZm8gPSBycGxfZW5jYXBfbHd0dW5uZWwoZHN0LT5sd3RzdGF0ZSk7DQo+ICAN
-Cj4gLQllcnIgPSBycGxfZG9fc3JoX2lubGluZShza2IsIHJsd3QsIHRpbmZvLT5zcmgpOw0KPiAt
-CWlmIChlcnIpDQo+IC0JCXJldHVybiBlcnI7DQo+IC0NCj4gLQlyZXR1cm4gMDsNCj4gKwlyZXR1
-cm4gcnBsX2RvX3NyaF9pbmxpbmUoc2tiLCBybHd0LCB0aW5mby0+c3JoKTsNCj4gIH0NCg0KUGxl
-YXNlIGF0IGxlYXN0IGNvbXBpbGUgdGVzdCB5b3VyIGNoYW5nZXM6DQoNCm5ldC9pcHY2L3JwbF9p
-cHR1bm5lbC5jOiBJbiBmdW5jdGlvbiChcnBsX2RvX3NyaKI6DQpuZXQvaXB2Ni9ycGxfaXB0dW5u
-ZWwuYzoxOTM6Njogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIKFlcnKiIFstV3VudXNlZC12YXJp
-YWJsZV0NCiAgMTkzIHwgIGludCBlcnIgPSAwOw0K
+On Mon, Aug 17, 2020 at 09:32:04AM +0200, Christoph Hellwig wrote:
+> default_file_splice_write is the last piece of generic code that uses
+> set_fs to make the uaccess routines operate on kernel pointers.  It
+> implements a "fallback loop" for splicing from files that do not actually
+> provide a proper splice_read method.  The usual file systems and other
+> high bandwith instances all provide a ->splice_read, so this just removes
+> support for various device drivers and procfs/debugfs files.  If splice
+> support for any of those turns out to be important it can be added back
+> by switching them to the iter ops and using generic_file_splice_read.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+This seems a bit disruptive? I feel like this is going to make fuzzers
+really noisy (e.g. trinity likes to splice random stuff out of /sys and
+/proc).
+
+Conceptually, though:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
