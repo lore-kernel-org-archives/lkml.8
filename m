@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7AFC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA94FC433DF
 	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1404E2067C
+	by mail.kernel.org (Postfix) with ESMTP id C543E2075E
 	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgHRI5u (ORCPT
+        id S1726847AbgHRI5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:57:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37998 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 04:57:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37984 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgHRI5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726740AbgHRI5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 04:57:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9C8FDB048;
+        by mx2.suse.de (Postfix) with ESMTP id BDAB5B04C;
         Tue, 18 Aug 2020 08:57:34 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 15/16] vc_screen: extract vcs_read_buf_header
-Date:   Tue, 18 Aug 2020 10:57:05 +0200
-Message-Id: <20200818085706.12163-15-jslaby@suse.cz>
+Subject: [PATCH 16/16] vc_screen: prune macros
+Date:   Tue, 18 Aug 2020 10:57:06 +0200
+Message-Id: <20200818085706.12163-16-jslaby@suse.cz>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200818085706.12163-1-jslaby@suse.cz>
 References: <20200818085706.12163-1-jslaby@suse.cz>
@@ -41,67 +41,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The attribute header handling is terrible in vcs_read_buf. Separate it
-to a new function and simply do memmove (of up to 4 bytes) to the start
-of the con_buf -- if user seeked.
+Do not undefine random words. I guess this was here as there were macros
+with such generic names somewhere. I very doubt they still exist. So
+drop these.
+
+And remove a spare blank line.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vc_screen.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+ drivers/tty/vt/vc_screen.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index c178a1611223..9d68c6b36ddf 100644
+index 9d68c6b36ddf..3e3a6a9a7f44 100644
 --- a/drivers/tty/vt/vc_screen.c
 +++ b/drivers/tty/vt/vc_screen.c
-@@ -297,6 +297,22 @@ static void vcs_read_buf_noattr(const struct vc_data *vc, char *con_buf,
- 	}
- }
+@@ -50,11 +50,7 @@
+ #include <asm/byteorder.h>
+ #include <asm/unaligned.h>
  
-+static unsigned int vcs_read_buf_header(const struct vc_data *vc, char *con_buf,
-+		unsigned int pos, unsigned int count)
-+{
-+	count = min(HEADER_SIZE - pos, count);
-+
-+	/* clamp header values if they don't fit */
-+	con_buf[0] = min(vc->vc_rows, 0xFFu);
-+	con_buf[1] = min(vc->vc_cols, 0xFFu);
-+	getconsxy(vc, con_buf + 2);
-+
-+	if (pos)
-+		memmove(con_buf, con_buf + pos, count);
-+
-+	return count;
-+}
-+
- static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
- 		unsigned int pos, unsigned int count, bool viewed,
- 		unsigned int *skip)
-@@ -306,22 +322,11 @@ static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
- 	unsigned int filled = count;
- 
- 	if (pos < HEADER_SIZE) {
--		/* clamp header values if they don't fit */
--		con_buf[0] = min(vc->vc_rows, 0xFFu);
--		con_buf[1] = min(vc->vc_cols, 0xFFu);
--		getconsxy(vc, con_buf + 2);
+-#undef attr
+-#undef org
+-#undef addr
+ #define HEADER_SIZE	4u
 -
--		*skip += pos;
--		count += pos;
--		if (count > CON_BUF_SIZE) {
--			count = CON_BUF_SIZE;
--			filled = count - pos;
--		}
-+		count -= vcs_read_buf_header(vc, con_buf, pos, count);
+ #define CON_BUF_SIZE (CONFIG_BASE_SMALL ? 256 : PAGE_SIZE)
  
--		/* Advance state pointers and move on. */
--		count -= min(HEADER_SIZE, count);
- 		pos = HEADER_SIZE;
- 		con_buf += HEADER_SIZE;
-+
- 		/* If count >= 0, then pos is even... */
- 	} else if (pos & 1) {
- 		/*
+ /*
 -- 
 2.28.0
 
