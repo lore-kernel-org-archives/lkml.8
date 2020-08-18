@@ -2,74 +2,87 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8681C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8C220738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FB7206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597758730;
+	bh=F1UGo65DXs9OFY28Zjp/23kFoGYwJB2tDZeX0WHQAH8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p7nQPZBADYjKUzA878544ku+V+asVOpAp47RTuItQT2XLebawhW90HuQnQx0U8zMI
+	 eYibTqL4jW+znIZfzXaoukRAReU9CHB/33V6JT1ziw4ONIszc2j1nO73JRjhbWScub
+	 AiM3BDRLoYuky0Ms0+7YOpLg5m/rK4JHdghzRNEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgHRNup (ORCPT
+        id S1726766AbgHRNwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:50:45 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28896 "EHLO mga18.intel.com"
+        Tue, 18 Aug 2020 09:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgHRNup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:50:45 -0400
-IronPort-SDR: R4rg3rtO+yxGnZe1BpTXjaX36Av7lp32iZmyQz0qsyhUo5ixoH6Jycf1KytA+aj+XtCENfOkPN
- VyTL8FffwOeg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142526768"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="142526768"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:50:44 -0700
-IronPort-SDR: OFjA1eihL9+leGX1XYtlVNpCK7iHXFFmlgmhCiGVDFbAQiXAPfr0FrDYFE6KKeK4+KS2Yf2XKX
- ZxwkIyGMOxnw==
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="278050481"
-Received: from cdrobins-mobl.amr.corp.intel.com (HELO [10.209.120.216]) ([10.209.120.216])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:50:41 -0700
-Subject: Re: [PATCH 2/2] soundwire: fix port_ready[] dynamic allocation in
- mipi_disco and ASoC codecs
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200817174727.15139-1-yung-chuan.liao@linux.intel.com>
- <20200817174727.15139-3-yung-chuan.liao@linux.intel.com>
- <20200818063659.GW2639@vkoul-mobl>
- <e9f12e13-49e0-5306-a975-b1b854baef02@linux.intel.com>
-Message-ID: <c5c91925-b4c0-a41a-1c35-aeebf5de175b@linux.intel.com>
-Date:   Tue, 18 Aug 2020 08:50:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726482AbgHRNwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:52:08 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08973206DA;
+        Tue, 18 Aug 2020 13:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597758728;
+        bh=F1UGo65DXs9OFY28Zjp/23kFoGYwJB2tDZeX0WHQAH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qWcE7oAMdEGkAelwMQFfRzDDR4EPsjKKKRSCPWcR1zusul/q822eJ5A6LaxzxX5Q1
+         Av/J1ix4PSiT0Az8MqyHDj7kZVjk2d0aSCmSxAmgUz/tkeUMGSnHlMvZMeoElMP71D
+         TPFui8zsHWVQmyU09KtHoL9uluL6HEs2y/IIei18=
+Received: by mail-oi1-f179.google.com with SMTP id b22so17945771oic.8;
+        Tue, 18 Aug 2020 06:52:08 -0700 (PDT)
+X-Gm-Message-State: AOAM5339h0ifrPnf1cWiO+FsTYtMrdieORdQj2zxQL1rPIMyHXHprkhq
+        jy11bAxI7QRn1cHdQiAlEWzbx6/7j0iLKcOOyg==
+X-Google-Smtp-Source: ABdhPJxGanlb3nCp2GWbiG6UUDuU3rs1/7fktgcZQ7ZyizkaUzNsnIsqV9iFBz6UFmXDZKYRbUztyO63qhD6WjUuI6M=
+X-Received: by 2002:aca:c3d8:: with SMTP id t207mr79157oif.152.1597758727392;
+ Tue, 18 Aug 2020 06:52:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e9f12e13-49e0-5306-a975-b1b854baef02@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200818092746.24366-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20200818092746.24366-1-Zhiqiang.Hou@nxp.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Aug 2020 07:51:56 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+TG7JD2oWGmOSJqqBQihbHr0C12cteH5EtSRLCj63Nhw@mail.gmail.com>
+Message-ID: <CAL_Jsq+TG7JD2oWGmOSJqqBQihbHr0C12cteH5EtSRLCj63Nhw@mail.gmail.com>
+Subject: Re: [PATCHv2] PCI: designware-ep: Fix the Header Type check
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 3:35 AM Zhiqiang Hou <Zhiqiang.Hou@nxp.com> wrote:
+>
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>
+> The current check will result in the multiple function device
+> fails to initialize. So fix the check by masking out the
+> multiple function bit.
+>
+> Fixes: 0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - Add marco PCI_HEADER_TYPE_MASK and print the masked value.
+>
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 3 ++-
+>  include/uapi/linux/pci_regs.h                   | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 
-
-
-> In addition, there's a WIP change to regmap to add support for SoundWire 
-> 1.2 MBQ-based register access, but this only affects regmap and ASoC 
-> trees, all handled by Mark.
-
-I have to take this comment back, the regmap change will depend on the 
-MBQ macro that should go in the SoundWire tree.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
