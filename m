@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE20C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722F52067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057BA2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Oz+SgBPA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gVTsDwN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgHRHvD (ORCPT
+        id S1726480AbgHRHvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 18 Aug 2020 03:51:03 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:33639 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRHu7 (ORCPT
+Received: from mailout3.samsung.com ([203.254.224.33]:21252 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRHu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 03:50:59 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200818075055epoutp01dcd98a9a318a4e4029e6eb6537831934~sTWMgdYtq1582415824epoutp01W
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:50:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200818075055epoutp01dcd98a9a318a4e4029e6eb6537831934~sTWMgdYtq1582415824epoutp01W
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200818075053epoutp03d4c5d140d1666da012b475de7a90ad67~sTWKGDbA40799507995epoutp03r
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:50:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200818075053epoutp03d4c5d140d1666da012b475de7a90ad67~sTWKGDbA40799507995epoutp03r
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597737055;
-        bh=NwOlS5cnBe1k4GJDW5Zv0HRcItTMtAfl5az4Un8KkCs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oz+SgBPAdERFLHiA9ZsNCB1Msc7eDbYKaAx/JWym7tT7kuTAweDDbYEekpM+MEXMP
-         8zyglECU4MFLlIbx8TcikAnYJs4K9lrkXRTdXYuLC9E9/GKIPNJRJdEVqxcx4Mk9IE
-         cCp3MvuzKkE/yOXxDG0tHR018OauIglgMyUF7mA8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200818075055epcas2p435ef9a85a1e2f0dffe39d1c35136281e~sTWMA3WGs0451104511epcas2p4Y;
-        Tue, 18 Aug 2020 07:50:55 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.40.186]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4BW34X0WfFzMqYkq; Tue, 18 Aug
-        2020 07:50:52 +0000 (GMT)
+        s=mail20170921; t=1597737053;
+        bh=reRIwhiJO75p0FtjqI282A2lfxt7RtX0AcKI2mqvwtA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=gVTsDwN3X7E+ytqhiLbOrf0uFe6cbYQV9QufI+xBlhm5hl69Em6Jtlw4wcvfUxpz5
+         4uInry1xK/PEJvgtCaWI/pu8fEMJGqEtQ/XSOKp8pCBun1yC37rE0bp2Qs7vrOjxIj
+         nJ/ytD00fcbq3SWt1TufAZIbVRgUB8ucD/PN7FnI=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20200818075052epcas2p231cfcb5286cafe1e59d86c15b16058ca~sTWJj_Usr3073630736epcas2p2K;
+        Tue, 18 Aug 2020 07:50:52 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.181]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4BW34W4f6ZzMqYkk; Tue, 18 Aug
+        2020 07:50:51 +0000 (GMT)
 Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BE.30.27441.B588B3F5; Tue, 18 Aug 2020 16:50:52 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200818075051epcas2p316edad6edd3df59444c08d392b075ea8~sTWIO-GKy2931529315epcas2p35;
-        Tue, 18 Aug 2020 07:50:51 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200818075050epsmtrp2e2eff35d365f0d3d2457bd13553c58d7~sTWHsNWs40185501855epsmtrp2B;
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C5.9D.27013.B588B3F5; Tue, 18 Aug 2020 16:50:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200818075050epcas2p15c780650f5f6b4a54ce731c273d24c98~sTWHnDs5M3062830628epcas2p1r;
         Tue, 18 Aug 2020 07:50:50 +0000 (GMT)
-X-AuditID: b6c32a47-fafff70000006b31-83-5f3b885b8fa4
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200818075050epsmtrp1eec76f890344da64cc22ef3f4c6ac8c4~sTWHkZGom2959829598epsmtrp1L;
+        Tue, 18 Aug 2020 07:50:50 +0000 (GMT)
+X-AuditID: b6c32a48-2acd6a8000006985-9d-5f3b885b7e0d
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        97.09.08303.A588B3F5; Tue, 18 Aug 2020 16:50:50 +0900 (KST)
+        87.09.08303.A588B3F5; Tue, 18 Aug 2020 16:50:50 +0900 (KST)
 Received: from KEI.dsn.sec.samsung.com (unknown [12.36.155.227]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200818075050epsmtip13728894ac95b41ac3557af485c3cde3d~sTWHbvejq2278422784epsmtip1r;
+        20200818075050epsmtip1032ad1a46b74017b4fce00a5453f0c6c~sTWHVcUUm2207622076epsmtip1H;
         Tue, 18 Aug 2020 07:50:50 +0000 (GMT)
 From:   Cho KyongHo <pullip.cho@samsung.com>
 To:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org
@@ -66,279 +67,333 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com,
         robin.murphy@arm.com, janghyuck.kim@samsung.com,
         hyesoo.yu@samsung.com, Cho KyongHo <pullip.cho@samsung.com>
-Subject: [PATCH 2/2] arm64: dma-mapping: add relaxed DMA sync
-Date:   Tue, 18 Aug 2020 16:43:11 +0900
-Message-Id: <1597736591-20457-2-git-send-email-pullip.cho@samsung.com>
+Subject: [PATCH 1/2] dma-mapping: introduce relaxed version of dma sync
+Date:   Tue, 18 Aug 2020 16:43:10 +0900
+Message-Id: <1597736591-20457-1-git-send-email-pullip.cho@samsung.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597736591-20457-1-git-send-email-pullip.cho@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmmW5Mh3W8wbtEi/fLehgt/nZeYLVY
-        sN/aYvOcYovO2RvYLTY9vsZqcXnXHDaLtUfuslv86z3IaHHwwxNWi5Y7pg7cHk8OzmPyWDNv
-        DaPHplWdbB6bl9R7TL6xnNGjb8sqRo/Pm+QC2KNybDJSE1NSixRS85LzUzLz0m2VvIPjneNN
-        zQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2Cql
-        FqTkFBgaFugVJ+YWl+al6yXn51oZGhgYmQJVJuRk7Fh4g61gg0XFn9lXWBoYZ+p1MXJySAiY
-        SOx7uIGxi5GLQ0hgB6NE648XUM4nRomV3U/ZIZzPjBInjl1lhGlZcm0qG0RiF6PEi6VzoKq+
-        MkrcvvGBHaSKTUBLYvXc42AdIgK2Ej+/T2QGKWIW+MYosevHXSaQhDBQ4nL3IqAEBweLgKrE
-        6w1cIGFeATeJS1chSiQE5CRunusEK+EUcJdonKAEMkZC4CO7xJuzX9khalwkTnbcg6oXlnh1
-        fAtUXEri87u9bBAN0xkl3s0/xAaR2Mwo8W23IIRtLDHrWTsjyAJmAU2J9bv0QUwJAWWJI7dY
-        QCqYBfgkOg7/ZYcI80p0tAlBNKpI7Jx6jQVmU9/eG1C2h8S+K1PAPhcSmMUo8X6X/ARGuVkI
-        8xcwMq5iFEstKM5NTy02KjBGjrBNjOD0p+W+g3HG2w96hxiZOBgPMUpwMCuJ8CadMI8X4k1J
-        rKxKLcqPLyrNSS0+xGgKDLmJzFKiyfnABJxXEm9oamRmZmBpamFqZmShJM5bbHUhTkggPbEk
-        NTs1tSC1CKaPiYNTqoHJn+n/NC/1CR+fvYw5GCs81Y9zgnWmzamKw2vEDhnsfeW+S+qKQ/qz
-        D4+zN+69IrbG/7L/08m7Olf6lE2o1bC7mJIl+qOA5csFw1Wq/C0vZU63aC8W3NR2X8RcMlR/
-        O2OKqHeLrswZBYstCl2HVtUyyX6xW6qj91Jlg3Iyp1LkxNNb2vXebb5YvWmfWuTjm6Iyq1jY
-        NW8VPLii9+/epYuHJASnvnt2eMHtz/Y1OsrshVJySikv7deZvFjI8X/qnc9Cza9k//wpuq+T
-        ai0p2rE9W+6/07aTnie8WXfPUfnDt9rNvfvx8x2R/Pm9rzn4CnvMVq2dFr0wjMeicPuSg/4+
-        V/q3CW85f+zNhpcOd2quKbEUZyQaajEXFScCAPCD1ocIBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsWy7bCSnG5Uh3W8wbHl6hbvl/UwWvztvMBq
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNKsWRmVeSWpSXmKPExsWy7bCmmW50h3W8wf/VLBbvl/UwWvztvMBq
         sWC/tcXmOcUWnbM3sFtsenyN1eLyrjlsFmuP3GW3+Nd7kNHi4IcnrBYtd0wduD2eHJzH5LFm
-        3hpGj02rOtk8Ni+p95h8YzmjR9+WVYwenzfJBbBHcdmkpOZklqUW6dslcGXsWHiDrWCDRcWf
-        2VdYGhhn6nUxcnJICJhILLk2la2LkYtDSGAHo8SFlr3MEAkpiXnda5kgbGGJ+y1HWCGKPjNK
-        zJ3UzgKSYBPQklg99zhjFyMHh4iAo0TDexOQGmaBf4wSR690gw0SFrCVuNy9iBmkhkVAVeL1
-        Bi6QMK+Am8Slq3eh5stJ3DzXCVbCKeAu0ThBCSQsBFQy8dp0pgmMfAsYGVYxSqYWFOem5xYb
-        FhjlpZbrFSfmFpfmpesl5+duYgSHqZbWDsY9qz7oHWJk4mA8xCjBwawkwpt0wjxeiDclsbIq
-        tSg/vqg0J7X4EKM0B4uSOO/XWQvjhATSE0tSs1NTC1KLYLJMHJxSDUxrYgJ9RDLPPdruU+3z
-        kO2YU2ZW45kyt/6sf6untO/N45e8NS1Zkt3HvfHbMo79WZv2h+aH3zy6dWHS9MMO4WJbmy+x
-        53zodBP4tN6m02Pz1QXtRTfv9qxnjy1wf23I8D3z0JOl696L9O09MI2BtVHjkXe8oHzbmS+m
-        J/7XvzeK3Vc5zfDMRl6/ud8zJjB52xmkvgnxnCJ4cY/Vw1wvVdmZqctSKyKTNKreXEw5nuBu
-        z3UkV8RixtpZKZXOCvIKMxYH1Gp9umVzN/x7fN6Kmpcvqx/I3EhjlDVrt2TsX7BvV/GMD3uO
-        ZIV+Ljq08Mi3trMTlp1d2xBs/oDdPm6CwcQ/F7e6WzBLyPy5vt92A58SS3FGoqEWc1FxIgDG
-        OMHdwgIAAA==
-X-CMS-MailID: 20200818075051epcas2p316edad6edd3df59444c08d392b075ea8
+        3hpGj02rOtk8Ni+p95h8YzmjR9+WVYwenzfJBbBH5dhkpCampBYppOYl56dk5qXbKnkHxzvH
+        m5oZGOoaWlqYKynkJeam2iq5+AToumXmAB2opFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFV
+        Si1IySkwNCzQK07MLS7NS9dLzs+1MjQwMDIFqkzIyZi24BFzwTyfiuNTTrM3MG526GLk5JAQ
+        MJF4evAWaxcjF4eQwA5Gic6dN9khnE+MEm9ezmeEcD4zSiz9socZpuXd+7UsEIldjBITb16H
+        avnKKLF9dycrSBWbgJbE6rnHGUFsEQFbiZ/fJzKDFDELfGOU2PXjLhNIQljAXeLBx3VgRSwC
+        qhL7z7xjAbF5BdwkLmx+xASxTk7i5rlOsGYJgVvsEo1bnrBBJFwk+k//Y4SwhSVeHd/CDmFL
+        Sbzsb2OHaJjOKPFu/iGohs2MEt92C0LYxhKznrUDNXMAnaQpsX6XPogpIaAsceQW2A3MAnwS
+        HYf/skOEeSU62oQgGlUkdk69xgKzqW/vDRaIEg+JvxPBSoQEYiUuHX3LOIFRdhbC+AWMjKsY
+        xVILinPTU4uNCkyQY2kTIzjVaXnsYJz99oPeIUYmDsZDjBIczEoivEknzOOFeFMSK6tSi/Lj
+        i0pzUosPMZoCg2sis5Rocj4w2eaVxBuaGpmZGViaWpiaGVkoifO+s7oQJySQnliSmp2aWpBa
+        BNPHxMEp1cDUMHkdj1bdzIMvxFLNN0V4XxQ5yDy3h+NzwJUy3hwrrcbz7V/SZguo7bn26MBH
+        rqCzNe+zJ09n/Mc7vWv2xeoPHu2ZczaeuaRk//GUSWuqkVumcrjfJzGRE6+KN/fErLsouP4d
+        b9A5901TA28f3HDifMviqddt5l+L6p3CemlBSvFs06knivT6jj+fela3k1Hp3DvOkhvGW/xf
+        tIsZpuvwvgtK7ip42zMjoMjYqeiDepKIkfXDm5YrWSKm7julVmiovqKK4eHMpYwZyzc+3bh8
+        ivaKacfvGa4/ue7qjd0LAu54rdb25bzMvuRxVw6vZJj6ZY+Vq2d+3n7HY8Kz44++3OP9Ksf5
+        57vNW6lswReFXEosxRmJhlrMRcWJAPj7+Hv+AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJLMWRmVeSWpSXmKPExsWy7bCSnG5Uh3W8QcNUJYv3y3oYLf52XmC1
+        WLDf2mLznGKLztkb2C02Pb7GanF51xw2i7VH7rJb/Os9yGhx8MMTVouWO6YO3B5PDs5j8lgz
+        bw2jx6ZVnWwem5fUe0y+sZzRo2/LKkaPz5vkAtijuGxSUnMyy1KL9O0SuDKmLXjEXDDPp+L4
+        lNPsDYybHboYOTkkBEwk3r1fy9LFyMUhJLCDUWJW5zFWiISUxLzutUwQtrDE/ZYjrBBFnxkl
+        eva8ACtiE9CSWD33OGMXIweHiICjRMN7E5AaZoF/jBJHr3Qzg9QIC7hLPPi4jhHEZhFQldh/
+        5h0LiM0r4CZxYfMjqAVyEjfPdTJPYORZwMiwilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/
+        dxMjOPS0tHYw7ln1Qe8QIxMH4yFGCQ5mJRHepBPm8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5
+        v85aGCckkJ5YkpqdmlqQWgSTZeLglGpgWvpsn6DN45c/Yi5JKAXdPrm/kfHhnehfr7cHX+Ez
+        mRry0WNSlAdr5PrqxRZrkvkiGNdbcB3YlF2c82zqmpAbJ3axz9ky5z63W9yVVWfaNTf9tN71
+        Pur+erNJIpWbnocyzXzGfVIrZepl122f9503nvnl6E37E1+/LFikf6tOsjT60wenU0Kei2b7
+        3+ua5MAWdPq6sKizwYEfU0wmiFztOWZ26Y649Y4yB17+oHkekneq5h4s1Nn8P7etiq10Vmih
+        q83b7w5FDY9nmVYuFn/tc7PsS6qV3+ozD+p+R+sV9KVt9+D2r16w16VTqHpjeUavw5G11+9O
+        e3vcLvXrutJ3se3vZDmUbLafvFt97d+6Gz+UWIozEg21mIuKEwFE4oStrAIAAA==
+X-CMS-MailID: 20200818075050epcas2p15c780650f5f6b4a54ce731c273d24c98
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200818075051epcas2p316edad6edd3df59444c08d392b075ea8
-References: <1597736591-20457-1-git-send-email-pullip.cho@samsung.com>
-        <CGME20200818075051epcas2p316edad6edd3df59444c08d392b075ea8@epcas2p3.samsung.com>
+X-CMS-RootMailID: 20200818075050epcas2p15c780650f5f6b4a54ce731c273d24c98
+References: <CGME20200818075050epcas2p15c780650f5f6b4a54ce731c273d24c98@epcas2p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__dma_[un]map_area() is the implementation of cache maintenance
-operations for DMA in arm64. 'dsb sy' in the subroutine guarantees the
-view of given memory area is consistent to all memory observers. So,
-it is required.
-However, dma_sync_sg_for_{device|cpu}() and dma_[un]map_sg() calls
-__dma_[un]map_area() nents number of times and 'dsb sy' instruction is
-executed the same number of times. We have observed that 'dsb sy'
-consumes more time than cleaning or invalidating 4KiB area.
-arch_sync_dma_for_{device|cpu}_relaxed() and
-arch_sync_barrier_for_{device|cpu}() are introduced since commit
-6a9356234 ("dma-mapping: introduce relaxed version of dma sync") to
-reduce redundant memory barriers in sg versions of DMA sync API.
-Implementing relaxed version of DMA sync API will dramatically increase
-the performance of dma_sync_sg_for_{device|cpu}().
+Cache maintenance operations in the most of CPU architectures needs
+memory barrier after the cache maintenance for the DMAs to view the
+region of the memory correctly. The problem is that memory barrier is
+very expensive and dma_[un]map_sg() and dma_sync_sg_for_{device|cpu}()
+involves the memory barrier per every single cache sg entry. In some
+CPU micro-architecture, a single memory barrier consumes more time than
+cache clean on 4KiB. It becomes more serious if the number of CPU cores
+are larger.
+This patch introduces arch_sync_dma_for_device_relaxed() and
+arch_sync_dma_for_cpu_relaxed() which do not involve memory barrier.
+So the users called those functions require explicitly calling
+arch_sync_barrier_for_device() and arch_sync_barrier_for_cpu(),
+respectively to confirm the view of memory is consistent between the
+CPUs and DMAs.
 
 Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
 ---
- arch/arm64/Kconfig                 |  4 ++--
- arch/arm64/include/asm/assembler.h | 33 ++++++++++++++++++++++++++++++++-
- arch/arm64/include/asm/barrier.h   | 13 +++++++++++++
- arch/arm64/mm/cache.S              | 34 +++++++++++-----------------------
- arch/arm64/mm/dma-mapping.c        |  4 ++--
- include/linux/dma-noncoherent.h    |  1 +
- 6 files changed, 61 insertions(+), 28 deletions(-)
+ drivers/iommu/dma-iommu.c       |  6 +++--
+ include/linux/dma-direct.h      | 29 +++++++++++++++++-----
+ include/linux/dma-noncoherent.h | 54 +++++++++++++++++++++++++++++++++++++++++
+ kernel/dma/Kconfig              |  8 ++++++
+ kernel/dma/direct.c             | 25 +++++++++++++++----
+ 5 files changed, 109 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6d23283..4fc7ef4 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -31,8 +31,8 @@ config ARM64
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
--	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
--	select ARCH_HAS_SYNC_DMA_FOR_CPU
-+	select ARCH_HAS_SYNC_DMA_FOR_DEVICE_RELAXED
-+	select ARCH_HAS_SYNC_DMA_FOR_CPU_RELAXED
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 54d1811..1f87d98 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -345,6 +345,33 @@ alternative_endif
- 	.endm
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 5141d49..4f9c9cb 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -705,7 +705,8 @@ static void iommu_dma_sync_sg_for_cpu(struct device *dev,
+ 		return;
  
- /*
-+ * Macro to perform a data cache invalidation for the interval
-+ * [kaddr, kaddr + size)
-+ *
-+ *	kaddr:		starting virtual address of the region
-+ *	size:		size of the region
-+ *	Corrupts:	kaddr, size, tmp1, tmp2
-+ */
-+	.macro __dcache_inv_by_line kaddr, size, tmp1, tmp2
-+	add	\size, \size, \kaddr
-+	dcache_line_size \tmp1, \tmp2
-+	sub	\tmp2, \tmp1, #1
-+	tst	\size, \tmp2		// end cache line aligned?
-+	bic	\size, \size, \tmp2
-+	b.eq	9997f
-+	dc	civac, \size		// clean & invalidate D / U line
-+9997:	tst	\kaddr, \tmp2		// start cache line aligned?
-+	bic	\kaddr, \kaddr, \tmp2
-+	b.eq	9998f
-+	dc	civac, \kaddr		// clean & invalidate D / U line
-+	b	9999f
-+9998:	dc	ivac, \kaddr		// invalidate D / U line
-+9999:	add	\kaddr, \kaddr, \tmp1
-+	cmp	\kaddr, \size
-+	b.lo	9998b
-+	.endm
+ 	for_each_sg(sgl, sg, nelems, i)
+-		arch_sync_dma_for_cpu(sg_phys(sg), sg->length, dir);
++		arch_sync_dma_for_cpu_relaxed(sg_phys(sg), sg->length, dir);
++	arch_sync_barrier_for_cpu(dir);
+ }
+ 
+ static void iommu_dma_sync_sg_for_device(struct device *dev,
+@@ -719,7 +720,8 @@ static void iommu_dma_sync_sg_for_device(struct device *dev,
+ 		return;
+ 
+ 	for_each_sg(sgl, sg, nelems, i)
+-		arch_sync_dma_for_device(sg_phys(sg), sg->length, dir);
++		arch_sync_dma_for_device_relaxed(sg_phys(sg), sg->length, dir);
++	arch_sync_barrier_for_device(dir);
+ }
+ 
+ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 6e87225..f5b1fee 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -152,7 +152,7 @@ static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
+ }
+ 
+-static inline dma_addr_t dma_direct_map_page(struct device *dev,
++static inline dma_addr_t __dma_direct_map_page(struct device *dev,
+ 		struct page *page, unsigned long offset, size_t size,
+ 		enum dma_data_direction dir, unsigned long attrs)
+ {
+@@ -172,20 +172,37 @@ static inline dma_addr_t dma_direct_map_page(struct device *dev,
+ 		return DMA_MAPPING_ERROR;
+ 	}
+ 
+-	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+-		arch_sync_dma_for_device(phys, size, dir);
+ 	return dma_addr;
+ }
+ 
+-static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
++static inline dma_addr_t dma_direct_map_page(struct device *dev,
++		struct page *page, unsigned long offset, size_t size,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	dma_addr_t dma_addr = __dma_direct_map_page(dev, page, offset, size, dir, attrs);
 +
-+/*
-  * Macro to perform a data cache maintenance for the interval
-  * [kaddr, kaddr + size)
-  *
-@@ -362,7 +389,7 @@ alternative_else
- alternative_endif
- 	.endm
- 
--	.macro dcache_by_line_op op, domain, kaddr, size, tmp1, tmp2
-+	.macro __dcache_by_line_op op, kaddr, size, tmp1, tmp2
- 	dcache_line_size \tmp1, \tmp2
- 	add	\size, \kaddr, \size
- 	sub	\tmp2, \tmp1, #1
-@@ -388,6 +415,10 @@ alternative_endif
- 	add	\kaddr, \kaddr, \tmp1
- 	cmp	\kaddr, \size
- 	b.lo	9998b
-+	.endm
++	if (dma_addr != DMA_MAPPING_ERROR && !dev_is_dma_coherent(dev) &&
++	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
++		arch_sync_dma_for_device(page_to_phys(page) + offset, size, dir);
 +
-+	.macro dcache_by_line_op op, domain, kaddr, size, tmp1, tmp2
-+	__dcache_by_line_op \op, \kaddr, \size, \tmp1, \tmp2
- 	dsb	\domain
- 	.endm
++	return dma_addr;
++}
++
++static inline void __dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	phys_addr_t phys = dma_to_phys(dev, addr);
  
-diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-index fb4c275..96bbbf6 100644
---- a/arch/arm64/include/asm/barrier.h
-+++ b/arch/arm64/include/asm/barrier.h
-@@ -167,6 +167,19 @@ do {									\
++	if (unlikely(is_swiotlb_buffer(phys)))
++		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
++}
++
++static inline void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
++		size_t size, enum dma_data_direction dir, unsigned long attrs)
++{
+ 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+ 		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
  
- #include <asm-generic/barrier.h>
+-	if (unlikely(is_swiotlb_buffer(phys)))
+-		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
++	__dma_direct_unmap_page(dev, addr, size, dir, attrs);
+ }
+ #endif /* _LINUX_DMA_DIRECT_H */
+diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+index ca09a4e..0a31e6c 100644
+--- a/include/linux/dma-noncoherent.h
++++ b/include/linux/dma-noncoherent.h
+@@ -73,23 +73,77 @@ static inline void arch_dma_cache_sync(struct device *dev, void *vaddr,
+ #endif /* CONFIG_DMA_NONCOHERENT_CACHE_SYNC */
  
-+#include <linux/dma-direction.h>
+ #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE
++#ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE_RELAXED
++void arch_sync_dma_for_device_relaxed(phys_addr_t paddr, size_t size,
++		enum dma_data_direction dir);
++
++static inline void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
++		enum dma_data_direction dir)
++{
++	arch_sync_dma_for_device_relaxed(paddr, size, dir);
++	arch_sync_barrier_for_device(dir);
++}
++#else
++#define arch_sync_dma_for_device_relaxed arch_sync_dma_for_device
++
+ void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir);
 +
 +static inline void arch_sync_barrier_for_device(enum dma_data_direction dir)
 +{
-+	dsb(sy);
 +}
++#endif /* ARCH_HAS_SYNC_DMA_FOR_DEVICE_RELAXED */
+ #else
++static inline void arch_sync_dma_for_device_relaxed(phys_addr_t paddr,
++		size_t size, enum dma_data_direction dir)
++{
++}
++
+ static inline void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir)
+ {
+ }
++
++static inline void arch_sync_barrier_for_device(enum dma_data_direction dir)
++{
++}
+ #endif /* ARCH_HAS_SYNC_DMA_FOR_DEVICE */
+ 
+ #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU
++#ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_RELAXED
++void arch_sync_dma_for_cpu_relaxed(phys_addr_t paddr, size_t size,
++		enum dma_data_direction dir);
++
++static inline void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
++		enum dma_data_direction dir)
++{
++	arch_sync_dma_for_cpu_relaxed(paddr, size, dir);
++	arch_sync_barrier_for_cpu(dir);
++}
++#else
++#define arch_sync_dma_for_cpu_relaxed arch_sync_dma_for_cpu
++
+ void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir);
 +
 +static inline void arch_sync_barrier_for_cpu(enum dma_data_direction dir)
 +{
-+	if (dir == DMA_FROM_DEVICE)
-+		dsb(sy);
++}
++#endif /* ARCH_HAS_SYNC_DMA_FOR_CPU_RELAXED */
+ #else
++static inline void arch_sync_dma_for_cpu_relaxed(phys_addr_t paddr, size_t size,
++		enum dma_data_direction dir)
++{
 +}
 +
- #endif	/* __ASSEMBLY__ */
- 
- #endif	/* __ASM_BARRIER_H */
-diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index 2d881f3..7180256 100644
---- a/arch/arm64/mm/cache.S
-+++ b/arch/arm64/mm/cache.S
-@@ -138,34 +138,20 @@ SYM_FUNC_END(__clean_dcache_area_pou)
-  *	- kaddr   - kernel address
-  *	- size    - size in question
-  */
--SYM_FUNC_START_LOCAL(__dma_inv_area)
- SYM_FUNC_START_PI(__inval_dcache_area)
--	/* FALLTHROUGH */
-+	__dcache_inv_by_line x0, x1, x2, x3
-+	dsb	sy
-+	ret
-+SYM_FUNC_END_PI(__inval_dcache_area)
- 
- /*
-  *	__dma_inv_area(start, size)
-  *	- start   - virtual start address of region
-  *	- size    - size in question
-  */
--	add	x1, x1, x0
--	dcache_line_size x2, x3
--	sub	x3, x2, #1
--	tst	x1, x3				// end cache line aligned?
--	bic	x1, x1, x3
--	b.eq	1f
--	dc	civac, x1			// clean & invalidate D / U line
--1:	tst	x0, x3				// start cache line aligned?
--	bic	x0, x0, x3
--	b.eq	2f
--	dc	civac, x0			// clean & invalidate D / U line
--	b	3f
--2:	dc	ivac, x0			// invalidate D / U line
--3:	add	x0, x0, x2
--	cmp	x0, x1
--	b.lo	2b
--	dsb	sy
-+SYM_FUNC_START_LOCAL(__dma_inv_area)
-+	__dcache_inv_by_line x0, x1, x2, x3
- 	ret
--SYM_FUNC_END_PI(__inval_dcache_area)
- SYM_FUNC_END(__dma_inv_area)
- 
- /*
-@@ -177,16 +163,18 @@ SYM_FUNC_END(__dma_inv_area)
-  *	- kaddr   - kernel address
-  *	- size    - size in question
-  */
--SYM_FUNC_START_LOCAL(__dma_clean_area)
- SYM_FUNC_START_PI(__clean_dcache_area_poc)
--	/* FALLTHROUGH */
-+	dcache_by_line_op cvac, sy, x0, x1, x2, x3
-+	ret
-+SYM_FUNC_END_PI(__clean_dcache_area_poc)
- 
- /*
-  *	__dma_clean_area(start, size)
-  *	- start   - virtual start address of region
-  *	- size    - size in question
-  */
--	dcache_by_line_op cvac, sy, x0, x1, x2, x3
-+SYM_FUNC_START_LOCAL(__dma_clean_area)
-+	__dcache_by_line_op cvac, x0, x1, x2, x3
- 	ret
- SYM_FUNC_END_PI(__clean_dcache_area_poc)
- SYM_FUNC_END(__dma_clean_area)
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 6c45350..12943b3 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -13,13 +13,13 @@
- 
- #include <asm/cacheflush.h>
- 
--void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
-+void arch_sync_dma_for_device_relaxed(phys_addr_t paddr, size_t size,
+ static inline void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
  		enum dma_data_direction dir)
  {
- 	__dma_map_area(phys_to_virt(paddr), size, dir);
+ }
++
++static inline void arch_sync_barrier_for_cpu(enum dma_data_direction dir)
++{
++}
+ #endif /* ARCH_HAS_SYNC_DMA_FOR_CPU */
+ 
+ #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 847a9d1..d6fe727f1 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -59,6 +59,14 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	bool
+ 	select NEED_DMA_MAP_STATE
+ 
++config ARCH_HAS_SYNC_DMA_FOR_DEVICE_RELAXED
++	bool
++	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
++
++config ARCH_HAS_SYNC_DMA_FOR_CPU_RELAXED
++	bool
++	select ARCH_HAS_SYNC_DMA_FOR_CPU
++
+ config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
+ 	bool
+ 
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index db6ef07a..52e5fd1 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -321,9 +321,12 @@ void dma_direct_sync_sg_for_device(struct device *dev,
+ 					dir, SYNC_FOR_DEVICE);
+ 
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_device(paddr, sg->length,
++			arch_sync_dma_for_device_relaxed(paddr, sg->length,
+ 					dir);
+ 	}
++
++	if (!dev_is_dma_coherent(dev))
++		arch_sync_barrier_for_device(dir);
+ }
+ #endif
+ 
+@@ -340,15 +343,17 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 		phys_addr_t paddr = dma_to_phys(dev, sg_dma_address(sg));
+ 
+ 		if (!dev_is_dma_coherent(dev))
+-			arch_sync_dma_for_cpu(paddr, sg->length, dir);
++			arch_sync_dma_for_cpu_relaxed(paddr, sg->length, dir);
+ 
+ 		if (unlikely(is_swiotlb_buffer(paddr)))
+ 			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
+ 					SYNC_FOR_CPU);
+ 	}
+ 
+-	if (!dev_is_dma_coherent(dev))
++	if (!dev_is_dma_coherent(dev)) {
++		arch_sync_barrier_for_cpu(dir);
+ 		arch_sync_dma_for_cpu_all();
++	}
  }
  
--void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
-+void arch_sync_dma_for_cpu_relaxed(phys_addr_t paddr, size_t size,
- 		enum dma_data_direction dir)
- {
- 	__dma_unmap_area(phys_to_virt(paddr), size, dir);
-diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-index 0a31e6c..f88fc0f 100644
---- a/include/linux/dma-noncoherent.h
-+++ b/include/linux/dma-noncoherent.h
-@@ -5,6 +5,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/pgtable.h>
+ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+@@ -357,8 +362,11 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+ 	struct scatterlist *sg;
+ 	int i;
  
-+#include <asm/barrier.h>
- #ifdef CONFIG_ARCH_HAS_DMA_COHERENCE_H
- #include <asm/dma-coherence.h>
- #elif defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
++	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
++		dma_direct_sync_sg_for_cpu(dev, sgl, nents, dir);
++
+ 	for_each_sg(sgl, sg, nents, i)
+-		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
++		__dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+ 			     attrs);
+ }
+ #endif
+@@ -370,13 +378,20 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ 	struct scatterlist *sg;
+ 
+ 	for_each_sg(sgl, sg, nents, i) {
+-		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
++		sg->dma_address = __dma_direct_map_page(dev, sg_page(sg),
+ 				sg->offset, sg->length, dir, attrs);
+ 		if (sg->dma_address == DMA_MAPPING_ERROR)
+ 			goto out_unmap;
+ 		sg_dma_len(sg) = sg->length;
+ 	}
+ 
++	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC)) {
++		for_each_sg(sgl, sg, nents, i)
++			arch_sync_dma_for_device_relaxed(dma_to_phys(dev, sg_dma_address(sg)),
++							 sg->length, dir);
++		arch_sync_barrier_for_device(dir);
++	}
++
+ 	return nents;
+ 
+ out_unmap:
 -- 
 2.7.4
 
