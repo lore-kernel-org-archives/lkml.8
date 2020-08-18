@@ -2,81 +2,96 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E80C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC88EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8604420789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C082078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:48:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BFDo4pYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgHRKqu (ORCPT
+        id S1726801AbgHRKsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:46:50 -0400
-Received: from muru.com ([72.249.23.125]:40772 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgHRKqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:46:48 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 4FAF9810D;
-        Tue, 18 Aug 2020 10:46:47 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 13:47:14 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] n_gsm: Fix write handling for zero bytes written
-Message-ID: <20200818104714.GR2994@atomide.com>
-References: <20200817135454.28505-1-tony@atomide.com>
- <1b8538a8-d8b6-4287-36e1-aa1e0863ff2d@kernel.org>
- <20200818095609.GQ2994@atomide.com>
- <ea5e0639-4419-c60b-059a-8fbd057fc6e3@kernel.org>
+        Tue, 18 Aug 2020 06:48:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgHRKsI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:48:08 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD4AC061389;
+        Tue, 18 Aug 2020 03:48:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BW70y2TJ2z9sPC;
+        Tue, 18 Aug 2020 20:48:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597747682;
+        bh=3kIXGotFaP4a+86oeoeZVflcMriWduQ4QxOHceZ7zjU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BFDo4pYzlA9vBlvXuAXLv9csKx7A/l3dFaYJVS2cyXxudz7rbbVoE0nquTZqTeZAZ
+         1nAhdspfGIxp3gk1331GG+PI33+VXYHL0O74QyKpX988IE+ZjVRDW6kYWHRXAPdxWj
+         tAvetSgYdicBkHtACRvKj5uZOYVrGNxod0CClFZcGLrIaoRuQz1orDMDZ6S66mvXFV
+         EMxyn+u3WvaW6433x/oAazRqUHoi+QjEBPq8WxJ3vTp8wyDIC8ADroH6HEfZJwY98/
+         UkRhrnnQTjy3AzmpYIV5VmW57oQfJKo1sVRglth3vPHnJy/cWKEN1J4JT4uBHH520y
+         2Pk24MKl05izw==
+Date:   Tue, 18 Aug 2020 20:48:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the fsinfo tree with the kbuid tree
+Message-ID: <20200818204800.1bce48de@canb.auug.org.au>
+In-Reply-To: <2193240.1597738758@warthog.procyon.org.uk>
+References: <20200817090523.68692855@canb.auug.org.au>
+        <20200805163246.4df09c31@canb.auug.org.au>
+        <2193240.1597738758@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea5e0639-4419-c60b-059a-8fbd057fc6e3@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/sqADU2uWxS3SxU9/mwkWD03";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jiri Slaby <jirislaby@kernel.org> [200818 10:14]:
-> On 18. 08. 20, 11:56, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Jiri Slaby <jirislaby@kernel.org> [200818 08:24]:
-> >> On 17. 08. 20, 15:54, Tony Lindgren wrote:
-> >>> If write returns zero we currently end up removing the message
-> >>> from the queue. Instead of removing the message, we want to just
-> >>> break out of the loop just like we already do for error codes.
-> >>
-> >> When exactly does the only writer (gsmld_output) return zero for
-> >> non-zero len parameter?
-> > 
-> > I ran into this when testing with the WIP serial core PM runtime
-> > changes from Andy Shevchenko earlier. If there are also other
-> > cases where we have serial drivers return 0, I don't know about
-> > them.
-> 
-> Sorry, I don't understand: my gsmld_output() ignores the return value
-> from drivers' write and returns something greater than zero or a
-> negative error. What tree/SHA do you run?
+--Sig_/sqADU2uWxS3SxU9/mwkWD03
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Oh right, good catch. I also had my WIP serdev-ngsm patches applied
-that uses gsm_serdev_output() and returns the bytes written. Andy's
-patches do not touch n_gsm.c.
+Hi David,
 
-Hmm sounds like we should also start returning value also from
-gsmld_output()? Any objections to making that change?
+On Tue, 18 Aug 2020 09:19:18 +0100 David Howells <dhowells@redhat.com> wrot=
+e:
+>
+> Please drop the fsinfo branch for now, thanks.
 
-For reference, Andy's WIP serial cor PM runtime changes are at:
+OK, done.  What about the notifications tree?  (not pushing, just wondering)
 
-https://gitlab.com/andy-shev/next.git/ topic/uart/rpm-plus
+--=20
+Cheers,
+Stephen Rothwell
 
-Regards,
+--Sig_/sqADU2uWxS3SxU9/mwkWD03
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Tony
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl87seAACgkQAVBC80lX
+0Gyspwf/aF4pNeP+57KWhzJY3U6hyq66BzJ5CkYOZLArAuxTt2dHtaDo76piyU3i
+z+gnixLss6qbQlhdEj+7OVI9GKVrQHGftVN8Oqt78y9G0/a7sOiKMpEECOeAz8f5
+y4gFno0uI+NINb/qJ7KRYWJnOJMbdEDVAtHJhOZSES3PKK5WzmUZjLuRzNQ2pDI1
+JAVcuvR5TG+SxOM93J6xKl03b1LugJ1a+vmCzaSv2XPKSF3TVfR8syTat28NEXYp
+szYfS2kkvLysuhR2MMMHo++YQKIRyVvawQKXgdo1XO4Yw0SXUNHLf1FAHnjMmpdt
+g2bM5/Bi8ecCrXvOh6nfTCjLE6J+IQ==
+=8TTh
+-----END PGP SIGNATURE-----
+
+--Sig_/sqADU2uWxS3SxU9/mwkWD03--
