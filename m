@@ -2,103 +2,96 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F497C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776092076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 118572076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHRR4y (ORCPT
+        id S1726778AbgHRR6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:56:54 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2662 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726541AbgHRR4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:56:50 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 41A6913A95D71BCC9E35;
-        Tue, 18 Aug 2020 18:56:49 +0100 (IST)
-Received: from [127.0.0.1] (10.210.172.123) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 18 Aug
- 2020 18:56:48 +0100
-Subject: Re: [PATCH] MAINTAINERS: Add entries for CoreSight and Arm SPE
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>, <acme@kernel.org>,
-        <will@kernel.org>, <leo.yan@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200817193140.3659956-1-mathieu.poirier@linaro.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com>
-Date:   Tue, 18 Aug 2020 18:54:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 18 Aug 2020 13:58:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53273 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgHRR55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:57:57 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k85rt-0005EW-F5; Tue, 18 Aug 2020 17:57:53 +0000
+Date:   Tue, 18 Aug 2020 19:57:51 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hewllig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Message-ID: <20200818175751.xg726hgyirbt354d@wittgenstein>
+References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
+ <20200818174447.GV17456@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200817193140.3659956-1-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.172.123]
-X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818174447.GV17456@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/08/2020 20:31, Mathieu Poirier wrote:
-> Add entries for perf tools elements related to the support of
-> Arm CoreSight and Arm SPE.
-
-Thanks for doing this...
-
+On Tue, Aug 18, 2020 at 06:44:47PM +0100, Matthew Wilcox wrote:
+> On Tue, Aug 18, 2020 at 07:34:00PM +0200, Christian Brauner wrote:
+> > The only remaining function callable outside of kernel/fork.c is
+> > _do_fork(). It doesn't really follow the naming of kernel-internal
+> > syscall helpers as Christoph righly pointed out. Switch all callers and
+> > references to kernel_clone() and remove _do_fork() once and for all.
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->   MAINTAINERS | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4e2698cc7e23..f9bb76baeec9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13427,8 +13427,18 @@ F:	tools/perf/
->   PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
->   R:	John Garry <john.garry@huawei.com>
->   R:	Will Deacon <will@kernel.org>
-> +R:	Mathieu Poirier <mathieu.poirier@linaro.org>
-> +R:	Leo Yan <leo.yan@linaro.org>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   S:	Supported
-> +F:	tools/build/feature/test-libopencsd.c
-> +F:	tools/perf/arch/arm/util/auxtrace.c
-> +F:	tools/perf/arch/arm/util/cs-etm.*
-> +F:	tools/perf/arch/arm/util/pmu.c
-> +F:	tools/perf/arch/arm64/util/arm-spe.c
-> +F:	tools/perf/util/arm-spe.h
-> +F:	tools/perf/util/cs-etm-decoder/*
-> +F:	tools/perf/util/cs-etm.*
+> My only concern is around return type.  long, int, pid_t ... can we
+> choose one and stick to it?  pid_t is probably the right return type
+> within the kernel, despite the return type of clone3().  It'll save us
+> some work if we ever go through the hassle of growing pid_t beyond 31-bit.
 
-But from the previous discussion, I thought that we wanted an entry to 
-cover all tools/perf/arch/arm64/ and other related folders. Or was it 
-just put all special interest parts (like SPE support) under one entry 
-and leave the other arm/arm64 parts to be caught by "PERFORMANCE EVENTS 
-SUBSYSTEM" entry?
+It should be safe to switch kernel_clone() to return pid_t. (Afair, the
+syscall wrappers all have "long" as return type. (I think Linus provided
+some more details on that in another mail. Also see
+include/linux/syscalls.h. So the return type for clone3() is really
+somewhat a userspace thing, I think.)
 
-Cheers,
-John
+I wonder whether I should take the opportunity and switch the advertised
+flag arguments for the legacy clone() syscalls and kernel_thread() from
+unsigned long to unsigned int so we can get rid of the lower
+		.flags		= (lower_32_bits(clone_flags) & ~CSIGNAL),
+calls I added to fix sign extension issues glibc ran into...
 
->   F:	tools/perf/pmu-events/arch/arm64/
->   
->   PERSONALITY HANDLING
-> 
-
+Christian
