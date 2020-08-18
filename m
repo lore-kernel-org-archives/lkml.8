@@ -2,165 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20730C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B92C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBDD206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D555A206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mUMs3/6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHRJv3 (ORCPT
+        id S1726730AbgHRJvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:51:29 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48908 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgHRJv2 (ORCPT
+        Tue, 18 Aug 2020 05:51:44 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11818 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726398AbgHRJvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:51:28 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0EEFE1C0BB7; Tue, 18 Aug 2020 11:51:25 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 11:51:24 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        jbaron@akamai.com, Jim Cromie <jim.cromie@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 051/168] dyndbg: fix a BUG_ON in
- ddebug_describe_flags
-Message-ID: <20200818095124.GD10974@amd>
-References: <20200817143733.692105228@linuxfoundation.org>
- <20200817143736.291298404@linuxfoundation.org>
+        Tue, 18 Aug 2020 05:51:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597744301; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=hzpVyPWKFg4D4ANT8DjNIVmlgu/bhkSWN4fRW6pYeQs=;
+ b=mUMs3/6TwZpH5NSOvE5nTdRWVHIy0BoozfsHtQa6txwXdTYO+txysOG5LV3CNxnOqKK8pnqj
+ HZFtQbkfhPtRo1k6UQ0gt6s121qJBjzPYBMesWFXHzrjjtioRsgEztusyjyhbuU0IfdnV8T9
+ JRClgx4yyEBJCagHpj935nbXOaM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3ba4ac3f2ce110201a9cc3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 09:51:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65EF8C433A1; Tue, 18 Aug 2020 09:51:40 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CDA9C433C6;
+        Tue, 18 Aug 2020 09:51:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5CDA9C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
-Content-Disposition: inline
-In-Reply-To: <20200817143736.291298404@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH net-next] ath11k: Fix possible memleak in
+ ath11k_qmi_init_service
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1595237804-66297-1-git-send-email-wangyufen@huawei.com>
+References: <1595237804-66297-1-git-send-email-wangyufen@huawei.com>
+To:     Wang Yufen <wangyufen@huawei.com>
+Cc:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <brcm80211-dev-list@cypress.com>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <franky.lin@broadcom.com>, <wright.feng@cypress.com>,
+        Wang Yufen <wangyufen@huawei.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200818095140.65EF8C433A1@smtp.codeaurora.org>
+Date:   Tue, 18 Aug 2020 09:51:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wang Yufen <wangyufen@huawei.com> wrote:
 
---UfEAyuTBtIjiZzX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> When qmi_add_lookup fail, we should destroy the workqueue
+> 
+> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Yufen <wangyufen@huawei.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-On Mon 2020-08-17 17:16:22, Greg Kroah-Hartman wrote:
-> From: Jim Cromie <jim.cromie@gmail.com>
->=20
-> [ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
->=20
-> ddebug_describe_flags() currently fills a caller provided string buffer,
-> after testing its size (also passed) in a BUG_ON.  Fix this by
-> replacing them with a known-big-enough string buffer wrapped in a
-> struct, and passing that instead.
->=20
-> Also simplify ddebug_describe_flags() flags parameter from a struct to
-> a member in that struct, and hoist the member deref up to the caller.
-> This makes the function reusable (soon) where flags are unpacked.
+Patch applied to ath-next branch of ath.git, thanks.
 
-Original code was correct, passing explicit size, this passes strange
-structure. BUG_ON can never trigger in the origianl code, so this is
-not a bugfix.
+28f163211881 ath11k: Fix possible memleak in ath11k_qmi_init_service
 
-Best regards,
-								Pavel
+-- 
+https://patchwork.kernel.org/patch/11673293/
 
-> +++ b/lib/dynamic_debug.c
-> @@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt=
-_array[] =3D {
->  	{ _DPRINTK_FLAGS_NONE, '_' },
->  };
-> =20
-> +struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
-> +
->  /* format a string into buf[] which describes the _ddebug's flags */
-> -static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
-> -				    size_t maxlen)
-> +static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *=
-fb)
->  {
-> -	char *p =3D buf;
-> +	char *p =3D fb->buf;
->  	int i;
-> =20
-> -	BUG_ON(maxlen < 6);
->  	for (i =3D 0; i < ARRAY_SIZE(opt_array); ++i)
-> -		if (dp->flags & opt_array[i].flag)
-> +		if (flags & opt_array[i].flag)
->  			*p++ =3D opt_array[i].opt_char;
-> -	if (p =3D=3D buf)
-> +	if (p =3D=3D fb->buf)
->  		*p++ =3D '_';
->  	*p =3D '\0';
-> =20
-> -	return buf;
-> +	return fb->buf;
->  }
-> =20
->  #define vpr_info(fmt, ...)					\
-> @@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *q=
-uery,
->  	struct ddebug_table *dt;
->  	unsigned int newflags;
->  	unsigned int nfound =3D 0;
-> -	char flagbuf[10];
-> +	struct flagsbuf fbuf;
-> =20
->  	/* search for matching ddebugs */
->  	mutex_lock(&ddebug_lock);
-> @@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *q=
-uery,
->  			vpr_info("changed %s:%d [%s]%s =3D%s\n",
->  				 trim_prefix(dp->filename), dp->lineno,
->  				 dt->mod_name, dp->function,
-> -				 ddebug_describe_flags(dp, flagbuf,
-> -						       sizeof(flagbuf)));
-> +				 ddebug_describe_flags(dp->flags, &fbuf));
->  		}
->  	}
->  	mutex_unlock(&ddebug_lock);
-> @@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void =
-*p)
->  {
->  	struct ddebug_iter *iter =3D m->private;
->  	struct _ddebug *dp =3D p;
-> -	char flagsbuf[10];
-> +	struct flagsbuf flags;
-> =20
->  	vpr_info("called m=3D%p p=3D%p\n", m, p);
-> =20
-> @@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void =
-*p)
->  	seq_printf(m, "%s:%u [%s]%s =3D%s \"",
->  		   trim_prefix(dp->filename), dp->lineno,
->  		   iter->table->mod_name, dp->function,
-> -		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
-> +		   ddebug_describe_flags(dp->flags, &flags));
->  	seq_escape(m, dp->format, "\t\r\n\"");
->  	seq_puts(m, "\"\n");
-> =20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UfEAyuTBtIjiZzX6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl87pJwACgkQMOfwapXb+vK8egCeOuLFXFZ8DrogqMjVa0su9IUM
-VC8AoJu7I0GDnLFTdQOaAoQVu+f6tfKS
-=XkW2
------END PGP SIGNATURE-----
-
---UfEAyuTBtIjiZzX6--
