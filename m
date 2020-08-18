@@ -2,124 +2,122 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA62C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 161832067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E5420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgHRRGz (ORCPT
+        id S1728552AbgHRRHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:06:55 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:34000 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbgHRRGH (ORCPT
+        Tue, 18 Aug 2020 13:07:08 -0400
+Received: from smtprelay0197.hostedemail.com ([216.40.44.197]:36830 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728468AbgHRRG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:06:07 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8F58C2001F;
-        Tue, 18 Aug 2020 19:05:57 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 19:05:56 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] drm/panel: Add panel driver for the Mantix
- MLAF057WE51-X DSI panel
-Message-ID: <20200818170556.GA2291850@ravnborg.org>
-References: <cover.1597652012.git.agx@sigxcpu.org>
+        Tue, 18 Aug 2020 13:06:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 319721E19;
+        Tue, 18 Aug 2020 17:06:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: stew13_3e08fcc27021
+X-Filterd-Recvd-Size: 3473
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 18 Aug 2020 17:06:53 +0000 (UTC)
+Message-ID: <516b2816dddbc9427e4f0a5a6a57e77292014e7a.camel@perches.com>
+Subject: Re: [PATCH] staging: kpc2000: kpc_dma: fix spelling mistake "for
+ for" -> "for"
+From:   Joe Perches <joe@perches.com>
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matt Sickler <Matt.Sickler@daktronics.com>
+Date:   Tue, 18 Aug 2020 10:06:52 -0700
+In-Reply-To: <20200818164654.381588-1-colin.king@canonical.com>
+References: <20200818164654.381588-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1597652012.git.agx@sigxcpu.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=8nJEP1OIZ-IA:10 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
-        a=eCTDOZTGqrxRdbbr8LwA:9 a=wPNLvfGTeEIA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido.
+On Tue, 2020-08-18 at 17:46 +0100, Colin King wrote:
+> There are a couple of duplicated "for" spelling mistakes in dev_err
+> error messages. Fix these.
 
-On Mon, Aug 17, 2020 at 10:14:33AM +0200, Guido Günther wrote:
-> 
-> The panel uses a Focaltech FT8006p, the touch part is handled by the already
-> existing edt-ft5x06. It can be found in e.g. the Librem 5.
-> 
-> Changes from v2:
-> - Due to review comments by Sam Ravnborg, thanks!
->   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
->   - Drop unused header
->   - Use newline before comment
-> - Add Reviewed/Acked-by by Sam Ravnborg, thanks!
->   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
->   https://lore.kernel.org/lkml/20200815212750.GB1244923@ravnborg.org/
->   https://lore.kernel.org/lkml/20200815212840.GC1244923@ravnborg.org/
-> 
-> Changes from v1:
-> - Due to review comments by Sam Ravnborg, thanks!
->   https://lore.kernel.org/dri-devel/20200815083917.GA993113@ravnborg.org/
->   - Don't preserve newlines with '|' in description
->   - Use reset-gpios and backlight from panel-common.yaml
->   - Reindent example
->   https://lore.kernel.org/dri-devel/20200815093226.GB993113@ravnborg.org/
->   - Drop unused includes
->   - Use dev_* instead of DRM_* for printing
->   - Turn off regulators in reverse order from enable
->   - Silence errors in mantix_{shutdown,remove}
->   - Drop duplicate mipi_dsi_dcs_enter_sleep_mode()
->   https://lore.kernel.org/dri-devel/20200815100230.GA1002374@ravnborg.org/
->   - Use dev_err_probe()
-> - Add delays when turning off panel as suggested by the data sheet
-> 
-> This series is against next-20200814.
-> 
-> Guido Günther (3):
->   dt-bindings: vendor-prefixes: Add mantix vendor prefix
->   dt-bindings: Add Mantix MLAF057WE51-X panel bindings
->   drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
+Might as well remove the messages instead.
 
-Maxime Ripard backmerged -rc1 to drm-misc-next so I went ahead and applied
-this series to drm-misc-next, forgetting you got commit rights. As they are
-already pushed out too late for you to do push them - sorry!
+> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+[]
+> @@ -53,7 +53,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  
+>  	acd = kzalloc(sizeof(*acd), GFP_KERNEL);
+>  	if (!acd) {
+> -		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
+> +		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for the aio data\n");
+>  		return -ENOMEM;
+>  	}
+>  	memset(acd, 0x66, sizeof(struct aio_cb_data));
 
-	Sam
+Also there's no reason to use kzalloc then a memset over
+the alloc'ed memory or a different sizeof style for the
+alloc then memset.
 
-> 
->  .../display/panel/mantix,mlaf057we51-x.yaml   |  70 ++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  MAINTAINERS                                   |   7 +
->  drivers/gpu/drm/panel/Kconfig                 |  11 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 328 ++++++++++++++++++
->  6 files changed, 419 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
->  create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
-> 
-> -- 
-> 2.26.2
+Setting the struct content to 0x66 does seem odd.
+
+> @@ -69,7 +69,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  	acd->user_pages = kcalloc(acd->page_count, sizeof(struct page *),
+>  				  GFP_KERNEL);
+>  	if (!acd->user_pages) {
+> -		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the page pointers\n");
+> +		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for the page pointers\n");
+>  		rv = -ENOMEM;
+>  		goto err_alloc_userpages;
+>  	}
+
+Maybe:
+---
+ drivers/staging/kpc2000/kpc_dma/fileops.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+index dd716edd9b1b..c5330ad6b175 100644
+--- a/drivers/staging/kpc2000/kpc_dma/fileops.c
++++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+@@ -51,12 +51,11 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+ 
+ 	ldev = priv->ldev;
+ 
+-	acd = kzalloc(sizeof(*acd), GFP_KERNEL);
+-	if (!acd) {
+-		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
++	acd = kmalloc(sizeof(*acd), GFP_KERNEL);
++	if (!acd)
+ 		return -ENOMEM;
+-	}
+-	memset(acd, 0x66, sizeof(struct aio_cb_data));
++
++	memset(acd, 0x66, sizeof(*acd));
+ 
+ 	acd->priv = priv;
+ 	acd->ldev = priv->ldev;
+@@ -69,7 +68,6 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+ 	acd->user_pages = kcalloc(acd->page_count, sizeof(struct page *),
+ 				  GFP_KERNEL);
+ 	if (!acd->user_pages) {
+-		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the page pointers\n");
+ 		rv = -ENOMEM;
+ 		goto err_alloc_userpages;
+ 	}
+
+
