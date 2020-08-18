@@ -2,44 +2,43 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48231C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA9DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FF720772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6686620772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597777087;
-	bh=k/vVNPuTXbs3t5Qi9TqGDtRXS9Go1NUeRpRBFN2Mg2w=;
+	s=default; t=1597777141;
+	bh=cdDqlxbTJLRPaomvljkcqdnEyM+0X43LsblU5qVipzE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sJ/lG20hoKcogDIhrJWgDk6FvuXAb9SJyFg2LajenCl73zKjYBvhvzS1ySlSe3rzw
-	 ySx94yjMaGEi7tlRYQrcz/5N3U6uDd/d2FoZIwkY4HM1P3LjKJxFbWQD61UHZXSfX9
-	 USTMd2+8DKrgceLwEmXAj3rUN7i6OPNJnL/ifVDE=
+	b=flkLPRFUBa9y+uZRlt2ld7MH4nil32OWLU38MoqNzvOhaEDnSH+aNJq66tB4Hz89r
+	 etYbx9jwW3vNawbOwW4/XzTau7FMpoujBoh5uZ106FPtTEVB9xiFY3xvtSb1UocdlE
+	 xy47NcZRPdebS1DVG1B9MvLyH3lwk/MwxCnVQUrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHRS6G (ORCPT
+        id S1726772AbgHRS7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 14:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgHRS6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:58:05 -0400
+        id S1726552AbgHRS67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 14:58:59 -0400
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5EF206B5;
-        Tue, 18 Aug 2020 18:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4441206B5;
+        Tue, 18 Aug 2020 18:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597777085;
-        bh=k/vVNPuTXbs3t5Qi9TqGDtRXS9Go1NUeRpRBFN2Mg2w=;
+        s=default; t=1597777139;
+        bh=cdDqlxbTJLRPaomvljkcqdnEyM+0X43LsblU5qVipzE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UgwCyutnyVfYOCYmyBesZ9R8sKxMIvrR5EPgjkJVRDs4BKUph97jcgCB513ZV4AuJ
-         FjjaOxKeg3M2X8a0ue48Yyi95p0kruodIEKNkN5jkvTbbgE2Of7bCpH4ynj8lWd9bw
-         ubgsteI5+uBGXOEleqhab6PfdauEvmVfzCEe+ZOE=
-Date:   Tue, 18 Aug 2020 11:58:03 -0700
+        b=10yqYHudnQXTl/lRXJhIjD/BGLLpAMZDFa2i3JRLFC8LkAMU/Hkq2cHzaSttmK4yn
+         RXl7puyBg1YHewkND/h2l/hiI+c5MlEPstucK6Cw3T/21tleWqODsTJ2+xAMRvvbHz
+         uKGPav1hrG05rA4NMcpit5Fz1Wf2BXa0gvQ5d5fU=
+Date:   Tue, 18 Aug 2020 11:58:57 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     "Ooi, Joyce" <joyce.ooi@intel.com>
 Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
@@ -48,34 +47,56 @@ Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         Tan Ley Foon <ley.foon.tan@intel.com>,
         See Chin Liang <chin.liang.see@intel.com>,
         Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v6 08/10] net: eth: altera: add support for ptp and
- timestamping
-Message-ID: <20200818115803.5169d7a1@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200818154613.148921-9-joyce.ooi@intel.com>
+        Dalon Westergreen <dalon.westergreen@intel.com>
+Subject: Re: [PATCH v6 09/10] net: eth: altera: add msgdma prefetcher
+Message-ID: <20200818115857.78d6b2ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200818154613.148921-10-joyce.ooi@intel.com>
 References: <20200818154613.148921-1-joyce.ooi@intel.com>
-        <20200818154613.148921-9-joyce.ooi@intel.com>
+        <20200818154613.148921-10-joyce.ooi@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 23:46:11 +0800 Ooi, Joyce wrote:
+On Tue, 18 Aug 2020 23:46:12 +0800 Ooi, Joyce wrote:
 > From: Dalon Westergreen <dalon.westergreen@intel.com>
-> 
-> Add support for the ptp clock used with the tse, and update
-> the driver to support timestamping when enabled.  We also
-> enable debugfs entries for the ptp clock to allow some user
-> control and interaction with the ptp clock.
-> 
-> Cc: Richard Cochran <richardcochran@gmail.com>
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+>=20
+> Add support for the mSGDMA prefetcher.  The prefetcher adds support
+> for a linked list of descriptors in system memory.  The prefetcher
+> feeds these to the mSGDMA dispatcher.
 
-Please address the W=1 warning:
+This generates warnings on 32bit builds:
 
-drivers/net/ethernet/altera/intel_fpga_tod.c:293:55: warning: Using plain integer as NULL pointer
+../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c: In function =E2=
+=80=98msgdma_pref_initialize=E2=80=99:
+../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c:97:51: warning: f=
+ormat =E2=80=98%llx=E2=80=99 expects argument of type =E2=80=98long long un=
+signed int=E2=80=99, but argument 4 has type =E2=80=98dma_addr_t=E2=80=99 {=
+aka =E2=80=98unsigned int=E2=80=99} [-Wformat=3D]
+   97 |   netdev_info(priv->dev, "%s: RX Desc mem at 0x%llx\n", __func__,
+      |                                                ~~~^
+      |                                                   |
+      |                                                   long long unsigne=
+d int
+      |                                                %x
+   98 |        priv->pref_rxdescphys);
+      |        ~~~~~~~~~~~~~~~~~~~~~                      =20
+      |            |
+      |            dma_addr_t {aka unsigned int}
+../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c:101:51: warning: =
+format =E2=80=98%llx=E2=80=99 expects argument of type =E2=80=98long long u=
+nsigned int=E2=80=99, but argument 4 has type =E2=80=98dma_addr_t=E2=80=99 =
+{aka =E2=80=98unsigned int=E2=80=99} [-Wformat=3D]
+  101 |   netdev_info(priv->dev, "%s: TX Desc mem at 0x%llx\n", __func__,
+      |                                                ~~~^
+      |                                                   |
+      |                                                   long long unsigne=
+d int
+      |                                                %x
+  102 |        priv->pref_txdescphys);
+      |        ~~~~~~~~~~~~~~~~~~~~~                      =20
+      |            |
+      |            dma_addr_t {aka unsigned int}
