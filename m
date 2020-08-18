@@ -2,95 +2,146 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5695C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500EC206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SH63MKzY"
+	by mail.kernel.org (Postfix) with ESMTP id CC41F206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHRNp7 (ORCPT
+        id S1726759AbgHRNqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:45:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50224 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgHRNp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:45:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597758355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CZRumnYOrFgt3qoT6t+nLLJKuANtNAnklm5YHpJrh+8=;
-        b=SH63MKzYz7r2sN/Wyk5h769y2OcKXiKXQ1q6NaWGVLFIExR0/Zutdnh7ACdj/1ahehyQHm
-        GtvIpJGukIs8tmT43j8c9lpob9/ecmgBVqCdsv+kVEilVF2Ge4O1ujBJGK086vLYDBxt31
-        lOsxuWr0ETgQRPxVndPQHkOMRvxN7YY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295--bgF-J0OOsq5LKkAuenMIQ-1; Tue, 18 Aug 2020 09:45:53 -0400
-X-MC-Unique: -bgF-J0OOsq5LKkAuenMIQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 261251015C92;
-        Tue, 18 Aug 2020 13:45:52 +0000 (UTC)
-Received: from krava (unknown [10.40.193.152])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AFBDE7A401;
-        Tue, 18 Aug 2020 13:45:44 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 15:45:43 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
-        andriin@fb.com, Mark Wielaard <mjw@redhat.com>
-Subject: Re: Kernel build error on BTFIDS vmlinux
-Message-ID: <20200818134543.GD177896@krava>
-References: <20200818105555.51fc6d62@carbon>
- <20200818091404.GB177896@krava>
- <20200818105602.GC177896@krava>
+        Tue, 18 Aug 2020 09:46:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51878 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbgHRNqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:46:20 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A46A2698D4DD69BE3844;
+        Tue, 18 Aug 2020 21:46:16 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
+ 21:46:11 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <ulli.kroll@googlemail.com>, <linus.walleij@linaro.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <mirq-linux@rere.qmqm.pl>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH net] net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
+Date:   Tue, 18 Aug 2020 21:44:04 +0800
+Message-ID: <20200818134404.63828-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818105602.GC177896@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:56:08PM +0200, Jiri Olsa wrote:
-> On Tue, Aug 18, 2020 at 11:14:10AM +0200, Jiri Olsa wrote:
-> > On Tue, Aug 18, 2020 at 10:55:55AM +0200, Jesper Dangaard Brouer wrote:
-> > > 
-> > > On latest DaveM net-git tree (06a4ec1d9dc652), after linking (LD vmlinux) the
-> > > "BTFIDS vmlinux" fails. Are anybody else experiencing this? Are there already a
-> > > fix? (just returned from vacation so not fully up-to-date on ML yet)
-> > > 
-> > > The tool which is called and error message:
-> > >   ./tools/bpf/resolve_btfids/resolve_btfids vmlinux
-> > >   FAILED elf_update(WRITE): invalid section alignment
-> > 
-> > hi,
-> > could you send your .config as well?
-> 
-> reproduced.. checking on fix
+Fix the missing free_netdev() before return from
+gemini_ethernet_port_probe() in the error handling case.
 
-I discussed this with Mark (cc-ed) it seems to be a problem
-with linker when dealing with compressed debug info data,
-which is enabled in your .config
+Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/net/ethernet/cortina/gemini.c | 35 ++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
-it works for me when I disable CONFIG_DEBUG_INFO_COMPRESSED option
-
-Mark will fix this upstream, meanwhile he suggested workaround
-we can do in resolve_btfids tool, that I'll try to send shortly
-
-thanks,
-jirka
+diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
+index 66e67b24a887..d8de50fde27d 100644
+--- a/drivers/net/ethernet/cortina/gemini.c
++++ b/drivers/net/ethernet/cortina/gemini.c
+@@ -2407,37 +2407,46 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 	dmares = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!dmares) {
+ 		dev_err(dev, "no DMA resource\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_out_free;
+ 	}
+ 	port->dma_base = devm_ioremap_resource(dev, dmares);
+-	if (IS_ERR(port->dma_base))
+-		return PTR_ERR(port->dma_base);
++	if (IS_ERR(port->dma_base)) {
++		ret = PTR_ERR(port->dma_base);
++		goto err_out_free;
++	}
+ 
+ 	/* GMAC config memory */
+ 	gmacres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 	if (!gmacres) {
+ 		dev_err(dev, "no GMAC resource\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_out_free;
+ 	}
+ 	port->gmac_base = devm_ioremap_resource(dev, gmacres);
+-	if (IS_ERR(port->gmac_base))
+-		return PTR_ERR(port->gmac_base);
++	if (IS_ERR(port->gmac_base)) {
++		ret = PTR_ERR(port->gmac_base);
++		goto err_out_free;
++	}
+ 
+ 	/* Interrupt */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq <= 0)
+-		return irq ? irq : -ENODEV;
++	if (irq <= 0) {
++		ret = irq ? irq : -ENODEV;
++		goto err_out_free;
++	}
+ 	port->irq = irq;
+ 
+ 	/* Clock the port */
+ 	port->pclk = devm_clk_get(dev, "PCLK");
+ 	if (IS_ERR(port->pclk)) {
+ 		dev_err(dev, "no PCLK\n");
+-		return PTR_ERR(port->pclk);
++		ret = PTR_ERR(port->pclk);
++		goto err_out_free;
+ 	}
+ 	ret = clk_prepare_enable(port->pclk);
+ 	if (ret)
+-		return ret;
++		goto err_out_free;
+ 
+ 	/* Maybe there is a nice ethernet address we should use */
+ 	gemini_port_save_mac_addr(port);
+@@ -2447,7 +2456,8 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 	if (IS_ERR(port->reset)) {
+ 		dev_err(dev, "no reset\n");
+ 		clk_disable_unprepare(port->pclk);
+-		return PTR_ERR(port->reset);
++		ret = PTR_ERR(port->reset);
++		goto err_out_free;
+ 	}
+ 	reset_control_reset(port->reset);
+ 	usleep_range(100, 500);
+@@ -2504,7 +2514,7 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 					port);
+ 	if (ret) {
+ 		clk_disable_unprepare(port->pclk);
+-		return ret;
++		goto err_out_free;
+ 	}
+ 
+ 	ret = register_netdev(netdev);
+@@ -2520,6 +2530,7 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 		return 0;
+ 	}
+ 
++err_out_free:
+ 	port->netdev = NULL;
+ 	free_netdev(netdev);
+ 	return ret;
+-- 
+2.17.1
 
