@@ -2,213 +2,118 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E44C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B54CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223AC20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688F6208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="d3qdQ7UZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHROt1 (ORCPT
+        id S1727843AbgHROt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:49:27 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:37490 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgHROtW (ORCPT
+        Tue, 18 Aug 2020 10:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbgHROtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:49:22 -0400
-Received: by mail-il1-f197.google.com with SMTP id u7so14527732ilj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:49:21 -0700 (PDT)
+        Tue, 18 Aug 2020 10:49:23 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1372AC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:49:23 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y206so10058734pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fCviTlz4XSnwg6yVOSQsWhVAGKd364Znuee6QkGLbdc=;
+        b=d3qdQ7UZPKbZ7S+EnT9F/IN+BE6+5jbLchQTYDcmwIEOjBhWvPQznkybbt0H+G6ND1
+         h9mEckYYN5ikynT1ACEykIl6aXlC4E931EuXEHxn+d0KBcy9G6LTrkvXqhpWdNsvl9+h
+         56QZb0lSW0Eml8RJskwKAk8dvVP2RepBw/GMwudC33XqUcLJJQKjXKg+iQrk0q7zBZfJ
+         rEl5ENyQej6T/ZKKd3Sz/roVc2N+L2wqKf8MzYfAwpZgrHIW32iZTUsHMWwD3Ijrbqq9
+         efjH9gdjiE+jXE6V0NJ3mmPkS7GL/FzPbsYk8txCUN1Pxk+7xj+N7Ms3ARuf3p7wZuKr
+         CbzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=XHgBkjzXNaJbC9aZkOW8kfREg5RuJLTicvWC13gR6lE=;
-        b=PI2wNnDTDvBGEe9hsBzCZeL+QbAO3tbG4pafRNCRD6/lAS0rDEV9uyJPYuK7WG/dJj
-         K2PqO3pcVAANx9GKiyg/ndXosq04BOCZetmU6Y0QhYSVVNz+SUTASNW0MpahZhjx7yrV
-         k3sGE8LKTfSih2r+8zm0v+nwz2gy6QYGLyFW2WoMo1WNqjF0iWdUxHtmrGyGFc7csl/C
-         Ipe76Hmy0+DtqF659H65YgrHn4iR0o5EXYQ2aVu0YERHAs2ErER0Ezz43NJyxqTa9QcO
-         wxs4FN6M5J/IwtEEVKTd3vG4lcbjtFPgxki1GXL/IaiGzcadNWNw3ElwOl2kzZbvbnxt
-         mIiw==
-X-Gm-Message-State: AOAM532EbPmRg9kARscB4LHUHbbi4ekxX2bCmOXZsqUQGqK9rFgKzgB9
-        y0PO00jZ6LUppjleaUoBN41rfIivp0NL6h7knx9HIlItLeBd
-X-Google-Smtp-Source: ABdhPJz8nkM9nFl38+T6GT2+Q2X7LiyxHFjjj8O7VSlPzKTH9mfL77o8DPQDj7f/i+qti579CjX8Yjf9d745psB5Gduu4vwBP+/S
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fCviTlz4XSnwg6yVOSQsWhVAGKd364Znuee6QkGLbdc=;
+        b=BAaQ1lHa8d3a6Rws6DdKlrzH8DMzb+orysz2SJC6F4U2RvKRns06SLBSz+Eye4DdPn
+         +yT+qvTo1qMugsNZko/B0BRJUGzm204jxpoFt8cwoAELBk66O+h826DLt7VpgbkZP+2P
+         Q+iB7xqPdxhNHzJMUtgGUbZMSBFt3rilcO81sKRoEg7mYgVpyEK9jlS+hndI3N0F4A6m
+         ZMzDQtuZkaUTh7c2ewSqnrRdQaS4Ps2E25zAwDayfgaT7bDcQ/0x8JkOKelUrCftFuco
+         mGbvM1cAj7iv2ho0R27lq9s0Di/0xign8nc12qNzSOptUI5WA/gSyiJaxseGWhFo4Ge1
+         GCxA==
+X-Gm-Message-State: AOAM532xhCrHFZMhmUIhEnq0nbwm1BQmv7pYtWli08QlbQLyDkL2furn
+        NzWbZRRtjn+ZQCgdwvLolVKosTIz/cVRiDluwqw=
+X-Google-Smtp-Source: ABdhPJx0FESruQtVAJ0RygWDB3g1tZOeUssXuc6Oj9ZrdkWXm/c4kZfcWzGKId1IecLreRwWduJRBw==
+X-Received: by 2002:a63:4450:: with SMTP id t16mr13494555pgk.3.1597762162542;
+        Tue, 18 Aug 2020 07:49:22 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:9214:36a5:5cec:a06d? ([2605:e000:100e:8c61:9214:36a5:5cec:a06d])
+        by smtp.gmail.com with ESMTPSA id fh14sm171070pjb.38.2020.08.18.07.49.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 07:49:21 -0700 (PDT)
+Subject: Re: [PATCH] block/rnbd: Ensure err is always initialized in
+ process_rdma
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Brooke Basile <brookebasile@gmail.com>
+References: <CAMGffE=2m7XOdKS9xG1bNY7MYR2x6AgQm9YZFHm6D4biO860sw@mail.gmail.com>
+ <20200818064924.3984068-1-natechancellor@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d6c0f92d-6c0c-cad4-24d3-e17f0f59a8c0@kernel.dk>
+Date:   Tue, 18 Aug 2020 07:49:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e70d:: with SMTP id b13mr16595725ioh.141.1597762161437;
- Tue, 18 Aug 2020 07:49:21 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 07:49:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000011710f05ad27fe8a@google.com>
-Subject: KASAN: use-after-free Write in page_counter_cancel
-From:   syzbot <syzbot+b5ea6fb6f139c8b9482b@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200818064924.3984068-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 8/17/20 11:49 PM, Nathan Chancellor wrote:
+> Clang warns:
+> 
+> drivers/block/rnbd/rnbd-srv.c:150:6: warning: variable 'err' is used
+> uninitialized whenever 'if' condition is true
+> [-Wsometimes-uninitialized]
+>         if (IS_ERR(bio)) {
+>             ^~~~~~~~~~~
+> drivers/block/rnbd/rnbd-srv.c:177:9: note: uninitialized use occurs here
+>         return err;
+>                ^~~
+> drivers/block/rnbd/rnbd-srv.c:150:2: note: remove the 'if' if its
+> condition is always false
+>         if (IS_ERR(bio)) {
+>         ^~~~~~~~~~~~~~~~~~
+> drivers/block/rnbd/rnbd-srv.c:126:9: note: initialize the variable 'err'
+> to silence this warning
+>         int err;
+>                ^
+>                 = 0
+> 1 warning generated.
+> 
+> err is indeed uninitialized when this statement is taken. Ensure that it
+> is assigned the error value of bio before jumping to the error handling
+> label.
 
-syzbot found the following issue on:
+Applied, thanks.
 
-HEAD commit:    4993e4fe Add linux-next specific files for 20200814
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10d0d116900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
-dashboard link: https://syzkaller.appspot.com/bug?extid=b5ea6fb6f139c8b9482b
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+-- 
+Jens Axboe
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b5ea6fb6f139c8b9482b@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
-BUG: KASAN: use-after-free in atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
-BUG: KASAN: use-after-free in atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
-BUG: KASAN: use-after-free in page_counter_cancel+0x1c/0x70 mm/page_counter.c:54
-Write of size 8 at addr ffff88804ad14148 by task syz-executor.5/2783
-
-CPU: 1 PID: 2783 Comm: syz-executor.5 Not tainted 5.8.0-next-20200814-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- instrument_atomic_write include/linux/instrumented.h:71 [inline]
- atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
- atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
- page_counter_cancel+0x1c/0x70 mm/page_counter.c:54
- page_counter_uncharge+0x2e/0x60 mm/page_counter.c:156
- uncharge_batch+0x67/0x450 mm/memcontrol.c:6764
- uncharge_page+0xfd/0x560 mm/memcontrol.c:6796
- uncharge_list mm/memcontrol.c:6835 [inline]
- mem_cgroup_uncharge_list+0xf6/0x180 mm/memcontrol.c:6877
- release_pages+0x637/0x17a0 mm/swap.c:912
- tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
- tlb_flush_mmu_free mm/mmu_gather.c:242 [inline]
- tlb_flush_mmu mm/mmu_gather.c:249 [inline]
- tlb_finish_mmu+0x165/0x8c0 mm/mmu_gather.c:328
- exit_mmap+0x2d1/0x530 mm/mmap.c:3200
- __mmput+0x122/0x470 kernel/fork.c:1075
- mmput+0x53/0x60 kernel/fork.c:1096
- exit_mm kernel/exit.c:483 [inline]
- do_exit+0xa8b/0x29f0 kernel/exit.c:793
- do_group_exit+0x125/0x310 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d239
-Code: Bad RIP value.
-RSP: 002b:00007ffdf9f90358 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 000000000000001e RCX: 000000000045d239
-RDX: 0000000000416b81 RSI: fffffffffffffff7 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 00000000c426f42b R09: 00007ffdf9f903b0
-R10: 00000000c426f427 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffdf9f903b0 R14: 0000000000000000 R15: 00007ffdf9f903c0
-
-Allocated by task 2685:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- __do_kmalloc mm/slab.c:3655 [inline]
- __kmalloc+0x1a8/0x320 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- mem_cgroup_alloc mm/memcontrol.c:5210 [inline]
- mem_cgroup_css_alloc+0xc1/0x1bd0 mm/memcontrol.c:5278
- css_create kernel/cgroup/cgroup.c:5128 [inline]
- cgroup_apply_control_enable+0x478/0xc00 kernel/cgroup/cgroup.c:3059
- cgroup_apply_control kernel/cgroup/cgroup.c:3141 [inline]
- cgroup_subtree_control_write+0x7fc/0xcc0 kernel/cgroup/cgroup.c:3299
- cgroup_file_write+0x211/0x750 kernel/cgroup/cgroup.c:3697
- kernfs_fop_write+0x268/0x490 fs/kernfs/file.c:315
- vfs_write+0x2b0/0x730 fs/read_write.c:576
- ksys_write+0x12d/0x250 fs/read_write.c:631
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 20465:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3756
- css_free_rwork_fn+0xf2/0x10c0 kernel/cgroup/cgroup.c:4941
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
- queue_rcu_work+0x82/0xa0 kernel/workqueue.c:1747
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Second to last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
- __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
- __percpu_ref_switch_mode+0x365/0x700 lib/percpu-refcount.c:237
- percpu_ref_kill_and_confirm+0x94/0x350 lib/percpu-refcount.c:350
- kill_css+0x115/0x340 kernel/cgroup/cgroup.c:5451
- cgroup_apply_control_disable+0x3d8/0x500 kernel/cgroup/cgroup.c:3108
- cgroup_finalize_control kernel/cgroup/cgroup.c:3171 [inline]
- cgroup_subtree_control_write+0x83e/0xcc0 kernel/cgroup/cgroup.c:3300
- cgroup_file_write+0x211/0x750 kernel/cgroup/cgroup.c:3697
- kernfs_fop_write+0x268/0x490 fs/kernfs/file.c:315
- vfs_write+0x2b0/0x730 fs/read_write.c:576
- ksys_write+0x12d/0x250 fs/read_write.c:631
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88804ad14000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 328 bytes inside of
- 4096-byte region [ffff88804ad14000, ffff88804ad15000)
-The buggy address belongs to the page:
-page:000000002f31f80d refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x4ad14
-head:000000002f31f80d order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea0001274388 ffffea00023b4188 ffff8880aa040900
-raw: 0000000000000000 ffff88804ad14000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88804ad14000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88804ad14080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88804ad14100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                              ^
- ffff88804ad14180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88804ad14200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
