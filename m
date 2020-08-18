@@ -2,98 +2,110 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0819C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B340320639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64AE2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iB7njDfk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XqZ7IzUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHRJaI (ORCPT
+        id S1726483AbgHRJaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHRJaH (ORCPT
+        Tue, 18 Aug 2020 05:30:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:25388 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726145AbgHRJaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:30:07 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44A7C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:30:07 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id y134so11040692yby.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=481phWAt8mWnm/w37igX0FBuMwcl7pH6Y12b99av8uM=;
-        b=iB7njDfkGMWSB25RqCTukPDN6G8BUqT8FDIKPbEpQC0PPxPKPgNd8/0ZoLApCGD6ue
-         XnS3FZJTv1c66qJCmonlcde0qkn6fnGDolHBy4V4Iy7tRB5/nvEa3ADjeE6r1OeL48iU
-         bZm6hPBgkSg4uRDECLSbVnYWMtpvFFDbrSDHHGibZZOWZTeiklukC2lU14Zyk2rNFlHz
-         dnAUmQDjkrhjT1TdxXFGbYRAJLch4zTWjKgr88wZaXB03+Co74Q8FMdnvvjXDAizqCSs
-         Hw/G7Zg3SD6lJtnXyxAH74PdHYt4wZhmUPhRSGUqVf5nsS1UkbhyCIYnmbhEFumURfnd
-         etoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=481phWAt8mWnm/w37igX0FBuMwcl7pH6Y12b99av8uM=;
-        b=q/vmiY+Mh4wFpxhhkyMOYwAX4CKQiYebl0JhOM6dXu922K/3pIsQ8VT/8MeoMz9UKM
-         D76nNC/IPutU7ou6dJNht7kxUfZbkpEpTU+0MkZQHkJDGPkejAEFYDF9rK/S4PnvAozB
-         dyWYivi7F/z0eV7X7Kq3lqOBY2xMPh8uTYBw8rqWLnBgvnOVZNpDmbZLIMxPc2FtYmF+
-         6Z3xQAakWyfLiqlZiJbROX7Xd2xaM86g5o892168f8bf7/YlhtqnuwKoitPa5HLFp6he
-         SVRk0vq2nHtzEnVHyuXP9OWMD1LtyMsNXupZ73C8qZBNpZjapmXvztbCqHIBVvsXExeT
-         qaMA==
-X-Gm-Message-State: AOAM532Y8uendKYM2fPck7Ivj5s5+gSP+qnF3dhCdEwEccPZtgKPdzFB
-        WCP+zg46JfDGF0sfMO1JiSkXOvqHWUT6vMK+5qo=
-X-Google-Smtp-Source: ABdhPJxM39/++p6F5f8iE4zXgPZAJlZZwZ9z86P+Ell1ALaX6vv0I5U7iT8v0iQCnIO3MMPqEkRjotqjVYYM6yDylkc=
-X-Received: by 2002:a25:3b0d:: with SMTP id i13mr25465799yba.314.1597743004557;
- Tue, 18 Aug 2020 02:30:04 -0700 (PDT)
+        Tue, 18 Aug 2020 05:30:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597743019; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=AHVbPJFk+TLJWIDMizKenawUcEUUBXKZ1Yv5y2vGNuY=;
+ b=XqZ7IzUL8Nw0Vn37g1M7niGEggQ8/49MRS9XUuM4aNd2+lSXDNgKgHPF6kKi3tEam5iLr3GK
+ f/UyrJfF/LFkEPEYaKm0b8nqQmZg8EtrdpDhDQzcCSXtqB5XZp5LC59v6rnm80k+6BsTQIvF
+ R/jTb/DX21lFVGnbMkj0+eSJRrs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f3b9f6ef2b697637a220853 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 09:29:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EB685C433A1; Tue, 18 Aug 2020 09:29:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hongwus)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19D12C433CA;
+        Tue, 18 Aug 2020 09:29:16 +0000 (UTC)
 MIME-Version: 1.0
-References: <1594874393-23620-1-git-send-email-bmeng.cn@gmail.com> <edca7c9e9a8934fc66d09c7056e92a6aa7f0d645.camel@wdc.com>
-In-Reply-To: <edca7c9e9a8934fc66d09c7056e92a6aa7f0d645.camel@wdc.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Tue, 18 Aug 2020 17:29:53 +0800
-Message-ID: <CAEUhbmW6S2TG14w0smXQ6foZvmSfVvcdYf4kgkLwT9ivXV+m0Q@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Add SiFive drivers to rv32_defconfig
-To:     Alistair Francis <Alistair.Francis@wdc.com>
-Cc:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bin.meng@windriver.com" <bin.meng@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 17:29:16 +0800
+From:   hongwus@codeaurora.org
+To:     Asutosh Das <asutoshd@codeaurora.org>
+Cc:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-scsi-owner@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs: Remove an unpaired
+ ufshcd_scsi_unblock_requests() in err_handler()
+In-Reply-To: <20200818054237.GA880@asutoshd-linux1.qualcomm.com>
+References: <1597728047-39936-1-git-send-email-cang@codeaurora.org>
+ <20200818054237.GA880@asutoshd-linux1.qualcomm.com>
+Message-ID: <72617138cbb0ccd5a50a9b7048251489@codeaurora.org>
+X-Sender: hongwus@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:39 AM Alistair Francis
-<Alistair.Francis@wdc.com> wrote:
->
-> On Wed, 2020-07-15 at 21:39 -0700, Bin Meng wrote:
-> > From: Bin Meng <bin.meng@windriver.com>
-> >
-> > This adds SiFive drivers to rv32_defconfig, to keep in sync with the
-> > 64-bit config. This is useful when testing 32-bit kernel with QEMU
-> > 'sifive_u' 32-bit machine.
-> >
-> > Signed-off-by: Bin Meng <bin.meng@windriver.com>
->
-> Reviewed-by: Alistair Francis <alistair.francis@wdc.com>
->
+On 2020-08-18 13:42, Asutosh Das wrote:
+> On Mon, Aug 17 2020 at 22:21 -0700, Can Guo wrote:
+>> Commit 5586dd8ea250a ("scsi: ufs: Fix a race condition between error
+>> handler and runtime PM ops") moves the ufshcd_scsi_block_requests() 
+>> inside
+>> err_handler(), but forgets to remove the 
+>> ufshcd_scsi_unblock_requests() in
+>> the early return path. Correct the coding mistake.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> 
+> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 2b55c2e..b8441ad 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -5670,7 +5670,6 @@ static void ufshcd_err_handler(struct 
+>> work_struct *work)
+>> 		if (hba->ufshcd_state != UFSHCD_STATE_ERROR)
+>> 			hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
+>> 		spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> -		ufshcd_scsi_unblock_requests(hba);
+>> 		return;
+>> 	}
+>> 	ufshcd_set_eh_in_progress(hba);
+>> -- Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
+>> a Linux Foundation Collaborative Project.
+>> 
 
-Ping?
-
-Is this patch applied anywhere? Thanks!
-
-Regards,
-Bin
+Reviewed-by: Hongwu Su<hongwus@codeaurora.org>
