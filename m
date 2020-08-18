@@ -2,100 +2,143 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95618C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723C020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658D820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j7wyfdQz"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="GKDS8REJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHRK0a (ORCPT
+        id S1726652AbgHRK0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRK03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:26:29 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F43C061389;
-        Tue, 18 Aug 2020 03:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VCX6Iv8QocyVcCbIivzpSCWISFs79AnDnWaSLIjrF8U=; b=j7wyfdQzzEZMB+e5Nys0bXVBDM
-        vXxWFcYB/mrjbGXoK6s/YyXkyE6PEiHxe/nBfggrXwCHEBYZoA+0zTm5Vb1AstfB31VWdqkUhz+Lu
-        GhuVveE3fX33vy9iOUGmUOGQTpcnGX8Le2X92V55OQNMd6LaHzwBqsrrTz20Loi9qbnaDar3Egck5
-        ZPIiaa51a22YyQbTto8qWi2dofwWO9ePhTZU9EQfrLwzHhf1SZ7eMIaQETjafCmtTZEowmxaz8kI+
-        BRM4AOz+8lAiFZuTvd6ErYylKdURKpdwxPyyZ4ER3Pkd/KKNdee92nG2DliqRsgvFcnLS+HFsElKf
-        m1hCpYeQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7yos-0004EG-CM; Tue, 18 Aug 2020 10:26:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 09548300DB4;
-        Tue, 18 Aug 2020 12:26:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E60632B76E7C6; Tue, 18 Aug 2020 12:26:16 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 12:26:16 +0200
-From:   peterz@infradead.org
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Michal Hocko <mhocko@suse.com>, Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-Message-ID: <20200818102616.GP2674@hirez.programming.kicks-ass.net>
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200818091453.GL2674@hirez.programming.kicks-ass.net>
- <20200818092617.GN28270@dhcp22.suse.cz>
- <20200818095910.GM2674@hirez.programming.kicks-ass.net>
- <20200818101756.GA155582@chrisdown.name>
+        Tue, 18 Aug 2020 06:26:49 -0400
+Received: from mail-bn7nam10on2067.outbound.protection.outlook.com ([40.107.92.67]:13857
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbgHRK0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:26:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jJXxJ4ERmxk2cNFI9MtBHBCCauIcGAofgTWzOOKJLCa41YvnS/jBduqVM72Ph6kjiaY4AOuSXgkVaUhZa85GihCUhkRcnmiuLG0JLsUw9BVvWeeD8uNwHFC9VvHR29oBtzhInyHnWrilZo9MO8ZPzLgg9Wpkf7ukqrF61GCyJ+3r7qqz8eZJ57BEOEsHgjffxZ5JdzGAngfEf7oE3Icy09KLlcluGBs2pv5QKOFwdlqeSicL0FBn+p44M0qFgVRTJCWI9iVAcHMKWpjZ7QMJ4DEKFdODnlBphOYO6jaLAPowZy4XA0+XfH5AKFpZWrcX9v4n97HnyYO+DyE4L/+y3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tCNhZvIk0BEmvB2qVuoKO06tjJZRW9d3j1Ffo6nO/1A=;
+ b=BhHUYrU7in4M0mgggwe4rJ7sgylwM9Ef1V5H3R009AztQGbSTaRE0jI8WxZuUANdZDy013Fuvky4YXG7mEyzvush3YDT3v1ggfQIaEGP6dFwbr7iD2d/5YDq5bMRg7t4t9Fu8/7nuusFjpFwIXBWtkpkI3pYLlcEC1PN6K1ma4K0lU9yifvk+XfqZ982xxW5E7pZ2HC36dOWTaoRsyiX76vbhJGDkwWdugD/MwfK8n1bq8P6MFF6FcMOYpNO9Y74iGjDV7I0wsR9G1DPF+DFrOK1SQuNo+srnvO3vVvTxOHABUEkDO72cBJxOfvvH2lzR2/WoWGkEHl7MUlyIrBcsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tCNhZvIk0BEmvB2qVuoKO06tjJZRW9d3j1Ffo6nO/1A=;
+ b=GKDS8REJfR9xFmSiaq49O6UwO5ld9ICBa+2k1RjFDaOR7TjXUU/E6ALk9kHekDLO8knjYnIh9kyMsubQ3q26st/5xQ6j094DGs0v+OuL7RG778SkUPsegjNS8NyieT2V1mdazK+8S1iY0CBspM+yH62odzXgl8NaSC2cye7Dxr4=
+Authentication-Results: kvack.org; dkim=none (message not signed)
+ header.d=none;kvack.org; dmarc=none action=none header.from=windriver.com;
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
+ by BYAPR11MB3557.namprd11.prod.outlook.com (2603:10b6:a03:b4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 18 Aug
+ 2020 10:26:42 +0000
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::8d64:f85b:1cce:a1c0]) by BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::8d64:f85b:1cce:a1c0%5]) with mapi id 15.20.3305.024; Tue, 18 Aug 2020
+ 10:26:41 +0000
+Subject: Re: [PATCH] mm/memory.c: Correct the function name in comment
+To:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200818072910.27068-1-yanfei.xu@windriver.com>
+ <0eb405b4-a9a3-1840-0ca6-f9a801ab701c@redhat.com>
+From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
+Message-ID: <2b9b69bd-cbf8-55f9-72f7-b3c3d24b14fa@windriver.com>
+Date:   Tue, 18 Aug 2020 18:26:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <0eb405b4-a9a3-1840-0ca6-f9a801ab701c@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR13CA0009.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::22) To BY5PR11MB4241.namprd11.prod.outlook.com
+ (2603:10b6:a03:1ca::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818101756.GA155582@chrisdown.name>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BY5PR13CA0009.namprd13.prod.outlook.com (2603:10b6:a03:180::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.13 via Frontend Transport; Tue, 18 Aug 2020 10:26:39 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d5319f00-d340-4d01-b452-08d843613286
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3557:
+X-Microsoft-Antispam-PRVS: <BYAPR11MB3557266C9FC1FEE02EE901A7E45C0@BYAPR11MB3557.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3w5bbYbdg7rWq/NnYcJEyiyzILgtdNdoJz4/k+eqoHLQc62gDYPP6zbSl9+dkC4exkD/d7gL3abwb/heau4LrrPT/S4PNZAyBYFBXq0KP4v486Ao0HXMGRGbIdbOQzz2ZJf23Z4AyMpwJVrvoLovvrTcfMmhyxKeXRW7VGXkg2ztlX8Nq7KwLSaJTw6snYKXqwsDQjvM4probpGFqkohhEbcQDnrxSuwVF+I6WMgdRH1uGlTREl3afARAZBsngKc3Fg2zEv6XH20qwsRE+OnKZ2pN/1oiiRcE4stvRoSuMYlyLT+RYLc4OFHJb2MIHVBWh2JQvktfZ7gRFYAnJdaQZqNO61NefxJZ2nX6fBZWLkjbmDL0/KvQfkh3TVHnJBcii955RByfycCTwLJfWPi50bwUyUJaslf464Mmpw4F74=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(396003)(346002)(39850400004)(376002)(110011004)(66946007)(478600001)(6666004)(31686004)(86362001)(31696002)(16576012)(4326008)(316002)(83380400001)(36756003)(53546011)(66556008)(66476007)(956004)(52116002)(2616005)(2906002)(6486002)(8676002)(5660300002)(186003)(26005)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: xYA3jz8pjyhCUvvbivv4FoVkZENcZluGxugstHd/ON4z1Kb98lsOuN+39zKe1r43y00kuUfp5v+q9l+tWxkCDn8tjNq9aFR4ACs6iUbC65XgSZXpQjB/J7gBAQv8gcgY9ZK7m5fCM55THaA0danPLGddVDpLZ3Z7SQvk8rKae+orGNF0pYDyFPXt4VlRGI/6RvStClT477fjR3J7L0YU1vNq3D3rBow2QrPDHz0726EgFs4ugrAerhA7zcoTXV6pUJj8MEmgJ2gcRU1gnGIu+ferYTfcfeJAs3prhI/M5pHcSU7ZROtBfRVR6JKD29UQGnYVBBR9q38OxBJcg6Z3w7npTjDGddn9esu4wnWNq+J6OUlININVf2pNQyZ6kwqkSVAyfik34xqmb4DyLcj/5lhK3rvPHMT6UQ67KrIasV+8963zvOsgW8adm/YVk+et5U5MJAHXFjwSwSby+PaE1pUnHFgm7W6RzmwKtPckpO9gUFoQeu0hyU3XaKGtqVE9p4gUeFUGKdeiDoAgZ0p3lpxZBZuJ0C0sXtdk/WlhFjBgvq4bEHLPGQYZeI0a+en8fi8PjASvnxAq9estY5Ub58aH+S4lnc7S/6WDDmx3FmWpG1v3KhuUF3qQJd3ZHfJt325ktEcxNUli+lx5AETUVg==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5319f00-d340-4d01-b452-08d843613286
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4241.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 10:26:41.4680
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4NxTOSFdHMNr48yjgyE17E0SiK6i3i9gyrhzVnLTxsWV3NrxSlwVVL8AGOWwfnWe1OmuA3TRkFv39YZCmwA+/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:17:56AM +0100, Chris Down wrote:
 
-> I'd ask that you understand a bit more about the tradeoffs and intentions of
-> the patch before rushing in to declare its failure, considering it works
-> just fine :-)
+
+On 8/18/20 3:34 PM, David Hildenbrand wrote:
+> On 18.08.20 09:29, yanfei.xu@windriver.com wrote:
+>> From: Yanfei Xu <yanfei.xu@windriver.com>
+>>
+>> Correct the function name which is "pte_alloc_pne" to "pte_alloc_one"
+>>
 > 
-> Clamping the maximal time allows the application to take some action to
-> remediate the situation, while still being slowed down significantly. 2
-> seconds per allocation batch is still absolutely plenty for any use case
-> I've come across. If you have evidence it isn't, then present that instead
-> of vague notions of "wrongness".
+> I'd have phrased this like
+> 
+> "mm/memory: Fix typo in __do_fault() comment
+> 
+> It's "pte_alloc_one", not "pte_alloc_pne". Let's fix that.
+> "
+> 
+Hah, yours is more clear. I'll send a v2
+Thanks for your suggestion. :)
 
-There is no feedback from the freeing rate, therefore it cannot be
-correct in maintaining a maximum amount of pages.
+//Yanfei
 
-0.5 pages / sec is still non-zero, and if the free rate is 0, you'll
-crawl across whatever limit was set without any bounds. This is math
-101.
-
-It's true that I haven't been paying attention to mm in a while, but I
-was one of the original authors of the I/O dirty balancing, I do think I
-understand how these things work.
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
+>> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
+>> ---
+>>   mm/memory.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index c3a83f4ca851..9cc3d0dc816c 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -3446,7 +3446,7 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
+>>   	 *				unlock_page(A)
+>>   	 * lock_page(B)
+>>   	 *				lock_page(B)
+>> -	 * pte_alloc_pne
+>> +	 * pte_alloc_one
+>>   	 *   shrink_page_list
+>>   	 *     wait_on_page_writeback(A)
+>>   	 *				SetPageWriteback(B)
+>>
+> 
+> 
