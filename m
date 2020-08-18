@@ -2,139 +2,72 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B54C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D0E20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ez7FjKya"
+	by mail.kernel.org (Postfix) with ESMTP id CFA8D20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgHRSYC (ORCPT
+        id S1726739AbgHRS0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRSYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:24:00 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFD5C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:24:00 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id e6so18772530oii.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4uE3xXRtqRfEn1OYDBHpEdtWV2R53NDeV7+oyoOPFlY=;
-        b=Ez7FjKya15XLVptzGK9jhY368i4dW4wH9c4TXuNDpfUxnWcft1abxC/w1ocfrnabnE
-         uHHCi23vYrA9iXfhytDd3m4m4QD1AiDrN4hYkfbZtC/PDPxKVpaate4C833r6qmeIfKa
-         ZIPjGG8eFKud0nhBUNAgJ3mpGczd8HCErDrGSt4htMFD01+W1vsCTaGm7/1yRH5R7Xrw
-         e2lO4yx8cm4TkZY9foBk/Y1jfGGb76zmrH1E/LlQax2YbtSEXkXxuiAbcY09uJ8bjAVW
-         JDMc92qNJ/OSV47kxD6GndcGrfrF31glQCXEWSR7xN4XX+tZMg/rtlWsbYx9cm7QMuFl
-         7Ggw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4uE3xXRtqRfEn1OYDBHpEdtWV2R53NDeV7+oyoOPFlY=;
-        b=Cv6FrYJomV0/Ok8k48/Exfba44+mXKCzMKqgBpHCVPMt+dXpTZVybLAKKz+4RVB+8s
-         Qs3t7DGKTaPYRkUuveK/9ejBrKWeNe1YY32BtpxU1zaeUmV0XYHcTBKeSiNsYDBcaOPX
-         o42cJVtedavKmI7R36n9sXcpy9uWCYW1s+foQgz4F7eKPCGpDrkza78BPkTUSiyVU3DL
-         FmhGJ2IRymmHFf7EFReSq21/zZgTDeA/XJJO7AzisQBcOUpSMM8Wzv2rgeUM4JRwOA1/
-         UAl1Z5mJ78EvoOt8M6nmsy8rEzQR1CK1WtaFGyeCmBV1QymbwvYWO2pUK6Ahf3bP3gNz
-         7kFA==
-X-Gm-Message-State: AOAM530l95Wyc6zT+wbuuIpz0Abqbc9X0aOnXRYMG+fKlSPC/NncbpVZ
-        GMAhO7E0DNvBEC6QpI7IdmTMUdfUc6zJARKdzlE4YA==
-X-Google-Smtp-Source: ABdhPJyuGN7XZ1Z8Z2FMh8+bnDzSw7T3BCgIA3pJkT3cia0BthIccdwP/UkkDsnnZI8xefCeiZqFqvqEeMH9fkn0tUg=
-X-Received: by 2002:aca:670b:: with SMTP id z11mr919784oix.6.1597775039443;
- Tue, 18 Aug 2020 11:23:59 -0700 (PDT)
+        Tue, 18 Aug 2020 14:26:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:24086 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbgHRS0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 14:26:06 -0400
+IronPort-SDR: dHpTq1qXN7/4wYILMELe3w7gwqEQMGwU/P0Xnykja7gFHXhd+S6x8Y3LPQpFz7SiR3W7s7ZWwN
+ gSzggFfq5eeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="173032866"
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="173032866"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 11:26:07 -0700
+IronPort-SDR: oC63Dy7qujs42aK44MwCv4Dhj/DyNLMFkIj7OrB6Wo3dyWwXxaBa53jFFRkn+6oI33G8ssXBWI
+ i+KMeWZnBm/w==
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="441318282"
+Received: from jbrandeb-mobl3.amr.corp.intel.com (HELO localhost) ([10.212.158.55])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 11:26:06 -0700
+Date:   Tue, 18 Aug 2020 11:26:05 -0700
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     Qingyu Li <ieatmuttonchuan@gmail.com>
+Cc:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/bluetooth/hci_sock.c: add CAP_NET_RAW check.
+Message-ID: <20200818112605.0000735f@intel.com>
+In-Reply-To: <20200818075648.GA29124@oppo>
+References: <20200818075648.GA29124@oppo>
+X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20200807084841.7112-1-chenyi.qiang@intel.com> <20200807084841.7112-3-chenyi.qiang@intel.com>
- <CALMp9eQiyRxJ0jkvVi+fWMZcDQbvyCcuTwH1wrYV-u_E004Bhg@mail.gmail.com>
- <34b083be-b9d5-fd85-b42d-af0549e3b002@intel.com> <CALMp9eS=dO7=JvvmGp-nt-LBO9evH-bLd2LQMO9wdYJ5V6S0_Q@mail.gmail.com>
- <268b0ee4-e56f-981c-c03e-6dca8a4e99da@intel.com>
-In-Reply-To: <268b0ee4-e56f-981c-c03e-6dca8a4e99da@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 18 Aug 2020 11:23:47 -0700
-Message-ID: <CALMp9eSAkzGPp4zPVakypR1McSJtJ1x4j1zAAj1sM1bHxd01zg@mail.gmail.com>
-Subject: Re: [RFC 2/7] KVM: VMX: Expose IA32_PKRS MSR
-To:     Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:28 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->
->
->
-> On 8/14/2020 1:31 AM, Jim Mattson wrote:
-> > On Wed, Aug 12, 2020 at 10:42 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >>
-> >>
-> >>
-> >> On 8/13/2020 5:21 AM, Jim Mattson wrote:
-> >>> On Fri, Aug 7, 2020 at 1:46 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >>>>
-> >>>> Protection Keys for Supervisor Pages (PKS) uses IA32_PKRS MSR (PKRS) at
-> >>>> index 0x6E1 to allow software to manage supervisor protection key
-> >>>> rights. For performance consideration, PKRS intercept will be disabled
-> >>>> so that the guest can access the PKRS without VM exits.
-> >>>> PKS introduces dedicated control fields in VMCS to switch PKRS, which
-> >>>> only does the retore part. In addition, every VM exit saves PKRS into
-> >>>> the guest-state area in VMCS, while VM enter won't save the host value
-> >>>> due to the expectation that the host won't change the MSR often. Update
-> >>>> the host's value in VMCS manually if the MSR has been changed by the
-> >>>> kernel since the last time the VMCS was run.
-> >>>> The function get_current_pkrs() in arch/x86/mm/pkeys.c exports the
-> >>>> per-cpu variable pkrs_cache to avoid frequent rdmsr of PKRS.
-> >>>>
-> >>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> >>>> ---
-> >>>
-> >>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> >>>> index 11e4df560018..df2c2e733549 100644
-> >>>> --- a/arch/x86/kvm/vmx/nested.c
-> >>>> +++ b/arch/x86/kvm/vmx/nested.c
-> >>>> @@ -289,6 +289,7 @@ static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
-> >>>>           dest->ds_sel = src->ds_sel;
-> >>>>           dest->es_sel = src->es_sel;
-> >>>>    #endif
-> >>>> +       dest->pkrs = src->pkrs;
-> >>>
-> >>> Why isn't this (and other PKRS code) inside the #ifdef CONFIG_X86_64?
-> >>> PKRS isn't usable outside of long mode, is it?
-> >>>
-> >>
-> >> Yes, I'm also thinking about whether to put all pks code into
-> >> CONFIG_X86_64. The kernel implementation also wrap its pks code inside
-> >> CONFIG_ARCH_HAS_SUPERVISOR_PKEYS which has dependency with CONFIG_X86_64.
-> >> However, maybe this can help when host kernel disable PKS but the guest
-> >> enable it. What do you think about this?
-> >
-> > I see no problem in exposing PKRS to the guest even if the host
-> > doesn't have CONFIG_ARCH_HAS_SUPERVISOR_PKEYS.
-> >
->
-> Yes, but I would prefer to keep it outside CONFIG_X86_64. PKS code has
-> several code blocks and putting them under x86_64 may end up being a
-> mess. In addition, PKU KVM related code isn't under CONFIG_X86_64 as
-> well. So, is it really necessary to put inside?
+On Tue, 18 Aug 2020 15:56:48 +0800
+Qingyu Li <ieatmuttonchuan@gmail.com> wrote:
 
-I'll let someone who actually cares about the i386 build answer that question.
+> When creating a raw PF_BLUETOOTH socket,
+> CAP_NET_RAW needs to be checked first.
+> 
+
+Thanks for the patch! Your subject doesn't need to end in a period. In
+your commit message, I can guess why you'd want this patch, but your
+commit message should include more info about why the kernel wants this
+patch included. Especially since this is a user visible change and
+likely a fix of a bug. Please review:
+https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+specifically:
+https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-any-other-tips-to-help-ensure-my-net-net-next-patch-gets-ok-d
+
+This looks like a fix, please add a Fixes tag.
