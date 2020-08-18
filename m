@@ -2,87 +2,141 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A512C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D29204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D1E204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHRKTd (ORCPT
+        id S1726721AbgHRKVD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:19:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38462 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgHRKTd (ORCPT
+        Tue, 18 Aug 2020 06:21:03 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57266 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbgHRKUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:19:33 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k7yiH-0001XG-U9; Tue, 18 Aug 2020 10:19:30 +0000
-Date:   Tue, 18 Aug 2020 12:19:28 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        criu@openvz.org, bpf@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH 17/17] file: Rename __close_fd to close_fd and remove the
- files parameter
-Message-ID: <20200818101928.6tbaakfpqxtlrf53@wittgenstein>
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
- <20200817220425.9389-17-ebiederm@xmission.com>
+        Tue, 18 Aug 2020 06:20:53 -0400
+Received: from [78.134.86.56] (port=53170 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1k7yjY-000DIV-Rp; Tue, 18 Aug 2020 12:20:49 +0200
+Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
+ on programming failure
+To:     Tom Rix <trix@redhat.com>, linux-fpga@vger.kernel.org
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200817165911.32589-1-luca@lucaceresoli.net>
+ <20200817165911.32589-2-luca@lucaceresoli.net>
+ <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
+Date:   Tue, 18 Aug 2020 12:20:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817220425.9389-17-ebiederm@xmission.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:04:25PM -0500, Eric W. Biederman wrote:
-> The function __close_fd was added to support binder[1].  Now that
-> binder has been fixed to no longer need __close_fd[2] and
-> get_files_struct has been removed it is no longer possible to
-> correctly call __close_fd with anything current->files pass as it's
-> files parameter.
-> 
-> Therefore transform the files parameter into a local variable
-> initialized to current->files, and rename __close_fd to close_fd to
-> reflect this change, and keep it in sync with the similar changes to
-> __alloc_fd, and __fd_install.
-> 
-> This removes the need for callers to care about the extra care that
-> needs to be take if anything except current->files is passed, by
-> limiting the callers to only operation on current->files.
-> 
-> [1] 483ce1d4b8c3 ("take descriptor-related part of close() to file.c")
-> [2] 44d8047f1d87 ("binder: use standard functions to allocate fds")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
+[a question for GPIO maintainers below]
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Hi Tom,
+
+thanks for your review!
+
+On 17/08/20 20:15, Tom Rix wrote:
+> The other two patches are fine.
+> 
+> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
+>> When the DONE pin does not go high after programming to confirm programming
+>> success, the INIT_B pin provides some info on the reason. Use it if
+>> available to provide a more explanatory error message.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> ---
+>>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+>> index 502fae0d1d85..2aa942bb1114 100644
+>> --- a/drivers/fpga/xilinx-spi.c
+>> +++ b/drivers/fpga/xilinx-spi.c
+>> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>>  			return xilinx_spi_apply_cclk_cycles(conf);
+>>  	}
+>>  
+>> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+>> +	if (conf->init_b) {
+>> +		int init_b_asserted = gpiod_get_value(conf->init_b);
+> 
+> gpiod_get_value can fail. So maybe need split the first statement.
+> 
+> init_b_asserted < 0 ? "invalid device"
+> 
+> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
+
+Thanks for the heads up. However I'm not sure which is the best thing to
+do here.
+
+First, I've been reading the libgpiod code after your email and yes, the
+libgpiod code _could_ return runtime errors received from the gpiochip
+driver, even though the docs state:
+
+> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
+(https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
+
+On the other hand there are plenty of calls to gpiod_get/set_value in
+the kernel that don't check for error values. I guess this is because
+failures getting/setting a GPIO are very uncommon (perhaps impossible
+with platform GPIO).
+
+When still a GPIO get/set operation fails I'm not sure adding thousands
+of error-checking code lines in hundreds of drivers is the best way to
+go. I feel like we should have a unique, noisy dev_err() in the error
+path in libgpio but I was surprised in not finding any [1].
+
+Linus, Bartosz, what's your opinion? Should all drivers check for errors
+after every gpiod_[sg]et_value*() call?
+
+>> +		dev_err(&mgr->dev,
+>> +			init_b_asserted ? "CRC error or invalid device\n"
+>> +			: "Missing sync word or incomplete bitstream\n");
+>> +	} else {
+>> +		dev_err(&mgr->dev, "Timeout after config data transfer.\n");
+> patch 3 removes '.' s , and you just added one back in ?
+
+Here I'm only changing indentation of this line. But OK, this is
+misleading, so I'll swap patches 2 and 3 in the next patch iteration to
+avoid confusion.
+
+[1]
+https://elixir.bootlin.com/linux/v5.8/source/drivers/gpio/gpiolib.c#L3646
+
+-- 
+Luca
+
