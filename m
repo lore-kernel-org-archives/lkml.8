@@ -2,408 +2,511 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5B4C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD278C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5D3206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zbCYQdEV"
+	by mail.kernel.org (Postfix) with ESMTP id AA71B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgHRH6O (ORCPT
+        id S1726420AbgHRIB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:58:14 -0400
-Received: from mail-bn7nam10on2061.outbound.protection.outlook.com ([40.107.92.61]:17697
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbgHRH6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:58:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eZs8fIUbZD7GbH+Wq+6a5fpD6XsRqDl8h3dY4m1woQBlu19iIha4EiWF9Kdm+1hg0im+r5Di/6K6hcEZJ7ZSVRRKtAma+/2zRpOyoUhHvT5aFDCmYfL6y2go7sWo6p7mjU7rmepCzBYwMUt4TEdXJft6cBhvgUG4XGXS+uLuJmC9wHzPFY2iWzPOjrSvcKz9Py7WWNuR85YWw5F2iKmnvhfmEJzx09a931xBisP/7M3qbjUq6kWy8O7fAEKx+jQai7jcYaesFMjUqvdoxVE06cyZKFMAjvfWN9m7Es2z2SwkIQQChJlIs5fBvFilIAVwgSjQAFThXqbWHi++ILINjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7EK3lX3GavvNjO3+ZjPDvyQVZn6K0CH5jRYSdwxdRs8=;
- b=fE3zIDS4LX2Ku9CxkxQjK1CKVhYq3m0Zjoo4ZLh8V4MDhYiHKCzR2KTCtQLNX9AmaDmHWEwi8iyE5nfCtx9WX52QHH76kvFbn68wIYd1jYID8yVLWV8z2x9spyjpRSNQ172ZxRT8kM68dWuDH8sXAE4ICxrXrPAnGTu8i/QAh8uAfj66kpnaUc9Gd89rGimUNgZ+g/gNLv8RVURsDZb4X05YzVY0RfuX70Xits8o/KSS6AHxSN4WH4zHt+pAx1bAdfQLAOMGmrpZkz4YS4DKztNA2lVXf1gfYfyYkiAltc9lWxdab63bNkqtbN8iAJY9hQygMbNazReCWpyDHZNFUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7EK3lX3GavvNjO3+ZjPDvyQVZn6K0CH5jRYSdwxdRs8=;
- b=zbCYQdEVC3hKC33YhhQECD43R9+w4pQ4Nq8irQ4eXhiYboCF7Ps372F/ysmOC8EagGhR/QDnUrPE9Qs9YNsQ6GWagmwpK0TDLMudkeF6Ftt6p3RHpRjHp1l5OrNxBmdx74ZKayKgsyjuXNckBLTsbTT5SumN1Zvm8Gzpf8AzRyI=
-Authentication-Results: lists.xenproject.org; dkim=none (message not signed)
- header.d=none;lists.xenproject.org; dmarc=none action=none
- header.from=amd.com;
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
- by MN2PR12MB3696.namprd12.prod.outlook.com (2603:10b6:208:169::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Tue, 18 Aug
- 2020 07:58:06 +0000
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 07:58:06 +0000
-Subject: Re: [PATCH 1/2] drm: allow limiting the scatter list size.
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
-        <etnaviv@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
-References: <20200818074828.9509-1-kraxel@redhat.com>
- <20200818074828.9509-2-kraxel@redhat.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <9c355d64-1a61-eb59-be80-d9fc863ddf22@amd.com>
-Date:   Tue, 18 Aug 2020 09:57:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200818074828.9509-2-kraxel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR04CA0061.eurprd04.prod.outlook.com
- (2603:10a6:208:1::38) To MN2PR12MB3775.namprd12.prod.outlook.com
- (2603:10b6:208:159::19)
+        Tue, 18 Aug 2020 04:01:28 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36385 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgHRIB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:01:27 -0400
+IronPort-SDR: 1HTr5sII1G/+IvONhrP4/5VPd06IszgtJY6Xbej3PieiqucHi83vI2m1ASHsKdYcHU8Xm/Maxj
+ 9sP59dtUtvJg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216383569"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="gz'50?scan'50,208,50";a="216383569"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 01:00:17 -0700
+IronPort-SDR: SSRXb2XthU/t7pjTqcL6HpJqz3DrpR31uYOLPiblEKl8ybzVIYud/ecMuY8krvURi6D0PsFQ6Y
+ MX6K6YBb021Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="gz'50?scan'50,208,50";a="497293364"
+Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Aug 2020 01:00:14 -0700
+Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k7wXV-00015r-8x; Tue, 18 Aug 2020 08:00:13 +0000
+Date:   Tue, 18 Aug 2020 15:59:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no
+ member named 'of_node'
+Message-ID: <202008181555.pOLRgOnW%lkp@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR04CA0061.eurprd04.prod.outlook.com (2603:10a6:208:1::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend Transport; Tue, 18 Aug 2020 07:58:02 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 36acc88a-ea0c-4a23-69c9-08d8434c7067
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3696:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB36969E49B6CBE62456F3C3FF835C0@MN2PR12MB3696.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jJICQZ3vvUC4qYRzVNIOVqMXwL/+LNv5lZtjFzTQjNwObH0kgjsE7yvI2pxg4XO5NBuwnR7kd3VESzYYGrad9apkwXaN69Hg75mKzwJbp4nOqNpOZGtve4KZEfzl8GtCiwL2tyJqPuyo5iXRIVJSxx/HMRSobk+JfFm2SLbNIwMFYUwo6eJeD/WckmWYC86bgM6Iu559vakJ4aAZMixOM3IY+sTfcWjtO1/fn7EvgwtAlJPpVzSZO0H1U2gF1lytAGJPedJKLftV+d26QTVaNYJwYISy2IMpyhxwcOZKhEq9kNwlNB590qR2H4sBoRAApHJoMxIFPJTp/hgfe8CY0OKUFDaAQBEXPrz6j8rRs8Z1M6Ai2U/5snLsd2ENMfCF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(31696002)(186003)(8676002)(478600001)(2616005)(86362001)(52116002)(66476007)(83380400001)(66556008)(66946007)(54906003)(8936002)(31686004)(5660300002)(316002)(36756003)(16526019)(4326008)(7416002)(2906002)(6666004)(30864003)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 09Pu6O3+2dUkDSYKZtIndy6NYcL9CdYi/HAycGaO4ooDsRNLJg0RJxl6jmYSi1bX0o4mDR0IMW7IAz+6pbjkSGVzK6g26HcOLzr1RT/fs5J/F4HbZz8y5SKDv2gcI7Jg3GPV8N146v7po4R4DrZITRZqrQe/QAUdmNQtLUfTs3gt3xDElNe8T09Rv7j2SGDoYOH/UvnIxNv8VNqG6TQzVhUGDqxpjoRo8h8HpEQCZ607DbpyhW23gK6tmnxSBTng/sC6f+T6IMEc4Y+zdDSqv1UJxG5NeHyrNHBPFyaI9GE30uI350ZEuP+xUiMbWOUOHNlC4R5ME60+iq6sbpHExL/zQQvIq9sSBFiIFoPS1nGI4GQ1ztAgvUPpIdTi+u8YPebhrYUMbu6XrDGpbU1DyWByO9i38lEJNhX5JiP8gX9QF1oO7HSebvPcIho3qvj0sNhtLFCkaXG1yL0ijQY9RmozJmQbd2XRiSlsQOb2V3cuZWsIW+czaZ7Oyci9XiE/HWAU15iCBkcPsOTZEYNb6c73N2I5qesFpIYWpnxlYKDyxhEMnwAGxnK6k5L8TZP4q5ItU4HutfU+uPHIRChEKMIJ/to7Tgb71yxf4u7SMshFRfbmm533e0ZWWDmzHnldBl5n0rrTpXEK8pGYa15EcSf6LHUkZYLaQGe3itrAbIAQSEzVdsv5gRcRgiaEkVRPsJurA7FUHwJA1hUgxX6fIQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36acc88a-ea0c-4a23-69c9-08d8434c7067
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 07:58:05.8774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z4VJmiF3KGPP5fNKMfyzPdSkIDfSPdlh7Bt+1JDU+qYuLI5f6uclcHajsFQnLHmO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3696
+Content-Type: multipart/mixed; boundary="Kj7319i9nmIyA2yE"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 18.08.20 um 09:48 schrieb Gerd Hoffmann:
-> Add max_segment argument to drm_prime_pages_to_sg().  When set pass it
-> through to the __sg_alloc_table_from_pages() call, otherwise use
-> SCATTERLIST_MAX_SEGMENT.
->
-> Also add max_segment field to gem objects and pass it to
-> drm_prime_pages_to_sg() calls in drivers and helpers.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-I'm missing an explanation why this should be useful (it certainly is).
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And the maximum segment size seems misplaced in the GEM object. This is 
-usually a property of the device or even completely constant.
+Hi Kieran,
 
-Christian.
+FYI, the error/warning still remains.
 
-> ---
->   include/drm/drm_gem.h                       |  8 ++++++++
->   include/drm/drm_prime.h                     |  3 ++-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c |  3 ++-
->   drivers/gpu/drm/drm_gem_shmem_helper.c      |  3 ++-
->   drivers/gpu/drm/drm_prime.c                 | 10 +++++++---
->   drivers/gpu/drm/etnaviv/etnaviv_gem.c       |  3 ++-
->   drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c |  3 ++-
->   drivers/gpu/drm/msm/msm_gem.c               |  3 ++-
->   drivers/gpu/drm/msm/msm_gem_prime.c         |  3 ++-
->   drivers/gpu/drm/nouveau/nouveau_prime.c     |  3 ++-
->   drivers/gpu/drm/radeon/radeon_prime.c       |  3 ++-
->   drivers/gpu/drm/rockchip/rockchip_drm_gem.c |  6 ++++--
->   drivers/gpu/drm/tegra/gem.c                 |  3 ++-
->   drivers/gpu/drm/vgem/vgem_drv.c             |  3 ++-
->   drivers/gpu/drm/xen/xen_drm_front_gem.c     |  3 ++-
->   15 files changed, 43 insertions(+), 17 deletions(-)
->
-> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-> index 337a48321705..dea5e92e745b 100644
-> --- a/include/drm/drm_gem.h
-> +++ b/include/drm/drm_gem.h
-> @@ -241,6 +241,14 @@ struct drm_gem_object {
->   	 */
->   	size_t size;
->   
-> +	/**
-> +	 * @max_segment:
-> +	 *
-> +	 * Max size for scatter list segments.  When unset the default
-> +	 * (SCATTERLIST_MAX_SEGMENT) is used.
-> +	 */
-> +	size_t max_segment;
-> +
->   	/**
->   	 * @name:
->   	 *
-> diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
-> index 9af7422b44cf..2c3689435cb4 100644
-> --- a/include/drm/drm_prime.h
-> +++ b/include/drm/drm_prime.h
-> @@ -88,7 +88,8 @@ void drm_gem_dmabuf_vunmap(struct dma_buf *dma_buf, void *vaddr);
->   int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
->   int drm_gem_dmabuf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *vma);
->   
-> -struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages);
-> +struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages,
-> +				       size_t max_segment);
->   struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
->   				     int flags);
->   
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> index 519ce4427fce..5e8a9760b33f 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> @@ -303,7 +303,8 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma_buf_attachment *attach,
->   	switch (bo->tbo.mem.mem_type) {
->   	case TTM_PL_TT:
->   		sgt = drm_prime_pages_to_sg(bo->tbo.ttm->pages,
-> -					    bo->tbo.num_pages);
-> +					    bo->tbo.num_pages,
-> +					    obj->max_segment);
->   		if (IS_ERR(sgt))
->   			return sgt;
->   
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index 4b7cfbac4daa..cfb979d808fd 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -656,7 +656,8 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_object *obj)
->   
->   	WARN_ON(shmem->base.import_attach);
->   
-> -	return drm_prime_pages_to_sg(shmem->pages, obj->size >> PAGE_SHIFT);
-> +	return drm_prime_pages_to_sg(shmem->pages, obj->size >> PAGE_SHIFT,
-> +				     obj->max_segment);
->   }
->   EXPORT_SYMBOL_GPL(drm_gem_shmem_get_sg_table);
->   
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index 1693aa7c14b5..27c783fd6633 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -802,7 +802,8 @@ static const struct dma_buf_ops drm_gem_prime_dmabuf_ops =  {
->    *
->    * This is useful for implementing &drm_gem_object_funcs.get_sg_table.
->    */
-> -struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages)
-> +struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages,
-> +				       size_t max_segment)
->   {
->   	struct sg_table *sg = NULL;
->   	int ret;
-> @@ -813,8 +814,11 @@ struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_page
->   		goto out;
->   	}
->   
-> -	ret = sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
-> -				nr_pages << PAGE_SHIFT, GFP_KERNEL);
-> +	if (max_segment == 0 || max_segment > SCATTERLIST_MAX_SEGMENT)
-> +		max_segment = SCATTERLIST_MAX_SEGMENT;
-> +	ret = __sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
-> +					  nr_pages << PAGE_SHIFT,
-> +					  max_segment, GFP_KERNEL);
->   	if (ret)
->   		goto out;
->   
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> index f06e19e7be04..e5b6e7996f80 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> @@ -103,7 +103,8 @@ struct page **etnaviv_gem_get_pages(struct etnaviv_gem_object *etnaviv_obj)
->   		int npages = etnaviv_obj->base.size >> PAGE_SHIFT;
->   		struct sg_table *sgt;
->   
-> -		sgt = drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-> +		sgt = drm_prime_pages_to_sg(etnaviv_obj->pages, npages,
-> +					    etnaviv_obj->base.max_segment);
->   		if (IS_ERR(sgt)) {
->   			dev_err(dev->dev, "failed to allocate sgt: %ld\n",
->   				PTR_ERR(sgt));
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> index 6d9e5c3c4dd5..f327676450bd 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> @@ -19,7 +19,8 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
->   		return ERR_PTR(-EINVAL);
->   
-> -	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-> +	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages,
-> +				     obj->max_segment);
->   }
->   
->   void *etnaviv_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index b2f49152b4d4..f805419bb84a 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -126,7 +126,8 @@ static struct page **get_pages(struct drm_gem_object *obj)
->   
->   		msm_obj->pages = p;
->   
-> -		msm_obj->sgt = drm_prime_pages_to_sg(p, npages);
-> +		msm_obj->sgt = drm_prime_pages_to_sg(p, npages,
-> +						     obj->max_segment);
->   		if (IS_ERR(msm_obj->sgt)) {
->   			void *ptr = ERR_CAST(msm_obj->sgt);
->   
-> diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-> index d7c8948427fe..a5a412564c7f 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_prime.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-> @@ -19,7 +19,8 @@ struct sg_table *msm_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	if (WARN_ON(!msm_obj->pages))  /* should have already pinned! */
->   		return NULL;
->   
-> -	return drm_prime_pages_to_sg(msm_obj->pages, npages);
-> +	return drm_prime_pages_to_sg(msm_obj->pages, npages,
-> +				     obj->max_segment);
->   }
->   
->   void *msm_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_prime.c b/drivers/gpu/drm/nouveau/nouveau_prime.c
-> index bae6a3eccee0..56a2e916d51a 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_prime.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_prime.c
-> @@ -32,7 +32,8 @@ struct sg_table *nouveau_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	struct nouveau_bo *nvbo = nouveau_gem_object(obj);
->   	int npages = nvbo->bo.num_pages;
->   
-> -	return drm_prime_pages_to_sg(nvbo->bo.ttm->pages, npages);
-> +	return drm_prime_pages_to_sg(nvbo->bo.ttm->pages, npages,
-> +				     obj->max_segment);
->   }
->   
->   void *nouveau_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/radeon/radeon_prime.c b/drivers/gpu/drm/radeon/radeon_prime.c
-> index b906e8fbd5f3..503e35625045 100644
-> --- a/drivers/gpu/drm/radeon/radeon_prime.c
-> +++ b/drivers/gpu/drm/radeon/radeon_prime.c
-> @@ -36,7 +36,8 @@ struct sg_table *radeon_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	struct radeon_bo *bo = gem_to_radeon_bo(obj);
->   	int npages = bo->tbo.num_pages;
->   
-> -	return drm_prime_pages_to_sg(bo->tbo.ttm->pages, npages);
-> +	return drm_prime_pages_to_sg(bo->tbo.ttm->pages, npages,
-> +				     obj->max_segment);
->   }
->   
->   void *radeon_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> index b9275ba7c5a5..444657e03c16 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> @@ -85,7 +85,8 @@ static int rockchip_gem_get_pages(struct rockchip_gem_object *rk_obj)
->   
->   	rk_obj->num_pages = rk_obj->base.size >> PAGE_SHIFT;
->   
-> -	rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-> +	rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages,
-> +					    rk_obj->base.max_segment);
->   	if (IS_ERR(rk_obj->sgt)) {
->   		ret = PTR_ERR(rk_obj->sgt);
->   		goto err_put_pages;
-> @@ -442,7 +443,8 @@ struct sg_table *rockchip_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	int ret;
->   
->   	if (rk_obj->pages)
-> -		return drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-> +		return drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages,
-> +					     obj->max_segment);
->   
->   	sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
->   	if (!sgt)
-> diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
-> index 723df142a981..8d98b02a8d21 100644
-> --- a/drivers/gpu/drm/tegra/gem.c
-> +++ b/drivers/gpu/drm/tegra/gem.c
-> @@ -284,7 +284,8 @@ static int tegra_bo_get_pages(struct drm_device *drm, struct tegra_bo *bo)
->   
->   	bo->num_pages = bo->gem.size >> PAGE_SHIFT;
->   
-> -	bo->sgt = drm_prime_pages_to_sg(bo->pages, bo->num_pages);
-> +	bo->sgt = drm_prime_pages_to_sg(bo->pages, bo->num_pages,
-> +					bo->gem.max_segment);
->   	if (IS_ERR(bo->sgt)) {
->   		err = PTR_ERR(bo->sgt);
->   		goto put_pages;
-> diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-> index 313339bbff90..d25c93b5a2c1 100644
-> --- a/drivers/gpu/drm/vgem/vgem_drv.c
-> +++ b/drivers/gpu/drm/vgem/vgem_drv.c
-> @@ -321,7 +321,8 @@ static struct sg_table *vgem_prime_get_sg_table(struct drm_gem_object *obj)
->   {
->   	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
->   
-> -	return drm_prime_pages_to_sg(bo->pages, bo->base.size >> PAGE_SHIFT);
-> +	return drm_prime_pages_to_sg(bo->pages, bo->base.size >> PAGE_SHIFT,
-> +				     obj->max_segment);
->   }
->   
->   static struct drm_gem_object* vgem_prime_import(struct drm_device *dev,
-> diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> index f0b85e094111..362fe5311b1b 100644
-> --- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> +++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> @@ -179,7 +179,8 @@ struct sg_table *xen_drm_front_gem_get_sg_table(struct drm_gem_object *gem_obj)
->   	if (!xen_obj->pages)
->   		return ERR_PTR(-ENOMEM);
->   
-> -	return drm_prime_pages_to_sg(xen_obj->pages, xen_obj->num_pages);
-> +	return drm_prime_pages_to_sg(xen_obj->pages, xen_obj->num_pages,
-> +				     gem_obj->max_segment);
->   }
->   
->   struct drm_gem_object *
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   06a4ec1d9dc652e17ee3ac2ceb6c7cf6c2b75cdd
+commit: 66d8c9d2422da21ed41f75c03ba0685987b65fe0 media: i2c: Add MAX9286 driver
+date:   4 weeks ago
+config: nios2-randconfig-p002-20200818 (attached as .config)
+compiler: nios2-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout 66d8c9d2422da21ed41f75c03ba0685987b65fe0
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=nios2 
 
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   drivers/media/i2c/max9286.c: In function 'max9286_register_gpio':
+>> drivers/media/i2c/max9286.c:1033:6: error: 'struct gpio_chip' has no member named 'of_node'
+    1033 |  gpio->of_node = dev->of_node;
+         |      ^~
+
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=66d8c9d2422da21ed41f75c03ba0685987b65fe0
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git fetch --no-tags linus master
+git checkout 66d8c9d2422da21ed41f75c03ba0685987b65fe0
+vim +1033 drivers/media/i2c/max9286.c
+
+  1022	
+  1023	static int max9286_register_gpio(struct max9286_priv *priv)
+  1024	{
+  1025		struct device *dev = &priv->client->dev;
+  1026		struct gpio_chip *gpio = &priv->gpio;
+  1027		int ret;
+  1028	
+  1029		/* Configure the GPIO */
+  1030		gpio->label = dev_name(dev);
+  1031		gpio->parent = dev;
+  1032		gpio->owner = THIS_MODULE;
+> 1033		gpio->of_node = dev->of_node;
+  1034		gpio->ngpio = 2;
+  1035		gpio->base = -1;
+  1036		gpio->set = max9286_gpio_set;
+  1037		gpio->get = max9286_gpio_get;
+  1038		gpio->can_sleep = true;
+  1039	
+  1040		/* GPIO values default to high */
+  1041		priv->gpio_state = BIT(0) | BIT(1);
+  1042	
+  1043		ret = devm_gpiochip_add_data(dev, gpio, priv);
+  1044		if (ret)
+  1045			dev_err(dev, "Unable to create gpio_chip\n");
+  1046	
+  1047		return ret;
+  1048	}
+  1049	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--Kj7319i9nmIyA2yE--
