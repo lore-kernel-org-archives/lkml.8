@@ -2,94 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21159C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F25C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CD92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CB020709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9ZazxWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgHRUZR (ORCPT
+        id S1726713AbgHRU2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:25:17 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36784 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHRUZO (ORCPT
+        Tue, 18 Aug 2020 16:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgHRU2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:25:14 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0825F1C0BB6; Tue, 18 Aug 2020 22:25:11 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 22:25:10 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/168] 4.19.140-rc1 review
-Message-ID: <20200818202510.GA25182@amd>
-References: <20200817143733.692105228@linuxfoundation.org>
+        Tue, 18 Aug 2020 16:28:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1101C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:28:06 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x25so10540570pff.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xxbo8ts5YS429RzEU6ZgRNO13aJtTja8Ct2w5Hx3ELI=;
+        b=I9ZazxWW3yNjUs4lFGnzeJihSQFCQ2r/rN+yu5KLqpCghaUgoNqtf6TwLa8Zs4Ld3V
+         ZKcsVCz8OufKjRhyMG0CIadleSRk1SKaVJDzLUVsZ7aA3DpZiNQyHXy/AieFuNVleSdz
+         o9MsfLwNq1MCTxYBELvWTJ7/riY/rh7WCiQUMsDGntllK4zDoCSxonJON9YtejbA6VDk
+         2a0PWw6s87jLwUjwjhqhq7ZYwQfr6tIYL+BkCpjyY6GR8UAJMQVg0UJEQk3yKGdwICp0
+         dfyEVT4ClFeI+1FwC60kRM5LoF9IL0zuC1m+XgdKMRGzpkdG8Yiq5R2OeunyZG6J+F4/
+         4Brw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xxbo8ts5YS429RzEU6ZgRNO13aJtTja8Ct2w5Hx3ELI=;
+        b=Wa6QSoKYybsfZ/2mNpm5NOoKLB1E4AfETTqV1u+V0WCP/Q+2+EYlcLOl7TZQ7XzsRJ
+         c3P/WAvI33gh0beTioURyx+lsewoVUWjoGgye7eKLh/mFCK4FzgRnTZlGv6ibX6HQqd3
+         bY1QpoHUvbHlv/xR31y2ghAXNQHyejqR8F0B4LHD7w4LolkxU06/VUf46Ij28UsEOu9m
+         7Ukv2YeSa1DiMCDrLE4M7s15QbmYSab1kWKtzuurSlflNUzVxgz0ZOeooizjh7+4iDRd
+         7xF6M/NrNNLZw6lJP8aLMJv89P8S3Mrv3tqYZcAB+AdLd3fW2RTPj3hFmKpnlsdf0LWv
+         eCxQ==
+X-Gm-Message-State: AOAM530yV/qtBgwHp00RjkLtF3usxtnD7F9TcbOcK6si4x2MF6xeqg6+
+        sExTHsLkchzzjoeuxjXeV/6vVKAvMdUY7KgGkDdBLA==
+X-Google-Smtp-Source: ABdhPJw3r3c5zfHyeswmOG57fp7bxIYVb0RszFBCj3KKjt8kCRCEcn6gmG8pMyymVAA3R/3CtWzuceO4UwwxbAZmZwU=
+X-Received: by 2002:aa7:96e5:: with SMTP id i5mr13635550pfq.108.1597782485999;
+ Tue, 18 Aug 2020 13:28:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan>
+In-Reply-To: <20200818202407.GA3143683@rani.riverdale.lan>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Aug 2020 13:27:54 -0700
+Message-ID: <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
+> > On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
+> > >
+> > > I'm not saying "change the semantics", nor am I saying that playing
+> > > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
+> > > to the compiler authors and get them to implement such a #pragma: "this
+> > > freestanding implementation *does* support *this specific library function*,
+> > > and you are free to call it."
+> >
+> > I'd much rather just see the library functions as builtins that always
+> > do the right thing (with the fallback being "just call the standard
+> > function").
+> >
+> > IOW, there's nothing wrong with -ffreestanding if you then also have
+> > __builtin_memcpy() etc, and they do the sane compiler optimizations
+> > for memcpy().
+> >
+> > What we want to avoid is the compiler making *assumptions* based on
+> > standard names, because we may implement some of those things
+> > differently.
+> >
+>
+> -ffreestanding as it stands today does have __builtin_memcpy and
+> friends. But you need to then use #define memcpy __builtin_memcpy etc,
+> which is messy and also doesn't fully express what you want. #pragma, or
+> even just allowing -fbuiltin-foo options would be useful.
+>
+> The two compilers have some peculiarities, which means you really can't
+> have functions with the same name that do something else if you want to
+> use builtins at all, and can also lead to missed optimizations.
+>
+> For eg, __builtin_strchr(s,'\0') can be optimized to strlen. gcc will
+> optimize it that way even if -ffreestanding is used (so strlen has to
+> mean strlen), while clang won't, so it misses a potential optimization.
+> This is admittedly a silly example, but you could imagine something like
+> strncpy being optimized to memcpy+memset if the source length was
+> previously computed.
+>
+> PS: clang optimizes sprintf, but doesn't provide __builtin_sprintf?
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> This is the start of the stable review cycle for the 4.19.140 release.
-> There are 168 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 19 Aug 2020 14:36:49 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.14=
-0-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.19.y
-> and the diffstat can be found below.
-
-Our tests did not detect problems:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-78773989
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl88OSYACgkQMOfwapXb+vJv1ACeLACcvuxP80Z2Kq/mbtGk60Ln
-cYIAnjlmwgnph+XcHVHIqaidtje3dsv0
-=xk+w
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+https://bugs.llvm.org/show_bug.cgi?id=47224
+-- 
+Thanks,
+~Nick Desaulniers
