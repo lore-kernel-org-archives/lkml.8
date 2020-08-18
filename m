@@ -2,176 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47354C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D06A20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597757861;
-	bh=7GfMx+3DL1strby6wKxSFzxulPkZi4asMsiaClpBxe8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=17SPRFjgMfd95gwvpc9a3hdh3hgpO7A4YbwPba3I915XZ/6X6RNRSilTY8ktI29Gs
-	 DAuEQr1eQolHD2SlYKD2sXFhFyqcQmbiGnxoTEmzwPNgynlj9OT/AjK/ESQUSIgEf/
-	 iGnf4ngTW6PDRNvnrVMmkliiTNkBQoKdxWgIUf9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7EFBA206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHRNh2 (ORCPT
+        id S1726873AbgHRNiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:37:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgHRNhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:37:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F358F206B5;
-        Tue, 18 Aug 2020 13:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597757838;
-        bh=7GfMx+3DL1strby6wKxSFzxulPkZi4asMsiaClpBxe8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bYw3M+Bw2yipIZCR47U4l57CfeltMX1PWV/R1cnD7Fp91pcNd8BT4CPuHm+/Anla0
-         xKjePM0rjqfW070Eq4RArDJl6QDYIy6z1MrKBj0ImWYj3u5mB5sSOm12Tmuow8RawY
-         aIkEFpX4Fh8HlV7Xmg6bktJti+v4hn8TfmdAHX5U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: tegra: no need to check return value of debugfs_create functions
-Date:   Tue, 18 Aug 2020 15:37:39 +0200
-Message-Id: <20200818133739.463193-1-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        Tue, 18 Aug 2020 09:38:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58922 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgHRNho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:37:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D1A94299361
+Subject: Re: [PATCH v3 1/3] platform/chrome: cros_ec_typec: Send enum values
+ to usb_role_switch_set_role()
+To:     Azhar Shaikh <azhar.shaikh@intel.com>, bleung@chromium.org,
+        groeck@chromium.org, heikki.krogerus@linux.intel.com,
+        pmalani@chromium.org
+Cc:     linux-kernel@vger.kernel.org, rajmohan.mani@intel.com,
+        utkarsh.h.patel@intel.com, casey.g.bowman@intel.com
+References: <20200811193757.45057-1-azhar.shaikh@intel.com>
+ <20200811193757.45057-2-azhar.shaikh@intel.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <da604f7b-04d6-5d1b-c794-28d3aee540e3@collabora.com>
+Date:   Tue, 18 Aug 2020 15:37:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200811193757.45057-2-azhar.shaikh@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+Hi Azhar,
 
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>
-Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 20 +++++------------
- drivers/pci/controller/pci-tegra.c         | 25 +++++-----------------
- 2 files changed, 10 insertions(+), 35 deletions(-)
+Thank you for your patch.
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 70498689d0c0..87f8dd63df0a 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -699,23 +699,16 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
- 	dw_pcie_writel_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL, val);
- }
- 
--static int init_debugfs(struct tegra_pcie_dw *pcie)
-+static void init_debugfs(struct tegra_pcie_dw *pcie)
- {
--	struct dentry *d;
--
--	d = debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt",
--					pcie->debugfs, aspm_state_cnt);
--	if (IS_ERR_OR_NULL(d))
--		dev_err(pcie->dev,
--			"Failed to create debugfs file \"aspm_state_cnt\"\n");
--
--	return 0;
-+	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
-+				    aspm_state_cnt);
- }
- #else
- static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
- static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
- static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
--static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
-+static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
- #endif
- 
- static void tegra_pcie_enable_system_interrupts(struct pcie_port *pp)
-@@ -1641,10 +1634,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- 	}
- 
- 	pcie->debugfs = debugfs_create_dir(name, NULL);
--	if (!pcie->debugfs)
--		dev_err(dev, "Failed to create debugfs\n");
--	else
--		init_debugfs(pcie);
-+	init_debugfs(pcie);
- 
- 	return ret;
- 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index c1d34353c29b..e1a6f9db36f7 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2601,24 +2601,12 @@ static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
- 	pcie->debugfs = NULL;
- }
- 
--static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
-+static void tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
- {
--	struct dentry *file;
--
- 	pcie->debugfs = debugfs_create_dir("pcie", NULL);
--	if (!pcie->debugfs)
--		return -ENOMEM;
--
--	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
--				   pcie, &tegra_pcie_ports_ops);
--	if (!file)
--		goto remove;
--
--	return 0;
- 
--remove:
--	tegra_pcie_debugfs_exit(pcie);
--	return -ENOMEM;
-+	debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs, pcie,
-+			    &tegra_pcie_ports_ops);
- }
- 
- static int tegra_pcie_probe(struct platform_device *pdev)
-@@ -2672,11 +2660,8 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 		goto pm_runtime_put;
- 	}
- 
--	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
--		err = tegra_pcie_debugfs_init(pcie);
--		if (err < 0)
--			dev_err(dev, "failed to setup debugfs: %d\n", err);
--	}
-+	if (IS_ENABLED(CONFIG_DEBUG_FS))
-+		tegra_pcie_debugfs_init(pcie);
- 
- 	return 0;
- 
--- 
-2.28.0
+On 11/8/20 21:37, Azhar Shaikh wrote:
+> usb_role_switch_set_role() has the second argument as enum for usb_role.
+> Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
+> This eventually translates to USB_ROLE_NONE in case of UFP and
+> USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
+> values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
+> DFP.
+> 
+> Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
+> 
 
+No extra line here.
+
+> Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
+
+Did the Prashant reviewed tag disappear for some reason? Can you resend the
+patches with all the collected tags? (looks like this patch and others from this
+series already have been reviewed)
+
+Thanks,
+  Enric
+
+> ---
+> Changes in v3:
+>  - No changes
+> 
+> Changes in v2:
+>  - Update the commit message to change 'USB_ROLE_HOST in case of
+>     UFP.'  to 'USB_ROLE_HOST in case of DFP.'
+> 
+>  drivers/platform/chrome/cros_ec_typec.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 3fcd27ec9ad8..06108212ee94 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -591,7 +591,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
+>  		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
+>  
+>  	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
+> -					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
+> +				       resp.role & PD_CTRL_RESP_ROLE_DATA
+> +				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
+>  }
+>  
+>  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+> 
