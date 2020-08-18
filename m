@@ -2,105 +2,123 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0943CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6633DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E6F2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A132067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgHRI42 convert rfc822-to-8bit (ORCPT
+        id S1726652AbgHRI5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:56:28 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55847 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbgHRI41 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:56:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-54-fr6a1Gp7PCek2qBtx_YSwg-1; Tue, 18 Aug 2020 09:56:22 +0100
-X-MC-Unique: fr6a1Gp7PCek2qBtx_YSwg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 18 Aug 2020 09:56:22 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 18 Aug 2020 09:56:22 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ingo Molnar' <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Pavel Machek <pavel@ucw.cz>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Witten <mfwitten@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        John Levon <john.levon@joyent.com>,
-        "John Levon" <levon@movementarian.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: RE: [PATCH] Makefile: Yes. Finally remove
- '-Wdeclaration-after-statement'
-Thread-Topic: [PATCH] Makefile: Yes. Finally remove
- '-Wdeclaration-after-statement'
-Thread-Index: AQHWdR7fdrR7Y2b6OUCIIALK0604z6k9jrEQ
-Date:   Tue, 18 Aug 2020 08:56:22 +0000
-Message-ID: <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
- <20200816175303.GB1236603@ZenIV.linux.org.uk> <20200817204223.GB12414@amd>
- <87lfid6kpi.fsf@x220.int.ebiederm.org>
- <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
- <20200817220908.GA3701@amd>
- <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
- <20200818051717.GA3134537@gmail.com>
-In-Reply-To: <20200818051717.GA3134537@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 18 Aug 2020 04:57:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37654 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgHRI46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:56:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AB2A0ABF4;
+        Tue, 18 Aug 2020 08:57:21 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 1/8] tty: n_gsm, eliminate indirection for gsm->{output,error}()
+Date:   Tue, 18 Aug 2020 10:56:48 +0200
+Message-Id: <20200818085655.12071-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I'm a big fan of -Wdeclaration-after-statement and I think C++ style
-> mixed variables/statements code has several disadvantages:
+gsm->output and ->error are set only to gsmld_output and gsm_error,
+respectively. Call these functions directly and remove error and output
+function pointers from struct gsm_mux completely.
 
-Agreed.
-Personally I think declarations should either be either right
-at the top of a function or in a very small code block.
+Note: we need a forward declaration of gsmld_output now.
 
-Otherwise they are annoying to find.
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/tty/n_gsm.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-You also get very hard to spot bugs unless -Wshadow
-is enabled (I can't remember if the linux kernel has
-it enabled).
-
-C++ (sort of) has to allow definitions in the middle
-of code blocks because it doesn't allow uninitialised
-variables - so definitions are best delayed until the
-copy-constructor can be used.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 0a29a94ec438..10f8fc07f23c 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -222,11 +222,8 @@ struct gsm_mux {
+ 	u8 received_fcs;
+ 	u8 *txframe;			/* TX framing buffer */
+ 
+-	/* Methods for the receiver side */
++	/* Method for the receiver side */
+ 	void (*receive)(struct gsm_mux *gsm, u8 ch);
+-	void (*error)(struct gsm_mux *gsm, u8 ch, u8 flag);
+-	/* And transmit side */
+-	int (*output)(struct gsm_mux *mux, u8 *data, int len);
+ 
+ 	/* Link Layer */
+ 	unsigned int mru;
+@@ -366,6 +363,8 @@ static const u8 gsm_fcs8[256] = {
+ #define INIT_FCS	0xFF
+ #define GOOD_FCS	0xCF
+ 
++static int gsmld_output(struct gsm_mux *gsm, u8 *data, int len);
++
+ /**
+  *	gsm_fcs_add	-	update FCS
+  *	@fcs: Current FCS
+@@ -587,7 +586,7 @@ static void gsm_send(struct gsm_mux *gsm, int addr, int cr, int control)
+ 		WARN_ON(1);
+ 		return;
+ 	}
+-	gsm->output(gsm, cbuf, len);
++	gsmld_output(gsm, cbuf, len);
+ 	gsm_print_packet("-->", addr, cr, control, NULL, 0);
+ }
+ 
+@@ -687,7 +686,7 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ 			print_hex_dump_bytes("gsm_data_kick: ",
+ 					     DUMP_PREFIX_OFFSET,
+ 					     gsm->txframe, len);
+-		if (gsm->output(gsm, gsm->txframe, len) < 0)
++		if (gsmld_output(gsm, gsm->txframe, len) < 0)
+ 			break;
+ 		/* FIXME: Can eliminate one SOF in many more cases */
+ 		gsm->tx_bytes -= msg->len;
+@@ -2128,7 +2127,6 @@ static int gsm_activate_mux(struct gsm_mux *gsm)
+ 		gsm->receive = gsm0_receive;
+ 	else
+ 		gsm->receive = gsm1_receive;
+-	gsm->error = gsm_error;
+ 
+ 	spin_lock(&gsm_mux_lock);
+ 	for (i = 0; i < MAX_MUX; i++) {
+@@ -2378,7 +2376,6 @@ static int gsmld_attach_gsm(struct tty_struct *tty, struct gsm_mux *gsm)
+ 	int ret, i;
+ 
+ 	gsm->tty = tty_kref_get(tty);
+-	gsm->output = gsmld_output;
+ 	ret =  gsm_activate_mux(gsm);
+ 	if (ret != 0)
+ 		tty_kref_put(gsm->tty);
+@@ -2438,7 +2435,7 @@ static void gsmld_receive_buf(struct tty_struct *tty, const unsigned char *cp,
+ 		case TTY_BREAK:
+ 		case TTY_PARITY:
+ 		case TTY_FRAME:
+-			gsm->error(gsm, *dp, flags);
++			gsm_error(gsm, *dp, flags);
+ 			break;
+ 		default:
+ 			WARN_ONCE(1, "%s: unknown flag %d\n",
+-- 
+2.28.0
 
