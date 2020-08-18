@@ -2,156 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BC0207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8054C207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FQ6CVbjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHROLz (ORCPT
+        id S1726873AbgHROMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:11:55 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4866 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726542AbgHROLw (ORCPT
+        Tue, 18 Aug 2020 10:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbgHROMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:11:52 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07IE56ur030307;
-        Tue, 18 Aug 2020 10:11:48 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3304n5a33e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 10:11:48 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07IEBkYt044490
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 18 Aug 2020 10:11:46 -0400
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 18 Aug 2020 07:11:45 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 18 Aug 2020 07:10:50 -0700
-Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 18 Aug 2020 07:11:44 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07IEBgan008414;
-        Tue, 18 Aug 2020 10:11:43 -0400
-From:   Cristian Pop <cristian.pop@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, Cristian Pop <cristian.pop@analog.com>
-Subject: [RFC PATCH] iio: core: Add optional symbolic label to a device channel
-Date:   Tue, 18 Aug 2020 17:12:44 +0300
-Message-ID: <20200818141244.51273-1-cristian.pop@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 10:12:25 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A869C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=ZUO5Vp9OkQgSb6VnFGJoTj57+Y0nzg4Wq9DZKNwafHk=; b=FQ6CVbjb48m+SLKYl65HtFhaVb
+        zHyTF96LIHATyuJyAF0/td196q7gLEAK9F3ZQxZc9ldgoLLdpIMO3onYfFkE/2BqcaVe6XRw2mFZd
+        cSnuoSHD/SnJYKJ3slgvn5GaR/Q6HyM1DZ9RR52XSkdZWbbCGcQF8Ys57vcetG/gPNXbm6d3+/Ngy
+        oxHYosbntJURxFYaS0SWCDQJsZreXAK9az0vcK99jSgTO1Zdd7iVvzuPuXwTUrqmYH3amnKIEcCld
+        dbsqXFVcQDPAoFpCoDtaL3BXUPCPiDwyYXBgKgoWFV8FjBENJy3uo1+0kdtzDv/YMPzDr0mTztTZf
+        mWVvLC4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k82LK-0000oE-Tz; Tue, 18 Aug 2020 14:12:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A931A307943;
+        Tue, 18 Aug 2020 16:12:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id C96A723D42C0C; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
+Message-ID: <20200818135804.982214828@infradead.org>
+User-Agent: quilt/0.66
+Date:   Tue, 18 Aug 2020 15:57:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
+Subject: [PATCH v7 12/18] x86/alternatives: Teach text_poke_bp() to emulate RET
+References: <20200818135735.948368560@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_10:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008180102
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a label is defined in the device tree for this channel add that
-to the channel specific attributes. This is useful for userspace to
-be able to identify an individual channel.
+Future patches will need to poke a RET instruction, provide the
+infrastructure required for this.
 
-Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/iio/industrialio-core.c | 10 ++++++++--
- include/linux/iio/iio.h         |  2 ++
- include/linux/iio/types.h       |  1 +
- 3 files changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/text-patching.h |   19 +++++++++++++++++++
+ arch/x86/kernel/alternative.c        |    5 +++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 1527f01a44f1..32277e94f02d 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -135,6 +135,7 @@ static const char * const iio_modifier_names[] = {
- /* relies on pairs of these shared then separate */
- static const char * const iio_chan_info_postfix[] = {
- 	[IIO_CHAN_INFO_RAW] = "raw",
-+	[IIO_CHAN_INFO_LABEL] = "label",
- 	[IIO_CHAN_INFO_PROCESSED] = "input",
- 	[IIO_CHAN_INFO_SCALE] = "scale",
- 	[IIO_CHAN_INFO_OFFSET] = "offset",
-@@ -653,14 +654,18 @@ static ssize_t iio_read_channel_info(struct device *dev,
- 	int ret;
- 	int val_len = 2;
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -53,6 +53,9 @@ extern void text_poke_finish(void);
+ #define INT3_INSN_SIZE		1
+ #define INT3_INSN_OPCODE	0xCC
  
--	if (indio_dev->info->read_raw_multi)
-+	if (indio_dev->info->read_raw_multi) {
- 		ret = indio_dev->info->read_raw_multi(indio_dev, this_attr->c,
- 							INDIO_MAX_RAW_ELEMENTS,
- 							vals, &val_len,
- 							this_attr->address);
--	else
-+	} else {
- 		ret = indio_dev->info->read_raw(indio_dev, this_attr->c,
- 				    &vals[0], &vals[1], this_attr->address);
-+		if (ret < 0 && this_attr->address == IIO_CHAN_INFO_LABEL &&
-+			this_attr->c->label_name)
-+			return sprintf(buf, "%s\n", this_attr->c->label_name);
-+	}
- 
- 	if (ret < 0)
- 		return ret;
-@@ -1399,6 +1404,7 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
- 			attrcount_orig++;
- 	}
- 	attrcount = attrcount_orig;
++#define RET_INSN_SIZE		1
++#define RET_INSN_OPCODE		0xC3
 +
- 	/*
- 	 * New channel registration method - relies on the fact a group does
- 	 * not need to be initialized if its name is NULL.
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index a1be82e74c93..39209f3b62be 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -223,6 +223,7 @@ struct iio_event_spec {
-  *			correspond to the first name that the channel is referred
-  *			to by in the datasheet (e.g. IND), or the nearest
-  *			possible compound name (e.g. IND-INC).
-+ * @label_name:		Unique name to identify which channel this is.
-  * @modified:		Does a modifier apply to this channel. What these are
-  *			depends on the channel type.  Modifier is set in
-  *			channel2. Examples are IIO_MOD_X for axial sensors about
-@@ -260,6 +261,7 @@ struct iio_chan_spec {
- 	const struct iio_chan_spec_ext_info *ext_info;
- 	const char		*extend_name;
- 	const char		*datasheet_name;
-+	const char		*label_name;
- 	unsigned		modified:1;
- 	unsigned		indexed:1;
- 	unsigned		output:1;
-diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
-index e6fd3645963c..c8f65f476eb2 100644
---- a/include/linux/iio/types.h
-+++ b/include/linux/iio/types.h
-@@ -34,6 +34,7 @@ enum iio_available_type {
+ #define CALL_INSN_SIZE		5
+ #define CALL_INSN_OPCODE	0xE8
  
- enum iio_chan_info_enum {
- 	IIO_CHAN_INFO_RAW = 0,
-+	IIO_CHAN_INFO_LABEL,
- 	IIO_CHAN_INFO_PROCESSED,
- 	IIO_CHAN_INFO_SCALE,
- 	IIO_CHAN_INFO_OFFSET,
--- 
-2.17.1
+@@ -73,6 +76,7 @@ static __always_inline int text_opcode_s
+ 
+ 	switch(opcode) {
+ 	__CASE(INT3);
++	__CASE(RET);
+ 	__CASE(CALL);
+ 	__CASE(JMP32);
+ 	__CASE(JMP8);
+@@ -141,11 +145,26 @@ void int3_emulate_push(struct pt_regs *r
+ }
+ 
+ static __always_inline
++unsigned long int3_emulate_pop(struct pt_regs *regs)
++{
++	unsigned long val = *(unsigned long *)regs->sp;
++	regs->sp += sizeof(unsigned long);
++	return val;
++}
++
++static __always_inline
+ void int3_emulate_call(struct pt_regs *regs, unsigned long func)
+ {
+ 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
+ 	int3_emulate_jmp(regs, func);
+ }
++
++static __always_inline
++void int3_emulate_ret(struct pt_regs *regs)
++{
++	unsigned long ip = int3_emulate_pop(regs);
++	int3_emulate_jmp(regs, ip);
++}
+ #endif /* !CONFIG_UML_X86 */
+ 
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1099,6 +1099,10 @@ int noinstr poke_int3_handler(struct pt_
+ 		 */
+ 		goto out_put;
+ 
++	case RET_INSN_OPCODE:
++		int3_emulate_ret(regs);
++		break;
++
+ 	case CALL_INSN_OPCODE:
+ 		int3_emulate_call(regs, (long)ip + tp->rel32);
+ 		break;
+@@ -1240,6 +1244,7 @@ static void text_poke_loc_init(struct te
+ 
+ 	switch (tp->opcode) {
+ 	case INT3_INSN_OPCODE:
++	case RET_INSN_OPCODE:
+ 		break;
+ 
+ 	case CALL_INSN_OPCODE:
+
 
