@@ -2,104 +2,176 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2DBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F1B2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C054920772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597777329;
-	bh=3JxHEf69MiYBgRnPoJemOu/qqSt5jjbd8a7ucWtXl5Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=riW6N03ukedHMmOTf3m1M8P1SBDBvMMs1vf1qStPMdU7Wlm3HhuszkBIWFUXjgSMs
-	 UMjVIItLdydo+yfsXxqJLw44KNX1KD51LxRg8Lx1JOaj09K9bz7Y8vof0LVQbbasOF
-	 SWyO5o6eJroPWIewBI+Ke8MXaX+ZW/6HyeTF5n+w=
+	s=default; t=1597777385;
+	bh=7H5ZWWY6YLYiTiWY7a+UJBAlG+UhyF+KVtyPoiI+3DY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Zv2ZSRmtCS6LdAg9HlbSmftDrin3X6bNY5o9qumQtS6OFPs2MA/JX0xOMV/QCnWrK
+	 poywsAKvUqO2+iwRkgeOOEZIpRlzMIHZUAg/gfhuwui9BDstuWPr62JTgbMbd0OOJ2
+	 /caH8b0aRgDbhCqxo4O7WqE2lkjWRYKX7mzVUjw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHRTCH (ORCPT
+        id S1726715AbgHRTDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbgHRTCG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:02:06 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5DEC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:02:05 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id b30so10774127lfj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nQVuZWCOnlFwQnX2Zqx0X5sy3pLItQeKoPELobHQVGQ=;
-        b=OdFylsapCoULupAOYKw2uxh3CBvd6ctb0Q+oE4KHDc7exoz8gPT0JzpVzCs2UFYloZ
-         pdfG98SZ4TKORf3pZEGIPjJidGca60aMQLOi2nen+7fHRK9fQJKdqmCu+AFXvUdhjWjx
-         E0UpiJcscdcfZTXaD9DYNr+NvdEPSVQoYZIRg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nQVuZWCOnlFwQnX2Zqx0X5sy3pLItQeKoPELobHQVGQ=;
-        b=XDq9LkdIJqK7VHLrLX+1BE52/jRNmnrf3qsSboJsjpupRFecT2hsAHwD6lVFINgOjF
-         CFaJVT9xjcTmZ2lKePKBHknqGDcfXJ1Zl1GEkQrkx26Q8ydfNueH2SadpOzykOpnXxW7
-         qn6TfbOU5aUKz8mjY19e/lG7PgWkesNIJ8PIg9ieHFbQ3W9FO3mUJukqLat4XZpTtli+
-         pw1l1lsb9STov1Sdi1of8qRQGxwTRycnaZ6mN98Dp55F6UtYlImMLyiY6eBKLbDf6cU4
-         9o4CHb7RKVIsI/SHSX0KvNFYer3Nr6FvvgvXuVeLtxLbF/CYb1VLyyvBKljY9V75tZPB
-         E8IQ==
-X-Gm-Message-State: AOAM530u6WW2+wr8PTomzNDpA4oFdWZIX9uyA6Hp4uP/hykaJ20RgEGG
-        wHflp8mp+DDzcN1uekBmAZkBKma28P2dXA==
-X-Google-Smtp-Source: ABdhPJw/V3r1lQUAQReVTFvOHAJaO+ZVna4FJ30ASNRtJN7uzHQzSMbcFNSYoBKmwW8GCL0yZkUt1g==
-X-Received: by 2002:a19:5c2:: with SMTP id 185mr10301706lff.38.1597777321118;
-        Tue, 18 Aug 2020 12:02:01 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id j6sm6762278lfp.44.2020.08.18.12.01.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 12:01:59 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id t23so22663266ljc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:01:59 -0700 (PDT)
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr9769511ljc.371.1597777319256;
- Tue, 18 Aug 2020 12:01:59 -0700 (PDT)
+        Tue, 18 Aug 2020 15:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgHRTDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:03:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 447DE2076E;
+        Tue, 18 Aug 2020 19:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597777381;
+        bh=7H5ZWWY6YLYiTiWY7a+UJBAlG+UhyF+KVtyPoiI+3DY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lG6c7XfmiFTjSYHYrfxKb5hhYD6nIpqiB/Rpqaq0tdFteoQGT8DqDJlQ6shK6MgTI
+         VpZFrJ//JYY431uMKgbwb/ByRcOPRzHDb0PYobp0Jm56cMrpp2LwSlpQ4TzZKVyT2A
+         mLQU/svuX6rlC8PEFLK3Mjoj9w6cRfaxJwpgL4D0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k86st-00406W-Q2; Tue, 18 Aug 2020 20:02:59 +0100
 MIME-Version: 1.0
-References: <20200815043041.132195-1-shy828301@gmail.com>
-In-Reply-To: <20200815043041.132195-1-shy828301@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Aug 2020 12:01:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjbaptBBKYS+XdCgdjU_RbFPaAd8EkT6_Un6CtNmezt9A@mail.gmail.com>
-Message-ID: <CAHk-=wjbaptBBKYS+XdCgdjU_RbFPaAd8EkT6_Un6CtNmezt9A@mail.gmail.com>
-Subject: Re: [v3 PATCH] mm/memory.c: skip spurious TLB flush for retried page fault
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Yu Xu <xuyu@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 20:02:59 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+In-Reply-To: <CAGETcx-hkz8fyAHuhRi=JhBFu4YUmL2UpHfgs7doLHK-RdKA0A@mail.gmail.com>
+References: <20200815125112.462652-2-maz@kernel.org>
+ <20200815232228.GA1325245@bjorn-Precision-5520>
+ <87pn7qnabq.wl-maz@kernel.org>
+ <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+ <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+ <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+ <72c10e43023289b9a4c36226fe3fd5d9@kernel.org>
+ <CAGETcx-hkz8fyAHuhRi=JhBFu4YUmL2UpHfgs7doLHK-RdKA0A@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <d6f0894a81c645d66480310cd741a44e@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: saravanak@google.com, robh@kernel.org, helgaas@kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, heiko@sntech.de, shawn.lin@rock-chips.com, bhelgaas@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 2:04 PM Yang Shi <shy828301@gmail.com> wrote:
->
-> We could just skip the spurious TLB flush to mitigate the regression.
+On 2020-08-18 18:48, Saravana Kannan wrote:
+> On Tue, Aug 18, 2020 at 10:34 AM Marc Zyngier <maz@kernel.org> wrote:
 
-Ok, this patch I will apply.
+[...]
 
-I still hope that arm64 fixes (maybe already fixed) their spurious TLB
-function, and I think we should rename it to make sure everybody
-understands it's local, but in the meantime this patch hides the
-regression and isn't wrong.
+>> OK. So how about something like this?
+>> 
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index 590493e04b01..a7a6ee599b14 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -134,9 +134,13 @@ static int of_bus_pci_match(struct device_node 
+>> *np)
+>>          * "pciex" is PCI Express
+>>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>>          * "ht" is hypertransport
+>> +        *
+>> +        * If none of the device_type match, and that the node name is
+>> +        * "pcie", accept the device as PCI (with a warning).
+>>          */
+>>         return of_node_is_type(np, "pci") || of_node_is_type(np, 
+>> "pciex") ||
+>> -               of_node_is_type(np, "vci") || of_node_is_type(np, 
+>> "ht");
+>> +               of_node_is_type(np, "vci") || of_node_is_type(np, 
+>> "ht") ||
+>> +               WARN_ON_ONCE(of_node_name_eq(np, "pcie"));
+> 
+> I don't think we need the _ONCE. Otherwise, it'd warn only for the
+> first device that has this problem.
 
-Thanks,
+Because probing devices doesn't necessarily occur once. Case in point,
+it takes *10 to 15* attempts for a rk3399 system such as mine to finally
+probe its PCIe device, thanks to the wonderful -EPROBE_DEFER.
 
-                Linus
+Do I want to see the same stack trace 10 (or more) times? No.
+
+> How about?
+> WARN(of_node_name_eq(np, "pcie"), "Missing device type in %pOF", np)
+> 
+> That'll even tell them which node is bad.
+
+I explained my objections above. Spitting out the device node is
+useful, but there is no need to be exhaustive (if you're in a
+position to fix the DT, you can track all the broken instances
+for your device easily).
+
+I'm actually minded to tone it down even more, because the stack
+trace is meaningless to most users. See below for a revised patch.
+
+         M.
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 590493e04b01..b37bd9cc2810 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const 
+__be32 *addr)
+   * PCI bus specific translator
+   */
+
++static bool of_node_is_pcie(struct device_node *np)
++{
++	bool is_pcie = of_node_name_eq(np, "pcie");
++
++	if (is_pcie)
++		pr_warn_once("%pOF: Missing device_type\n", np);
++
++	return is_pcie;
++}
++
+  static int of_bus_pci_match(struct device_node *np)
+  {
+  	/*
+   	 * "pciex" is PCI Express
+  	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+  	 * "ht" is hypertransport
++	 *
++	 * If none of the device_type match, and that the node name is
++	 * "pcie", accept the device as PCI (with a warning).
+  	 */
+  	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+-		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
++		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
++		of_node_is_pcie(np);
+  }
+
+  static void of_bus_pci_count_cells(struct device_node *np,
+
+-- 
+Jazz is not dead. It just smells funny...
