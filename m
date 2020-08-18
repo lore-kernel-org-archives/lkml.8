@@ -2,300 +2,225 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A340C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8D2207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597762815;
-	bh=lnB/C+wtTDf5qJEfErL7G/GGRvqR0kDSlrVPNDSfozM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wszr/g8AMz4fCTfmYvCviXnJi1M+bBvcltVU08TDW1VdVPbIlPhHp9vAr3JmqhjUt
-	 GlGTIPQrfcD3ScIbwuGNA00WW+Qz6O/Hg7Jrbc1ShNykZcmVgIbO7ZF81R04kGp0tY
-	 xUvFh55gW3n2o7uhazsTzPplRjE4+iuRclqvJ3ow=
+	by mail.kernel.org (Postfix) with ESMTP id D947E20639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IeUFct3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHRPAD (ORCPT
+        id S1727003AbgHRPAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbgHRO7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:59:06 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B382080C;
-        Tue, 18 Aug 2020 14:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597762745;
-        bh=lnB/C+wtTDf5qJEfErL7G/GGRvqR0kDSlrVPNDSfozM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juOxBA/lRoFAxwUTT1zRw1+eWhcQlfFCZT8L3+CHVZ4UUJ0ay4++I4ddXMTJ+SkWc
-         3sJ3qNgQqUL7YjssDHnt03DfOOzBxf/L4lzYjZYCVt4dQ/xh6c5eO1ZsrvU3ltExHc
-         p7V2GcK6YrsbZ4JHKPJqnoB++qTcIUHPeO9EddNc=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k834p-00EGAe-1v; Tue, 18 Aug 2020 16:59:03 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] staging: mfd: hi6421-spmi-pmic: get rid of interrupt properties
-Date:   Tue, 18 Aug 2020 16:58:54 +0200
-Message-Id: <e231244e42cb5b56240705cac2f987e11a078038.1597762400.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597762400.git.mchehab+huawei@kernel.org>
-References: <cover.1597762400.git.mchehab+huawei@kernel.org>
+        Tue, 18 Aug 2020 11:00:38 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:35189 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726651AbgHRPAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:00:32 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 7E1E510C5;
+        Tue, 18 Aug 2020 11:00:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 18 Aug 2020 11:00:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8S7o2W
+        itJx0pvqq+v4qz1FcBNywixhV6Vrq1Sr74rOw=; b=IeUFct3LDCNutJP+hMWOsL
+        f7wWiak+icSFW+MvRxJnmmDGVyq+QoNjV0u0h4diVV85i1/bFgS5beDJp4GT+BI5
+        e/88q9Otlp5sm33ZVUNDGIdy0Uxvd3inGz9wbsS38qsBvAEyeJ4vFMjjAHAyTaIH
+        ekE21bRWkxHpuHdnUnYWo4SwU71GkUekGLPLWKBktRuwREBNnDBzfNbzjhP+2w+z
+        TPzOUMmikQGgs+METUaEul7INBjjAQyARvMXa6zOEKm3HjE/XMbzmIEo/qJ8Ipzw
+        FCpGsI0LkRZoSUVTuwq+O08Qsaz7dmMA2CK8i1eFzKAOVsTKInwba/eHBoHXOrhg
+        ==
+X-ME-Sender: <xms:Du07X4wwgPwBWcNAvrSn1iRQao6L6jxNoEUJRph4lHXYzBSrngnqqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtiedgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeeg
+    iedvleekjeegteekleegveeghfefgefhffeiheduueetkeeuteegteeigfenucffohhmrg
+    hinhepmhgrrhhkmhgrihhlrdhorhhgnecukfhppeeluddrieegrddujedtrdekleenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrh
+    gvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
+X-ME-Proxy: <xmx:Du07X8SPOB_hyzkXYgeEq9bJ2pYBd98O9jD72RPbDr8CCMQ3MkBwfA>
+    <xmx:Du07X6WmT5S8CagUx1Gs1I6N7wHAHwb61jqpSn_skwZdSaPJDdGhnw>
+    <xmx:Du07X2ieobDKlLmeb_mQEy-JiqzqUHoGC8RHIX3xHEMQgSrbOLFn6A>
+    <xmx:D-07X74Ol74v2NphVCtLF4ypBLH_KCh_kpsDKDD3EPcH7Yscu5YTdg>
+Received: from mail-itl (ip5b40aa59.dynamic.kabel-deutschland.de [91.64.170.89])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9ACC4306005F;
+        Tue, 18 Aug 2020 11:00:29 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 17:00:20 +0200
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        norbert.kaminski@3mdeb.com, xen-devel@lists.xenproject.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+Message-ID: <20200818150020.GL1679@mail-itl>
+References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+ <20200817090013.GN975@Air-de-Roger>
+ <20200818120135.GK1679@mail-itl>
+ <20200818124710.GK828@Air-de-Roger>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pe+tqlI1iYzVj1X/"
+Content-Disposition: inline
+In-Reply-To: <20200818124710.GK828@Air-de-Roger>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both irqnum and irqarray properties reflect the same thing:
-the number of bits and bytes for interrupts at this
-chipset. E. g.:
 
-	irqnum = 8 x irqarray
+--pe+tqlI1iYzVj1X/
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
 
-This can be seen by the way pending interrupts are handled:
+On Tue, Aug 18, 2020 at 02:47:10PM +0200, Roger Pau Monn=C3=A9 wrote:
+> On Tue, Aug 18, 2020 at 02:01:35PM +0200, Marek Marczykowski-G=C3=B3recki=
+ wrote:
+> > Do you mean PV dom0 should receive full EFI memory map? Jan already
+> > objected this as it would be a layering violation.
+>=20
+> dom0 is already capable of getting the native e820 memory map using
+> XENMEM_machine_memory_map, I'm not sure why allowing to return the
+> memory map in EFI form would be any different (or a layering
+> violation in the PV dom0 case).
+>
+> Do you have a reference to that thread? I certainly missed it.
 
-	/* During probe time */
-	pmic->irqs = devm_kzalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
+See this thread: http://markmail.org/message/nrrvuau5whebksy2
 
-	/* While handling IRQs */
-	for (i = 0; i < pmic->irqarray; i++) {
-		pending = hi6421_spmi_pmic_read(pmic, (i + pmic->irq_addr));
-		pending &= 0xff;
+> For PVH dom0 we could consider something different, since in that case
+> there's a guest memory map which could likely be returned in EFI
+> format and with the EFI regions if required.
+>=20
+> > > > Skip this part on Xen PV (let Xen do the right thing if it deems
+> > > > necessary) and use ESRT table normally.
+> > >=20
+> > > Maybe it would be better to introduce a new hypercall (or add a
+> > > parameter to XENMEM_machine_memory_map) in order to be able to fetch
+> > > the EFI memory map?
+> > >
+> > > That should allow a PV dom0 to check the ESRT is correct and thus not
+> > > diverge from bate metal.
+> >=20
+> > Note the EFI memory map there is used not just to check things, but to
+> > actually modify it to reserve the region. I think that's rather Xen
+> > responsibility, not dom0. See the comment from Ard.
+>=20
+> But that would modify Linux copy of the memory map, which is fine? My
+> understanding of EFI is limited, but I don't think such changes are
+> feed back into EFI, so Linux is completely free to do whatever it
+> wants with it's copy of the EFI memory map.
 
-		for_each_set_bit(offset, &pending, 8)
-			generic_handle_irq(pmic->irqs[offset + i * 8]);
+Yes, but the thing is to make sure Xen doesn't use that memory, not only
+dom0. See below.
 
-	}
+> > > > +	if (efi_enabled(EFI_MEMMAP)) {
+> > > > +		rc =3D efi_mem_desc_lookup(efi.esrt, &md);
+> > > > +		if (rc < 0 ||
+> > > > +		    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+> > > > +		     md.type !=3D EFI_BOOT_SERVICES_DATA &&
+> > > > +		     md.type !=3D EFI_RUNTIME_SERVICES_DATA)) {
+> > > > +			pr_warn("ESRT header is not in the memory map.\n");
+> > > > +			return;
+> > > > +		}
+> > >=20
+> > > Here you blindly trust the data in the ESRT in the PV case, without
+> > > checking it matches the regions on the memory map, which could lead to
+> > > errors if ESRT turns to be wrong.
+> >=20
+> > I don't think checking merely if ESRT lives somewhere in
+> > EFI_{BOOT,RUNTIME}_SERVICES_DATA area guarantees its correctness.
+> >=20
+> > On the other hand, this seems to be done to prevent overwriting that
+> > memory with something else (see that in case of EFI_BOOT_SERVICES_DATA
+> > it is later marked as reserved. I think it should be rather done by Xen,
+> > not dom0.
+>=20
+> Forcing Xen to do all those checks seems quite a tedious work, and in
+> fact the memory map that dom0 has might be more complete than the one
+> Xen is able to construct, as Xen doesn't have an AML parser so it's
+> not able to get all the possible info from ACPI.
 
-Going further, there are some logic at the driver which assumes
-that irqarray is 2:
+Let me draw the picture from the beginning.
 
-	/* solve powerkey order */
-	if ((i == HISI_IRQ_KEY_NUM) &&
-	    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
-		generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
-		generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
-		pending &= (~HISI_IRQ_KEY_VALUE);
-	}
+EFI memory map contains various memory regions. Some of them are marked
+as not needed after ExitBootServices() call (done in Xen before
+launching dom0). This includes EFI_BOOT_SERVICES_DATA and
+EFI_BOOT_SERVICES_CODE.
 
-As HISI_IRQ_KEY_DOWN and HISI_IRQ_KEY_UP are fixed values
-and don't depend on irqnum/irqarray.
+EFI SystemTable contains pointers to various ConfigurationTables -
+physical addresses (at least in this case). Xen does interpret some of
+them, but not ESRT. Xen pass the whole (address of) SystemTable to Linux
+dom0 (at least in PV case). Xen doesn't do anything about tables it
+doesn't understand.
 
-The IRQ addr and mask addr seem to be also fixed, based on some
-comments at the OF parsing code. So, get rid of them too,
-removing the of parsing function completely.
+Now, the code in Linux takes the (ESRT) table address early and checks
+the memory map for it. We have 3 cases:
+ - it points at area marked as neither EFI_*_SERVICES_DATA, nor with
+   EFI_MEMORY_RUNTIME attribute -> Linux refuse to use it
+ - it points to EFI_RUNTIME_SERVICES_DATA or with EFI_MEMORY_RUNTIME
+   attribute - Linux uses the table; memory map already says the area
+   belongs to EFI and the OS should not use it for something else
+ - it points to EFI_BOOT_SERVICES_DATA - Linux mark the area as reserved
+   to not release it after calling ExitBootServices()
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c | 80 ++++++---------------
- include/linux/mfd/hi6421-spmi-pmic.h        | 15 ----
- 2 files changed, 20 insertions(+), 75 deletions(-)
+The problematic is the third case - at the time when Linux dom0 is run,
+ExitBootServices() was already called and EFI_BOOT_SERVICES_* memory was
+already released. It could be already used for something else (for
+example Xen could overwrite it while loading dom0).
 
-diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-index 9d73458ca65a..7817c0637737 100644
---- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-+++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
-@@ -38,6 +38,12 @@
- /* 8-bit register offset in PMIC */
- #define HISI_MASK_STATE			0xff
- 
-+#define HISI_IRQ_ARRAY			2
-+#define HISI_IRQ_NUM			(HISI_IRQ_ARRAY * 8)
-+
-+#define SOC_PMIC_IRQ_MASK_0_ADDR	0x0202
-+#define SOC_PMIC_IRQ0_ADDR		0x0212
-+
- #define HISI_IRQ_KEY_NUM		0
- #define HISI_IRQ_KEY_VALUE		0xc0
- #define HISI_IRQ_KEY_DOWN		7
-@@ -121,13 +127,13 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
- 	unsigned long pending;
- 	int i, offset;
- 
--	for (i = 0; i < pmic->irqarray; i++) {
--		pending = hi6421_spmi_pmic_read(pmic, (i + pmic->irq_addr));
-+	for (i = 0; i < HISI_IRQ_ARRAY; i++) {
-+		pending = hi6421_spmi_pmic_read(pmic, (i + SOC_PMIC_IRQ0_ADDR));
- 		pending &= HISI_MASK_FIELD;
- 		if (pending != 0)
- 			pr_debug("pending[%d]=0x%lx\n\r", i, pending);
- 
--		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
-+		hi6421_spmi_pmic_write(pmic, (i + SOC_PMIC_IRQ0_ADDR), pending);
- 
- 		/* solve powerkey order */
- 		if ((i == HISI_IRQ_KEY_NUM) &&
-@@ -153,7 +159,7 @@ static void hi6421_spmi_irq_mask(struct irq_data *d)
- 	unsigned long flags;
- 
- 	offset = (irqd_to_hwirq(d) >> 3);
--	offset += pmic->irq_mask_addr;
-+	offset += SOC_PMIC_IRQ_MASK_0_ADDR;
- 
- 	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hi6421_spmi_pmic_read(pmic, offset);
-@@ -169,7 +175,7 @@ static void hi6421_spmi_irq_unmask(struct irq_data *d)
- 	unsigned long flags;
- 
- 	offset = (irqd_to_hwirq(d) >> 3);
--	offset += pmic->irq_mask_addr;
-+	offset += SOC_PMIC_IRQ_MASK_0_ADDR;
- 
- 	spin_lock_irqsave(&pmic->lock, flags);
- 	data = hi6421_spmi_pmic_read(pmic, offset);
-@@ -204,60 +210,20 @@ static const struct irq_domain_ops hi6421_spmi_domain_ops = {
- 	.xlate	= irq_domain_xlate_twocell,
- };
- 
--static int get_pmic_device_tree_data(struct device_node *np,
--				     struct hi6421_spmi_pmic *pmic)
--{
--	int ret = 0;
--
--	/* IRQ number */
--	ret = of_property_read_u32(np, "irq-num", &pmic->irqnum);
--	if (ret) {
--		pr_err("no irq-num property set\n");
--		ret = -ENODEV;
--		return ret;
--	}
--
--	/* Size of IRQ array */
--	ret = of_property_read_u32(np, "irq-array", &pmic->irqarray);
--	if (ret) {
--		pr_err("no irq-array property set\n");
--		ret = -ENODEV;
--		return ret;
--	}
--
--	/* SOC_PMIC_IRQ_MASK_0_ADDR */
--	ret = of_property_read_u32(np, "irq-mask-addr", &pmic->irq_mask_addr);
--	if (ret) {
--		pr_err("no irq-mask-addr property set\n");
--		ret = -ENODEV;
--		return ret;
--	}
--
--	/* SOC_PMIC_IRQ0_ADDR */
--	ret = of_property_read_u32(np, "irq-addr", &pmic->irq_addr);
--	if (ret) {
--		pr_err("no irq-addr property set\n");
--		ret = -ENODEV;
--		return ret;
--	}
--
--	return ret;
--}
--
- static void hi6421_spmi_pmic_irq_prc(struct hi6421_spmi_pmic *pmic)
- {
- 	int i, pending;
- 
--	for (i = 0 ; i < pmic->irqarray; i++)
--		hi6421_spmi_pmic_write(pmic, pmic->irq_mask_addr + i,
-+	for (i = 0 ; i < HISI_IRQ_ARRAY; i++)
-+		hi6421_spmi_pmic_write(pmic, SOC_PMIC_IRQ_MASK_0_ADDR + i,
- 				       HISI_MASK_STATE);
- 
--	for (i = 0 ; i < pmic->irqarray; i++) {
--		pending = hi6421_spmi_pmic_read(pmic, pmic->irq_addr + i);
-+	for (i = 0 ; i < HISI_IRQ_ARRAY; i++) {
-+		pending = hi6421_spmi_pmic_read(pmic, SOC_PMIC_IRQ0_ADDR + i);
- 
- 		pr_debug("PMU IRQ address value:irq[0x%x] = 0x%x\n",
--			 pmic->irq_addr + i, pending);
--		hi6421_spmi_pmic_write(pmic, pmic->irq_addr + i,
-+			 SOC_PMIC_IRQ0_ADDR + i, pending);
-+		hi6421_spmi_pmic_write(pmic, SOC_PMIC_IRQ0_ADDR + i,
- 				       HISI_MASK_STATE);
- 	}
- }
-@@ -274,12 +240,6 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 	if (!pmic)
- 		return -ENOMEM;
- 
--	ret = get_pmic_device_tree_data(np, pmic);
--	if (ret) {
--		dev_err(dev, "Error reading hisi pmic dts\n");
--		return ret;
--	}
--
- 	spin_lock_init(&pmic->lock);
- 
- 	pmic->dev = dev;
-@@ -301,11 +261,11 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 
- 	hi6421_spmi_pmic_irq_prc(pmic);
- 
--	pmic->irqs = devm_kzalloc(dev, pmic->irqnum * sizeof(int), GFP_KERNEL);
-+	pmic->irqs = devm_kzalloc(dev, HISI_IRQ_NUM * sizeof(int), GFP_KERNEL);
- 	if (!pmic->irqs)
- 		goto irq_malloc;
- 
--	pmic->domain = irq_domain_add_simple(np, pmic->irqnum, 0,
-+	pmic->domain = irq_domain_add_simple(np, HISI_IRQ_NUM, 0,
- 					     &hi6421_spmi_domain_ops, pmic);
- 	if (!pmic->domain) {
- 		dev_err(dev, "failed irq domain add simple!\n");
-@@ -313,7 +273,7 @@ static int hi6421_spmi_pmic_probe(struct spmi_device *pdev)
- 		goto irq_malloc;
- 	}
- 
--	for (i = 0; i < pmic->irqnum; i++) {
-+	for (i = 0; i < HISI_IRQ_NUM; i++) {
- 		virq = irq_create_mapping(pmic->domain, i);
- 		if (!virq) {
- 			dev_err(dev, "Failed mapping hwirq\n");
-diff --git a/include/linux/mfd/hi6421-spmi-pmic.h b/include/linux/mfd/hi6421-spmi-pmic.h
-index ff3adfa7b3ec..2c8896fd852e 100644
---- a/include/linux/mfd/hi6421-spmi-pmic.h
-+++ b/include/linux/mfd/hi6421-spmi-pmic.h
-@@ -17,16 +17,6 @@
- #define HISI_ECO_MODE_ENABLE		(1)
- #define HISI_ECO_MODE_DISABLE		(0)
- 
--struct hi6421_spmi_irq_mask_info {
--	int start_addr;
--	int array;
--};
--
--struct hi6421_spmi_irq_info {
--	int start_addr;
--	int array;
--};
--
- struct hi6421_spmi_pmic {
- 	struct resource				*res;
- 	struct device				*dev;
-@@ -36,11 +26,6 @@ struct hi6421_spmi_pmic {
- 	int					irq;
- 	int					gpio;
- 	unsigned int				*irqs;
--
--	int					irqnum;
--	int					irqarray;
--	int					irq_mask_addr;
--	int					irq_addr;
- };
- 
- int hi6421_spmi_pmic_read(struct hi6421_spmi_pmic *pmic, int reg);
--- 
-2.26.2
+Note the problematic case should be the most common - UEFI specification
+says "The ESRT shall be stored in memory of type EfiBootServicesData"
+(chapter 22.3 of UEFI Spec v2.6).
 
+For this reason, to use ESRT in dom0, Xen should do something about it
+before ExitBootServices() call. While analyzing all the EFI tables is
+probably not a viable option, it can do some simple action:
+ - retains all the EFI_BOOT_SERVICES_* areas - there is already code
+   for that, controlled with /mapbs boot switch (to xen.efi, would need
+   another option for multiboot2+efi)
+ - have a list of tables to retain - since Xen already do analyze some
+   of the ConfigurationTables, it can also have a list of those to
+   preserve even if they live in EFI_BOOT_SERVICES_DATA. In this case,
+   while Xen doesn't need to parse the whole table, it need to parse it's
+   header to get the table size - to reserve that memory and not reuse
+   it after ExitBootServices().
+
+I think the second solution is slightly more elegant.
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+
+--pe+tqlI1iYzVj1X/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl877QQACgkQ24/THMrX
+1ywhywf/eGFZ6OCabrDr7rLIyZb+h0glpr6T/95k3/v/plivK1v3J/tWQ5+0cHtz
++j/6b/jRWGzRiheX22jsuTKWJBr3s04oOJmcrYq2LrdBB5jmR8qLK/nwBrLRZwlt
+s1xKHFFYPSOfdNikfBOcHVdzBg4FMEL5ETzLcTjfTme+xHKoZFRQ527GRfrUcxMi
+LzHKisOmBOHcBoPbcS0Oe0nH4ZfCsizPIKlsmagytmEq67TEYMcle820BPcI/pv6
+dUQaocEaqIqgJIIlRDJ3ouGTOrhh/3ICuu6Zvsm0eolg8Lbw9wPVnXVIHQBToCME
+GMmzBJ91gvCMpUiIsugdO77VJfg1eg==
+=j7zi
+-----END PGP SIGNATURE-----
+
+--pe+tqlI1iYzVj1X/--
