@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC11C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFEDF20639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163E020829
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHRGyH (ORCPT
+        id S1726635AbgHRGyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:54:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9832 "EHLO huawei.com"
+        Tue, 18 Aug 2020 02:54:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9831 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbgHRGyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:54:06 -0400
+        id S1726353AbgHRGyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:54:15 -0400
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2F72F60EF1D7F7E17F31;
+        by Forcepoint Email with ESMTP id 39D586B58F610C2A31E8;
         Tue, 18 Aug 2020 14:53:56 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
@@ -32,9 +32,9 @@ To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <tzimmermann@suse.de>,
         <tglx@linutronix.de>, <dri-devel@lists.freedesktop.org>,
         <xinliang.liu@linaro.org>, <linux-kernel@vger.kernel.org>
 CC:     <linuxarm@huawei.com>
-Subject: [PATCH drm/hisilicon 1/4] drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_ttm
-Date:   Tue, 18 Aug 2020 14:51:41 +0800
-Message-ID: <1597733504-30812-2-git-send-email-tiantao6@hisilicon.com>
+Subject: [PATCH drm/hisilicon 3/4] drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_drm_de
+Date:   Tue, 18 Aug 2020 14:51:43 +0800
+Message-ID: <1597733504-30812-4-git-send-email-tiantao6@hisilicon.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
 References: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
@@ -47,26 +47,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use drv_err instead of DRM_ERROR in hibmc_ttm.
+Use drv_err instead of DRM_ERROR in hibmc_drm_de
 
 Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
 ---
- drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-index 322bd54..602ece1 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-@@ -32,7 +32,7 @@ int hibmc_mm_init(struct hibmc_drm_private *hibmc)
- 				       hibmc->fb_size);
- 	if (IS_ERR(vmm)) {
- 		ret = PTR_ERR(vmm);
--		DRM_ERROR("Error initializing VRAM MM; %d\n", ret);
-+		drm_err(dev, "Error initializing VRAM MM; %d\n", ret);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+index d9062a3..4d57ec6 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
+@@ -71,12 +71,12 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
+ 		return PTR_ERR(crtc_state);
+ 
+ 	if (src_w != state->crtc_w || src_h != state->crtc_h) {
+-		DRM_DEBUG_ATOMIC("scale not support\n");
++		drm_dbg_atomic(plane->dev, "scale not support\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (state->crtc_x < 0 || state->crtc_y < 0) {
+-		DRM_DEBUG_ATOMIC("crtc_x/y of drm_plane state is invalid\n");
++		drm_dbg_atomic(plane->dev, "crtc_x/y of drm_plane state is invalid\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -87,12 +87,12 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
+ 	    crtc_state->adjusted_mode.hdisplay ||
+ 	    state->crtc_y + state->crtc_h >
+ 	    crtc_state->adjusted_mode.vdisplay) {
+-		DRM_DEBUG_ATOMIC("visible portion of plane is invalid\n");
++		drm_dbg_atomic(plane->dev, "visible portion of plane is invalid\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (state->fb->pitches[0] % 128 != 0) {
+-		DRM_DEBUG_ATOMIC("wrong stride with 128-byte aligned\n");
++		drm_dbg_atomic(plane->dev, "wrong stride with 128-byte aligned\n");
+ 		return -EINVAL;
+ 	}
+ 	return 0;
+@@ -515,7 +515,7 @@ int hibmc_de_init(struct hibmc_drm_private *priv)
+ 				       NULL);
+ 
+ 	if (ret) {
+-		DRM_ERROR("failed to init plane: %d\n", ret);
++		drm_err(dev, "failed to init plane: %d\n", ret);
  		return ret;
  	}
  
+@@ -524,13 +524,13 @@ int hibmc_de_init(struct hibmc_drm_private *priv)
+ 	ret = drm_crtc_init_with_planes(dev, crtc, plane,
+ 					NULL, &hibmc_crtc_funcs, NULL);
+ 	if (ret) {
+-		DRM_ERROR("failed to init crtc: %d\n", ret);
++		drm_err(dev, "failed to init crtc: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	ret = drm_mode_crtc_set_gamma_size(crtc, 256);
+ 	if (ret) {
+-		DRM_ERROR("failed to set gamma size: %d\n", ret);
++		drm_err(dev, "failed to set gamma size: %d\n", ret);
+ 		return ret;
+ 	}
+ 	drm_crtc_helper_add(crtc, &hibmc_crtc_helper_funcs);
 -- 
 2.7.4
 
