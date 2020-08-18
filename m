@@ -2,193 +2,118 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85553C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C839C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A302075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpcmiZRC"
+	by mail.kernel.org (Postfix) with ESMTP id 514C520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgHRLct (ORCPT
+        id S1726605AbgHRLfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgHRLcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:32:21 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB99FC061342;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id y30so4072423ooj.3;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ExSCm02y3qpUSj/p3vHeizuT1G9r/WCp9sMwgc77Xhw=;
-        b=lpcmiZRC0Itwnv8XEX0Gt0g4YzYZoFD+0cQTl/lgDNgLVzRe6IuCkiyAsMKmXxtzyS
-         DF5PMESVBKjCzoZjEI411d9Iw1L3XxuPkPVdy8WD0iLU9FEOhQt0C+gxLXxG9FwuHlLM
-         rhDESa4KirIUUOyZAMa3fGnotL1y1ZAkDn7wOqcdEugoXuPZ7SjANkcHlMg4NvyiNbht
-         ty6pszTzwEC7d8yfKI/mGHwXfZomUw3KmQy9Bjfu0tTtXYliq18/FxRxu1WvUqVtTDdI
-         K3vNrDjnKkdMwRXJXjv0FWKEbAC/2OegAiVjrrRDrIlbVqKEFhwQhGoW00TK4+pX8gAo
-         GGSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=ExSCm02y3qpUSj/p3vHeizuT1G9r/WCp9sMwgc77Xhw=;
-        b=p0El+5oHOMmKmJczNTb3dMky9nFr5uMOoMs0POP74oey22EApUumHYTaL2oRazGoB/
-         MjCGKLVKfc71tEqS+ogdXUFK5vuC0DevJWejKQgz04YIDJU1NlUETxMpLJdIRj2OkZhV
-         L60QWwyO21LiNJCiq5pLmb405ibHA8+/h+/SyMTkHIdkP1dJ/KfrgRMccu8ew921kT59
-         cjLTsw2NimglvldCUau9X23RTY5ixerpBi3uFZ5PAaslw93pHkLh9roM+rUCuRVhWukR
-         6EukWQ4GBLWkYy4Znwi58XAQaPPrOe2MsBI6BZ9RC/FDkM2zW475Jeoqb9mGg5c9bgoa
-         nfpA==
-X-Gm-Message-State: AOAM533oxYlrnM51caMj7uyFiSwWM2s3vfm4KGY8nQVTN4TAq4IADE9/
-        Nvjc2eI+v9PG2DSuX10kSw==
-X-Google-Smtp-Source: ABdhPJywdLvN8lVgc2yDfHhvIZ4/3whUvULM6gOBhid0aKLlGB5miCWrsMhpAucNStAL2zXitNZckQ==
-X-Received: by 2002:a4a:7241:: with SMTP id r1mr14426630ooe.48.1597750340029;
-        Tue, 18 Aug 2020 04:32:20 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id v35sm3862490otb.32.2020.08.18.04.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 04:32:18 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id 4AF641800D4;
-        Tue, 18 Aug 2020 11:32:17 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 06:32:16 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Allen <allen.lkml@gmail.com>
-Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        axboe@kernel.dk, stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        daniel@ffwll.ch, sre@kernel.org,
-        James.Bottomley@hansenpartnership.com, kys@microsoft.com,
-        deller@gmx.de, dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] char: ipmi: convert tasklets to use new tasklet_setup()
- API
-Message-ID: <20200818113216.GD2842@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-3-allen.cryptic@gmail.com>
- <20200817121514.GE2865@minyard.net>
- <CAOMdWSJXCn5KYHen4kynH1A5Oixo+yPzs3oathsfa8gtKZGkjg@mail.gmail.com>
+        Tue, 18 Aug 2020 07:35:23 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44242 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbgHRLdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:33:24 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD99gvDtfbm0KAA--.22S2;
+        Tue, 18 Aug 2020 19:32:48 +0800 (CST)
+From:   Youling Tang <tangyouling@loongson.cn>
+To:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
+Date:   Tue, 18 Aug 2020 19:32:48 +0800
+Message-Id: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOMdWSJXCn5KYHen4kynH1A5Oixo+yPzs3oathsfa8gtKZGkjg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9DxD99gvDtfbm0KAA--.22S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1DAr4kKw1xZF1UAFyDAwb_yoW8tFy8pa
+        nrAwn5Gr4DWrW3AFn5ArW8uryrAa98GrW2qFW29F1YgasIqFy0qrs8GFn5ArsFyF45Ka4x
+        WrySgry7GFnrAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWxJVW8Jr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8KwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc8nYUUUUU
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:46:23PM +0530, Allen wrote:
-> > >
-> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> >
-> > This looks good to me.
-> >
-> > Reviewed-by: Corey Minyard <cminyard@mvista.com>
-> >
-> > Are you planning to push this, or do you want me to take it?  If you
-> > want me to take it, what is the urgency?
-> 
->  Thanks. Well, not hurry, as long as it goes into 5.9 with all other
-> changes.
+After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
 
-Ok, this is queued in my for-next branch.
+Fix the following build error:
 
--corey
+drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
+  VIRTUAL,
+  ^
+In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
+                 from ./arch/mips/include/asm/mmzone.h:12,
+                 from ./include/linux/mmzone.h:962,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/slab.h:15,
+                 from ./include/linux/genhd.h:16,
+                 from ./include/linux/blkdev.h:8,
+                 from drivers/md/persistent-data/dm-block-manager.h:11,
+                 from drivers/md/dm-thin-metadata.h:10,
+                 from drivers/md/dm-thin.c:7:
+./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
+definition of ‘VIRTUAL’ was here VIRTUAL = 3
+                                 ^
+scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
+make[2]: *** [drivers/md/dm-thin.o] Error 1
 
-> 
-> 
-> >
-> > -corey
-> >
-> > > ---
-> > >  drivers/char/ipmi/ipmi_msghandler.c | 13 ++++++-------
-> > >  1 file changed, 6 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> > > index 737c0b6b24ea..e1814b6a1225 100644
-> > > --- a/drivers/char/ipmi/ipmi_msghandler.c
-> > > +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> > > @@ -39,7 +39,7 @@
-> > >
-> > >  static struct ipmi_recv_msg *ipmi_alloc_recv_msg(void);
-> > >  static int ipmi_init_msghandler(void);
-> > > -static void smi_recv_tasklet(unsigned long);
-> > > +static void smi_recv_tasklet(struct tasklet_struct *t);
-> > >  static void handle_new_recv_msgs(struct ipmi_smi *intf);
-> > >  static void need_waiter(struct ipmi_smi *intf);
-> > >  static int handle_one_recv_msg(struct ipmi_smi *intf,
-> > > @@ -3430,9 +3430,8 @@ int ipmi_add_smi(struct module         *owner,
-> > >       intf->curr_seq = 0;
-> > >       spin_lock_init(&intf->waiting_rcv_msgs_lock);
-> > >       INIT_LIST_HEAD(&intf->waiting_rcv_msgs);
-> > > -     tasklet_init(&intf->recv_tasklet,
-> > > -                  smi_recv_tasklet,
-> > > -                  (unsigned long) intf);
-> > > +     tasklet_setup(&intf->recv_tasklet,
-> > > +                  smi_recv_tasklet);
-> > >       atomic_set(&intf->watchdog_pretimeouts_to_deliver, 0);
-> > >       spin_lock_init(&intf->xmit_msgs_lock);
-> > >       INIT_LIST_HEAD(&intf->xmit_msgs);
-> > > @@ -4467,10 +4466,10 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
-> > >       }
-> > >  }
-> > >
-> > > -static void smi_recv_tasklet(unsigned long val)
-> > > +static void smi_recv_tasklet(struct tasklet_struct *t)
-> > >  {
-> > >       unsigned long flags = 0; /* keep us warning-free. */
-> > > -     struct ipmi_smi *intf = (struct ipmi_smi *) val;
-> > > +     struct ipmi_smi *intf = from_tasklet(intf, t, recv_tasklet);
-> > >       int run_to_completion = intf->run_to_completion;
-> > >       struct ipmi_smi_msg *newmsg = NULL;
-> > >
-> > > @@ -4542,7 +4541,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
-> > >               spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
-> > >
-> > >       if (run_to_completion)
-> > > -             smi_recv_tasklet((unsigned long) intf);
-> > > +             smi_recv_tasklet(&intf->recv_tasklet);
-> > >       else
-> > >               tasklet_schedule(&intf->recv_tasklet);
-> > >  }
-> > > --
-> > > 2.17.1
-> > >
-> 
-> 
-> 
-> -- 
->        - Allen
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
+ arch/mips/loongson64/env.c                         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index afc92b7..a4ef4ac 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -195,7 +195,7 @@ struct boot_params {
+ enum loongson_bridge_type {
+ 	LS7A = 1,
+ 	RS780E = 2,
+-	VIRTUAL = 3
++	VIRT = 3
+ };
+ 
+ struct loongson_system_configuration {
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 134cb8e..623b3f1 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -180,8 +180,8 @@ void __init prom_init_env(void)
+ 		loongson_sysconf.early_config = rs780e_early_config;
+ 		break;
+ 	default:
+-		pr_info("The bridge chip is VIRTUAL\n");
+-		loongson_sysconf.bridgetype = VIRTUAL;
++		pr_info("The bridge chip is VIRT\n");
++		loongson_sysconf.bridgetype = VIRT;
+ 		loongson_sysconf.early_config = virtual_early_config;
+ 		loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
+ 		break;
+-- 
+2.1.0
+
