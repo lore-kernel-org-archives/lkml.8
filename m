@@ -2,88 +2,96 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A348CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D7DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC67206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D74206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qP61zNLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHRDDq (ORCPT
+        id S1726632AbgHRDEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:03:46 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:50941 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgHRDDp (ORCPT
+        Mon, 17 Aug 2020 23:04:14 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:42987 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726365AbgHRDEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:03:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U668E35_1597719823;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U668E35_1597719823)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Aug 2020 11:03:43 +0800
-Date:   Tue, 18 Aug 2020 11:03:43 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        alexander.h.duyck@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_reporting: the "page" must not be the list head
-Message-ID: <20200818030343.GB29756@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200817084836.29216-1-richard.weiyang@linux.alibaba.com>
- <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com>
+        Mon, 17 Aug 2020 23:04:11 -0400
+X-UUID: 105bf3c2538f4840a8358350a7e1071c-20200818
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ahbWRcPcWQCgNbqrlq91xsX5/hkLrfZyOxN384yVm+I=;
+        b=qP61zNLvFgfdN7yrjoLUecdRhb+3Dy7uLGoU5BzbKPt+dgWycMaELUTLXDeQ/Q0pYNGUA0BKDkkcV0eeYELe2TCA7v1ymTLM7LaZ02lOemn7C4036V73d6bN331Nj47IvnVs1CUqZTD9j0BcBrrC4k2S2GPq1nHYFxoqV6d7L3M=;
+X-UUID: 105bf3c2538f4840a8358350a7e1071c-20200818
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2066810986; Tue, 18 Aug 2020 11:04:04 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 18 Aug 2020 11:04:02 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 18 Aug 2020 11:04:02 +0800
+From:   EastL Lee <EastL.Lee@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
+CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>,
+        EastL Lee <EastL.Lee@mediatek.com>
+Subject: [PATCH v7 3/4] dmaengine: mediatek-cqdma: add dma mask for capability
+Date:   Tue, 18 Aug 2020 11:03:53 +0800
+Message-ID: <1597719834-6675-4-git-send-email-EastL.Lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1597719834-6675-1-git-send-email-EastL.Lee@mediatek.com>
+References: <1597719834-6675-1-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:35:29AM +0200, David Hildenbrand wrote:
->On 17.08.20 10:48, Wei Yang wrote:
->> If "page" is the list head, list_for_each_entry_safe() would stop
->> iteration.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/page_reporting.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
->> index 3bbd471cfc81..aaaa3605123d 100644
->> --- a/mm/page_reporting.c
->> +++ b/mm/page_reporting.c
->> @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
->>  		 * the new head of the free list before we release the
->>  		 * zone lock.
->>  		 */
->> -		if (&page->lru != list && !list_is_first(&page->lru, list))
->> +		if (!list_is_first(&page->lru, list))
->>  			list_rotate_to_front(&page->lru, list);
->>  
->>  		/* release lock before waiting on report processing */
->> 
->
->Is this a fix or a cleanup? If it's a fix, can this be reproduced easily
->and what ere the effects?
->
+VGhpcyBwYXRjaCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQoNClNpZ25lZC1vZmYtYnk6
+IEVhc3RMIExlZSA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBNYXR0aGlh
+cyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KLS0tDQogZHJpdmVycy9kbWEvbWVk
+aWF0ZWsvbXRrLWNxZG1hLmMgfCAxNyArKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxNyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9tZWRpYXRlay9t
+dGstY3FkbWEuYyBiL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5jDQppbmRleCA5MDVi
+YmNiLi4xNjEwNjMyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1h
+LmMNCisrKyBiL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5jDQpAQCAtMTE3LDYgKzEx
+Nyw3IEBAIHN0cnVjdCBtdGtfY3FkbWFfdmNoYW4gew0KICAqIEBjbGs6ICAgICAgICAgICAgICAg
+ICAgICBUaGUgY2xvY2sgdGhhdCBkZXZpY2UgaW50ZXJuYWwgaXMgdXNpbmcNCiAgKiBAZG1hX3Jl
+cXVlc3RzOiAgICAgICAgICAgVGhlIG51bWJlciBvZiBWQ3MgdGhlIGRldmljZSBzdXBwb3J0cyB0
+bw0KICAqIEBkbWFfY2hhbm5lbHM6ICAgICAgICAgICBUaGUgbnVtYmVyIG9mIFBDcyB0aGUgZGV2
+aWNlIHN1cHBvcnRzIHRvDQorICogQGRtYV9tYXNrOiAgICAgICAgICAgICAgIEEgbWFzayBmb3Ig
+RE1BIGNhcGFiaWxpdHkNCiAgKiBAdmM6ICAgICAgICAgICAgICAgICAgICAgVGhlIHBvaW50ZXIg
+dG8gYWxsIGF2YWlsYWJsZSBWQ3MNCiAgKiBAcGM6ICAgICAgICAgICAgICAgICAgICAgVGhlIHBv
+aW50ZXIgdG8gYWxsIHRoZSB1bmRlcmx5aW5nIFBDcw0KICAqLw0KQEAgLTEyNiw2ICsxMjcsNyBA
+QCBzdHJ1Y3QgbXRrX2NxZG1hX2RldmljZSB7DQogDQogCXUzMiBkbWFfcmVxdWVzdHM7DQogCXUz
+MiBkbWFfY2hhbm5lbHM7DQorCXUzMiBkbWFfbWFzazsNCiAJc3RydWN0IG10a19jcWRtYV92Y2hh
+biAqdmM7DQogCXN0cnVjdCBtdGtfY3FkbWFfcGNoYW4gKipwYzsNCiB9Ow0KQEAgLTYwNyw2ICs2
+MDksMjEgQEAgc3RhdGljIGludCBtdGtfY3FkbWFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikNCiAJCWNxZG1hLT5kbWFfY2hhbm5lbHMgPSBNVEtfQ1FETUFfTlJfUENIQU5TOw0K
+IAl9DQogDQorCWlmIChwZGV2LT5kZXYub2Zfbm9kZSkNCisJCWVyciA9IG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyKHBkZXYtPmRldi5vZl9ub2RlLA0KKwkJCQkJICAgImRtYS1jaGFubmVsLW1hc2siLA0K
+KwkJCQkJICAgJmNxZG1hLT5kbWFfbWFzayk7DQorCWlmIChlcnIpIHsNCisJCWRldl93YXJuKCZw
+ZGV2LT5kZXYsDQorCQkJICJVc2luZyAwIGFzIG1pc3NpbmcgZG1hLWNoYW5uZWwtbWFzayBwcm9w
+ZXJ0eVxuIik7DQorCQljcWRtYS0+ZG1hX21hc2sgPSAwOw0KKwl9DQorDQorCWlmIChkbWFfc2V0
+X21hc2soJnBkZXYtPmRldiwgRE1BX0JJVF9NQVNLKGNxZG1hLT5kbWFfbWFzaykpKSB7DQorCQlk
+ZXZfd2FybigmcGRldi0+ZGV2LCAiRE1BIHNldCBtYXNrIGZhaWxlZFxuIik7DQorCQlyZXR1cm4g
+LUVJTlZBTDsNCisJfQ0KKw0KIAljcWRtYS0+cGMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwg
+Y3FkbWEtPmRtYV9jaGFubmVscywNCiAJCQkJIHNpemVvZigqY3FkbWEtPnBjKSwgR0ZQX0tFUk5F
+TCk7DQogCWlmICghY3FkbWEtPnBjKQ0KLS0gDQoxLjkuMQ0K
 
-I think this is a cleanup.
-
-I am not sure why you ask this, since the check must be true when the
-iteration continues.
-
->-- 
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
