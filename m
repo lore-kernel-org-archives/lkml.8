@@ -2,125 +2,122 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95740C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616ECC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6639620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597735511;
-	bh=N2APiQQepxSYCzop4Qp1o77O54Y1HK1//Wr9CEjh4fI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aeTzT1Sr2P7Nzew9Qp4l3Iom46OMlYAkYi0x38ss5AkgZQ9EkZoQ/RfS+Z4jFhCVk
-	 AU1hGTQyd+eqh6hN2RdeunF0amjNruc3QL/rKCqqd2ic3hRf7Elt7QAHApPUB3M89h
-	 5G1rw/rn709atqdI85BSkeHuhYtkgo8MbQ2b3bL4=
+	by mail.kernel.org (Postfix) with ESMTP id 41A39205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IItI9WWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgHRHZJ (ORCPT
+        id S1726620AbgHRHZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgHRHZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:25:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 18 Aug 2020 03:25:22 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26535 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgHRHZV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:25:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597735519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=0vv+u3cMyAAlZzp0oz83EPljxFFgUqvzBIrtYyl8jSU=;
+        b=IItI9WWA/QZlE6kxDzgUjFa9zYiNtK20Pm+4gNoW+wk8RFiJwJSbhy2oTN8/Ht7E2C+dqy
+        IWJaOnwQ9gu4hf7rAD8OMdQ9lwc6UeJxdYHaT0+OTBWc2f+ja2DqjDuiMPS/jceQYogH9U
+        xJOexB60XKdIG3RAN/AXr0tedP2gxxU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-9-U_VBu19XPyyANcL089bpwA-1; Tue, 18 Aug 2020 03:25:17 -0400
+X-MC-Unique: U_VBu19XPyyANcL089bpwA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C541205CB;
-        Tue, 18 Aug 2020 07:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597735507;
-        bh=N2APiQQepxSYCzop4Qp1o77O54Y1HK1//Wr9CEjh4fI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ULGeP8jyfskRDwys6jK46JZVSeX56BII0NNgpCECczBC+KpvIXPogM4Q1HVJvnADo
-         5VJmaLBVinajow8/gOPXYUYoWqwOFTjugqSa6fvNspRq57ArW7izT0hMBa8h9/oTks
-         9tKe1cHeVM/V49yQNG2ZlweKwPAq5Xr04bK10aFs=
-Date:   Tue, 18 Aug 2020 09:25:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, X86 ML <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
-Message-ID: <20200818072531.GC9254@kroah.com>
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <20200817220212.338670-2-ndesaulniers@google.com>
- <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51CAF100CF74;
+        Tue, 18 Aug 2020 07:25:16 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 222A8BA63;
+        Tue, 18 Aug 2020 07:25:13 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 5B5819D74; Tue, 18 Aug 2020 09:25:12 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] drm/virtio: drop virtio_gpu_output->enabled
+Date:   Tue, 18 Aug 2020 09:25:11 +0200
+Message-Id: <20200818072511.6745-3-kraxel@redhat.com>
+In-Reply-To: <20200818072511.6745-1-kraxel@redhat.com>
+References: <20200818072511.6745-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:10:01AM +0200, Ard Biesheuvel wrote:
-> On Tue, 18 Aug 2020 at 00:02, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > LLVM implemented a recent "libcall optimization" that lowers calls to
-> > `sprintf(dest, "%s", str)` where the return value is used to
-> > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> > in parsing format strings. This optimization was introduced into
-> > clang-12. Because the kernel does not provide an implementation of
-> > stpcpy, we observe linkage failures for almost all targets when building
-> > with ToT clang.
-> >
-> > The interface is unsafe as it does not perform any bounds checking.
-> > Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
-> >
-> > Unlike
-> > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> > which cited failures with `-fno-builtin-*` flags being retained in LLVM
-> > LTO, that bug seems to have been fixed by
-> > https://reviews.llvm.org/D71193, so the above sha can now be reverted in
-> > favor of `-fno-builtin-bcmp`.
-> >
-> > Cc: stable@vger.kernel.org # 4.4
-> 
-> Why does a fix for Clang-12 have to be backported all the way to v4.4?
-> How does that meet the requirements for stable patches?
+Not needed, already tracked by drm_crtc_state->active.
 
-Because people like to build older kernels with new compliler versions.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 -
+ drivers/gpu/drm/virtio/virtgpu_display.c | 4 ----
+ drivers/gpu/drm/virtio/virtgpu_plane.c   | 2 +-
+ 3 files changed, 1 insertion(+), 6 deletions(-)
 
-And those "people" include me, who doesn't want to keep around old
-compilers just because my distro moved to the latest one...
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 4ab1b0ba2925..fbc04272db4f 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -137,7 +137,6 @@ struct virtio_gpu_output {
+ 	struct edid *edid;
+ 	int cur_x;
+ 	int cur_y;
+-	bool enabled;
+ 	bool needs_modeset;
+ };
+ #define drm_crtc_to_virtio_gpu_output(x) \
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index 6c26b41f4e0d..86a3a800d12e 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -97,9 +97,6 @@ static void virtio_gpu_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+ 					  struct drm_crtc_state *old_state)
+ {
+-	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+-
+-	output->enabled = true;
+ }
+ 
+ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+@@ -111,7 +108,6 @@ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 
+ 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0, 0, 0, 0, 0);
+ 	virtio_gpu_notify(vgdev);
+-	output->enabled = false;
+ }
+ 
+ static int virtio_gpu_crtc_atomic_check(struct drm_crtc *crtc,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index 65757409d9ed..6a311cd93440 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -142,7 +142,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 	if (WARN_ON(!output))
+ 		return;
+ 
+-	if (!plane->state->fb || !output->enabled) {
++	if (!plane->state->fb || !output->crtc.state->active) {
+ 		DRM_DEBUG("nofb\n");
+ 		virtio_gpu_cmd_set_scanout(vgdev, output->index, 0,
+ 					   plane->state->src_w >> 16,
+-- 
+2.18.4
 
-We've been doing this for the past 4+ years, for new versions of gcc,
-keeping 4.4.y building properly with the bleeding edge of that compiler,
-why is clang any different here?
-
-thanks,
-
-greg k-h
