@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E419C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C74E205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4CC205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="is/mGd+C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O7ndm9MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHRLgK (ORCPT
+        id S1726673AbgHRLgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
+        Tue, 18 Aug 2020 07:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgHRL2I (ORCPT
+        with ESMTP id S1726616AbgHRL2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:28:08 -0400
+        Tue, 18 Aug 2020 07:28:09 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 713D8C061343
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD4EC061345
         for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=EU8brcDaDiYW4fr6pjY4X18D72HZqxsjECTnBCKTXzk=; b=is/mGd+Cdj8TRUy6yDxDvR7u6M
-        14emhs2VKoIFad4Ym8FpoQzTZUaF/pDQ5Ahd6Kz3fRAuFdgzI5T+hdC18oUXE/1DHG16AgraiWGMf
-        jmK8W5m+dERaMXqyWvo1Z02kjfn5EIxwefRoHYMLCC8L6nsfOYSWeejOzmsldN4FPBBRc7Uwk9HgU
-        ZfU9qILnX3eYcziZ5jIQQbwVMv6w4bfM/QEXPZWh/bITnXjzgOQeYNPuPihCEtLiKylQj2bTHnunZ
-        +Aunr8JG/KWFUPRV/2XUoBXXYUmAEJ4WlKCKFP5nCkJvFL9DmS5yyoOLjz4OQW6PHBJzoNkO+0WQ4
-        PsD3sh3Q==;
+        bh=tx4qoiH3PUHFWV8+AgjV+uBCV7VzasfH+zR58zkiQYE=; b=O7ndm9MMVR6+8l/JHFpB0qh5mz
+        ucZmxwQ6+i2KbGy42XI4B2x9p0kGNuuLiQ1YSAskdjTxiVuYSul59U+ZilN72Cq3BCUFHTkQeZEKW
+        gH8JWmrQ8clbg2ENqqczQxbjJwGmZFPTPCWn8H4WpzisS36SWpFyW3SRvSzZikc+RB7ldoj0zUrkG
+        QbSKj4n57BWp6NnH2nHcq3nd9ThEcQHVkNHTfcX+YvOcIiDuiP6yguS97nmxv0qDJHrN1+0sutzVj
+        eDLxtVQqAGh7wwJxY3Cadd5vUVGKXxya2ERKRdTQ63t032X+j1dBOqPjebLG3wgxQCj5gHpuHalNe
+        qKo4SvHA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7zmP-0002AZ-OH; Tue, 18 Aug 2020 11:27:49 +0000
+        id 1k7zmO-0002AK-5I; Tue, 18 Aug 2020 11:27:48 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E98B5307691;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F661301A66;
         Tue, 18 Aug 2020 13:27:44 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6CB18200D4C3A; Tue, 18 Aug 2020 13:27:44 +0200 (CEST)
-Message-ID: <20200818112418.328209144@infradead.org>
+        id 5FB2A200D4C37; Tue, 18 Aug 2020 13:27:44 +0200 (CEST)
+Message-ID: <20200818112418.130676338@infradead.org>
 User-Agent: quilt/0.66
-Date:   Tue, 18 Aug 2020 12:51:08 +0200
+Date:   Tue, 18 Aug 2020 12:51:05 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, torvalds@linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, will@kernel.org, paulmck@kernel.org,
         hch@lst.de, axboe@kernel.dk, chris@chris-wilson.co.uk,
         davem@davemloft.net, kuba@kernel.org, fweisbec@gmail.com,
         oleg@redhat.com, vincent.guittot@linaro.org, peterz@infradead.org
-Subject: [RFC][PATCH v2 06/10] irq_work: Provide irq_work_queue_remote_static()
+Subject: [PATCH v2 03/10] irq_work: Optimize irq_work_single()
 References: <20200818105102.926463950@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,80 +64,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide the same horrible semantics provided by
-smp_call_function_single_async(), doing so allows skiping a bunch of
-atomic ops.
-
-API wise this is horrible crap as it relies on external serialization.
+Trade one atomic op for a full memory barrier.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/irq_work.h |    3 ++-
- kernel/irq_work.c        |   21 ++++++++++++++++++++-
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ include/linux/irqflags.h |    8 ++++----
+ kernel/irq_work.c        |   29 +++++++++++++++++------------
+ 2 files changed, 21 insertions(+), 16 deletions(-)
 
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -19,7 +19,7 @@ struct irq_work {
- };
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -88,14 +88,14 @@ do {						\
+ 		  current->irq_config = 0;			\
+ 	  } while (0)
  
- #define __IRQ_WORK_INIT(_func, _flags) (struct irq_work){	\
--	.node = { .u_flags = (_flags), },			\
-+	.node = { .u_flags = CSD_TYPE_IRQ_WORK | (_flags), },	\
- 	.func = (_func),					\
- }
- 
-@@ -68,6 +68,7 @@ static inline bool irq_work_needs_cpu(vo
- 
- #ifdef CONFIG_SMP
- extern int irq_work_queue_remote(int cpu, struct irq_work *work);
-+extern int irq_work_queue_remote_static(int cpu, struct irq_work *work);
- extern void irq_work_single(void *arg);
- #endif
+-# define lockdep_irq_work_enter(__work)					\
++# define lockdep_irq_work_enter(_flags)					\
+ 	  do {								\
+-		  if (!(atomic_read(&__work->node.a_flags) & IRQ_WORK_HARD_IRQ))\
++		  if (!((_flags) & IRQ_WORK_HARD_IRQ))			\
+ 			current->irq_config = 1;			\
+ 	  } while (0)
+-# define lockdep_irq_work_exit(__work)					\
++# define lockdep_irq_work_exit(_flags)					\
+ 	  do {								\
+-		  if (!(atomic_read(&__work->node.a_flags) & IRQ_WORK_HARD_IRQ))\
++		  if (!((_flags) & IRQ_WORK_HARD_IRQ))			\
+ 			current->irq_config = 0;			\
+ 	  } while (0)
  
 --- a/kernel/irq_work.c
 +++ b/kernel/irq_work.c
-@@ -29,7 +29,7 @@ static bool irq_work_claim(struct irq_wo
- {
- 	int oflags;
- 
--	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED | CSD_TYPE_IRQ_WORK, &work->node.a_flags);
-+	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED, &work->node.a_flags);
+@@ -34,7 +34,7 @@ static bool irq_work_claim(struct irq_wo
+ 	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED | CSD_TYPE_IRQ_WORK, &work->node.a_flags);
  	/*
  	 * If the work is already pending, no need to raise the IPI.
- 	 * The pairing smp_mb() in irq_work_single() makes sure
-@@ -63,6 +63,9 @@ void irq_work_single(void *arg)
- 	work->func(work);
- 	lockdep_irq_work_exit(flags);
+-	 * The pairing atomic_fetch_andnot() in irq_work_run() makes sure
++	 * The pairing smp_mb() in irq_work_single() makes sure
+ 	 * everything we did before is visible.
+ 	 */
+ 	if (oflags & IRQ_WORK_PENDING)
+@@ -136,22 +136,27 @@ void irq_work_single(void *arg)
+ 	int flags;
  
-+	if (!(flags & IRQ_WORK_BUSY))
-+		return;
+ 	/*
+-	 * Clear the PENDING bit, after this point the @work
+-	 * can be re-used.
+-	 * Make it immediately visible so that other CPUs trying
+-	 * to claim that work don't rely on us to handle their data
+-	 * while we are in the middle of the func.
++	 * Clear the PENDING bit, after this point the @work can be re-used.
++	 * The PENDING bit acts as a lock, and we own it, so we can clear it
++	 * without atomic ops.
+ 	 */
+-	flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->node.a_flags);
++	flags = atomic_read(&work->node.a_flags);
++	flags &= ~IRQ_WORK_PENDING;
++	atomic_set(&work->node.a_flags, flags);
++
++	/*
++	 * See irq_work_claim().
++	 */
++	smp_mb();
+ 
+-	lockdep_irq_work_enter(work);
++	lockdep_irq_work_enter(flags);
+ 	work->func(work);
+-	lockdep_irq_work_exit(work);
++	lockdep_irq_work_exit(flags);
 +
  	/*
- 	 * Clear the BUSY bit, if set, and return to the free state if no-one
- 	 * else claimed it meanwhile.
-@@ -108,6 +111,22 @@ int irq_work_queue_remote(int cpu, struc
- 
- 	return 0;
+-	 * Clear the BUSY bit and return to the free state if
+-	 * no-one else claimed it meanwhile.
++	 * Clear the BUSY bit, if set, and return to the free state if no-one
++	 * else claimed it meanwhile.
+ 	 */
+-	flags &= ~IRQ_WORK_PENDING;
+ 	(void)atomic_cmpxchg(&work->node.a_flags, flags, flags & ~IRQ_WORK_BUSY);
  }
-+
-+int irq_work_queue_remote_static(int cpu, struct irq_work *work)
-+{
-+	/*
-+	 * Ensures preemption is disabled in the caller.
-+	 */
-+	WARN_ON_ONCE(cpu == smp_processor_id());
-+
-+	if (work->node.u_flags & IRQ_WORK_PENDING)
-+		return -EBUSY;
-+
-+	work->node.u_flags |= IRQ_WORK_PENDING;
-+	__smp_call_single_queue(cpu, &work->node.llist);
-+
-+	return 0;
-+}
- 
- #endif /* CONFIG_SMP */
  
 
 
