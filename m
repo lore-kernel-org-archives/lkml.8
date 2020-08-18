@@ -2,114 +2,130 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC139C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE50206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:43:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVRBvpJp"
+	by mail.kernel.org (Postfix) with ESMTP id C0991206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHRMnx (ORCPT
+        id S1726738AbgHRMoY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHRMn0 (ORCPT
+        Tue, 18 Aug 2020 08:44:24 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42464 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgHRMoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:43:26 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5FFC061389;
-        Tue, 18 Aug 2020 05:43:26 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i20so3812175qkk.8;
-        Tue, 18 Aug 2020 05:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Lkwb0MC1U017Rc+5srV075yc1RB+zhRumqNLjycHzv0=;
-        b=bVRBvpJp1Jn3uK4vw5rxeYNaki/0jZ+GS2lYPzzIV5OyXDx5QK7LCUwXDm4HV0NE6o
-         TiwR7qCy6OmPidfUP06gFR//msKvhh2t/wcJfhMYjQ5kikNkqq52A/MnK8bJjBQeHFeD
-         89hEQKRV/MGCerWOTPNYyNEOHFoiNZGXfFdooR7eKsrFi0G5RQUvq8W1TD6nsj8o1piV
-         MQCHcS8OwsPucbVPmnclJXx8urib9+VQgJA1bGQ8kRPPMEZ7NPjJoi2nZpLT0v2Vpx8w
-         qGP07cIEq7Mn1tV2MJi9qdwCMJPOvhrJvLpVvd0IwiiJ4xeqffik42fjpO5Qegcc+8CT
-         Z8UQ==
+        Tue, 18 Aug 2020 08:44:22 -0400
+Received: by mail-il1-f193.google.com with SMTP id t13so17409265ile.9;
+        Tue, 18 Aug 2020 05:44:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Lkwb0MC1U017Rc+5srV075yc1RB+zhRumqNLjycHzv0=;
-        b=FxMqO/Kctj90Oif71RQzkcKzEfyu/WDku8fSgmJm/i2PwB+FKxStDpVIUmqdL0hUsu
-         1Qqc4NsB2yp6xZoM+JUJjtTgpWZy1QGGKcBPLzqTOUu/SzyImuiOWjvrIaPOGY2J1XbF
-         QpZWsNvjWWfuobi1VAFxAx0QnKA2XHHY9gLprid2cVad7W2RwiD3D2TMDuZi6UNPjHjp
-         NXq8oBaad5joIfGR/nb2xuFZJ2bHgVIVMyqtKFzxZrCKH5khUCoUlgQphMxoO1CFSiXv
-         BEQF9CSs8vrAf1rUMOuiQ1/Q7G0H6vX5TDLOCXkOxdgboPYzE4yENC6OzkoOmbgACcLV
-         nqfQ==
-X-Gm-Message-State: AOAM5316eAyVOarlNmw8bW7YyC9gtqq0AKc+b8AopjP1PBhdBFPOAuld
-        /VHNrQ7RAEZPD+bqW/+QqHMe54ej4SNNlZ20
-X-Google-Smtp-Source: ABdhPJzTrG9BNxDVZf15ZutpPQz8+OfOrVXp0M8eC/IHCYASQVuHRRYCad4iCp+6VqUxQdtC2GOPsg==
-X-Received: by 2002:a37:47cc:: with SMTP id u195mr16979523qka.39.1597754605328;
-        Tue, 18 Aug 2020 05:43:25 -0700 (PDT)
-Received: from [192.168.1.181] (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
-        by smtp.gmail.com with ESMTPSA id y9sm21581828qka.0.2020.08.18.05.43.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 05:43:24 -0700 (PDT)
-Subject: Re: [PATCH] block: rnbd: rnbd-srv: silence uninitialized variable
- warning
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200818040317.5926-1-brookebasile@gmail.com>
- <20200818052957.GA2253299@ubuntu-n2-xlarge-x86>
-From:   Brooke Basile <brookebasile@gmail.com>
-Message-ID: <2fd7f9c7-8558-0f81-6a8f-1366f1feb8a2@gmail.com>
-Date:   Tue, 18 Aug 2020 08:43:23 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DbyHrIOxa4jcO2ErW1gwDHjx1vIFDqRvp0Kn9SISwcw=;
+        b=XuyENUByL1JUnsF5zObVuGHKR7KROlOgpKRZCktZBAPPpV/KukmGJiYI7c73epJIbm
+         x80t7OL2yfrA451ciL89jAW09Fu1z4Nf+4wS1Fh8BC6zv5RL2ozXC6qhqB7T6N2RG0HV
+         ACd2H5QN4MseqK/DYssiiI8Z7f5uv/t+TG0GKSX9jc8e/Xbm5hjoVK1C74U9VD3ZNRVy
+         mlDo6oxzzWkl4AUfqNWnwU4jqv7pLzSNGYnG5teUiTRWuaciD9cLHBWopQUFPBU0YHTS
+         YtVjpcIcGGog0aCXA0rPYPYlUCq+Uo+hQF0jh/HKrCRmOF9U25c++0wVY7WtGhR9gmZO
+         jibA==
+X-Gm-Message-State: AOAM531QoPADDPZhGgYO+40Z3PPVt2VwwTHRJx1i3MKWOPalWVkzkgl/
+        rpTa+5BVR1flFfB6SpbzspHXC3igsT0HqR11GeM=
+X-Google-Smtp-Source: ABdhPJxWpu5n6piEUh6svMsCDBFsjQn4fo2xJvKgUOqpNv5S/bVOK6NyzvRqrLamhlzBRkHImAWk3CSE75v/MIZVCWk=
+X-Received: by 2002:a92:d30a:: with SMTP id x10mr17872887ila.287.1597754661152;
+ Tue, 18 Aug 2020 05:44:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200818052957.GA2253299@ubuntu-n2-xlarge-x86>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Tue, 18 Aug 2020 20:44:09 +0800
+Message-ID: <CAAhV-H5mqDUndoX=mam8S9JKn0nEUHc=NXb7FQJ-0uau=OqoAQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of
+ enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
+To:     Youling Tang <tangyouling@loongson.cn>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 1:29 AM, Nathan Chancellor wrote:
-> I don't think this is a proper fix since the root cause of the warning
-> appears to be that we are ignoring the return value of
-> rnbd_bio_map_kern. Should we not set err to that value like this
-> (completely untested)?
-> 
-> Cheers,
-> Nathan
-> 
-> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-> index 0fb94843a495..1b71cb2a885d 100644
-> --- a/drivers/block/rnbd/rnbd-srv.c
-> +++ b/drivers/block/rnbd/rnbd-srv.c
-> @@ -148,7 +148,8 @@ static int process_rdma(struct rtrs_srv *sess,
->   	/* Generate bio with pages pointing to the rdma buffer */
->   	bio = rnbd_bio_map_kern(data, sess_dev->rnbd_dev->ibd_bio_set, datalen, GFP_KERNEL);
->   	if (IS_ERR(bio)) {
-> -		rnbd_srv_err(sess_dev, "Failed to generate bio, err: %ld\n", PTR_ERR(bio));
-> +		err = PTR_ERR(bio);
-> +		rnbd_srv_err(sess_dev, "Failed to generate bio, err: %ld\n", err);
->   		goto sess_dev_put;
->   	}
->   
-> 
+Hi, Youling,
 
-Ah, I see what you mean.  Thanks for the fix!
+On Tue, Aug 18, 2020 at 7:35 PM Youling Tang <tangyouling@loongson.cn> wrote:
+>
+> After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
+>
+> Fix the following build error:
+>
+> drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
+>   VIRTUAL,
+>   ^
+> In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
+>                  from ./arch/mips/include/asm/mmzone.h:12,
+>                  from ./include/linux/mmzone.h:962,
+>                  from ./include/linux/gfp.h:6,
+>                  from ./include/linux/slab.h:15,
+>                  from ./include/linux/genhd.h:16,
+>                  from ./include/linux/blkdev.h:8,
+>                  from drivers/md/persistent-data/dm-block-manager.h:11,
+>                  from drivers/md/dm-thin-metadata.h:10,
+>                  from drivers/md/dm-thin.c:7:
+> ./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
+> definition of ‘VIRTUAL’ was here VIRTUAL = 3
+>                                  ^
+> scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
+> make[2]: *** [drivers/md/dm-thin.o] Error 1
+>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>  arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
+>  arch/mips/loongson64/env.c                         | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> index afc92b7..a4ef4ac 100644
+> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
+> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> @@ -195,7 +195,7 @@ struct boot_params {
+>  enum loongson_bridge_type {
+>         LS7A = 1,
+>         RS780E = 2,
+> -       VIRTUAL = 3
+> +       VIRT = 3
+>  };
+Thank you for your patch, but I think this problem is because of
+invalid .h file inclusion (arch-dependent .h file should not be
+included in drivers), and Xuerui Wang has investigated it for some
+time. He has a draft patch (haven't sent yet) which I think is a
+better way. So, please wait some time.
 
-Best,
-Brooke Basile
+Huacai
+>
+>  struct loongson_system_configuration {
+> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+> index 134cb8e..623b3f1 100644
+> --- a/arch/mips/loongson64/env.c
+> +++ b/arch/mips/loongson64/env.c
+> @@ -180,8 +180,8 @@ void __init prom_init_env(void)
+>                 loongson_sysconf.early_config = rs780e_early_config;
+>                 break;
+>         default:
+> -               pr_info("The bridge chip is VIRTUAL\n");
+> -               loongson_sysconf.bridgetype = VIRTUAL;
+> +               pr_info("The bridge chip is VIRT\n");
+> +               loongson_sysconf.bridgetype = VIRT;
+>                 loongson_sysconf.early_config = virtual_early_config;
+>                 loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
+>                 break;
+> --
+> 2.1.0
+>
