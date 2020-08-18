@@ -2,122 +2,100 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF39C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B89C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC8920825
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACC42080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgHRP40 (ORCPT
+        id S1728393AbgHRP4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:56:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:35749 "EHLO mga11.intel.com"
+        Tue, 18 Aug 2020 11:56:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59294 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgHRPrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:47:18 -0400
-IronPort-SDR: vL9FBaH0TqzJ0GQ11erL/qDWNu9Gl8TR5nz21tju0VQIm3AwwVgBUukPSIDWhddBmSi9LHVFUz
- yQLkUoymPlUw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152563263"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="152563263"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:47:18 -0700
-IronPort-SDR: V2LwCJFKDxgzQb5hV91A5IeYw3Ero92nPQ+4CXQK6uEQjJ72/c3Ds8RnGIRtPtb0AlwJEGbUzw
- 4zaYKZhNRABg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="400530265"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:47:15 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-Subject: [PATCH v6 04/10] net: eth: altera: add optional function to start tx dma
-Date:   Tue, 18 Aug 2020 23:46:07 +0800
-Message-Id: <20200818154613.148921-5-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
-References: <20200818154613.148921-1-joyce.ooi@intel.com>
+        id S1728378AbgHRP40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:56:26 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k83yH-009vuo-8G; Tue, 18 Aug 2020 17:56:21 +0200
+Date:   Tue, 18 Aug 2020 17:56:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de, dqfext@gmail.com
+Subject: Re: [PATCH net-next v2 3/7] net: dsa: mt7530: Extend device data
+ ready for adding a new hardware
+Message-ID: <20200818155621.GE2330298@lunn.ch>
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+ <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+On Tue, Aug 18, 2020 at 03:14:08PM +0800, Landen Chao wrote:
+> Add a structure holding required operations for each device such as device
+> initialization, PHY port read or write, a checker whether PHY interface is
+> supported on a certain port, MAC port setup for either bus pad or a
+> specific PHY interface.
+> 
+> The patch is done for ready adding a new hardware MT7531.
+> 
+> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  drivers/net/dsa/mt7530.c | 272 +++++++++++++++++++++++++++++----------
+>  drivers/net/dsa/mt7530.h |  37 +++++-
+>  2 files changed, 240 insertions(+), 69 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 0fd50798aa42..d30b41725b4d 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -372,8 +372,9 @@ mt7530_fdb_write(struct mt7530_priv *priv, u16 vid,
+>  		mt7530_write(priv, MT7530_ATA1 + (i * 4), reg[i]);
+>  }
+>  
+> +/* Setup TX circuit incluing relevant PAD and driving */
+>  static int
+> -mt7530_pad_clk_setup(struct dsa_switch *ds, int mode)
+> +mt7530_pad_clk_setup(struct dsa_switch *ds, phy_interface_t interface)
+>  {
+>  	struct mt7530_priv *priv = ds->priv;
+>  	u32 ncpo1, ssc_delta, trgint, i, xtal;
+> @@ -387,7 +388,7 @@ mt7530_pad_clk_setup(struct dsa_switch *ds, int mode)
+>  		return -EINVAL;
+>  	}
+>  
+> -	switch (mode) {
+> +	switch (interface) {
+>  	case PHY_INTERFACE_MODE_RGMII:
+>  		trgint = 0;
+>  		/* PLL frequency: 125MHz */
 
-Allow for optional start up of tx dma if the start_txdma
-function is defined in altera_dmaops.
+Do you actually need to support all 4 RGMII modes?
 
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-v2: no change
-v3: no change
-v4: no change
-v5: no change
-v6: no change
----
- drivers/net/ethernet/altera/altera_tse.h      | 1 +
- drivers/net/ethernet/altera/altera_tse_main.c | 5 +++++
- 2 files changed, 6 insertions(+)
+...
 
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index 7d0c98fc103e..26c5541fda27 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -401,6 +401,7 @@ struct altera_dmaops {
- 	int (*init_dma)(struct altera_tse_private *priv);
- 	void (*uninit_dma)(struct altera_tse_private *priv);
- 	void (*start_rxdma)(struct altera_tse_private *priv);
-+	void (*start_txdma)(struct altera_tse_private *priv);
- };
- 
- /* This structure is private to each device.
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index a3749ffdcac9..0a724e4d2c8c 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -1244,6 +1244,9 @@ static int tse_open(struct net_device *dev)
- 
- 	priv->dmaops->start_rxdma(priv);
- 
-+	if (priv->dmaops->start_txdma)
-+		priv->dmaops->start_txdma(priv);
-+
- 	/* Start MAC Rx/Tx */
- 	spin_lock(&priv->mac_cfg_lock);
- 	tse_set_mac(priv, true);
-@@ -1646,6 +1649,7 @@ static const struct altera_dmaops altera_dtype_sgdma = {
- 	.init_dma = sgdma_initialize,
- 	.uninit_dma = sgdma_uninitialize,
- 	.start_rxdma = sgdma_start_rxdma,
-+	.start_txdma = NULL,
- };
- 
- static const struct altera_dmaops altera_dtype_msgdma = {
-@@ -1665,6 +1669,7 @@ static const struct altera_dmaops altera_dtype_msgdma = {
- 	.init_dma = msgdma_initialize,
- 	.uninit_dma = msgdma_uninitialize,
- 	.start_rxdma = msgdma_start_rxdma,
-+	.start_txdma = NULL,
- };
- 
- static const struct of_device_id altera_tse_ids[] = {
--- 
-2.13.0
++			goto unsupported;
+> +		break;
+> +	case 6: /* 1st cpu port */
+> +		if (state->interface != PHY_INTERFACE_MODE_RGMII &&
+> +		    state->interface != PHY_INTERFACE_MODE_TRGMII)
 
+phy_interface_mode_is_rgmii()?
+
+	Andrew
