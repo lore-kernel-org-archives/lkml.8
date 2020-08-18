@@ -2,169 +2,153 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E792FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A574C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4A62063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597784015;
-	bh=PoiM3j5EkvZ44e8I6cUQWHdTxb0lNwr5tUyBzR8juj0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YZAySPv33fc46VpRO2UTtYvg8Q4HzcLhtOzmjEV31IM9d7SzbjW6+OaCeKNL41HA6
-	 Y++aNshVNrYVIZjhmWdi5iHlcy4yOyDVsEdRRwS7dp9vDU522l6F0tNWxOCcIHXhFi
-	 A3LVkh7WGGAkC8fSDw6H89wtqRsEwb8N24I5H3Es=
+	by mail.kernel.org (Postfix) with ESMTP id 2C9EF2063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7t4t8R2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHRUxd (ORCPT
+        id S1726867AbgHRU4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
+        Tue, 18 Aug 2020 16:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgHRUxc (ORCPT
+        with ESMTP id S1726829AbgHRU4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:53:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6089C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:31 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f26so22961141ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:31 -0700 (PDT)
+        Tue, 18 Aug 2020 16:56:11 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDC4C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id u24so18020386oic.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=44jjlz9gHZ8bxkxJCT+KFdrq1JkP5ys9BBa+Qk39NAU=;
-        b=KmKfogzwUujvQb/F0JA/vopaWbvFysSlsxJrpItNo5RKDQ8MIZrythcEa0jhqcR97h
-         6k/jvzQGWfMSCchn3FxL3xWMnBP2o1wmrl8y6sRimpA8Bh+iDfzxbjypP5Ke/mhWrexJ
-         Ac+8fu9qUv1fiSsbJIE2/XWj5iLbyNhOIcPwQ=
+        bh=WVlaqaJEkLaogLxHkb59x+3913QcwhMo1tlZOm9AT0s=;
+        b=F7t4t8R2e65gCr9vdIxnNuliGDt2ahdeDAfavI7tANLzu2aQ0/Dm9nm68MjGmfDIEn
+         +INKamv7mBD5XwNAn5unHK7F4wcGpKBzLWiimwLuJuMjurd9FzQdSLd4A3XwNq4oZgON
+         0mJ1mp3STPu72DoEU6s2oGDaAPZc1d9iqm6UukG6YQUqg1rxoULI89OmVCHGV1I5M6PW
+         LehxdYwb6AkyftI67q/r18iiMmsk+U2qcn2C0MXIx9alBu+BWFFFFCArG9HhsRjc+0Ow
+         eHMsfDTsciu66LcErJpINTzl2QMt9ciDVh42trJ4L0rc+/x0fLt7IxkYDBuYtyO6wsbj
+         4YsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=44jjlz9gHZ8bxkxJCT+KFdrq1JkP5ys9BBa+Qk39NAU=;
-        b=XLkT+dkBX7MvTCzjO/GToOzmtt+k64Jh3Mw7yyYXVGEN2RlT6oX4APynEQbxtvhiQf
-         ax0XhSvKBNOcOncFGmlQmbh0+K7Grh818/NhgZLRTtqbhStTUF/Bq0VKgsvUN/wpNKkf
-         lR6MemYYDsB0jNqQoGtDrZrFpZD8H8FjzkL5OmgQdvmZAzGWL30XuIdCP+flmQHV9HTq
-         rzBjkwp09IKaXMq+M5NvVm8PgH7MMQUP78W72TdCtF2XRMIGRnVFwpWpnqJ4FGcazu52
-         JFfVrT+OeGJYoWikE9wNUS2uJevjS904E1E4Yk/CpYxG/q7OTPNhrL+Mb+32Dl8k1c8t
-         M5gA==
-X-Gm-Message-State: AOAM532WNyXmbLBgaOBfHA2OhgFOmbmqI71KadPRQqH+H0Q8Mn0aXc1V
-        CFfUc/Z0we/pAq3Dsvpz4hjZT5X/12QliA==
-X-Google-Smtp-Source: ABdhPJwsI9pv4hBK67F116nO13zEnGbTc0Od0N2n86PQXSScBqsEmPXspbgsHcXn/ZgEYCgjo0v1rw==
-X-Received: by 2002:a2e:9ed4:: with SMTP id h20mr10663202ljk.82.1597784009868;
-        Tue, 18 Aug 2020 13:53:29 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id f12sm6212072ljn.14.2020.08.18.13.53.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 13:53:28 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id v12so22968442ljc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:27 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr9400093ljk.421.1597784007533;
- Tue, 18 Aug 2020 13:53:27 -0700 (PDT)
+        bh=WVlaqaJEkLaogLxHkb59x+3913QcwhMo1tlZOm9AT0s=;
+        b=uSf5nT4mYyZCTBdwioPP8uk1m/pJ23GelfTSA8KwiIFW2bjHASpTr+hjJtMXgNQjnA
+         wAdmGOPUnYmEnbzgQDa+8fTtU90N2XkHilifpdAvm+6fODJPbWyMPdbhWJmP+9V/NzDI
+         FjilpIad3LgKuPmx+jDTBIufXPCaUeHhG2bYnrv7pzYImXKCgB2mGkxyf1SemavKJj0X
+         UgpytkB1W6wKPEVhCu5Efu2eygYJn44aw3i+KzXWrbi0dQqj16q7KaVasb9MO/t36Iyp
+         eplm/vAHo922YDEaiF2ZGkS0RL2E7Oq8s43cY/Aiv9BCDf1jiKQekeSLOPXJm1ur3RqJ
+         6R4g==
+X-Gm-Message-State: AOAM531xTofVQkmGufvrYbSGTKZzQE/5eeWZ4+ZvEGo4/FchEi37kvd8
+        QPno1ziMdptrEr1jrb8naJleEvA52UXj0xQpfWfm1Q==
+X-Google-Smtp-Source: ABdhPJwbu8MfbO3BaVc7WQtY8gCaYLyN64siinjCbEFyrvhEdhXeVpE86gO8wO6noTbeRWOhZomU5kKcgOZGItaZTUA=
+X-Received: by 2002:aca:1117:: with SMTP id 23mr1367198oir.97.1597784170084;
+ Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
- <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
- <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
- <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com> <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com>
-In-Reply-To: <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Aug 2020 13:53:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
-Message-ID: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
+ <20200818080415.7531-1-hyesoo.yu@samsung.com>
+In-Reply-To: <20200818080415.7531-1-hyesoo.yu@samsung.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 18 Aug 2020 13:55:59 -0700
+Message-ID: <CALAqxLWRLOqNrhhpjfqfztsWTib8SQQgeX3jJM+_ij_CvC6hiw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+To:     Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        iamjoonsoo.kim@lge.com, joaodias@google.com,
+        linux-mm <linux-mm@kvack.org>,
+        KyongHo Cho <pullip.cho@samsung.com>,
+        Suren Baghdasaryan <surenb@google.com>, vbabka@suse.cz,
+        "Andrew F. Davis" <afd@ti.com>,
+        "(Exiting) Benjamin Gaignard" <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 1:18 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Tue, Aug 18, 2020 at 12:45 AM Hyesoo Yu <hyesoo.yu@samsung.com> wrote:
 >
-> So why mix a binary structure into it?  Would it not make more sense
-> to make it text only?
+> These patch series to introduce a new dma heap, chunk heap.
+> That heap is needed for special HW that requires bulk allocation of
+> fixed high order pages. For example, 64MB dma-buf pages are made up
+> to fixed order-4 pages * 1024.
+>
+> The chunk heap uses alloc_pages_bulk to allocate high order page.
+> https://lore.kernel.org/linux-mm/20200814173131.2803002-1-minchan@kernel.org
+>
+> The chunk heap is registered by device tree with alignment and memory node
+> of contiguous memory allocator(CMA). Alignment defines chunk page size.
+> For example, alignment 0x1_0000 means chunk page size is 64KB.
+> The phandle to memory node indicates contiguous memory allocator(CMA).
+> If device node doesn't have cma, the registration of chunk heap fails.
+>
+> The patchset includes the following:
+>  - export dma-heap API to register kernel module dma heap.
+>  - add chunk heap implementation.
+>  - document of device tree to register chunk heap
+>
+> Hyesoo Yu (3):
+>   dma-buf: add missing EXPORT_SYMBOL_GPL() for dma heaps
+>   dma-buf: heaps: add chunk heap to dmabuf heaps
+>   dma-heap: Devicetree binding for chunk heap
 
-.. because for basic and standard stuff, the binary structure just
-makes sense and is easier for everybody.
+Hey! Thanks so much for sending this out! I'm really excited to see
+these heaps be submitted and reviewed on the list!
 
-When I want to get the size of a file, I do "stat()" on it, and get
-the size from st.st_size. That's convenient, and there's no reason
-_not_ to do it. Returning the size as an ASCII string would be
-completely pointless and annoying as hell.
+The first general concern I have with your series is that it adds a dt
+binding for the chunk heap, which we've gotten a fair amount of
+pushback on.
 
-So binary formats have their places. But those places are for standard
-and well-understood fields that are commonly accessed and do not have
-any free-form or wild components to them that needs to be marshalled
-into some binary format.
+A possible alternative might be something like what Kunihiko Hayashi
+proposed for non-default CMA heaps:
+  https://lore.kernel.org/lkml/1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com/
 
-Whenever you have free-form data, just use ASCII.
+This approach would insteal allow a driver to register a CMA area with
+the chunk heap implementation.
 
-It's what "mount" already uses, for chrissake. We pass in mount
-options as ASCII for a good reason.
+However, (and this was the catch Kunihiko Hayashi's patch) this
+requires that the driver also be upstream, as we need an in-tree user
+of such code.
 
-Basically, I think a rough rule of thumb can and should be:
+Also, it might be good to provide some further rationale on why this
+heap is beneficial over the existing CMA heap?  In general focusing
+the commit messages more on the why we might want the patch, rather
+than what the patch does, is helpful.
 
- - stuff that the VFS knows about natively and fully is clearly pretty
-mount-agnostic and generic, and can be represented in whatever
-extended "struct statfs_x" directly.
+"Special hardware" that doesn't have upstream drivers isn't very
+compelling for most maintainers.
 
- - anything that is variable-format and per-fs should be expressed in
-the ASCII buffer
+That said, I'm very excited to see these sorts of submissions, as I
+know lots of vendors have historically had very custom out of tree ION
+heaps, and I think it would be a great benefit to the community to
+better understand the experience vendors have in optimizing
+performance on their devices, so we can create good common solutions
+upstream. So I look forward to your insights on future revisions of
+this patch series!
 
-Look at our fancy new fs_context - that's pretty much what it does
-even inside the kernel. Sure, we have "binary" fields there for core
-basic information ("struct dentry *root", but also things like flags
-with MNT_NOSUID), but the configuration stuff is ASCII that the
-filesystem can parse itself.
-
-Exactly because some things are very much specific to some
-filesystems, not generic things.
-
-So we fundamentally already have a mix of "standard FS data" and
-"filesystem-specific options", and it's already basically split that
-way: binary flag fields for the generic stuff, and ASCII text for the
-odd options.
-
-Again: binary data isn't wrong when it's a fixed structure that didn't
-need some odd massaging or marshalling or parsing. Just a simple fixed
-structure. That is _the_ most common kernel interface, used for almost
-everything.  Sometimes we have arrays of them, but most of the time
-it's a single struct pointer.
-
-But binary data very much is wrong the moment you think you need to
-have a parser to read it, or a marshaller to write it. Just use ASCII.
-
-I really would prefer for the free-form data to have a lot of
-commonalities with the /proc/mounts line. Not because that's a
-wonderful format, but because there are very very few truly wonderful
-formats out there, and in the absense of "wonderful", I'd much prefer
-"familiar" and "able to use common helpers" (hopefully both on the
-kernel side and the user side)..
-
-               Linus
+thanks
+-john
