@@ -2,156 +2,84 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDDAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D864C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2200820786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7F72067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:37:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oiWpoxmA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sChHbAxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgHRIg0 (ORCPT
+        id S1726519AbgHRIhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:36:26 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:54794 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726631AbgHRIgZ (ORCPT
+        Tue, 18 Aug 2020 04:37:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHRIhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:36:25 -0400
-X-UUID: cda77b9ba2494b929655d8549d9c3e65-20200818
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=aSQA+gxoSQ0QZcwrx3/12pS4dgKqh+H+S6wrzElQA5M=;
-        b=oiWpoxmA2YANbo7haAsYbJSgyylv9S4ht81wS6EyCqIstVn21fk5Ar2jAKtlpST48ofT9Nh/u15hEBSLmIrvau83di5Jjy7RTyv6uc/AvA+UuJzKGIGGfhZqyQVLHz+yEiZ5zQGq/Co59DsLziJlfHVaQLqQ5WGNqufHrOun0Ug=;
-X-UUID: cda77b9ba2494b929655d8549d9c3e65-20200818
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1543251234; Tue, 18 Aug 2020 16:36:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 18 Aug 2020 16:36:16 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 18 Aug 2020 16:36:17 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v1 1/2] pinctrl: mediatek: support access registers without race-condition
-Date:   Tue, 18 Aug 2020 16:36:15 +0800
-Message-ID: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Tue, 18 Aug 2020 04:37:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D345C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=z+RycezjV2WVCujs2S8itL6PhqDnVUaq7qp6xVdLAo4=; b=sChHbAxde70X2xuGN/HW+28KHz
+        HI6YetzZL7SCINwQdD5+hHwkS6qWOP4voGDc8BYsONfhYhnkoQjB8JI7DJJ9WQFCYfhWEbCSaLAB/
+        omXVKQnx1SSatRgDqyYjcqU0OpvgaD2swot7bjhdFztT6gzNDrjEARqivLy9gDHU+rpvRWfZnA8TU
+        EXesWd61vo9k2yjd6ObDCJVrP1fhwDN5MYWt/fXfGTXqq8r+QJLiuZzA0MqYq9MFwmi9U6wOVFmOZ
+        0288DMbrkGzzFf92AljB7ECFX3C4q0e5AVJDUpv6hEAlOSfHWemTogfSP8tf0Sw1RswoQai5g6knN
+        CYOJR6QQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7x7Q-0002kj-2n; Tue, 18 Aug 2020 08:37:20 +0000
+Date:   Tue, 18 Aug 2020 09:37:20 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Cho KyongHo <pullip.cho@samsung.com>, joro@8bytes.org,
+        catalin.marinas@arm.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        janghyuck.kim@samsung.com, hyesoo.yu@samsung.com
+Subject: Re: [PATCH 1/2] dma-mapping: introduce relaxed version of dma sync
+Message-ID: <20200818083720.GA9451@infradead.org>
+References: <CGME20200818075050epcas2p15c780650f5f6b4a54ce731c273d24c98@epcas2p1.samsung.com>
+ <1597736591-20457-1-git-send-email-pullip.cho@samsung.com>
+ <20200818082852.GA15145@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818082852.GA15145@willie-the-truck>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KU29tZSBNZWRp
-YVRlayBTT0MgcHJvdmlkZSBtb3JlIGNvbnRyb2wgcmVnaXN0ZXJzIG90aGVyIHRoYW4gdmFsdWUg
-cmVnaXN0ZXIuDQpHZW5lcmFubGwsIGEgdmFsdWUgcmVnaXN0ZXIgbmVlZCByZWFkLW1vZGlmeS13
-cml0ZSBpcyBhdCBvZmZzZXQgMHhYWFhYWFhYWDAuDQpBIGNvcnJlc3BvbmRpbmcgU0VUIHJlZ2lz
-dGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg0LiBXcml0ZSAxcycgdG8gc29tZSBiaXRzDQogIG9m
-IFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQpBIGNv
-cnJlc3BvbmRpbmcgQ0xSIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg4LiBXcml0ZSAx
-cycgdG8gc29tZSBiaXRzDQogIG9mIENMUiByZWdpc3RlciB3aWxsIGNsZWFyIHNhbWUgYml0cyBp
-biB2YWx1ZSByZWdpc3Rlci4NCkZvciBHUElPIG1vZGUgc2VsZWN0aW9uLCBNV1IgcmVnaXN0ZXIg
-aXMgcHJvdmlkZWQgYXQgb2Zmc2V0IDB4WFhYWFhYWEMuDQogIFdpdGggTVdSLCB0aGUgTVNCaXQg
-b2YgR1BJTyBtb2RlIHNlbGVjdGlvbiBmaWVsZCBpcyBmb3IgbW9kaWZpY2F0aW9uLWVuYWJsZSwN
-CiAgbm90IGZvciBHUElPIG1vZGUgc2VsZWN0aW9uLCBhbmQgdGhlIHJlbWFpbmluZyBMU0JpdHMg
-YXJlIGZvciBtb2RlDQogIHNlbGVjdGlvbi4NCiAgVGFrZSBtb2RlIHNlbGVjdGlvbiBmaWVsZCB3
-aXRoIDQtYml0cyBhcyBleGFtcGxlLCB0byBzZWxlY3QgbW9kZSAwfjcgdmlhDQogIE1XUiByZWdp
-c3RlciwgOH4xNSAoaW5zdGVhZCBvZiAwfjcpIHNoYWxsIGJlIHdyaXR0ZW4gdG8gY29ycmVzcG9u
-ZGluZyBtb2RlDQogIHNlbGVjdGlvbiBmaWVsZC4NCldoZW4gdXNpbmcgU0VUL0NMUi9NV1IgcmVn
-aXN0ZXJzLCByZWFkLW1vZGlmeS13cml0ZSBvZiB2YWx1ZSByZWdpc3RlciBpcyBub3QNCiAgbmVj
-ZXNzYXJ5LiBUaGlzIGNhbiBwcmV2ZW50IGZyb20gcmFjZSBjb25kaXRpb24gd2hlbiBtdWx0aXBs
-ZSBidXMgbWFzdGVycw0KICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNhbWUg
-dmFsdWUgcmVnaXN0ZXIgZm9yIHNldHRpbmcgZGlmZmVyZW50DQogIGZpZWxkcyBvZiB0aGUgc2Ft
-ZSB2YWx1ZSByZWdpc3Rlci4NCg0KU2lnbmVkLW9mZi1ieTogTGlnaHQgSHNpZWggPGxpZ2h0Lmhz
-aWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
-LW10ay1jb21tb24tdjIuYyB8IDY5ICsrKysrKysrKysrKysrKysrKysrKystLQ0KIGRyaXZlcnMv
-cGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuaCB8ICAyICsNCiAyIGZpbGVz
-IGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2
-ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGI3N2Ix
-OGYuLjUxZjBiNTMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
-bC1tdGstY29tbW9uLXYyLmMNCisrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
-LW10ay1jb21tb24tdjIuYw0KQEAgLTE4LDYgKzE4LDI5IEBADQogI2luY2x1ZGUgIm10ay1laW50
-LmgiDQogI2luY2x1ZGUgInBpbmN0cmwtbXRrLWNvbW1vbi12Mi5oIg0KIA0KKy8qIFNvbWUgTWVk
-aWFUZWsgU09DIHByb3ZpZGUgbW9yZSBjb250cm9sIHJlZ2lzdGVycyBvdGhlciB0aGFuIHZhbHVl
-IHJlZ2lzdGVyLg0KKyAqIEdlbmVyYW5sbCwgYSB2YWx1ZSByZWdpc3RlciBuZWVkIHJlYWQtbW9k
-aWZ5LXdyaXRlIGlzIGF0IG9mZnNldCAweFhYWFhYWFhYMC4NCisgKiBBIGNvcnJlc3BvbmRpbmcg
-U0VUIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg0LiBXcml0ZSAxcycgdG8gc29tZSBi
-aXRzDQorICogIG9mIFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVn
-aXN0ZXIuDQorICogQSBjb3JyZXNwb25kaW5nIENMUiByZWdpc3RlciBpcyBhdCBvZmZzZXQgMHhY
-WFhYWFhYOC4gV3JpdGUgMXMnIHRvIHNvbWUgYml0cw0KKyAqICBvZiBDTFIgcmVnaXN0ZXIgd2ls
-bCBjbGVhciBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQorICogRm9yIEdQSU8gbW9kZSBz
-ZWxlY3Rpb24sIE1XUiByZWdpc3RlciBpcyBwcm92aWRlZCBhdCBvZmZzZXQgMHhYWFhYWFhYQy4N
-CisgKiAgV2l0aCBNV1IsIHRoZSBNU0JpdCBvZiBHUElPIG1vZGUgc2VsZWN0aW9uIGZpZWxkIGlz
-IGZvciBtb2RpZmljYXRpb24tZW5hYmxlLA0KKyAqICBub3QgZm9yIEdQSU8gbW9kZSBzZWxlY3Rp
-b24sIGFuZCB0aGUgcmVtYWluaW5nIExTQml0cyBhcmUgZm9yIG1vZGUNCisgKiAgc2VsZWN0aW9u
-Lg0KKyAqICBUYWtlIG1vZGUgc2VsZWN0aW9uIGZpZWxkIHdpdGggNC1iaXRzIGFzIGV4YW1wbGUs
-IHRvIHNlbGVjdCBtb2RlIDB+NyB2aWENCisgKiAgTVdSIHJlZ2lzdGVyLCA4fjE1IChpbnN0ZWFk
-IG9mIDB+Nykgc2hhbGwgYmUgd3JpdHRlbiB0byBjb3JyZXNwb25kaW5nIG1vZGUNCisgKiAgc2Vs
-ZWN0aW9uIGZpZWxkLg0KKyAqIFdoZW4gdXNpbmcgU0VUL0NMUi9NV1IgcmVnaXN0ZXJzLCByZWFk
-LW1vZGlmeS13cml0ZSBvZiB2YWx1ZSByZWdpc3RlciBpcyBub3QNCisgKiAgbmVjZXNzYXJ5LiBU
-aGlzIGNhbiBwcmV2ZW50IGZyb20gcmFjZSBjb25kaXRpb24gd2hlbiBtdWx0aXBsZSBidXMgbWFz
-dGVycw0KKyAqICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNhbWUgdmFsdWUg
-cmVnaXN0ZXIgZm9yIHNldHRpbmcgZGlmZmVyZW50DQorICogIGZpZWxkcyBvZiB0aGUgc2FtZSB2
-YWx1ZSByZWdpc3Rlci4NCisgKi8NCisNCisjZGVmaW5lIFNFVF9PRkZTRVQgMHg0DQorI2RlZmlu
-ZSBDTFJfT0ZGU0VUIDB4OA0KKyNkZWZpbmUgTVdSX09GRlNFVCAweEMNCisNCiAvKioNCiAgKiBz
-dHJ1Y3QgbXRrX2RyaXZlX2Rlc2MgLSB0aGUgc3RydWN0dXJlIHRoYXQgaG9sZHMgdGhlIGluZm9y
-bWF0aW9uDQogICoJCQkgICAgb2YgdGhlIGRyaXZpbmcgY3VycmVudA0KQEAgLTY0LDYgKzg3LDM4
-IEBAIHZvaWQgbXRrX3JtdyhzdHJ1Y3QgbXRrX3BpbmN0cmwgKnBjdGwsIHU4IGksIHUzMiByZWcs
-IHUzMiBtYXNrLCB1MzIgc2V0KQ0KIAltdGtfdzMyKHBjdGwsIGksIHJlZywgdmFsKTsNCiB9DQog
-DQorDQorc3RhdGljIHZvaWQgbXRrX2h3X3NldF92YWx1ZV9yYWNlX2ZyZWUoc3RydWN0IG10a19w
-aW5jdHJsICpwY3RsLA0KKwkJc3RydWN0IG10a19waW5fZmllbGQgKnBmLCB1MzIgdmFsdWUpDQor
-ew0KKwl1bnNpZ25lZCBpbnQgc2V0LCBjbHI7DQorDQorCXNldCA9IHZhbHVlICYgcGYtPm1hc2s7
-DQorCWNsciA9ICh+c2V0KSAmIHBmLT5tYXNrOw0KKw0KKwlpZiAoc2V0KQ0KKwkJbXRrX3czMihw
-Y3RsLCBwZi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBTRVRfT0ZGU0VULA0KKwkJCXNldCA8PCBwZi0+
-Yml0cG9zKTsNCisJaWYgKGNscikNCisJCW10a193MzIocGN0bCwgcGYtPmluZGV4LCBwZi0+b2Zm
-c2V0ICsgQ0xSX09GRlNFVCwNCisJCQljbHIgPDwgcGYtPmJpdHBvcyk7DQorfQ0KKw0KK3N0YXRp
-YyB2b2lkIG10a19od19zZXRfbW9kZV9yYWNlX2ZyZWUoc3RydWN0IG10a19waW5jdHJsICpwY3Rs
-LA0KKwkJc3RydWN0IG10a19waW5fZmllbGQgKnBmLCB1MzIgdmFsdWUpDQorew0KKwl1bnNpZ25l
-ZCBpbnQgdmFsdWVfbmV3Ow0KKw0KKwkvKiBNU0Igb2YgbWFzayBpcyBtb2RpZmljYXRpb24tZW5h
-YmxlIGJpdCwgc2V0IHRoaXMgYml0ICovDQorCXZhbHVlX25ldyA9ICgxIDw8IChwY3RsLT5zb2Mt
-Pm13cl9maWVsZF93aWR0aCAtIDEpKSB8IHZhbHVlOw0KKwlpZiAodmFsdWVfbmV3ID09IHZhbHVl
-KQ0KKwkJZGV2X25vdGljZShwY3RsLT5kZXYsDQorCQkJImludmFsaWQgbW9kZSAweCV4LCB1c2Ug
-aXQgYnkgaWdub3JpbmcgTVNCaXQhXG4iLA0KKwkJCXZhbHVlKTsNCisJbXRrX3czMihwY3RsLCBw
-Zi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBNV1JfT0ZGU0VULA0KKwkJdmFsdWVfbmV3IDw8IHBmLT5i
-aXRwb3MpOw0KK30NCisNCiBzdGF0aWMgaW50IG10a19od19waW5fZmllbGRfbG9va3VwKHN0cnVj
-dCBtdGtfcGluY3RybCAqaHcsDQogCQkJCSAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRl
-c2MsDQogCQkJCSAgIGludCBmaWVsZCwgc3RydWN0IG10a19waW5fZmllbGQgKnBmZCkNCkBAIC0x
-OTcsMTAgKzI1MiwxNiBAQCBpbnQgbXRrX2h3X3NldF92YWx1ZShzdHJ1Y3QgbXRrX3BpbmN0cmwg
-Kmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KIAlpZiAodmFsdWUgPCAwIHx8
-IHZhbHVlID4gcGYubWFzaykNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KLQlpZiAoIXBmLm5leHQp
-DQotCQltdGtfcm13KGh3LCBwZi5pbmRleCwgcGYub2Zmc2V0LCBwZi5tYXNrIDw8IHBmLmJpdHBv
-cywNCi0JCQkodmFsdWUgJiBwZi5tYXNrKSA8PCBwZi5iaXRwb3MpOw0KLQllbHNlDQorCWlmICgh
-cGYubmV4dCkgew0KKwkJaWYgKGh3LT5zb2MtPnJhY2VfZnJlZV9hY2Nlc3MpIHsNCisJCQlpZiAo
-ZmllbGQgPT0gUElOQ1RSTF9QSU5fUkVHX01PREUpDQorCQkJCW10a19od19zZXRfbW9kZV9yYWNl
-X2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KKwkJCWVsc2UNCisJCQkJbXRrX2h3X3NldF92YWx1ZV9y
-YWNlX2ZyZWUoaHcsICZwZiwgdmFsdWUpOw0KKwkJfSBlbHNlDQorCQkJbXRrX3JtdyhodywgcGYu
-aW5kZXgsIHBmLm9mZnNldCwgcGYubWFzayA8PCBwZi5iaXRwb3MsDQorCQkJCSh2YWx1ZSAmIHBm
-Lm1hc2spIDw8IHBmLmJpdHBvcyk7DQorCX0gZWxzZQ0KIAkJbXRrX2h3X3dyaXRlX2Nyb3NzX2Zp
-ZWxkKGh3LCAmcGYsIHZhbHVlKTsNCiANCiAJcmV0dXJuIDA7DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oIGIvZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oDQppbmRleCAyN2RmMDg3Li45NWZi
-MzI5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
-bW1vbi12Mi5oDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
-bW9uLXYyLmgNCkBAIC0yMDMsNiArMjAzLDggQEAgc3RydWN0IG10a19waW5fc29jIHsNCiAJLyog
-U3BlY2lmaWMgcGFyYW1ldGVycyBwZXIgU29DICovDQogCXU4CQkJCWdwaW9fbTsNCiAJYm9vbAkJ
-CQlpZXNfcHJlc2VudDsNCisJYm9vbCAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWNlX2Zy
-ZWVfYWNjZXNzOw0KKwl1bnNpZ25lZCBpbnQgICAgICAgICAgICAgICAgICAgIG13cl9maWVsZF93
-aWR0aDsNCiAJY29uc3QgY2hhciAqIGNvbnN0CQkqYmFzZV9uYW1lczsNCiAJdW5zaWduZWQgaW50
-CQkJbmJhc2VfbmFtZXM7DQogDQotLSANCjEuOC4xLjEuZGlydHkNCg==
+On Tue, Aug 18, 2020 at 09:28:53AM +0100, Will Deacon wrote:
+> On Tue, Aug 18, 2020 at 04:43:10PM +0900, Cho KyongHo wrote:
+> > Cache maintenance operations in the most of CPU architectures needs
+> > memory barrier after the cache maintenance for the DMAs to view the
+> > region of the memory correctly. The problem is that memory barrier is
+> > very expensive and dma_[un]map_sg() and dma_sync_sg_for_{device|cpu}()
+> > involves the memory barrier per every single cache sg entry. In some
+> > CPU micro-architecture, a single memory barrier consumes more time than
+> > cache clean on 4KiB. It becomes more serious if the number of CPU cores
+> > are larger.
+> 
+> Have you got higher-level performance data for this change? It's more likely
+> that the DSB is what actually forces the prior cache maintenance to
+> complete, so it's important to look at the bigger picture, not just the
+> apparent relative cost of these instructions.
+> 
+> Also, it's a miracle that non-coherent DMA even works, so I'm not sure
+> that we should be complicating the implementation like this to try to
+> make it "fast".
 
+And without not just an important in-tree user but one that actually
+matters and can show how this is correct the whole proposal is complete
+nonstarter.
