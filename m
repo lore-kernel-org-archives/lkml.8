@@ -2,64 +2,63 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F254C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9622076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F82A2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgHRTyE (ORCPT
+        id S1726778AbgHRTyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:54:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRTyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:54:03 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E76EC061389;
-        Tue, 18 Aug 2020 12:54:03 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5F74B127A25D7;
-        Tue, 18 Aug 2020 12:37:16 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:54:01 -0700 (PDT)
-Message-Id: <20200818.125401.958204660420531471.davem@davemloft.net>
-To:     wanghai38@huawei.com
-Cc:     ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        kuba@kernel.org, mirq-linux@rere.qmqm.pl,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net] net: gemini: Fix missing free_netdev() in error
- path of gemini_ethernet_port_probe()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200818134404.63828-1-wanghai38@huawei.com>
-References: <20200818134404.63828-1-wanghai38@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Aug 2020 12:37:16 -0700 (PDT)
+        Tue, 18 Aug 2020 15:54:50 -0400
+Received: from verein.lst.de ([213.95.11.211]:34912 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgHRTyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:54:49 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A341968AFE; Tue, 18 Aug 2020 21:54:46 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 21:54:46 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 03/11] fs: don't allow splice read/write without
+ explicit ops
+Message-ID: <20200818195446.GA32691@lst.de>
+References: <20200817073212.830069-1-hch@lst.de> <20200817073212.830069-4-hch@lst.de> <202008181239.E51B80265@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008181239.E51B80265@keescook>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
-Date: Tue, 18 Aug 2020 21:44:04 +0800
-
-> Fix the missing free_netdev() before return from
-> gemini_ethernet_port_probe() in the error handling case.
+On Tue, Aug 18, 2020 at 12:39:34PM -0700, Kees Cook wrote:
+> On Mon, Aug 17, 2020 at 09:32:04AM +0200, Christoph Hellwig wrote:
+> > default_file_splice_write is the last piece of generic code that uses
+> > set_fs to make the uaccess routines operate on kernel pointers.  It
+> > implements a "fallback loop" for splicing from files that do not actually
+> > provide a proper splice_read method.  The usual file systems and other
+> > high bandwith instances all provide a ->splice_read, so this just removes
+> > support for various device drivers and procfs/debugfs files.  If splice
+> > support for any of those turns out to be important it can be added back
+> > by switching them to the iter ops and using generic_file_splice_read.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > 
-> Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> This seems a bit disruptive? I feel like this is going to make fuzzers
+> really noisy (e.g. trinity likes to splice random stuff out of /sys and
+> /proc).
 
-You can just convert this function to use 'devm_alloc_etherdev_mqs', which
-is a one line fix.
+Noisy in the sence of triggering the pr_debug or because they can't
+handle -EINVAL?
