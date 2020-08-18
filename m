@@ -2,191 +2,404 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94349C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5393C2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561112067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlDFccnv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPYR+grp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgHRWFv (ORCPT
+        id S1726910AbgHRWHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
+        Tue, 18 Aug 2020 18:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHRWFr (ORCPT
+        with ESMTP id S1726838AbgHRWHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:05:47 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E80C061389;
-        Tue, 18 Aug 2020 15:05:45 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u126so22650632iod.12;
-        Tue, 18 Aug 2020 15:05:45 -0700 (PDT)
+        Tue, 18 Aug 2020 18:07:17 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3610BC061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:07:17 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id s23so16354289qtq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:07:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dQQ7nxmbbtqPjMJ2v1Fd/tVads8v7A1o12xPycfzDck=;
-        b=YlDFccnv1UsuHHlQzmM690C7v5BvX0FQV4SVnxlk1r34xvRCg89M4up+6M50Vk9wEE
-         Y2AteDF2L+d+fP3EhlI1cwk+MOKK68zbdaMsRaneQgG0Qa50cTFaOtYUXpuQteQPYRuw
-         HI/01vu5IL39hjTzCS81cCrcLUFZbFmKjwRyf5JPcQ2k4wye8vdDWxwAxy2rtMcJdOB+
-         +7XGA3O3cbaIP2O0UmO8u7wA+l3zoCyuxw5sOQZHJHpTR5PSsjTleP9w5PGSH7anFPQC
-         XHa3Ipk8wHGiDURmM9E3vujONTW1+d3dZ/FS3T5Sa+vndQVzaM7prYOsZXwebQb5uA5q
-         jYgg==
+         :cc;
+        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
+        b=HPYR+grppmQc/6qWyiY8FL2m31cXd/LpPr+K9Rk92MwGCiO+09qTJQZJnbWEvNLGy4
+         HFWN3eMFqp8OTxNH4FZF407D2c/tv50tQvOvS5rWKs3nno+UKbYsZzt++FIvTgcv3QcB
+         Vo9gmTRuDH3ygT/pm6qRwfLBQjjnQrcJCxpArjqcsnci5IMXbXWh4y2w/DhE0UHxmwyd
+         oD03vMhzkAnZ0S067sgdGPTGneuyU0iD/YuqUlV9pAomfPnmWGHldmQYLfkNMbuEDafg
+         6nTddIcCQ2hcE3Ywjmoug4WrJ7Fau5OgM3uyQFXW4lMor/xZUiuBVQ7frs0SVNcQz7AX
+         Cvyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dQQ7nxmbbtqPjMJ2v1Fd/tVads8v7A1o12xPycfzDck=;
-        b=TDQH71yUdbjoHZzehoR0/toGCpruJ/rVviPowD8/V5iQSvqEE9XStkA7u5cyDYfZev
-         Ra68CTtOyL5ELG34a57yuzjOC+QS6B/bFh1l9AXDyNVtP2qadkIwZZrzuiRtUSoV8VPO
-         JPyJG/jw4WviDZ4PU2FkGw5gQ2g/yMfoDOTefMA7v0cHL0HFdT02+nblMqS9P5z5tRgl
-         CK9QO++Ow3fBVjJjProYNOkCEzf/YdQxFhixWNTm/Xu2kXVMQ/KIvPev82eOW+I7G2rP
-         r+cU24AZ4El9Y3W6s5AeJlcN7FgHzPqsT9Fb8SadH2LLMJzNf2uFgvRKaU89aqdVB1G8
-         Lkqg==
-X-Gm-Message-State: AOAM532vW5DxSDN8rbeizUEceD11oM8ATbnqK2xk38kyTvwyXyXvnewN
-        fHfpljyLR59IQYFucWEGPWs7q0V1ZJ27S6IjY2Q=
-X-Google-Smtp-Source: ABdhPJxSul2CgvgJsr+gxMYAytA+CCKs5CyZNyNI4AEkrKww4DBx6RbQLmuzZWsruLM+ETlPn8/0PVdVmUf+gjRqdX4=
-X-Received: by 2002:a05:6638:594:: with SMTP id a20mr21415996jar.127.1597788345058;
- Tue, 18 Aug 2020 15:05:45 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
+        b=DHHcFs31OB3xBDsYrcdRzfNz2SyZAs3yfCtdZsrGPPicTUc81Ia1UkXhBh7P8r5pJw
+         emmlLvWg134YsdrwteU7hFe8IooNT+q8MlFSM4KSOtnqiryzTxHSizQ8VKX9dD3Tdbjf
+         z+w0enxlJEBH6VAVeIMT4YgR13+iDqO32RNNC9dQh8oCzyt2notyQVieWPYeUcr9jbRK
+         oIKXlMhfnPMbHKKdfHUYMp477sfq91CEi5XxwRmzDuffNISTnLxgm9sVleuQnK2teVr8
+         513gwyBgnIQ2Qs71PoEflrNZL6NpYsdVYSMiz6NATvq4XTklTmS6apToYzLsig73aBtA
+         Vk9Q==
+X-Gm-Message-State: AOAM532kGi7ynpTn45gxM+u75RV+hTu+sKLIRngX0ZQPsQMzPj61a/lU
+        XCb0+77Rh3ciSvl7vNfKqyEq6pdDnWY9xsrwKrc0lg==
+X-Google-Smtp-Source: ABdhPJyHCn8r4aLq23a97uyhpLFlSZ3mnxBVLrCwHgQJVtznOvhgjh2wgQPw3On28wpzamxePVdq2m1CSITqWxILkUE=
+X-Received: by 2002:aed:22cb:: with SMTP id q11mr19402496qtc.200.1597788435923;
+ Tue, 18 Aug 2020 15:07:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan> <CAKwvOdnW8zjcxmHwu5PhHa1hMFu=S=qPh5gfC6tN7FrSE+3kKg@mail.gmail.com>
-In-Reply-To: <CAKwvOdnW8zjcxmHwu5PhHa1hMFu=S=qPh5gfC6tN7FrSE+3kKg@mail.gmail.com>
-From:   =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>
-Date:   Wed, 19 Aug 2020 00:05:34 +0200
-Message-ID: <CAOrgDVO=NBaqGP2Fs6X4FHeLfbaAA7Km8i2ttcGf0kwfojmVSA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1596020528-19510-2-git-send-email-grzegorz.jaszczyk@linaro.org> <20200817211456.GA1542592@bogus>
+In-Reply-To: <20200817211456.GA1542592@bogus>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Wed, 19 Aug 2020 00:07:05 +0200
+Message-ID: <CAMxfBF5YQCE9i-Xot209S+vWtaH6NFUrcViFcsEG6GKyeQ5j3A@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: ti: Add TI PRUSS bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     ssantosh@kernel.org, "Anna, Suman" <s-anna@ti.com>,
+        santosh.shilimkar@oracle.com, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        Roger Quadros <rogerq@ti.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here:
-https://godbolt.org/z/qjo5P6
+Hi Rob,
 
-st 19. 8. 2020 o 0:00 Nick Desaulniers <ndesaulniers@google.com> nap=C3=ADs=
-al(a):
+On Mon, 17 Aug 2020 at 23:14, Rob Herring <robh@kernel.org> wrote:
 >
-> On Tue, Aug 18, 2020 at 2:41 PM Arvind Sankar <nivedita@alum.mit.edu> wro=
-te:
+> On Wed, Jul 29, 2020 at 01:02:03PM +0200, Grzegorz Jaszczyk wrote:
+> > This patch adds the bindings for the Programmable Real-Time Unit
+> > and Industrial Communication Subsystem (PRU-ICSS) present on various
+> > TI SoCs. The IP is present on multiple TI SoC architecture families
+> > including the OMAP architecture SoCs such as AM33xx, AM437x and
+> > AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
+> > also present on the Davinci based OMAPL138 SoCs and K3 architecture
+> > based AM65x and J721E SoCs as well.
 > >
-> > On Tue, Aug 18, 2020 at 01:58:51PM -0700, Nick Desaulniers wrote:
-> > > On Tue, Aug 18, 2020 at 1:27 PM Nick Desaulniers
-> > > <ndesaulniers@google.com> wrote:
-> > > >
-> > > > On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.ed=
-u> wrote:
-> > > > >
-> > > > > On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
-> > > > > > On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com>=
- wrote:
-> > > > > > >
-> > > > > > > I'm not saying "change the semantics", nor am I saying that p=
-laying
-> > > > > > > whack-a-mole *for a limited time* is unreasonable. But I woul=
-d like to go back
-> > > > > > > to the compiler authors and get them to implement such a #pra=
-gma: "this
-> > > > > > > freestanding implementation *does* support *this specific lib=
-rary function*,
-> > > > > > > and you are free to call it."
-> > > > > >
-> > > > > > I'd much rather just see the library functions as builtins that=
- always
-> > > > > > do the right thing (with the fallback being "just call the stan=
-dard
-> > > > > > function").
-> > > > > >
-> > > > > > IOW, there's nothing wrong with -ffreestanding if you then also=
- have
-> > > > > > __builtin_memcpy() etc, and they do the sane compiler optimizat=
-ions
-> > > > > > for memcpy().
-> > > > > >
-> > > > > > What we want to avoid is the compiler making *assumptions* base=
-d on
-> > > > > > standard names, because we may implement some of those things
-> > > > > > differently.
-> > > > > >
-> > > > >
-> > > > > -ffreestanding as it stands today does have __builtin_memcpy and
-> > > > > friends. But you need to then use #define memcpy __builtin_memcpy=
- etc,
-> > > > > which is messy and also doesn't fully express what you want. #pra=
-gma, or
-> > > > > even just allowing -fbuiltin-foo options would be useful.
-> > >
-> > > I do really like the idea of -fbuiltin-foo.  For example, you'd speci=
-fy:
-> > >
-> > > -ffreestanding -fbuiltin-bcmp
-> > >
-> > > as an example. `-ffreestanding` would opt you out of ALL libcall
-> > > optimizations, `-fbuiltin-bcmp` would then opt you back in to
-> > > transforms that produce bcmp.  That way you're informing the compiler
-> > > more precisely about the environment you'd be targeting.  It feels
-> > > symmetric to existing `-fno-` flags (clang makes -f vs -fno- pretty
-> > > easy when there is such symmetry).  And it's already convention that
-> > > if you specify multiple conflicting compiler flags, then the latter
-> > > one specified "wins."  In that sense, turning back on specific
-> > > libcalls after disabling the rest looks more ergonomic to me.
-> > >
-> > > Maybe Eli or David have thoughts on why that may or may not be as
-> > > ergonomic or possible to implement as I imagine?
-> > >
+> > The IP has a number of sub-modules some of which are represented as
+> > their own devices. This binding covers only the top-level sub-system
+> > devices, and some sub-modules like MDIO, MII_RT (Ethernet MII_RT module
+> > with MII ports) and IEP (Industrial Ethernet Peripheral). The remaining
+> > sub-modules bindings shall be defined in the respective driver
+> > subsystem bindings folders. Couple of full examples have also been
+> > added demonstrating the devices on AM335x and AM437x SoCs.
 > >
-> > Note that -fno-builtin-foo seems to mean slightly different things in
-> > clang and gcc. From experimentation, clang will neither optimize a call
-> > to foo, nor perform an optimization that introduces a call to foo. gcc
-> > will avoid optimizing calls to foo, but it can still generate new calls
-> > to foo while optimizing something else. Which means that
-> > -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It's
-> > just that gcc doesn't seem to have implemented those optimizations.
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
+> >  1 file changed, 383 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> > new file mode 100644
+> > index 0000000..4b7a098
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> > @@ -0,0 +1,383 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/ti/ti,pruss.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: |+
+> > +  TI Programmable Real-Time Unit and Industrial Communication Subsystem
+> > +
+> > +maintainers:
+> > +  - Suman Anna <s-anna@ti.com>
+> > +
+> > +description: |+
+> > +
+> > +  The Programmable Real-Time Unit and Industrial Communication Subsystem
+> > +  (PRU-ICSS a.k.a. PRUSS) is present on various TI SoCs such as AM335x, AM437x,
+> > +  Keystone 66AK2G, OMAP-L138/DA850 etc. A PRUSS consists of dual 32-bit RISC
+> > +  cores (Programmable Real-Time Units, or PRUs), shared RAM, data and
+> > +  instruction RAMs, some internal peripheral modules to facilitate industrial
+> > +  communication, and an interrupt controller.
+> > +
+> > +  The programmable nature of the PRUs provide flexibility to implement custom
+> > +  peripheral interfaces, fast real-time responses, or specialized data handling.
+> > +  The common peripheral modules include the following,
+> > +    - an Ethernet MII_RT module with two MII ports
+> > +    - an MDIO port to control external Ethernet PHYs
+> > +    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+> > +      Ethernet functions
+> > +    - an Enhanced Capture Module (eCAP)
+> > +    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+> > +    - a 16550-compatible UART to support PROFIBUS
+> > +    - Enhanced GPIO with async capture and serial support
+> > +
+> > +  A PRU-ICSS subsystem can have up to three shared data memories. A PRU core
+> > +  acts on a primary Data RAM (there are usually 2 Data RAMs) at its address
+> > +  0x0, but also has access to a secondary Data RAM (primary to the other PRU
+> > +  core) at its address 0x2000. A shared Data RAM, if present, can be accessed
+> > +  by both the PRU cores. The Interrupt Controller (INTC) and a CFG module are
+> > +  common to both the PRU cores. Each PRU core also has a private instruction
+> > +  RAM, and specific register spaces for Control and Debug functionalities.
+> > +
+> > +  Various sub-modules within a PRU-ICSS subsystem are represented as individual
+> > +  nodes and are defined using a parent-child hierarchy depending on their
+> > +  integration within the IP and the SoC. These nodes are described in the
+> > +  following sections.
+> > +
+> > +
+> > +  PRU-ICSS Node
+> > +  ==============
+> > +  Each PRU-ICSS instance is represented as its own node with the individual PRU
+> > +  processor cores, the memories node, an INTC node and an MDIO node represented
+> > +  as child nodes within this PRUSS node. This node shall be a child of the
+> > +  corresponding interconnect bus nodes or target-module nodes.
+> > +
+> > +  See ../../mfd/syscon.yaml for generic SysCon binding details.
+> > +
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,am3356-pruss  # for AM335x SoC family
+> > +      - ti,am4376-pruss0 # for AM437x SoC family and PRUSS unit 0
+> > +      - ti,am4376-pruss1 # for AM437x SoC family and PRUSS unit 1
+> > +      - ti,am5728-pruss  # for AM57xx SoC family
+> > +      - ti,k2g-pruss     # for 66AK2G SoC family
+> > +      - ti,am654-icssg   # for K3 AM65x SoC family
+> > +      - ti,j721e-icssg   # for K3 J721E SoC family
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  ranges:
+> > +    maxItems: 1
+> > +    description: |
+> > +      Standard ranges definition using addresses from 0 for child nodes.
 >
-> Can you please share some godbolt links that demonstrate these observatio=
-ns?
-> --
-> Thanks,
-> ~Nick Desaulniers
+> Don't need a description on standard properties.
+
+Ok.
+
+>
+>
+> > +
+> > +  power-domains:
+> > +    description: |
+> > +      This property is as per sci-pm-domain.txt.
+> > +
+> > +  memories:
+>
+> Missing unit-address pattern.
+
+Ok, I will also update other subnodes regarding the unit-address pattern.
+
+>
+>
+> > +    description: |
+> > +      The various Data RAMs within a single PRU-ICSS unit are represented as a
+> > +      single node with the name 'memories'.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      reg:
+> > +        minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
+> > +        maxItems: 3
+> > +        items:
+> > +          - description: Address and size of the Data RAM0.
+> > +          - description: Address and size of the Data RAM1.
+> > +          - description: |
+> > +              Address and size of the Shared Data RAM. Note that on AM437x one
+> > +              of two PRUSS units don't contain Shared RAM, while the second one
+> > +              has it.
+> > +
+> > +      reg-names:
+> > +        minItems: 2
+> > +        maxItems: 3
+> > +        items:
+> > +          - const: dram0
+> > +          - const: dram1
+> > +          - const: shrdram2
+> > +
+> > +    required:
+> > +      - reg
+> > +      - reg-names
+>
+>        additionalProperties: false
+>
+
+Ok.
+
+>
+>
+> (And throughout for other child nodes).
+
+Ok.
+
+>
+>
+> > +
+> > +  cfg:
+> > +    description: |
+> > +      PRU-ICSS configuration space. CFG sub-module represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-cfg
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  iep:
+> > +    description: |
+> > +      Industrial Ethernet Peripheral to manage/generate Industrial Ethernet
+> > +      functions such as time stamping. Each PRUSS has either 1 IEP (on AM335x,
+> > +      AM437x, AM57xx & 66AK2G SoCs) or 2 IEPs (on K3 AM65x & J721E SoCs ). IEP
+> > +      is used for creating PTP clocks and generating PPS signals. The bindings
+> > +      for this shall be defined in ../../net/ti,icss-iep.yaml.
+> > +
+> > +    type: object
+> > +
+> > +  mii-rt:
+> > +    description: |
+> > +      Real-Time Ethernet to support multiple industrial communication protocols.
+> > +      MII-RT sub-module represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-mii
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  mii-g-rt:
+> > +    description: |
+> > +      The Real-time Media Independent Interface to support multiple industrial
+> > +      communication protocols (G stands for Gigabit). MII-G-RT sub-module
+> > +      represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-mii-g
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  interrupt-controller:
+> > +    description: |
+> > +      PRUSS INTC Node. Each PRUSS has a single interrupt controller instance
+> > +      that is common to all the PRU cores. This should be represented as an
+> > +      interrupt-controller node. The bindings for this shall be defined in
+> > +      ../../interrupt-controller/ti,pruss-intc.yaml.
+>
+> Use $ref to reference the schema.
+
+The problem is that the mentioned binding is not merged yet. Is it ok
+for you to leave it as is and update once
+../../interrupt-controller/ti,pruss-intc.yam get merged?
+
+>
+>
+> > +
+> > +    type: object
+> > +
+> > +  mdio:
+> > +    description: |
+> > +      MDIO Node. Each PRUSS has an MDIO module that can be used to control
+> > +      external PHYs. The MDIO module used within the PRU-ICSS is an instance of
+> > +      the MDIO Controller used in TI Davinci SoCs.
+> > +
+> > +    allOf:
+> > +      - $ref: /schemas/net/ti,davinci-mdio.yaml#
+> > +
+> > +    type: object
+> > +
+> > +patternProperties:
+> > +  "^(pru|rtu|txpru)@[0-9a-f]+$":
+> > +    description: |
+> > +      PRU Node. Each PRUSS has dual PRU cores, each represented as a RemoteProc
+> > +      device through a PRU child node each. Each node can optionally be rendered
+> > +      inactive by using the standard DT string property, "status". The ICSSG IP
+> > +      present on K3 SoCs have additional auxiliary PRU cores with slightly
+> > +      different IP integration. The bindings for this shall be defined in
+> > +      ../../remoteproc/ti,pru-rproc.yaml
+> > +
+> > +    type: object
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - ranges
+> > +
+> > +# Due to inability of correctly verifying sub-nodes with an @address through
+> > +# the "required" list, the required sub-nodes below are commented out for now.
+> > +
+> > +#required:
+> > +# - memories
+> > +# - interrupt-controller
+> > +# - pru
+>
+> Add:
+>
+> additionalProperties: false
+
+Ok.
+
+>
+>
+> > +
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - ti,k2g-pruss
+> > +          - ti,am654-icssg
+> > +          - ti,j721e-icssg
+> > +then:
+> > +  required:
+> > +    - power-domains
+> > +
+> > +examples:
+> > +  - |
+> > +
+> > +    /* Example 1 AM33xx PRU-ICSS */
+> > +    pruss: pruss@0 {
+> > +        compatible = "ti,am3356-pruss";
+> > +        reg = <0x0 0x80000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges;
+>
+> I would have expected a warning on this since you defined it to have 1
+> entry.
+
+I've double checked with dt_binding_check - there is no warning. For
+ranges maxItems: 1 is defined.
+
+Thank you for your review,
+Grzegorz
