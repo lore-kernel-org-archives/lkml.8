@@ -2,30 +2,30 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E575C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B05B20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6724F20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgHRRes (ORCPT
+        id S1728747AbgHRRez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:34:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52412 "EHLO
+        Tue, 18 Aug 2020 13:34:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52427 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbgHRRe3 (ORCPT
+        with ESMTP id S1728622AbgHRRed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:34:29 -0400
+        Tue, 18 Aug 2020 13:34:33 -0400
 Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k85V8-0003E9-2j; Tue, 18 Aug 2020 17:34:22 +0000
+        id 1k85VG-0003E9-B8; Tue, 18 Aug 2020 17:34:30 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     Christoph Hewllig <hch@infradead.org>,
         linux-kernel@vger.kernel.org,
@@ -57,11 +57,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
         kgdb-bugreport@lists.sourceforge.net,
         linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 01/11] fork: introduce kernel_clone()
-Date:   Tue, 18 Aug 2020 19:34:01 +0200
-Message-Id: <20200818173411.404104-2-christian.brauner@ubuntu.com>
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 07/11] x86: switch to kernel_clone()
+Date:   Tue, 18 Aug 2020 19:34:07 +0200
+Message-Id: <20200818173411.404104-8-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200818173411.404104-1-christian.brauner@ubuntu.com>
 References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
@@ -72,111 +71,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old _do_fork() helper doesn't follow naming conventions of in-kernel
-helpers for syscalls. The process creation cleanup in [1] didn't change the
-name to something more reasonable mainly because _do_fork() was used in quite a
-few places. So sending this as a separate series seemed the better strategy.
+The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
+The latter adheres to naming conventions for kernel internal syscall helpers.
 
-This commit renames _do_fork() to kernel_clone() but keeps _do_fork() as a
-simple static inline wrapper around kernel_clone().
-Follow-up patches will switch each caller of _do_fork() and each place where it
-is referenced over to kernel_clone(). After all these changes are done, we can
-remove _do_fork() completely and will only be left with kernel_clone().
-
-[1]: 9ba27414f2ec ("Merge tag 'fork-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux")
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- include/linux/sched/task.h |  6 +++++-
- kernel/fork.c              | 14 +++++++-------
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ arch/x86/kernel/sys_ia32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index a98965007eef..d9ef07359c96 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -83,7 +83,11 @@ extern void do_group_exit(int);
- extern void exit_files(struct task_struct *);
- extern void exit_itimers(struct signal_struct *);
- 
--extern long _do_fork(struct kernel_clone_args *kargs);
-+extern int kernel_clone(struct kernel_clone_args *kargs);
-+static inline long _do_fork(struct kernel_clone_args *kargs)
-+{
-+	return kernel_clone(kargs);
-+}
- struct task_struct *fork_idle(int);
- struct mm_struct *copy_init_mm(void);
- extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4d32190861bd..34e37cee239f 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2384,7 +2384,7 @@ struct mm_struct *copy_init_mm(void)
-  *
-  * args->exit_signal is expected to be checked for sanity by the caller.
-  */
--long _do_fork(struct kernel_clone_args *args)
-+int kernel_clone(struct kernel_clone_args *args)
- {
- 	u64 clone_flags = args->flags;
- 	struct completion vfork;
-@@ -2477,7 +2477,7 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
- 		.stack_size	= (unsigned long)arg,
+diff --git a/arch/x86/kernel/sys_ia32.c b/arch/x86/kernel/sys_ia32.c
+index 720cde885042..6cf65397d225 100644
+--- a/arch/x86/kernel/sys_ia32.c
++++ b/arch/x86/kernel/sys_ia32.c
+@@ -251,6 +251,6 @@ COMPAT_SYSCALL_DEFINE5(ia32_clone, unsigned long, clone_flags,
+ 		.tls		= tls_val,
  	};
  
 -	return _do_fork(&args);
 +	return kernel_clone(&args);
  }
- 
- #ifdef __ARCH_WANT_SYS_FORK
-@@ -2488,7 +2488,7 @@ SYSCALL_DEFINE0(fork)
- 		.exit_signal = SIGCHLD,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- #else
- 	/* can not support in nommu mode */
- 	return -EINVAL;
-@@ -2504,7 +2504,7 @@ SYSCALL_DEFINE0(vfork)
- 		.exit_signal	= SIGCHLD,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- #endif
- 
-@@ -2542,7 +2542,7 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- 		.tls		= tls,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- #endif
- 
-@@ -2700,7 +2700,7 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
- 	if (!clone3_args_valid(&kargs))
- 		return -EINVAL;
- 
--	return _do_fork(&kargs);
-+	return kernel_clone(&kargs);
- }
- #endif
- 
-@@ -2863,7 +2863,7 @@ int unshare_fd(unsigned long unshare_flags, unsigned int max_fds,
- /*
-  * unshare allows a process to 'unshare' part of the process
-  * context which was originally shared using clone.  copy_*
-- * functions used by _do_fork() cannot be used here directly
-+ * functions used by kernel_clone() cannot be used here directly
-  * because they modify an inactive task_struct that is being
-  * constructed. Here we are modifying the current, active,
-  * task_struct.
+ #endif /* CONFIG_IA32_EMULATION */
 -- 
 2.28.0
 
