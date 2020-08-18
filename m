@@ -2,170 +2,142 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53409C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23463C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE702054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlUvltom"
+	by mail.kernel.org (Postfix) with ESMTP id 09FF22076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgHRQam (ORCPT
+        id S1727079AbgHRQat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgHRQac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:30:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD02C061389;
-        Tue, 18 Aug 2020 09:30:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so9439541plk.13;
-        Tue, 18 Aug 2020 09:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uYxuSXULk2GwrV5tHUS7tlUyDew6i48Gt8hPnnZN84g=;
-        b=jlUvltomcG5Fs1zTsYqZ4MPlEO7mi885cnLyByLOf/phVAxDxC/U7iZvM77jJsGEon
-         BSB92p/40B+ItljjVLLfyC22l7nQGtkrG1fY4SSNZ6/h6lXzRO0A55vLcLqJAschsIAk
-         rWMmS6jskMc8PRfm2Fdc3eM+SAw68d28J38L9Mq22289DScuXoqjQEY2HPybucWrJNpb
-         eo95W8tP05JxIplOkGywaw3NvV5jayRJtLaVFtxS+Vj2rgkMvIUxwvCO4VGph/FYgCS1
-         U7tsrS0QrTXU0VV2fTmqNDJD97o2IIVqob3Mg9fq1BycbARA8d5fMoUbixGGQ5Wi/5WP
-         L7GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uYxuSXULk2GwrV5tHUS7tlUyDew6i48Gt8hPnnZN84g=;
-        b=Rd7CmLlekFCbPaIAHpIbinvxg9+w39odLLtLCOaI54EnzaXpY22JuNNyDZWfD0IYU6
-         BWl4e9bl2W+VbYbFtVtZAtOVUxsTgEGzT6kcQukfAQ6WIYjDgvjETdg2V9zqQiNhpuZD
-         e+pga/gMhuGRD9QmYNF27nO4zqZyclTcLNINlTGeSpaUxO6mszGvDiGiUHrHunQRT0gC
-         +w+uRaUD24Ow4MJpKeQadXP7KtGZsiijcmfqZoyXIv7VAWgCw/W4DyEEpT1W0u9iW+cn
-         f0qIcixEwYJR6AVGgxVzWMCH12YzwA9AOPe4fgTWz9UYzrUFdndC2sD07aj6chtu4VuD
-         zUYw==
-X-Gm-Message-State: AOAM53174wKaYCGQm0wVWefPXXJu9YZg5tE/ZIR+h0JI1WUZAYSgGgqI
-        7+GTwc4sJC2p/ALC/IEMH1o=
-X-Google-Smtp-Source: ABdhPJwGwtmXC5WmDnnwZPtj1PesksPhW1Ru5oVRk3RWoVgwq9xKWge/sunWKKolPUaWZ9nAMKTCQg==
-X-Received: by 2002:a17:90a:d70c:: with SMTP id y12mr621940pju.31.1597768231683;
-        Tue, 18 Aug 2020 09:30:31 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id g2sm374594pju.23.2020.08.18.09.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 09:30:30 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm: enable vblank during atomic commits
-Date:   Tue, 18 Aug 2020 09:31:19 -0700
-Message-Id: <20200818163119.715410-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 18 Aug 2020 12:30:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64042 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726852AbgHRQai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:30:38 -0400
+IronPort-SDR: Sh0pAmPmWyknGk7dxXO5ruzBP5AJApwBSQmk98xE5euF0ECCRa0i/GhVYrIUduiF2HOCW0ZJdd
+ UPzI4Lgs4JOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="135012611"
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="135012611"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 09:30:37 -0700
+IronPort-SDR: 2oNuJKXT27GJXRvN0VtkdmZc0gFcrv+OJCOWX4A5DdH6J7GIGNZ7RhM1s4gMvEvXBlHLCy9CHL
+ hmCjerhZ6O0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="279440992"
+Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Aug 2020 09:30:34 -0700
+Date:   Tue, 18 Aug 2020 19:30:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
+Message-ID: <20200818163033.GF137138@linux.intel.com>
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+ <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+ <20200724092746.GD517988@gmail.com>
+ <20200725031648.GG17052@linux.intel.com>
+ <20200726081408.GB2927915@kernel.org>
+ <20200818053029.GE44714@linux.intel.com>
+ <20200818115141.GO752365@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818115141.GO752365@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Aug 18, 2020 at 02:51:41PM +0300, Mike Rapoport wrote:
+> On Tue, Aug 18, 2020 at 08:30:29AM +0300, Jarkko Sakkinen wrote:
+> > On Sun, Jul 26, 2020 at 11:14:08AM +0300, Mike Rapoport wrote:
+> > > > 
+> > > > I'm not still sure that I fully understand this feedback as I don't see
+> > > > any inherent and obvious difference to the v4. In that version fallbacks
+> > > > are to module_alloc() and module_memfree() and text_alloc() and
+> > > > text_memfree() can be overridden by arch.
+> > > 
+> > > The major difference between your v4 and my suggestion is that I'm not
+> > > trying to impose a single ARCH_HAS_TEXT_ALLOC as an alternative to
+> > > MODULES but rather to use per subsystem config option, e.g.
+> > > HAVE_KPROBES_TEXT_ALLOC.
+> > > 
+> > > Another thing, which might be worth doing regardless of the outcome of
+> > > this discussion is to rename alloc_insn_pages() to text_alloc_kprobes()
+> > > because the former is way too generic and does not emphasize that the 
+> > > instruction page is actually used by kprobes only.
+> > 
+> > What if we in kernel/kprobes.c just:
+> > 
+> > #ifndef CONFIG_ARCH_HAS_TEXT_ALLOC
+> 
+> I don't think that CONFIG_ARCH_HAS_TEXT_ALLOC will work for all
+> architectures.
+> 
+> If an architecture has different restrictions for allocation of text
+> for, say, modules, kprobes, bfp, it won't be able to use a single
+> ARCH_HAS_TEXT_ALLOC. Which means that this architecture is stuck with
+> dependency of kprobes on MODULES until the next rework.
 
-This has roughly the same effect as drm_atomic_helper_wait_for_vblanks(),
-basically just ensuring that vblank accounting is enabled so that we get
-valid timestamp/seqn on pageflip events.
+I was thinking to name it as CONFIG_HAS_KPROBES_ALLOC_PAGE, alogn the
+lines described below, so it is merely a glitch in my example.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/msm_atomic.c | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> 
+> > void __weak *alloc_insn_page(void)
+> > {
+> > 	return module_alloc(PAGE_SIZE);
+> > }
+> > 
+> > void __weak free_insn_page(void *page)
+> > {
+> > 	module_memfree(page);
+> > }
+> > #endif
+> > 
+> > In Kconfig (as in v5):
+> > 
+> > config KPROBES
+> > 	bool "Kprobes"
+> > 	depends on MODULES || ARCH_HAS_TEXT_ALLOC
+> > 
+> > I checked architectures that override alloc_insn_page(). With the
+> > exception of x86, they do not call module_alloc().
+> > 
+> > If no rename was done, then with this approach a more consistent.
+> > config flag name would be CONFIG_ARCH_HAS_ALLOC_INSN_PAGE.
+> > 
+> > I'd call the function just as kprobes_alloc_page(). Then the
+> > config flag would become CONFIG_HAS_KPROBES_ALLOC_PAGE.
+> > 
+> > > -- 
+> > > Sincerely yours,
+> > > Mike.
+> > 
+> > Thanks for the feedback!
+> > 
+> > /Jarkko
+> 
 
-diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-index 5ccfad794c6a..561bfa48841c 100644
---- a/drivers/gpu/drm/msm/msm_atomic.c
-+++ b/drivers/gpu/drm/msm/msm_atomic.c
-@@ -27,6 +27,34 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
- 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
- }
- 
-+/*
-+ * Helpers to control vblanks while we flush.. basically just to ensure
-+ * that vblank accounting is switched on, so we get valid seqn/timestamp
-+ * on pageflip events (if requested)
-+ */
-+
-+static void vblank_get(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_get(crtc);
-+	}
-+}
-+
-+static void vblank_put(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_put(crtc);
-+	}
-+}
-+
- static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- {
- 	unsigned crtc_mask = BIT(crtc_idx);
-@@ -44,6 +72,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 
- 	kms->funcs->enable_commit(kms);
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -58,6 +88,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
-@@ -221,6 +253,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	 */
- 	kms->pending_crtc_mask &= ~crtc_mask;
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -235,6 +269,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
--- 
-2.26.2
+> -- 
+> Sincerely yours,
+> Mike.
 
+BR,
+/Jarkko
