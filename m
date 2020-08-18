@@ -2,157 +2,287 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA29EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE420C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8868120789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8461520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XJIRNe3G"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="is4USddA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHRUK3 (ORCPT
+        id S1726632AbgHRUMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
+        Tue, 18 Aug 2020 16:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHRUKU (ORCPT
+        with ESMTP id S1725903AbgHRUMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:10:20 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E16A6C061348
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:10:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so9739930plt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:10:18 -0700 (PDT)
+        Tue, 18 Aug 2020 16:12:03 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BDC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id i20so5306660qkk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TVHg8iic3jhifLJcBgUbuICf6X+/XJrx7XucziWHTh4=;
-        b=XJIRNe3GC5+ESqXN1Xu3abO5ZefKkTKOYHKBaOfb9ueeT+8D0u27nucOFMVEcVEIlU
-         jmvz6dATQFCtEO6g5yNeaZR33qILQindJ5FbeJ6y98srbza53yHyzyYR5Ae2HVSridP4
-         36Xq5I+k5oTWeayZlqu4WxkJBY7w5Y8AAm/NE=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
+        b=is4USddA9HL0bmIjDMo1/up8AxbtbwKHhhxh23jSEjA//iEB2AlWSzij1O9BhVmaBx
+         f0lxWgAsQEOdKuqPld7g6GV3xeoS8Aka9K+OGyi/3Dum8qLSTtTokKXG5smmeS55Tu0z
+         hx7Qa73R2Ho5coZCveDCqdSENEXRPRLhCyUPJD57txa5emv/yOfpuzEnLDHeaJwIqvMT
+         UmQkx+O4eV1WSxSzOk+0I0plyVmHQofc4s33eZ16Ri44ZR8apPc+sdyvhWZvRmFPrIgy
+         P6DpNu6WBsGby80CH/twX/HurYxK8Mi+nQUomWqYZFHVxdxCSqtzvej5gSQ0mUU2WTMh
+         FJyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TVHg8iic3jhifLJcBgUbuICf6X+/XJrx7XucziWHTh4=;
-        b=FedIosu+YhOmcQC2u8dZ/rTAAwMD3kiVrcPnAV7xYHqob9W710vaZLzM1pU1vkHTIC
-         F1q+7kiTFxYvqt8nCGNRZ1PEmmuaiYwsoClWbKnd8c1NSFQCj90BlGB/FPWYdNGD63P8
-         rm66vHtmXDzgYV9iUwv2vC/iiEIC4jLws42+Z7iXxwD+jeqyAnnCM7fWn0BTBpieVmFV
-         OI7m4Gp05oCl/zqz+325YJT3jqlQW12e0ZOF8+4KhQqEFamOJgGtYb3xrX4xGvoO/LV2
-         BFbJ8FmQmFVz9Qq2nu1unuEK/W+19DN8Q1rSCJiTxJFVvUnjZT5aEek0bFCeQqU5atU0
-         5JjQ==
-X-Gm-Message-State: AOAM532tJsnvDPzihXVfV7Cnkp8CfLaIWFYvG53M/4MRuk/c7DFzxFGV
-        LfjK/iSRF+XRghI1DStK7BhYfQ==
-X-Google-Smtp-Source: ABdhPJxuNmuIkhrqM6bpbnFGPMCC2Ooxj9YFPlaOufZ98RpuJ8EhlSYOLxahQ/MIWXdKo1mkyqnaIw==
-X-Received: by 2002:a17:902:6b05:: with SMTP id o5mr16351190plk.173.1597781417356;
-        Tue, 18 Aug 2020 13:10:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t25sm26530806pfl.198.2020.08.18.13.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 13:10:15 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 13:10:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Allen Pais <allen.cryptic@gmail.com>,
-        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        3chas3@gmail.com, stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        daniel@ffwll.ch, sre@kernel.org, kys@microsoft.com, deller@gmx.de,
-        dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        maximlevitsky@gmail.com, oakad@yahoo.com, ulf.hansson@linaro.org,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, davem@davemloft.net, kuba@kernel.org,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <202008181309.FD3940A2D5@keescook>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com>
- <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook>
- <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
+        b=PNAGldCU/h6GWFTVlFsbZ29hs4S0xAJx98YlKuNkDTLTSNMkMEFs1eF2vKN3U26AIf
+         u+sdWjRtmcJ9YCPm4LW4ZeeIY/kTu0jkx1HBsllZBnNcvdHc2AQI6PB64m92axUN4hu5
+         BcUX8B8azc9UInObrWJrpi8d6xmmDW0N3OSfjI1uH2H2yu4n76fPgf+kd1EyTz08cfVS
+         6oXQMcXm+jmRPpaTBhnP3+iVVpwFYUO71e5ABuC6LJ8s9KtJuKed/nnP/3I9xjJ0OXGr
+         YYTlUBzIrleW/kbpYPz3EMM9NqjRO7hJ422NhG0nR4kIk3gFlOXGvWhzovAyOYVw82f5
+         FMjQ==
+X-Gm-Message-State: AOAM531zpSAccJDvBC2iyv0Umy9kwrDi1iFlShYpnzA8MAeP/Xhq8+Kk
+        CA3E5GrGXT1zvrgw76zyLMgbNA5B09WTHupr72+gpw==
+X-Google-Smtp-Source: ABdhPJwOKRYS2PwWBBYN4GFKNKJdQYmjkuOx3UDDgltvQa7vQlCXjb3kyJ+bQrzsi9ccw8z8SKrP/CgWTVGQkKsMYRc=
+X-Received: by 2002:a37:a5c1:: with SMTP id o184mr18448700qke.323.1597781522517;
+ Tue, 18 Aug 2020 13:12:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597780833.3978.3.camel@HansenPartnership.com>
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com> <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Aug 2020 22:11:51 +0200
+Message-ID: <CAMpxmJXFXGGXebBDKhnk6W3J-KX+GLFUJOiQQY6ERNC7_D+_hw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/3] gpio: xilinx: Add clock adaptation support
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 01:00:33PM -0700, James Bottomley wrote:
-> On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
-> > On 8/17/20 12:48 PM, Kees Cook wrote:
-> > > On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
-> > > > On 8/17/20 12:29 PM, Kees Cook wrote:
-> > > > > On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
-> > > > > > On 8/17/20 2:15 AM, Allen Pais wrote:
-> > > > > > > From: Allen Pais <allen.lkml@gmail.com>
-> > > > > > > 
-> > > > > > > In preparation for unconditionally passing the
-> > > > > > > struct tasklet_struct pointer to all tasklet
-> > > > > > > callbacks, switch to using the new tasklet_setup()
-> > > > > > > and from_tasklet() to pass the tasklet pointer explicitly.
-> > > > > > 
-> > > > > > Who came up with the idea to add a macro 'from_tasklet' that
-> > > > > > is just container_of? container_of in the code would be
-> > > > > > _much_ more readable, and not leave anyone guessing wtf
-> > > > > > from_tasklet is doing.
-> > > > > > 
-> > > > > > I'd fix that up now before everything else goes in...
-> > > > > 
-> > > > > As I mentioned in the other thread, I think this makes things
-> > > > > much more readable. It's the same thing that the timer_struct
-> > > > > conversion did (added a container_of wrapper) to avoid the
-> > > > > ever-repeating use of typeof(), long lines, etc.
-> > > > 
-> > > > But then it should use a generic name, instead of each sub-system 
-> > > > using some random name that makes people look up exactly what it
-> > > > does. I'm not huge fan of the container_of() redundancy, but
-> > > > adding private variants of this doesn't seem like the best way
-> > > > forward. Let's have a generic helper that does this, and use it
-> > > > everywhere.
-> > > 
-> > > I'm open to suggestions, but as things stand, these kinds of
-> > > treewide
-> > 
-> > On naming? Implementation is just as it stands, from_tasklet() is
-> > totally generic which is why I objected to it. from_member()? Not
-> > great with naming... But I can see this going further and then we'll
-> > suddenly have tons of these. It's not good for readability.
-> 
-> Since both threads seem to have petered out, let me suggest in
-> kernel.h:
-> 
-> #define cast_out(ptr, container, member) \
-> 	container_of(ptr, typeof(*container), member)
-> 
-> It does what you want, the argument order is the same as container_of
-> with the only difference being you name the containing structure
-> instead of having to specify its type.
+On Thu, Jul 23, 2020 at 4:06 PM Srinivas Neeli
+<srinivas.neeli@xilinx.com> wrote:
+>
+> Add support of clock adaptation for AXI GPIO driver.
+>
 
-I like this! Shall I send this to Linus to see if this can land in -rc2
-for use going forward?
+Please make the commit message more specific. I can tell from the
+patch that it's about power management but I've never heard anyone
+referring to it as clock adaptation. There's also a lot of runtime pm
+code in here. Be more descriptive.
 
--- 
-Kees Cook
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> ---
+> Changes in V2:
+> Add check for return value of platform_get_irq() API.
+> ---
+>  drivers/gpio/gpio-xilinx.c | 111 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 109 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 67f9f82e0db0..d103613e787a 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/slab.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/clk.h>
+
+Alphabetical order of includes?
+
+>
+>  /* Register Offset Definitions */
+>  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
+> @@ -38,6 +40,7 @@
+>   * @gpio_state: GPIO state shadow register
+>   * @gpio_dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+> + * @clk: clock resource for this driver
+>   */
+>  struct xgpio_instance {
+>         struct gpio_chip gc;
+> @@ -45,7 +48,8 @@ struct xgpio_instance {
+>         unsigned int gpio_width[2];
+>         u32 gpio_state[2];
+>         u32 gpio_dir[2];
+> -       spinlock_t gpio_lock[2];
+> +       spinlock_t gpio_lock[2];        /* For serializing operations */
+
+This looks like it was sneaked into an unrelated patch.
+
+> +       struct clk *clk;
+>  };
+>
+>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+> @@ -256,6 +260,83 @@ static void xgpio_save_regs(struct xgpio_instance *chip)
+>                        chip->gpio_dir[1]);
+>  }
+>
+> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       int ret = pm_runtime_get_sync(chip->parent);
+> +
+> +       /*
+> +        * If the device is already active pm_runtime_get() will return 1 on
+> +        * success, but gpio_request still needs to return 0.
+> +        */
+> +       return ret < 0 ? ret : 0;
+> +}
+> +
+> +static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       pm_runtime_put(chip->parent);
+> +}
+> +
+> +static int __maybe_unused xgpio_suspend(struct device *dev)
+> +{
+> +       struct platform_device *pdev = to_platform_device(dev);
+> +       struct irq_data *data;
+> +       int irq = platform_get_irq(pdev, 0);
+> +
+> +       if (irq < 0) {
+> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
+> +               return irq;
+> +       }
+> +
+> +       data = irq_get_irq_data(irq);
+> +       if (!irqd_is_wakeup_set(data))
+> +               return pm_runtime_force_suspend(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_resume(struct device *dev)
+> +{
+> +       struct platform_device *pdev = to_platform_device(dev);
+> +       struct irq_data *data;
+> +       int irq = platform_get_irq(pdev, 0);
+> +
+> +       if (irq < 0) {
+> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
+> +               return irq;
+> +       }
+
+No, don't do this on every suspend/resume - just call
+platform_get_irq() in probe() and store the irq number for later use.
+This way you only check it once. Also why would you log the return
+value?
+
+> +
+> +       data = irq_get_irq_data(irq);
+> +
+> +       if (!irqd_is_wakeup_set(data))
+> +               return pm_runtime_force_resume(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
+> +{
+> +       struct platform_device *pdev = to_platform_device(dev);
+> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
+> +
+> +       clk_disable(gpio->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused xgpio_runtime_resume(struct device *dev)
+> +{
+> +       struct platform_device *pdev = to_platform_device(dev);
+> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
+> +
+> +       return clk_enable(gpio->clk);
+> +}
+> +
+> +static const struct dev_pm_ops xgpio_dev_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
+> +       SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
+> +                          xgpio_runtime_resume, NULL)
+> +};
+> +
+>  /**
+>   * xgpio_of_probe - Probe method for the GPIO device.
+>   * @pdev: pointer to the platform device
+> @@ -324,6 +405,8 @@ static int xgpio_probe(struct platform_device *pdev)
+>         chip->gc.direction_output = xgpio_dir_out;
+>         chip->gc.get = xgpio_get;
+>         chip->gc.set = xgpio_set;
+> +       chip->gc.request = xgpio_request;
+> +       chip->gc.free = xgpio_free;
+>         chip->gc.set_multiple = xgpio_set_multiple;
+>
+>         chip->gc.label = dev_name(&pdev->dev);
+> @@ -334,15 +417,38 @@ static int xgpio_probe(struct platform_device *pdev)
+>                 return PTR_ERR(chip->regs);
+>         }
+>
+> +       chip->clk = devm_clk_get_optional(&pdev->dev, "s_axi_aclk");
+> +       if (IS_ERR(chip->clk)) {
+> +               if (PTR_ERR(chip->clk) != -EPROBE_DEFER)
+> +                       dev_err(&pdev->dev, "Input clock not found\n");
+
+How is this an error if the clock is optional?
+
+> +               return PTR_ERR(chip->clk);
+> +       }
+> +       status = clk_prepare_enable(chip->clk);
+> +       if (status < 0) {
+> +               dev_err(&pdev->dev, "Failed to prepare clk\n");
+> +               return status;
+> +       }
+> +       pm_runtime_enable(&pdev->dev);
+> +       status = pm_runtime_get_sync(&pdev->dev);
+> +       if (status < 0)
+> +               goto err_unprepare_clk;
+> +
+>         xgpio_save_regs(chip);
+>
+>         status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+>         if (status) {
+>                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
+> -               return status;
+> +               goto err_pm_put;
+>         }
+>
+> +       pm_runtime_put(&pdev->dev);
+>         return 0;
+> +err_pm_put:
+> +       pm_runtime_put(&pdev->dev);
+> +err_unprepare_clk:
+> +       pm_runtime_disable(&pdev->dev);
+> +       clk_unprepare(chip->clk);
+> +       return status;
+>  }
+>
+>  static const struct of_device_id xgpio_of_match[] = {
+> @@ -357,6 +463,7 @@ static struct platform_driver xgpio_plat_driver = {
+>         .driver         = {
+>                         .name = "gpio-xilinx",
+>                         .of_match_table = xgpio_of_match,
+> +                       .pm = &xgpio_dev_pm_ops,
+>         },
+>  };
+>
+> --
+> 2.7.4
+>
+
+Bart
