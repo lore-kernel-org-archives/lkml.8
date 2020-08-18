@@ -2,393 +2,667 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80268C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7E207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7D9207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avbTsWm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHRNrH (ORCPT
+        id S1726728AbgHRNtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:47:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9766 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbgHRNqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:46:44 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 560295C1CB765C8BB0E0;
-        Tue, 18 Aug 2020 21:46:37 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
- 21:46:29 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <hch@infradead.org>, <darrick.wong@oracle.com>,
-        <willy@infradead.org>, <david@fromorbit.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [RFC PATCH V2] iomap: add support to track dirty state of sub pages
-Date:   Tue, 18 Aug 2020 21:46:18 +0800
-Message-ID: <20200818134618.2345884-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 18 Aug 2020 09:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgHRNtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:49:33 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F08EC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:49:32 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so18366017wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FCDdvr0ztkXWIqI8+MEAEcO00YHBZRQb2mH183ByXdU=;
+        b=avbTsWm5plFOHwFDp5FmWNDB+kQkFsnF3cziQMPjEvTEDEpeHzVJFbZPAgHcLjNcny
+         lPivVFpN8jqVWvBlS8LPp1z96c35apZLioX2U2olwo2hRSborD1u6KJBmssOYrrcKdeB
+         3+sp7A/Bti0X5x3m+eLiMNw18N9NZg5+Eo7VG7oR1CDX+jVVCGnvsLnf8cfoE5EQCDt7
+         qNohMUnoN9kQ0r9htRgGR2K9nzk3AGfXhTkf03rS0NmJf364+BNk2LQLh54EhftUCIQ5
+         KCZDRZSC+sz71OR3ADVPCSAZq1r0pntUR+JopJzl+VqTwALq9zM4URUa78d5IJ9vKe8V
+         CJyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FCDdvr0ztkXWIqI8+MEAEcO00YHBZRQb2mH183ByXdU=;
+        b=j4kYK/6+LdUYytYV43yR7RlVzh4FLgnobUvd+eSjaqPa8IygwHtKsPSr7SzroKzFEd
+         GaN6wZu6eCia1lXSz+D606/Qw2h/29IQjzoBoJQyIXu32rvUiwrH9eYoM8qL4tN06BOR
+         EY9qEleoPpHeg+e0mRg0hZAo+DtSaJ9xTPZttlhOZ3QkjUAr0fOWqM/fe8QGpWQirGkh
+         3r7lJKowDqMJCygNSuAo37+lh9rzdlq3+wa5TR2C4+yTX0hWewbkRm5nbdJaHQlSSVcM
+         +kK08ACVd/0KnI2ypBoj2nOQrvHM4aH2UM/W/Ku1/Myk8slBKEdKoBdv8HfJdjCLLeIm
+         BHcw==
+X-Gm-Message-State: AOAM5317716qEjkzxUJF5Fqyws7H3/8F7fm0QNf5cnx6BMxEaT6DnpzX
+        vRK2L89fq59Pgpej64gyDPk=
+X-Google-Smtp-Source: ABdhPJx0Eec0N+SRa6eL15uukYYKz4ZL6v1fwaNdMRo/oZu3uwPb0pe+CWMo70Fm7iEKaBsuyu6ApQ==
+X-Received: by 2002:adf:dfd0:: with SMTP id q16mr22185839wrn.60.1597758570802;
+        Tue, 18 Aug 2020 06:49:30 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id p6sm55313wmg.0.2020.08.18.06.49.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 06:49:30 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: emxx_udc: Use standard BIT() macro
+Date:   Tue, 18 Aug 2020 14:49:18 +0100
+Message-Id: <20200818134922.409195-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes from v1:
- - separate set dirty and clear dirty functions
- - don't test uptodate bit in iomap_writepage_map()
- - use one bitmap array for uptodate and dirty.
+Currently emxx_udc.h defines bit values using local macros. Use the
+standard one instead.
 
-commit 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O
-without buffer heads") replace the per-block structure buffer_head with
-the per-page structure iomap_page. However, iomap_page can't track the
-dirty state of sub pages, which will cause performance issue since sub
-pages will be writeback even if they are not dirty.
+Also, combine bit values with bitwise-or rather than addition, as
+suggested by Coccinelle.
 
-For example, if block size is 4k and page size is 64k:
-
-dd if=/dev/zero of=testfile bs=4k count=16 oflag=sync
-
-With buffer_head implementation, the above dd cmd will writeback 4k in
-each round. However, with iomap_page implementation, the range of
-writeback in each round is from the start of the page to the end offset
-we just wrote.
-
-Thus add support to track dirty state in iomap_page.
-
-I tested this path with:
-test environment:
-	platform:	arm64
-	kernel:		v5.8
-	pagesize:	64k
-	blocksize:	4k
-	device:		sata ssd
-
-test case:
-	dd if=/dev/zero of=/mnt/testfile bs=1M count=128
-	fio --ioengine=sync --rw=randwrite --iodepth=64 --name=test --filename=/mnt/testfile --bs=4k --fsync=1
-
-The test result is:
-a. with patch
-
-```
-Jobs: 1 (f=1): [w(1)][100.0%][r=0KiB/s,w=4460KiB/s][r=0,w=1115 IOPS][eta 00m:00s]
-test: (groupid=0, jobs=1): err= 0: pid=3158: Tue Aug 18 07:38:53 2020
-  write: IOPS=1087, BW=4350KiB/s (4455kB/s)(128MiB/30129msec)
-    clat (nsec): min=3020, max=22320, avg=4990.47, stdev=1613.56
-     lat (nsec): min=3180, max=23220, avg=5157.69, stdev=1617.42
-    clat percentiles (nsec):
-     |  1.00th=[ 3376],  5.00th=[ 3568], 10.00th=[ 3824], 20.00th=[ 4016],
-     | 30.00th=[ 4128], 40.00th=[ 4192], 50.00th=[ 4256], 60.00th=[ 4320],
-     | 70.00th=[ 4512], 80.00th=[ 7392], 90.00th=[ 7840], 95.00th=[ 8032],
-     | 99.00th=[ 8512], 99.50th=[ 8896], 99.90th=[12096], 99.95th=[14144],
-     | 99.99th=[20096]
-   bw (  KiB/s): min= 1504, max= 4496, per=100.00%, avg=4350.65, stdev=392.33, samples=60
-   iops        : min=  376, max= 1124, avg=1087.65, stdev=98.08, samples=60
-  lat (usec)   : 4=17.40%, 10=82.40%, 20=0.19%, 50=0.02%
-  fsync/fdatasync/sync_file_range:
-    sync (usec): min=677, max=24318, avg=903.99, stdev=455.75
-    sync percentiles (usec):
-     |  1.00th=[  685],  5.00th=[  693], 10.00th=[  701], 20.00th=[  701],
-     | 30.00th=[  709], 40.00th=[  709], 50.00th=[  717], 60.00th=[  717],
-     | 70.00th=[  725], 80.00th=[ 1467], 90.00th=[ 1483], 95.00th=[ 1500],
-     | 99.00th=[ 1532], 99.50th=[ 1762], 99.90th=[ 7767], 99.95th=[ 7832],
-     | 99.99th=[ 8094]
-  cpu          : usr=0.33%, sys=2.13%, ctx=98405, majf=0, minf=4
-  IO depths    : 1=200.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     issued rwts: total=0,32768,0,32767 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-  WRITE: bw=4350KiB/s (4455kB/s), 4350KiB/s-4350KiB/s (4455kB/s-4455kB/s), io=128MiB (134MB), run=30129-30129msec
-
-Disk stats (read/write):
-  sda: ios=4/65596, merge=0/5, ticks=3/30579, in_queue=58279, util=99.72%
-```
-
-b. without patch
-
-```
-Jobs: 1 (f=1): [w(1)][100.0%][r=0KiB/s,w=3003KiB/s][r=0,w=750 IOPS][eta 00m:00s]
-test: (groupid=0, jobs=1): err= 0: pid=9174: Tue Aug 18 04:17:16 2020
-  write: IOPS=678, BW=2714KiB/s (2780kB/s)(128MiB/48286msec)
-    clat (nsec): min=3420, max=26240, avg=5898.60, stdev=1824.49
-     lat (nsec): min=3600, max=26860, avg=6065.21, stdev=1826.90
-    clat percentiles (nsec):
-     |  1.00th=[ 3792],  5.00th=[ 4128], 10.00th=[ 4320], 20.00th=[ 4512],
-     | 30.00th=[ 4576], 40.00th=[ 4704], 50.00th=[ 4832], 60.00th=[ 4960],
-     | 70.00th=[ 7968], 80.00th=[ 8256], 90.00th=[ 8512], 95.00th=[ 8768],
-     | 99.00th=[ 9152], 99.50th=[ 9408], 99.90th=[11840], 99.95th=[13376],
-     | 99.99th=[18560]
-   bw (  KiB/s): min= 1016, max= 3128, per=99.92%, avg=2711.92, stdev=357.89, samples=96
-   iops        : min=  254, max=  782, avg=677.98, stdev=89.47, samples=96
-  lat (usec)   : 4=3.14%, 10=96.66%, 20=0.20%, 50=0.01%
-  fsync/fdatasync/sync_file_range:
-    sync (usec): min=814, max=24221, avg=1456.82, stdev=543.48
-    sync percentiles (usec):
-     |  1.00th=[  988],  5.00th=[  996], 10.00th=[  996], 20.00th=[ 1012],
-     | 30.00th=[ 1029], 40.00th=[ 1221], 50.00th=[ 1270], 60.00th=[ 1287],
-     | 70.00th=[ 1795], 80.00th=[ 1844], 90.00th=[ 2245], 95.00th=[ 2278],
-     | 99.00th=[ 2442], 99.50th=[ 2737], 99.90th=[ 5407], 99.95th=[ 5538],
-     | 99.99th=[ 5735]
-  cpu          : usr=0.19%, sys=1.54%, ctx=98412, majf=0, minf=4
-  IO depths    : 1=200.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     issued rwts: total=0,32768,0,32767 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-  WRITE: bw=2714KiB/s (2780kB/s), 2714KiB/s-2714KiB/s (2780kB/s-2780kB/s), io=128MiB (134MB), run=48286-48286msec
-
-Disk stats (read/write):
-  sda: ios=4/65344, merge=0/5, ticks=2/48198, in_queue=88938, util=99.83%
-```
-
-c. ext4
-
-```
-Jobs: 1 (f=1): [w(1)][100.0%][r=0KiB/s,w=3919KiB/s][r=0,w=979 IOPS][eta 00m:00s]
-test: (groupid=0, jobs=1): err= 0: pid=8682: Tue Aug 18 04:15:43 2020
-  write: IOPS=960, BW=3840KiB/s (3932kB/s)(128MiB/34133msec)
-    clat (usec): min=4, max=349, avg= 8.92, stdev= 2.94
-     lat (usec): min=4, max=349, avg= 9.06, stdev= 2.94
-    clat percentiles (nsec):
-     |  1.00th=[ 6112],  5.00th=[ 6624], 10.00th=[ 6880], 20.00th=[ 7200],
-     | 30.00th=[ 7456], 40.00th=[ 7712], 50.00th=[ 8032], 60.00th=[ 8384],
-     | 70.00th=[ 9024], 80.00th=[11712], 90.00th=[12608], 95.00th=[13120],
-     | 99.00th=[14272], 99.50th=[14656], 99.90th=[17536], 99.95th=[20352],
-     | 99.99th=[33536]
-   bw (  KiB/s): min= 1344, max= 3992, per=100.00%, avg=3839.88, stdev=314.69, samples=68
-   iops        : min=  336, max=  998, avg=959.97, stdev=78.67, samples=68
-  lat (usec)   : 10=74.64%, 20=25.31%, 50=0.05%, 100=0.01%, 500=0.01%
-  fsync/fdatasync/sync_file_range:
-    sync (usec): min=666, max=25174, avg=1021.69, stdev=871.62
-    sync percentiles (usec):
-     |  1.00th=[  685],  5.00th=[  693], 10.00th=[  701], 20.00th=[  701],
-     | 30.00th=[  709], 40.00th=[  717], 50.00th=[  717], 60.00th=[  725],
-     | 70.00th=[  734], 80.00th=[ 1500], 90.00th=[ 1516], 95.00th=[ 1532],
-     | 99.00th=[ 6128], 99.50th=[ 6128], 99.90th=[ 7832], 99.95th=[ 8225],
-     | 99.99th=[ 9634]
-  cpu          : usr=0.32%, sys=2.87%, ctx=90254, majf=0, minf=4
-  IO depths    : 1=200.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     issued rwts: total=0,32768,0,32767 short=0,0,0,0 dropped=0,0,0,0
-     latency   : target=0, window=0, percentile=100.00%, depth=64
-
-Run status group 0 (all jobs):
-  WRITE: bw=3840KiB/s (3932kB/s), 3840KiB/s-3840KiB/s (3932kB/s-3932kB/s), io=128MiB (134MB), run=34133-34133msec
-
-Disk stats (read/write):
-  sda: ios=0/75055, merge=0/8822, ticks=0/40565, in_queue=68469, util=99.80%
-```
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- fs/iomap/buffered-io.c | 91 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 79 insertions(+), 12 deletions(-)
+ drivers/staging/emxx_udc/emxx_udc.h | 456 +++++++++++++---------------
+ 1 file changed, 211 insertions(+), 245 deletions(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bcfc288dba3f..0a501dc82dde 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -28,8 +28,12 @@
- struct iomap_page {
- 	atomic_t		read_count;
- 	atomic_t		write_count;
--	spinlock_t		uptodate_lock;
--	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-+	spinlock_t		state_lock;
-+	/*
-+	 * The first half bits are used to track sub-page uptodate status,
-+	 * the second half bits are for dirty status.
-+	 */
-+	DECLARE_BITMAP(state, PAGE_SIZE / 256);
- };
+diff --git a/drivers/staging/emxx_udc/emxx_udc.h b/drivers/staging/emxx_udc/emxx_udc.h
+index 9c2671cb32f7..45f076e5fdb0 100644
+--- a/drivers/staging/emxx_udc/emxx_udc.h
++++ b/drivers/staging/emxx_udc/emxx_udc.h
+@@ -52,197 +52,163 @@ int vbus_irq;
+ #define U2F_ENABLE		1
+ #define U2F_DISABLE		0
  
- static inline struct iomap_page *to_iomap_page(struct page *page)
-@@ -52,8 +56,8 @@ iomap_page_create(struct inode *inode, struct page *page)
- 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
- 	atomic_set(&iop->read_count, 0);
- 	atomic_set(&iop->write_count, 0);
--	spin_lock_init(&iop->uptodate_lock);
--	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-+	spin_lock_init(&iop->state_lock);
-+	bitmap_zero(iop->state, PAGE_SIZE * 2 / SECTOR_SIZE);
- 
- 	/*
- 	 * migrate_page_move_mapping() assumes that pages with private data have
-@@ -101,7 +105,7 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 
- 		/* move forward for each leading block marked uptodate */
- 		for (i = first; i <= last; i++) {
--			if (!test_bit(i, iop->uptodate))
-+			if (!test_bit(i, iop->state))
- 				break;
- 			*pos += block_size;
- 			poff += block_size;
-@@ -111,7 +115,7 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 
- 		/* truncate len if we find any trailing uptodate block(s) */
- 		for ( ; i <= last; i++) {
--			if (test_bit(i, iop->uptodate)) {
-+			if (test_bit(i, iop->state)) {
- 				plen -= (last - i + 1) * block_size;
- 				last = i - 1;
- 				break;
-@@ -135,6 +139,64 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 	*lenp = plen;
- }
- 
-+static void
-+iomap_iop_set_range_dirty(struct page *page, unsigned int off,
-+		unsigned int len)
-+{
-+	struct iomap_page *iop = to_iomap_page(page);
-+	struct inode *inode = page->mapping->host;
-+	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
-+	unsigned int first = off >> inode->i_blkbits;
-+	unsigned int last = (off + len - 1) >> inode->i_blkbits;
-+	unsigned long flags;
-+	unsigned int i;
+-/*------- BIT */
+-#define BIT00		0x00000001
+-#define BIT01		0x00000002
+-#define BIT02		0x00000004
+-#define BIT03		0x00000008
+-#define BIT04		0x00000010
+-#define BIT05		0x00000020
+-#define BIT06		0x00000040
+-#define BIT07		0x00000080
+-#define BIT08		0x00000100
+-#define BIT09		0x00000200
+-#define BIT10		0x00000400
+-#define BIT11		0x00000800
+-#define BIT12		0x00001000
+-#define BIT13		0x00002000
+-#define BIT14		0x00004000
+-#define BIT15		0x00008000
+-#define BIT16		0x00010000
+-#define BIT17		0x00020000
+-#define BIT18		0x00040000
+-#define BIT19		0x00080000
+-#define BIT20		0x00100000
+-#define BIT21		0x00200000
+-#define BIT22		0x00400000
+-#define BIT23		0x00800000
+-#define BIT24		0x01000000
+-#define BIT25		0x02000000
+-#define BIT26		0x04000000
+-#define BIT27		0x08000000
+-#define BIT28		0x10000000
+-#define BIT29		0x20000000
+-#define BIT30		0x40000000
+-#define BIT31		0x80000000
+-
+-#define TEST_FORCE_ENABLE		(BIT18 + BIT16)
+-
+-#define INT_SEL				BIT10
+-#define CONSTFS				BIT09
+-#define SOF_RCV				BIT08
+-#define RSUM_IN				BIT07
+-#define SUSPEND				BIT06
+-#define CONF				BIT05
+-#define DEFAULT				BIT04
+-#define CONNECTB			BIT03
+-#define PUE2				BIT02
++#define TEST_FORCE_ENABLE		(BIT(18) | BIT(16))
 +
-+	spin_lock_irqsave(&iop->state_lock, flags);
-+	for (i = first; i <= last; i++)
-+		set_bit(i + total, iop->state);
-+	spin_unlock_irqrestore(&iop->state_lock, flags);
-+}
-+
-+static void
-+iomap_set_range_dirty(struct page *page, unsigned int off,
-+		unsigned int len)
-+{
-+	if (PageError(page))
-+		return;
-+
-+	if (page_has_private(page))
-+		iomap_iop_set_range_dirty(page, off, len);
-+}
-+
-+static void
-+iomap_iop_clear_range_dirty(struct page *page, unsigned int off,
-+		unsigned int len)
-+{
-+	struct iomap_page *iop = to_iomap_page(page);
-+	struct inode *inode = page->mapping->host;
-+	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
-+	unsigned int first = off >> inode->i_blkbits;
-+	unsigned int last = (off + len - 1) >> inode->i_blkbits;
-+	unsigned long flags;
-+	unsigned int i;
-+
-+	spin_lock_irqsave(&iop->state_lock, flags);
-+	for (i = first; i <= last; i++)
-+		clear_bit(i + total, iop->state);
-+	spin_unlock_irqrestore(&iop->state_lock, flags);
-+}
-+
-+static void
-+iomap_clear_range_dirty(struct page *page, unsigned int off,
-+		unsigned int len)
-+{
-+	if (PageError(page))
-+		return;
-+
-+	if (page_has_private(page))
-+		iomap_iop_clear_range_dirty(page, off, len);
-+}
-+
- static void
- iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- {
-@@ -146,17 +208,17 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	unsigned long flags;
- 	unsigned int i;
++#define INT_SEL				BIT(10)
++#define CONSTFS				BIT(9)
++#define SOF_RCV				BIT(8)
++#define RSUM_IN				BIT(7)
++#define SUSPEND				BIT(6)
++#define CONF				BIT(5)
++#define DEFAULT				BIT(4)
++#define CONNECTB			BIT(3)
++#define PUE2				BIT(2)
  
--	spin_lock_irqsave(&iop->uptodate_lock, flags);
-+	spin_lock_irqsave(&iop->state_lock, flags);
- 	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
- 		if (i >= first && i <= last)
--			set_bit(i, iop->uptodate);
--		else if (!test_bit(i, iop->uptodate))
-+			set_bit(i, iop->state);
-+		else if (!test_bit(i, iop->state))
- 			uptodate = false;
- 	}
+ #define MAX_TEST_MODE_NUM		0x05
+ #define TEST_MODE_SHIFT			16
  
- 	if (uptodate)
- 		SetPageUptodate(page);
--	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
-+	spin_unlock_irqrestore(&iop->state_lock, flags);
- }
+ /*------- (0x0004) USB Status Register */
+-#define SPEED_MODE			BIT06
+-#define HIGH_SPEED			BIT06
++#define SPEED_MODE			BIT(6)
++#define HIGH_SPEED			BIT(6)
  
- static void
-@@ -466,7 +528,7 @@ iomap_is_partially_uptodate(struct page *page, unsigned long from,
+-#define CONF				BIT05
+-#define DEFAULT				BIT04
+-#define USB_RST				BIT03
+-#define SPND_OUT			BIT02
+-#define RSUM_OUT			BIT01
++#define CONF				BIT(5)
++#define DEFAULT				BIT(4)
++#define USB_RST				BIT(3)
++#define SPND_OUT			BIT(2)
++#define RSUM_OUT			BIT(1)
  
- 	if (iop) {
- 		for (i = first; i <= last; i++)
--			if (!test_bit(i, iop->uptodate))
-+			if (!test_bit(i, iop->state))
- 				return 0;
- 		return 1;
- 	}
-@@ -705,6 +767,7 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
- 	if (unlikely(copied < len && !PageUptodate(page)))
- 		return 0;
- 	iomap_set_range_uptodate(page, offset_in_page(pos), len);
-+	iomap_set_range_dirty(page, offset_in_page(pos), len);
- 	iomap_set_page_dirty(page);
- 	return copied;
- }
-@@ -1030,6 +1093,7 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
- 		WARN_ON_ONCE(!PageUptodate(page));
- 		iomap_page_create(inode, page);
- 		set_page_dirty(page);
-+		iomap_set_range_dirty(page, offset_in_page(pos), length);
- 	}
+ /*------- (0x0008) USB Address Register */
+ #define USB_ADDR			0x007F0000
+-#define SOF_STATUS			BIT15
+-#define UFRAME				(BIT14 + BIT13 + BIT12)
++#define SOF_STATUS			BIT(15)
++#define UFRAME				(BIT(14) | BIT(13) | BIT(12))
+ #define FRAME				0x000007FF
  
- 	return length;
-@@ -1373,6 +1437,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	unsigned len = i_blocksize(inode);
- 	u64 file_offset; /* file offset of page */
- 	int error = 0, count = 0, i;
-+	int total = PAGE_SIZE / SECTOR_SIZE;
- 	LIST_HEAD(submit_list);
+ #define USB_ADRS_SHIFT			16
  
- 	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-@@ -1386,7 +1451,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	for (i = 0, file_offset = page_offset(page);
- 	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
- 	     i++, file_offset += len) {
--		if (iop && !test_bit(i, iop->uptodate))
-+		if (iop && !test_bit(i + total, iop->state))
- 			continue;
+ /*------- (0x000C) UTMI Characteristic 1 Register */
+-#define SQUSET				(BIT07 + BIT06 + BIT05 + BIT04)
++#define SQUSET				(BIT(7) | BIT(6) | BIT(5) | BIT(4))
  
- 		error = wpc->ops->map_blocks(wpc, inode, file_offset);
-@@ -1435,6 +1500,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 		 */
- 		set_page_writeback_keepwrite(page);
- 	} else {
-+		iomap_clear_range_dirty(page, 0,
-+				end_offset - page_offset(page) + 1);
- 		clear_page_dirty_for_io(page);
- 		set_page_writeback(page);
- 	}
+-#define USB_SQUSET			(BIT06 + BIT05 + BIT04)
++#define USB_SQUSET			(BIT(6) | BIT(5) | BIT(4))
+ 
+ /*------- (0x0010) TEST Control Register */
+-#define FORCEHS				BIT02
+-#define CS_TESTMODEEN			BIT01
+-#define LOOPBACK			BIT00
++#define FORCEHS				BIT(2)
++#define CS_TESTMODEEN			BIT(1)
++#define LOOPBACK			BIT(0)
+ 
+ /*------- (0x0018) Setup Data 0 Register */
+ /*------- (0x001C) Setup Data 1 Register */
+ 
+ /*------- (0x0020) USB Interrupt Status Register */
+ #define EPN_INT				0x00FFFF00
+-#define EP15_INT			BIT23
+-#define EP14_INT			BIT22
+-#define EP13_INT			BIT21
+-#define EP12_INT			BIT20
+-#define EP11_INT			BIT19
+-#define EP10_INT			BIT18
+-#define EP9_INT				BIT17
+-#define EP8_INT				BIT16
+-#define EP7_INT				BIT15
+-#define EP6_INT				BIT14
+-#define EP5_INT				BIT13
+-#define EP4_INT				BIT12
+-#define EP3_INT				BIT11
+-#define EP2_INT				BIT10
+-#define EP1_INT				BIT09
+-#define EP0_INT				BIT08
+-#define SPEED_MODE_INT			BIT06
+-#define SOF_ERROR_INT			BIT05
+-#define SOF_INT				BIT04
+-#define USB_RST_INT			BIT03
+-#define SPND_INT			BIT02
+-#define RSUM_INT			BIT01
++#define EP15_INT			BIT(23)
++#define EP14_INT			BIT(22)
++#define EP13_INT			BIT(21)
++#define EP12_INT			BIT(20)
++#define EP11_INT			BIT(19)
++#define EP10_INT			BIT(18)
++#define EP9_INT				BIT(17)
++#define EP8_INT				BIT(16)
++#define EP7_INT				BIT(15)
++#define EP6_INT				BIT(14)
++#define EP5_INT				BIT(13)
++#define EP4_INT				BIT(12)
++#define EP3_INT				BIT(11)
++#define EP2_INT				BIT(10)
++#define EP1_INT				BIT(9)
++#define EP0_INT				BIT(8)
++#define SPEED_MODE_INT			BIT(6)
++#define SOF_ERROR_INT			BIT(5)
++#define SOF_INT				BIT(4)
++#define USB_RST_INT			BIT(3)
++#define SPND_INT			BIT(2)
++#define RSUM_INT			BIT(1)
+ 
+ #define USB_INT_STA_RW			0x7E
+ 
+ /*------- (0x0024) USB Interrupt Enable Register */
+ #define EP15_0_EN			0x00FFFF00
+-#define EP15_EN				BIT23
+-#define EP14_EN				BIT22
+-#define EP13_EN				BIT21
+-#define EP12_EN				BIT20
+-#define EP11_EN				BIT19
+-#define EP10_EN				BIT18
+-#define EP9_EN				BIT17
+-#define EP8_EN				BIT16
+-#define EP7_EN				BIT15
+-#define EP6_EN				BIT14
+-#define EP5_EN				BIT13
+-#define EP4_EN				BIT12
+-#define EP3_EN				BIT11
+-#define EP2_EN				BIT10
+-#define EP1_EN				BIT09
+-#define EP0_EN				BIT08
+-#define SPEED_MODE_EN			BIT06
+-#define SOF_ERROR_EN			BIT05
+-#define SOF_EN				BIT04
+-#define USB_RST_EN			BIT03
+-#define SPND_EN				BIT02
+-#define RSUM_EN				BIT01
++#define EP15_EN				BIT(23)
++#define EP14_EN				BIT(22)
++#define EP13_EN				BIT(21)
++#define EP12_EN				BIT(20)
++#define EP11_EN				BIT(19)
++#define EP10_EN				BIT(18)
++#define EP9_EN				BIT(17)
++#define EP8_EN				BIT(16)
++#define EP7_EN				BIT(15)
++#define EP6_EN				BIT(14)
++#define EP5_EN				BIT(13)
++#define EP4_EN				BIT(12)
++#define EP3_EN				BIT(11)
++#define EP2_EN				BIT(10)
++#define EP1_EN				BIT(9)
++#define EP0_EN				BIT(8)
++#define SPEED_MODE_EN			BIT(6)
++#define SOF_ERROR_EN			BIT(5)
++#define SOF_EN				BIT(4)
++#define USB_RST_EN			BIT(3)
++#define SPND_EN				BIT(2)
++#define RSUM_EN				BIT(1)
+ 
+ #define USB_INT_EN_BIT	\
+ 	(EP0_EN | SPEED_MODE_EN | USB_RST_EN | SPND_EN | RSUM_EN)
+ 
+ /*------- (0x0028) EP0 Control Register */
+-#define EP0_STGSEL			BIT18
+-#define EP0_OVERSEL			BIT17
+-#define EP0_AUTO			BIT16
+-#define EP0_PIDCLR			BIT09
+-#define EP0_BCLR			BIT08
+-#define EP0_DEND			BIT07
+-#define EP0_DW				(BIT06 + BIT05)
++#define EP0_STGSEL			BIT(18)
++#define EP0_OVERSEL			BIT(17)
++#define EP0_AUTO			BIT(16)
++#define EP0_PIDCLR			BIT(9)
++#define EP0_BCLR			BIT(8)
++#define EP0_DEND			BIT(7)
++#define EP0_DW				(BIT(6) | BIT(5))
+ #define EP0_DW4				0
+-#define EP0_DW3				(BIT06 + BIT05)
+-#define EP0_DW2				BIT06
+-#define EP0_DW1				BIT05
++#define EP0_DW3				(BIT(6) | BIT(5))
++#define EP0_DW2				BIT(6)
++#define EP0_DW1				BIT(5)
+ 
+-#define EP0_INAK_EN			BIT04
+-#define EP0_PERR_NAK_CLR		BIT03
+-#define EP0_STL				BIT02
+-#define EP0_INAK			BIT01
+-#define EP0_ONAK			BIT00
++#define EP0_INAK_EN			BIT(4)
++#define EP0_PERR_NAK_CLR		BIT(3)
++#define EP0_STL				BIT(2)
++#define EP0_INAK			BIT(1)
++#define EP0_ONAK			BIT(0)
+ 
+ /*------- (0x002C) EP0 Status Register */
+-#define EP0_PID				BIT18
+-#define EP0_PERR_NAK			BIT17
+-#define EP0_PERR_NAK_INT		BIT16
+-#define EP0_OUT_NAK_INT			BIT15
+-#define EP0_OUT_NULL			BIT14
+-#define EP0_OUT_FULL			BIT13
+-#define EP0_OUT_EMPTY			BIT12
+-#define EP0_IN_NAK_INT			BIT11
+-#define EP0_IN_DATA			BIT10
+-#define EP0_IN_FULL			BIT09
+-#define EP0_IN_EMPTY			BIT08
+-#define EP0_OUT_NULL_INT		BIT07
+-#define EP0_OUT_OR_INT			BIT06
+-#define EP0_OUT_INT			BIT05
+-#define EP0_IN_INT			BIT04
+-#define EP0_STALL_INT			BIT03
+-#define STG_END_INT			BIT02
+-#define STG_START_INT			BIT01
+-#define SETUP_INT			BIT00
+-
+-#define EP0_STATUS_RW_BIT	(BIT16 | BIT15 | BIT11 | 0xFF)
++#define EP0_PID				BIT(18)
++#define EP0_PERR_NAK			BIT(17)
++#define EP0_PERR_NAK_INT		BIT(16)
++#define EP0_OUT_NAK_INT			BIT(15)
++#define EP0_OUT_NULL			BIT(14)
++#define EP0_OUT_FULL			BIT(13)
++#define EP0_OUT_EMPTY			BIT(12)
++#define EP0_IN_NAK_INT			BIT(11)
++#define EP0_IN_DATA			BIT(10)
++#define EP0_IN_FULL			BIT(9)
++#define EP0_IN_EMPTY			BIT(8)
++#define EP0_OUT_NULL_INT		BIT(7)
++#define EP0_OUT_OR_INT			BIT(6)
++#define EP0_OUT_INT			BIT(5)
++#define EP0_IN_INT			BIT(4)
++#define EP0_STALL_INT			BIT(3)
++#define STG_END_INT			BIT(2)
++#define STG_START_INT			BIT(1)
++#define SETUP_INT			BIT(0)
++
++#define EP0_STATUS_RW_BIT	(BIT(16) | BIT(15) | BIT(11) | 0xFF)
+ 
+ /*------- (0x0030) EP0 Interrupt Enable Register */
+-#define EP0_PERR_NAK_EN			BIT16
+-#define EP0_OUT_NAK_EN			BIT15
++#define EP0_PERR_NAK_EN			BIT(16)
++#define EP0_OUT_NAK_EN			BIT(15)
+ 
+-#define EP0_IN_NAK_EN			BIT11
++#define EP0_IN_NAK_EN			BIT(11)
+ 
+-#define EP0_OUT_NULL_EN			BIT07
+-#define EP0_OUT_OR_EN			BIT06
+-#define EP0_OUT_EN			BIT05
+-#define EP0_IN_EN			BIT04
+-#define EP0_STALL_EN			BIT03
+-#define STG_END_EN			BIT02
+-#define STG_START_EN			BIT01
+-#define SETUP_EN			BIT00
++#define EP0_OUT_NULL_EN			BIT(7)
++#define EP0_OUT_OR_EN			BIT(6)
++#define EP0_OUT_EN			BIT(5)
++#define EP0_IN_EN			BIT(4)
++#define EP0_STALL_EN			BIT(3)
++#define STG_END_EN			BIT(2)
++#define STG_START_EN			BIT(1)
++#define SETUP_EN			BIT(0)
+ 
+ #define EP0_INT_EN_BIT	\
+ 	(EP0_OUT_OR_EN | EP0_OUT_EN | EP0_IN_EN | STG_END_EN | SETUP_EN)
+@@ -254,90 +220,90 @@ int vbus_irq;
+ /*------- (0x003C) EP0 Write Register */
+ 
+ /*------- (0x0040:) EPN Control Register */
+-#define EPN_EN				BIT31
+-#define EPN_BUF_TYPE			BIT30
+-#define EPN_BUF_SINGLE			BIT30
++#define EPN_EN				BIT(31)
++#define EPN_BUF_TYPE			BIT(30)
++#define EPN_BUF_SINGLE			BIT(30)
+ 
+-#define EPN_DIR0			BIT26
+-#define EPN_MODE			(BIT25 + BIT24)
++#define EPN_DIR0			BIT(26)
++#define EPN_MODE			(BIT(25) | BIT(24))
+ #define EPN_BULK			0
+-#define EPN_INTERRUPT			BIT24
+-#define EPN_ISO				BIT25
+-
+-#define EPN_OVERSEL			BIT17
+-#define EPN_AUTO			BIT16
+-
+-#define EPN_IPIDCLR			BIT11
+-#define EPN_OPIDCLR			BIT10
+-#define EPN_BCLR			BIT09
+-#define EPN_CBCLR			BIT08
+-#define EPN_DEND			BIT07
+-#define EPN_DW				(BIT06 + BIT05)
++#define EPN_INTERRUPT			BIT(24)
++#define EPN_ISO				BIT(25)
++
++#define EPN_OVERSEL			BIT(17)
++#define EPN_AUTO			BIT(16)
++
++#define EPN_IPIDCLR			BIT(11)
++#define EPN_OPIDCLR			BIT(10)
++#define EPN_BCLR			BIT(9)
++#define EPN_CBCLR			BIT(8)
++#define EPN_DEND			BIT(7)
++#define EPN_DW				(BIT(6) | BIT(5))
+ #define EPN_DW4				0
+-#define EPN_DW3				(BIT06 + BIT05)
+-#define EPN_DW2				BIT06
+-#define EPN_DW1				BIT05
++#define EPN_DW3				(BIT(6) | BIT(5))
++#define EPN_DW2				BIT(6)
++#define EPN_DW1				BIT(5)
+ 
+-#define EPN_OSTL_EN			BIT04
+-#define EPN_ISTL			BIT03
+-#define EPN_OSTL			BIT02
++#define EPN_OSTL_EN			BIT(4)
++#define EPN_ISTL			BIT(3)
++#define EPN_OSTL			BIT(2)
+ 
+-#define EPN_ONAK			BIT00
++#define EPN_ONAK			BIT(0)
+ 
+ /*------- (0x0044:) EPN Status Register	*/
+-#define EPN_ISO_PIDERR			BIT29		/* R */
+-#define EPN_OPID			BIT28		/* R */
+-#define EPN_OUT_NOTKN			BIT27		/* R */
+-#define EPN_ISO_OR			BIT26		/* R */
+-
+-#define EPN_ISO_CRC			BIT24		/* R */
+-#define EPN_OUT_END_INT			BIT23		/* RW */
+-#define EPN_OUT_OR_INT			BIT22		/* RW */
+-#define EPN_OUT_NAK_ERR_INT		BIT21		/* RW */
+-#define EPN_OUT_STALL_INT		BIT20		/* RW */
+-#define EPN_OUT_INT			BIT19		/* RW */
+-#define EPN_OUT_NULL_INT		BIT18		/* RW */
+-#define EPN_OUT_FULL			BIT17		/* R */
+-#define EPN_OUT_EMPTY			BIT16		/* R */
+-
+-#define EPN_IPID			BIT10		/* R */
+-#define EPN_IN_NOTKN			BIT09		/* R */
+-#define EPN_ISO_UR			BIT08		/* R */
+-#define EPN_IN_END_INT			BIT07		/* RW */
+-
+-#define EPN_IN_NAK_ERR_INT		BIT05		/* RW */
+-#define EPN_IN_STALL_INT		BIT04		/* RW */
+-#define EPN_IN_INT			BIT03		/* RW */
+-#define EPN_IN_DATA			BIT02		/* R */
+-#define EPN_IN_FULL			BIT01		/* R */
+-#define EPN_IN_EMPTY			BIT00		/* R */
++#define EPN_ISO_PIDERR			BIT(29)		/* R */
++#define EPN_OPID			BIT(28)		/* R */
++#define EPN_OUT_NOTKN			BIT(27)		/* R */
++#define EPN_ISO_OR			BIT(26)		/* R */
++
++#define EPN_ISO_CRC			BIT(24)		/* R */
++#define EPN_OUT_END_INT			BIT(23)		/* RW */
++#define EPN_OUT_OR_INT			BIT(22)		/* RW */
++#define EPN_OUT_NAK_ERR_INT		BIT(21)		/* RW */
++#define EPN_OUT_STALL_INT		BIT(20)		/* RW */
++#define EPN_OUT_INT			BIT(19)		/* RW */
++#define EPN_OUT_NULL_INT		BIT(18)		/* RW */
++#define EPN_OUT_FULL			BIT(17)		/* R */
++#define EPN_OUT_EMPTY			BIT(16)		/* R */
++
++#define EPN_IPID			BIT(10)		/* R */
++#define EPN_IN_NOTKN			BIT(9)		/* R */
++#define EPN_ISO_UR			BIT(8)		/* R */
++#define EPN_IN_END_INT			BIT(7)		/* RW */
++
++#define EPN_IN_NAK_ERR_INT		BIT(5)		/* RW */
++#define EPN_IN_STALL_INT		BIT(4)		/* RW */
++#define EPN_IN_INT			BIT(3)		/* RW */
++#define EPN_IN_DATA			BIT(2)		/* R */
++#define EPN_IN_FULL			BIT(1)		/* R */
++#define EPN_IN_EMPTY			BIT(0)		/* R */
+ 
+ #define EPN_INT_EN	\
+ 	(EPN_OUT_END_INT | EPN_OUT_INT | EPN_IN_END_INT | EPN_IN_INT)
+ 
+ /*------- (0x0048:) EPN Interrupt Enable Register */
+-#define EPN_OUT_END_EN			BIT23		/* RW */
+-#define EPN_OUT_OR_EN			BIT22		/* RW */
+-#define EPN_OUT_NAK_ERR_EN		BIT21		/* RW */
+-#define EPN_OUT_STALL_EN		BIT20		/* RW */
+-#define EPN_OUT_EN			BIT19		/* RW */
+-#define EPN_OUT_NULL_EN			BIT18		/* RW */
++#define EPN_OUT_END_EN			BIT(23)		/* RW */
++#define EPN_OUT_OR_EN			BIT(22)		/* RW */
++#define EPN_OUT_NAK_ERR_EN		BIT(21)		/* RW */
++#define EPN_OUT_STALL_EN		BIT(20)		/* RW */
++#define EPN_OUT_EN			BIT(19)		/* RW */
++#define EPN_OUT_NULL_EN			BIT(18)		/* RW */
+ 
+-#define EPN_IN_END_EN			BIT07		/* RW */
++#define EPN_IN_END_EN			BIT(7)		/* RW */
+ 
+-#define EPN_IN_NAK_ERR_EN		BIT05		/* RW */
+-#define EPN_IN_STALL_EN			BIT04		/* RW */
+-#define EPN_IN_EN			BIT03		/* RW */
++#define EPN_IN_NAK_ERR_EN		BIT(5)		/* RW */
++#define EPN_IN_STALL_EN			BIT(4)		/* RW */
++#define EPN_IN_EN			BIT(3)		/* RW */
+ 
+ /*------- (0x004C:) EPN Interrupt Enable Register */
+-#define EPN_STOP_MODE			BIT11
+-#define EPN_DEND_SET			BIT10
+-#define EPN_BURST_SET			BIT09
+-#define EPN_STOP_SET			BIT08
++#define EPN_STOP_MODE			BIT(11)
++#define EPN_DEND_SET			BIT(10)
++#define EPN_BURST_SET			BIT(9)
++#define EPN_STOP_SET			BIT(8)
+ 
+-#define EPN_DMA_EN			BIT04
++#define EPN_DMA_EN			BIT(4)
+ 
+-#define EPN_DMAMODE0			BIT00
++#define EPN_DMAMODE0			BIT(0)
+ 
+ /*------- (0x0050:) EPN MaxPacket & BaseAddress Register */
+ #define EPN_BASEAD			0x1FFF0000
+@@ -351,62 +317,62 @@ int vbus_irq;
+ /*------- (0x005C:) EPN Write Register */
+ 
+ /*------- (0x1000) AHBSCTR Register */
+-#define WAIT_MODE			BIT00
++#define WAIT_MODE			BIT(0)
+ 
+ /*------- (0x1004) AHBMCTR Register */
+-#define ARBITER_CTR			BIT31		/* RW */
+-#define MCYCLE_RST			BIT12		/* RW */
++#define ARBITER_CTR			BIT(31)		/* RW */
++#define MCYCLE_RST			BIT(12)		/* RW */
+ 
+-#define ENDIAN_CTR			(BIT09 + BIT08)	/* RW */
+-#define ENDIAN_BYTE_SWAP		BIT09
++#define ENDIAN_CTR			(BIT(9) | BIT(8))	/* RW */
++#define ENDIAN_BYTE_SWAP		BIT(9)
+ #define ENDIAN_HALF_WORD_SWAP		ENDIAN_CTR
+ 
+-#define HBUSREQ_MODE			BIT05		/* RW */
+-#define HTRANS_MODE			BIT04		/* RW */
++#define HBUSREQ_MODE			BIT(5)		/* RW */
++#define HTRANS_MODE			BIT(4)		/* RW */
+ 
+-#define WBURST_TYPE			BIT02		/* RW */
+-#define BURST_TYPE			(BIT01 + BIT00)	/* RW */
++#define WBURST_TYPE			BIT(2)		/* RW */
++#define BURST_TYPE			(BIT(1) | BIT(0))	/* RW */
+ #define BURST_MAX_16			0
+-#define BURST_MAX_8			BIT00
+-#define BURST_MAX_4			BIT01
++#define BURST_MAX_8			BIT(0)
++#define BURST_MAX_4			BIT(1)
+ #define BURST_SINGLE			BURST_TYPE
+ 
+ /*------- (0x1008) AHBBINT Register */
+ #define DMA_ENDINT			0xFFFE0000	/* RW */
+ 
+-#define AHB_VBUS_INT			BIT13		/* RW */
++#define AHB_VBUS_INT			BIT(13)		/* RW */
+ 
+-#define MBUS_ERRINT			BIT06		/* RW */
++#define MBUS_ERRINT			BIT(6)		/* RW */
+ 
+-#define SBUS_ERRINT0			BIT04		/* RW */
++#define SBUS_ERRINT0			BIT(4)		/* RW */
+ #define ERR_MASTER			0x0000000F	/* R */
+ 
+ /*------- (0x100C) AHBBINTEN Register */
+ #define DMA_ENDINTEN			0xFFFE0000	/* RW */
+ 
+-#define VBUS_INTEN			BIT13		/* RW */
++#define VBUS_INTEN			BIT(13)		/* RW */
+ 
+-#define MBUS_ERRINTEN			BIT06		/* RW */
++#define MBUS_ERRINTEN			BIT(6)		/* RW */
+ 
+-#define SBUS_ERRINT0EN			BIT04		/* RW */
++#define SBUS_ERRINT0EN			BIT(4)		/* RW */
+ 
+ /*------- (0x1010) EPCTR Register */
+-#define DIRPD				BIT12		/* RW */
++#define DIRPD				BIT(12)		/* RW */
+ 
+-#define VBUS_LEVEL			BIT08		/* R */
++#define VBUS_LEVEL			BIT(8)		/* R */
+ 
+-#define PLL_RESUME			BIT05		/* RW */
+-#define PLL_LOCK			BIT04		/* R */
++#define PLL_RESUME			BIT(5)		/* RW */
++#define PLL_LOCK			BIT(4)		/* R */
+ 
+-#define EPC_RST				BIT00		/* RW */
++#define EPC_RST				BIT(0)		/* RW */
+ 
+ /*------- (0x1014) USBF_EPTEST Register */
+-#define LINESTATE			(BIT09 + BIT08)	/* R */
+-#define DM_LEVEL			BIT09		/* R */
+-#define DP_LEVEL			BIT08		/* R */
++#define LINESTATE			(BIT(9) | BIT(8))	/* R */
++#define DM_LEVEL			BIT(9)		/* R */
++#define DP_LEVEL			BIT(8)		/* R */
+ 
+-#define PHY_TST				BIT01		/* RW */
+-#define PHY_TSTCLK			BIT00		/* RW */
++#define PHY_TST				BIT(1)		/* RW */
++#define PHY_TSTCLK			BIT(0)		/* RW */
+ 
+ /*------- (0x1020) USBSSVER Register */
+ #define AHBB_VER			0x00FF0000	/* R */
+@@ -420,8 +386,8 @@ int vbus_irq;
+ /*------- (0x1110:) EPNDCR1 Register */
+ #define DCR1_EPN_DMACNT			0x00FF0000	/* RW */
+ 
+-#define DCR1_EPN_DIR0			BIT01		/* RW */
+-#define DCR1_EPN_REQEN			BIT00		/* RW */
++#define DCR1_EPN_DIR0			BIT(1)		/* RW */
++#define DCR1_EPN_REQEN			BIT(0)		/* RW */
+ 
+ /*------- (0x1114:) EPNDCR2 Register */
+ #define DCR2_EPN_LMPKT			0x07FF0000	/* RW */
 -- 
-2.25.4
+2.28.0
 
