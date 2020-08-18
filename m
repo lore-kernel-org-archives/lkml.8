@@ -2,122 +2,169 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAC2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A4E2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79792065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E4DYtiik"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THN0APLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgHRXrj (ORCPT
+        id S1727106AbgHRXvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54694 "EHLO
+        Tue, 18 Aug 2020 19:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgHRXrj (ORCPT
+        with ESMTP id S1726847AbgHRXvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:47:39 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECD8C061389;
-        Tue, 18 Aug 2020 16:47:38 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA2E129E;
-        Wed, 19 Aug 2020 01:47:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597794457;
-        bh=hxztss17bLb6KhNdLdaqC7hTZ/NDwi0IYF0CKHOOvxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E4DYtiikJJBFhq38FSZqnQVVTJy/0ANm6inqqsOYwZl0TDnuspCw+525H53Gtw8iZ
-         u/ZNVHJNlH5RZRsiuBwNcqZlueRkEs1kNesKmBnYZtDjRyCvzHvmnBPFVor3dCgw8C
-         U/i/0JpQr4osGHeBYimKNNmSIogs+F3nX9hDVrec=
-Date:   Wed, 19 Aug 2020 02:47:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] media: usb: uvc: no need to check return value of
- debugfs_create functions
-Message-ID: <20200818234719.GD2360@pendragon.ideasonboard.com>
-References: <20200818133608.462514-1-gregkh@linuxfoundation.org>
- <20200818133608.462514-7-gregkh@linuxfoundation.org>
+        Tue, 18 Aug 2020 19:51:25 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0027CC061389;
+        Tue, 18 Aug 2020 16:51:22 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id t6so10487768qvw.1;
+        Tue, 18 Aug 2020 16:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Lo6iZLl7xE7OzIfrLMy/9DpiSarjn7eEJS7aRAeCfMo=;
+        b=THN0APLDMqb2cLMhFHkO9+wC4AfYiMVPXep4tRXCgXS9mUN1zMAfDH2TgtkZUh2aHj
+         WKemY2BuPrItRscDqpWtxeuqxn7oF3a2zg2ve1piL54VEPFWMJy/uA7xtVg5eyRR55QP
+         eNRwdmVEgN0tGmX3+i5adL6HfusxMsrQYlMGnPzyHUwUHZzS5igDS+hmO7xGefDrHAjc
+         6QEFHmLVnIXK+MiZILRKqsgGZJ1BE7MAJ+aX4xNYJZ+6KotCrwVlcX8IEk2Ev3ShbxbT
+         o9IlaANh3EIFKVq2/rbNW6NRk+/aPyV0AgtTFCPzkexyVn3h0evAo+UwQz2qsAR/C7pi
+         LCtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Lo6iZLl7xE7OzIfrLMy/9DpiSarjn7eEJS7aRAeCfMo=;
+        b=nLH1jaKk4qxIvJNwyIwXCdE9is9pDXxlLdMqnHikjHWszALPxBqQfVZl7MscEElQp2
+         X7LoGxnbq0S8LA4jafPNlgpRlAauuRTHNGlB3urTX+4PvQ2O6oac6AEOLashh4bgX3f4
+         fwoho5fMURCxZxLaVb7QTPm0avihTBCrp6JfgMtyh9lSB+BUjsRD2POS3tuZWj8ZsG30
+         ACJdFtI9uDPour5udtH/RrBQWpbRm1Nm0WFaok1eYii6lzuMkqbcUHFPlpmJEV1/KNsN
+         58Xe/bFOtX8P+sKqbo4e3c9z1iIQ53YdmJLHCFPJPtjBjTr3eR0TgQXpxzO1CRDTntvV
+         DQJA==
+X-Gm-Message-State: AOAM531qln6N/PW2ZMWd/9AG/OaCzVKLHcVGJZh/fnd2j9ahFYItXL9S
+        zbzP+kMhRGni+Rp2F8mnxkk=
+X-Google-Smtp-Source: ABdhPJz10xNEeu79aDW1NwxFJUjonsYSOUgQSPf0CDG3llEWl2zeHgZ/dASUCxFuvnFMBMICLOmpog==
+X-Received: by 2002:a0c:e102:: with SMTP id w2mr21475510qvk.51.1597794681903;
+        Tue, 18 Aug 2020 16:51:21 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n184sm22515319qkn.49.2020.08.18.16.51.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 16:51:21 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 18 Aug 2020 19:51:18 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Message-ID: <20200818235118.GA3380006@rani.riverdale.lan>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <20200818222542.GA3254379@rani.riverdale.lan>
+ <CAKwvOdmfiD1TNqRvFuX07BqonYzh1eKFE9mFmOpaSyrbR0d5Lw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200818133608.462514-7-gregkh@linuxfoundation.org>
+In-Reply-To: <CAKwvOdmfiD1TNqRvFuX07BqonYzh1eKFE9mFmOpaSyrbR0d5Lw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-Thank you for the patch.
-
-On Tue, Aug 18, 2020 at 03:36:08PM +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
-
-Is there no value in warning the user that something went wrong ? Silent
-failures are harder to debug.
-
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/media/usb/uvc/uvc_debugfs.c | 20 ++++----------------
->  1 file changed, 4 insertions(+), 16 deletions(-)
+On Tue, Aug 18, 2020 at 03:59:45PM -0700, Nick Desaulniers wrote:
+> On Tue, Aug 18, 2020 at 3:25 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Another thing that needs to be fixed is that at least lib/string.c needs
+> > to be compiled with -ffreestanding.
+> >
+> > gcc-10 optimizes the generic memset implementation in there into a call
+> > to memset. Now that's on x86 which doesn't use the generic
+> > implementation, but this is just waiting to bite us.
+> >
+> > https://godbolt.org/z/6EhG15
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_debugfs.c b/drivers/media/usb/uvc/uvc_debugfs.c
-> index 2b8af4b54117..1a1258d4ffca 100644
-> --- a/drivers/media/usb/uvc/uvc_debugfs.c
-> +++ b/drivers/media/usb/uvc/uvc_debugfs.c
-> @@ -73,7 +73,6 @@ static struct dentry *uvc_debugfs_root_dir;
->  void uvc_debugfs_init_stream(struct uvc_streaming *stream)
->  {
->  	struct usb_device *udev = stream->dev->udev;
-> -	struct dentry *dent;
->  	char dir_name[33];
->  
->  	if (uvc_debugfs_root_dir == NULL)
-> @@ -82,22 +81,11 @@ void uvc_debugfs_init_stream(struct uvc_streaming *stream)
->  	snprintf(dir_name, sizeof(dir_name), "%u-%u-%u", udev->bus->busnum,
->  		 udev->devnum, stream->intfnum);
->  
-> -	dent = debugfs_create_dir(dir_name, uvc_debugfs_root_dir);
-> -	if (IS_ERR_OR_NULL(dent)) {
-> -		uvc_printk(KERN_INFO, "Unable to create debugfs %s "
-> -			   "directory.\n", dir_name);
-> -		return;
-> -	}
-> -
-> -	stream->debugfs_dir = dent;
-> +	stream->debugfs_dir = debugfs_create_dir(dir_name,
-> +						 uvc_debugfs_root_dir);
->  
-> -	dent = debugfs_create_file("stats", 0444, stream->debugfs_dir,
-> -				   stream, &uvc_debugfs_stats_fops);
-> -	if (IS_ERR_OR_NULL(dent)) {
-> -		uvc_printk(KERN_INFO, "Unable to create debugfs stats file.\n");
-> -		uvc_debugfs_cleanup_stream(stream);
-> -		return;
-> -	}
-> +	debugfs_create_file("stats", 0444, stream->debugfs_dir, stream,
-> +			    &uvc_debugfs_stats_fops);
->  }
->  
->  void uvc_debugfs_cleanup_stream(struct uvc_streaming *stream)
+> I'll let you send the patch for that this time.  (It's too bad godbolt
+> doesn't have newer versions of GCC for cross compilation...cant test
+> aarch64 gcc-10, for example.)  It would be interesting for sure to see
+> resulting differences in disassembly observed in lib/string.o with
+> -ffreestanding.
 
--- 
-Regards,
+https://lore.kernel.org/lkml/20200818234307.3382306-1-nivedita@alum.mit.edu/
 
-Laurent Pinchart
+> 
+> But, oof, that's not good.  Certainly impressive and powerful loop
+> idiom recognition, but wouldn't you consider it a bug that this
+> optimization should probably first check that it's not replacing part
+> of a loop with a potentially recursive call to itself?
+
+Difficult to check that in general, but I would have thought they'd at
+least add a check for memset directly calling memset. It looks like they
+considered that but then decided to go with -ffreestanding disabling the
+optimization. Even gcc 4.x does it :)
+
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56888
+
+> 
+> Admittedly, we've had the same shenanigans with memcpy implemented in
+> terms of calls to __builtin_memcpy being lowered to infinitely
+> recursive calls...which feels like the same kind of bug.  ("You wanted
+> infinite recursion in the kexec purgatory image, right?" "No,
+> compiler, I did not.")  example: https://godbolt.org/z/MzrTaM
+> (probably should fix this in both implementations; at the least I feel
+> like Clang's -Winfinite-recursion should try to help us out here).
+> 
+> Feels almost like it may be difficult to provide an implementation of
+> memset without stepping on a landmine.  One thing I'd be curious about
+> is whether all of lib/string.c would need -ffreestanding, or if you
+> could move just memset to its own TU then use -ffreestanding on that.
+> A free standing environment must always provide a core set of
+> functions like memset, memcpy, memcmp, memmove, according to
+> https://gcc.gnu.org/onlinedocs/gcc/Standards.html.  Maybe those four
+> should be in a separate TU compiled as -ffreestanding, so that they
+> can never be lowered to calls to themselves (potentially infinitely
+> recursive)?
+> -- 
+> Thanks,
+> ~Nick Desaulniers
+
+I think all of it should be freestanding. Since eg the compiler could
+recognize strcpy and turn it into a call to strcpy.
+
+It turns out that at least memcpy can also be recognized, but gcc only
+does that if the arguments have the restrict qualifier, so the version
+in the kernel doesn't get broken.
