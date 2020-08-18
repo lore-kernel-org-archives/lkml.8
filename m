@@ -2,93 +2,111 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F68CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA98C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0403E20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597734426;
-	bh=+XlUuiYgxpjWLxJnFmdvDv42C/DsTrYSpERrcEEgrRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BJby4wFK3Sj30O4s+qh85jiBlId4Zjff1Sdp/N2eWQbWxkMHapB+DoVaVxy+3jFqc
-	 oiFXc58hXP4DQTSS4r6siRN3DtMqMyDHVi82M9oDcLSA1JyDu79lQUsHQTnl2sKOiw
-	 1e2RPoLQfAXkc7Muaq4iBkYnjzP6NAU9e7WCARcQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7523A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgHRHHF (ORCPT
+        id S1726605AbgHRHHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRHHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:07:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A493720658;
-        Tue, 18 Aug 2020 07:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597734424;
-        bh=+XlUuiYgxpjWLxJnFmdvDv42C/DsTrYSpERrcEEgrRo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rYjUiCoj48gNlq+617b1au+TbIcSRSE/beRJD6kJhx1AUYzmdpVS+FHaGkFhyjgxk
-         E36rY2CoCJpOPpZfRSyelpD1vRoi23yE3MdY6EvtPwDX7aOZ7gY8ZsGZ2y2aNNgzR2
-         81+3C2vWCKEKQ99tReAPg/4awcQ9ATw0MCx5oDRs=
-Date:   Tue, 18 Aug 2020 09:07:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.8 000/464] 5.8.2-rc1 review
-Message-ID: <20200818070727.GA3333@kroah.com>
-References: <20200817143833.737102804@linuxfoundation.org>
- <CA+G9fYtidMe-oYY7ZZi-cYMz1HYxdsLAX-6oJHerfr1SD6taXw@mail.gmail.com>
+        Tue, 18 Aug 2020 03:07:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47358 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726043AbgHRHHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:07:22 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 44F63BCD2F157C503327;
+        Tue, 18 Aug 2020 15:07:14 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.220) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
+ 15:07:05 +0800
+Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
+To:     Dave Young <dyoung@redhat.com>
+References: <20200801130856.86625-1-chenzhou10@huawei.com>
+ <20200801130856.86625-6-chenzhou10@huawei.com>
+ <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
+ <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
+ <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bhe@redhat.com>, <corbet@lwn.net>, <John.P.donnelly@oracle.com>,
+        <prabhakar.pkin@gmail.com>, <bhsharma@redhat.com>,
+        <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <wangkefeng.wang@huawei.com>
+From:   chenzhou <chenzhou10@huawei.com>
+Message-ID: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+Date:   Tue, 18 Aug 2020 15:07:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtidMe-oYY7ZZi-cYMz1HYxdsLAX-6oJHerfr1SD6taXw@mail.gmail.com>
+In-Reply-To: <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.220]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:38:20AM +0530, Naresh Kamboju wrote:
-> On Mon, 17 Aug 2020 at 20:49, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.8.2 release.
-> > There are 464 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed, 19 Aug 2020 14:36:49 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.2-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
 
-Thanks for testing all of these and letting me know, that was fast!
 
-greg k-h
+On 2020/8/10 14:03, Dave Young wrote:
+> Hi,
+>
+>>> Previously I remember we talked about to use similar logic as X86, but I
+>>> remember you mentioned on some arm64 platform there could be no low
+>>> memory at all.  Is this not a problem now for the fallback?  Just be
+>>> curious, thanks for the update, for the common part looks good.
+>> Hi Dave,
+>>
+>> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
+> I meant about this reply instead :)
+> https://lkml.org/lkml/2020/1/16/616
+Hi Dave,
+
+Sorry for not repley in time, I was on holiday last week.
+
+The platform James mentioned may exist for which have no devices and need no low memory.
+For our arm64 server platform, there are some devices and need low memory.
+
+I got it. For the platform with no low memory, reserving crashkernel will  always fail.
+How about like this:
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index a8e34d97a894..4df18c7ea438 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -147,7 +147,7 @@ static void __init reserve_crashkernel(void)
+        }
+        memblock_reserve(crash_base, crash_size);
+ 
+-       if (crash_base >= CRASH_ADDR_LOW_MAX) {
++       if (memstart_addr < CRASH_ADDR_LOW_MAX && crash_base >= CRASH_ADDR_LOW_MAX) {
+                const char *rename = "Crash kernel (low)";
+ 
+                if (reserve_crashkernel_low()) {
+
+
+Thanks,
+Chen Zhou
+
+>
+> Thanks
+> Dave
+>
+>
+> .
+>
+
+
