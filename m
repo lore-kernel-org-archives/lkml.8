@@ -2,89 +2,111 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF375C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9E0C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9133520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bxDdpiJj"
+	by mail.kernel.org (Postfix) with ESMTP id A378120674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgHRRcE (ORCPT
+        id S1728641AbgHRRdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:32:04 -0400
-Received: from mout.gmx.net ([212.227.15.19]:45577 "EHLO mout.gmx.net"
+        Tue, 18 Aug 2020 13:33:51 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43470 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbgHRRcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:32:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597771879;
-        bh=MuzodkzXFlQqlZOXkPhy7wbYV96XJcj5ljN9UAV22AI=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=bxDdpiJjndCI3UC/MOlheD0Zwd+8I4WIrgbVUKPLJJ4473ryoUygMcTywR689lVo4
-         L5gt8X0boORhnxRKqo+3lqwW0o0CulaGX8SGQ5BVTQ+3XwrxrRo2ZPttzj7lx3WxPR
-         +4czsL3mIigaP5AjunMDCX5IMHl/iY7MJY7tjJY4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([185.53.43.192]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWAOW-1kAvuv1BcY-00XdDL; Tue, 18
- Aug 2020 19:31:19 +0200
-Date:   Tue, 18 Aug 2020 19:31:01 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
-References: <cover.1597729692.git.landen.chao@mediatek.com> <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
+        id S1727773AbgHRRdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:33:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id F0524FB03;
+        Tue, 18 Aug 2020 19:33:46 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SV7xgiVLbSXw; Tue, 18 Aug 2020 19:33:45 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 08CA94576F; Tue, 18 Aug 2020 19:33:44 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 19:33:44 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200818173344.GA382297@bogon.m.sigxcpu.org>
+References: <cover.1597652012.git.agx@sigxcpu.org>
+ <20200818170556.GA2291850@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net-next v2 3/7] net: dsa: mt7530: Extend device data ready for adding a new hardware
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Landen Chao <landen.chao@mediatek.com>, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
-        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-CC:     devicetree@vger.kernel.org, dqfext@gmail.com,
-        netdev@vger.kernel.org, sean.wang@mediatek.com,
-        linux-kernel@vger.kernel.org, opensource@vdorst.com,
-        davem@davemloft.net
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <883BB20A-48CD-4B73-9D2F-E5CC21DD2B70@public-files.de>
-X-Provags-ID: V03:K1:RHA4uIrsqvBmFN2vJOdO4H+IjP89S5tlylzz2vL0VK7JvBRx6Zg
- D2a9/54EsigXuEOoaa6ykZRzsCqJxH8BVSzQlxQMcnlf1RdYxa8ovqah6R/3d2kzFK3PMky
- x/cq2s51kaoZ9F3ESokT3WIp815pypysw1/mAQehDEoopEiDUrN5JKceIjW34ySZTbyuEpz
- YTWXV/lC4Hk4rOBll4UJg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ysoVgdAP2ws=:7hZ0WFuTmv9t+qc2gunHBb
- ezfwPSqdtyYobAeEzguiyOaA1byPYhC+x84rFOOSNNlvHFl7+2QLMACbva9t0k/h7yfJ2vjjH
- aD8i25Mq1UGLE7iq1xh9qE59E0st8smtiazLD1OMv01D9dgILIZo5NDXucckz9Cti5yVOYY+u
- 1dLjMzb5V3CXiujgUabv7fOzEDoBdnUc7mqR4x8ynAIVIXqhiWGMfB0jhE1zAGDqGsNAN/PkI
- Vs0yW28amGgEw2lIOUS/jPsqSnhI+dclbx2ckHuuVuAqamz+PoOqD+yRVOIH6pAa/9nx1XlCz
- pgoNaXu0kHuHSAzJRRDqT/KFPjieicTqE2ejiGHjI7YDlifPVzOFT3ctpSIku5+jf0/tpfreP
- Jyz/9F4yUAMr0frYAbCwwncV9gS7Q5ucivdFLZZPw0MO+y4c5iWpw946WPJGFNa6Oa/BVILqf
- VQMtGQtqqI9AuypK79mZbw1pjBN5y7l/fGWcKrrLGKV8iUCbaNXhq1PICjTQTAYaE4pRq79v6
- bLuUHLu8IOQY1SJDpQrEPF3FflBOzDZMVO6Ppt2KStzbc59jGzlXrgBn9sO+v3LkvvJ/lHdgf
- QF/ej9nebquSZUgMlkVRd1jMr+RlrCrt+g/n24NlJ5d2g1ZkUvNMMI65ZdvuTYmEgS0sDuwCl
- Bd8Z+zxMiBpCGKsdsaYrx524SQRfOLWABi2YuYT9pOHLkNbgcMX4DgdykiUz46twAY/RIg0Lj
- zZMyaC3Hmdk9VyEQXuO1r+m6uJOqNx7fZW69PmyWeZNHfzsd2t5If54PdCGVVjoHwHkoM6+1U
- ANNmoW9MypPAv+8yUWDRcL/4DsuDfRw4C/LPgejZDrdryUmkOG+GzOp1LbLsTZ/64K+/w2F05
- 9t4Lik0bL/rnBSpb6JUwtmB3tLvNsI/bfoTiw7qFVX5mFk5CY7ROnlOdKx7ksW+xNFkIoX3k2
- eicVjkRMMvePORhNvVCGIoFWrgYReIB5th+1TktetOteZdmJ3WDFednsZ+01nF4fLg7v7Pxl8
- j1LuJmsI6ZmdqJwugPfeUJpVyaNQXjZ+9My2maESx8HMA6cUuG6dQJ8ous7Eg2yxkZaBfVEYR
- mXGOZ7hnhVAU/Qn6Q77IGX4Tg4BcCasVZBMFHLjUpQRLYP3/ByeZGlvUPKPM55Dep4498NMvW
- IT6oWBUqARVoutnViYuNBshvYsMIfbF4H0mv+P5QmLzyVoA2UKQ5mzzUPyxlFIWrbvmxB6xmT
- 0EXqjOGY9m4/e8AFST81v0bkWcwfnEPm+sIUh/A==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200818170556.GA2291850@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a little typo you've inherited from existing code
+Hi Sam,
+On Tue, Aug 18, 2020 at 07:05:56PM +0200, Sam Ravnborg wrote:
+> Hi Guido.
+> 
+> On Mon, Aug 17, 2020 at 10:14:33AM +0200, Guido Günther wrote:
+> > 
+> > The panel uses a Focaltech FT8006p, the touch part is handled by the already
+> > existing edt-ft5x06. It can be found in e.g. the Librem 5.
+> > 
+> > Changes from v2:
+> > - Due to review comments by Sam Ravnborg, thanks!
+> >   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
+> >   - Drop unused header
+> >   - Use newline before comment
+> > - Add Reviewed/Acked-by by Sam Ravnborg, thanks!
+> >   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
+> >   https://lore.kernel.org/lkml/20200815212750.GB1244923@ravnborg.org/
+> >   https://lore.kernel.org/lkml/20200815212840.GC1244923@ravnborg.org/
+> > 
+> > Changes from v1:
+> > - Due to review comments by Sam Ravnborg, thanks!
+> >   https://lore.kernel.org/dri-devel/20200815083917.GA993113@ravnborg.org/
+> >   - Don't preserve newlines with '|' in description
+> >   - Use reset-gpios and backlight from panel-common.yaml
+> >   - Reindent example
+> >   https://lore.kernel.org/dri-devel/20200815093226.GB993113@ravnborg.org/
+> >   - Drop unused includes
+> >   - Use dev_* instead of DRM_* for printing
+> >   - Turn off regulators in reverse order from enable
+> >   - Silence errors in mantix_{shutdown,remove}
+> >   - Drop duplicate mipi_dsi_dcs_enter_sleep_mode()
+> >   https://lore.kernel.org/dri-devel/20200815100230.GA1002374@ravnborg.org/
+> >   - Use dev_err_probe()
+> > - Add delays when turning off panel as suggested by the data sheet
+> > 
+> > This series is against next-20200814.
+> > 
+> > Guido Günther (3):
+> >   dt-bindings: vendor-prefixes: Add mantix vendor prefix
+> >   dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+> >   drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
+> 
+> Maxime Ripard backmerged -rc1 to drm-misc-next so I went ahead and applied
+> this series to drm-misc-next, forgetting you got commit rights. As they are
+> already pushed out too late for you to do push them - sorry!
 
->+/* Setup TX circuit incluing relevant PAD and driving */
-
-including
-
-regards Frank
+On the contrary: Thanks a lot for handling this so promptly!
+ -- Guido
