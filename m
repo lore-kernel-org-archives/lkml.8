@@ -2,261 +2,169 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D14C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E792FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866722075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=meinberg.de header.i=@meinberg.de header.b="iJoaDzL3"
+	by mail.kernel.org (Postfix) with ESMTP id BB4A62063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597784015;
+	bh=PoiM3j5EkvZ44e8I6cUQWHdTxb0lNwr5tUyBzR8juj0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YZAySPv33fc46VpRO2UTtYvg8Q4HzcLhtOzmjEV31IM9d7SzbjW6+OaCeKNL41HA6
+	 Y++aNshVNrYVIZjhmWdi5iHlcy4yOyDVsEdRRwS7dp9vDU522l6F0tNWxOCcIHXhFi
+	 A3LVkh7WGGAkC8fSDw6H89wtqRsEwb8N24I5H3Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgHRUu4 (ORCPT
+        id S1726845AbgHRUxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:50:56 -0400
-Received: from server1a.meinberg.de ([176.9.44.212]:56954 "EHLO
-        server1a.meinberg.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgHRUux (ORCPT
+        Tue, 18 Aug 2020 16:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHRUxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:50:53 -0400
-Received: from srv-kerioconnect.py.meinberg.de (unknown [193.158.22.2])
-        (using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by server1a.meinberg.de (Postfix) with ESMTPSA id 8CD5871C12CD;
-        Tue, 18 Aug 2020 22:50:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meinberg.de; s=dkim;
-        t=1597783847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=duR/eyl3+vmwe4wjWP6CNYqeRZKf9PfuW02UUUGINho=;
-        b=iJoaDzL31NujwCwMfVNKkqcFs5ZyeilIyIvi1hHKOLgjYjDhbgJuhvimeZOpegw1RqrBGt
-        wGU9RlPjIlnNrfiDX5i5eTYqWVa4kEYXiup2NfmG1+Fzz8Fm6gCZPH7uCcWSsbHCZk6+3q
-        bQYxJgOufvC7qTFpRlOrLGmuJClCFY8SorshKSEp0jnQIiVCycbrYJC5CavDOsOBk2Fo30
-        +jGMU4WED5x5PSXyzKmCaXsO6L2nAFkUcUbyDog+x3UzIKeGKS3dKkOwheBRUvf4Jv6ehA
-        1UHF/nuvtHriO/cqE+urYluYenZwIEyr71NMdb7usSHNZPwv2WVl3omNlsRicw==
-X-Footer: bWVpbmJlcmcuZGU=
-Received: from localhost ([127.0.0.1])
-        by srv-kerioconnect.py.meinberg.de with ESMTPSA
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits));
-        Tue, 18 Aug 2020 22:50:43 +0200
-Subject: Re: Kernel build system broken in 5.8?
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-References: <1c4d1da4-36a9-c83b-1a8a-95334aa62ce3@meinberg.de>
- <CAK7LNARpC4GHnXoWM=JU=cYxMdamg5iUWGoXt5o6mhf81QkjLw@mail.gmail.com>
-From:   Martin Burnicki <martin.burnicki@meinberg.de>
-Autocrypt: addr=martin.burnicki@meinberg.de; keydata=
- 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
- fPTIMcWxGmfGPw==
-Organization: Meinberg Funkuhren GmbH & Co. KG, Bad Pyrmont, Germany
-Message-ID: <092a70e9-12c1-29fd-1fb0-fd851024de39@meinberg.de>
-Date:   Tue, 18 Aug 2020 22:50:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 16:53:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6089C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:31 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f26so22961141ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=44jjlz9gHZ8bxkxJCT+KFdrq1JkP5ys9BBa+Qk39NAU=;
+        b=KmKfogzwUujvQb/F0JA/vopaWbvFysSlsxJrpItNo5RKDQ8MIZrythcEa0jhqcR97h
+         6k/jvzQGWfMSCchn3FxL3xWMnBP2o1wmrl8y6sRimpA8Bh+iDfzxbjypP5Ke/mhWrexJ
+         Ac+8fu9qUv1fiSsbJIE2/XWj5iLbyNhOIcPwQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=44jjlz9gHZ8bxkxJCT+KFdrq1JkP5ys9BBa+Qk39NAU=;
+        b=XLkT+dkBX7MvTCzjO/GToOzmtt+k64Jh3Mw7yyYXVGEN2RlT6oX4APynEQbxtvhiQf
+         ax0XhSvKBNOcOncFGmlQmbh0+K7Grh818/NhgZLRTtqbhStTUF/Bq0VKgsvUN/wpNKkf
+         lR6MemYYDsB0jNqQoGtDrZrFpZD8H8FjzkL5OmgQdvmZAzGWL30XuIdCP+flmQHV9HTq
+         rzBjkwp09IKaXMq+M5NvVm8PgH7MMQUP78W72TdCtF2XRMIGRnVFwpWpnqJ4FGcazu52
+         JFfVrT+OeGJYoWikE9wNUS2uJevjS904E1E4Yk/CpYxG/q7OTPNhrL+Mb+32Dl8k1c8t
+         M5gA==
+X-Gm-Message-State: AOAM532WNyXmbLBgaOBfHA2OhgFOmbmqI71KadPRQqH+H0Q8Mn0aXc1V
+        CFfUc/Z0we/pAq3Dsvpz4hjZT5X/12QliA==
+X-Google-Smtp-Source: ABdhPJwsI9pv4hBK67F116nO13zEnGbTc0Od0N2n86PQXSScBqsEmPXspbgsHcXn/ZgEYCgjo0v1rw==
+X-Received: by 2002:a2e:9ed4:: with SMTP id h20mr10663202ljk.82.1597784009868;
+        Tue, 18 Aug 2020 13:53:29 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id f12sm6212072ljn.14.2020.08.18.13.53.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 13:53:28 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id v12so22968442ljc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:53:27 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr9400093ljk.421.1597784007533;
+ Tue, 18 Aug 2020 13:53:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARpC4GHnXoWM=JU=cYxMdamg5iUWGoXt5o6mhf81QkjLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
+ <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
+ <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
+ <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
+ <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com> <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com>
+In-Reply-To: <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 Aug 2020 13:53:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
+Message-ID: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
+Subject: Re: file metadata via fs API
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Masahiro,
+On Tue, Aug 18, 2020 at 1:18 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> So why mix a binary structure into it?  Would it not make more sense
+> to make it text only?
 
-Masahiro Yamada wrote:
-> On Wed, Aug 19, 2020 at 1:14 AM Martin Burnicki
-> <martin.burnicki@meinberg.de> wrote:
-[...]
->> I usually build the kernel module as standard user, and only install the
->> new module as root, e.g.:
->>
->>   git checkout devel   # The 'devel' branch is appropriate for testing
->>   cd mbgclock          # the subdirectory of the kernel module
->>   git clean -fd; make  # or make V=1 for verbose output
->>   sudo make install
-> 
-> 
-> This is a bad way for reporting a bug
-> because your project is too big.
+.. because for basic and standard stuff, the binary structure just
+makes sense and is easier for everybody.
 
-Sorry for this. I wasn't sure which was the best way to get a contact to
-folks who are more familiar with details of the kernel build system, and
-what may have been changed.
+When I want to get the size of a file, I do "stat()" on it, and get
+the size from st.st_size. That's convenient, and there's no reason
+_not_ to do it. Returning the size as an ASCII string would be
+completely pointless and annoying as hell.
 
-A possibility could have
+So binary formats have their places. But those places are for standard
+and well-understood fields that are commonly accessed and do not have
+any free-form or wild components to them that needs to be marshalled
+into some binary format.
 
-> mbgclock/Makefile include the top Makefile,
-> which is more than 1000 lines.
+Whenever you have free-form data, just use ASCII.
 
-If you run 'make' in the mbgclock subdirectory then the kernel build
-system is just called as usual, i.e.
+It's what "mount" already uses, for chrissake. We pass in mount
+options as ASCII for a good reason.
 
-  make -C <path-to-the-kernel-build-system> M=$PWD <some EXTRA_CFLAGS>
+Basically, I think a rough rule of thumb can and should be:
 
-This has been working without problems for many years, for many popular
-distros, and all kernels from 2.6 up to 5.7 (except that for older
-kernels SUBDIRS=$PWD was used instead of M=$PWD).
+ - stuff that the VFS knows about natively and fully is clearly pretty
+mount-agnostic and generic, and can be represented in whatever
+extended "struct statfs_x" directly.
 
-> Please provide steps to reproduce it
-> with a tiny test module.
+ - anything that is variable-format and per-fs should be expressed in
+the ASCII buffer
 
-I was just hoping that someone had an idea like "Oh, this is because xyz
-has changed in kernel 5.18" when he read what I've observed.
+Look at our fancy new fs_context - that's pretty much what it does
+even inside the kernel. Sure, we have "binary" fields there for core
+basic information ("struct dentry *root", but also things like flags
+with MNT_NOSUID), but the configuration stuff is ASCII that the
+filesystem can parse itself.
 
-In the past I've seen cases where folks e.g. from RedHat or SuSE had
-backported patches from newer kernels to older ones, causing build
-errors in my driver code, and I was able to apply workarounds to my
-source code.
+Exactly because some things are very much specific to some
+filesystems, not generic things.
 
-However, this case is different because obviously the kernel source tree
-is modified under certain circumstances. Is my assumption correct that
-this should not happen if I install Linux header packages for a distro,
-that have been pre-configured according to the running kernel?
+So we fundamentally already have a mix of "standard FS data" and
+"filesystem-specific options", and it's already basically split that
+way: binary flag fields for the generic stuff, and ASCII text for the
+odd options.
 
-Anyway, I'm going to try to set up an example which makes it easier to
-duplicate the problem.
+Again: binary data isn't wrong when it's a fixed structure that didn't
+need some odd massaging or marshalling or parsing. Just a simple fixed
+structure. That is _the_ most common kernel interface, used for almost
+everything.  Sometimes we have arrays of them, but most of the time
+it's a single struct pointer.
 
-> You state 5.7.15 was fine.
+But binary data very much is wrong the moment you think you need to
+have a parser to read it, or a marshaller to write it. Just use ASCII.
 
-Yes.
+I really would prefer for the free-form data to have a lot of
+commonalities with the /proc/mounts line. Not because that's a
+wonderful format, but because there are very very few truly wonderful
+formats out there, and in the absense of "wonderful", I'd much prefer
+"familiar" and "able to use common helpers" (hopefully both on the
+kernel side and the user side)..
 
-> So, could you also run git-bisect, please?
-
-Sorry, I've just recently started using git, and yet I'm not too
-familiar with some of the commands. How could git-bisect help in this case?
-
->> Also, I was under the impression that the kernel source tree should be
->> read-only, and kept clean, but this doesn't seem to be the case anymore.
->>
->>
->> For example:
->>
->> On Ubuntu 19.10 with kernel 5.8.1-050801-generic from
->> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.1/
-> 
-> 
-> I cannot try it since that is not what
-> I install on my machine, sorry.
-
-What distro are you using? Or do you only run kernels you have compiled
-yourself? ;-)
-
-> Please provide steps to reproduce it
-> for a person using a different environment.
-
-I'm going to try to do this. Do you have any hints what this should look
-like?
-
-Should this topic be continued on linux-kernel@, or better on
-linux-kbuild@, or elsewhere?
-
-
-Thanks,
-
-Martin
--- 
-Martin Burnicki
-
-Senior Software Engineer
-
-MEINBERG Funkuhren GmbH & Co. KG
-Email: martin.burnicki@meinberg.de
-Phone: +49 5281 9309-414
-Linkedin: https://www.linkedin.com/in/martinburnicki/
-
-Lange Wand 9, 31812 Bad Pyrmont, Germany
-Amtsgericht Hannover 17HRA 100322
-Geschäftsführer/Managing Directors: Günter Meinberg, Werner Meinberg,
-Andre Hartmann, Heiko Gerstung
-Websites: https://www.meinberg.de  https://www.meinbergglobal.com
-Training: https://www.meinberg.academy
-
+               Linus
