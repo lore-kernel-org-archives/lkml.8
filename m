@@ -4,115 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67694C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA09820897
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CE9208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgHRPse (ORCPT
+        id S1728258AbgHRPtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:48:34 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727108AbgHRPqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:46:53 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 72D5DD3BE118E0003501;
-        Tue, 18 Aug 2020 16:46:49 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:46:47 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:46:50 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 21/30] user namespace: Add function that checks if the UID map is defined
-Date:   Tue, 18 Aug 2020 17:42:21 +0200
-Message-ID: <20200818154230.14016-12-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+        Tue, 18 Aug 2020 11:49:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:8521 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728153AbgHRPrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:47:12 -0400
+IronPort-SDR: LDzOuy/P6ioik2EGMnuyeHlqLnzZMZQzmjGtcbZeaPC/XeTbt6DPsb5qfGTdRGsKxzOkmRLiKI
+ Lox1xo0o0SVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152345542"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="152345542"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:47:11 -0700
+IronPort-SDR: 5qv3GD2RoO6VHR6djUlkpNAv06/Wj5U/JiCgJZEspJjW3l6OVL/WMe016Qj9YG7Oi/j/3KwWgM
+ AMgU3O1Bn/9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="400530251"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:47:09 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+Subject: [PATCH v6 03/10] net: eth: altera: fix altera_dmaops declaration
+Date:   Tue, 18 Aug 2020 23:46:06 +0800
+Message-Id: <20200818154613.148921-4-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
+References: <20200818154613.148921-1-joyce.ooi@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Add function that checks if the UID map is defined. It will be used by
-ima to check if ID remapping in subject-based rules is necessary.
+The declaration of struct altera_dmaops does not have
+identifier names.  Add identifier names to confrom with
+required coding styles.
 
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- include/linux/user_namespace.h |  6 ++++++
- kernel/user_namespace.c        | 11 +++++++++++
- 2 files changed, 17 insertions(+)
+v2: no change
+v3: no change
+v4: no change
+v5: no change
+v6: no change
+---
+ drivers/net/ethernet/altera/altera_tse.h | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-index d9759c54fead..bcb21c41c910 100644
---- a/include/linux/user_namespace.h
-+++ b/include/linux/user_namespace.h
-@@ -138,6 +138,7 @@ extern bool in_userns(const struct user_namespace *ancestor,
- 		       const struct user_namespace *child);
- extern bool current_in_userns(const struct user_namespace *target_ns);
- struct ns_common *ns_get_owner(struct ns_common *ns);
-+extern bool userns_set_uidmap(const struct user_namespace *ns);
- #else
+diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
+index f17acfb579a0..7d0c98fc103e 100644
+--- a/drivers/net/ethernet/altera/altera_tse.h
++++ b/drivers/net/ethernet/altera/altera_tse.h
+@@ -385,20 +385,22 @@ struct altera_tse_private;
+ struct altera_dmaops {
+ 	int altera_dtype;
+ 	int dmamask;
+-	void (*reset_dma)(struct altera_tse_private *);
+-	void (*enable_txirq)(struct altera_tse_private *);
+-	void (*enable_rxirq)(struct altera_tse_private *);
+-	void (*disable_txirq)(struct altera_tse_private *);
+-	void (*disable_rxirq)(struct altera_tse_private *);
+-	void (*clear_txirq)(struct altera_tse_private *);
+-	void (*clear_rxirq)(struct altera_tse_private *);
+-	int (*tx_buffer)(struct altera_tse_private *, struct tse_buffer *);
+-	u32 (*tx_completions)(struct altera_tse_private *);
+-	void (*add_rx_desc)(struct altera_tse_private *, struct tse_buffer *);
+-	u32 (*get_rx_status)(struct altera_tse_private *);
+-	int (*init_dma)(struct altera_tse_private *);
+-	void (*uninit_dma)(struct altera_tse_private *);
+-	void (*start_rxdma)(struct altera_tse_private *);
++	void (*reset_dma)(struct altera_tse_private *priv);
++	void (*enable_txirq)(struct altera_tse_private *priv);
++	void (*enable_rxirq)(struct altera_tse_private *priv);
++	void (*disable_txirq)(struct altera_tse_private *priv);
++	void (*disable_rxirq)(struct altera_tse_private *priv);
++	void (*clear_txirq)(struct altera_tse_private *priv);
++	void (*clear_rxirq)(struct altera_tse_private *priv);
++	int (*tx_buffer)(struct altera_tse_private *priv,
++			 struct tse_buffer *buffer);
++	u32 (*tx_completions)(struct altera_tse_private *priv);
++	void (*add_rx_desc)(struct altera_tse_private *priv,
++			    struct tse_buffer *buffer);
++	u32 (*get_rx_status)(struct altera_tse_private *priv);
++	int (*init_dma)(struct altera_tse_private *priv);
++	void (*uninit_dma)(struct altera_tse_private *priv);
++	void (*start_rxdma)(struct altera_tse_private *priv);
+ };
  
- static inline struct user_namespace *get_user_ns(struct user_namespace *ns)
-@@ -182,6 +183,11 @@ static inline struct ns_common *ns_get_owner(struct ns_common *ns)
- {
- 	return ERR_PTR(-EPERM);
- }
-+
-+static inline bool userns_set_uidmap(const struct user_namespace *ns)
-+{
-+	return true;
-+}
- #endif
- 
- #endif /* _LINUX_USER_H */
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 87804e0371fe..e38f9f11a589 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -1232,6 +1232,17 @@ bool current_in_userns(const struct user_namespace *target_ns)
- }
- EXPORT_SYMBOL(current_in_userns);
- 
-+bool userns_set_uidmap(const struct user_namespace *ns)
-+{
-+	bool mapping_defined;
-+
-+	mutex_lock(&userns_state_mutex);
-+	mapping_defined = ns->uid_map.nr_extents != 0;
-+	mutex_unlock(&userns_state_mutex);
-+
-+	return mapping_defined;
-+}
-+
- static inline struct user_namespace *to_user_ns(struct ns_common *ns)
- {
- 	return container_of(ns, struct user_namespace, ns);
+ /* This structure is private to each device.
 -- 
-2.20.1
+2.13.0
 
