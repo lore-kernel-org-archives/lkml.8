@@ -7,92 +7,77 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9937BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F92C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778E82076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FFA2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597730832;
-	bh=6n7HKQ8FG9mYV1YWzHcAkCOw1Hb+vs4gc4MNYclnHAI=;
+	s=default; t=1597730996;
+	bh=zRSoZcxxtlGv7Uhf96NOWLK06H4oKEDZby8VR4L6QTA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PPviikCWfbzU3kMy7hrG0cAKWAcmUgjXwmUZAGxQwp82MoJ6f6Iq/SFI2r9lxq7GV
-	 zdemsEMBGpQ10P7eGPbe2XN30e34Ci1F+cYw3lerwqBALZBm9QnrkmcUyqG7OXV55r
-	 clesUO1fbiB9j0MHqCXUHrrdLFUXINOumnbB0XuM=
+	b=X0Y2CPOZFXhiqNbQpzvo1khpZOQymQqvvoryhXLwC1e12GhSIt3sMfHPoFNdoDXsV
+	 qoNWPmSY+vyNfHHB5hh+R0x/FWBYWZOTW1PfL70ytOMkfYmmIUNAVuIBuaNejBnl3v
+	 kfOl9LrlpEffaAZ3tFBWQ7KwKw9jYw9oxrywpQfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHRGHL (ORCPT
+        id S1726429AbgHRGJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 02:09:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgHRGHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:07:10 -0400
+        id S1726353AbgHRGJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:09:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E59E20709;
-        Tue, 18 Aug 2020 06:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBDAB20709;
+        Tue, 18 Aug 2020 06:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597730830;
-        bh=6n7HKQ8FG9mYV1YWzHcAkCOw1Hb+vs4gc4MNYclnHAI=;
+        s=default; t=1597730994;
+        bh=zRSoZcxxtlGv7Uhf96NOWLK06H4oKEDZby8VR4L6QTA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lh2kBDkZjRtgPYNuX+Ey0wdXvDKxr8aaLHJqYr2eOHgBvU3qvQvys3YQq3YUkAECD
-         PNdlqtHYONuEasE8+luhaRYqqmuJwvKKzca1oNMfgi66KmSLOPMmdKzXlSfgcDaupz
-         twoXNXrG/OdFb8k+qPpKU7z4Htcc0uk6tWS5/3F8=
-Date:   Tue, 18 Aug 2020 08:07:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200818060707.GB1742213@kroah.com>
-References: <cover.1597376585.git.huangqiwu@xiaomi.com>
- <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
- <20200814060909.GD1409566@kroah.com>
- <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+        b=O+Zu/6dCiM8xP0df+50OiO6fN50f1cVZsI9u3rQaVJOZ3VnHn6tiVvtLjSIceZPg8
+         zmVASdKd4bNQ8hFNzgYe6SpT65No+Ux6g9j3bnXyw8GAS3gGXE7v4jzRFqBEETga9U
+         WyGrpYN+VBRqglzyevKDF1PZOG5g+J89lPGH7JZk=
+Date:   Tue, 18 Aug 2020 08:09:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] romfs: Fix uninitialized memory leak in romfs_dev_read()
+Message-ID: <20200818060951.GC1742213@kroah.com>
+References: <20200818013202.2246365-1-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+In-Reply-To: <20200818013202.2246365-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:56:28AM +0800, Qiwu Huang wrote:
-> On Fri, Aug 14, 2020 at 2:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
-> > > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> > >
-> > > Reports the kind of quick charge type based on
-> > > different adapter power.
-> > >
-> > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
-> > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> > >  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
-> > >  include/linux/power_supply.h                | 14 ++++++
-> > >  4 files changed, 87 insertions(+)
-> >
-> > You should also submit your driver that uses these new attributes at the
-> > same time.  What happened to that request?  Otherwise no one really
-> > knows how these are being used, or if they even are used by anyone.
-> >
+On Tue, Aug 18, 2020 at 03:32:02AM +0200, Jann Horn wrote:
+> romfs has a superblock field that limits the size of the filesystem;
+> data beyond that limit is never accessed.
 > 
-> I don't think I can submit the whole driver because our drivers are
-> divided into three parts, the first part is in ADSP, the second part
-> is in kernel and the third part is in Android Hal.This is the second
-> part.
+> romfs_dev_read() fetches a caller-supplied number of bytes from the
+> backing device. It returns 0 on success or an error code on failure;
+> therefore, its API can't represent short reads, it's all-or-nothing.
+> 
+> However, when romfs_dev_read() detects that the requested operation
+> would cross the filesystem size limit, it currently silently truncates
+> the requested number of bytes. This e.g. means that when the content
+> of a file with size 0x1000 starts one byte before the filesystem size
+> limit, ->readpage() will only fill a single byte of the supplied page
+> while leaving the rest uninitialized, leaking that uninitialized memory
+> to userspace.
+> 
+> Fix it by returning an error code instead of truncating the read when
+> the requested read operation would go beyond the end of the filesystem.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-WHat is "ADSP"?
-
-Just submit your kernel driver code, that's all we care about here.
-Userspace code is not anything we can do anything with :)
-
-thanks,
-
-greg k-h
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
