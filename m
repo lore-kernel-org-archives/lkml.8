@@ -2,109 +2,122 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D545DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE34920772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A4E2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E4DYtiik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgHRXnL (ORCPT
+        id S1727125AbgHRXrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:43:11 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:32979 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgHRXnK (ORCPT
+        Tue, 18 Aug 2020 19:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgHRXrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:43:10 -0400
-Received: by mail-qv1-f68.google.com with SMTP id dd12so10476910qvb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:43:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bsP3WAK1pfI5NZ2U1r3gXjZrG4nRfJP8f387+vY6AgY=;
-        b=CoMTETMzSqw8coTVvMQHeq7terG5H0ppDJaYXHN2kkasSC9OohGQ+AysA1zvgu6+h5
-         djfIpT4THDABbgVLbtPG/gArNtnCEeewnrDTfXvpirQdhRQI0LaLAkRRXKYA/qg7RNGR
-         afgpnRGgsRfgvo4tFkuj6CCi5NrjkGIDcWBljTjKde2c1/12NdOAZnQp5I8VTBJ89Zyg
-         xIEa6aDy+/WcDdy0CDS6EVlFA8xqLiYpL3YVyNUBquV4Sfyq3WMlsaHcdJ5rCfvk1/4B
-         QDjtfka2r0jihHAi/nEa/QLqdZGYN6I4MpwH5I+Im3cwjqKULoWrxM/SWT94tbXhF8Or
-         A4og==
-X-Gm-Message-State: AOAM531ulfMONR9ib6Gj7k4R97514q8hs/PhmumYSQQBVVqxAMekhRFd
-        LpSjwzDhcX5unjURjkNj+qc=
-X-Google-Smtp-Source: ABdhPJy+9YGnXHWLktpjXxPm4PgCr6fxzYJTVqUuSfeHM6qeAIlvoUjvHKYwb8m+XqYTlqFMwVGUDw==
-X-Received: by 2002:a05:6214:1086:: with SMTP id o6mr20534054qvr.41.1597794189388;
-        Tue, 18 Aug 2020 16:43:09 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 84sm21793627qkl.11.2020.08.18.16.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 16:43:08 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] lib/string.c: Disable tree-loop-distribute-patterns
-Date:   Tue, 18 Aug 2020 19:43:07 -0400
-Message-Id: <20200818234307.3382306-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
+        Tue, 18 Aug 2020 19:47:39 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECD8C061389;
+        Tue, 18 Aug 2020 16:47:38 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA2E129E;
+        Wed, 19 Aug 2020 01:47:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597794457;
+        bh=hxztss17bLb6KhNdLdaqC7hTZ/NDwi0IYF0CKHOOvxk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E4DYtiikJJBFhq38FSZqnQVVTJy/0ANm6inqqsOYwZl0TDnuspCw+525H53Gtw8iZ
+         u/ZNVHJNlH5RZRsiuBwNcqZlueRkEs1kNesKmBnYZtDjRyCvzHvmnBPFVor3dCgw8C
+         U/i/0JpQr4osGHeBYimKNNmSIogs+F3nX9hDVrec=
+Date:   Wed, 19 Aug 2020 02:47:19 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] media: usb: uvc: no need to check return value of
+ debugfs_create functions
+Message-ID: <20200818234719.GD2360@pendragon.ideasonboard.com>
+References: <20200818133608.462514-1-gregkh@linuxfoundation.org>
+ <20200818133608.462514-7-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818133608.462514-7-gregkh@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc can transform the loop in a naive implementation of memset/memcpy
-etc into a call to the function itself. This optimization is enabled by
--ftree-loop-distribute-patterns.
+Hi Greg,
 
-This has been the case for a while (see eg [0]), but gcc-10.x enables
-this option at -O2 rather than -O3 as in previous versions.
+Thank you for the patch.
 
-Add -ffreestanding, which implicitly disables this optimization with
-gcc. It is unclear whether clang performs such optimizations, but
-hopefully it will also not do so in a freestanding environment.
+On Tue, Aug 18, 2020 at 03:36:08PM +0200, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
 
-This by itself is insufficient for gcc if the optimization was
-explicitly enabled by CFLAGS, so also add a flag to explicitly disable
-it.
+Is there no value in warning the user that something went wrong ? Silent
+failures are harder to debug.
 
-[0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56888
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/media/usb/uvc/uvc_debugfs.c | 20 ++++----------------
+>  1 file changed, 4 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_debugfs.c b/drivers/media/usb/uvc/uvc_debugfs.c
+> index 2b8af4b54117..1a1258d4ffca 100644
+> --- a/drivers/media/usb/uvc/uvc_debugfs.c
+> +++ b/drivers/media/usb/uvc/uvc_debugfs.c
+> @@ -73,7 +73,6 @@ static struct dentry *uvc_debugfs_root_dir;
+>  void uvc_debugfs_init_stream(struct uvc_streaming *stream)
+>  {
+>  	struct usb_device *udev = stream->dev->udev;
+> -	struct dentry *dent;
+>  	char dir_name[33];
+>  
+>  	if (uvc_debugfs_root_dir == NULL)
+> @@ -82,22 +81,11 @@ void uvc_debugfs_init_stream(struct uvc_streaming *stream)
+>  	snprintf(dir_name, sizeof(dir_name), "%u-%u-%u", udev->bus->busnum,
+>  		 udev->devnum, stream->intfnum);
+>  
+> -	dent = debugfs_create_dir(dir_name, uvc_debugfs_root_dir);
+> -	if (IS_ERR_OR_NULL(dent)) {
+> -		uvc_printk(KERN_INFO, "Unable to create debugfs %s "
+> -			   "directory.\n", dir_name);
+> -		return;
+> -	}
+> -
+> -	stream->debugfs_dir = dent;
+> +	stream->debugfs_dir = debugfs_create_dir(dir_name,
+> +						 uvc_debugfs_root_dir);
+>  
+> -	dent = debugfs_create_file("stats", 0444, stream->debugfs_dir,
+> -				   stream, &uvc_debugfs_stats_fops);
+> -	if (IS_ERR_OR_NULL(dent)) {
+> -		uvc_printk(KERN_INFO, "Unable to create debugfs stats file.\n");
+> -		uvc_debugfs_cleanup_stream(stream);
+> -		return;
+> -	}
+> +	debugfs_create_file("stats", 0444, stream->debugfs_dir, stream,
+> +			    &uvc_debugfs_stats_fops);
+>  }
+>  
+>  void uvc_debugfs_cleanup_stream(struct uvc_streaming *stream)
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- lib/Makefile | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/lib/Makefile b/lib/Makefile
-index e290fc5707ea..80edea49613f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -15,11 +15,18 @@ KCOV_INSTRUMENT_debugobjects.o := n
- KCOV_INSTRUMENT_dynamic_debug.o := n
- KCOV_INSTRUMENT_fault-inject.o := n
- 
-+# string.o implements standard library functions like memset/memcpy etc.
-+# Use -ffreestanding to ensure that the compiler does not try to "optimize"
-+# them into calls to themselves.
-+# The optimization pass that does such transformations in gcc is
-+# tree-loop-distribute-patterns. Explicitly disable it just in case.
-+CFLAGS_string.o := -ffreestanding $(call cc-option,-fno-tree-loop-distribute-patterns)
-+
- # Early boot use of cmdline, don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KASAN_SANITIZE_string.o := n
- 
--CFLAGS_string.o := -fno-stack-protector
-+CFLAGS_string.o += -fno-stack-protector
- endif
- 
- # Used by KCSAN while enabled, avoid recursion.
 -- 
-2.26.2
+Regards,
 
+Laurent Pinchart
