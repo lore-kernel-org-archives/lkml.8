@@ -2,83 +2,97 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E7820674
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E587A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597772381;
-	bh=X2MHH+ajAt8ye/9QwPzB+aG8Y9hDwLgxvzGBUmiUFUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fZfdkEsaHTdkNor4kh7i5Mk6DQWR1IiYG7qheWLb1tC89n6OKoMOE9VPnzJzE+UyR
-	 HcgbVYFpkwNwrKbGfoZBVnRtgw9e21g/19j/BQJWRFoNWr1PA7YnYY+iESPJ/CvT4c
-	 /E5yUVojTctM4l14nsdsRgkh3w3nUj1V9HpLaTlg=
+	s=default; t=1597772403;
+	bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=EYK1ZW93zbmRIvdHZhkLb9SoZ69ON1P5bKSAadPWIAAfj47Mb4Y/Cw9IapLQKSKcC
+	 qU0H2kOulvzOKt2fsytrGnyBvDkSuGx9LRNx5Enj5MNzhk1Is1eKjCG28QBGsOpEv0
+	 m+rrFONoOE+afTw2dwDkdmHkAC85GT8fpnHguYWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgHRRjk (ORCPT
+        id S1727114AbgHRRkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 13:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgHRRjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:39:39 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        id S1726691AbgHRRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:39:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8D420738;
-        Tue, 18 Aug 2020 17:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED2D20738;
+        Tue, 18 Aug 2020 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597772378;
-        bh=X2MHH+ajAt8ye/9QwPzB+aG8Y9hDwLgxvzGBUmiUFUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A2GWk3PWMd1NreljfZxP+OqUTzod2fm7mIpCQ2qDQ3qvyktQFZsiI1Hu65eBGngzS
-         /pdohnETh4V1X31tm8Fvq5I+D2HMEhhxkB8xsfbl6HRDH09D5WWdq8xSfdSRmMlL5n
-         W52qnLFBeZuAX4Ov7JTOB9KCrbr3c4fgaVtkzFxY=
-Date:   Tue, 18 Aug 2020 10:39:36 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Javier Gonzalez <javier@javigon.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>, Damien.LeMoal@wdc.com,
-        axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, johannes.thumshirn@wdc.com,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200818173936.GA3097355@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com>
- <20200818071249.GB2544@lst.de>
- <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local>
- <20200818165811.GA2979311@dhcp-10-100-145-180.wdl.wdc.com>
- <20200818172912.e54klrofz3tfhxhj@MacBook-Pro.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818172912.e54klrofz3tfhxhj@MacBook-Pro.localdomain>
+        s=default; t=1597772397;
+        bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=JITDFbdXUSdL3CAO6S6oBsDueJ6T92UpvF2cvgIOiROsih1Att03rFWG8fDHlw8Kr
+         5gt3MWB6+E0LwEoKV+J6QXsnwHozg+mfEoWWSvEb1Q5SEj1klVTkoZKaAbgD8OMGnD
+         3qc8wxSPdiMVAh95d49Qx9j8IJ2vMKLzaQUYDKLo=
+Date:   Tue, 18 Aug 2020 18:39:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     heiko@sntech.de, Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        sugar.zhang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+        alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org
+In-Reply-To: <20200818143727.5882-1-jbx6244@gmail.com>
+References: <20200818143727.5882-1-jbx6244@gmail.com>
+Subject: Re: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
+Message-Id: <159777235702.24785.2371871958311959848.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 07:29:12PM +0200, Javier Gonzalez wrote:
-> On 18.08.2020 09:58, Keith Busch wrote:
-> > On Tue, Aug 18, 2020 at 11:50:33AM +0200, Javier Gonzalez wrote:
-> > > a number of customers are requiring the use of normal writes, which we
-> > > want to support.
-> > 
-> > A device that supports append is completely usable for those customers,
-> > too. There's no need to create divergence in this driver.
+On Tue, 18 Aug 2020 16:37:26 +0200, Johan Jonker wrote:
+> A test with the command below shows that the compatible string
 > 
-> Not really. You know as well as I do that some features are disabled for
-> a particular SSD model on customer requirements. Generic models
-> implementing append can submit both I/Os, but those that remove append
-> are left out.
+> "rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
+> 
+> is already in use, but is not added to a document.
+> The current fallback string "rockchip,rk3328-spdif" points to a data
+> set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
+> in the mainline as in the manufacturer kernel.
+> (Of the enum only RK_SPDIF_RK3288 is used.)
+> So if the properties don't change we might as well use the first SoC
+> in line as fallback string and add the description for rk3308 as:
+> 
+> [...]
 
-You are only supporting my point: if your device supports append, you
-get to work in every ZNS use case, otherwise you only get to work in a
-subset.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: rockchip-spdif: add description for rk3308
+      commit: a8535ae7034e3547f4f7a8c7ca03a6ee72097fb0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
