@@ -2,120 +2,143 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0727AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D38C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37CA20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597748611;
-	bh=aM76h0LVRWD/VLaNlIvaLamCRS32rZ9tXaBBf7SqjKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2EHqeCkRQz+LFfkqiXSvZ7MjXzkA39zOe7ViHgHF4Sm/lX19dB/3vuXKHCdfOh/LG
-	 6ou/WpC5aCyM/LqM6HVk2Hc7BC1K7pOVMafAVS43bvrQfAXvcRwru4J8o6sdv6TEuZ
-	 6ZFwRPwPaeOo+VUVnqsn69FfKyx1QQqL3wnyfjk4=
+	by mail.kernel.org (Postfix) with ESMTP id AF4D22067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHRLD2 (ORCPT
+        id S1726640AbgHRLFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60288 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 07:05:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29176 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRLDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:03:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B109C2067C;
-        Tue, 18 Aug 2020 11:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597748602;
-        bh=aM76h0LVRWD/VLaNlIvaLamCRS32rZ9tXaBBf7SqjKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xz+KBqCsqtyyNaFLl9EC9cWvB075M+HVY4v7aNwfI6vFva6s2DbNBy3ym7dpepa/G
-         ODNgxQ8gjopHuSd1fg0KlxpT1DTBAl5NUYCcNKBK4VRJBV73kd6osQAXp161bnqMrQ
-         F66WXUNy9iNq54bXz8NiYpLKpBYgjX8be+T77SVM=
-Date:   Tue, 18 Aug 2020 13:03:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de,
-        andy.shevchenko@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH v5 0/9] Raspberry Pi 4 USB firmware initialization rework
-Message-ID: <20200818110332.GA167428@kroah.com>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
- <a6aecb7a4d270cb23430d25850c85a332555af55.camel@suse.de>
- <01e4b87c-d287-fd72-9f9c-545539127a50@gmail.com>
- <20200814061105.GG1409566@kroah.com>
- <21baf85fa476f62a56895d77fa76dc0d73c1b3a0.camel@suse.de>
+        id S1726535AbgHRLFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:05:05 -0400
+IronPort-SDR: tgzYrrdWAWtAjZcyDV4E5ODOkcNxRSTPxEb6ST94KNqHLcinJdO5IBIvNJIRbh6KMA8BGTMndu
+ K8wSbfFJrnOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239705243"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="239705243"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 04:05:04 -0700
+IronPort-SDR: Zyl1zkY136CnxKdCbyCD89FjESR6rtWsviP14MKhKzpsA2396TvId8tkG83uuM+d+03U/0/ztr
+ 7gO/W/YhD+Mw==
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="278020960"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 04:05:01 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 461CE2064F; Tue, 18 Aug 2020 14:04:59 +0300 (EEST)
+Date:   Tue, 18 Aug 2020 14:04:59 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Bingbu Cao <bingbu.cao@linux.intel.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: Re: [PATCH v5 0/6] Support running driver's probe for a device
+ powered off
+Message-ID: <20200818110459.GR24582@paasikivi.fi.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
+ <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <21baf85fa476f62a56895d77fa76dc0d73c1b3a0.camel@suse.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:04:05PM +0200, Nicolas Saenz Julienne wrote:
-> On Fri, 2020-08-14 at 08:11 +0200, Greg KH wrote:
-> > On Thu, Aug 13, 2020 at 12:17:49PM -0700, Florian Fainelli wrote:
-> > > 
-> > > On 8/13/2020 3:01 AM, Nicolas Saenz Julienne wrote:
-> > > > Hi everyone.
-> > > > 
-> > > > On Mon, 2020-06-29 at 18:18 +0200, Nicolas Saenz Julienne wrote:
-> > > > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> > > > > loaded directly from an EEPROM or, if not present, by the SoC's
-> > > > > co-processor, VideoCore. This series reworks how we handle this.
-> > > > > 
-> > > > > The previous solution makes use of PCI quirks and exporting platform
-> > > > > specific functions. Albeit functional it feels pretty shoehorned. This
-> > > > > proposes an alternative way of handling the triggering of the xHCI chip
-> > > > > initialization trough means of a reset controller.
-> > > > > 
-> > > > > The benefits are pretty evident: less platform churn in core xHCI code,
-> > > > > and no explicit device dependency management in pcie-brcmstb.
-> > > > > 
-> > > > > Note that patch #1 depends on another series[1], that was just applied
-> > > > > into the clk maintainer's tree.
-> > > > > 
-> > > > > The series is based on v5.8-rc3
-> > > > > 
-> > > > > v3: https://www.spinics.net/lists/arm-kernel/msg813612.html
-> > > > > v2: https://lkml.org/lkml/2020/6/9/875
-> > > > > v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
-> > > > > 
-> > > > > [1] https://lore.kernel.org/linux-clk/159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com/T/#t
-> > > > > 
-> > > > > ---
-> > > > 
-> > > > We were waiting on a dependency to be merged upstream to get this. They are now
-> > > > in, so could we move things forward?
-> > > > 
-> > > > I can take the device tree patches, I guess philipp can take the reset
-> > > > controller code. But I'm not so sure who should be taking the PCI/USB
-> > > > counterparts.
-> > > 
-> > > Should we route everything through the USB tree since that is where the
-> > > changes that do require synchronization with other subsystems and DTS is
-> > > needed the most?
-> > > -- 
-> > > Florian
-> > 
-> > That's fine with me, if everyone else is ok with it :)
+Hi Tomasz, Bingbu,
+
+On Fri, Aug 14, 2020 at 03:17:58PM +0200, Tomasz Figa wrote:
+> On Fri, Aug 14, 2020 at 6:12 AM Bingbu Cao <bingbu.cao@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 8/10/20 10:27 PM, Sakari Ailus wrote:
+> > > Hi all,
+> > >
+> > ...snip...
+> > >
+> > > The use case is such that there is a privacy LED next to an integrated
+> > > user-facing laptop camera, and this LED is there to signal the user that
+> > > the camera is recording a video or capturing images. That LED also happens
+> > > to be wired to one of the power supplies of the camera, so whenever you
+> > > power on the camera, the LED will be lit, whether images are captured from
+> > > the camera --- or not. There's no way to implement this differently
+> > > without additional software control (allowing of which is itself a
+> > > hardware design decision) on most CSI-2-connected camera sensors as they
+> > > simply have no pin to signal the camera streaming state.
+> > >
+> > > This is also what happens during driver probe: the camera will be powered
+> > > on by the I²C subsystem calling dev_pm_domain_attach() and the device is
+> > > already powered on when the driver's own probe function is called. To the
+> > > user this visible during the boot process as a blink of the privacy LED,
+> > > suggesting that the camera is recording without the user having used an
+> > > application to do that. From the end user's point of view the behaviour is
+> > > not expected and for someone unfamiliar with internal workings of a
+> > > computer surely seems quite suspicious --- even if images are not being
+> > > actually captured.
+> > >
+> > > I've tested these on linux-next master. They also apply to Wolfram's
+> > > i2c/for-next branch, there's a patch that affects the I²C core changes
+> > > here (see below). The patches apart from that apply to Bartosz's
+> > > at24/for-next as well as Mauro's linux-media master branch.
+> >
+> > Sakari, we meet one issue - once the vcm sub-device registered, the user space
+> > will try to open the VCM (I have not figure out who did that), it will also
+> > trigger the acpi pm resume/suspend, as the VCM always shares same power rail
+> > with camera sensor, so the privacy LED still has a blink.
 > 
-> Sounds good to me.
+> It's not always the case, as on some designs there are multiple power
+> rails to the sensor and one drives the LED, while the other drives the
+> VCM. That said, it would be still good to solve it in either case.
+> 
+> Perhaps we need some more general discussion on the side effects of
+> simply opening and querying a device. Most of V4L2 drivers these days
+> are designed to avoid powering up the hardware until it's absolutely
+> needed to do so. However, for non-streaming subdevs that are directly
+> controlled by the userspace, like VCM, it's a common practice to power
+> up on open and down on release. This is because they don't have a
+> "streaming" state, so the driver has no way to determine when the
+> power is needed. I wonder if there is a way to improve this.
 
-All now queued up, thanks for sticking with this!
+Good question.
 
-greg k-h
+I think in this particular case the device could be powered on only when
+there's an open file handle and current is applied on the coil (i.e. the
+control's value is non-zero).
+
+But in general case more IOCTLs would be needed. PM QoS framework could be
+used for the purpose based on wakeup latency. I guess no-one has needed it
+badly enough to implement the support? This would be actually a better
+approach. In any case in the case of the lens it requires that the current
+behaviour of powering on the device based on just open file handles would
+have to change.
+
+-- 
+Kind regards,
+
+Sakari Ailus
