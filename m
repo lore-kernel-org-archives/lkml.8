@@ -2,115 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE91C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C67D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51862065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ld1kuJRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHRKBm (ORCPT
+        id S1726673AbgHRKBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:01:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9758 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbgHRKBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:01:42 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 39D7F7C5D9FE4F502BC5;
-        Tue, 18 Aug 2020 18:01:38 +0800 (CST)
-Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 18 Aug
- 2020 18:01:33 +0800
-Subject: Re: [PATCH] f2fs: fix indefinite loop scanning for free nid
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1597392335-4998-1-git-send-email-stummala@codeaurora.org>
- <e1251327-bd48-215d-e558-08780474bddb@huawei.com>
- <20200818095547.GA5062@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <cf2eb391-65a0-a309-6ab7-950ff6f1d660@huawei.com>
-Date:   Tue, 18 Aug 2020 18:01:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200818095547.GA5062@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
+        Tue, 18 Aug 2020 06:01:51 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.160]:36030 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRKBt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:01:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597744907;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=gJZHQFoC1RuwciwdjDmugKLAqLBT+pDMLrsktIem2so=;
+        b=ld1kuJRxVSvq4czLNR0vE0+kZGqvAZCUVNFGLdJjwltT/hxlufO+CZlBsvW1+hNCT/
+        EPjBzz1KxEEzH66N0fcL8yhufl/Nmqg83BTedtGtCjdPUK7e+ZJY82f9Ca2fwL6QFLqj
+        +8ArC6t2nnF52H0dWW/PdvQZhLD1Qp/tDEwMq3VxL+woCXYdkpT73C0+xjm7BNwTGyot
+        eW8tEyNL9VQtmX3RURtjdrL3ZkRaEkt38VpAD7s4FIe/RcpIUODBcBPVsUWv/TqCynYJ
+        mbWjhCh+B+UoVwdRrDkWKAhcAfCpDQsm0PUdbr4x+I8iGKwRVY70RQW64142A9Mfq7Jx
+        zu9g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCaXA4NMLE="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w7I9wlRjh
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 18 Aug 2020 11:58:47 +0200 (CEST)
+Subject: Re: [Letux-kernel] [PATCH] omap5: Fix DSI base address and clocks
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200818095100.25412-1-dave@ds0.me>
+Date:   Tue, 18 Aug 2020 11:58:47 +0200
+Cc:     kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.136.114.67]
-X-CFilter-Loop: Reflected
+Message-Id: <9081697A-02F9-42EA-9F22-F62381FA1C79@goldelico.com>
+References: <20200818095100.25412-1-dave@ds0.me>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/18 17:55, Sahitya Tummala wrote:
-> On Tue, Aug 18, 2020 at 04:29:05PM +0800, Chao Yu wrote:
->> On 2020/8/14 16:05, Sahitya Tummala wrote:
->>> If the sbi->ckpt->next_free_nid is not NAT block aligned and if there
->>> are free nids in that NAT block between the start of the block and
->>> next_free_nid, then those free nids will not be scanned in scan_nat_page().
->>> This results into mismatch between nm_i->available_nids and the sum of
->>> nm_i->free_nid_count of all NAT blocks scanned. And nm_i->available_nids
->>> will always be greater than the sum of free nids in all the blocks.
->>> Under this condition, if we use all the currently scanned free nids,
->>> then it will loop forever in f2fs_alloc_nid() as nm_i->available_nids
->>> is still not zero but nm_i->free_nid_count of that partially scanned
->>> NAT block is zero.
->>>
->>> Fix this to align the nm_i->next_scan_nid to the first nid of the
->>> corresponding NAT block.
->>>
->>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->>> ---
->>>   fs/f2fs/node.c | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>> index 9bbaa26..d615e59 100644
->>> --- a/fs/f2fs/node.c
->>> +++ b/fs/f2fs/node.c
->>> @@ -2402,6 +2402,8 @@ static int __f2fs_build_free_nids(struct f2fs_sb_info *sbi,
->>>   			if (IS_ERR(page)) {
->>>   				ret = PTR_ERR(page);
->>>   			} else {
->>> +				if (nid % NAT_ENTRY_PER_BLOCK)
->>> +					nid = NAT_BLOCK_OFFSET(nid) * NAT_ENTRY_PER_BLOCK;
->>
->> How about moving this logic to the beginning of __f2fs_build_free_nids(),
->> after nid reset?
->>
-> 
-> Sure, I will move it.
-> 
->> BTW, it looks we can add unlikely in this judgment condition?
-> 
-> But it may not be an unlikely as it can happen whenever checkpoint is done,
-> based on the next available free nid in function next_free_nid(), which can happen
-> quite a few times, right?
 
-Oh, yes, I missed that place, please ignore that suggestion.. :)
+> Am 18.08.2020 um 11:51 schrieb David Shah <dave@ds0.me>:
+> 
+> DSI was not probing due to base address off by 0x1000, and sys_clk
+> missing.
+> 
+> With this patch, the Pyra display works if HDMI is disabled in the
+> device tree.
 
-Thanks,
+For me it also works if HDMI is not disabled.
+So IMHO this comment is misleading.
+
+Otherwise,
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 
 > 
-> Hitting the loop forever issue condition due to this could be a rare/difficult to
-> reproduce but this check itself may not be unlikely in my opinion.
+> Signed-off-by: David Shah <dave@ds0.me>
+> ---
+> arch/arm/boot/dts/omap5.dtsi | 20 +++++++++++---------
+> 1 file changed, 11 insertions(+), 9 deletions(-)
 > 
-> Thanks,
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index c96e19a15c52..849a2dd9fef7 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -388,11 +388,11 @@ rfbi: encoder@0  {
+> 					};
+> 				};
 > 
->>
->> Thanks,
->>
->>>   				ret = scan_nat_page(sbi, page, nid);
->>>   				f2fs_put_page(page, 1);
->>>   			}
->>>
+> -				target-module@5000 {
+> +				target-module@4000 {
+> 					compatible = "ti,sysc-omap2", "ti,sysc";
+> -					reg = <0x5000 0x4>,
+> -					      <0x5010 0x4>,
+> -					      <0x5014 0x4>;
+> +					reg = <0x4000 0x4>,
+> +					      <0x4010 0x4>,
+> +					      <0x4014 0x4>;
+> 					reg-names = "rev", "sysc", "syss";
+> 					ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> 							<SYSC_IDLE_NO>,
+> @@ -404,7 +404,7 @@ SYSC_OMAP2_SOFTRESET |
+> 					ti,syss-mask = <1>;
+> 					#address-cells = <1>;
+> 					#size-cells = <1>;
+> -					ranges = <0 0x5000 0x1000>;
+> +					ranges = <0 0x4000 0x1000>;
 > 
+> 					dsi1: encoder@0 {
+> 						compatible = "ti,omap5-dsi";
+> @@ -414,8 +414,9 @@ dsi1: encoder@0 {
+> 						reg-names = "proto", "phy", "pll";
+> 						interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+> 						status = "disabled";
+> -						clocks = <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 8>;
+> -						clock-names = "fck";
+> +						clocks = <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 8>,
+> +							 <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 10>;
+> +						clock-names = "fck", "sys_clk";
+> 					};
+> 				};
+> 
+> @@ -445,8 +446,9 @@ dsi2: encoder@0 {
+> 						reg-names = "proto", "phy", "pll";
+> 						interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> 						status = "disabled";
+> -						clocks = <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 8>;
+> -						clock-names = "fck";
+> +						clocks = <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 8>,
+> +							 <&dss_clkctrl OMAP5_DSS_CORE_CLKCTRL 10>;
+> +						clock-names = "fck", "sys_clk";
+> 					};
+> 				};
+> 
+> -- 
+> 2.28.0
+> 
+> _______________________________________________
+> https://projects.goldelico.com/p/gta04-kernel/
+> Letux-kernel mailing list
+> Letux-kernel@openphoenux.org
+> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
+
