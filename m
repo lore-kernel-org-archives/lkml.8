@@ -2,82 +2,144 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59907C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E49C20639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9300820639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TKBIZQ9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgHRJlj (ORCPT
+        id S1726631AbgHRJlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:41:39 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48146 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgHRJlj (ORCPT
+        Tue, 18 Aug 2020 05:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgHRJlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:41:39 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 6C3F71C0BB6; Tue, 18 Aug 2020 11:41:36 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 11:41:35 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 040/168] drm/radeon: disable AGP by default
-Message-ID: <20200818094135.GC10974@amd>
-References: <20200817143733.692105228@linuxfoundation.org>
- <20200817143735.768643197@linuxfoundation.org>
+        Tue, 18 Aug 2020 05:41:44 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1D7C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:41:42 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id qc22so21299484ejb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:41:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dv1Xhl1bS+5jEQYbFML/aNrkT6FMSIT4YIWLINTkYuA=;
+        b=TKBIZQ9cEM0s7XlAhqk+9WuMaJ5WAzHt28fYx7z2YcY+Ky15uWjPK9XQAlE4GEUNqa
+         mV0SnmJ2Gpom5vx/h8sEIfNfZa5zbCrKs2dnoVh0T89qV+LR7R+5+3MROncxObXPQArg
+         /jnklxkh2Vw4IJ9BkaOQd5d8BqCmxE3VXbUS4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dv1Xhl1bS+5jEQYbFML/aNrkT6FMSIT4YIWLINTkYuA=;
+        b=fJ5G3rqs6imjtTI2Qe2dubCZlzR9h6Ex26wUqMWLR9ED/GeRrt8DKHAj63pC603UZB
+         5ynBFG/SJITkkQOx9WUTDLgFNXoBwSUZQMiT86kKr6wTYb/T6BLufRFhvWf9Z/WtJKZZ
+         Y2LYyypuZx4SegGKDnKNz+aEG3guaX4SCduOVeU+Q2t+tBPmd7NA9lx+DzbMT95RslrT
+         TQ8kb5cEH2sqe7OjZiaOTZx9vuNQ6UlPRrdXd1oONTkZ79/bYD2jbH5IB8lRJYNOz7E6
+         +CQDOLuEE/Qi2+9XNdK3HowiSUR1sDg8Sl7eOwYTjsOoOAzibjDrd/FeZZD05k2qvAMU
+         /58w==
+X-Gm-Message-State: AOAM531p1ThMKIDgmC01Jn3JCMEULCSdG0Dbkty30C30OHRMJwj3J195
+        Haju2YQ906n2ABT0mFa68kXUAlUyvklF//6EJA4L6Q==
+X-Google-Smtp-Source: ABdhPJzt1EdcvKZCvCY2Z46UPxjvinPUBrda1Z9vw7Mvqcsu6bquKdK/yTIXHnA8ZslRVtZfcgEoy+b/s/oUX8tNtng=
+X-Received: by 2002:a17:907:94ca:: with SMTP id dn10mr19044858ejc.110.1597743701266;
+ Tue, 18 Aug 2020 02:41:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
-Content-Disposition: inline
-In-Reply-To: <20200817143735.768643197@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
+ <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
+ <20200812143957.GQ1236603@ZenIV.linux.org.uk> <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
+ <20200812150807.GR1236603@ZenIV.linux.org.uk> <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
+ <20200812163347.GS1236603@ZenIV.linux.org.uk> <CAJfpegv8MTnO9YAiFUJPjr3ryeT82=KWHUpLFmgRNOcQfeS17w@mail.gmail.com>
+ <20200812173911.GT1236603@ZenIV.linux.org.uk> <20200812183326.GU1236603@ZenIV.linux.org.uk>
+ <20200812213041.GV1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200812213041.GV1236603@ZenIV.linux.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 18 Aug 2020 11:41:29 +0200
+Message-ID: <CAJfpeguyQhfxrSnaH1mZkncgfiLFB2yM2ZgdMBzuhAdKdmmuxA@mail.gmail.com>
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 12, 2020 at 11:30 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Wed, Aug 12, 2020 at 07:33:26PM +0100, Al Viro wrote:
+>
+> > BTW, what would such opened files look like from /proc/*/fd/* POV?  And
+> > what would happen if you walk _through_ that symlink, with e.g. ".."
+> > following it?  Or with names of those attributes, for that matter...
+> > What about a normal open() of such a sucker?  It won't know where to
+> > look for your ->private_data...
+> >
+> > FWIW, you keep refering to regularity of this stuff from the syscall
+> > POV, but it looks like you have no real idea of what subset of the
+> > things available for normal descriptors will be available for those.
+>
+> Another question: what should happen with that sucker on umount of
+> the filesystem holding the underlying object?  Should it be counted
+> as pinning that fs?
 
---V88s5gaDVPzZ0KCq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Obviously yes.
 
-On Mon 2020-08-17 17:16:11, Greg Kroah-Hartman wrote:
-> From: Christian K=F6nig <christian.koenig@amd.com>
->=20
-> [ Upstream commit ba806f98f868ce107aa9c453fef751de9980e4af ]
->=20
-> Always use the PCI GART instead. We just have to many cases
-> where AGP still causes problems. This means a performance
-> regression for some GPUs, but also a bug fix for some others.
+> Who controls what's in that tree?
 
-Yes, and the regressions mean this is not suitable for -stable, right?
+It could be several entities:
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+ - global (like mount info)
+ - per inode (like xattr)
+ - per fs (fs specific inode attributes)
+ - etc..
 
---V88s5gaDVPzZ0KCq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>  If we plan to have xattrs there,
+> will they be in a flat tree, or should it mirror the hierarchy of
+> xattrs?  When is it populated?  open() time?  What happens if we
+> add/remove an xattr after that point?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+From the interface perspective it would be dynamic (i.e. would get
+updated on open or read).  From an implementation POV it could have
+caching, but that's not how I'd start out.
 
-iEYEARECAAYFAl87ok0ACgkQMOfwapXb+vI1twCcCbmk7JCG2L844+59rQVtnMCy
-P2wAn2sDw4AS3tdZJMleH5mIAx3M4kIB
-=JVX2
------END PGP SIGNATURE-----
+> If we open the same file several times, what should we get?  A full
+> copy of the tree every time, with all coherency being up to whatever's
+> putting attributes there?
+>
+> What are the permissions needed to do lookups in that thing?
 
---V88s5gaDVPzZ0KCq--
+That would depend on what would need to be looked up.  Top level would
+be world readable, otherwise it would be up to the attribute/group.
+
+>
+> All of that is about semantics and the answers are needed before we
+> start looking into implementations.  "Whatever my implementation
+> does" is _not_ a good way to go, especially since that'll be cast
+> in stone as soon as API becomes exposed to userland...
+
+Fine.
+
+Thanks,
+Miklos
