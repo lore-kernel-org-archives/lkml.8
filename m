@@ -2,147 +2,142 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33340C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4611CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8582076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4DC2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:03:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="z6FSMv10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgHRTDK (ORCPT
+        id S1726779AbgHRTDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:03:10 -0400
-Received: from smtprelay0203.hostedemail.com ([216.40.44.203]:52818 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726435AbgHRTDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:03:08 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 68C8C100E7B45;
-        Tue, 18 Aug 2020 19:03:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: ghost36_3e055b927021
-X-Filterd-Recvd-Size: 3429
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 18 Aug 2020 19:03:03 +0000 (UTC)
-Message-ID: <ac461ce3173457270815aba33b4be36dee760c54.camel@perches.com>
-Subject: Re: [PATCH] qed_main: Remove unnecessary cast in kfree
-From:   Joe Perches <joe@perches.com>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Xu Wang <vulab@iscas.ac.cn>
-Cc:     aelior@marvell.com, GR-everest-linux-l2@marvell.com,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 18 Aug 2020 12:03:02 -0700
-In-Reply-To: <20200818114403.00001257@intel.com>
-References: <20200818091056.12309-1-vulab@iscas.ac.cn>
-         <20200818114403.00001257@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Tue, 18 Aug 2020 15:03:54 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36623 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgHRTDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:03:53 -0400
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:61e8:d401:1991:f3df])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 07IJ2bvX2888434
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 18 Aug 2020 12:02:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 07IJ2bvX2888434
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020072401; t=1597777361;
+        bh=cfOAXIuv0d1n/p0ol2GZ1qiMxIvr2XSR2TAgYuI9r3w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=z6FSMv10XGVilhbjjXXiM0AVWKbJ7Fhzt0md6cIgU1Ohsv04ugdthB2lXdOawFp4G
+         /yIHdNmPHZoJCDgNTXPnJTtAPUBICrzszid60D+pV/4UicZbTfZbrRU0+BZ8RM9wQ7
+         35+zOHMSIK0jpi7uLcUHBcJWVVBeZ5kJHzSii4DCkNNkgF64tjR5yM5SQnJO97g4e0
+         TLtVUzXQFjyCrQUlr1DheafRH0JBDtqIMF2aHk+22UqWXF1TCLjag5KLD7muJd8VV/
+         HrTaRZAfyaXM5tK2841JwFpFsQImabhN3BWsuyiGhtf+WNri0flORDI4/EZYE6HGwH
+         89XyyKW8H1m/w==
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
+ <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+Date:   Tue, 18 Aug 2020 12:02:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 11:44 -0700, Jesse Brandeburg wrote:
-> On Tue, 18 Aug 2020 09:10:56 +0000
-> Xu Wang <vulab@iscas.ac.cn> wrote:
+On 2020-08-18 10:56, Nick Desaulniers wrote:
+>>
+>> The problem here is twofold:
+>>
+>> 1. The user would be expected to know what kind of the optimizations the
+>> compiler can do on what function, which is private knowledge to the
+>> compiler.
+>>
+>> 2. The only way to override -fno-builtin is by a header file with macros
+>> overriding the function names with __builtin, but that doesn't tell the
+>> compiler proper anything about the execution environment.
+>>
+>> So the Right Thing is for the compiler authors to change the way
+>> -ffreestanding works.
 > 
-> > Remove unnecassary casts in the argument to kfree.
-> > 
-> > Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> Sir, this is an Arby's
 > 
-> You seem to have several of these patches, they should be sent in a
-> series with the series patch subject (for example):
-> [PATCH net-next 0/n] fix up casts on kfree
+> There are things all across the compilation landscape that make we
+> want to pontificate or even throw a tantrum in an Arby's.  Would I?
+> Well, no, I'm just trying to flip burgers or shovel the elephant
+> sh...or w/e they do at Arby's (I've never actually been; I detest
+> roast beef).
 > 
-> Did you use a coccinelle script to find these? 
+> Would it be interesting to have a way of opting in, as you describe,
+> such that your compiler knew exactly what kind of embedded environment
+> it was targeting?  Maybe, but I'd argue that opting out is just the
+> other side of the same coin. Heads, I win; tails, you lose. That the
+> opt in or opt out list is shorter for a given project is not
+> particularly interesting.  Should we change the semantics of a fairly
+> commonly used compiler flag that multiple toolchains are in agreement
+> of, then fix all of the breakage in all of the code that relied on
+> those semantics?  I'm afraid that ship may have already
+> sailed...probably 20 or 30 years ago.
 > 
-> They could all have Fixes tags. I'd resend the whole bunch as a series.
+>> -ffreestanding means, by definition, that there
+>> are no library calls (other than libgcc or whatever else is supplied
+>> with the compiler) that the compiler can call. That is currently an
+>> all-or-nothing choice, or at least one choice per C standard implemented.
 > 
-> Since this has no functional change, you could mention that in the
-> series commit message text.
+> Yes?
+> 
 
-Commits with no functional change generally should
-not be marked with Fixes:
+I'm not saying "change the semantics", nor am I saying that playing
+whack-a-mole *for a limited time* is unreasonable. But I would like to go back
+to the compiler authors and get them to implement such a #pragma: "this
+freestanding implementation *does* support *this specific library function*,
+and you are free to call it." The only way we can get what we really need from
+the compilers is by speaking up and requesting it, and we have done so very
+successfully recently; further back we tended to get a lot of
+language-lawyering, but these days both the gcc and the clang teams have been
+wonderfully responsive.
 
-And some wrapper functions might as well be removed
-and just kfree used in-place instead.
-
-Something like:
----
- drivers/net/ethernet/qlogic/qed/qed_main.c | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
-index 2558cb680db3..961adb4d8910 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-@@ -482,24 +482,6 @@ int qed_fill_dev_info(struct qed_dev *cdev,
- 	return 0;
- }
- 
--static void qed_free_cdev(struct qed_dev *cdev)
--{
--	kfree((void *)cdev);
--}
--
--static struct qed_dev *qed_alloc_cdev(struct pci_dev *pdev)
--{
--	struct qed_dev *cdev;
--
--	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
--	if (!cdev)
--		return cdev;
--
--	qed_init_struct(cdev);
--
--	return cdev;
--}
--
- /* Sets the requested power state */
- static int qed_set_power_state(struct qed_dev *cdev, pci_power_t state)
- {
-@@ -618,9 +600,11 @@ static struct qed_dev *qed_probe(struct pci_dev *pdev,
- 	struct qed_dev *cdev;
- 	int rc;
- 
--	cdev = qed_alloc_cdev(pdev);
-+	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
- 	if (!cdev)
--		goto err0;
-+		return NULL;
-+
-+	qed_init_struct(cdev);
- 
- 	cdev->drv_type = DRV_ID_DRV_TYPE_LINUX;
- 	cdev->protocol = params->protocol;
-@@ -658,8 +642,7 @@ static struct qed_dev *qed_probe(struct pci_dev *pdev,
- err2:
- 	qed_free_pci(cdev);
- err1:
--	qed_free_cdev(cdev);
--err0:
-+	kfree(cdev);
- 	return NULL;
- }
- 
-@@ -676,7 +659,7 @@ static void qed_remove(struct qed_dev *cdev)
- 
- 	qed_devlink_unregister(cdev);
- 
--	qed_free_cdev(cdev);
-+	kfree(cdev);
- }
- 
- static void qed_disable_msix(struct qed_dev *cdev)
-
+	-hpa
 
