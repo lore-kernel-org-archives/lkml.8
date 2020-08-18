@@ -2,101 +2,152 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D48C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6686620772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597777141;
-	bh=cdDqlxbTJLRPaomvljkcqdnEyM+0X43LsblU5qVipzE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=flkLPRFUBa9y+uZRlt2ld7MH4nil32OWLU38MoqNzvOhaEDnSH+aNJq66tB4Hz89r
-	 etYbx9jwW3vNawbOwW4/XzTau7FMpoujBoh5uZ106FPtTEVB9xiFY3xvtSb1UocdlE
-	 xy47NcZRPdebS1DVG1B9MvLyH3lwk/MwxCnVQUrY=
+	by mail.kernel.org (Postfix) with ESMTP id 22E932076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dH63OBwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHRS7A (ORCPT
+        id S1726673AbgHRTAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbgHRS67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:58:59 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4441206B5;
-        Tue, 18 Aug 2020 18:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597777139;
-        bh=cdDqlxbTJLRPaomvljkcqdnEyM+0X43LsblU5qVipzE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=10yqYHudnQXTl/lRXJhIjD/BGLLpAMZDFa2i3JRLFC8LkAMU/Hkq2cHzaSttmK4yn
-         RXl7puyBg1YHewkND/h2l/hiI+c5MlEPstucK6Cw3T/21tleWqODsTJ2+xAMRvvbHz
-         uKGPav1hrG05rA4NMcpit5Fz1Wf2BXa0gvQ5d5fU=
-Date:   Tue, 18 Aug 2020 11:58:57 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-Subject: Re: [PATCH v6 09/10] net: eth: altera: add msgdma prefetcher
-Message-ID: <20200818115857.78d6b2ac@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200818154613.148921-10-joyce.ooi@intel.com>
-References: <20200818154613.148921-1-joyce.ooi@intel.com>
-        <20200818154613.148921-10-joyce.ooi@intel.com>
+        Tue, 18 Aug 2020 15:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgHRTAs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:00:48 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B616EC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:00:48 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g14so22352320iom.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6y7jaq85qVWyUjsIUSZ25WamPn+4eSTzE9M7XKfX/FM=;
+        b=dH63OBwnuhjcOBJxjXMhjufxWX6ONCsuAceeqQIiqN6TqgJ/1YsyUbcxqd9l4JSzgE
+         xRTl2ij4bbzVQyRQqhh+wjGCWwI1Lx2F29C6z+aO3wV/Fkv7nm5DVK1gG0CxyHSTy2tY
+         c+/hxn4w/RvuxY6Vg6GSelXM7VK3NLF2xQ6sE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6y7jaq85qVWyUjsIUSZ25WamPn+4eSTzE9M7XKfX/FM=;
+        b=Hw0HaZGFWxliAR7lfIkFQvBwH8lLPJGFHqzkXTS+ln6t+QcvpvclFtzgoYEhXyZTxR
+         3tjXe4b6du1a7WcOftJdhmdOQikCeuTetHGCHro5OBBiQj5KwCgFSpVS3EsE0ESrs0hk
+         u5bGgK9KDr5GziuDYRYBrdL1wVi/sopfXkVnbT93ONiFiQzvwyfRi8z6MhPIDzxB234z
+         o6ypvsWVyIEpindQPJiKSWLhiUVr/ByWCHI5SDUVcLHU8RSbp9kPPJ6Z6Ef4C5Hdtutk
+         GlHpslYZZUYkJU/ZzcbHU78lIZ0f6h0Ll8vRk/vV9SwEFN5plKvTE+PwQF3n8K8rFegt
+         cfyQ==
+X-Gm-Message-State: AOAM530hIA81ZBB3huEjOJ4l+Cayvbc5gEhMmuxXrxYuOdyBgv0BRIuY
+        risydv+SAtNWCWFA4JSvwA80/wivYA3NAAIqUCFHug==
+X-Google-Smtp-Source: ABdhPJy8MyeJce2Quxo1tyOawcOEzlS+kBjEMXHglIDsFc5FDaQjH6+UI3GatQx6TYGSywF57VSNfMNJvhH6aw4DIbQ=
+X-Received: by 2002:a05:6602:2dc9:: with SMTP id l9mr17608751iow.154.1597777247683;
+ Tue, 18 Aug 2020 12:00:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200814064557.17365-1-qiang.zhang@windriver.com>
+ <20200814185124.GA2113@pc636> <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+ <20200818171807.GI27891@paulmck-ThinkPad-P72>
+In-Reply-To: <20200818171807.GI27891@paulmck-ThinkPad-P72>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 18 Aug 2020 15:00:35 -0400
+Message-ID: <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, qiang.zhang@windriver.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 23:46:12 +0800 Ooi, Joyce wrote:
-> From: Dalon Westergreen <dalon.westergreen@intel.com>
->=20
-> Add support for the mSGDMA prefetcher.  The prefetcher adds support
-> for a linked list of descriptors in system memory.  The prefetcher
-> feeds these to the mSGDMA dispatcher.
+On Tue, Aug 18, 2020 at 1:18 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Mon, Aug 17, 2020 at 06:03:54PM -0400, Joel Fernandes wrote:
+> > On Fri, Aug 14, 2020 at 2:51 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+> > >
+> > > > From: Zqiang <qiang.zhang@windriver.com>
+> > > >
+> > > > Due to cpu hotplug. some cpu may be offline after call "kfree_call_rcu"
+> > > > func, if the shrinker is triggered at this time, we should drain each
+> > > > possible cpu "krcp".
+> > > >
+> > > > Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+> > > > ---
+> > > >  kernel/rcu/tree.c | 6 +++---
+> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > index 8ce77d9ac716..619ccbb3fe4b 100644
+> > > > --- a/kernel/rcu/tree.c
+> > > > +++ b/kernel/rcu/tree.c
+> > > > @@ -3443,7 +3443,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+> > > >       unsigned long count = 0;
+> > > >
+> > > >       /* Snapshot count of all CPUs */
+> > > > -     for_each_online_cpu(cpu) {
+> > > > +     for_each_possible_cpu(cpu) {
+> > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > >
+> > > >               count += READ_ONCE(krcp->count);
+> > > > @@ -3458,7 +3458,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > > >       int cpu, freed = 0;
+> > > >       unsigned long flags;
+> > > >
+> > > > -     for_each_online_cpu(cpu) {
+> > > > +     for_each_possible_cpu(cpu) {
+> > > >               int count;
+> > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > >
+> > > > @@ -3491,7 +3491,7 @@ void __init kfree_rcu_scheduler_running(void)
+> > > >       int cpu;
+> > > >       unsigned long flags;
+> > > >
+> > > > -     for_each_online_cpu(cpu) {
+> > > > +     for_each_possible_cpu(cpu) {
+> > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > >
+> > > >               raw_spin_lock_irqsave(&krcp->lock, flags);
+> > > >
+> > > I agree that it can happen.
+> > >
+> > > Joel, what is your view?
+> >
+> > Yes I also think it is possible. The patch LGTM. Another fix could be
+> > to drain the caches in the CPU offline path and save the memory. But
+> > then it will take hit during __get_free_page(). If CPU
+> > offlining/online is not frequent, then it will save the lost memory.
+> >
+> > I wonder how other per-cpu caches in the kernel work in such scenarios.
+> >
+> > Thoughts?
+>
+> Do I count this as an ack or a review?  If not, what precisely would
+> you like the submitter to do differently?
 
-This generates warnings on 32bit builds:
+Hi Paul,
+The patch is correct and is definitely an improvement. I was thinking
+about whether we should always do what the patch is doing when
+offlining CPUs to save memory but now I feel that may not be that much
+of a win to justify more complexity.
 
-../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c: In function =E2=
-=80=98msgdma_pref_initialize=E2=80=99:
-../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c:97:51: warning: f=
-ormat =E2=80=98%llx=E2=80=99 expects argument of type =E2=80=98long long un=
-signed int=E2=80=99, but argument 4 has type =E2=80=98dma_addr_t=E2=80=99 {=
-aka =E2=80=98unsigned int=E2=80=99} [-Wformat=3D]
-   97 |   netdev_info(priv->dev, "%s: RX Desc mem at 0x%llx\n", __func__,
-      |                                                ~~~^
-      |                                                   |
-      |                                                   long long unsigne=
-d int
-      |                                                %x
-   98 |        priv->pref_rxdescphys);
-      |        ~~~~~~~~~~~~~~~~~~~~~                      =20
-      |            |
-      |            dma_addr_t {aka unsigned int}
-../drivers/net/ethernet/altera/altera_msgdma_prefetcher.c:101:51: warning: =
-format =E2=80=98%llx=E2=80=99 expects argument of type =E2=80=98long long u=
-nsigned int=E2=80=99, but argument 4 has type =E2=80=98dma_addr_t=E2=80=99 =
-{aka =E2=80=98unsigned int=E2=80=99} [-Wformat=3D]
-  101 |   netdev_info(priv->dev, "%s: TX Desc mem at 0x%llx\n", __func__,
-      |                                                ~~~^
-      |                                                   |
-      |                                                   long long unsigne=
-d int
-      |                                                %x
-  102 |        priv->pref_txdescphys);
-      |        ~~~~~~~~~~~~~~~~~~~~~                      =20
-      |            |
-      |            dma_addr_t {aka unsigned int}
+You can take it with my ack:
+
+Acked-by: Joel Fernandes <joel@joelfernandes.org>
+
+ thanks,
+
+ - Joel
