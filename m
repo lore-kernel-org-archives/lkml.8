@@ -2,151 +2,169 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2903DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030C120738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4D320738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cNBG7oi+"
+	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="MVcF6eC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgHRHts (ORCPT
+        id S1726592AbgHRHuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:49:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41558 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbgHRHtq (ORCPT
+        Tue, 18 Aug 2020 03:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgHRHuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:49:46 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07I7WZql160485;
-        Tue, 18 Aug 2020 03:49:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=87gJXPDfhi2rateCJHzi2rAoFQOxxft7r4R9eDeoiyo=;
- b=cNBG7oi+D9lOKanCx5Q8BHZNOqIqs5w3L0SBFhEKLxa0tlQpftXfa2UgS7hL4LvcVe2u
- PUlr27sSY4ktAnj1hvHevvFVbQ4QVKHYrw/x6P6RKJUaTSRklbYEOTgNU1h0w3O3QagH
- pMgDrdiX4uRfGyJJMhbSCxCLbK4amxp6jnDJHx0b5cYwnjTd7RtjVCOoLZDzPXPqCem0
- MGDtm1xUxOGJnyu6yHidw/haFJWC7l34lN1tgsKkFS6SnSaHsE/Ah0BH9ZAsmTzgxNKL
- cDszJ/y8lBQNkywVr+HV4dl32xy7pXdCeujeGb6DhHny9yFu46AVgg3KGnf90/OaD4JS aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304nu0tp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 03:49:28 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07I7XRk6163508;
-        Tue, 18 Aug 2020 03:49:28 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304nu0tn5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 03:49:27 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07I7ijEt011058;
-        Tue, 18 Aug 2020 07:49:26 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3304cc0c4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 07:49:25 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07I7nNcx12976508
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 07:49:23 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A36E211C050;
-        Tue, 18 Aug 2020 07:49:23 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0606B11C04C;
-        Tue, 18 Aug 2020 07:49:21 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 18 Aug 2020 07:49:20 +0000 (GMT)
-Date:   Tue, 18 Aug 2020 13:19:20 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Such?nek <msuchanek@suse.de>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200818074920.GA3698@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200703091001.GJ21462@kitsune.suse.cz>
- <20200703092414.GR18446@dhcp22.suse.cz>
- <20200703105944.GS18446@dhcp22.suse.cz>
- <20200703125823.GA26243@linux.vnet.ibm.com>
- <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
- <20200812060101.GB10992@linux.vnet.ibm.com>
- <13a85e52-5caa-24a8-7169-3992b1ad262a@redhat.com>
- <20200818073712.GK28270@dhcp22.suse.cz>
+        Tue, 18 Aug 2020 03:50:16 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B6BC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 00:50:16 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so17283612wrh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 00:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=forissier-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=fZ1BeW8VOC+hA9MKnc/D9SCIGFybsj4Ujy30wQvcOtY=;
+        b=MVcF6eC7Aq5gX1Mi1yTI343wu/3W7v/5vogxthqYoEAfbSKGXI+gRuIx57aM++Yge6
+         YM/xiGjtNRw9s8sTOYwsz5KtVWPsWVhnYrG2lyeWWVlspG5pcPGl3xeQXSpLv3Ez0TvC
+         ui7b4ZWj2ba/5bpDfFEDmRnDyArevONCzhEWBvnERqr+WxD1VxyD5nc7udJfpT2yair5
+         haSI24FrgOV0vP5C5uPX7vvdGjrG+l/yaAFmPh/qV38hXKSaF4T6GNXvaAhcM+26RYtH
+         nzLGyhL0a3/QtEJWhdsZqZX//zeTyQF2xQS7g52KDh6vRY0fu9+QwWJVcPJFjLlHwMmV
+         5Oeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fZ1BeW8VOC+hA9MKnc/D9SCIGFybsj4Ujy30wQvcOtY=;
+        b=mfeaqLzD1sunOl4NFd/0BcKgNZkAP52xgWS5Oj2soiuiWBVZOX7jbWXOtrK8nO/Kyg
+         4xUeSxMh520QsNHzbYLxldA19h70gl7c00V7C+6tbWievY4QUUKeYZNBEVY1sE4cx1pk
+         nv/NnZEGlhfA4DMV31ds0muIQ/mhsRLdFGAN4KBM3KDWqYcebTcOZqIPyYrkFvczZXiS
+         9a7IIBDmrANU5z9C3fcx3PSsJIbbP44T5HrGTO9vo4WIacbJret+JVM/rL2flWG89WZL
+         vZSSiapfGgGux+IpIyaY5CICZOXE6JNGv4mg04n4sydgi4tEwVo47N+jR+kb3G4rtn63
+         4Vpw==
+X-Gm-Message-State: AOAM5303S+ixEJdG7xhQNEdMvd+5LXywnfMisB+RfwyQQYxbdcyCMXOi
+        XlMMPoRZz7wvZ9Yh3R8o+jUfJvkaPNB6KXet+Z/mjA==
+X-Google-Smtp-Source: ABdhPJz3daSpl/dawmfPEEI70hSBq/yqZiY4kwArSCs57W5R/zSRz/nCwAqwTo9lq7baoRktjeJDgA==
+X-Received: by 2002:a5d:464e:: with SMTP id j14mr19208165wrs.361.1597737014128;
+        Tue, 18 Aug 2020 00:50:14 -0700 (PDT)
+Received: from ?IPv6:2a01:e0a:3cb:7bb0:8875:d92:eae5:ceb5? ([2a01:e0a:3cb:7bb0:8875:d92:eae5:ceb5])
+        by smtp.gmail.com with ESMTPSA id c15sm31834432wme.23.2020.08.18.00.50.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 00:50:13 -0700 (PDT)
+Subject: Re: [PATCH v3] checkpatch: add --kconfig-prefix
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        linux-kernel@vger.kernel.org
+References: <20200817095056.31001-1-jerome@forissier.org>
+ <20200818074349.726778-1-jerome@forissier.org>
+From:   Jerome Forissier <jerome@forissier.org>
+Message-ID: <266350d9-c770-6a29-b784-46de2b005e39@forissier.org>
+Date:   Tue, 18 Aug 2020 09:50:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200818073712.GK28270@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_04:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- adultscore=0 clxscore=1011 priorityscore=1501 phishscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008180051
+In-Reply-To: <20200818074349.726778-1-jerome@forissier.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michal Hocko <mhocko@suse.com> [2020-08-18 09:37:12]:
 
-> On Tue 18-08-20 09:32:52, David Hildenbrand wrote:
-> > On 12.08.20 08:01, Srikar Dronamraju wrote:
-> > > Hi Andrew, Michal, David
-> > > 
-> > > * Andrew Morton <akpm@linux-foundation.org> [2020-08-06 21:32:11]:
-> > > 
-> > >> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
-> > >>
-> > >>>> The memory hotplug changes that somehow because you can hotremove numa
-> > >>>> nodes and therefore make the nodemask sparse but that is not a common
-> > >>>> case. I am not sure what would happen if a completely new node was added
-> > >>>> and its corresponding node was already used by the renumbered one
-> > >>>> though. It would likely conflate the two I am afraid. But I am not sure
-> > >>>> this is really possible with x86 and a lack of a bug report would
-> > >>>> suggest that nobody is doing that at least.
-> > >>>>
-> > >> So...  do we merge this patch or not?  Seems that the overall view is
-> > >> "risky but nobody is likely to do anything better any time soon"?
-> > > 
-> > > Can we decide on this one way or the other?
-> > 
-> > Hmm, not sure who's the person to decide. I tend to prefer doing the
-> > node renaming, handling this in ppc code;
+
+On 8/18/20 9:43 AM, Jerome Forissier wrote:
+> Kconfig allows to customize the CONFIG_ prefix via the $CONFIG_
+> environment variable. Out-of-tree projects may therefore use Kconfig
+> with a different prefix, or they may use a custom configuration tool
+> which does not use the CONFIG_ prefix at all. Such projects may still
+> want to adhere to the Linux kernel coding style and run checkpatch.pl.
 > 
-> Agreed. That would be a safer option.
+> One example is OP-TEE [1] which does not use Kconfig but does have
+> configuration options prefixed with CFG_. It also mostly follows the
+> kernel coding style and therefore being able to use checkpatch is quite
+> valuable.
+> 
+> To make this possible, add the --kconfig-prefix command line option.
 
-Okay, will send arch specific v6 version.
+(Oh I forgot to add the link here :-/ sorry about that. Let me know if
+you want me to resend.)
 
-> -- 
-> Michal Hocko
-> SUSE Labs
+[1] https://github.com/OP-TEE/optee_os
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+> 
+> Signed-off-by: Jerome Forissier <jerome@forissier.org>
+> ---
+>  scripts/checkpatch.pl | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> v3:
+> - Use ${CONFIG_} instead of $CONFIG_.
+> - Expand the commit message to mention OP-TEE.
+> 
+> v2:
+> - Use a command-line/.checkpatch.conf option instead of the _CONFIG
+>   environment variable.
+> - Changed the patch subject (was: "checkpatch: get CONFIG_ prefix from
+>   the environment").
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 2cbeae6d9aee..fd65f8c774ed 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -65,6 +65,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
+>  # git output parsing needs US English output, so first set backtick child process LANGUAGE
+>  my $git_command ='export LANGUAGE=en_US.UTF-8; git';
+>  my $tabsize = 8;
+> +my ${CONFIG_} = "CONFIG_";
+>  
+>  sub help {
+>  	my ($exitcode) = @_;
+> @@ -127,6 +128,8 @@ Options:
+>    --typedefsfile             Read additional types from this file
+>    --color[=WHEN]             Use colors 'always', 'never', or only when output
+>                               is a terminal ('auto'). Default is 'auto'.
+> +  --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
+> +                             ${CONFIG_})
+>    -h, --help, --version      display this help and exit
+>  
+>  When FILE is - read standard input.
+> @@ -235,6 +238,7 @@ GetOptions(
+>  	'color=s'	=> \$color,
+>  	'no-color'	=> \$color,	#keep old behaviors of -nocolor
+>  	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
+> +	'kconfig-prefix=s'	=> \${CONFIG_},
+>  	'h|help'	=> \$help,
+>  	'version'	=> \$help
+>  ) or help(1);
+> @@ -6528,16 +6532,16 @@ sub process {
+>  		}
+>  
+>  # check for IS_ENABLED() without CONFIG_<FOO> ($rawline for comments too)
+> -		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^CONFIG_/) {
+> +		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^${CONFIG_}/) {
+>  			WARN("IS_ENABLED_CONFIG",
+> -			     "IS_ENABLED($1) is normally used as IS_ENABLED(CONFIG_$1)\n" . $herecurr);
+> +			     "IS_ENABLED($1) is normally used as IS_ENABLED(${CONFIG_}$1)\n" . $herecurr);
+>  		}
+>  
+>  # check for #if defined CONFIG_<FOO> || defined CONFIG_<FOO>_MODULE
+> -		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(CONFIG_[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
+> +		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(${CONFIG_}[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
+>  			my $config = $1;
+>  			if (WARN("PREFER_IS_ENABLED",
+> -				 "Prefer IS_ENABLED(<FOO>) to CONFIG_<FOO> || CONFIG_<FOO>_MODULE\n" . $herecurr) &&
+> +				 "Prefer IS_ENABLED(<FOO>) to ${CONFIG_}<FOO> || ${CONFIG_}<FOO>_MODULE\n" . $herecurr) &&
+>  			    $fix) {
+>  				$fixed[$fixlinenr] = "\+#if IS_ENABLED($config)";
+>  			}
+> 
