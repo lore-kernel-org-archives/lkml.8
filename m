@@ -2,194 +2,107 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC84C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4727AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683E1206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22982206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iI8x+Bpt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGZ7bHcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHROa3 (ORCPT
+        id S1726952AbgHROam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        Tue, 18 Aug 2020 10:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgHROaY (ORCPT
+        with ESMTP id S1726930AbgHROaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:30:24 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B16DC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:30:24 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id m20so15430394eds.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:30:23 -0700 (PDT)
+        Tue, 18 Aug 2020 10:30:25 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC3CC061344;
+        Tue, 18 Aug 2020 07:30:24 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id h19so21660602ljg.13;
+        Tue, 18 Aug 2020 07:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uNMrh+oJtAzOJ4E1aOl6mhIopG05pjfwxNFOrBzLENY=;
-        b=iI8x+BptaRYQcW/koMeu8EHod+gqmM3hwGdLJ4DuI8Ip83avJh3xK8SjvXJ9dxEBx2
-         x8qZQbZQxX9PQK3Iys50h20c8YpsLbJDP6Zupf+eX031yEQ7W2igaavvUK/u+W4RYgeY
-         CG/Ne7SKF68NwmMnxGv10VshBAEJdMKES0mTc=
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=EKmO5OL8YqABBQxdTc7s+i0zzy1xBLouHzrebnJDpis=;
+        b=mGZ7bHcElaXqrCYV9DL1BOj/IuS2bmiyPYX0PqgMOP9WF/77dT1kpyEyyglxYYmB4u
+         EvEBaisupWAJrDa5DhO8+n5lvmQsxZyOM96nzQOaWEakY7evRmrpsxruxbpW1f39pmG8
+         zYU9WXNjnNjfTv9uvN9T5/dd8ct/pKXRYCTyraUYNAh3C/M6HBtjo9i3gwo/ZnMcuQBK
+         SmhkjHYQtoCe14V6Lakfz729CvVqy8p/SUWutYSruyat+fTgh3IAEsvGMNoqzn7Z5rBO
+         F7SfX8bznQT5If88lPI5JXNGyrpa3w5rdZHQwgxzXdVgu8G4HdE250jxt9HK1GBfQo40
+         FLpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
          :content-transfer-encoding;
-        bh=uNMrh+oJtAzOJ4E1aOl6mhIopG05pjfwxNFOrBzLENY=;
-        b=cAG9e5IigHXCzXbkMThC+MZZehNOeLOT/w+E9osTz6BdyK0y49KxI+4GDhBOPqE056
-         7H9N9xl0IFiougHNolgTUF+G9gt1SvfcQyUrVCQ13Z9Jz9Nd7b6/6lCBbXVV+KjmiFcx
-         yPT67mebrS2tFzm3rfoDD9EpCbiodNm1dd90wNLk/cP2DsPxUm8fgolcBPwfUf5kyusS
-         f6XS90F0IzUrvMqTKANFEeXpHS56K9vCYH8fUHeP2rlgx4m9javGspFrQhqzJIAXKdtx
-         dtZyXgy4+MC7OQikjiSkz2ff82iNvkxwpq6Niu6iTWAAS3f2vLJbofY6Y4tJH+h4rD9+
-         gZKA==
-X-Gm-Message-State: AOAM533DOL6dvJCLEQ23riv9H07z5LymRcwj0YG5M8XpV0gtA5YH7I94
-        hJBYV/dyeRKcWXu5qKwZxUnYzg==
-X-Google-Smtp-Source: ABdhPJzNl2xbyrcto/z2JWk8p8a3T6cWnVMNIsGNZsnotgtthOq7WYEBNZXFKLaRQU4YjK+f4fRQmQ==
-X-Received: by 2002:a05:6402:b67:: with SMTP id cb7mr20158831edb.216.1597761022560;
-        Tue, 18 Aug 2020 07:30:22 -0700 (PDT)
-Received: from [192.168.2.66] ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id re10sm16759810ejb.68.2020.08.18.07.30.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:30:21 -0700 (PDT)
-Subject: Re: [PATCH bpf-next v8 1/7] A purely mechanical change to split the
- renaming from the actual generalization.
-To:     Martin KaFai Lau <kafai@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-References: <20200803164655.1924498-1-kpsingh@chromium.org>
- <20200803164655.1924498-2-kpsingh@chromium.org>
- <20200817235621.ulkqw6mqd2uu647t@kafai-mbp.dhcp.thefacebook.com>
-From:   KP Singh <kpsingh@chromium.org>
-Message-ID: <51554981-21be-5b42-2827-f6c90b587b95@chromium.org>
-Date:   Tue, 18 Aug 2020 16:30:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=EKmO5OL8YqABBQxdTc7s+i0zzy1xBLouHzrebnJDpis=;
+        b=U+8jeX+Z+GvykQohCp6ZuP8lQ5yIU81JmF9/cq602LjOi6gx9bbFlPqg1MmiNQuyfH
+         4w41kUccHI6OupsfBLLYwgYMDXA/4pywW8j+gIQJHmAcC5Z4gPgyOVMD1p78r4I3K4xy
+         28ac6sgfRRxN6vu4Uv9H6mkPjJhVSXXDhT7HZR3fKe01RuHwR7HM8yCKAqbZ3nUMqXPP
+         aXZdKd24Hc0d4S4M2PfPlz0McO3XhkBhpUMUQ9wm1hDAvO0Zke51T7Q9RUjjjocMCQKy
+         6gXAXE8uMLV1K8B/FWwiyqVHTvCjLTxuEXJpeJ1xFvfE6edon22U0/plg+XwtqxT2frI
+         qhWQ==
+X-Gm-Message-State: AOAM531x+O/Ja0DXbxghacO16a6ps/mq6VzasWmpbrkClrtXHFSajLoy
+        O8tE6ZvxjZMXnrLVLn0sQTEwC9n4DnEBtpJ+pXSssGc4tu4=
+X-Google-Smtp-Source: ABdhPJwDLwy9lrFbCZHRAPg/5oUtgAIZvmfT4IQOBkQIyITsssC28W0Q8MfrFwEwrIl2E+AXrkgrKVjw+etzb7teu24=
+X-Received: by 2002:a2e:b174:: with SMTP id a20mr6626678ljm.200.1597761023270;
+ Tue, 18 Aug 2020 07:30:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200817235621.ulkqw6mqd2uu647t@kafai-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Tue, 18 Aug 2020 20:00:11 +0530
+Message-ID: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
+Subject: Scheduler benchmarks
+To:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
+
+I=E2=80=99ve two identical Linux systems with only kernel differences.
+While doing kernel profiling with perf, I got the below mentioned
+metrics for Scheduler benchmarks.
+
+1st system (older kernel version compared to the other system) benchmark re=
+sult:
+
+$ perf bench sched messaging -g 64
+# Running 'sched/messaging' benchmark:
+# 20 sender and receiver processes per group
+# 64 groups =3D=3D 2560 processes run
+
+     Total time: 2.936 [sec]
 
 
-On 8/18/20 1:56 AM, Martin KaFai Lau wrote:
-> On Mon, Aug 03, 2020 at 06:46:49PM +0200, KP Singh wrote:
->> From: KP Singh <kpsingh@google.com>
->>
->> Flags/consts:
->>
->>   SK_STORAGE_CREATE_FLAG_MASK	BPF_LOCAL_STORAGE_CREATE_FLAG_MASK
->>   BPF_SK_STORAGE_CACHE_SIZE	BPF_LOCAL_STORAGE_CACHE_SIZE
->>   MAX_VALUE_SIZE		BPF_LOCAL_STORAGE_MAX_VALUE_SIZE
->>
->> Structs:
->>
->>   bucket			bpf_local_storage_map_bucket
->>   bpf_sk_storage_map		bpf_local_storage_map
->>   bpf_sk_storage_data		bpf_local_storage_data
->>   bpf_sk_storage_elem		bpf_local_storage_elem
->>   bpf_sk_storage		bpf_local_storage
->>
->> The "sk" member in bpf_local_storage is also updated to "owner"
->> in preparation for changing the type to void * in a subsequent patch.
->>
->> Functions:
->>
->>   selem_linked_to_sk			selem_linked_to_storage
->>   selem_alloc				bpf_selem_alloc
->>   __selem_unlink_sk			bpf_selem_unlink_storage
->>   __selem_link_sk			bpf_selem_link_storage
->>   selem_unlink_sk			__bpf_selem_unlink_storage
->>   sk_storage_update			bpf_local_storage_update
->>   __sk_storage_lookup			bpf_local_storage_lookup
->>   bpf_sk_storage_map_free		bpf_local_storage_map_free
->>   bpf_sk_storage_map_alloc		bpf_local_storage_map_alloc
->>   bpf_sk_storage_map_alloc_check	bpf_local_storage_map_alloc_check
->>   bpf_sk_storage_map_check_btf		bpf_local_storage_map_check_btf
->>
-> 
-> [ ... ]
-> 
->> @@ -147,85 +148,86 @@ static struct bpf_sk_storage_elem *selem_alloc(struct bpf_sk_storage_map *smap,
->>   * The caller must ensure selem->smap is still valid to be
->>   * dereferenced for its smap->elem_size and smap->cache_idx.
->>   */
->> -static bool __selem_unlink_sk(struct bpf_sk_storage *sk_storage,
->> -			      struct bpf_sk_storage_elem *selem,
->> -			      bool uncharge_omem)
->> +static bool bpf_selem_unlink_storage(struct bpf_local_storage *local_storage,
->> +				     struct bpf_local_storage_elem *selem,
->> +				     bool uncharge_omem)
-> Please add a "_nolock()" suffix, just to be clear that the unlink_map()
-> counter part is locked.  It could be a follow up later.
+2nd system benchmark result:
 
-Done.
+$ perf bench sched messaging -g 64
+# Running 'sched/messaging' benchmark:
+# 20 sender and receiver processes per group
+# 64 groups =3D=3D 2560 processes run
 
-> 
->>  {
->> -	struct bpf_sk_storage_map *smap;
->> -	bool free_sk_storage;
->> +	struct bpf_local_storage_map *smap;
->> +	bool free_local_storage;
+     Total time: 10.074 [sec]
 
-[...]
 
->> +	if (unlikely(!selem_linked_to_storage(selem)))
->>  		/* selem has already been unlinked from sk */
->>  		return;
->>  
->> -	sk_storage = rcu_dereference(selem->sk_storage);
->> -	raw_spin_lock_bh(&sk_storage->lock);
->> -	if (likely(selem_linked_to_sk(selem)))
->> -		free_sk_storage = __selem_unlink_sk(sk_storage, selem, true);
->> -	raw_spin_unlock_bh(&sk_storage->lock);
->> +	local_storage = rcu_dereference(selem->local_storage);
->> +	raw_spin_lock_bh(&local_storage->lock);
->> +	if (likely(selem_linked_to_storage(selem)))
->> +		free_local_storage =
->> +			bpf_selem_unlink_storage(local_storage, selem, true);
->> +	raw_spin_unlock_bh(&local_storage->lock);
->>  
->> -	if (free_sk_storage)
->> -		kfree_rcu(sk_storage, rcu);
->> +	if (free_local_storage)
->> +		kfree_rcu(local_storage, rcu);
->>  }
->>  
->> -static void __selem_link_sk(struct bpf_sk_storage *sk_storage,
->> -			    struct bpf_sk_storage_elem *selem)
->> +static void bpf_selem_link_storage(struct bpf_local_storage *local_storage,
->> +				   struct bpf_local_storage_elem *selem)
-> Same here. bpf_selem_link_storage"_nolock"().
+So as per scheduler benchmark results, clearly a huge difference
+between two systems.
+Can anyone suggest to me how to dive deeper to know the root cause for
+it. Also are there any tunable kernel parameters related to this one?
 
-Done.
 
-> 
-> Please tag the Subject line with "bpf:".
 
-Done. Changed it to:
-
-bpf: Renames in preparation for bpf_local_storage
-    
-A purely mechanical change to split the renaming from the actual
-generalization.
-
-[...]
-
-> 
-> Acked-by: Martin KaFai Lau <kafai@fb.com>
-> 
+--=20
+Thanks,
+Sekhar
