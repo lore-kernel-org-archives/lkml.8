@@ -2,69 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28755C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEBB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D338B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9OgGTTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgHRJRE (ORCPT
+        id S1726788AbgHRJRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:17:04 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48132 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726474AbgHRJRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:17:03 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B5F6BE8540D178E13F7;
-        Tue, 18 Aug 2020 17:17:00 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
- 17:16:49 +0800
-Subject: Re: [PATCH v2 0/2] ACPI/IORT: Code cleanups
-To:     Zenghui Yu <yuzenghui@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>
-CC:     <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
-References: <20200818063625.980-1-yuzenghui@huawei.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <12667629-5c3f-4606-ec27-72e5ef19f35a@huawei.com>
-Date:   Tue, 18 Aug 2020 17:16:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 18 Aug 2020 05:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgHRJRO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:17:14 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D3DC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:17:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 9so15570378wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:cc:subject:message-id:mime-version:content-disposition;
+        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
+        b=g9OgGTTcV/DXM6qez+st7dlpEcxogyEG4ViV8vAbxiou4UWZUTVZlGvQQnEsaXmK7C
+         9BtAUXQ0ufpOR8INAF8VnE9R6Yv/DN5qU4VeK7gTcRiiZxRKtRRy+GrskhhnlZEiTVy4
+         quFw1+DtoCBmh0yzghiBwfP2KyexcnOFlBSR6OcLmAqf8Wfao55RPRi3Pn2X+SrpyQd1
+         wA29DespuXyhBfIao7fGBCKqTvF4/RovqRxC2yUsaF/MYUZpDUUTtecWE+t9R2dFSanU
+         T4/918oP1D9wI7RNgfAWtXMQxj/k5xEjDPu3IfTJERJhkD2h3C7far8lDFqOIMIiwkF2
+         wVUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
+        b=msj3RSdB/qcPyBeQ89H49kHwM/aBn5Wothu7z2J62DZlKSSd3EtY+nI47CU9xCvN4v
+         q5mSVAS2WVy1wL4ZDyHK/DXHidXZzcKK+SdVDN+jBAR13mvsGOMGg+a8QcaJ/YHYoEZI
+         I4Y8Iv7aVVz5dgFi5M474ZsEBT7STF+PSRu//lFT36H2FPw6hRM35vckU45XFua00lhI
+         Wzw9b92zIz8NWswdQGPt47p+wTFjr+F2/dVtKdMWR190kFrGvXsWSMMdtCFv9WwciMwH
+         qL1W39npD80GQlr3/Wfkr7IiaK1HFh5FxKgDUMHBJnF3LMlwLx4wY+/2fcgJoy6+30oY
+         pWKQ==
+X-Gm-Message-State: AOAM531lZPN2INlFEGPEs3LZleu5dFYp4/0ZYB5c7/vVEewcszNJwZ9r
+        ET6hj+ckUaStVtndfsK70VU=
+X-Google-Smtp-Source: ABdhPJyYEBjemYYY66shh3k24o9Ej5PDwHQXqhemqLsfFbOHmDuOyo1Kt5S9D7qQU1rAMIolcBmj7g==
+X-Received: by 2002:a1c:540c:: with SMTP id i12mr17315460wmb.96.1597742233220;
+        Tue, 18 Aug 2020 02:17:13 -0700 (PDT)
+Received: from tsnow ([94.159.146.190])
+        by smtp.gmail.com with ESMTPSA id g25sm30855540wmh.35.2020.08.18.02.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 02:17:12 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:17:08 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] *** SUBJECT HERE ***
+Message-ID: <cover.1597742228.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818063625.980-1-yuzenghui@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/18 14:36, Zenghui Yu wrote:
-> * From v1 [1]:
->    - As pointed out by Hanjun, remove two now unused inline functions.
->      Compile tested with CONFIG_IOMMU_API is not selected.
-> 
-> [1] https://lore.kernel.org/r/20200817105946.1511-1-yuzenghui@huawei.com
-> 
-> Zenghui Yu (2):
->    ACPI/IORT: Drop the unused @ops of iort_add_device_replay()
->    ACPI/IORT: Remove the unused inline functions
-> 
->   drivers/acpi/arm64/iort.c | 10 ++--------
->   1 file changed, 2 insertions(+), 8 deletions(-)
+*** BLURB HERE ***
 
-Nice cleanup.
+Tomer Samara (4):
+  staging: android: Replace BUG_ON with WARN_ON
+  staging: android: Add error handling to ion_page_pool_shrink
+  staging: android: Convert BUG to WARN
+  staging: android: Add error handling to order_to_index callers
 
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
+ drivers/staging/android/ion/ion_page_pool.c   | 14 ++++++++++----
+ drivers/staging/android/ion/ion_system_heap.c | 16 +++++++++++++---
+ 2 files changed, 23 insertions(+), 7 deletions(-)
 
+-- 
+2.25.1
+
+/tmp/0001-staging-android-Replace-BUG_ON-with-WARN_ON.patch
+/tmp/0002-staging-android-Add-error-handling-to-ion_page_pool_.patch
+/tmp/0003-staging-android-Convert-BUG-to-WARN.patch
+/tmp/0004-staging-android-Add-error-handling-to-order_to_index.patch
