@@ -2,99 +2,180 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32715C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E472065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F204205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="F3TJolfs";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="S1ijLZW5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g2SmK++a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgHRQUA (ORCPT
+        id S1728103AbgHRQUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:20:00 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51336 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgHRQTj (ORCPT
+        Tue, 18 Aug 2020 12:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgHRQU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:19:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 5F2EA8EE1A9;
-        Tue, 18 Aug 2020 09:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597767575;
-        bh=L/MN+lxn8x8KGJbs1vAEkdW/rjO9wlNxW0FetUNgKJE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=F3TJolfs2dnkOc99Rj/5Zn8QU8AwiBtf/PoD+Ybd46WQYFKE47TMO4K9Rse9ySnha
-         K8EiUDemagYiEcnjDJ3wb7TRylgGNWzB4SBFLklBk+HUeu6VYP1lI7fBVPerHFKl2G
-         4AG081qyKmoSiPoq1FuBRwnepFJ2OsaN6DveGoOc=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5V37A5Z9zYZ5; Tue, 18 Aug 2020 09:19:34 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1EEAE8EE17F;
-        Tue, 18 Aug 2020 09:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597767574;
-        bh=L/MN+lxn8x8KGJbs1vAEkdW/rjO9wlNxW0FetUNgKJE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=S1ijLZW5ep+iwtdY2BSLm5T+ZmNajMO7m+g+9JVex4iRAXkSI2+oCoXpb2vIS3IKS
-         SC1rbcuo8t6pBK5PPcflRruDFKgZ7qdmGNInHRGVS68Dq7jZisFZrfRFusbJqEojj1
-         BioijcDNFNk01kzf/xCm0lQWStYSXsperJU1UIBc=
-Message-ID: <1597767571.3898.15.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     krzysztof.struczynski@huawei.com, linux-integrity@vger.kernel.org,
+        Tue, 18 Aug 2020 12:20:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9753FC061389;
+        Tue, 18 Aug 2020 09:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=4H0TL3UakH2JUbmlW0JzdQvhUAQHmi+ChGY1XsWrTIc=; b=g2SmK++anMxFszA+Wfz8OLiHIW
+        BnTZzqB/iU5WxQ0LtRKgQEXw1AT+3+z1BQ+Olf3CkyFupEPAurf8x+lP9ds1MOgjlTBVxz5HzjHkQ
+        5VB5ea5FYptKnQl28zwpRn+oIfbYt0EOiePQibnV3JvmqkSQObUuJi4almAAyfPfVK82PSLeGKZh2
+        xA9k8mNDARVSxz61nzCXG96+LAYHwdIOYDIQQV539xKDgxlWESMMtBVYcd7p25rTealbx8HVvDMw7
+        ToZG3P7rfM1/O+B0WKyfuCmNSXRtNfphrLihadmFud3p2S5EhvbCZyIQQK/GI2n/fBqt75pCBiNSs
+        /HsOQA0w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k84LW-0007XQ-Fj; Tue, 18 Aug 2020 16:20:23 +0000
+Subject: Re: Kernel build system broken in 5.8?
+To:     Martin Burnicki <martin.burnicki@meinberg.de>,
         linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org
-Cc:     zohar@linux.ibm.com, stefanb@linux.vnet.ibm.com,
-        sunyuqiong1988@gmail.com, mkayaalp@cs.binghamton.edu,
-        dmitry.kasatkin@gmail.com, serge@hallyn.com, jmorris@namei.org,
-        christian@brauner.io, silviu.vlasceanu@huawei.com,
-        roberto.sassu@huawei.com
-Date:   Tue, 18 Aug 2020 09:19:31 -0700
-In-Reply-To: <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
-References: <N> <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+References: <1c4d1da4-36a9-c83b-1a8a-95334aa62ce3@meinberg.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <124fa2c7-ce60-2739-7208-e5e325d66a40@infradead.org>
+Date:   Tue, 18 Aug 2020 09:20:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1c4d1da4-36a9-c83b-1a8a-95334aa62ce3@meinberg.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 17:20 +0200, krzysztof.struczynski@huawei.com
-wrote:
-> The measurement list remains global, with the assumption that there
-> is only one TPM in the system. Each IMA namespace has a unique ID,
-> that allows to track measurements per IMA namespace. Processes in one
-> namespace, have access only to the measurements from that namespace.
-> The exception is made for the initial IMA namespace, whose processes
-> have access to all entries.
+[adding kbuild list and maintainer]
 
-So I think this can work in the use case where the system owner is
-responsible for doing the logging and attestation and the tenants just
-trust the owner without requiring an attestation.  However, in a multi-
-tenant system you need a way for the attestation to be per-container
-(because the combined list of who executed what would be a security
-leak between tenants).  Since we can't virtualise the PCRs without
-introducing a vtpm this is going to require a vtpm infrastructure like
-that used for virtual machines and then we can do IMA logging per
-container.
+On 8/18/20 9:09 AM, Martin Burnicki wrote:
+> Hi,
+> 
+> I'm the maintainer of a driver package for some PCI cards (GPS receiver
+> cards, etc.). A read-only git repo of the driver package can be found here:
+> https://git.meinbergglobal.com/mbgtools-lx.git
+> 
+> The kernel driver from that package is compiled as out-of-tree module,
+> and runs fine on kernels 2.6, 3.x, 4.x, and 5.x up to 5.7, actually
+> 5.7.15 on Ubuntu.
+> 
+> However, if I try this on kernel 5.8.1, I get strange errors related to
+> autoconf.h, which make it impossible to compile or install the kernel
+> module.
+> 
+> I usually build the kernel module as standard user, and only install the
+> new module as root, e.g.:
+> 
+>   git checkout devel   # The 'devel' branch is appropriate for testing
+>   cd mbgclock          # the subdirectory of the kernel module
+>   git clean -fd; make  # or make V=1 for verbose output
+>   sudo make install
+> 
+> Also, I was under the impression that the kernel source tree should be
+> read-only, and kept clean, but this doesn't seem to be the case anymore.
+> 
+> 
+> For example:
+> 
+> On Ubuntu 19.10 with kernel 5.8.1-050801-generic from
+> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.1/
+> 
+> 'make' completes without error, even if run as normal user without write
+> permissions in the kernel source tree.
+> 
+> 'sudo insmod ./mbgclock.ko' loads the module successfully, and the PCI
+> card can be accessed as usually, e.g. using the 'mbgstatus' program, so
+> the compiled kernel module  is OK.
+> 
+> BUT: Once I run 'sudo make install', which calls the kernel build system
+> to make 'modules_install', I immediately get an error:
+> 
+> -------------------------------------------------------------------------
+> Calling kernel build system to make "modules_install"
+> make[1]: Entering directory '/usr/src/linux-headers-5.8.1-050801-generic'
+> 
+>   ERROR: Kernel configuration is invalid.
+>          include/generated/autoconf.h or include/config/auto.conf are
+> missing.
+>          Run 'make oldconfig && make prepare' on kernel src to fix it.
+> 
+> make[1]: *** [Makefile:719: include/config/auto.conf] Error 1
+> make[1]: Leaving directory '/usr/src/linux-headers-5.8.1-050801-generic'
+> make: *** [/home/martin/projects/mbgtools-lx/mbgclock/../Makefile:834:
+> install_module] Error 2
+> -------------------------------------------------------------------------
+> 
+> And once this has happened, this problem persists, i.e., if I run the
+> same commands
+> 
+>   git clean -fd; make
+> 
+> once more, as normal user as mentioned above, I get the error above
+> every time.
+> 
+> Also, If I initially try to build the kernel kernel module as root, with
+> 'sudo':
+> 
+>   git clean -fd; sudo make
+> 
+> I immediately get this error, and the module is not built. Only after I
+> have re-installed the kernel headers package, I can compile the module
+> again.
+> 
+> 
+> A diff between the kernel header files before and after the kernel build
+> system has been messed up shows that the following files have changed:
+> 
+> include/generated/autoconf.h
+> scripts/basic/.fixdep.cmd
+> scripts/basic/fixdep
+> scripts/kconfig/.conf.o.cmd
+> scripts/kconfig/.confdata.o.cmd
+> scripts/kconfig/.expr.o.cmd
+> scripts/kconfig/.lexer.lex.c.cmd
+> scripts/kconfig/conf.o
+> scripts/kconfig/confdata.o
+> scripts/kconfig/expr.o
+> scripts/kconfig/lexer.lex.c
+> scripts/kconfig/parser.tab.c
+> 
+> Specifically, autoconf.h has been deleted even though some script
+> obviously still requires that the file is available.
+> 
+> 
+> With openSUSE Leap 15.2 and kernel 5.8.1 from
+> https://download.opensuse.org/repositories/Kernel:/stable/standard/
+> 
+> I've encountered similar problems because include/generated/autoconf.h
+> is not even available after installation of the kernel headers package.
+> 
+> Only on Arch Linux with kernel 5.8.1-arch1-1 I can build and install the
+> module as root or standard user, as it was possible with earlier kernel
+> versions.
+> 
+> Can someone please shed some light on what's going on here?
+> 
+> 
+> Thanks,
+> 
+> Martin
+> 
 
-I don't think the above has to be in your first patch set, we just have
-to have an idea of how it could be done to show that nothing in this
-patch set precludes a follow on from doing this.
 
-James
-
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
