@@ -2,192 +2,296 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3895C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D983207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597760181;
-	bh=IMWe0uEfWphXmdXBrS86ktgzLDd1wXmECJxjWh3Nbo8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GpIr1ORXUjGP/jHTYn04aiUNewZZJ2851wGOoX034Wq283gDGeXWAkZCZDLcrfbOi
-	 AT7l62oo/5gzAzyUQcisJj7ZqSJZcEZLJuT2rn+cQkUtR5QcS93Zm7APv3JzgmSrZG
-	 EqdjDBf6yn+Xff4qiMHgS0seNXBcTFATY+EHmT4c=
+	by mail.kernel.org (Postfix) with ESMTP id 0BE8A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lpfGBqZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgHROQT (ORCPT
+        id S1727103AbgHROQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgHROQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:16:15 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F7D20786;
-        Tue, 18 Aug 2020 14:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597760172;
-        bh=IMWe0uEfWphXmdXBrS86ktgzLDd1wXmECJxjWh3Nbo8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LOEB8BvlwPsxT0KMHs+tqeqV7zbJtoHgcBTgZ+8IJhT+2BYuPOPjEYKZJgJ0/iSed
-         xePxCrxKM3sPMLM9VrIdwT8ed/0huYmu1K+pbIjZA+U8rLDxGliw1hPUwTj76rN7dh
-         uq/IsuqIyFZiAZbDbOqQ13mwiVJK6fuUnJKnQ8sc=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: [PATCH v4 0/6] mm: introduce memfd_secret system call to create "secret" memory areas
-Date:   Tue, 18 Aug 2020 17:15:48 +0300
-Message-Id: <20200818141554.13945-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 18 Aug 2020 10:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726570AbgHROM0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:12:26 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF03C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=AwvM0zlXDZu+2GkEyaiWz2zndTWZII374Hua899bqqw=; b=lpfGBqZ16nioA2YSQ3wJ/a/vil
+        YH+6g2hLVxMsMS7ZO0cUpbNYLGnWyLkAXDPtaRnbO6CoEdrF0tbv+eC85IIHr8TJBUJW+NcgBczWo
+        XILNIFrCrJ7Mn7UsHn15RTt0Da4g1PbTMQiBYJKSlB9wgcCtquXYZxkDqBohLu+eLMEnIZQhqgZ4a
+        Xonp5rb39APGqNU40pQg2qFyQ6pUK/zllhmRqHpunw9BQevAlozaOPkhoBbaFVBPjyeC5OE3Cg6C7
+        0BgMkQAgdfEAY4xVieELx3ISkQ7S4wbtNNQ1n9I1H8qfLkSO5PL06LrFOzf/Zbv9L6b5bkQ0pE2Eu
+        YBoU3lFA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k82LL-0000oL-8X; Tue, 18 Aug 2020 14:12:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B1E60307985;
+        Tue, 18 Aug 2020 16:12:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id E43A923D42C10; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
+Message-ID: <20200818135805.220737930@infradead.org>
+User-Agent: quilt/0.66
+Date:   Tue, 18 Aug 2020 15:57:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
+Subject: [PATCH v7 16/18] static_call: Allow early init
+References: <20200818135735.948368560@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+In order to use static_call() to wire up x86_pmu, we need to
+initialize earlier, specifically before memory allocation works; copy
+some of the tricks from jump_label to enable this.
 
-Hi,
+Primarily we overload key->next to store a sites pointer when there
+are no modules, this avoids having to use kmalloc() to initialize the
+sites and allows us to run much earlier.
 
-This is an implementation of "secret" mappings backed by a file descriptor. 
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ arch/x86/kernel/setup.c       |    2 +
+ arch/x86/kernel/static_call.c |    5 ++-
+ include/linux/static_call.h   |   15 +++++++--
+ kernel/static_call.c          |   70 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 85 insertions(+), 7 deletions(-)
 
-v4 changes:
-* rebase on v5.9-rc1
-* Do not redefine PMD_PAGE_ORDER in fs/dax.c, thanks Kirill
-* Make secret mappings exclusive by default and only require flags to
-  memfd_secret() system call for uncached mappings, thanks again Kirill :)
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -19,6 +19,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+ #include <linux/usb/xhci-dbgp.h>
++#include <linux/static_call.h>
+ 
+ #include <uapi/linux/mount.h>
+ 
+@@ -849,6 +850,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_cpu_init();
+ 	arch_init_ideal_nops();
+ 	jump_label_init();
++	static_call_init();
+ 	early_ioremap_init();
+ 
+ 	setup_olpc_ofw_pgd();
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -11,7 +11,7 @@ enum insn_type {
+ 	RET = 3,  /* tramp / site cond-tail-call */
+ };
+ 
+-static void __static_call_transform(void *insn, enum insn_type type, void *func)
++static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
+ {
+ 	int size = CALL_INSN_SIZE;
+ 	const void *code;
+@@ -38,6 +38,9 @@ static void __static_call_transform(void
+ 	if (memcmp(insn, code, size) == 0)
+ 		return;
+ 
++	if (unlikely(system_state == SYSTEM_BOOTING))
++		return text_poke_early(insn, code, size);
++
+ 	text_poke_bp(insn, code, size, NULL);
+ }
+ 
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -136,6 +136,8 @@ extern void arch_static_call_transform(v
+ 
+ #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
+ 
++extern void __init static_call_init(void);
++
+ struct static_call_mod {
+ 	struct static_call_mod *next;
+ 	struct module *mod; /* for vmlinux, mod == NULL */
+@@ -144,7 +146,12 @@ struct static_call_mod {
+ 
+ struct static_call_key {
+ 	void *func;
+-	struct static_call_mod *mods;
++	union {
++		/* bit 0: 0 = mods, 1 = sites */
++		unsigned long type;
++		struct static_call_mod *mods;
++		struct static_call_site *sites;
++	};
+ };
+ 
+ extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
+@@ -155,7 +162,7 @@ extern int static_call_text_reserved(voi
+ 	DECLARE_STATIC_CALL(name, _func);				\
+ 	struct static_call_key STATIC_CALL_KEY(name) = {		\
+ 		.func = _func,						\
+-		.mods = NULL,						\
++		.type = 1,						\
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+@@ -180,6 +187,8 @@ extern int static_call_text_reserved(voi
+ 
+ #elif defined(CONFIG_HAVE_STATIC_CALL)
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+@@ -225,6 +234,8 @@ static inline int static_call_text_reser
+ 
+ #else /* Generic implementation */
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -94,10 +94,31 @@ static inline void static_call_sort_entr
+ 	     static_call_site_cmp, static_call_site_swap);
+ }
+ 
++static inline bool static_call_key_has_mods(struct static_call_key *key)
++{
++	return !(key->type & 1);
++}
++
++static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
++{
++	if (!static_call_key_has_mods(key))
++		return NULL;
++
++	return key->mods;
++}
++
++static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
++{
++	if (static_call_key_has_mods(key))
++		return NULL;
++
++	return (struct static_call_site *)(key->type & ~1);
++}
++
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
+ 	struct static_call_site *site, *stop;
+-	struct static_call_mod *site_mod;
++	struct static_call_mod *site_mod, first;
+ 
+ 	cpus_read_lock();
+ 	static_call_lock();
+@@ -116,13 +137,22 @@ void __static_call_update(struct static_
+ 	if (WARN_ON_ONCE(!static_call_initialized))
+ 		goto done;
+ 
+-	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
++	first = (struct static_call_mod){
++		.next = static_call_key_next(key),
++		.mod = NULL,
++		.sites = static_call_key_sites(key),
++	};
++
++	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
+ 		struct module *mod = site_mod->mod;
+ 
+ 		if (!site_mod->sites) {
+ 			/*
+ 			 * This can happen if the static call key is defined in
+ 			 * a module which doesn't use it.
++			 *
++			 * It also happens in the has_mods case, where the
++			 * 'first' entry has no sites associated with it.
+ 			 */
+ 			continue;
+ 		}
+@@ -192,16 +222,48 @@ static int __static_call_init(struct mod
+ 		if (key != prev_key) {
+ 			prev_key = key;
+ 
++			/*
++			 * For vmlinux (!mod) avoid the allocation by storing
++			 * the sites pointer in the key itself. Also see
++			 * __static_call_update()'s @first.
++			 *
++			 * This allows architectures (eg. x86) to call
++			 * static_call_init() before memory allocation works.
++			 */
++			if (!mod) {
++				key->sites = site;
++				key->type |= 1;
++				goto do_transform;
++			}
++
+ 			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+ 			if (!site_mod)
+ 				return -ENOMEM;
+ 
++			/*
++			 * When the key has a direct sites pointer, extract
++			 * that into an explicit struct static_call_mod, so we
++			 * can have a list of modules.
++			 */
++			if (static_call_key_sites(key)) {
++				site_mod->mod = NULL;
++				site_mod->next = NULL;
++				site_mod->sites = static_call_key_sites(key);
++
++				key->mods = site_mod;
++
++				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
++				if (!site_mod)
++					return -ENOMEM;
++			}
++
+ 			site_mod->mod = mod;
+ 			site_mod->sites = site;
+-			site_mod->next = key->mods;
++			site_mod->next = static_call_key_next(key);
+ 			key->mods = site_mod;
+ 		}
+ 
++do_transform:
+ 		arch_static_call_transform(site_addr, NULL, key->func,
+ 				static_call_is_tail(site));
+ 	}
+@@ -348,7 +410,7 @@ int static_call_text_reserved(void *star
+ 	return __static_call_mod_text_reserved(start, end);
+ }
+ 
+-static void __init static_call_init(void)
++void __init static_call_init(void)
+ {
+ 	int ret;
+ 
 
-v3 changes:
-* Squash kernel-parameters.txt update into the commit that added the
-  command line option.
-* Make uncached mode explicitly selectable by architectures. For now enable
-  it only on x86.
-
-v2 changes:
-* Follow Michael's suggestion and name the new system call 'memfd_secret'
-* Add kernel-parameters documentation about the boot option
-* Fix i386-tinyconfig regression reported by the kbuild bot.
-  CONFIG_SECRETMEM now depends on !EMBEDDED to disable it on small systems
-  from one side and still make it available unconditionally on
-  architectures that support SET_DIRECT_MAP.
-
-
-The file descriptor backing secret memory mappings is created using a
-dedicated memfd_secret system call The desired protection mode for the
-memory is configured using flags parameter of the system call. The mmap()
-of the file descriptor created with memfd_secret() will create a "secret"
-memory mapping. The pages in that mapping will be marked as not present in
-the direct map and will have desired protection bits set in the user page
-table. For instance, current implementation allows uncached mappings.
-
-Although normally Linux userspace mappings are protected from other users, 
-such secret mappings are useful for environments where a hostile tenant is
-trying to trick the kernel into giving them access to other tenants
-mappings.
-
-Additionally, the secret mappings may be used as a mean to protect guest
-memory in a virtual machine host.
-
-For demonstration of secret memory usage we've created a userspace library
-[1] that does two things: the first is act as a preloader for openssl to
-redirect all the OPENSSL_malloc calls to secret memory meaning any secret
-keys get automatically protected this way and the other thing it does is
-expose the API to the user who needs it. We anticipate that a lot of the
-use cases would be like the openssl one: many toolkits that deal with
-secret keys already have special handling for the memory to try to give
-them greater protection, so this would simply be pluggable into the
-toolkits without any need for user application modification.
-
-I've hesitated whether to continue to use new flags to memfd_create() or to
-add a new system call and I've decided to use a new system call after I've
-started to look into man pages update. There would have been two completely
-independent descriptions and I think it would have been very confusing.
-
-Hiding secret memory mappings behind an anonymous file allows (ab)use of
-the page cache for tracking pages allocated for the "secret" mappings as
-well as using address_space_operations for e.g. page migration callbacks.
-
-The anonymous file may be also used implicitly, like hugetlb files, to
-implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
-ABIs in the future.
-
-As the fragmentation of the direct map was one of the major concerns raised
-during the previous postings, I've added an amortizing cache of PMD-size
-pages to each file descriptor and an ability to reserve large chunks of the
-physical memory at boot time and then use this memory as an allocation pool
-for the secret memory areas.
-
-v3: https://lore.kernel.org/lkml/20200804095035.18778-1-rppt@kernel.org
-v2: https://lore.kernel.org/lkml/20200727162935.31714-1-rppt@kernel.org
-v1: https://lore.kernel.org/lkml/20200720092435.17469-1-rppt@kernel.org/
-rfc-v2: https://lore.kernel.org/lkml/20200706172051.19465-1-rppt@kernel.org/
-rfc-v1: https://lore.kernel.org/lkml/20200130162340.GA14232@rapoport-lnx/
-
-Mike Rapoport (6):
-  mm: add definition of PMD_PAGE_ORDER
-  mmap: make mlock_future_check() global
-  mm: introduce memfd_secret system call to create "secret" memory areas
-  arch, mm: wire up memfd_secret system call were relevant
-  mm: secretmem: use PMD-size pages to amortize direct map fragmentation
-  mm: secretmem: add ability to reserve memory at boot
-
- arch/Kconfig                           |   7 +
- arch/arm64/include/asm/unistd.h        |   2 +-
- arch/arm64/include/asm/unistd32.h      |   2 +
- arch/arm64/include/uapi/asm/unistd.h   |   1 +
- arch/riscv/include/asm/unistd.h        |   1 +
- arch/x86/Kconfig                       |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl |   1 +
- fs/dax.c                               |  11 +-
- include/linux/pgtable.h                |   3 +
- include/linux/syscalls.h               |   1 +
- include/uapi/asm-generic/unistd.h      |   7 +-
- include/uapi/linux/magic.h             |   1 +
- include/uapi/linux/secretmem.h         |   8 +
- kernel/sys_ni.c                        |   2 +
- mm/Kconfig                             |   4 +
- mm/Makefile                            |   1 +
- mm/internal.h                          |   3 +
- mm/mmap.c                              |   5 +-
- mm/secretmem.c                         | 451 +++++++++++++++++++++++++
- 20 files changed, 501 insertions(+), 12 deletions(-)
- create mode 100644 include/uapi/linux/secretmem.h
- create mode 100644 mm/secretmem.c
-
--- 
-2.26.2
 
