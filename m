@@ -2,104 +2,98 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81342C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F12C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56D75206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5750A206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GFlw44Sp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgHRN4b convert rfc822-to-8bit (ORCPT
+        id S1726904AbgHRN4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46422 "EHLO
+        Tue, 18 Aug 2020 09:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHRN4T (ORCPT
+        with ESMTP id S1726739AbgHRN4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:56:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD587C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:56:18 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k825w-0001mv-Mx; Tue, 18 Aug 2020 15:56:08 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k825w-0001Hd-BR; Tue, 18 Aug 2020 15:56:08 +0200
-Message-ID: <94002fe8f460de93ab3d9ba7e5bae6ee2c1f6b64.camel@pengutronix.de>
-Subject: Re: [PATCH 2/7] media: coda: no need to check return value of
- debugfs_create functions
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 18 Aug 2020 15:56:08 +0200
-In-Reply-To: <20200818133608.462514-2-gregkh@linuxfoundation.org>
-References: <20200818133608.462514-1-gregkh@linuxfoundation.org>
-         <20200818133608.462514-2-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 18 Aug 2020 09:56:35 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ABBC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:56:35 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id r197so4316802vkf.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SQHECpOUmUIUn/BlEGYsCVfl8NoL6sE1Zq5USMNyPsA=;
+        b=GFlw44Sp9NvIROQShqLUaqn4pvZMQJmHC9t78x2jciAp3VCTruRs3JKFPbGAdavqdA
+         jjRu4+46WRShUl2tgpcae4KqfCCmG8mTS2YQJgacVlzlgzqWEW+Y+2RPD4A4lrMKKttT
+         yOKhXnEcWWI+FwdcvX4J7AZCbJaepBlthLTbI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SQHECpOUmUIUn/BlEGYsCVfl8NoL6sE1Zq5USMNyPsA=;
+        b=aLUvHVbbt3ke8BygYpOMBJkoLiBgek0+I/Vu6NtIKtEIS/jyc9Wilok7e6Ecvlb2r2
+         FnthTrh+vmrUcNc2PIaLh0sEsx14udO2DlSQybXUEQ2cnUDHLXN5Uu8zk3Q8E9APEsmu
+         BNhfoM12i+nTT88PjzUzhNBnlsPkdw6pndaFpDSDjRMAkSPJjuBHzBElIesVyPXN+G3R
+         P4pjIEfhTVIJJQImUvfHRTD3/5wZYu3+Cr11Aigs3zwomWOtA+NqxEx6OHpLex5uaBnm
+         /mxdj9nVBZhAN9eqNu9omu3sWSVr6MHAtl5R0MKvm9TGI3C2LUXhR3q7tCHrGOgoYPO8
+         bivg==
+X-Gm-Message-State: AOAM530QNq/aS9/GUwjAAF/1/K9ynATe1I1FzUWhlfKpZdBiWuAAWv0y
+        rCQ19YcWA4iu3oUFArB/Oq4G3O8drvQHhw==
+X-Google-Smtp-Source: ABdhPJzuO26kID1fY/wM4Cc387lawJ+V7hJZwXvOy7omXdexvkKiXyLcbCEc2ltUxxI/tJ66AC/SkA==
+X-Received: by 2002:a1f:4646:: with SMTP id t67mr596496vka.75.1597758994355;
+        Tue, 18 Aug 2020 06:56:34 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id n123sm4157854vkf.41.2020.08.18.06.56.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 06:56:33 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id a1so10143388vsp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:56:33 -0700 (PDT)
+X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr11637826vsg.6.1597758992748;
+ Tue, 18 Aug 2020 06:56:32 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com> <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
+In-Reply-To: <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 18 Aug 2020 06:56:13 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VJB=6PxaG6LZsjQdWxKbVonnm9WTHwqCeoXPMD=uWjfw@mail.gmail.com>
+Message-ID: <CAD=FV=VJB=6PxaG6LZsjQdWxKbVonnm9WTHwqCeoXPMD=uWjfw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 15:36 +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
+Hi,
+
+On Tue, Aug 18, 2020 at 12:38 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> There is one LLCC logical bank(LLCC0) on SC7180 SoC and the size of the
+> LLCC0 base
+> is 0x50000(320KB) not 2MB, so correct the size and fix copy paste
+> mistake
+> carried over from SDM845.
 
-Thank you,
+Sounds fine, thanks!
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
-
-> ---
->  drivers/media/platform/coda/coda-common.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-> index 3ab3d976d8ca..9020be29d8f2 100644
-> --- a/drivers/media/platform/coda/coda-common.c
-> +++ b/drivers/media/platform/coda/coda-common.c
-> @@ -1937,9 +1937,6 @@ int coda_alloc_aux_buf(struct coda_dev *dev, struct coda_aux_buf *buf,
->  		buf->blob.size = size;
->  		buf->dentry = debugfs_create_blob(name, 0644, parent,
->  						  &buf->blob);
-> -		if (!buf->dentry)
-> -			dev_warn(dev->dev,
-> -				 "failed to create debugfs entry %s\n", name);
->  	}
->  
->  	return 0;
-> @@ -3211,8 +3208,6 @@ static int coda_probe(struct platform_device *pdev)
->  	ida_init(&dev->ida);
->  
->  	dev->debugfs_root = debugfs_create_dir("coda", NULL);
-> -	if (!dev->debugfs_root)
-> -		dev_warn(&pdev->dev, "failed to create debugfs root\n");
->  
->  	/* allocate auxiliary per-device buffers for the BIT processor */
->  	if (dev->devtype->product == CODA_DX6) {
-
+-Doug
