@@ -2,165 +2,198 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96876C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F994C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74961205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Qrj9DcFV";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="D+8/Cr58"
+	by mail.kernel.org (Postfix) with ESMTP id 36FB120786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597784639;
+	bh=HPr9VORaCJTq4ADIyzNh0P8W6nvrS9HdzdYwLMApPxQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=TQGgpoa577m2TVlvnvOdySMYSp4jrfqGrJNEOU0P+4yw0iPiqiSaqpVthsb6zCenz
+	 sKXffjXUexDPM7oagieiYmvI8dQXTqf+VN3TbXwUYFlhfQlfa2hd1/mF76uNGEC1bh
+	 sIv7evqCZIQyNb+6E1TTZoa0ySO7uES9Gum5WmA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHRVAu (ORCPT
+        id S1726919AbgHRVD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:00:50 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:56308 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726790AbgHRVAs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 17:00:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E76FB8EE1A9;
-        Tue, 18 Aug 2020 14:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597784444;
-        bh=tbsUcv475+YCZw1GTj2PQ6LvX4vSQZaYxn4zaS+R/4c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Qrj9DcFVwfv3LQ3ogFCLogZ3MFRIrVuZOGzCtGnuXEksHbYpCf4MOzhnjK48hnLeJ
-         WBJIwZcuhQRmEISK3OYmfO8zwCeV5WGheC1BlogkcVwtiUSnVqiZDKUeoZ3ftkI0DB
-         8C1HptXhFOQveW6XttTml0y/WCVpA+LP1XIfDIQU=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yxTvzG0VvDFx; Tue, 18 Aug 2020 14:00:43 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        Tue, 18 Aug 2020 17:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgHRVD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 17:03:56 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3908A8EE17F;
-        Tue, 18 Aug 2020 14:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597784443;
-        bh=tbsUcv475+YCZw1GTj2PQ6LvX4vSQZaYxn4zaS+R/4c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=D+8/Cr58B/oiGrsp2scAFTKzPpwuRrxI0nzk9/FGC1mH6aV1pe7T9eKYXHzydxf7e
-         uxoPDcWpTJmWe7T3PSHxKLwqMdOy0OFGWtWHPKks90yqeWzrewWrtu8v+gZ22+Y9Xp
-         3BintrUiXfYlFbDYGCbt6iSJyrOyqS5V85WlObHk=
-Message-ID: <1597784438.3978.6.camel@HansenPartnership.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Allen Pais <allen.cryptic@gmail.com>,
-        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        3chas3@gmail.com, stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        daniel@ffwll.ch, sre@kernel.org, kys@microsoft.com, deller@gmx.de,
-        dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        maximlevitsky@gmail.com, oakad@yahoo.com, ulf.hansson@linaro.org,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, davem@davemloft.net, kuba@kernel.org,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Date:   Tue, 18 Aug 2020 14:00:38 -0700
-In-Reply-To: <202008181309.FD3940A2D5@keescook>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
-         <20200817091617.28119-2-allen.cryptic@gmail.com>
-         <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
-         <202008171228.29E6B3BB@keescook>
-         <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
-         <202008171246.80287CDCA@keescook>
-         <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
-         <1597780833.3978.3.camel@HansenPartnership.com>
-         <202008181309.FD3940A2D5@keescook>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 40935205CB;
+        Tue, 18 Aug 2020 21:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597784635;
+        bh=HPr9VORaCJTq4ADIyzNh0P8W6nvrS9HdzdYwLMApPxQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=KY9Y7Q//gHTdu/nCTRm12otNIzpXnWe7WOs5r0rBgXhzavzNXdoW1SAxyM2WXltQ6
+         2bL2HZajS0Nos2oTvrg0Ht58bBTdcA6IctVu1XLfH5cYve6pYfNYl/uZTUpitnIIyB
+         RqjuJnhRUP9hyJ3p6JIL7QlFzOwE2O3Lt9ZczcB4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1CCA535228F5; Tue, 18 Aug 2020 14:03:55 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 14:03:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, qiang.zhang@windriver.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
+Message-ID: <20200818210355.GM27891@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200814064557.17365-1-qiang.zhang@windriver.com>
+ <20200814185124.GA2113@pc636>
+ <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+ <20200818171807.GI27891@paulmck-ThinkPad-P72>
+ <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 13:10 -0700, Kees Cook wrote:
-> On Tue, Aug 18, 2020 at 01:00:33PM -0700, James Bottomley wrote:
-> > On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
-> > > On 8/17/20 12:48 PM, Kees Cook wrote:
-> > > > On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
-> > > > > On 8/17/20 12:29 PM, Kees Cook wrote:
-> > > > > > On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
-> > > > > > > On 8/17/20 2:15 AM, Allen Pais wrote:
-> > > > > > > > From: Allen Pais <allen.lkml@gmail.com>
-> > > > > > > > 
-> > > > > > > > In preparation for unconditionally passing the
-> > > > > > > > struct tasklet_struct pointer to all tasklet
-> > > > > > > > callbacks, switch to using the new tasklet_setup()
-> > > > > > > > and from_tasklet() to pass the tasklet pointer
-> > > > > > > > explicitly.
-> > > > > > > 
-> > > > > > > Who came up with the idea to add a macro 'from_tasklet'
-> > > > > > > that
-> > > > > > > is just container_of? container_of in the code would be
-> > > > > > > _much_ more readable, and not leave anyone guessing wtf
-> > > > > > > from_tasklet is doing.
-> > > > > > > 
-> > > > > > > I'd fix that up now before everything else goes in...
-> > > > > > 
-> > > > > > As I mentioned in the other thread, I think this makes
-> > > > > > things
-> > > > > > much more readable. It's the same thing that the
-> > > > > > timer_struct
-> > > > > > conversion did (added a container_of wrapper) to avoid the
-> > > > > > ever-repeating use of typeof(), long lines, etc.
-> > > > > 
-> > > > > But then it should use a generic name, instead of each sub-
-> > > > > system 
-> > > > > using some random name that makes people look up exactly what
-> > > > > it
-> > > > > does. I'm not huge fan of the container_of() redundancy, but
-> > > > > adding private variants of this doesn't seem like the best
-> > > > > way
-> > > > > forward. Let's have a generic helper that does this, and use
-> > > > > it
-> > > > > everywhere.
-> > > > 
-> > > > I'm open to suggestions, but as things stand, these kinds of
-> > > > treewide
-> > > 
-> > > On naming? Implementation is just as it stands, from_tasklet() is
-> > > totally generic which is why I objected to it. from_member()? Not
-> > > great with naming... But I can see this going further and then
-> > > we'll
-> > > suddenly have tons of these. It's not good for readability.
-> > 
-> > Since both threads seem to have petered out, let me suggest in
-> > kernel.h:
-> > 
-> > #define cast_out(ptr, container, member) \
-> > 	container_of(ptr, typeof(*container), member)
-> > 
-> > It does what you want, the argument order is the same as
-> > container_of with the only difference being you name the containing
-> > structure instead of having to specify its type.
+On Tue, Aug 18, 2020 at 03:00:35PM -0400, Joel Fernandes wrote:
+> On Tue, Aug 18, 2020 at 1:18 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Mon, Aug 17, 2020 at 06:03:54PM -0400, Joel Fernandes wrote:
+> > > On Fri, Aug 14, 2020 at 2:51 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+> > > >
+> > > > > From: Zqiang <qiang.zhang@windriver.com>
+> > > > >
+> > > > > Due to cpu hotplug. some cpu may be offline after call "kfree_call_rcu"
+> > > > > func, if the shrinker is triggered at this time, we should drain each
+> > > > > possible cpu "krcp".
+> > > > >
+> > > > > Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+> > > > > ---
+> > > > >  kernel/rcu/tree.c | 6 +++---
+> > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > index 8ce77d9ac716..619ccbb3fe4b 100644
+> > > > > --- a/kernel/rcu/tree.c
+> > > > > +++ b/kernel/rcu/tree.c
+> > > > > @@ -3443,7 +3443,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+> > > > >       unsigned long count = 0;
+> > > > >
+> > > > >       /* Snapshot count of all CPUs */
+> > > > > -     for_each_online_cpu(cpu) {
+> > > > > +     for_each_possible_cpu(cpu) {
+> > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > >
+> > > > >               count += READ_ONCE(krcp->count);
+> > > > > @@ -3458,7 +3458,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > > > >       int cpu, freed = 0;
+> > > > >       unsigned long flags;
+> > > > >
+> > > > > -     for_each_online_cpu(cpu) {
+> > > > > +     for_each_possible_cpu(cpu) {
+> > > > >               int count;
+> > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > >
+> > > > > @@ -3491,7 +3491,7 @@ void __init kfree_rcu_scheduler_running(void)
+> > > > >       int cpu;
+> > > > >       unsigned long flags;
+> > > > >
+> > > > > -     for_each_online_cpu(cpu) {
+> > > > > +     for_each_possible_cpu(cpu) {
+> > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > >
+> > > > >               raw_spin_lock_irqsave(&krcp->lock, flags);
+> > > > >
+> > > > I agree that it can happen.
+> > > >
+> > > > Joel, what is your view?
+> > >
+> > > Yes I also think it is possible. The patch LGTM. Another fix could be
+> > > to drain the caches in the CPU offline path and save the memory. But
+> > > then it will take hit during __get_free_page(). If CPU
+> > > offlining/online is not frequent, then it will save the lost memory.
+> > >
+> > > I wonder how other per-cpu caches in the kernel work in such scenarios.
+> > >
+> > > Thoughts?
+> >
+> > Do I count this as an ack or a review?  If not, what precisely would
+> > you like the submitter to do differently?
 > 
-> I like this! Shall I send this to Linus to see if this can land in
-> -rc2 for use going forward?
+> Hi Paul,
+> The patch is correct and is definitely an improvement. I was thinking
+> about whether we should always do what the patch is doing when
+> offlining CPUs to save memory but now I feel that may not be that much
+> of a win to justify more complexity.
+> 
+> You can take it with my ack:
+> 
+> Acked-by: Joel Fernandes <joel@joelfernandes.org>
 
-Sure ... he's probably been lurking on this thread anyway ... it's
-about time he got off his arse^Wthe fence and made an executive
-decision ...
+Thank you all!  I wordsmithed a bit as shown below, so please let
+me know if I messed anything up.
 
-James
+							Thanx, Paul
 
+------------------------------------------------------------------------
+
+commit fe5d89cc025b3efe682cac122bc4d39f4722821e
+Author: Zqiang <qiang.zhang@windriver.com>
+Date:   Fri Aug 14 14:45:57 2020 +0800
+
+    rcu: Shrink each possible cpu krcp
+    
+    CPUs can go offline shortly after kfree_call_rcu() has been invoked,
+    which can leave memory stranded until those CPUs come back online.
+    This commit therefore drains the kcrp of each CPU, not just the
+    ones that happen to be online.
+    
+    Acked-by: Joel Fernandes <joel@joelfernandes.org>
+    Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 02ca8e5..d9f90f6 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3500,7 +3500,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long count = 0;
+ 
+ 	/* Snapshot count of all CPUs */
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		count += READ_ONCE(krcp->count);
+@@ -3515,7 +3515,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	int cpu, freed = 0;
+ 	unsigned long flags;
+ 
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		int count;
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+@@ -3548,7 +3548,7 @@ void __init kfree_rcu_scheduler_running(void)
+ 	int cpu;
+ 	unsigned long flags;
+ 
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		raw_spin_lock_irqsave(&krcp->lock, flags);
