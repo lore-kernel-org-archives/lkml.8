@@ -2,140 +2,80 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F13C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBEB20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:09:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiEOFluj"
+	by mail.kernel.org (Postfix) with ESMTP id 51D0A207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597759789;
+	bh=HgHc4ESZwhbbEAe1yXtGZBgMlETAW1fB2DVt/PGNgAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x3mmAKONvYo//kzDC/4kOxK9CjSq3nqQT+WPG7ndhTCl5KAsc76s+M3RU7sbcc+cV
+	 8Fhs91dDY8lNm7m6Er1nkydJevHr4T92YmA8mTFypzE9z34N4A+zgbJCX7iFLGwxkA
+	 OCp9HfgZpE9o7ckrM9ZVvZqIbaDBiI0+omtbcmGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHROJ1 (ORCPT
+        id S1726759AbgHROJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHROJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:09:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8F7C061389;
-        Tue, 18 Aug 2020 07:09:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l2so18406503wrc.7;
-        Tue, 18 Aug 2020 07:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1H2yOHeG6qsldeZpoyc2sz7sMJshfjbS1b8gZKRx98Y=;
-        b=jiEOFlujIONfp3NsuPDQRxhggX67lZRgtm1FlIVKeSOqATb5V31ZYHVr3DR37JNiwl
-         Anqx/RkRSGwmNHjOcjr4dLGi4XANj5Ezf5JBhYwObSiJKvAg033ZQ/gaxzc9hHjN195I
-         lClOJqR70hNEt0beS5Y8JILTPR49xNoWIZjG2RBC6uUT0y4L41R1wZJyXQRi0PE9DYwz
-         l1GGIx58h4ul20GqBWe+bREP0afY0y522dCXM0ars4vTFUT9pGiXuqLkIZE58z11PJBG
-         oUH6f9JQ68R1sSXkgwo+2lNSCAI8lVt807P+6e6DupMlPtiefVULfci/WybApzDkrI2Z
-         7Flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1H2yOHeG6qsldeZpoyc2sz7sMJshfjbS1b8gZKRx98Y=;
-        b=sEtiJGX5FRm+0pYkIBq7BrZj7C5K4zaDpmrRFDUy+TQJzN3ynhXIx9FdXrniMtCdom
-         Qvy3/MW5RtpvOBVXzQIyx6nxxLPWt3/rzGxomfXVCD7Cmoh1gII9nNKlLBSb8emHqEkt
-         rbLgOK/e0M9arzkXhm7/WaF11fHF/OOZk/AgIoOb+FXWQJyW4HNvP2YrobQZr9WStr4m
-         BHBa2asdu+XO2HO3wCyi9TQyvkW7Wjl9vhb1lxIoJHOO4nLcbi8Br9TK+RGD1cS82eRk
-         SZ1Ca8CueY5mCr++9KbRnXuLvy43DOO8gZ2jSh2WWmcyrJXJEJtnT7RtaiV7ldV9wWO+
-         SHfA==
-X-Gm-Message-State: AOAM5303UPl3pdHZfBbeGU91Im+k/UO9LTKdBp9Trl94WIExNwhjggtU
-        MaCj/2vYlfE+coS/2wG9uTc=
-X-Google-Smtp-Source: ABdhPJzuOGcRH65pQQhWEPOum5p4OObacHriBq62kw/b4exT9sD7ZnV8iohBJO6BMKN2IE56kRzmdw==
-X-Received: by 2002:adf:ed0c:: with SMTP id a12mr20170776wro.24.1597759764468;
-        Tue, 18 Aug 2020 07:09:24 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id b7sm31979036wrs.67.2020.08.18.07.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 07:09:23 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 16:09:21 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: no need to check return value of
- debugfs_create functions
-Message-ID: <20200818140921.GA814860@ulmo>
-References: <20200818133739.463193-1-gregkh@linuxfoundation.org>
+        Tue, 18 Aug 2020 10:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgHROJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:09:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9567C20786;
+        Tue, 18 Aug 2020 14:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597759787;
+        bh=HgHc4ESZwhbbEAe1yXtGZBgMlETAW1fB2DVt/PGNgAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zl5bZUyFmc5LcO7VsYG+6oHb1jwgmNvUKSUS+Re5X9wyvNupQoisEwg8uCoN7T0fr
+         AF8HGohr0LWYljWy+CdrGRYPBQtq7zBpk2M5iv4UV6UczHP208ZnLKWO1uuhoAHoCa
+         qnfifpuWkbsm0GcmelwQIYP6O4ZxJw/zAf2w4gss=
+Date:   Tue, 18 Aug 2020 16:10:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tomer Samara <tomersamara98@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Todd Kjos <tkjos@android.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Riley Andrews <riandrews@android.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Hridya Valsaraju <hridya@google.com>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Martijn Coenen <maco@android.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH v2 2/4] staging: android: Add error handling to
+ ion_page_pool_shrink
+Message-ID: <20200818141009.GA562377@kroah.com>
+References: <cover.1597602783.git.tomersamara98@gmail.com>
+ <73d1b8b904ae867f59e7ada14c3fb90e27f12bbb.1597602783.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818133739.463193-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <73d1b8b904ae867f59e7ada14c3fb90e27f12bbb.1597602783.git.tomersamara98@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 16, 2020 at 10:24:22PM +0300, Tomer Samara wrote:
+> Add error check to ion_page_pool_shrink after calling
+> ion_page_pool_remove, due to converting BUG_ON to WARN_ON.
+> 
+> Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So this fixes a previous patch?  That's not good, please merge them
+together so you do not cause a bug and then fix it up later on.
 
-On Tue, Aug 18, 2020 at 03:37:39PM +0200, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->=20
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 20 +++++------------
->  drivers/pci/controller/pci-tegra.c         | 25 +++++-----------------
->  2 files changed, 10 insertions(+), 35 deletions(-)
+thanks,
 
-Looks good to me:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl874Q8ACgkQ3SOs138+
-s6EPYhAAiOKXbVExfZ5GF1JdSWf/MtDFL//RZskjZAr4Qt2mz45OBpoOSLNz5ZxT
-kY8TAAiQXmIB8SvO1CeMYbJhX9yZKZHdTq9PsPwH7D9ReJ/G6wr18HFQCsmZru+v
-MvoUUz77VPh21olmyPr5k53OOwNb/8HSf3JAWuide4a6dZB+DfxE1LXZFjtMLRYl
-oqsQV3tiCRqcw9O+nsAkTrEbw5Kj2n1PN2E8QxgSX/YsVRW695obVMBVJkmpX67W
-ly1/a7rVhvNfvZD3nkYPtcG8/deJ87w9/ztckn4gsGyg77PH/qlWQLmXcwMPCG+Q
-wt5+tdeN9HKwrVQcL7NKUOW0unFCeSYFliwTc4//LqCLg/3ZdHnuuqeaQmXCtxnG
-biOlDzgn3GoaUBBKaQ1x3wgb09fgfsnJP2Rboe6Jm2pYeVT7w6F0IHoZH2gqLPHr
-MRj71MZGyrQrivsI7cLk5nhWlyOl4HTguD762djx9p+gi+Gf8MXKUIrWiM0A+hj5
-WJYfZ0IUpFaLpBZRK+WrpVUU+qe+ZkwKQWDPq9t3YZcxvBhsjEEtrA/heEDLX5xq
-/A41Qj97BirCtqLj/RDYhCaGqAFl5Xk7bHESRiHakB8UFVwi+uk+d2QyH8vhQUwL
-9wERatxDfRdHK0fMSg2AtpLTYljlVlBcEqTY2aCf9qbSAeB+51Q=
-=cp7x
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+greg k-h
