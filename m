@@ -2,121 +2,162 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BEC2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903692076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YTPipOkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgHRH2R (ORCPT
+        id S1726777AbgHRH2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:28:17 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53935 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgHRH2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:28:16 -0400
-IronPort-SDR: Pov9nzS9vx2mEpfuRSEg8ZyFR0zjKpEHl2PEmQspg4HqU15I/+eA9z8Bf0uoipN2n9gfoxsMO1
- SD78ggcwdPnQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154114728"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="154114728"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 00:28:15 -0700
-IronPort-SDR: uoxytRL5DoN/WFFOd/KhbsIuNFOqFF3c86pmgiZqpA5gEbqlj7fB4cyqkBGl/W1afXyK4Cft8a
- iR/EjnVIqJIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="326652332"
-Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 00:28:13 -0700
-Subject: Re: [RFC 2/7] KVM: VMX: Expose IA32_PKRS MSR
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200807084841.7112-1-chenyi.qiang@intel.com>
- <20200807084841.7112-3-chenyi.qiang@intel.com>
- <CALMp9eQiyRxJ0jkvVi+fWMZcDQbvyCcuTwH1wrYV-u_E004Bhg@mail.gmail.com>
- <34b083be-b9d5-fd85-b42d-af0549e3b002@intel.com>
- <CALMp9eS=dO7=JvvmGp-nt-LBO9evH-bLd2LQMO9wdYJ5V6S0_Q@mail.gmail.com>
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-Message-ID: <268b0ee4-e56f-981c-c03e-6dca8a4e99da@intel.com>
-Date:   Tue, 18 Aug 2020 15:27:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 03:28:24 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:5910 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgHRH2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:28:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1597735702; x=1629271702;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=kg6Pid/S3uyECtsR9/ZQNoRBSFk6tXHhc71xqlOp1H8=;
+  b=YTPipOkkR5R4LrUIt+cHb3uckw8l8V2ZMLqsHx5i1DmFXmmYtYcRvu37
+   Om9YqM3w0ydwPo/kXvE1ULOL1tT4jX6ajo9Dux6pP/4aWLU7Ug1D1nlD6
+   GU+5CmevhU1Wmf9t0TIrtC/R4+zmSKCa7BRqI13Sy2jAyootBfaO814OX
+   U=;
+X-IronPort-AV: E=Sophos;i="5.76,326,1592870400"; 
+   d="scan'208";a="60596917"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 18 Aug 2020 07:28:20 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 72002A18E4;
+        Tue, 18 Aug 2020 07:28:17 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 18 Aug 2020 07:28:16 +0000
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.162.73) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 18 Aug 2020 07:27:59 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
+        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC v7 08/10] tools/damon/record: Support physical memory monitoring
+Date:   Tue, 18 Aug 2020 09:24:59 +0200
+Message-ID: <20200818072501.30396-9-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200818072501.30396-1-sjpark@amazon.com>
+References: <20200818072501.30396-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eS=dO7=JvvmGp-nt-LBO9evH-bLd2LQMO9wdYJ5V6S0_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.73]
+X-ClientProxiedBy: EX13D38UWB002.ant.amazon.com (10.43.161.171) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
 
+This commit allows users to record the data accesses on physical memory
+address space by passing 'paddr' as target to 'damo-record'.  If the
+init regions are given, the regions will be monitored.  Else, it will
+monitor biggest conitguous 'System RAM' region in '/proc/iomem' and
+monitor the region.
 
-On 8/14/2020 1:31 AM, Jim Mattson wrote:
-> On Wed, Aug 12, 2020 at 10:42 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->>
->>
->>
->> On 8/13/2020 5:21 AM, Jim Mattson wrote:
->>> On Fri, Aug 7, 2020 at 1:46 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
->>>>
->>>> Protection Keys for Supervisor Pages (PKS) uses IA32_PKRS MSR (PKRS) at
->>>> index 0x6E1 to allow software to manage supervisor protection key
->>>> rights. For performance consideration, PKRS intercept will be disabled
->>>> so that the guest can access the PKRS without VM exits.
->>>> PKS introduces dedicated control fields in VMCS to switch PKRS, which
->>>> only does the retore part. In addition, every VM exit saves PKRS into
->>>> the guest-state area in VMCS, while VM enter won't save the host value
->>>> due to the expectation that the host won't change the MSR often. Update
->>>> the host's value in VMCS manually if the MSR has been changed by the
->>>> kernel since the last time the VMCS was run.
->>>> The function get_current_pkrs() in arch/x86/mm/pkeys.c exports the
->>>> per-cpu variable pkrs_cache to avoid frequent rdmsr of PKRS.
->>>>
->>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
->>>> ---
->>>
->>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->>>> index 11e4df560018..df2c2e733549 100644
->>>> --- a/arch/x86/kvm/vmx/nested.c
->>>> +++ b/arch/x86/kvm/vmx/nested.c
->>>> @@ -289,6 +289,7 @@ static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
->>>>           dest->ds_sel = src->ds_sel;
->>>>           dest->es_sel = src->es_sel;
->>>>    #endif
->>>> +       dest->pkrs = src->pkrs;
->>>
->>> Why isn't this (and other PKRS code) inside the #ifdef CONFIG_X86_64?
->>> PKRS isn't usable outside of long mode, is it?
->>>
->>
->> Yes, I'm also thinking about whether to put all pks code into
->> CONFIG_X86_64. The kernel implementation also wrap its pks code inside
->> CONFIG_ARCH_HAS_SUPERVISOR_PKEYS which has dependency with CONFIG_X86_64.
->> However, maybe this can help when host kernel disable PKS but the guest
->> enable it. What do you think about this?
-> 
-> I see no problem in exposing PKRS to the guest even if the host
-> doesn't have CONFIG_ARCH_HAS_SUPERVISOR_PKEYS.
-> 
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ tools/damon/_damon.py |  2 ++
+ tools/damon/record.py | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-Yes, but I would prefer to keep it outside CONFIG_X86_64. PKS code has 
-several code blocks and putting them under x86_64 may end up being a 
-mess. In addition, PKU KVM related code isn't under CONFIG_X86_64 as 
-well. So, is it really necessary to put inside?
+diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
+index a22ec3777c16..6ff278117e84 100644
+--- a/tools/damon/_damon.py
++++ b/tools/damon/_damon.py
+@@ -27,6 +27,8 @@ def set_target(tid, init_regions=[]):
+     if not os.path.exists(debugfs_init_regions):
+         return 0
+ 
++    if tid == 'paddr':
++        tid = 42
+     string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
+     return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
+             shell=True, executable='/bin/bash')
+diff --git a/tools/damon/record.py b/tools/damon/record.py
+index 11fd54001472..6fd0b59c73e0 100644
+--- a/tools/damon/record.py
++++ b/tools/damon/record.py
+@@ -101,6 +101,29 @@ def set_argparser(parser):
+     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
+             default='damon.data', help='output file path')
+ 
++def default_paddr_region():
++    "Largest System RAM region becomes the default"
++    ret = []
++    with open('/proc/iomem', 'r') as f:
++        # example of the line: '100000000-42b201fff : System RAM'
++        for line in f:
++            fields = line.split(':')
++            if len(fields) != 2:
++                continue
++            name = fields[1].strip()
++            if name != 'System RAM':
++                continue
++            addrs = fields[0].split('-')
++            if len(addrs) != 2:
++                continue
++            start = int(addrs[0], 16)
++            end = int(addrs[1], 16)
++
++            sz_region = end - start
++            if not ret or sz_region > (ret[1] - ret[0]):
++                ret = [start, end]
++    return ret
++
+ def main(args=None):
+     global orig_attrs
+     if not args:
+@@ -122,7 +145,11 @@ def main(args=None):
+     target = args.target
+ 
+     target_fields = target.split()
+-    if not subprocess.call('which %s &> /dev/null' % target_fields[0],
++    if target == 'paddr':   # physical memory address space
++        if not init_regions:
++            init_regions = [default_paddr_region()]
++        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
++    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
+             shell=True, executable='/bin/bash'):
+         do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
+     else:
+-- 
+2.17.1
+
