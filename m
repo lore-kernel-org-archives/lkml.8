@@ -2,119 +2,115 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7F0206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597763208;
-	bh=EWjrUEn8Fdl8vRk5AW0ZEQ0oQDuBzaEaX+X3DssIftw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZYwaM4rYJEROJ7efftFZX6QGznMnbayk4+wUUslZG3FWkoCYJCvtHPsfaeHmUXXQ3
-	 hiZ08XLTJrbIhhKCROyiSHotyIp5RKGH8lU7ZrMzl5Teo4Uy4qqd6ukbGKHMZgsTAw
-	 BrsvjX3iDbE6v1/iQp6fQymGer/znlu4fvToyf+c=
+	by mail.kernel.org (Postfix) with ESMTP id 02954207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgHRPGq (ORCPT
+        id S1727068AbgHRPGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 11:06:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31048 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHRPGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:06:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21FD7207D3;
-        Tue, 18 Aug 2020 15:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597763200;
-        bh=EWjrUEn8Fdl8vRk5AW0ZEQ0oQDuBzaEaX+X3DssIftw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fdnPgih/agxspQ3O97ozg+vfLTKhbe903DSbfSdPJPdNgPfjbfpNrw9kTy2acF2Er
-         qeHmtCEY0hxPYbnljXO+hvtujxi6rif6YSLQOweYR8ysm10y5Th6fWLxpoyn2pBxW1
-         o4dZJ0kBLmyt9us1ueN0PezqTv4EdBeq1ovCkHOs=
-Date:   Tue, 18 Aug 2020 17:07:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     devel@driverdev.osuosl.org,
-        Manivannan Sadhasivam <mani@kernel.org>, linuxarm@huawei.com,
-        linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        mauro.chehab@huawei.com
-Subject: Re: [PATCH 1/6] staging: hikey9xx: fix Kconfig dependency chain
-Message-ID: <20200818150704.GA665815@kroah.com>
-References: <cover.1597762400.git.mchehab+huawei@kernel.org>
- <1b7e23500e7449593393115cc0954af441b0c730.1597762400.git.mchehab+huawei@kernel.org>
+        id S1726890AbgHRPGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:06:46 -0400
+IronPort-SDR: qc3U4rRDt8enX9dppp2eMUw62Q424IMEqdHo2xLO3Cedu+7A1iwNRHpluDHrXKHFChAHVlGylm
+ koRmbLRuONRg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152551339"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="152551339"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:06:35 -0700
+IronPort-SDR: Ww7ojPoHjm4INVvKIPKcxsngbNw6jdurmN5xOs5RdoxzroApsVouVCcQt4ENYKkk41wQ8a/Bb0
+ 40jq8DjVwwbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="370918038"
+Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
+  by orsmga001.jf.intel.com with ESMTP; 18 Aug 2020 08:06:28 -0700
+Date:   Tue, 18 Aug 2020 18:06:27 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>, kai.huang@intel.com,
+        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
+        ludloff@google.com, luto@kernel.org,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200818150627.GD132200@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+ <20200810222317.GG14724@linux.intel.com>
+ <20200818145234.GC132200@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b7e23500e7449593393115cc0954af441b0c730.1597762400.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200818145234.GC132200@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 04:58:53PM +0200, Mauro Carvalho Chehab wrote:
-> Both the SPMI controller and the SPMI PMIC driver
-> depends on the SPMI bus support.
+On Tue, Aug 18, 2020 at 05:52:41PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Aug 10, 2020 at 03:23:17PM -0700, Sean Christopherson wrote:
+> > > This can be done implicitly by wrapping the struct
+> > > sgx_enclave_exception in another structure and then using techniques
+> > > like container_of() to find another field. However, this is made more
+> > > difficult by the fact that the sgx_enclave_exit_handler_t is not
+> > > really using the x86_64 sysv calling convention. Therefore, the
+> > > sgx_enclave_exit_handler_t MUST be written in assembly.
+> > 
+> > What bits of the x86-64 ABI require writing the handler in assembly?  There
+> > are certainly restrictions on what the handler can do without needing an
+> > assembly trampoline, but I was under the impression that vanilla C code is
+> > compatible with the exit handler patch.  Is Rust more picky about calling
+> > convention?
+> > 
+> > Side topic, the documentation for vdso_sgx_enter_enclave_t is wrong, it
+> > states the EFLAGS.DF is not cleared before invoking the handler, but that's
+> > a lie.
 > 
-> The dependency for the regulator is also wrong:
-> it should depends on the SPMI version of the HiSilicon 6421,
-> and not on the normal one.
+> If handler requires the use of setjmp/longjmp API for sudden exits, that
+> is considered bad even with C++, as it is not compatible with stack
+> unwinding. The handler has a lot of constraints for its environment, and
+> is somewhat unappealing to use.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  drivers/staging/hikey9xx/Kconfig | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/hikey9xx/Kconfig b/drivers/staging/hikey9xx/Kconfig
-> index 76267b9be562..a004839e8fa9 100644
-> --- a/drivers/staging/hikey9xx/Kconfig
-> +++ b/drivers/staging/hikey9xx/Kconfig
-> @@ -5,6 +5,7 @@ config SPMI_HISI3670
->  	tristate "Hisilicon 3670 SPMI Controller"
->  	select IRQ_DOMAIN_HIERARCHY
->  	depends on HAS_IOMEM
-> +	depends on SPMI
->  	help
->  	  If you say yes to this option, support will be included for the
->  	  built-in SPMI PMIC Arbiter interface on Hisilicon 3670
-> @@ -14,6 +15,7 @@ config SPMI_HISI3670
->  config MFD_HI6421_SPMI
->  	tristate "HiSilicon Hi6421v600 SPMI PMU/Codec IC"
->  	depends on OF
-> +	depends on SPMI
->  	select MFD_CORE
->  	help
->  	  Add support for HiSilicon Hi6421v600 SPMI PMIC. Hi6421 includes
-> @@ -28,7 +30,7 @@ config MFD_HI6421_SPMI
->  # to be placed at drivers/regulator
->  config REGULATOR_HI6421V600
->  	tristate "HiSilicon Hi6421v600 PMIC voltage regulator support"
-> -	depends on MFD_HI6421_PMIC && OF
-> +	depends on MFD_HI6421_SPMI && OF
->  	help
->  	  This driver provides support for the voltage regulators on
->  	  HiSilicon Hi6421v600 PMU / Codec IC.
+> That's why I started today thinking a possibility of using a bpf program
+> as a middle-man. BPF programs can be used to execute code by the kernel
+> in behalf of user in a domain defined sandbox. The execution context is
+> just a buffer passed in R1 to the BPF interpreter. It can be defined by
+> application.
 
-Better, but now I get the following build error:
+Something like
 
-ERROR: modpost: "regulator_map_voltage_iterate" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
-ERROR: modpost: "regulator_list_voltage_table" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
-ERROR: modpost: "of_get_regulator_init_data" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
-ERROR: modpost: "regulator_register" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
-ERROR: modpost: "regulator_unregister" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
-ERROR: modpost: "rdev_get_drvdata" [drivers/staging/hikey9xx/hi6421v600-regulator.ko] undefined!
+1. An exception is triggered.
+2. Kernel executes an eBPF program behalf of the caller, if one was
+   given.
+3. vDSO calls a fixed exit handler that based on the outcome calls
+   ERESUME/EENTER.
 
-Someone need CONFIG_REGULATOR enabled?
+Possibly an ioctl could be used to attach an eBPF program to an
+enclave and vDSO would only get a context struct.
 
-Another follow-on patch?  :)
-
-thanks,
-
-greg k-h
+/Jarkko
