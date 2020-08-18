@@ -2,132 +2,173 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E09C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6EBD2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XtzgrLuw"
+	by mail.kernel.org (Postfix) with ESMTP id 56BFE2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHRKDs (ORCPT
+        id S1726645AbgHRKEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:03:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:45202 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgHRKDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:03:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597745026; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=JE65E5Dtrka1DOzWdtukE2KACAFY/NVV59JKO7w/pIg=;
- b=XtzgrLuwAJ4LfB+ZaqJvlIFKkhiDZMuQNDhwaQkyXy6nQ7BQjbIKWI6ufSJP/9YeQ/32/yiE
- xP8Y4OnGpa/6N7M9LIWsoE72QCQLJZY6kJl0QBywsnWQww/6nUFIv+nYTBUXBeMN1M66yr2e
- 853JiU0gh660vWXB47E/y7XNwrQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f3ba76e1e4d3989d41ed4aa (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 10:03:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 90DE5C433CB; Tue, 18 Aug 2020 10:03:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA871C433CA;
-        Tue, 18 Aug 2020 10:03:24 +0000 (UTC)
+        Tue, 18 Aug 2020 06:04:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37736 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHRKEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:04:30 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k7yTd-00008v-Jn; Tue, 18 Aug 2020 10:04:21 +0000
+Date:   Tue, 18 Aug 2020 12:04:20 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        criu@openvz.org, bpf@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
+        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Subject: Re: [PATCH 01/17] exec: Move unshare_files to fix posix file locking
+ during exec
+Message-ID: <20200818100420.akdocgojdjhmq5z6@wittgenstein>
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
+ <20200817220425.9389-1-ebiederm@xmission.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Aug 2020 15:33:24 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        Emil Velikov <emil.velikov@collabora.com>, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-In-Reply-To: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
-Message-ID: <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200817220425.9389-1-ebiederm@xmission.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Aug 17, 2020 at 05:04:09PM -0500, Eric W. Biederman wrote:
+> Many moons ago the binfmts were doing some very questionable things
+> with file descriptors and an unsharing of the file descriptor table
+> was added to make things better[1][2].  The helper steal_files was
+> added to avoid breaking the userspace programs[3][4][6].
+> 
+> Unfortunately it turned out that steal_locks did not work for network
+> file systems[5], so it was removed to see if anyone would
+> complain[7][8].  It was thought at the time that NPTL would not be
+> affected as the unshare_files happened after the other threads were
+> killed[8].  Unfortunately because there was an unshare_files in
+> binfmt_elf.c before the threads were killed this analysis was
+> incorrect.
+> 
+> This unshare_files in binfmt_elf.c resulted in the unshares_files
+> happening whenever threads were present.  Which led to unshare_files
+> being moved to the start of do_execve[9].
+> 
+> Later the problems were rediscovered and suggested approach was to
+> readd steal_locks under a different name[10].  I happened to be
+> reviewing patches and I noticed that this approach was a step
+> backwards[11].
+> 
+> I proposed simply moving unshare_files[12] and it was pointed
+> out that moving unshare_files without auditing the code was
+> also unsafe[13].
+> 
+> There were then several attempts to solve this[14][15][16] and I even
+> posted this set of changes[17].  Unfortunately because auditing all of
+> execve is time consuming this change did not make it in at the time.
+> 
+> Well now that I am cleaning up exec I have made the time to read
+> through all of the binfmts and the only playing with file descriptors
+> is either the security modules closing them in
+> security_bprm_committing_creds or is in the generic code in fs/exec.c.
+> None of it happens before begin_new_exec is called.
+> 
+> So move unshare_files into begin_new_exec, after the point of no
+> return.  If memory is very very very low and the application calling
+> exec is sharing file descriptor tables between processes we might fail
+> past the point of no return.  Which is unfortunate but no different
+> than any of the other places where we allocate memory after the point
+> of no return.
+> 
+> This movement allows another process that shares the file table, or
+> another thread of the same process and that closes files or changes
+> their close on exec behavior and races with execve to cause some
+> unexpected things to happen.  There is only one time of check to time
 
-On 2020-06-01 16:33, Krishna Manikandan wrote:
-> Define shutdown callback for display drm driver,
-> so as to disable all the CRTCS when shutdown
-> notification is received by the driver.
+It seems to only make the already existing race window wider by moving
+it from bprm_execve() to begin_new_exec() which isn't great but probably
+ok since done for a good reason.
+
+> of use race and it is just there so that execve fails instead of
+> an interpreter failing when it tries to open the file it is supposed
+> to be interpreting.   Failing later if userspace is being silly is
+> not a problem.
 > 
-> This change will turn off the timing engine so
-> that no display transactions are requested
-> while mmu translations are getting disabled
-> during reboot sequence.
+> With this change it the following discription from the removal
+> of steal_locks[8] finally becomes true.
 > 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+>     Apps using NPTL are not affected, since all other threads are killed before
+>     execve.
 > 
-> Changes in v2:
-> 	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
-> 	- Change commit text to reflect when this issue
-> 	  was uncovered (Sai Prakash Ranjan)
+>     Apps using LinuxThreads are only affected if they
+> 
+>       - have multiple threads during exec (LinuxThreads doesn't kill other
+>         threads, the app may do it with pthread_kill_other_threads_np())
+>       - rely on POSIX locks being inherited across exec
+> 
+>     Both conditions are documented, but not their interaction.
+> 
+>     Apps using clone() natively are affected if they
+> 
+>       - use clone(CLONE_FILES)
+>       - rely on POSIX locks being inherited across exec
+> 
+> I have investigated some paths to make it possible to solve this
+> without moving unshare_files but they all look more complicated[18].
+> 
+> Reported-by: Daniel P. Berrangé <berrange@redhat.com>
+> Reported-by: Jeff Layton <jlayton@redhat.com>
+> History-tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+> [1] 02cda956de0b ("[PATCH] unshare_files"
+> [2] 04e9bcb4d106 ("[PATCH] use new unshare_files helper")
+> [3] 088f5d7244de ("[PATCH] add steal_locks helper")
+> [4] 02c541ec8ffa ("[PATCH] use new steal_locks helper")
+> [5] https://lkml.kernel.org/r/E1FLIlF-0007zR-00@dorka.pomaz.szeredi.hu
+> [6] https://lkml.kernel.org/r/0060321191605.GB15997@sorel.sous-sol.org
+> [7] https://lkml.kernel.org/r/E1FLwjC-0000kJ-00@dorka.pomaz.szeredi.hu
+> [8] c89681ed7d0e ("[PATCH] remove steal_locks()")
+> [9] fd8328be874f ("[PATCH] sanitize handling of shared descriptor tables in failing execve()")
+> [10] https://lkml.kernel.org/r/20180317142520.30520-1-jlayton@kernel.org
+> [11] https://lkml.kernel.org/r/87r2nwqk73.fsf@xmission.com
+> [12] https://lkml.kernel.org/r/87bmfgvg8w.fsf@xmission.com
+> [13] https://lkml.kernel.org/r/20180322111424.GE30522@ZenIV.linux.org.uk
+> [14] https://lkml.kernel.org/r/20180827174722.3723-1-jlayton@kernel.org
+> [15] https://lkml.kernel.org/r/20180830172423.21964-1-jlayton@kernel.org
+> [16] https://lkml.kernel.org/r/20180914105310.6454-1-jlayton@kernel.org
+> [17] https://lkml.kernel.org/r/87a7ohs5ow.fsf@xmission.com
+> [18] https://lkml.kernel.org/r/87pn8c1uj6.fsf_-_@x220.int.ebiederm.org
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > ---
->  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c 
-> b/drivers/gpu/drm/msm/msm_drv.c
-> index e4b750b..94e3963 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct 
-> platform_device *pdev)
->  	return 0;
->  }
-> 
-> +static void msm_pdev_shutdown(struct platform_device *pdev)
-> +{
-> +	struct drm_device *drm = platform_get_drvdata(pdev);
-> +
-> +	drm_atomic_helper_shutdown(drm);
-> +}
-> +
->  static const struct of_device_id dt_match[] = {
->  	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
->  	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-> @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device 
-> *pdev)
->  static struct platform_driver msm_platform_driver = {
->  	.probe      = msm_pdev_probe,
->  	.remove     = msm_pdev_remove,
-> +	.shutdown   = msm_pdev_shutdown,
->  	.driver     = {
->  		.name   = "msm",
->  		.of_match_table = dt_match,
 
-Any more comments on this patch?
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Slightly scary change but it solves a problem.
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
