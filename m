@@ -2,104 +2,127 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA17C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A24D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9654A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgHRI6d (ORCPT
+        id S1726925AbgHRI6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:58:33 -0400
-Received: from muru.com ([72.249.23.125]:40720 "EHLO muru.com"
+        Tue, 18 Aug 2020 04:58:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37752 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbgHRI61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:58:27 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 317F7810D;
-        Tue, 18 Aug 2020 08:58:25 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 11:58:53 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
- omap34/36 families
-Message-ID: <20200818085853.GO2994@atomide.com>
-References: <20200817133931.11785-1-aford173@gmail.com>
- <20200817215953.59607c11@aktux>
- <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
- <20200817221532.5d150648@aktux>
+        id S1726624AbgHRI5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:57:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C0EF5B033;
+        Tue, 18 Aug 2020 08:57:22 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 6/8] tty: vt, fix kernel-doc
+Date:   Tue, 18 Aug 2020 10:56:53 +0200
+Message-Id: <20200818085655.12071-6-jslaby@suse.cz>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200818085655.12071-1-jslaby@suse.cz>
+References: <20200818085655.12071-1-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817221532.5d150648@aktux>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andreas Kemnade <andreas@kemnade.info> [200817 20:15]:
-> On Mon, 17 Aug 2020 15:02:27 -0500
-> Adam Ford <aford173@gmail.com> wrote:
-> 
-> > On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
-> > >
-> > > On Mon, 17 Aug 2020 08:39:31 -0500
-> > > Adam Ford <aford173@gmail.com> wrote:
-> > >  
-> > > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
-> > > > depending on commercial or industrial temperature ratings.
-> > > >
-> > > > This patch expands the thermal information to include the limits of 90
-> > > > and 105C for alert and critical.  It sets the coolings-cells for the
-> > > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
-> > > >
-> > > > For boards who never use industrial temperatures, these can be
-> > > > changed on their respective device trees with something like:
-> > > >
-> > > > &cpu_alert0 {
-> > > >       temperature = <85000>; /* millicelsius */
-> > > > };
-> > > >
-> > > > &cpu_crit {
-> > > >       temperature = <90000>; /* millicelsius */
-> > > > };
+As in the previous patches, fix kernel-doc in vt.
 
-I think you should set the lower temperatures by default and have
-only the boards known to work with higher values configure them as
-needed.
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/tty/vt/consolemap.c | 2 +-
+ drivers/tty/vt/vt.c         | 7 ++++---
+ drivers/tty/vt/vt_ioctl.c   | 3 +--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-> > > > OMAP3_THERMAL will need to be enabled.  It is off by default.
-> > > >  
-> > > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
-> > > got stuck somewhere. It still seems not to work. Shouldn't that patch
-> > > be applied first?  
-> > 
-> > I rebased the idle stuff, and now I get errors, so I haven't pushed it
-> > yet.  I put a note that OMAP3_THERMAL is off by default, but this
-> > patch would at least get the framing in there.  I know at least two of
-> > us that use 1GHZ processors which are not supposed to run at that
-> > speed above 90MHz, so the idea was to tolerate the higher current for
-> > now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
-> > default.
-> > 
-> yes, makes sense, so with this patch we have the choice to either
-> optimize for low speeds and currents (by disabling OMAP3_THERMAL and
-> 1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
+diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
+index 5d5a5fd2dce7..5d778c0aa009 100644
+--- a/drivers/tty/vt/consolemap.c
++++ b/drivers/tty/vt/consolemap.c
+@@ -708,7 +708,7 @@ EXPORT_SYMBOL(con_set_default_unimap);
+ /**
+  *	con_copy_unimap		-	copy unimap between two vts
+  *	@dst_vc: target
+- *	@src_vt: source
++ *	@src_vc: source
+  *
+  *	The caller must hold the console lock when invoking this method
+  */
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 0f7064d41e92..71f972675fee 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1181,7 +1181,6 @@ static inline int resize_screen(struct vc_data *vc, int width, int height,
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+- *	@real_tty: real tty (different to tty if a pty/tty pair)
+  *	@vc: virtual console private data
+  *	@cols: columns
+  *	@lines: lines
+@@ -2607,6 +2606,9 @@ static inline int vc_sanitize_unicode(const int c)
+ 
+ /**
+  * vc_translate_unicode -- Combine UTF-8 into Unicode in @vc_utf_char
++ * @vc: virtual console
++ * @c: character to translate
++ * @rescan: we return true if we need more (continuation) data
+  *
+  * @vc_utf_char is the being-constructed unicode character.
+  * @vc_utf_count is the number of continuation bytes still expected to arrive.
+@@ -3982,7 +3984,7 @@ EXPORT_SYMBOL(con_is_visible);
+ 
+ /**
+  * con_debug_enter - prepare the console for the kernel debugger
+- * @sw: console driver
++ * @vc: virtual console
+  *
+  * Called when the console is taken over by the kernel debugger, this
+  * function needs to save the current console state, then put the console
+@@ -4040,7 +4042,6 @@ EXPORT_SYMBOL_GPL(con_debug_enter);
+ 
+ /**
+  * con_debug_leave - restore console state
+- * @sw: console driver
+  *
+  * Restore the console state to what it was before the kernel debugger
+  * was invoked.
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index 91c301775047..7726df6b9b6f 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -181,7 +181,7 @@ static void vt_event_wait(struct vt_event_wait *vw)
+ 
+ /**
+  *	vt_event_wait_ioctl	-	event ioctl handler
+- *	@arg: argument to ioctl
++ *	@event: argument to ioctl (the event)
+  *
+  *	Implement the VT_WAITEVENT ioctl using the VT event interface
+  */
+@@ -208,7 +208,6 @@ static int vt_event_wait_ioctl(struct vt_event __user *event)
+ 
+ /**
+  *	vt_waitactive	-	active console wait
+- *	@event: event code
+  *	@n: new console
+  *
+  *	Helper for event waits. Used to implement the legacy
+-- 
+2.28.0
 
-Maybe add something like that to the patch description too?
-
-Regards,
-
-Tony
