@@ -2,148 +2,164 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA914C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE67DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B23E1206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A105620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jO4SgFTl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jfMCuq5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHRSAf (ORCPT
+        id S1726716AbgHRSCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:00:35 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18649 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgHRSAc (ORCPT
+        Tue, 18 Aug 2020 14:02:18 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:59983 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726552AbgHRSCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:00:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3c17050003>; Tue, 18 Aug 2020 10:59:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Aug 2020 11:00:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Aug 2020 11:00:31 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Aug
- 2020 18:00:31 +0000
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.44) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 18 Aug 2020 18:00:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQ++KQOpnHyerh9c8gDcCx0jwfwjd6deXvWSPybhmuQQreRKXvIHXyU4cHk1sl6POHCEaHdO8WHU3QcG1m3XNma9vcbSWM6yohjNO0LFNM+K6dNlOtvXXBReCK9z0SKvoH8mu8eoBl7RnFNU4ChEdMyinPG5xDkIJogfq5HR9IYZZSOi4h0TxvrNwajlZJU6++KqwwCKAJobLADSf2TKuhNen6Jzm2yOy+ww7UWci/xBA3GyJjq018AePVD+KVoPDOTzCaEQvuaPN0PzRHO78jaZmdQyV04kG0g9pb0PmeRfjEDH8yAaWzKKzp8txEd9zUMbtTmc0WIG1PIk+LPIgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xdIffwpkdCgXFwUoecVzKow+Tj7FkSRff4d62iQ8GHc=;
- b=LTC19IciQh+NqRdBBaNToqjcN1JkC5vULNzBJV/jlnMx+9WI9PkWOWOyzTH797rTsfp7ArZe9n1+PHr1csswQ14vIjl4McDB/JPEonAjhgQH3t0I2DI3J/USUZO1K4DMGcdUcno0I+5GDqBUJc0cypga9LS+E4cAKAsk4kaWJ3vvoG4UYbmd5ZeCt0bcnH5wt7PTgvk07iSXxpYx7JUCFPkb3NO2dgKPrQIWxDKspr/uZ2gOTwLJxmluOYmFAx1SNtqfJxLyGFflVRxpD6qARVuM5gvQsJWydXGalOWNfGWZePTbBEt+zFfaWVVzooAhlPDlPyZig50vEF55RLuRUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB0204.namprd12.prod.outlook.com (2603:10b6:4:51::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.22; Tue, 18 Aug
- 2020 18:00:30 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 18:00:30 +0000
-Date:   Tue, 18 Aug 2020 15:00:28 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: Re: [PATCH rdma-next 0/3] Cleanups to flow creation paths
-Message-ID: <20200818180028.GA2056204@nvidia.com>
-References: <20200730081235.1581127-1-leon@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200730081235.1581127-1-leon@kernel.org>
-X-ClientProxiedBy: MN2PR04CA0016.namprd04.prod.outlook.com
- (2603:10b6:208:d4::29) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Tue, 18 Aug 2020 14:02:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597773733; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=fCOD3kM9rO9Fr5v+nlMHtZMF2fgpmS7QVgaoW1pPtdE=;
+ b=jfMCuq5ZHAhjr7cM9Ir67otpyCqksrCaeSCvt+QVdv9E2kVgY8MiRjL5yFBLy1+0sAyzZU4B
+ WBI8zvBSRzcZKE+txnV4L51vDJ/kohD7tNkfOqwaFrEzmSzvc8Od5amrwIR1Vmy5QNG5nSHp
+ usRxOeX+U88dyInSIVboJpMRTv8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3c17703f2ce110203ebc8d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 18:01:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 807FAC433CA; Tue, 18 Aug 2020 18:01:19 +0000 (UTC)
+Received: from [192.168.1.153] (cpe-76-167-231-33.san.res.rr.com [76.167.231.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 834D1C433C6;
+        Tue, 18 Aug 2020 18:01:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 834D1C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] firmware: qcom_scm: Add memory protect virtual
+ address ranges
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
+ <20200817082723.17458-2-stanimir.varbanov@linaro.org>
+Message-ID: <e8819e37-273c-e12a-962b-55c7f9074f71@codeaurora.org>
+Date:   Tue, 18 Aug 2020 11:01:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR04CA0016.namprd04.prod.outlook.com (2603:10b6:208:d4::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Tue, 18 Aug 2020 18:00:29 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k85uO-008cxc-D6; Tue, 18 Aug 2020 15:00:28 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9bf7ab3b-2031-41d3-3a5f-08d843a09815
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0204:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0204311FF3FD9AB493C67E88C25C0@DM5PR1201MB0204.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YhG7POF0k2IKLKyY/T4nNmAuLvqDpBRhW8Nd/kAE+0LqgE6y0MaZkHAz8w5QP9UoYyC4kO4EKFKtN4b4ytms0bflMJlvBWZeCjAngPiyHTxPB2n0lE5cDgys2K/AwboztFgXFl8vDe96D7GkxV4Qt8SKCviFnZVaGRHiBNMGHEleAo4IqKOYWlLO08QQORPZL9Hqz4+nd0v7cmHsXQyT8G3fyE/MMSzT46MaI+8vOdn8cCrDoPVbDnyG/cVW/hJD61UM2NlpWeqQ50JXxRjls1fDIlMAxqxikCKMRFhX5AXovNozK1omwv7dzq59XezgSd9FBW1EgaBRHrKEUu7a7Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(39860400002)(396003)(376002)(366004)(2906002)(33656002)(8676002)(4326008)(8936002)(107886003)(6916009)(9746002)(9786002)(54906003)(478600001)(426003)(2616005)(26005)(1076003)(4744005)(5660300002)(316002)(186003)(66556008)(66476007)(36756003)(66946007)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GT1SJ3H7/xxtV9l8nUBrYOYpDj7nelAVJZRH4bw62VaT5bf02TdHyCdyTMqKO1cQ+c19IwEzMvGtOSww5ngHT8/418BOE6LwD5B6aSB27vTRY+qje+rnOjD2Rg7PcN9O/M3GtiYwJQ8l7uRPpq1MhCUBUM8V3l2IZYFwOgV3ANHAUcucy6CVcnfoOFBqRbV21s7QOQyKHeDBkyKMkbZrh+oiJhFC36YEh2wWtLJhxslxHlamB7smzV7UjKybQe0pPaL4pNDX+Xhbj71Ipq43DFq0cvhRVBVzc2Xacdc/7mNN3hOMvvEcucmGCntBfkSprK1wyngsG96nrMNA3UTn4253zEfLKGnBrYG5+9LeRAZxPmQOSmPoZjPoBBcCpVBGA6HxWd/UVETxhZ9Ro6hiwQotvWiK2dxaGJOHzxfhE5CN6S4IPTb/eKhaLPRzfGj+By7TRjCIXYK9vWvu0tqjl8zxi3c/48DwbyASOrU+s1hF0Jadpj7kMwrua6dqdLiVS6m0YgpcWDM6CV174MZjlx00FfJ9YJQhvH9ceBzsYZ6Wl8/Khrwpz94cKEUMT+JAwih9E7wOL2w2tm3Va16MhpkVwcJ915stqWHUTQKNT5F+pFBG10LhG7Fqqi16L73UQBaxPlMjOSdP6u9hmIOITw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bf7ab3b-2031-41d3-3a5f-08d843a09815
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 18:00:30.0860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8F/5g0T6yBr/Zzj/AfIH6ANy+0sQfg7/jxNoIxGlTt35/nfbysswsjTHXhSUChRx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0204
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597773573; bh=xdIffwpkdCgXFwUoecVzKow+Tj7FkSRff4d62iQ8GHc=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Exchange-Transport-Forked:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=jO4SgFTlMGnaKZ2cEL42TR7m86fLiw2rLeWW1NaSpOrFZa8kVWdRmRTfQ9hPmW4dU
-         Q+9E6LTaACVryCuIwE2CGA5kHBqWzcRtVQIA+3+knBihPo2RfajI0ZX5uo3GXUiM70
-         7aNIsVoUzMTwqxqQPC9YxEKKdEM5vxusWrdT8Wlx7mfh8l5MLtXXzA6EEzhEoYlh/m
-         Xzp37OvkAoooRm5ZUv4VrHlS5jTeRxiQYhlEexEdtXsJFuof+Rzlszrgo7WhM+DMXi
-         CfL7q4CQ/Sonotgpc/u0BEPaWZ62c2tgk9FyVkpVmm9l12k1JO3t4zNIdhhYK5JzAK
-         kqizYD4fy6x8g==
+In-Reply-To: <20200817082723.17458-2-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:12:32AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Very straightforward cleanup.
-> 
-> Thanks
-> 
-> Leon Romanovsky (3):
->   RDMA/mlx5: Simplify multiple else-if cases with switch keyword
->   RDMA/mlx5: Replace open-coded offsetofend() macro
->   RDMA: Remove constant domain argument from flow creation call
+Reviewed-by: Elliot Berman <eberman@codeaurora.org>
 
-Applied to for-next, thanks
-
-Jason
+On 8/17/2020 1:27 AM, Stanimir Varbanov wrote:
+> This adds a new SCM memprotect command to set virtual address ranges.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>   drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+>   drivers/firmware/qcom_scm.h |  1 +
+>   include/linux/qcom_scm.h    |  8 +++++++-
+>   3 files changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 0e7233a20f34..dec8dc42a6bc 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -757,6 +757,30 @@ int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>   }
+>   EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
+>   
+> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +				   u32 cp_nonpixel_start,
+> +				   u32 cp_nonpixel_size)
+> +{
+> +	int ret;
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_MP,
+> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
+> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
+> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
+> +		.args[0] = cp_start,
+> +		.args[1] = cp_size,
+> +		.args[2] = cp_nonpixel_start,
+> +		.args[3] = cp_nonpixel_size,
+> +		.owner = ARM_SMCCC_OWNER_SIP,
+> +	};
+> +	struct qcom_scm_res res;
+> +
+> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+> +
+> +	return ret ? : res.result[0];
+> +}
+> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
+> +
+>   static int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+>   				 size_t mem_sz, phys_addr_t src, size_t src_sz,
+>   				 phys_addr_t dest, size_t dest_sz)
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index d9ed670da222..14da834ac593 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+>   #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+>   #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+>   #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
+> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
+>   #define QCOM_SCM_MP_ASSIGN			0x16
+>   
+>   #define QCOM_SCM_SVC_OCMEM		0x0f
+> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+> index 3d6a24697761..ba45537f688b 100644
+> --- a/include/linux/qcom_scm.h
+> +++ b/include/linux/qcom_scm.h
+> @@ -77,11 +77,13 @@ extern bool qcom_scm_restore_sec_cfg_available(void);
+>   extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+>   extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
+>   extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
+> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +					  u32 cp_nonpixel_start,
+> +					  u32 cp_nonpixel_size);
+>   extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>   			       unsigned int *src,
+>   			       const struct qcom_scm_vmperm *newvm,
+>   			       unsigned int dest_cnt);
+> -
+>   extern bool qcom_scm_ocmem_lock_available(void);
+>   extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>   			       u32 size, u32 mode);
+> @@ -128,6 +130,10 @@ static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size)
+>   		{ return -ENODEV; }
+>   static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>   		{ return -ENODEV; }
+> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +						 u32 cp_nonpixel_start,
+> +						 u32 cp_nonpixel_size)
+> +		{ return -ENODEV; }
+>   static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>   		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+>   		unsigned int dest_cnt) { return -ENODEV; }
+> 
