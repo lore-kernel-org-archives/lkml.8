@@ -2,153 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0620C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA91C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A640D20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF422067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:56:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnMPWYm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHRH4P (ORCPT
+        id S1726203AbgHRH44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:56:15 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36584 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRH4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:56:14 -0400
-IronPort-SDR: /SGiGL+/x2EYD0rFgVRlrPygr4i9Td1NXQwxK4sNfIc7xyGb6GTuYP+YBL5lKfJ4NwMibUiRb8
- KylGB1q+LcUA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219174401"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="219174401"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 00:56:13 -0700
-IronPort-SDR: 4tYE53XSB6YAiPbWPaMciN12HkT7ZYYCf7k8Ae7IpAZCTWS09uaC5r847Uwmki8KWpY0nFBP5l
- FeNh0UgDFGeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="326657452"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 00:56:11 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: [char-misc V5] mei: hdcp: fix mei_hdcp_verify_mprime() input parameter
-Date:   Tue, 18 Aug 2020 10:54:06 +0300
-Message-Id: <20200818075406.2532605-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 18 Aug 2020 03:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRH4y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:56:54 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244BCC061389;
+        Tue, 18 Aug 2020 00:56:54 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y206so9548664pfb.10;
+        Tue, 18 Aug 2020 00:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=0a8ZXLhEGMn1gXIxhyv1oqNmrc1yvciM66y5dEH31qA=;
+        b=OnMPWYm8lscfbPQyj1djbb0PioZoTGd5x4JH/p04tOQzntO2w3QdMDxT4Vh3tE6Kpp
+         JEfePTroeo3muKV9QU6EQicNZyKS1IUHCaxsGZAe6s8+MGYiA+oAiwz9p5ucVc5j8A/z
+         +3JgFIXMFVippgcpe7Ab4SDXt3aYmlLU+u8nx7Tj+g/zovWtHaOEOv2YXc9//frymD1+
+         p7wAkJFfgHwjxsUzpHXxKKCDlPtBwf46S8k/8QxlMToSmWkj7plbCYY6hbGxptfuKAhv
+         W8oZ/FBjzR/kmFc8lnUnnrfx2KykJWhD4fhHA9k7P0/9WEubGAoG2ln+MWK2q+39qh9A
+         AM5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0a8ZXLhEGMn1gXIxhyv1oqNmrc1yvciM66y5dEH31qA=;
+        b=sHsvUjuY63MmHIX7X/Azg0PS78IiR2xjrBD9QZWaSaPs2aiuanzGhaT0ET4T3v22IT
+         KGanZHJg/gmpXolC8mS9Sb5bexrqv4rmMz4rRVe2w+HoyCYC9/SnGqiiBZcQBix4zMqq
+         0FclGWM7BrlPxsgoxOt1KU5659vrFM5nJTJrHGwmO/7T/jQQpyj5Qrl3SHwex+11W/kc
+         /KAAXfsoYaf6T8stoFWU0/NRn7zOi5kgMvPFJ9VeEM8Ok1YAxogG8eaHBDzdX3ox4Ts1
+         1j5Ak2p08Rq2UaFZlbp5eFX1WSSO8k+7MMuc5lu4GKTxOMdc8/8wucA5tKyHkKpmKjmL
+         KnSw==
+X-Gm-Message-State: AOAM533EtORE7fQds3hELoSniNnfyMjPPy9QzCZdolVjoHbOCFh2SsQ1
+        Xfr1OSGFFP7mK39ASW2+Xic8kviWlMg=
+X-Google-Smtp-Source: ABdhPJwCldrcVcuZK3TXMeMsmX3YZ82dces6WA6CSG6z3pNHH/qbchCc3BqaDK6HrNnLWrmYWImFHg==
+X-Received: by 2002:aa7:99cc:: with SMTP id v12mr14322545pfi.255.1597737412978;
+        Tue, 18 Aug 2020 00:56:52 -0700 (PDT)
+Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
+        by smtp.gmail.com with ESMTPSA id r28sm23400867pfg.158.2020.08.18.00.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 00:56:51 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 15:56:48 +0800
+From:   Qingyu Li <ieatmuttonchuan@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/bluetooth/hci_sock.c: add CAP_NET_RAW check.
+Message-ID: <20200818075648.GA29124@oppo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wired_cmd_repeater_auth_stream_req_in has a variable
-length array at the end. we use struct_size() overflow
-macro to determine the size for the allocation and sending
-size.
-This also fixes bug in case number of streams is > 0 in the original
-submission. This bug was not triggered as the number of streams is
-always one.
+When creating a raw PF_BLUETOOTH socket,
+CAP_NET_RAW needs to be checked first.
 
-Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-Fixes: 0a1af1b5c18d (misc/mei/hdcp: Verify M_prime)
-Cc: <stable@vger.kernel.org> # v5.1+: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
 ---
-V5:
-1. Add reference to depending patch for stable
-V4:
-1. Fix typo in the subject. (Gustavo)
-2. Fix dereferencing pointer in send. (Gustavo)
-V3:
-1. Fix commit message with more info and another patch it fixes 
-(Gustavo) 2. Target stable. (Gustavo)
-V2:
-1. Check for allocation failure.
+ net/bluetooth/hci_sock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/misc/mei/hdcp/mei_hdcp.c | 40 +++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+index 251b9128f530..c0919e209f05 100644
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -2034,6 +2034,9 @@ static int hci_sock_create(struct net *net, struct socket *sock, int protocol,
+ 	if (sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
 
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-index d1d3e025ca0e..9ae9669e46ea 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -546,38 +546,46 @@ static int mei_hdcp_verify_mprime(struct device *dev,
- 				  struct hdcp_port_data *data,
- 				  struct hdcp2_rep_stream_ready *stream_ready)
- {
--	struct wired_cmd_repeater_auth_stream_req_in
--					verify_mprime_in = { { 0 } };
-+	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
- 	struct wired_cmd_repeater_auth_stream_req_out
- 					verify_mprime_out = { { 0 } };
- 	struct mei_cl_device *cldev;
- 	ssize_t byte;
-+	size_t cmd_size;
- 
- 	if (!dev || !stream_ready || !data)
- 		return -EINVAL;
- 
- 	cldev = to_mei_cl_device(dev);
- 
--	verify_mprime_in.header.api_version = HDCP_API_VERSION;
--	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
--	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
--	verify_mprime_in.header.buffer_len =
-+	cmd_size = struct_size(verify_mprime_in, streams, data->k);
-+	if (cmd_size == SIZE_MAX)
-+		return -EINVAL;
++	if (!capable(CAP_NET_RAW))
++		return -EPERM;
 +
-+	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
-+	if (!verify_mprime_in)
-+		return -ENOMEM;
-+
-+	verify_mprime_in->header.api_version = HDCP_API_VERSION;
-+	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
-+	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
-+	verify_mprime_in->header.buffer_len =
- 			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
- 
--	verify_mprime_in.port.integrated_port_type = data->port_type;
--	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
--	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
-+	verify_mprime_in->port.integrated_port_type = data->port_type;
-+	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
-+	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
-+
-+	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
-+	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
- 
--	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
--	       HDCP_2_2_MPRIME_LEN);
--	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
--	memcpy(verify_mprime_in.streams, data->streams,
-+	memcpy(verify_mprime_in->streams, data->streams,
- 	       array_size(data->k, sizeof(*data->streams)));
- 
--	verify_mprime_in.k = cpu_to_be16(data->k);
-+	verify_mprime_in->k = cpu_to_be16(data->k);
- 
--	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
--			      sizeof(verify_mprime_in));
-+	byte = mei_cldev_send(cldev, (u8 *)verify_mprime_in, cmd_size);
-+	kfree(verify_mprime_in);
- 	if (byte < 0) {
- 		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
- 		return byte;
--- 
-2.25.4
+ 	sock->ops = &hci_sock_ops;
+
+ 	sk = sk_alloc(net, PF_BLUETOOTH, GFP_ATOMIC, &hci_sk_proto, kern);
+--
+2.17.1
 
