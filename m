@@ -2,109 +2,198 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD86C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3427C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1454B208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883EC20897
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TckO8q8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgHRPra (ORCPT
+        id S1727997AbgHRPrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:47:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:61047 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbgHRPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:46:39 -0400
-IronPort-SDR: o7Jx+xhYr0uzkGnBRktiGla2EL5K9RZYZlohq3y5tFrLwbPp79eN6c9UgJ8z+pcni0qvKLRWK2
- GPMH9qAr52pQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239764578"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="239764578"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:46:38 -0700
-IronPort-SDR: bXhhCgaI4SpGafK6goF4Iy0xecS55diLmCWD2TpOYA2OMaSe8hh8Pniz6ZhcS2vFBU3gaMZDNK
- g5qMnM9sw9oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="400530163"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:46:36 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>
-Subject: [PATCH v6 00/10] net: eth: altera: tse: Add PTP and mSGDMA prefetcher
-Date:   Tue, 18 Aug 2020 23:46:03 +0800
-Message-Id: <20200818154613.148921-1-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
+        Tue, 18 Aug 2020 11:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgHRPqk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:46:40 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E62C061389;
+        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id b17so21600439ion.7;
+        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IhRK4si9xEoUVOddxAouxLbNZadm1eVe8xYF5LfxIzI=;
+        b=TckO8q8q9GYYWdaLzHlnObn7mHR35pCqimMAEwUhMPsF+NV+xV4ejpqnKoPqKMSypT
+         I9rU/5J41DIaPz4HTAMJjpDixzfSvnBXc04VLIQhM5qpnZEEvRzp3RbFCNvXzr6Ww3jk
+         ahUxT8/0Exv19xESS+wdDLpFGPiTevIx24ZYNCZZCehuWCYI92TXVxlp3tiPQPiJO0Ru
+         K4BG00OH2+9JsWS8PobPx7L9NqAZMq4ctc5u838x96I/PKQ9E37iHirGcO+qfdK6AlOQ
+         YPwmNkDHaTSREYdWJ95Yo5rR8cXARlsCgoxlrmJr9bre6vrIiCzBUD5lN9d7hNOfWlDi
+         7uvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IhRK4si9xEoUVOddxAouxLbNZadm1eVe8xYF5LfxIzI=;
+        b=eMSRZ6WTcunhlr/jxoYEu2EGz6SMOS/IC0mZoxjvv4Augj6qMg+ygkfLYZZdybLQ6Y
+         rCF6OsGocT98+bA/8mb5s8+YZ1k0CbfATSM+s3KchQ3BOvUIpIetHzd2Rko/mxzk/VE8
+         PipHeMb0PHRfqcAInOBClI28PX9DkQmh1uotjjIPnohF3bEJJpGsAw5Ws3BZ2P6YiZwy
+         tucv6d3MikiyqCntJhUuNpha963vfflWEv0cMBG+xDnmVxXE+hNN+qe0/n9D3jFnr1n2
+         qbyX8/ufcQ5vy6FY2NK9IC7kaqZiR4At2aDV2rpFDlyruFWQcmC1VzML4YTRjdTS8f1r
+         bp7A==
+X-Gm-Message-State: AOAM531PkBwaaVVy0xpsI5O4/0NuqmwOhvDufM8DCn00BW+RpN7VfiDz
+        pWWU3G50/GLPWKOST8JhAs34Lb0K8SmPDg==
+X-Google-Smtp-Source: ABdhPJwhvjO8PItUV55yph5joJ/ppt3vZmd0TDwQG+VHhkUUct6SsNcqDfEBWZNCP2Uo8fBayzx6+Q==
+X-Received: by 2002:a05:6638:8b:: with SMTP id v11mr19816588jao.122.1597765599365;
+        Tue, 18 Aug 2020 08:46:39 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id z1sm3113625ilh.13.2020.08.18.08.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 08:46:38 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power management
+Date:   Tue, 18 Aug 2020 10:46:32 -0500
+Message-Id: <20200818154633.5421-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joyce Ooi <joyce.ooi@intel.com>
+The bandgap sensor can be idled when the processor is too, but it
+isn't currently being done, so the power consumption of OMAP3
+boards can elevated if the bangap sensor is enabled.
 
-This patch series cleans up the Altera TSE driver and adds support
-for the newer msgdma prefetcher as well as ptp support when using
-the msgdma prefetcher.
+This patch attempts to use some additional power management
+to idle the clock to the bandgap when not needed.
 
-v2: Rename altera_ptp to intel_fpga_tod, modify msgdma and sgdma tx_buffer
-    functions to be of type netdev_tx_t, and minor suggested edits
-v3: Modify tx_buffer to stop queue before returning NETDEV_TX_BUSY
-v4: Fix build warnings
-v5: Rename 'ptp_enable' variable to 'has_ptp' and initialize hardware clock
-    to 0 in intel_fpga_tod, and make minor suggested changes
-v6: Fix build warning and remove return error to allow PHY with
-    timestamping support to pass through ioctl
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Dalon Westergreen (10):
-  net: eth: altera: tse_start_xmit ignores tx_buffer call response
-  net: eth: altera: set rx and tx ring size before init_dma call
-  net: eth: altera: fix altera_dmaops declaration
-  net: eth: altera: add optional function to start tx dma
-  net: eth: altera: Move common functions to altera_utils
-  net: eth: altera: Add missing identifier names to function
-    declarations
-  net: eth: altera: change tx functions to type netdev_tx_t
-  net: eth: altera: add support for ptp and timestamping
-  net: eth: altera: add msgdma prefetcher
-  net: eth: altera: update devicetree bindings documentation
-
- .../devicetree/bindings/net/altera_tse.txt         | 103 ++++-
- drivers/net/ethernet/altera/Kconfig                |   1 +
- drivers/net/ethernet/altera/Makefile               |   3 +-
- drivers/net/ethernet/altera/altera_msgdma.c        |   5 +-
- drivers/net/ethernet/altera/altera_msgdma.h        |  30 +-
- .../net/ethernet/altera/altera_msgdma_prefetcher.c | 431 +++++++++++++++++++++
- .../net/ethernet/altera/altera_msgdma_prefetcher.h |  30 ++
- .../ethernet/altera/altera_msgdmahw_prefetcher.h   |  87 +++++
- drivers/net/ethernet/altera/altera_sgdma.c         |  22 +-
- drivers/net/ethernet/altera/altera_sgdma.h         |  32 +-
- drivers/net/ethernet/altera/altera_tse.h           |  98 ++---
- drivers/net/ethernet/altera/altera_tse_ethtool.c   |  30 ++
- drivers/net/ethernet/altera/altera_tse_main.c      | 200 ++++++++--
- drivers/net/ethernet/altera/altera_utils.c         |  29 ++
- drivers/net/ethernet/altera/altera_utils.h         |  51 +++
- drivers/net/ethernet/altera/intel_fpga_tod.c       | 341 ++++++++++++++++
- drivers/net/ethernet/altera/intel_fpga_tod.h       |  56 +++
- 17 files changed, 1396 insertions(+), 153 deletions(-)
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
- create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
- create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.c
- create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.h
-
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+index ab19ceff6e2a..923ef3abb867 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+@@ -25,10 +25,18 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_irq.h>
+ #include <linux/io.h>
++#include <linux/cpu_pm.h>
++#include <linux/device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include "ti-bandgap.h"
+ 
+ static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
++static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
++				  unsigned long cmd, void *v);
+ 
+ /***   Helper functions to access registers and their bitfields   ***/
+ 
+@@ -1008,6 +1016,9 @@ int ti_bandgap_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
++	cpu_pm_register_notifier(&bgp->nb);
++
+ 	return 0;
+ 
+ remove_last_cooling:
+@@ -1041,7 +1052,9 @@ int ti_bandgap_remove(struct platform_device *pdev)
+ 	struct ti_bandgap *bgp = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	/* First thing is to remove sensor interfaces */
++	cpu_pm_unregister_notifier(&bgp->nb);
++
++	/* Remove sensor interfaces */
+ 	for (i = 0; i < bgp->conf->sensor_count; i++) {
+ 		if (bgp->conf->sensors[i].unregister_cooling)
+ 			bgp->conf->sensors[i].unregister_cooling(bgp, i);
+@@ -1153,6 +1166,38 @@ static int ti_bandgap_suspend(struct device *dev)
+ 	return err;
+ }
+ 
++static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
++				  unsigned long cmd, void *v)
++{
++	struct ti_bandgap *bgp;
++
++	bgp = container_of(nb, struct ti_bandgap, nb);
++
++	spin_lock(&bgp->lock);
++	switch (cmd) {
++	case CPU_CLUSTER_PM_ENTER:
++		if (bgp->is_suspended)
++			break;
++		ti_bandgap_save_ctxt(bgp);
++		ti_bandgap_power(bgp, false);
++		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
++			clk_disable(bgp->fclock);
++		break;
++	case CPU_CLUSTER_PM_ENTER_FAILED:
++	case CPU_CLUSTER_PM_EXIT:
++		if (bgp->is_suspended)
++			break;
++		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
++			clk_enable(bgp->fclock);
++		ti_bandgap_power(bgp, true);
++		ti_bandgap_restore_ctxt(bgp);
++		break;
++	}
++	spin_unlock(&bgp->lock);
++
++	return NOTIFY_OK;
++}
++
+ static int ti_bandgap_resume(struct device *dev)
+ {
+ 	struct ti_bandgap *bgp = dev_get_drvdata(dev);
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+index fce4657e9486..ed0ea4b17b25 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+@@ -12,6 +12,10 @@
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/err.h>
++#include <linux/cpu_pm.h>
++#include <linux/device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm.h>
+ 
+ struct gpio_desc;
+ 
+@@ -203,6 +207,8 @@ struct ti_bandgap {
+ 	int				irq;
+ 	struct gpio_desc		*tshut_gpiod;
+ 	u32				clk_rate;
++	struct notifier_block		nb;
++	unsigned int is_suspended:1;
+ };
+ 
+ /**
 -- 
-2.13.0
+2.17.1
 
