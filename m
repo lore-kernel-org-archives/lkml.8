@@ -2,117 +2,132 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A6F206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C25206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YxtEA4x1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c07Et75j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgHRJG2 (ORCPT
+        id S1726592AbgHRJHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:06:28 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13380 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRJG0 (ORCPT
+        Tue, 18 Aug 2020 05:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgHRJHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:06:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3b99d80000>; Tue, 18 Aug 2020 02:05:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Aug 2020 02:06:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Aug 2020 02:06:26 -0700
-Received: from [10.21.180.203] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Aug
- 2020 09:06:16 +0000
-Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
- to devlink reload command
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Moshe Shemesh <moshe@mellanox.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
- <1597657072-3130-2-git-send-email-moshe@mellanox.com>
- <20200817091615.37e76ca3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Moshe Shemesh <moshe@nvidia.com>
-Message-ID: <9fbad1d6-7052-225a-7d62-9d29548d6342@nvidia.com>
-Date:   Tue, 18 Aug 2020 12:06:13 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 05:07:50 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A133C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:07:50 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w14so20604546ljj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fZnxPwWDe+137g4lC8OGah8jmu6F2XgBBRdxMx+JMFY=;
+        b=c07Et75jGoRRCU9SGELs4oHTfr+/H4D/1uxObUPJ24ofLPA0OiSnJ0z8FFv3sPKr5T
+         2igd4HF3xWCidJ0rSVvX4jTGDJ2HTkRt1jurlkYcrBpkuanWEojIfKyao9h8TnCb8K3s
+         oy3VZZXAfv4W+pnTzZR9Yd7XtGZmVNVQART9TqKNKPc4n+8uTMWGiTCD408iN32X8VMm
+         ITaFArMjiUKbHBRuMilWJh9IxXIYtTMa7y2ZesUWt7V1RibiTWWLjrx7CxAGbPFNOzQL
+         KV5c6SKIYF0Hn0EImzAUDAduUnHadxKe6ffdg7lD4/U9Ysp9N5t4U1VzSz8TAyOqpCaL
+         Kbtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fZnxPwWDe+137g4lC8OGah8jmu6F2XgBBRdxMx+JMFY=;
+        b=TRQFyL8PCZrIuEXZbRMehOwHRYi9BvJk2WYFb16qyvJzuS7PB6Y9bYEMk/GrwI9/Kz
+         McIwk/7GMRDJjGx07FqoHoSbwpDLRL91bRB4Y6BbeSOCjyPrNh5WnWjA162Q6M+4Zd0E
+         AsBXxVP02zLMXFzfXPLbcuogoDQqWVOuVd7cJvDjtSS942eAmKfQ0OMchz25UCQvGnVc
+         ZDPztkdkOzLj+LvAnyRnhiYILKVQfAJF5bwjDanusgvnd0OQgMSETaBbttTHSWfTa9qZ
+         IDCT5qirxvCRuHtllhjiegHrehIakoFjfzgF71mW/17plUdB6moY2eOtITbSSF2h3K81
+         cNbA==
+X-Gm-Message-State: AOAM530xqSwiSK9sPjLv6fj5wF7WLlfhZpAbyQkexQYxpBgjkh45lpBo
+        EIs2gZaLD0gh2AaDKBppUCVc+XNtIaTWCeTnTraDDA==
+X-Google-Smtp-Source: ABdhPJwhGVYumWhavpL2roJ7EphWNB1VFxxxuBXrJ2Q40IekG6bzaLeBvZSiFKHTVCMnmDfn0z0Y57aWaL0TnFLLzMs=
+X-Received: by 2002:a2e:9990:: with SMTP id w16mr8587816lji.156.1597741668678;
+ Tue, 18 Aug 2020 02:07:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200817091615.37e76ca3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597741528; bh=HttBBno2RrdfqVBFotFLEqVwUaVEe8oX4DoTjrSxv9w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=YxtEA4x1mszR7M0/a+ZkzDE7cg06avnU3+2OWGw8K0hTsFeWpyAfcWoht6or+7zPs
-         zm+DtdSn0Plr8R6NJe2J6+z1vUaPPnocX4Dd06PmMtj+WYZMjM7lcdMv8dNDEyscd2
-         37GTGNZBw0Mb5KUWVt3Y46SNAEOvz7Cg2219UP4Uglycq8pASc7wY0WDIbCxguECcj
-         Dzf9/pXUIHGsx2lRez/E9DJ+Mia0njUQ/SiZ0jxrlxdW0fPhtXA/KdJQauV6/6CCYz
-         nU+o5vOlYTBWV9WnYYLQGV4Fimwv6mWCeIht5bQYKDVpZIFLm7PZHI2/HNUwLpisEE
-         W0VuLCW3qRlIw==
+References: <20200811113209.34057-1-benbjiang@tencent.com>
+In-Reply-To: <20200811113209.34057-1-benbjiang@tencent.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 18 Aug 2020 11:07:37 +0200
+Message-ID: <CAKfTPtBReSax0AK9sanzcSzBMJzx7jK-K8Umc3kfH_n11N7f3A@mail.gmail.com>
+Subject: Re: [PATCH v3] sched/fair: simplfy the work when reweighting entity
+To:     Jiang Biao <benbjiang@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/17/2020 7:16 PM, Jakub Kicinski wrote:
+On Tue, 11 Aug 2020 at 13:32, Jiang Biao <benbjiang@gmail.com> wrote:
 >
-> On Mon, 17 Aug 2020 12:37:40 +0300 Moshe Shemesh wrote:
->> Add devlink reload action to allow the user to request a specific reload
->> action. The action parameter is optional, if not specified then devlink
->> driver re-init action is used (backward compatible).
->> Note that when required to do firmware activation some drivers may need
->> to reload the driver. On the other hand some drivers may need to reset
->> the firmware to reinitialize the driver entities.
-> See, this is why I wanted to keep --live as a separate option.
-> Normally the driver is okay to satisfy more actions than requested,
-> e.g. activate FW even if only driver_reinit was requested.
+> From: Jiang Biao <benbjiang@tencent.com>
 >
-> fw_live_patch does not have this semantics, it explicitly requires
-> driver to not impact connectivity much. No "can do more resets than
-> requested" here. Hence the --live part would be better off as a
-> separate argument (at least in uAPI, the in-kernel interface we can
-> change later if needed).
+> The code in reweight_entity() can be simplified.
+>
+> For a sched entity on the rq, the entity accounting can be replaced by
+> cfs_rq instantaneous load updates currently called from within the
+> entity accounting.
+>
+> Even though an entity on the rq can't represent a task in
+> reweight_entity() (a task is always dequeued before calling this
+> function) and so the numa task accounting and the rq->cfs_tasks list
+> management of the entity accounting are never called, the redundant
+> cfs_rq->nr_running decrement/increment will be avoided.
+>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
 
+Minor typo of the subject: s/simplfy/simplify/
 
-Yes, it does have a different semantics, kind of no reset allowed.
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-On the other hand, it is not related to driver_reinit, only fw_activate.
-
-So the uAPI should be:
-
- =C2=A0=C2=A0=C2=A0 devlink dev reload DEV [ netns { PID | NAME | ID } ] [ =
-action {=20
-driver_reinit | fw_activate [--live] } ]
-
-Or maybe better than "live" say explicitly "no reset":
-
- =C2=A0=C2=A0=C2=A0 devlink dev reload DEV [ netns { PID | NAME | ID } ] [ =
-action {=20
-driver_reinit | fw_activate [--no_reset] } ]
-
-
->> Reload actions supported are:
->> driver_reinit: driver entities re-initialization, applying devlink-param
->>                 and devlink-resource values.
->> fw_activate: firmware activate.
->> fw_live_patch: firmware live patching.
+> ---
+> v3<-v2: Amend commit log taking Dietmar's advice. Thx.
+> v2<-v1: Amend the commit log
+>
+>  kernel/sched/fair.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 04fa8dbcfa4d..18a8fc7bd0de 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3086,7 +3086,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>                 /* commit outstanding execution time */
+>                 if (cfs_rq->curr == se)
+>                         update_curr(cfs_rq);
+> -               account_entity_dequeue(cfs_rq, se);
+> +               update_load_sub(&cfs_rq->load, se->load.weight);
+>         }
+>         dequeue_load_avg(cfs_rq, se);
+>
+> @@ -3102,7 +3102,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>
+>         enqueue_load_avg(cfs_rq, se);
+>         if (se->on_rq)
+> -               account_entity_enqueue(cfs_rq, se);
+> +               update_load_add(&cfs_rq->load, se->load.weight);
+>
+>  }
+>
+> --
+> 2.21.0
+>
