@@ -2,137 +2,61 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40299C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6010C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDED206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBeobjx2"
+	by mail.kernel.org (Postfix) with ESMTP id 91DBC206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHRTfY (ORCPT
+        id S1726754AbgHRTfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43900 "EHLO
+        Tue, 18 Aug 2020 15:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgHRTfW (ORCPT
+        with ESMTP id S1726681AbgHRTfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:35:22 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DDBC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:35:22 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so10475437pff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u9n/mt8PXTBKmKuG3o+opVNeX/HejppKa6InUAJeA7Y=;
-        b=fBeobjx20ZvqgMFkaNVq/ELQ1v5ovZ0pyk/PpsBmxpi2EOtH/EHH8lueVPAsHLePxq
-         YDawcnBGnH+daZxg1HfI4B8CtdqRIK/gYql0D3xoQ0TUhfRELDBak23SSWlBBE4LbVjM
-         GOcdv6i+CQyzRwJ8cpK17uf4nYxuLU6W0cMliF4pcpfMawc+sGUahhJuln49rIcQqoHm
-         OSxljVm9vdqfUgJmt4mCJKFsl9lTEDSfZgznOdmKH74aSCTe9uYNY2txxR95Y8g9Wf3o
-         hYgPfBsNJXhBJN8HzVJWdZxcdF4KCntNSoxeabAYJ+OODBWch4MTEyN02YpX5m3Otqjx
-         1jiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u9n/mt8PXTBKmKuG3o+opVNeX/HejppKa6InUAJeA7Y=;
-        b=l3mt0BHgrd0v/p8cnlava3JB1kqVoF/i/oq4Y8j5B9Xt94DAGSiVfJ+tZIjzqinafY
-         uYKj/Z7FKdUxEG27CTl4hFsW5GyfvEtMnyoa9jNFLtzhLC7iI13mIZSJ5Y9uI0FXGSmy
-         vFhnV7EUXbW+B6kpmBlt9JiI0qicYp+Km4BONYZFhUzksCTjZlgJbMCmYrSGvQYrHWMq
-         xlveiAbbXOMsLDusUnD9/HwejIfm6GmMmGq1SR6ErMW8ZlGwMMgFO4Pvw3osBMtO5+VS
-         zp2iR3WlQxAvnp0uzRWNcCn3quikb3Pxi/f5T7psgVUF9rSf2664433VUx7pNWqoXXAx
-         V8zg==
-X-Gm-Message-State: AOAM531AH8VWfdmqb13GLU5eVOnPqmdYd6I9ahXJ7dntwKt3QAd4I0BL
-        dfRJz5X193HB//xTxQOoNH3uxgbXhKtBmAr64Uix3A==
-X-Google-Smtp-Source: ABdhPJwg/txuAGDnuge1cNZ+FrLSNw6Czt9c1sqa0XhG3sA4ynkEYxXs89gPXSKRX1CqOZzs+gt2l8OQKyvMRO6DFvg=
-X-Received: by 2002:a63:7d8:: with SMTP id 207mr14800708pgh.263.1597779321639;
- Tue, 18 Aug 2020 12:35:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
-In-Reply-To: <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Aug 2020 12:35:10 -0700
-Message-ID: <CAKwvOdmUB1VtfQNJaRgK-KKOyyhzP3XbcnH818gb_RygYFRUqA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Aug 2020 15:35:51 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DCEC061389;
+        Tue, 18 Aug 2020 12:35:51 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DEE0C1279E923;
+        Tue, 18 Aug 2020 12:19:04 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:35:50 -0700 (PDT)
+Message-Id: <20200818.123550.1614770957816770142.davem@davemloft.net>
+To:     vulab@iscas.ac.cn
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rpl_iptunnel: simplify the return expression of
+ rpl_do_srh()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200818085454.12224-1-vulab@iscas.ac.cn>
+References: <20200818085454.12224-1-vulab@iscas.ac.cn>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Aug 2020 12:19:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
->
-> I'm not saying "change the semantics", nor am I saying that playing
-> whack-a-mole *for a limited time* is unreasonable.
-
-Ah, ok then.  Sorry I mischaracterized your position.
-
-> But I would like to go back
-> to the compiler authors and get them to implement such a #pragma: "this
-> freestanding implementation *does* support *this specific library function*,
-> and you are free to call it."
-
-I think the first thing that would be helpful is some more detailed
-write up of the problem statement, and analysis of why the current
-provided tools are close but not enough.  Maybe filing a Clang bug
-would be helpful to get more feedback from additional toolchain folks
-than just me (https://bugs.llvm.org/enter_bug.cgi?product=clang "new
-bug" component).  Alternatively, if you're planning on attending
-plumbers next week, I plan to propose a "kernel toolchain" mailing
-list for folks with whatever background to discuss future GNU C
-extensions and how they might be used in kernel development.  That
-might be more appropriate than a Clang bug, but it doesn't exist yet,
-and feedback might be that it's a terrible idea for some reason.
-
-> The only way we can get what we really need from
-> the compilers is by speaking up and requesting it, and we have done so very
-> successfully recently; further back we tended to get a lot of
-> language-lawyering, but these days both the gcc and the clang teams have been
-> wonderfully responsive.
-
-Just trying to avoid the shoe, again.  I'd really like to get to the
-point where we can untangle putting out fires from implementing
-feature requests though.
--- 
-Thanks,
-~Nick Desaulniers
+RnJvbTogWHUgV2FuZyA8dnVsYWJAaXNjYXMuYWMuY24+DQpEYXRlOiBUdWUsIDE4IEF1ZyAyMDIw
+IDA4OjU0OjU0ICswMDAwDQoNCj4gQEAgLTE5NywxMSArMTk3LDcgQEAgc3RhdGljIGludCBycGxf
+ZG9fc3JoKHN0cnVjdCBza19idWZmICpza2IsIGNvbnN0IHN0cnVjdCBycGxfbHd0ICpybHd0KQ0K
+PiAgDQo+ICAJdGluZm8gPSBycGxfZW5jYXBfbHd0dW5uZWwoZHN0LT5sd3RzdGF0ZSk7DQo+ICAN
+Cj4gLQllcnIgPSBycGxfZG9fc3JoX2lubGluZShza2IsIHJsd3QsIHRpbmZvLT5zcmgpOw0KPiAt
+CWlmIChlcnIpDQo+IC0JCXJldHVybiBlcnI7DQo+IC0NCj4gLQlyZXR1cm4gMDsNCj4gKwlyZXR1
+cm4gcnBsX2RvX3NyaF9pbmxpbmUoc2tiLCBybHd0LCB0aW5mby0+c3JoKTsNCj4gIH0NCg0KUGxl
+YXNlIGF0IGxlYXN0IGNvbXBpbGUgdGVzdCB5b3VyIGNoYW5nZXM6DQoNCm5ldC9pcHY2L3JwbF9p
+cHR1bm5lbC5jOiBJbiBmdW5jdGlvbiChcnBsX2RvX3NyaKI6DQpuZXQvaXB2Ni9ycGxfaXB0dW5u
+ZWwuYzoxOTM6Njogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIKFlcnKiIFstV3VudXNlZC12YXJp
+YWJsZV0NCiAgMTkzIHwgIGludCBlcnIgPSAwOw0K
