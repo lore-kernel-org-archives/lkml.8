@@ -2,144 +2,331 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA01C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 04:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 04:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782ED2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 04:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQFsAJKS"
+	by mail.kernel.org (Postfix) with ESMTP id ED77F207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 04:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgHREMo (ORCPT
+        id S1726617AbgHREPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 00:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgHREMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 00:12:43 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB52C061389;
-        Mon, 17 Aug 2020 21:12:42 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id d27so14216543qtg.4;
-        Mon, 17 Aug 2020 21:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hXLCDfrcY5+egor1E3ATfAy15D+Z8YefF1V4ZEaEKWs=;
-        b=CQFsAJKSDdLlK3EhRNv8Z+2s7zS5F6umJ9AQlthkXD6FPmHHIHJ0xmjQgnRIDPvjIK
-         LIDlw+c/jKJWU5j81LM7I3qDNXFytBw2i5gCvMP4Luu/00YfE+Sv2TOSFm+i1XaFoXzX
-         MgCZ4zOxi9UlsItvXwDU5pjAT5XzMEJZW/GG50wgPowfpvokDRqPX1D9OY2KAfmt05vA
-         XCu2lRg191aqx42qf9gTZlzPUddGOzGpHTVJrz7v4eX7lKb//h7JqmBHmbDaf04Bq+9G
-         PkXqIwAVE73e+Uz4y4T/w/JXFyENAzMhvah3QTgZb9FZu6sE9fgt4RUo1cRQVv306KDo
-         1pgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hXLCDfrcY5+egor1E3ATfAy15D+Z8YefF1V4ZEaEKWs=;
-        b=XL5OOhsGRXgQ7ZFBwvIgG1FqiaEpVcfoRc4BGfA4Tjnt/Mf3eDdwNX52NOQ+KrcIVM
-         bEAkwV7xE7vXPI5xCn3CASYU+EsDhVflFbSBetQ797RNwtlowqQN01MhIqpHgGdEnOHL
-         +PX0WcFQO6Cx+1cUD3+/OA0NSkRicJeuthuNP3ZfiMHtxos3yDDjVhiTLSAvLcLHxTNV
-         MwGbY1C2HwdcHj0DBdWYf3Jep26nxgocwqdN3q262AGvzn0g9f03Ms9XzuO8Z704fCTA
-         JNTsskCMH3ih4aWs8NCw1/Vq1MQWk61IOCLDwpiWlv0eiJV0hGSEjTyZw9sAg5jqeG/h
-         wpTw==
-X-Gm-Message-State: AOAM533aCpDvdlY5ARSJUXRx5iCuxZb3XktkwJqeEpXqtAPQS+xBpE1j
-        d0v5Mn8aXcFAPb2fy7V6LvIX/VIo/TsBqQ==
-X-Google-Smtp-Source: ABdhPJzaOrgJhzGbXOnMQBgWRgj5jPoujDkofHqlBTpYElKd3yqJ8qhcCmgFn27KsFM9jDNkDTNmrQ==
-X-Received: by 2002:ac8:4519:: with SMTP id q25mr16754352qtn.29.1597723961327;
-        Mon, 17 Aug 2020 21:12:41 -0700 (PDT)
-Received: from magi.myfiosgateway.com (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
-        by smtp.gmail.com with ESMTPSA id i65sm19592212qkf.126.2020.08.17.21.12.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 21:12:40 -0700 (PDT)
-From:   Brooke Basile <brookebasile@gmail.com>
-To:     danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com,
-        axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Brooke Basile <brookebasile@gmail.com>
-Subject: [PATCH] block: rnbd: rnbd-srv: silence uninitialized variable warning
-Date:   Tue, 18 Aug 2020 00:03:18 -0400
-Message-Id: <20200818040317.5926-1-brookebasile@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Tue, 18 Aug 2020 00:15:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:29031 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgHREPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 00:15:01 -0400
+IronPort-SDR: v0vtZL53EjXpnE1RF+/ox5w8TI4niyhWpJsbA5GDvOxYNHGSz/WUtQj3b1QxA4a4lPioFzVmyl
+ t5mnLlzxtOYA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152471630"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="152471630"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 21:14:53 -0700
+IronPort-SDR: YBMZ3OiG/Bfazb2jhyc1E6t3i8isqAw/xIrXgU06qO7osuPt2lOxKZR7PTx6ZDDAgFKzDK+fz2
+ MXJ0tmscqpgA==
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="336498730"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 21:14:53 -0700
+Date:   Mon, 17 Aug 2020 21:21:52 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "stefanha@gmail.com" <stefanha@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/15] iommu: Report domain nesting info
+Message-ID: <20200817212152.2820eedd@jacob-builder>
+In-Reply-To: <342e8d77-1c1d-e637-0227-720ba67df8ba@redhat.com>
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+        <1595917664-33276-3-git-send-email-yi.l.liu@intel.com>
+        <5c911565-c76a-c361-845e-56a91744d504@redhat.com>
+        <DM5PR11MB1435CC4503506228790CCB39C3400@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <342e8d77-1c1d-e637-0227-720ba67df8ba@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
-	drivers/block/rnbd/rnbd-srv.c:150:6: warning: variable 'err' is used
-	uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-        	if (IS_ERR(bio)) {
-            	^~~~~~~~~~~
-	drivers/block/rnbd/rnbd-srv.c:177:9: note: uninitialized use occurs here
-		return err;
-		^~~
-	drivers/block/rnbd/rnbd-srv.c:126:9: note: initialize the variable 'err'
-	to silence this warning
-        	int err;
-               	^
-                	= 0
+On Sun, 16 Aug 2020 14:40:57 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Silence this by replacing `err` with `ret`, returning ret = 0 upon
-success.
+> Hi Yi,
+> 
+> On 8/14/20 9:15 AM, Liu, Yi L wrote:
+> > Hi Eric,
+> >   
+> >> From: Auger Eric <eric.auger@redhat.com>
+> >> Sent: Thursday, August 13, 2020 8:53 PM
+> >>
+> >> Yi,
+> >> On 7/28/20 8:27 AM, Liu Yi L wrote:  
+> >>> IOMMUs that support nesting translation needs report the
+> >>> capability info  
+> >> s/needs/need to  
+> >>> to userspace. It gives information about requirements the
+> >>> userspace needs to implement plus other features characterizing
+> >>> the physical implementation.
+> >>>
+> >>> This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller
+> >>> can get nesting info after setting DOMAIN_ATTR_NESTING. For VFIO,
+> >>> it is after selecting VFIO_TYPE1_NESTING_IOMMU.  
+> >> This is not what this patch does ;-) It introduces a new IOMMU UAPI
+> >> struct that gives information about the nesting capabilities and
+> >> features. This struct is supposed to be returned by
+> >> iommu_domain_get_attr() with DOMAIN_ATTR_NESTING attribute
+> >> parameter, one a domain whose type has been set to
+> >> DOMAIN_ATTR_NESTING.  
+> > 
+> > got it. let me apply your suggestion. thanks. :-)
+> >   
+> >>>
+> >>> Cc: Kevin Tian <kevin.tian@intel.com>
+> >>> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >>> Cc: Alex Williamson <alex.williamson@redhat.com>
+> >>> Cc: Eric Auger <eric.auger@redhat.com>
+> >>> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >>> Cc: Joerg Roedel <joro@8bytes.org>
+> >>> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> >>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >>> ---
+> >>> v5 -> v6:
+> >>> *) rephrase the feature notes per comments from Eric Auger.
+> >>> *) rename @size of struct iommu_nesting_info to @argsz.
+> >>>
+> >>> v4 -> v5:
+> >>> *) address comments from Eric Auger.
+> >>>
+> >>> v3 -> v4:
+> >>> *) split the SMMU driver changes to be a separate patch
+> >>> *) move the @addr_width and @pasid_bits from vendor specific
+> >>>    part to generic part.
+> >>> *) tweak the description for the @features field of struct
+> >>>    iommu_nesting_info.
+> >>> *) add description on the @data[] field of struct
+> >>> iommu_nesting_info
+> >>>
+> >>> v2 -> v3:
+> >>> *) remvoe cap/ecap_mask in iommu_nesting_info.
+> >>> *) reuse DOMAIN_ATTR_NESTING to get nesting info.
+> >>> *) return an empty iommu_nesting_info for SMMU drivers per Jean'
+> >>>    suggestion.
+> >>> ---
+> >>>  include/uapi/linux/iommu.h | 74  
+> >> ++++++++++++++++++++++++++++++++++++++++++++++  
+> >>>  1 file changed, 74 insertions(+)
+> >>>
+> >>> diff --git a/include/uapi/linux/iommu.h
+> >>> b/include/uapi/linux/iommu.h index 7c8e075..5e4745a 100644
+> >>> --- a/include/uapi/linux/iommu.h
+> >>> +++ b/include/uapi/linux/iommu.h
+> >>> @@ -332,4 +332,78 @@ struct iommu_gpasid_bind_data {
+> >>>  	} vendor;
+> >>>  };
+> >>>
+> >>> +/*
+> >>> + * struct iommu_nesting_info - Information for nesting-capable
+> >>> IOMMU.
+> >>> + *			       userspace should check it
+> >>> before using
+> >>> + *			       nesting capability.
+> >>> + *
+> >>> + * @argsz:	size of the whole structure.
+> >>> + * @flags:	currently reserved for future extension. must
+> >>> set to 0.
+> >>> + * @format:	PASID table entry format, the same definition
+> >>> as struct
+> >>> + *		iommu_gpasid_bind_data @format.
+> >>> + * @features:	supported nesting features.
+> >>> + * @addr_width:	The output addr width of first
+> >>> level/stage translation
+> >>> + * @pasid_bits:	Maximum supported PASID bits, 0
+> >>> represents no PASID
+> >>> + *		support.
+> >>> + * @data:	vendor specific cap info. data[] structure type
+> >>> can be deduced
+> >>> + *		from @format field.
+> >>> + *
+> >>> + *  
+> >> +===============+===================================================
+> >> ===+  
+> >>> + * | feature       |
+> >>> Notes                                               |
+> >>> + *  
+> >> +===============+===================================================
+> >> ===+  
+> >>> + * | SYSWIDE_PASID |  IOMMU vendor driver sets it to mandate
+> >>> userspace    |
+> >>> + * |               |  to allocate PASID from kernel. All PASID
+> >>> allocation |
+> >>> + * |               |  free must be mediated through the TBD
+> >>> API.          |  
+> >> s/TBD/IOMMU  
+> > 
+> > got it.
+> >   
+> >>> + *
+> >>> +---------------+------------------------------------------------------+
+> >>> + * | BIND_PGTBL    |  IOMMU vendor driver sets it to mandate
+> >>> userspace    |
+> >>> + * |               |  bind the first level/stage page table to
+> >>> associated |  
+> >> s/bind/to bind  
+> > 
+> > got it.
+> >   
+> >>> + * |               |  PASID (either the one specified in bind
+> >>> request or  |
+> >>> + * |               |  the default PASID of iommu domain),
+> >>> through IOMMU   |
+> >>> + * |               |
+> >>> UAPI.                                               |
+> >>> + *
+> >>> +---------------+------------------------------------------------------+
+> >>> + * | CACHE_INVLD   |  IOMMU vendor driver sets it to mandate
+> >>> userspace    |  
+> >>  
+> >>> + * |               |  explicitly invalidate the IOMMU cache
+> >>> through IOMMU |  
+> >> to explicitly  
+> > 
+> > I see.
+> >   
+> >>> + * |               |  U
+> >>> API according to vendor-specific requirement when  |
+> >>> + * |               |  changing the 1st level/stage page
+> >>> table.            |
+> >>> + *
+> >>> +---------------+------------------------------------------------------+
+> >>> + *
+> >>> + * @data[] types defined for @format:
+> >>> + *  
+> >> +================================+==================================
+> >> ===+  
+> >>> + * | @format                        |
+> >>> @data[]                             |
+> >>> + *  
+> >> +================================+==================================
+> >> ===+  
+> >>> + * | IOMMU_PASID_FORMAT_INTEL_VTD   | struct
+> >>> iommu_nesting_info_vtd       |
+> >>> + *
+> >>> +--------------------------------+-------------------------------------+
+> >>> + *
+> >>> + */
+> >>> +struct iommu_nesting_info {
+> >>> +	__u32	argsz;
+> >>> +	__u32	flags;
+> >>> +	__u32	format;
+> >>> +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> >>> +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> >>> +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> >>> +	__u32	features;
+> >>> +	__u16	addr_width;
+> >>> +	__u16	pasid_bits;
+> >>> +	__u32	padding;
+> >>> +	__u8	data[];
+> >>> +};  
+> >> As opposed to other IOMMU UAPI structs there is no union member at
+> >> the end.  
+> > 
+> > nice catch. do you think it would be better to adding a union and
+> > put the struct iommu_nesting_info_vtd in it?  
+> Yes I think so. At least it would be consistent with the rest of the
+> API and with the guidelines.
+> >   
+> >> Also this struct is not documented in [PATCH v7 1/7] docs: IOMMU
+> >> user API. Shouldn't we align.
+> >> You may also consider to move this patch in Jacob's series for
+> >> consistency, thoughts?  
+> > 
+> > this was talked one time between Jacob and me. It was put in this
+> > series as the major user of nesting_info is in this series. e.g.
+> > vfio checks the SYSWIDE_PASID. but I'm open to merge it with Jacob's
+> > series if it would make the merge easier.  
+> Yep I think it would make sense to move in Jacob's series to have a
+> general understanding of the uapi
+> 
+I a little reluctant to include this in my UAPI set, the reason is that
+there are two dimensions IOMMU UAPI are extended:
+1. Define the protocols in interaction with VFIO, sanity checking, and
+backward compatibility.
+2. Adding more UAPI data structures that are parallel to the existing
+ones.
 
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
----
- drivers/block/rnbd/rnbd-srv.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+My patchset is to address #1, this patch is for #2. My thinking is that
+once we have reached consensus on #1, new UAPI structures such as this
+patch can just follow the suit.
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 0fb94843a495..f515d1a048a9 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -123,10 +123,10 @@ static int process_rdma(struct rtrs_srv *sess,
- 	struct rnbd_io_private *priv;
- 	struct rnbd_srv_sess_dev *sess_dev;
- 	u32 dev_id;
--	int err;
- 	struct rnbd_dev_blk_io *io;
- 	struct bio *bio;
- 	short prio;
-+	int ret = 0;
- 
- 	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -138,7 +138,7 @@ static int process_rdma(struct rtrs_srv *sess,
- 	if (IS_ERR(sess_dev)) {
- 		pr_err_ratelimited("Got I/O request on session %s for unknown device id %d\n",
- 				   srv_sess->sessname, dev_id);
--		err = -ENOTCONN;
-+		ret = -ENOTCONN;
- 		goto err;
- 	}
- 
-@@ -168,13 +168,13 @@ static int process_rdma(struct rtrs_srv *sess,
- 
- 	submit_bio(bio);
- 
--	return 0;
-+	return ret;
- 
- sess_dev_put:
- 	rnbd_put_sess_dev(sess_dev);
- err:
- 	kfree(priv);
--	return err;
-+	return ret;
- }
- 
- static void destroy_device(struct rnbd_srv_dev *dev)
--- 
-2.28.0
+If that is OK with you, I would like to keep them separate to avoid
+diverging conversations.
 
+Thanks,
+
+Jacob
+
+> Thanks
+> 
+> Eric
+> > 
+> > Thanks,
+> > Yi Liu
+> >   
+> >>> +
+> >>> +/*
+> >>> + * struct iommu_nesting_info_vtd - Intel VT-d specific nesting
+> >>> info.
+> >>> + *
+> >>> + * @flags:	VT-d specific flags. Currently reserved for
+> >>> future
+> >>> + *		extension. must be set to 0.
+> >>> + * @cap_reg:	Describe basic capabilities as defined in
+> >>> VT-d capability
+> >>> + *		register.
+> >>> + * @ecap_reg:	Describe the extended capabilities as
+> >>> defined in VT-d
+> >>> + *		extended capability register.
+> >>> + */
+> >>> +struct iommu_nesting_info_vtd {
+> >>> +	__u32	flags;
+> >>> +	__u32	padding;
+> >>> +	__u64	cap_reg;
+> >>> +	__u64	ecap_reg;
+> >>> +};
+> >>> +
+> >>>  #endif /* _UAPI_IOMMU_H */
+> >>>  
+> >>
+> >> Thanks
+> >>
+> >> Eric
+> >>  
+> >   
+> 
+
+[Jacob Pan]
