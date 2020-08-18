@@ -2,105 +2,74 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428A020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0B020639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgHRJWf (ORCPT
+        id S1726484AbgHRJ0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:22:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46126 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHRJWf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:22:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4BC761C0BB6; Tue, 18 Aug 2020 11:22:32 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 11:22:31 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 012/168] crypto: ccree - fix resource leak on error
- path
-Message-ID: <20200818092231.GA10974@amd>
-References: <20200817143733.692105228@linuxfoundation.org>
- <20200817143734.336080170@linuxfoundation.org>
+        Tue, 18 Aug 2020 05:26:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54426 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgHRJ0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:26:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6DBFFAE59;
+        Tue, 18 Aug 2020 09:26:44 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 11:26:17 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     peterz@infradead.org
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818092617.GN28270@dhcp22.suse.cz>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817143734.336080170@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200818091453.GL2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 18-08-20 11:14:53, Peter Zijlstra wrote:
+> On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
+> > Memory controller can be used to control and limit the amount of
+> > physical memory used by a task. When a limit is set in "memory.high" in
+> > a v2 non-root memory cgroup, the memory controller will try to reclaim
+> > memory if the limit has been exceeded. Normally, that will be enough
+> > to keep the physical memory consumption of tasks in the memory cgroup
+> > to be around or below the "memory.high" limit.
+> > 
+> > Sometimes, memory reclaim may not be able to recover memory in a rate
+> > that can catch up to the physical memory allocation rate. In this case,
+> > the physical memory consumption will keep on increasing. 
+> 
+> Then slow down the allocator? That's what we do for dirty pages too, we
+> slow down the dirtier when we run against the limits.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is what we actually do. Have a look at mem_cgroup_handle_over_high.
 
-Hi!
-
-> Fix a small resource leak on the error path of cipher processing.
-
-I believe this one is wrong.
-
-> @@ -149,10 +148,19 @@ static int cc_cipher_init(struct crypto_tfm *tfm)
->  	ctx_p->flow_mode =3D cc_alg->flow_mode;
->  	ctx_p->drvdata =3D cc_alg->drvdata;
-> =20
-> +	if (ctx_p->cipher_mode =3D=3D DRV_CIPHER_ESSIV) {
-> +		/* Alloc hash tfm for essiv */
-> +		ctx_p->shash_tfm =3D crypto_alloc_shash("sha256-generic", 0, 0);
-> +		if (IS_ERR(ctx_p->shash_tfm)) {
-> +			dev_err(dev, "Error allocating hash tfm for ESSIV.\n");
-> +			return PTR_ERR(ctx_p->shash_tfm);
-> +		}
-> +	}
-
-shash_tfm() is only allocated conditionally.
-
-> +free_key:
-> +	kfree(ctx_p->user.key);
-> +free_shash:
-> +	crypto_free_shash(ctx_p->shash_tfm);
-
-But it is freed unconditionally, and free_shash() is not robust
-against NULL pointer due to undefined behaviour in crypto_shash_tfm.
-
-Additionally, it would be cleaner to set ctx_p->shash_tfm to NULL in
-this path.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl87ndcACgkQMOfwapXb+vJqAgCeJ4kPDDTti77BdUluNZl/BNi4
-iugAn0Lm5kyR9qunG2p49VLBxbJaxd/0
-=9bnH
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+-- 
+Michal Hocko
+SUSE Labs
