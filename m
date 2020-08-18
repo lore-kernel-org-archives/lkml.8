@@ -2,70 +2,179 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0416C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD34C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C23D207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597765042;
-	bh=MAFNON2hoxA7JMZPJzIk8T3rPJSmyITITona5n96o6w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nBVKeTta2B4zZesNAlfog868MThWYPEFa0vIC6o6s+wdTNu6XTiZcGMbCznkeZLqs
-	 ur6yZD9LRikNBkmQZWSEa9DvOtcEXL4uW8iQpoU1t7OoH4fwjtRzU5REb9/RxgY4+z
-	 FDRj0Nt42LdvQBT8pFeJQAkiSqy94nthrSi1FTKk=
+	by mail.kernel.org (Postfix) with ESMTP id C64D5207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B083McDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHRPhT (ORCPT
+        id S1728036AbgHRPhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgHRPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:37:17 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 18 Aug 2020 11:37:41 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:57128 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728022AbgHRPhk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:37:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597765059; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hsDdRxoJeEJ8Y/dmt5JkrFOLYYx8r7UcYhdUGHIviGc=;
+ b=B083McDmsp5Ci5RfE3BmiEUpS0Z8/v9RyNywB09PG3JBjPSCnuVfxFfnWxSWsKC92MXo8UZ7
+ fWRyEgyWTzRwH9US3DxBJx3xUaTqexEOqdDdYZWD183+PNQAqj6DKNMY2fb+JurkNc+7uKsT
+ 3tKyHqWxP4yzOmnGFn+Sl4lSxL4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f3bf5c2ba4c2cd367552fa0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 15:37:38
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7CE07C43391; Tue, 18 Aug 2020 15:37:37 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2D020786;
-        Tue, 18 Aug 2020 15:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597765037;
-        bh=MAFNON2hoxA7JMZPJzIk8T3rPJSmyITITona5n96o6w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BkUCmiSKdQSIOgj6VXjPSb6vLBPevwrQyYVtcpyYtLYjse2rPJ94odnJPhumVCEPs
-         DKFmFhO65zEct2I8D3Ui7CMCmU78ixU06xUECjIFa3l7SSAWJEtf2UphWKkimU6WHi
-         qIcHeUD4OPMHnHGquAL3wsLDpGN6r2rEqJfL1uzg=
-Date:   Tue, 18 Aug 2020 08:37:15 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@nvidia.com>
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
- to devlink reload command
-Message-ID: <20200818083715.041b1b54@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <9fbad1d6-7052-225a-7d62-9d29548d6342@nvidia.com>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
-        <1597657072-3130-2-git-send-email-moshe@mellanox.com>
-        <20200817091615.37e76ca3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <9fbad1d6-7052-225a-7d62-9d29548d6342@nvidia.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D0ADC433C6;
+        Tue, 18 Aug 2020 15:37:36 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 21:07:36 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
+ <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+Message-ID: <d949bdfa15b133f74a47727401553c76@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 12:06:13 +0300 Moshe Shemesh wrote:
-> Or maybe better than "live" say explicitly "no reset":
->=20
->  =C2=A0=C2=A0=C2=A0 devlink dev reload DEV [ netns { PID | NAME | ID } ] =
-[ action {=20
-> driver_reinit | fw_activate [--no_reset] } ]
+Hi Doug,
 
-SGTM
+On 2020-08-18 20:42, Doug Anderson wrote:
+> Hi,
+> 
+<snip>...
+
+> 
+> I guess to start, it wasn't obvious (to me) that there were two
+> choices and we were picking one.  Mentioning that the other
+> alternative was way-based allocation would help a lot.  Even if you
+> can't fully explain the differences between the two, adding something
+> to the commit message indicating that this is a policy decision (in
+> other words, both work but each have their tradeoffs) would help.
+> Something like this, if it's correct:
+> 
+> In general we try to enable capacity based allocation (instead of the
+> default way based allocation) since that gives us better performance
+> with the current software / hardware configuration.
+> 
+
+Thanks, I will add it for next version. Let me also go poke some arch 
+teams
+to understand if we actually do gain something with this selection, who 
+knows
+we might get some additional details as well.
+
+>> >
+>> > Why are you introducing a whole second table?  Shouldn't you just add
+>> > a field to "struct qcom_llcc_config" ?
+>> >
+>> 
+>> This was my 2nd option, first one was to have this based on the 
+>> version
+>> of LLCC
+>> which are exposed by hw info registers. But that didn't turn out good
+>> since I
+>> couldn't find any relation of this property with LLCC version.
+>> 
+>> Second option was as you mentioned to have a field to 
+>> qcom_llcc_config.
+>> Now this is good,
+>> but then I thought that if we add LLCC support for 20(random number)
+>> SoCs of which
+>> 10 is capable of supporting cap_based_alloc and rest 10 are not, then 
+>> we
+>> will still be adding
+>> 20 more lines to each SoC's llcc_config if we follow this 2nd option.
+> 
+> If you do it right, you'd only need to add lines to the SoCs that need
+> it.  Linux conventions in general are that it's OK (and encouraged) to
+> rely on the fact that if you don't mention a variable in static
+> initialization it's initted to 0/False/NULL.  So if the member
+> variable is "need_llcc_config" then you only need to add this in
+> places where you're setting it to true.  It only needs to be a boolean
+> so if later someone really is worried about all the bytes that flags
+> like this are taking up we can use a bitfield.  For now (presumably)
+> just adding a boolean would be more efficient since (presumably) the
+> extra code needed to access a bitfield would be more than the extra
+> data bytes used.  In theory this could also be initdata probably, too.
+> 
+
+Yes but in this case we would better be explicit about the capable SoCs
+because for someone in QCOM it would be easier to confirm if the SoC is
+actually capable but it will not be very obvious for outside folks that
+the particular SoC actually supports it. I will use a boolean field 
+properly
+initialized to indicate if a particular SoC is capable or not.
+
+> 
+>> So why not opt for a 3rd option with the table where you just need to
+>> specify only the capable
+>> targets which is just 10 in our sample case above.
+> 
+> Are you trying to save space?  ...or complexity?  Sure a good compiler
+> will probably pool the constant string here so you won't need to
+> allocate it twice, but IMO having a second match table is more
+> complex.  You also need at least a pointer + bool per entry.  Each
+> probe will now need to parse through all these strings, too.  None of
+> this is a big deal, but I'd bet just adding a field to the existing
+> struct is lower overhead all around.
+> 
+
+Mostly space, but I agree now that the boolean field is indeed better 
+than
+a separate table.
+
+> 
+>> Am I just overthinking this too much and should just go with the 2nd
+>> option as you mentioned?
+> 
+> Someone could feel free to vote against me, but I'd just add to the
+> existing config.
+> 
+
+I vote for you :)
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
