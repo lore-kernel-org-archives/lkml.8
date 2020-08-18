@@ -2,137 +2,116 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B606C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88856C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7357420674
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C32A20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="n/I/jA2s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gg4TdrQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgHRRgf convert rfc822-to-8bit (ORCPT
+        id S1728880AbgHRRgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:36:35 -0400
-Received: from wildebeest.demon.nl ([212.238.236.112]:50288 "EHLO
-        gnu.wildebeest.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgHRRgX (ORCPT
+        Tue, 18 Aug 2020 13:36:50 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:39323 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728889AbgHRRgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:36:23 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Aug 2020 13:36:21 EDT
-Received: from tarox.wildebeest.org (tarox.wildebeest.org [172.31.17.39])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by gnu.wildebeest.org (Postfix) with ESMTPSA id 8197F30278CD;
-        Tue, 18 Aug 2020 19:29:56 +0200 (CEST)
-Received: by tarox.wildebeest.org (Postfix, from userid 1000)
-        id 2FDCF401443A; Tue, 18 Aug 2020 19:29:56 +0200 (CEST)
-Message-ID: <c9c4a42ba6b4d36e557a5441e90f7f4961ec3f72.camel@klomp.org>
-Subject: Re: Kernel build error on BTFIDS vmlinux
-From:   Mark Wielaard <mark@klomp.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
-        andriin@fb.com, nickc@redhat.com
-Date:   Tue, 18 Aug 2020 19:29:56 +0200
-In-Reply-To: <20200818183318.2c3fe4a2@carbon>
-References: <20200818105555.51fc6d62@carbon> <20200818091404.GB177896@krava>
-         <20200818105602.GC177896@krava> <20200818134543.GD177896@krava>
-         <20200818183318.2c3fe4a2@carbon>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Evolution 3.28.5 (3.28.5-8.el7) 
-Mime-Version: 1.0
+        Tue, 18 Aug 2020 13:36:35 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 3494A10A8;
+        Tue, 18 Aug 2020 13:36:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 18 Aug 2020 13:36:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=9
+        TlfznyxsMv5GMFDcfPOM5mcVt7VYPmD7P4p5Aa1ggA=; b=n/I/jA2sR7EdLT4fM
+        sdG8+/6f5iDm80zA9fnUvSoAe+dUsK94q3XUGCycovf4oIeDyYVAyHVh/JXLGfJC
+        yahhcQ2zWxL3srqei7NxqOZK0lz+2mmLS+QZKvsRtv9PfnqhTt6wPdagpV80d4e+
+        iLPzzTDlone/3uKJcSNXU3Ktth+Ua/Fm+JI7PY6vMX7x1jFuOvIWn3VTVLf+wwzS
+        H5N4/AiQxVRXvtfEFjJdsdWW2V5t+jrT3k89QZooxNrLvUYVbLcigf5u/zApyJKs
+        rk8p7cSnsZvwJnC1tFxoe2IaBFA07qFanpUrpjzkBEyMhPYXu39Z4+0DRARujkG3
+        ryyEw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=9TlfznyxsMv5GMFDcfPOM5mcVt7VYPmD7P4p5Aa1g
+        gA=; b=Gg4TdrQeB2iojmFKU7oK1ICjlmbsrX1Ru1wI0Uc2mGdq9OarkJHAUOMhD
+        z+siCAVbI1uSReLu4adjAcDNx46kCuADYZ/nlXxWlHFKtz2amNNX0CERhef/1w/h
+        d5V1uNeiEd7aQixuDKmYy/IRolckpqT0JExmCVf/6XUizADVEVchml3AG4IYI5Gw
+        dlxEpMYdo3swERA4HE8pDD6LfAlnH41s8AmmAfv4K09ebngM/WmIYGxPCld663Ym
+        RihXPTkqblSCclFI+U4uMpoDJ+Z5w83pma18GsTbjIKjjnzA1SrtLqU2f2YsGoTI
+        7voPF5A7qLNEc30xedntAKCqmrawg==
+X-ME-Sender: <xms:oRE8X_3osVoQ4g4vq8-lY1_6aDeZbIyRo37qQyXNW4LE0effnH-_ug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtiedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggugfgjsehtke
+    ertddttdejnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhm
+    qeenucggtffrrghtthgvrhhnpeeuheekheelffefieduteefkeejffdvueehjeejffehle
+    dugfetkedvleekudduvdenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
+    gtohhm
+X-ME-Proxy: <xmx:oRE8X-GdRey3VoRTH_FFEpSxg82SP2l2tYGyDAiU3lfOm_Z_WVRLWQ>
+    <xmx:oRE8X_62SMZdRXyMIsaGim_en4k1uVSPcSalIJxhq7n-trqUyj-nuQ>
+    <xmx:oRE8X02Kafx4DGYnvA9bd5kXv8ADhE0sJU1vGj9bJ8dfgjCPUlCE2A>
+    <xmx:oRE8X9N1ChapT9PIU622iyLJkerjQsZaZ46HOcar9JcQqy9WoWahBA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2E2693060272;
+        Tue, 18 Aug 2020 13:36:33 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 19:36:56 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: Scheduler benchmarks
+Message-ID: <20200818173656.GA748290@kroah.com>
+References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
+ <20200818143633.GA628293@kroah.com>
+ <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
+ <20200818171457.GA736234@kroah.com>
+ <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 18, 2020 at 11:01:35PM +0530, Muni Sekhar wrote:
+> On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
+> > > On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
+> > > >
+> > > > On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
+> > > > > Hi all,
+> > > > >
+> > > > > I’ve two identical Linux systems with only kernel differences.
+> > > >
+> > > > What are the differences in the kernels?
+> >
+> > You didn't answer this question, is this the same kernel source being
+> > compared here?  Same version?  Same compiler?  Everything identical?
+> Both systems are having exactly the same hardware configuration.
+> Compiler and kernel versions are different. One system has Ubuntu
+> 16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
+> the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
+> version 7.5.0).
 
-Adding Nick, the binutils maintainer, so we can make sure
-binutils/elfutils agree on some ELF section compression corner case.
+Those are _very_ different kernel versions, with many years and tens of
+thousands of different changes between them.
 
-On Tue, 2020-08-18 at 18:33 +0200, Jesper Dangaard Brouer wrote:
-> On Tue, 18 Aug 2020 15:45:43 +0200
-> Jiri Olsa <jolsa@redhat.com> wrote:
-> 
-> > On Tue, Aug 18, 2020 at 12:56:08PM +0200, Jiri Olsa wrote:
-> > > On Tue, Aug 18, 2020 at 11:14:10AM +0200, Jiri Olsa wrote:  
-> > > > On Tue, Aug 18, 2020 at 10:55:55AM +0200, Jesper Dangaard Brouer wrote:  
-> > > > > 
-> > > > > On latest DaveM net-git tree (06a4ec1d9dc652), after linking (LD vmlinux) the
-> > > > > "BTFIDS vmlinux" fails. Are anybody else experiencing this? Are there already a
-> > > > > fix? (just returned from vacation so not fully up-to-date on ML yet)
-> > > > > 
-> > > > > The tool which is called and error message:
-> > > > >   ./tools/bpf/resolve_btfids/resolve_btfids vmlinux
-> > > > >   FAILED elf_update(WRITE): invalid section alignment  
-> > > > 
-> > > > hi,
-> > > > could you send your .config as well?  
-> > > 
-> > > reproduced.. checking on fix  
-> > 
-> > I discussed this with Mark (cc-ed) it seems to be a problem
-> > with linker when dealing with compressed debug info data,
-> > which is enabled in your .config
-> > 
-> > it works for me when I disable CONFIG_DEBUG_INFO_COMPRESSED option
-> 
-> Thanks for finding this!
-> I confirm that disabling CONFIG_DEBUG_INFO_COMPRESSED fixed the issue.
-> 
-> > Mark will fix this upstream, meanwhile he suggested workaround
-> > we can do in resolve_btfids tool, that I'll try to send shortly
-> 
-> Great!
+Hopefully the newer kernel is faster, so just stick with that :)
 
-So, the issue is that there is some confusion about the correct
-alignment of compressed ELF sections.
-
-When an ELF section is compressed using gabi-zlib it contains a header
-(a Elf_Chdr32 or Elf_Chdr64, followed by the compressed data) The
-header explains how the section data is compressed, what the exploded
-size is, what the alignment of that uncompressed data is, etc.
-
-Because of this header the section data should be aligned to 4 (for
-32bit) or 8 (for 64 bit) bytes, but binutils ld sets sh_addralign to 1.
-[*]
-
-elfutils libelf is liberal in what it accepts, and internally fixes up
-the alignment if it is wrong. Which is why we probably didn't see this
-before. But it won't let you write out misaligned data like that. Which
-is slightly confusing, because if you didn't change that section data,
-it is not immediately clear why you are getting an error.
-
-Also if you would decompress the section data to use it and then
-recompress it elfutils libelf would set sh_addralign correctly for you.
-But it won't if you don't use the (uncompressed) data.
-
-The workaround would be to explicitly set the alignment of the
-compressed section before writing out the section. Which is what Jiri
-is now testing.
-
-But it would obviously be better if that wasn't necessary. So I'll try
-to fix libelf so that if it fixes up the alignment when reading the
-compressed data, it also does that when writing out the data again. But
-that would only help for a new version of elfutils.
-
-So it would be nice if binutils ld could also be fixed to write out
-compressed sections with the correct alignment.
-
-Then hopefully if someone has either a new elfutils or a new binutils
-it just works without needing any workarounds.
-
-Cheers,
-
-Mark
-
-[*] If this sounds vaguely familiar then that is because we did have a
-different alignment bug, but for the uncompressed data (which is the
-alignment set in the compression header):
-https://bugzilla.redhat.com/show_bug.cgi?id=1678204
-That bug was about ch_addralign, this bug is about sh_addralign.
+greg k-h
