@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8361F207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C1E207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769919;
-	bh=YUgeli4C6oBA4lmghDvhoFd0Y6GobmPBwB0dZlS1kso=;
+	s=default; t=1597769938;
+	bh=k3QM3tL7QIkWGlgH9bNck/rLCTsVvUQC5OXfv05XMqk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=lqDy4UWEG7GbZE696F55F4QzN5HvlJPd6nLEr28IzaPvPmQi1PvSVe318BXXtesve
-	 fv4vRegfiCZQt/fmsdxtjHjjFkvcLMuaHQYVVeBYM3WV8il73PxJb2Xo6hNXlVCSL7
-	 C5ei8F2++KdlzE5KCmGUgvdvbY7PThp3V8ZY09Oc=
+	b=nfvdYv2FaXwWCC2DxmCMSw0TFEY9vkrHsWOD0yQsyu6G9uSii4uBqgUa+LNxpnujE
+	 92nzcVYSadrB9bg7844/zfkmj3Icw+It4ht+oTkyZYoiwD6/mPQgY8Q886IEjoFcJA
+	 +17MGNNwl73eVUMaBTqO1B+48RMrrFV6dy1TKFcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgHRQ6i (ORCPT
+        id S1728342AbgHRQ65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgHRQ5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:57:35 -0400
+        id S1728586AbgHRQ5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:57:41 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C649A20786;
-        Tue, 18 Aug 2020 16:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D717020786;
+        Tue, 18 Aug 2020 16:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769855;
-        bh=YUgeli4C6oBA4lmghDvhoFd0Y6GobmPBwB0dZlS1kso=;
+        s=default; t=1597769861;
+        bh=k3QM3tL7QIkWGlgH9bNck/rLCTsVvUQC5OXfv05XMqk=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=HVB1bZu3HRuufpjkFl5tdyY45sQICLE7rAbZu1HB/hTzLJk3c82eEcAdWV4cV0DR7
-         mp13ep6gV7XcKkuhW892L4qYgC2zc9nHfR23bZR4u71jJ6NjkRtl6wb92HsNfvHXfs
-         CHlQJjnWUSTe/XhU+WWiiQMVM/jDhbVyZA5rKS+c=
-Date:   Tue, 18 Aug 2020 17:57:04 +0100
+        b=gfRzH3byQqxZ4MK7/S26FIIvrdGEPdegRQLaLMrRdl273my/WhO6pxqHwaxW2YkYo
+         OL/fnbEoiww9U2DR/xJFSoiwpB6XpzXgiZuMuRDlfnUyDbhVj6MJ05Cfclbly/woKL
+         mXcHlEPyB2/2SB3lyTkCd6otIQsNSghuazyuUN9M=
+Date:   Tue, 18 Aug 2020 17:57:10 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-In-Reply-To: <20200810095753.59ce9f75@xhacker.debian>
-References: <20200810095753.59ce9f75@xhacker.debian>
-Subject: Re: [PATCH] regulator: sy8827n: Fix W=1 build warning when CONFIG_OF=n
-Message-Id: <159776976827.56451.1428375330310144519.b4-ty@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     kernel-janitors@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200802175007.703995-1-christophe.jaillet@wanadoo.fr>
+References: <20200802175007.703995-1-christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] spi: a3700: Remove a useless memset
+Message-Id: <159776983046.56565.184336045961597730.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 09:57:53 +0800, Jisheng Zhang wrote:
-> Fixing W=1 build warning when no support for device tree is there.
+On Sun, 2 Aug 2020 19:50:07 +0200, Christophe JAILLET wrote:
+> Memory allocated by 'spi_alloc_master()' is already zeroed.
+> Remove a redundant memset.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: sy8827n: Fix W=1 build warning when CONFIG_OF=n
-      commit: a16138a32eeeca01e2603193288ff0714bead11d
+[1/1] spi: a3700: Remove a useless memset
+      commit: 2494174e04e7f4e58d1363adb13c0ae23b64d37c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
