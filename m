@@ -2,57 +2,58 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 550442076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28AC2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHRTzB (ORCPT
+        id S1726817AbgHRTzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRTzA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:55:00 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E2AC061389;
-        Tue, 18 Aug 2020 12:55:00 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 017CD127A25DA;
-        Tue, 18 Aug 2020 12:38:13 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:54:59 -0700 (PDT)
-Message-Id: <20200818.125459.575328486010129838.davem@davemloft.net>
-To:     alex.dewar90@gmail.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ethernet: cirrus: Remove unused macros
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200818140605.442958-1-alex.dewar90@gmail.com>
-References: <20200818140605.442958-1-alex.dewar90@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Aug 2020 12:38:14 -0700 (PDT)
+        Tue, 18 Aug 2020 15:55:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:34922 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbgHRTzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:55:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 61B1668AFE; Tue, 18 Aug 2020 21:55:39 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 21:55:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
+Message-ID: <20200818195539.GB32691@lst.de>
+References: <20200817073212.830069-1-hch@lst.de> <20200817073212.830069-9-hch@lst.de> <202008181244.BBDA7DAB@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008181244.BBDA7DAB@keescook>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Dewar <alex.dewar90@gmail.com>
-Date: Tue, 18 Aug 2020 15:06:01 +0100
-
-> Remove a couple of unused #defines in cs89x0.h.
+On Tue, Aug 18, 2020 at 12:44:49PM -0700, Kees Cook wrote:
+> On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
+> > For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
 > 
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> typo: thing
+> 
+> > need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
+> > definition to escape the explicit unsigned long cast.  This just works
+> > because __PAGE_OFFSET is defined using _AC itself and thus never needs
+> > the cast anyway.
+> 
+> Shouldn't this be folded into the prior patch so there's no bisection
+> problem?
 
-Applied to net-next.
+I didn't see a problem bisecting, do you have something particular in
+mind?
