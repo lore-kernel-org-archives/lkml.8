@@ -2,172 +2,90 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF157C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FABC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDFB206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C994206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YBL+4UJq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nID6AIEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHRTcm (ORCPT
+        id S1726734AbgHRTdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        Tue, 18 Aug 2020 15:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgHRTcj (ORCPT
+        with ESMTP id S1726685AbgHRTdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:32:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9844C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:32:38 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id j13so300140pjd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:32:38 -0700 (PDT)
+        Tue, 18 Aug 2020 15:33:07 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A805DC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:33:06 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id m7so19377182qki.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:33:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x0mSpyWuIZWEqnvKTrrktYzEB/1FdLaDkbrBBFQhHGI=;
-        b=YBL+4UJq3578y/m4bQy5uoo7Nos5o95utY8lW1upX/s0vb/FLrVGVMCzuFifk1dPhx
-         FS+7mdSK1xVpOroIiChvRnxET12YMP9nU64n53nNoOwXQ96vfIG4aiLfWcAX2C+39/Gk
-         ZoRUZ8tSedL0l/FxYUN3T4we0BDMxD7AK7+V0=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9v9LH57+IfNt2arroNdfPSnoAN0s5S5MCTGnfuBn1wA=;
+        b=nID6AIEUt87zPzVhsiu3zSRICoA8xdjdUmnpqUuhZDzIWO6fpU5q00kOORdeEDydV0
+         +1pLQ+SOk2QtbtINMc46qLvmcGM1oX7xQVeE4tKTgqjnbI97bt5nXaj3Pn50/TQKbicn
+         k7xX/uH3VKdJSYOWA53667Lh1bTJhecRepgu6hdfDY82F8HAvs8z2LIcaB4KmW4sHUIW
+         YI+DvsiBHpEJMk45qfUo6ORkvcTLbS8LW3wzMW0mgPGdrL42G/P1KOESfw3YI17x1H8w
+         AhzC0mI1zxDM9k0tpzD3QhbMKbs+16pKxNr6z0aVI+DL8DZaiU2PNbO4j/dWtdWVP4FH
+         LaoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x0mSpyWuIZWEqnvKTrrktYzEB/1FdLaDkbrBBFQhHGI=;
-        b=Xauy8bOzEFHv71vzxDS7YSKSJv+ZorS2cukz43AJy9uPL4BVOyzlETGbAENONzxsPM
-         /isctCDadnrKxWKRf0E72//V2xFeqKikP9aIJhmBzRM08+xqICofUMk6r4MAZnXoVkqT
-         GrjGM63RuOxXfp+iPyBWuHFQIcmlb9SHcsXGdeHac2Ky2y5SFnOmOdhYfNf5gH2i8Qcz
-         jnOVKdpUlun/dmD5okGUFmwkRGSijfWHqqTdoTzkc1eUmJ031fHbLq7BIFZN2hImlxvx
-         1aAaDhaZjUw/sTu/KvRZa/7nHnVcHH+oqVrwOrNGIAEnEuOpczHFYqovAfunUSYpU3YS
-         PkXg==
-X-Gm-Message-State: AOAM530sBiaKt3Mi0ktAwkF4TSems1zlmHSLZ09g9U7Wvz6hkJ8AzYeL
-        WyGdZKMZop6RdP19y7QrS95Y/A==
-X-Google-Smtp-Source: ABdhPJw8jgdFZ3pGF84Ud3h+RrnX4Nws4z4yjNUuEJuoeNPBKsDHr98xigXexLsC3VVrIZx/qGKWvA==
-X-Received: by 2002:a17:90a:1d0f:: with SMTP id c15mr1201149pjd.180.1597779158415;
-        Tue, 18 Aug 2020 12:32:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z6sm24659552pfg.68.2020.08.18.12.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:32:37 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:32:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 06/11] lkdtm: disable set_fs-based tests for
- !CONFIG_SET_FS
-Message-ID: <202008181228.D2DBEC6C6@keescook>
-References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-7-hch@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9v9LH57+IfNt2arroNdfPSnoAN0s5S5MCTGnfuBn1wA=;
+        b=s1kTiuKytx1mpOkuceCa1h3mpF7NYSioFhEJVRnUdFsLZJFrNh9iZouJUt4PC1OMWg
+         dTfZ6/podtbbJwj5NGgRXHPZmI7bZjD5P/N01Ea5kG/mwgdPo6HFmluZ3QZmRwrE2ILE
+         61g9o3dhPXS87UF+XSq5i/4tz1qRiFATI/Y5nTXQ6c+13Q0DCcLRwGTJzZ6l5aEWi+t+
+         MhEhY8wnGq8UsyR3IBUIRJtVGUGOwTetKhBWtNWtDqlJ3ng1HCEL6zWJuu74usGyjtsn
+         Z9VLVGQaRQ+hvZGrfEpDnx9Q9KF1epTuyu5O7O0aycI2j08WtOOMh6xjGTNoiLexdOSh
+         9uJg==
+X-Gm-Message-State: AOAM532EDrOmin5RC9v9LamaveSaB6bwu6jdBPIx283Bvubrmd5B6gf5
+        WmRb8IiENvtdsaRPuqJ/VA0Gzd14cLM72JaoLgvkDw==
+X-Google-Smtp-Source: ABdhPJwmnD0GkDIn2RBiNaYhiNXsC+hVsNBfaZCb7bBepphu0Bkn4ovqkFMtTO4UzpqXIrzQAxfXXRicf60+wy+pB8s=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr19052701qke.330.1597779185970;
+ Tue, 18 Aug 2020 12:33:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817073212.830069-7-hch@lst.de>
+References: <20200814194847.3171-1-olek2@wp.pl>
+In-Reply-To: <20200814194847.3171-1-olek2@wp.pl>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Aug 2020 21:32:55 +0200
+Message-ID: <CAMpxmJX2RWUaGnntxwyR+yNkeYo79cWhPJV8F9i=_Nz0yn+w6g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: stp-xway: automatically drive GPHY leds on ar10 and grx390
+To:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        John Crispin <john@phrozen.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:32:07AM +0200, Christoph Hellwig wrote:
-> Once we can't manipulate the address limit, we also can't test what
-> happens when the manipulation is abused.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Fri, Aug 14, 2020 at 9:49 PM Aleksander Jan Bajkowski <olek2@wp.pl> wrote:
+>
+> Ar10 (xr300) has 3 and grx390 (xrx330) has 4 built-in GPHY. PHY LEDs are
+> connected via STP. STP is a peripheral controller used to drive external
+> shift register cascades. The hardware is able to allow the GPHY to drive
+> some GPIO of the cascade automatically.This patch allows for this on ar10
+> and grx390.
+>
+> Tested on D-Link DWR-966 with OpenWRT.
+>
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 > ---
->  drivers/misc/lkdtm/bugs.c     | 2 ++
->  drivers/misc/lkdtm/core.c     | 4 ++++
->  drivers/misc/lkdtm/usercopy.c | 2 ++
->  3 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-> index 4dfbfd51bdf774..66f1800b1cb82d 100644
-> --- a/drivers/misc/lkdtm/bugs.c
-> +++ b/drivers/misc/lkdtm/bugs.c
-> @@ -312,6 +312,7 @@ void lkdtm_CORRUPT_LIST_DEL(void)
->  		pr_err("list_del() corruption not detected!\n");
->  }
->  
-> +#ifdef CONFIG_SET_FS
->  /* Test if unbalanced set_fs(KERNEL_DS)/set_fs(USER_DS) check exists. */
->  void lkdtm_CORRUPT_USER_DS(void)
->  {
-> @@ -321,6 +322,7 @@ void lkdtm_CORRUPT_USER_DS(void)
->  	/* Make sure we do not keep running with a KERNEL_DS! */
->  	force_sig(SIGKILL);
->  }
-> +#endif
 
-Please let the test defined, but it should XFAIL with a message about
-the CONFIG (see similar ifdefs in lkdtm).
+Queued for v5.10, thanks!
 
->  /* Test that VMAP_STACK is actually allocating with a leading guard page */
->  void lkdtm_STACK_GUARD_PAGE_LEADING(void)
-> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> index a5e344df916632..aae08b33a7ee2a 100644
-> --- a/drivers/misc/lkdtm/core.c
-> +++ b/drivers/misc/lkdtm/core.c
-> @@ -112,7 +112,9 @@ static const struct crashtype crashtypes[] = {
->  	CRASHTYPE(CORRUPT_STACK_STRONG),
->  	CRASHTYPE(CORRUPT_LIST_ADD),
->  	CRASHTYPE(CORRUPT_LIST_DEL),
-> +#ifdef CONFIG_SET_FS
->  	CRASHTYPE(CORRUPT_USER_DS),
-> +#endif
->  	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
->  	CRASHTYPE(STACK_GUARD_PAGE_TRAILING),
->  	CRASHTYPE(UNSET_SMEP),
-> @@ -172,7 +174,9 @@ static const struct crashtype crashtypes[] = {
->  	CRASHTYPE(USERCOPY_STACK_FRAME_FROM),
->  	CRASHTYPE(USERCOPY_STACK_BEYOND),
->  	CRASHTYPE(USERCOPY_KERNEL),
-> +#ifdef CONFIG_SET_FS
->  	CRASHTYPE(USERCOPY_KERNEL_DS),
-> +#endif
->  	CRASHTYPE(STACKLEAK_ERASING),
->  	CRASHTYPE(CFI_FORWARD_PROTO),
-
-Then none of these are needed.
-
->  #ifdef CONFIG_X86_32
-
-Hmpf, this ifdef was missed in ae56942c1474 ("lkdtm: Make arch-specific
-tests always available"). I will fix that.
-
-> diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-> index b833367a45d053..4b632fe79ab6bb 100644
-> --- a/drivers/misc/lkdtm/usercopy.c
-> +++ b/drivers/misc/lkdtm/usercopy.c
-> @@ -325,6 +325,7 @@ void lkdtm_USERCOPY_KERNEL(void)
->  	vm_munmap(user_addr, PAGE_SIZE);
->  }
->  
-> +#ifdef CONFIG_SET_FS
->  void lkdtm_USERCOPY_KERNEL_DS(void)
->  {
->  	char __user *user_ptr =
-> @@ -339,6 +340,7 @@ void lkdtm_USERCOPY_KERNEL_DS(void)
->  		pr_err("copy_to_user() to noncanonical address succeeded!?\n");
->  	set_fs(old_fs);
->  }
-> +#endif
-
-(Same here, please.)
-
->  
->  void __init lkdtm_usercopy_init(void)
->  {
-> -- 
-> 2.28.0
-> 
-
--- 
-Kees Cook
+Bartosz
