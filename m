@@ -2,114 +2,83 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A845C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C0120674
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E7820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597772381;
+	bh=X2MHH+ajAt8ye/9QwPzB+aG8Y9hDwLgxvzGBUmiUFUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZfdkEsaHTdkNor4kh7i5Mk6DQWR1IiYG7qheWLb1tC89n6OKoMOE9VPnzJzE+UyR
+	 HcgbVYFpkwNwrKbGfoZBVnRtgw9e21g/19j/BQJWRFoNWr1PA7YnYY+iESPJ/CvT4c
+	 /E5yUVojTctM4l14nsdsRgkh3w3nUj1V9HpLaTlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgHRRhD (ORCPT
+        id S1728624AbgHRRjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:37:03 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52416 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbgHRRe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:34:29 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k85VC-0003E9-CE; Tue, 18 Aug 2020 17:34:26 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christoph Hewllig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 04/11] m68k: switch to kernel_clone()
-Date:   Tue, 18 Aug 2020 19:34:04 +0200
-Message-Id: <20200818173411.404104-5-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200818173411.404104-1-christian.brauner@ubuntu.com>
-References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
+        Tue, 18 Aug 2020 13:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727773AbgHRRjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:39:39 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F8D420738;
+        Tue, 18 Aug 2020 17:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597772378;
+        bh=X2MHH+ajAt8ye/9QwPzB+aG8Y9hDwLgxvzGBUmiUFUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A2GWk3PWMd1NreljfZxP+OqUTzod2fm7mIpCQ2qDQ3qvyktQFZsiI1Hu65eBGngzS
+         /pdohnETh4V1X31tm8Fvq5I+D2HMEhhxkB8xsfbl6HRDH09D5WWdq8xSfdSRmMlL5n
+         W52qnLFBeZuAX4Ov7JTOB9KCrbr3c4fgaVtkzFxY=
+Date:   Tue, 18 Aug 2020 10:39:36 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Javier Gonzalez <javier@javigon.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Kanchan Joshi <joshi.k@samsung.com>, Damien.LeMoal@wdc.com,
+        axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, johannes.thumshirn@wdc.com,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+Message-ID: <20200818173936.GA3097355@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200818052936.10995-1-joshi.k@samsung.com>
+ <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
+ <20200818052936.10995-3-joshi.k@samsung.com>
+ <20200818071249.GB2544@lst.de>
+ <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local>
+ <20200818165811.GA2979311@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200818172912.e54klrofz3tfhxhj@MacBook-Pro.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818172912.e54klrofz3tfhxhj@MacBook-Pro.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
-The latter adheres to naming conventions for kernel internal syscall helpers.
+On Tue, Aug 18, 2020 at 07:29:12PM +0200, Javier Gonzalez wrote:
+> On 18.08.2020 09:58, Keith Busch wrote:
+> > On Tue, Aug 18, 2020 at 11:50:33AM +0200, Javier Gonzalez wrote:
+> > > a number of customers are requiring the use of normal writes, which we
+> > > want to support.
+> > 
+> > A device that supports append is completely usable for those customers,
+> > too. There's no need to create divergence in this driver.
+> 
+> Not really. You know as well as I do that some features are disabled for
+> a particular SSD model on customer requirements. Generic models
+> implementing append can submit both I/Os, but those that remove append
+> are left out.
 
-Cc: Kars de Jong <jongk@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- arch/m68k/kernel/process.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
-index 6492a2c54dbc..08359a6e058f 100644
---- a/arch/m68k/kernel/process.c
-+++ b/arch/m68k/kernel/process.c
-@@ -107,10 +107,10 @@ void flush_thread(void)
-  * on top of pt_regs, which means that sys_clone() arguments would be
-  * buried.  We could, of course, copy them, but it's too costly for no
-  * good reason - generic clone() would have to copy them *again* for
-- * _do_fork() anyway.  So in this case it's actually better to pass pt_regs *
-- * and extract arguments for _do_fork() from there.  Eventually we might
-- * go for calling _do_fork() directly from the wrapper, but only after we
-- * are finished with _do_fork() prototype conversion.
-+ * kernel_clone() anyway.  So in this case it's actually better to pass pt_regs *
-+ * and extract arguments for kernel_clone() from there.  Eventually we might
-+ * go for calling kernel_clone() directly from the wrapper, but only after we
-+ * are finished with kernel_clone() prototype conversion.
-  */
- asmlinkage int m68k_clone(struct pt_regs *regs)
- {
-@@ -125,7 +125,7 @@ asmlinkage int m68k_clone(struct pt_regs *regs)
- 		.tls		= regs->d5,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- 
- /*
--- 
-2.28.0
-
+You are only supporting my point: if your device supports append, you
+get to work in every ZNS use case, otherwise you only get to work in a
+subset.
