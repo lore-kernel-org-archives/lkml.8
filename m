@@ -2,100 +2,146 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B391C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFB520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA372206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:17:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MMIVJnuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgHRNO3 (ORCPT
+        id S1726583AbgHRNR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:14:29 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43760 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgHRNOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:14:22 -0400
-IronPort-SDR: 6W+Z5Qg0U19Qf6mTezwEiV/l/nmIcsazURgZwtb4cvtTksYO58RnRT+QjURHYhqJ2blI5oAh7+
- jrQr+HViX8RQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239721046"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="239721046"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:14:22 -0700
-IronPort-SDR: C11I1yanpgMrEx772U0BmhqlpbZtBtIyHJ4Ihp0okQu5vVkXPTDl80TrCZGMn/J5/tAJFEDRF5
- tY2sNCfCLxPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="326724846"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 06:14:16 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k81RO-009eUD-Vf; Tue, 18 Aug 2020 16:14:14 +0300
-Date:   Tue, 18 Aug 2020 16:14:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Tony Lindgren <tony@atomide.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Raul Rangel <rrangel@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH] uart:8250: change lock order in serial8250_do_startup()
-Message-ID: <20200818131414.GQ1891694@smile.fi.intel.com>
-References: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
- <20200814095928.GK1891694@smile.fi.intel.com>
- <20200818125218.GC17612@alley>
+        Tue, 18 Aug 2020 09:17:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44810 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726353AbgHRNRz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:17:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597756673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F0uI96kuUyz81rQQhwBKLrJwcZelZomkWIsH60DHRcU=;
+        b=MMIVJnuNUQJVYMP0Yu7s2CzYFJnWphHJOTq1F+xGcL8HR3LyhLqzF40168jRg94dWq7Qzp
+        U6ynYPaZE4rb3i+gk/UgVes/55EWrHXGlqwqDzXwd4NhH5oz3bcLF/3CMhG2kd1LV2GJhT
+        nXpRmnuneyafP/RIUBhT/YdAa9Uwae4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-6tH6VciYN8G9RuEwLPJ1Eg-1; Tue, 18 Aug 2020 09:17:51 -0400
+X-MC-Unique: 6tH6VciYN8G9RuEwLPJ1Eg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EDC58100CECC;
+        Tue, 18 Aug 2020 13:17:49 +0000 (UTC)
+Received: from darcari.bos.csb (ovpn-114-148.rdu2.redhat.com [10.10.114.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93E9426327;
+        Tue, 18 Aug 2020 13:17:49 +0000 (UTC)
+Subject: Re: [PATCH] tools/power turbostat: fix output formatting for ACPI CST
+ enumeration
+To:     linux-pm@vger.kernel.org
+Cc:     Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200810144330.75613-1-darcari@redhat.com>
+From:   David Arcari <darcari@redhat.com>
+Organization: Red Hat
+Message-ID: <bd35e393-f52d-0ac3-67bb-fbe52486f89f@redhat.com>
+Date:   Tue, 18 Aug 2020 09:17:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818125218.GC17612@alley>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200810144330.75613-1-darcari@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:52:18PM +0200, Petr Mladek wrote:
-> On Fri 2020-08-14 12:59:28, Andy Shevchenko wrote:
-> > On Fri, Aug 14, 2020 at 10:38:02AM +0900, Sergey Senozhatsky wrote:
-> > > We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
-> > > lockdep reports coming from 8250 driver; this causes a bit of trouble
-> > > to people, so let's fix it.
-> > 
-> > I guess we may add some tags here
-> > 
-> > Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Reported-by: Raul Rangel <rrangel@google.com>
-> > BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
-> > Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
+
+Hi,
+
+Just want to make sure that this doesn't get lost.
+
+Please let me know if you feel there is a better approach.
+
+Thanks,
+
+-Dave
+
+On 8/10/20 10:43 AM, David Arcari wrote:
+> turbostat formatting is broken with ACPI CST for enumeration.  The
+> problem is that the CX_ACPI% is eight characters long which does not
+> work with tab formatting.  One simple solution is to remove the underbar
+> from the state name such that C1_ACPI will be displayed as C1ACPI.
 > 
-> "Link:" tag should point to the mail that is applied using git am.
-> I am not sure if there is a tag for related discussion in another
-> mail threads.
-
-It's fine to have several Link tags and in the past we have them for bug
-reports thru mailing lists or so.
-
-> Andy proposed many changes. Sergey, could you please send v2?
-
-There is a v2.
-
-https://lore.kernel.org/linux-serial/20200817022646.1484638-1-sergey.senozhatsky@gmail.com/T/#u
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Signed-off-by: David Arcari <darcari@redhat.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   tools/power/x86/turbostat/turbostat.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+> 
+> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+> index 33b370865d16..5f074879cc0a 100644
+> --- a/tools/power/x86/turbostat/turbostat.c
+> +++ b/tools/power/x86/turbostat/turbostat.c
+> @@ -3474,6 +3474,20 @@ int has_config_tdp(unsigned int family, unsigned int model)
+>   	}
+>   }
+>   
+> +static void
+> +remove_underbar(char *s)
+> +{
+> +	char *to = s;
+> +
+> +	while (*s) {
+> +		if (*s != '_')
+> +			*to++ = *s;
+> +		s++;
+> +	}
+> +
+> +	*to = 0;
+> +}
+> +
+>   static void
+>   dump_cstate_pstate_config_info(unsigned int family, unsigned int model)
+>   {
+> @@ -3559,6 +3573,8 @@ dump_sysfs_cstate_config(void)
+>   		*sp = '\0';
+>   		fclose(input);
+>   
+> +		remove_underbar(name_buf);
+> +
+>   		sprintf(path, "/sys/devices/system/cpu/cpu%d/cpuidle/state%d/desc",
+>   			base_cpu, state);
+>   		input = fopen(path, "r");
+> @@ -5597,6 +5613,8 @@ void probe_sysfs(void)
+>   		*sp = '%';
+>   		*(sp + 1) = '\0';
+>   
+> +		remove_underbar(name_buf);
+> +
+>   		fclose(input);
+>   
+>   		sprintf(path, "cpuidle/state%d/time", state);
+> @@ -5624,6 +5642,8 @@ void probe_sysfs(void)
+>   		*sp = '\0';
+>   		fclose(input);
+>   
+> +		remove_underbar(name_buf);
+> +
+>   		sprintf(path, "cpuidle/state%d/usage", state);
+>   
+>   		if (is_deferred_skip(name_buf))
+> 
 
