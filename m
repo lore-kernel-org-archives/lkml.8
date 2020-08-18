@@ -2,216 +2,82 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B09C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED64E20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A2220786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vIKfUHvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgHRRVk (ORCPT
+        id S1728571AbgHRRWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:21:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:22687 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbgHRRTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:19:19 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BWHhL6MRTz9vCxq;
-        Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ZN1PWKNUWFtk; Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhL5bhXz9vCxg;
-        Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 943BA8B7EC;
-        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id wfILgMUBQyIW; Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 566798B7D7;
-        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3824665CF4; Tue, 18 Aug 2020 17:19:16 +0000 (UTC)
-Message-Id: <24a1baedea7f7ae7b6bf27be98bab6d01b5ca2c1.1597770847.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1597770847.git.christophe.leroy@csgroup.eu>
-References: <cover.1597770847.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 04/25] powerpc/ptrace: Create ptrace_get_fpr() and
- ptrace_put_fpr()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 18 Aug 2020 17:19:16 +0000 (UTC)
+        Tue, 18 Aug 2020 13:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbgHRRWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:22:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4F4C061389;
+        Tue, 18 Aug 2020 10:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=FmYiny6Y/5Pb9ex+9gFqdnDzd6qjJ/9YMPjKhe0IpLs=; b=vIKfUHvR8qR+mc1Y3Fjx/q0wdX
+        3YPNaWSCjfBBPPOIdcg+F8lKPTsWE3Gso7LDXqquj1HdackjHYKSUk4CxjagslhjORjr1Wvh+xkec
+        u6qSmQ7pSyFLtkDX80qBY4H9T46dn4TGzOY8JpOR0d5Rn9PdRTX9Qg4RpwrZVEJLFIBcmrY2SSMaz
+        Fjg239Kr8MnU0F/hBC0z0aTbcjJtXK+CitsJUz2IXSadkW72AVYIxChgdbxtlnxwTmSpieWjAPSDF
+        e58sdWyUQtfwWKpuDXXIc8hEZ4M8vdRe/pmyC8I16JuN9IJQB8vWVuHbDIf8ktfhw2hrlmY7eDQZb
+        2q12yXPg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k85Jf-0004wk-68; Tue, 18 Aug 2020 17:22:32 +0000
+Date:   Tue, 18 Aug 2020 18:22:31 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Support for I/O to a bitbucket
+Message-ID: <20200818172231.GU17456@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the same model as ptrace_get_reg() and ptrace_put_reg(),
-create ptrace_get_fpr() and ptrace_put_fpr() to get/set
-the floating points registers.
+One of the annoying things in the iomap code is how we handle
+block-misaligned I/Os.  Consider a write to a file on a 4KiB block size
+filesystem (on a 4KiB page size kernel) which starts at byte offset 5000
+and is 4133 bytes long.
 
-We move the boundary checkings in them.
+Today, we allocate page 1 and read bytes 4096-8191 of the file into
+it, synchronously.  Then we allocate page 2 and read bytes 8192-12287
+into it, again, synchronously.  Then we copy the user's data into the
+pagecache and mark it dirty.  This is a fairly significant delay for
+the user who normally sees the latency of a memcpy() now has to wait
+for two non-overlapping reads to complete.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/ptrace/Makefile      |  1 +
- arch/powerpc/kernel/ptrace/ptrace-decl.h |  4 +++
- arch/powerpc/kernel/ptrace/ptrace-fpu.c  | 40 ++++++++++++++++++++++++
- arch/powerpc/kernel/ptrace/ptrace.c      | 40 +++++++-----------------
- 4 files changed, 56 insertions(+), 29 deletions(-)
- create mode 100644 arch/powerpc/kernel/ptrace/ptrace-fpu.c
+What I'd love to be able to do is allocate pages 1 & 2, copy the user
+data into it and submit one read which targets:
 
-diff --git a/arch/powerpc/kernel/ptrace/Makefile b/arch/powerpc/kernel/ptrace/Makefile
-index c2f2402ebc8c..77abd1a5a508 100644
---- a/arch/powerpc/kernel/ptrace/Makefile
-+++ b/arch/powerpc/kernel/ptrace/Makefile
-@@ -6,6 +6,7 @@
- CFLAGS_ptrace-view.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
- 
- obj-y				+= ptrace.o ptrace-view.o
-+obj-y				+= ptrace-fpu.o
- obj-$(CONFIG_COMPAT)		+= ptrace32.o
- obj-$(CONFIG_VSX)		+= ptrace-vsx.o
- ifneq ($(CONFIG_VSX),y)
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
-index 2ddc68412fa8..eafe5f0f6289 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
-+++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
-@@ -164,6 +164,10 @@ int ptrace_put_reg(struct task_struct *task, int regno, unsigned long data);
- 
- extern const struct user_regset_view user_ppc_native_view;
- 
-+/* ptrace-fpu */
-+int ptrace_get_fpr(struct task_struct *child, int index, unsigned long *data);
-+int ptrace_put_fpr(struct task_struct *child, int index, unsigned long data);
-+
- /* ptrace-(no)adv */
- void ppc_gethwdinfo(struct ppc_debug_info *dbginfo);
- int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-fpu.c b/arch/powerpc/kernel/ptrace/ptrace-fpu.c
-new file mode 100644
-index 000000000000..8301cb52dd99
---- /dev/null
-+++ b/arch/powerpc/kernel/ptrace/ptrace-fpu.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/regset.h>
-+
-+#include <asm/switch_to.h>
-+
-+#include "ptrace-decl.h"
-+
-+int ptrace_get_fpr(struct task_struct *child, int index, unsigned long *data)
-+{
-+	unsigned int fpidx = index - PT_FPR0;
-+
-+	if (index > PT_FPSCR)
-+		return -EIO;
-+
-+	flush_fp_to_thread(child);
-+	if (fpidx < (PT_FPSCR - PT_FPR0))
-+		memcpy(data, &child->thread.TS_FPR(fpidx), sizeof(long));
-+	else
-+		*data = child->thread.fp_state.fpscr;
-+
-+	return 0;
-+}
-+
-+int ptrace_put_fpr(struct task_struct *child, int index, unsigned long data)
-+{
-+	unsigned int fpidx = index - PT_FPR0;
-+
-+	if (index > PT_FPSCR)
-+		return -EIO;
-+
-+	flush_fp_to_thread(child);
-+	if (fpidx < (PT_FPSCR - PT_FPR0))
-+		memcpy(&child->thread.TS_FPR(fpidx), &data, sizeof(long));
-+	else
-+		child->thread.fp_state.fpscr = data;
-+
-+	return 0;
-+}
-+
-diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-index 51557a9c0765..3d44b73adb83 100644
---- a/arch/powerpc/kernel/ptrace/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace.c
-@@ -56,25 +56,17 @@ long arch_ptrace(struct task_struct *child, long request,
- 		ret = -EIO;
- 		/* convert to index and check */
- 		index = addr / sizeof(long);
--		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR)
--		    || (child->thread.regs == NULL))
-+		if ((addr & (sizeof(long) - 1)) || !child->thread.regs)
- 			break;
- 
- 		CHECK_FULL_REGS(child->thread.regs);
--		if (index < PT_FPR0) {
-+		if (index < PT_FPR0)
- 			ret = ptrace_get_reg(child, (int) index, &tmp);
--			if (ret)
--				break;
--		} else {
--			unsigned int fpidx = index - PT_FPR0;
--
--			flush_fp_to_thread(child);
--			if (fpidx < (PT_FPSCR - PT_FPR0))
--				memcpy(&tmp, &child->thread.TS_FPR(fpidx),
--				       sizeof(long));
--			else
--				tmp = child->thread.fp_state.fpscr;
--		}
-+		else
-+			ret = ptrace_get_fpr(child, index, &tmp);
-+
-+		if (ret)
-+			break;
- 		ret = put_user(tmp, datalp);
- 		break;
- 	}
-@@ -86,24 +78,14 @@ long arch_ptrace(struct task_struct *child, long request,
- 		ret = -EIO;
- 		/* convert to index and check */
- 		index = addr / sizeof(long);
--		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR)
--		    || (child->thread.regs == NULL))
-+		if ((addr & (sizeof(long) - 1)) || !child->thread.regs)
- 			break;
- 
- 		CHECK_FULL_REGS(child->thread.regs);
--		if (index < PT_FPR0) {
-+		if (index < PT_FPR0)
- 			ret = ptrace_put_reg(child, index, data);
--		} else {
--			unsigned int fpidx = index - PT_FPR0;
--
--			flush_fp_to_thread(child);
--			if (fpidx < (PT_FPSCR - PT_FPR0))
--				memcpy(&child->thread.TS_FPR(fpidx), &data,
--				       sizeof(long));
--			else
--				child->thread.fp_state.fpscr = data;
--			ret = 0;
--		}
-+		else
-+			ret = ptrace_put_fpr(child, index, data);
- 		break;
- 	}
- 
--- 
-2.25.0
+0-903: page 1, offset 0, length 904
+904-5036: bitbucket, length 4133
+5037-8191: page 2, offset 942, length 3155
 
+That way, we don't even need to wait for the read to complete.
+
+I envisage block allocating a bitbucket page to support devices which
+don't have native support for bitbucket descriptors.  We'd also need a
+fallback path for devices which don't support whatever alignment the
+I/O is happening at ... but the block layer already has support for
+bounce-buffering, right?
+
+Anyway, I don't have time to take on this work, but I thought I'd throw
+it out in case anyone's looking for a project.  Or if it's a stupid idea,
+someone can point out why.
