@@ -2,350 +2,194 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3312C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FF3207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A912076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597764557;
+	bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sxaW3wVUMwnWWh1J0UJwRcTQH0D1svsHomdahA3zJUL0qHUHZr8Wi5TAlEpjpJH8x
+	 LrfKYekI17ZdP45U/Rk8DgXV/JEXRW4AIw5EUJeWWxGgKnekXraUkjVUGsInq4h7dB
+	 4DM4EehgKBvcFY8Dj+wNephqv/uANvc4ywcrA3Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgHRP1V (ORCPT
+        id S1727980AbgHRP3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:27:21 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2625 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727791AbgHRP0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:26:11 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 225CE751D64D2FEE2140;
-        Tue, 18 Aug 2020 16:26:10 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:26:08 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:26:10 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>
-Subject: [RFC PATCH 02/30] ima: Add a list of the installed ima namespaces
-Date:   Tue, 18 Aug 2020 17:20:09 +0200
-Message-ID: <20200818152037.11869-3-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
-References: <N>
- <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
+        Tue, 18 Aug 2020 11:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726972AbgHRP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:29:15 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE39206DA;
+        Tue, 18 Aug 2020 15:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597764555;
+        bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l1khQJNCqaJkNf17Z3CSbq9tMDMPPbMtKTMXXMzroWcNsHKDsO4NxIPVcEnlSTKcX
+         vdU1vzH4P+A5CN3B5DKjylxHKOgwQwyZMlSkUyFzeBK5M6HGi0wE204PORhNROuOkG
+         zBndFkZTkyO2KybOc9/lrOpk6h4q17/K+lRnUnJE=
+Date:   Tue, 18 Aug 2020 17:29:09 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+Message-ID: <20200818172909.71f5243a@coco.lan>
+In-Reply-To: <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+        <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Hi Robin,
 
-Add a list of the installed ima namespaces. IMA namespace is considered
-installed, if there is at least one process born in that namespace.
+Em Tue, 18 Aug 2020 15:47:55 +0100
+Robin Murphy <robin.murphy@arm.com> escreveu:
 
-This list will be used to check the read-write violations and to detect
-any object related changes relevant across namespaces.
+> On 2020-08-17 08:49, Mauro Carvalho Chehab wrote:
+> > Add a driver for the Kirin 960/970 iommu.
+> > 
+> > As on the past series, this starts from the original 4.9 driver from
+> > the 96boards tree:
+> > 
+> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > 
+> > The remaining patches add SPDX headers and make it build and run with
+> > the upstream Kernel.
+> > 
+> > Chenfeng (1):
+> >    iommu: add support for HiSilicon Kirin 960/970 iommu
+> > 
+> > Mauro Carvalho Chehab (15):
+> >    iommu: hisilicon: remove default iommu_map_sg handler
+> >    iommu: hisilicon: map and unmap ops gained new arguments
+> >    iommu: hisi_smmu_lpae: rebase it to work with upstream
+> >    iommu: hisi_smmu: remove linux/hisi/hisi-iommu.h
+> >    iommu: hisilicon: cleanup its code style
+> >    iommu: hisi_smmu_lpae: get rid of IOMMU_SEC and IOMMU_DEVICE
+> >    iommu: get rid of map/unmap tile functions
+> >    iommu: hisi_smmu_lpae: use the right code to get domain-priv data
+> >    iommu: hisi_smmu_lpae: convert it to probe_device
+> >    iommu: add Hisilicon Kirin970 iommu at the building system
+> >    iommu: hisi_smmu_lpae: cleanup printk macros
+> >    iommu: hisi_smmu_lpae: make OF compatible more standard  
+> 
+> Echoing the other comments about none of the driver patches being CC'd 
+> to the IOMMU list...
+> 
+> Still, I dug the series up on lore and frankly I'm not sure what to make 
+> of it - AFAICS the "driver" is just yet another implementation of Arm 
+> LPAE pagetable code, with no obvious indication of how those pagetables 
+> ever get handed off to IOMMU hardware (and indeed no indication of IOMMU 
+> hardware at all). Can you explain how it's supposed to work?
+> 
+> And as a pre-emptive strike, we really don't need any more LPAE 
+> implementations - that's what the io-pgtable library is all about (which 
+> incidentally has been around since 4.0...). I think that should make the 
+> issue of preserving authorship largely moot since there's no need to 
+> preserve most of the code anyway ;)
 
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
----
- include/linux/ima.h               |   8 ++-
- security/integrity/ima/ima.h      |  11 ++++
- security/integrity/ima/ima_init.c |   5 ++
- security/integrity/ima/ima_main.c |   3 +
- security/integrity/ima/ima_ns.c   | 101 ++++++++++++++++++++++++++++--
- 5 files changed, 122 insertions(+), 6 deletions(-)
+I didn't know about that, since I got a Hikey 970 board for the first time
+about one month ago, and that's the first time I looked into iommu code.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 4a9c29d4d056..5b6235b97603 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -10,10 +10,12 @@
- #include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/kexec.h>
--struct linux_binprm;
- 
-+struct linux_binprm;
- struct nsproxy;
- struct task_struct;
-+struct list_head;
-+struct llist_node;
- 
- #ifdef CONFIG_IMA
- extern int ima_bprm_check(struct linux_binprm *bprm);
-@@ -176,6 +178,10 @@ struct ima_namespace {
- 	struct ns_common ns;
- 	struct ucounts *ucounts;
- 	struct user_namespace *user_ns;
-+	struct list_head list;
-+	struct llist_node cleanup_list; /* namespaces on a death row */
-+	atomic_t inactive; /* set only when ns is added to the cleanup list */
-+	bool frozen;
- } __randomize_layout;
- 
- extern struct ima_namespace init_ima_ns;
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 603da5b2db08..092e87190c6d 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -372,12 +372,23 @@ static inline int ima_read_xattr(struct dentry *dentry,
- 
- #endif /* CONFIG_IMA_APPRAISE */
- 
-+extern struct list_head ima_ns_list;
-+extern struct rw_semaphore ima_ns_list_lock;
-+
- #ifdef CONFIG_IMA_NS
-+int __init ima_init_namespace(void);
-+
- static inline struct ima_namespace *get_current_ns(void)
- {
- 	return current->nsproxy->ima_ns;
- }
- #else
-+static inline int __init ima_init_namespace(void)
-+{
-+	list_add_tail(&init_ima_ns.list, &ima_ns_list);
-+	return 0;
-+}
-+
- static inline struct ima_namespace *get_current_ns(void)
- {
- 	return &init_ima_ns;
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 013bbec16849..0ba04a1a68cc 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -32,6 +32,7 @@ struct ima_namespace init_ima_ns = {
- #ifdef CONFIG_IMA_NS
- 	.ns.ops = &imans_operations,
- #endif
-+	.frozen = true
- };
- EXPORT_SYMBOL(init_ima_ns);
- 
-@@ -154,6 +155,10 @@ int __init ima_init(void)
- 
- 	ima_init_policy();
- 
-+	rc = ima_init_namespace();
-+	if (rc != 0)
-+		return rc;
-+
- 	rc = ima_fs_init();
- 	if (rc != 0)
- 		return rc;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 8a91711ca79b..d800e73c8b62 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -37,6 +37,9 @@ int ima_appraise;
- int ima_hash_algo = HASH_ALGO_SHA1;
- static int hash_setup_done;
- 
-+DECLARE_RWSEM(ima_ns_list_lock);
-+LIST_HEAD(ima_ns_list);
-+
- static struct notifier_block ima_lsm_policy_notifier = {
- 	.notifier_call = ima_lsm_policy_change,
- };
-diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
-index 8f5f301406a2..3a98cd536d05 100644
---- a/security/integrity/ima/ima_ns.c
-+++ b/security/integrity/ima/ima_ns.c
-@@ -21,9 +21,20 @@
- #include <linux/user_namespace.h>
- #include <linux/nsproxy.h>
- #include <linux/sched.h>
-+#include <linux/list.h>
-+#include <linux/llist.h>
-+#include <linux/rwsem.h>
-+#include <linux/workqueue.h>
-+#include <linux/mutex.h>
- 
- #include "ima.h"
- 
-+static LLIST_HEAD(cleanup_list);
-+static struct workqueue_struct *imans_wq;
-+
-+/* Protects tasks entering the same, not yet active namespace */
-+static DEFINE_MUTEX(frozen_lock);
-+
- static struct ucounts *inc_ima_namespaces(struct user_namespace *ns)
- {
- 	return inc_ucount(ns, current_euid(), UCOUNT_IMA_NAMESPACES);
-@@ -78,6 +89,7 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
- 	ns->ns.ops = &imans_operations;
- 	ns->user_ns = get_user_ns(user_ns);
- 	ns->ucounts = ucounts;
-+	ns->frozen = false;
- 
- 	return ns;
- 
-@@ -109,6 +121,19 @@ struct ima_namespace *copy_ima_ns(unsigned long flags,
- 	return clone_ima_ns(user_ns, old_ns);
- }
- 
-+int __init ima_init_namespace(void)
-+{
-+	/* Create workqueue for cleanup */
-+	imans_wq = create_singlethread_workqueue("imans");
-+	if (unlikely(!imans_wq))
-+		return -ENOMEM;
-+
-+	/* No other reader or writer at this stage */
-+	list_add_tail(&init_ima_ns.list, &ima_ns_list);
-+
-+	return 0;
-+}
-+
- static void destroy_ima_ns(struct ima_namespace *ns)
- {
- 	dec_ima_namespaces(ns->ucounts);
-@@ -117,13 +142,46 @@ static void destroy_ima_ns(struct ima_namespace *ns)
- 	kfree(ns);
- }
- 
-+static void cleanup_ima(struct work_struct *work)
-+{
-+	struct ima_namespace *ima_ns, *tmp;
-+	struct llist_node *ima_kill_list;
-+
-+	/* Atomically snapshot the list of namespaces to cleanup */
-+	ima_kill_list = llist_del_all(&cleanup_list);
-+
-+	/* Remove ima namespace from the namespace list */
-+	down_write(&ima_ns_list_lock);
-+	llist_for_each_entry(ima_ns, ima_kill_list, cleanup_list)
-+		list_del(&ima_ns->list);
-+	up_write(&ima_ns_list_lock);
-+
-+	/* After removing ima namespace from the ima_ns_list, memory can be
-+	 * freed. At this stage nothing should keep a reference to the given
-+	 * namespace.
-+	 */
-+	llist_for_each_entry_safe(ima_ns, tmp, ima_kill_list, cleanup_list)
-+		destroy_ima_ns(ima_ns);
-+}
-+
-+static DECLARE_WORK(ima_cleanup_work, cleanup_ima);
-+
- void free_ima_ns(struct kref *kref)
- {
--	struct ima_namespace *ns;
-+	struct ima_namespace *ima_ns;
- 
--	ns = container_of(kref, struct ima_namespace, kref);
-+	ima_ns = container_of(kref, struct ima_namespace, kref);
-+	/* Namespace can be destroyed instantly if no process ever was born
-+	 * into it - it was never added to the ima_ns_list.
-+	 */
-+	if (!ima_ns->frozen) {
-+		destroy_ima_ns(ima_ns);
-+		return;
-+	}
- 
--	destroy_ima_ns(ns);
-+	atomic_set(&ima_ns->inactive, 1);
-+	if (llist_add(&ima_ns->cleanup_list, &cleanup_list))
-+		queue_work(imans_wq, &ima_cleanup_work);
- }
- 
- static inline struct ima_namespace *to_ima_ns(struct ns_common *ns)
-@@ -168,8 +226,32 @@ static void imans_put(struct ns_common *ns)
- 	put_ima_ns(to_ima_ns(ns));
- }
- 
-+static int imans_activate(struct ima_namespace *ima_ns)
-+{
-+	if (ima_ns == &init_ima_ns)
-+		return 0;
-+
-+	if (ima_ns->frozen)
-+		return 0;
-+
-+	mutex_lock(&frozen_lock);
-+	if (ima_ns->frozen)
-+		goto out;
-+
-+	ima_ns->frozen = true;
-+
-+	down_write(&ima_ns_list_lock);
-+	list_add_tail(&ima_ns->list, &ima_ns_list);
-+	up_write(&ima_ns_list_lock);
-+out:
-+	mutex_unlock(&frozen_lock);
-+
-+	return 0;
-+}
-+
- static int imans_install(struct nsset *nsset, struct ns_common *new)
- {
-+	int res;
- 	struct nsproxy *nsproxy = nsset->nsproxy;
- 	struct ima_namespace *ns = to_ima_ns(new);
- 
-@@ -180,6 +262,10 @@ static int imans_install(struct nsset *nsset, struct ns_common *new)
- 	    !ns_capable(nsset->cred->user_ns, CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	res = imans_activate(ns);
-+	if (res)
-+		return res;
-+
- 	get_ima_ns(ns);
- 	put_ima_ns(nsproxy->ima_ns);
- 	nsproxy->ima_ns = ns;
-@@ -188,11 +274,12 @@ static int imans_install(struct nsset *nsset, struct ns_common *new)
- 	put_ima_ns(nsproxy->ima_ns_for_children);
- 	nsproxy->ima_ns_for_children = ns;
- 
--	return 0;
-+	return res;
- }
- 
- int imans_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- {
-+	int res;
- 	struct ns_common *nsc = &nsproxy->ima_ns_for_children->ns;
- 	struct ima_namespace *ns = to_ima_ns(nsc);
- 
-@@ -200,11 +287,15 @@ int imans_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- 	if (nsproxy->ima_ns == nsproxy->ima_ns_for_children)
- 		return 0;
- 
-+	res = imans_activate(ns);
-+	if (res)
-+		return res;
-+
- 	get_ima_ns(ns);
- 	put_ima_ns(nsproxy->ima_ns);
- 	nsproxy->ima_ns = ns;
- 
--	return 0;
-+	return res;
- }
- 
- static struct user_namespace *imans_owner(struct ns_common *ns)
--- 
-2.20.1
+My end goal with this is to make the DRM/KMS driver to work with upstream
+Kernels.
 
+The full patch series are at:
+
+	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
+
+(I need to put a new version there, after some changes due to recent
+upstream discussions at the regulator's part of the code)
+
+Basically, the DT binding has this, for IOMMU:
+
+
+	smmu_lpae {
+		compatible = "hisilicon,smmu-lpae";
+	};
+
+...
+	dpe: dpe@e8600000 {
+		compatible = "hisilicon,kirin970-dpe";
+		memory-region = <&drm_dma_reserved>;
+...
+		iommu_info {
+			start-addr = <0x8000>;
+			size = <0xbfff8000>;
+		};
+	}
+
+This is used by kirin9xx_drm_dss.c in order to enable and use
+the iommu:
+
+
+	static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
+	{
+		struct device *dev = NULL;
+
+		dev = &pdev->dev;
+
+		/* create iommu domain */
+		ctx->mmu_domain = iommu_domain_alloc(dev->bus);
+		if (!ctx->mmu_domain) {
+			pr_err("iommu_domain_alloc failed!\n");
+			return -EINVAL;
+		}
+
+		iommu_attach_device(ctx->mmu_domain, dev);
+
+		return 0;
+	}
+
+The only place where the IOMMU domain is used is on this part of the
+code(error part simplified here) [1]:
+
+	void hisi_dss_smmu_on(struct dss_hw_ctx *ctx) 
+	{
+		uint64_t fama_phy_pgd_base;
+		uint32_t phy_pgd_base;
+...
+		fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
+		phy_pgd_base = (uint32_t)fama_phy_pgd_base;
+		if (WARN_ON(!phy_pgd_base))
+			return;
+
+		set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
+	}
+
+[1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
+
+In other words, the driver needs to get the physical address of the frame
+buffer (mapped via iommu) in order to set some DRM-specific register.
+
+Yeah, the above code is somewhat hackish. I would love to replace 
+this part by a more standard approach.
+
+Thanks,
+Mauro
