@@ -2,89 +2,228 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB537C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A038320658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B633A207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHRQoF (ORCPT
+        id S1728298AbgHRQpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:44:05 -0400
-Received: from mga07.intel.com ([134.134.136.100]:21979 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbgHRQoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:44:02 -0400
-IronPort-SDR: X6lIl8RhRVELAgfJiM7jWo/U4xtjM8W//PJZv8CyPcBT+ekwrd8bCSvbnrhPgetZ0CPbUwuEvT
- Mb8oMk290LlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="219260080"
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="219260080"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 09:44:01 -0700
-IronPort-SDR: Lc8c/BFanHB/cWj0PCxNLhuy/ld9Iurt4gycRy1DgnxQg2PKNiDHY9aojoalC7SWp5JATFMSKJ
- 3AJ6ULnZIoUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="336673333"
-Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
-  by orsmga007.jf.intel.com with ESMTP; 18 Aug 2020 09:43:54 -0700
-Date:   Tue, 18 Aug 2020 19:43:53 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200818164353.GH137138@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
- <20200810222317.GG14724@linux.intel.com>
- <20200818145234.GC132200@linux.intel.com>
- <20200818150627.GD132200@linux.intel.com>
- <CAOASepNxu0YtSPjXynLaVgyt-S0uSad8HVrNgMNWf+Z7iamPvQ@mail.gmail.com>
+        Tue, 18 Aug 2020 12:45:39 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:11863 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgHRQpg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:45:36 -0400
+IronPort-SDR: QGvGC+94m2CHtZyrNvUzm1RSd62BiUYpgiHrN4129CMNbKP2FTxlEpMvz76wrBSlktM9srnqtt
+ yeR6WJsj4I4oLhU4273mwWNWT4j7wiEiEhSjhwM+HJ/ChMIYIQ3UraidHYHKFsr8DJlbp0ktTL
+ j3vjkR7KsmP2/nayyGWU1FT4NuVEPKiZ5I4e4uJxzPbcloeoIzz9H9MpnM4fRkcCb5XTGcDTcE
+ 0MP1O1jN10QZ10Ox9ypYMa5HpSv7SRT/1+UCYMhLr9d2fyxfxQhTgOkbIvHRq2TIhA2gC/lE0k
+ HLI=
+X-IronPort-AV: E=Sophos;i="5.76,328,1592899200"; 
+   d="scan'208";a="54210262"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 18 Aug 2020 08:45:35 -0800
+IronPort-SDR: LNzWom/QVpUDAc+OGyrCLYIWndKeE6BAPtIoPS0YTQcsEU9gt1mjI+ag3y2MS7X9PG5fNyV83j
+ IcP6A+JgWGbKaLNnB47T5jbK6jdokew0r5JLGAjl3nb+ehqLOXZwnJyuDBdkXUcndM2MrmC6Z3
+ 6LW5QBs+CkAJPQxmBkqM5xr/wFfxyifzJkuUaVBM+wIPIVyRGVJOtLvwPVyogr9rngsVOsp1EX
+ SbqB2TUpUKFe6Fv5ljkwovsRyZ9LiJC+EP4QYNbGgqXsNsYXqgTcPHfCNJnEqWRApL4FfmOdJ7
+ WcA=
+Subject: Re: PROBLEM: Long Workqueue delays V2
+From:   Jim Baxter <jim_baxter@mentor.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-mm@kvack.org>
+CC:     "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
+        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+Message-ID: <d6845a3c-f139-fbaa-01d2-1ffa5397fd7a@mentor.com>
+Date:   Tue, 18 Aug 2020 17:45:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepNxu0YtSPjXynLaVgyt-S0uSad8HVrNgMNWf+Z7iamPvQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+ SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:15:32AM -0400, Nathaniel McCallum wrote:
-> That seems like overkill to me. I'm just asking for one additional mov
-> instruction. :)
+Added linux-block List which may also be relevant to this issue.
 
-I started to consider eBPF since the complexity and constraints of the
-callback look like an overkill and without doubt will be a burden to
-maintain.
+On 18 Aug 2020 12:58, Jim Baxter wrote:
 
-/Jarkko
+> I am asking this question again to include the fs-devel list.
+> 
+> 
+> We have issues with the workqueue of the kernel overloading the CPU 0 
+> when we we disconnect a USB stick.
+> 
+> This results in other items on the shared workqueue being delayed by
+> around 6.5 seconds with a default kernel configuration and 2.3 seconds
+> on a config tailored for our RCar embedded platform.
+> 
+> 
+> 
+> We first noticed this issue on custom hardware and we have recreated it
+> on an RCar Starter Kit using a test module [1] to replicate the
+> behaviour, the test module outputs any delays of greater then 9ms.
+> 
+> To run the test we have a 4GB random file on a USB stick and perform
+> the following test.
+> The stick is mounted as R/O and we are copying data from the stick:
+> 
+> - Mount the stick.
+> mount -o ro,remount /dev/sda1
+> 
+> - Load the Module:
+> # taskset -c 0 modprobe latency-mon
+> 
+> - Copy large amount of data from the stick:
+> # dd if=/run/media/sda1/sample.txt of=/dev/zero
+> [ 1437.517603] DELAY: 10
+> 8388607+1 records in
+> 8388607+1 records out
+> 
+> 
+> - Disconnect the USB stick:
+> [ 1551.796792] usb 2-1: USB disconnect, device number 2
+> [ 1558.625517] DELAY: 6782
+> 
+> 
+> The Delay output 6782 is in milliseconds.
+> 
+> 
+> 
+> Using umount stops the issue occurring but is unfortunately not guaranteed
+> in our particular system.
+> 
+> 
+> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
+> 98% of the CPU.
+> 
+> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
+> and there is no particular workqueue function being executed a lot more then the 
+> others for the kworker/0:1+usb thread.
+> 
+> 
+> Using perf I identified the hub_events workqueue was spending a lot of time in
+> invalidate_partition(), I have included a cut down the captured data from perf in
+> [2] which shows the additional functions where the kworker spends most of its time.
+> 
+> 
+> I am aware there will be delays on the shared workqueue, are the delays
+> we are seeing considered normal?
+> 
+> 
+> Is there any way to mitigate or identify where the delay is?
+> I am unsure if this is a memory or filesystem subsystem issue.
+> 
+> 
+> Thank you for you help.
+> 
+> Thanks,
+> Jim Baxter
+> 
+> [1] Test Module:
+> // SPDX-License-Identifier: GPL-2.0
+> /*
+>  * Simple WQ latency monitoring
+>  *
+>  * Copyright (C) 2020 Advanced Driver Information Technology.
+>  */
+> 
+> #include <linux/init.h>
+> #include <linux/ktime.h>
+> #include <linux/module.h>
+> 
+> #define PERIOD_MS 100
+> 
+> static struct delayed_work wq;
+> static u64 us_save;
+> 
+> static void wq_cb(struct work_struct *work)
+> {
+> 	u64 us = ktime_to_us(ktime_get());
+> 	u64 us_diff = us - us_save;
+> 	u64 us_print = 0;
+> 
+> 	if (!us_save)
+> 		goto skip_print;
+> 
+> 
+> 	us_print = us_diff / 1000 - PERIOD_MS;
+> 	if (us_print > 9)
+> 		pr_crit("DELAY: %lld\n", us_print);
+> 
+> skip_print:
+> 	us_save = us;
+> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+> }
+> 
+> static int latency_mon_init(void)
+> {
+> 	us_save = 0;
+> 	INIT_DELAYED_WORK(&wq, wq_cb);
+> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+> 
+> 	return 0;
+> }
+> 
+> static void latency_mon_exit(void)
+> {
+> 	cancel_delayed_work_sync(&wq);
+> 	pr_info("%s\n", __func__);
+> }
+> 
+> module_init(latency_mon_init);
+> module_exit(latency_mon_exit);
+> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
+> MODULE_LICENSE("GPL");
+> 
+> 
+> [2] perf trace:
+>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
+>     |
+>     ---ret_from_fork
+>        kthread
+>        worker_thread
+>        |          
+>         --95.15%--process_one_work
+> 		  |          
+> 		   --94.99%--hub_event
+> 			 |          
+> 			  --94.99%--usb_disconnect
+> 			  <snip>
+> 				|  
+> 				--94.90%--invalidate_partition
+> 				   __invalidate_device
+> 				   |          
+> 				   |--64.55%--invalidate_bdev
+> 				   |  |          
+> 				   |   --64.13%--invalidate_mapping_pages
+> 				   |     |          
+> 				   |     |--24.09%--invalidate_inode_page
+> 				   |     |   |          
+> 				   |     |   --23.44%--remove_mapping
+> 				   |     |     |          
+> 				   |     |      --23.20%--__remove_mapping
+> 				   |     |        |          
+> 				   |     |         --21.90%--arch_local_irq_restore
+> 				   |     |          
+> 				   |     |--22.44%--arch_local_irq_enable
+> 				   |          
+> 					--30.35%--shrink_dcache_sb 
+> 					<snip>
+> 					  |      
+> 					  --30.17%--truncate_inode_pages_range
+> 
