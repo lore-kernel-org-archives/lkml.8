@@ -2,96 +2,119 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD638C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D05C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A890D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597729484;
-	bh=+3xQMT+D9bjmE/WwJ1ldD+GMba3nVLlvw6ICzv6B2W4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dGEY+pjBR9hMLBebswKxIUHap1mDvbcQX/453RMVdJhoOt/EBAX0AI/eNYn2oe5c5
-	 Rah/T6n6cYbqSdHYDqXSArBVRZjDoLeoeRK7nXtvK2NCkMRvEtDLf+7252VxUbvELg
-	 p6uY7M9HS2cG09NfaNFukGU78XiUHbizK5b7eYaY=
+	by mail.kernel.org (Postfix) with ESMTP id C4F5D20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHRFon (ORCPT
+        id S1726795AbgHRFpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 01:44:43 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:33360 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgHRFom (ORCPT
+        Tue, 18 Aug 2020 01:45:42 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:59763 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726593AbgHRFpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 01:44:42 -0400
-Received: by mail-ej1-f67.google.com with SMTP id jp10so20615779ejb.0;
-        Mon, 17 Aug 2020 22:44:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8xJ+uVT/WHccEkVlHi1wKll5tijnlgRwLyicm8LM78A=;
-        b=pvax8nwiTzlSC8KLnlD5iBsWFk7Se46AKY8/yWk0VEMGeoWkJbm8mafPjkg7PUt6VF
-         Xqgaq86t9PUmBY1oVAFQGeLeo/0/5qxRti4jHJfuHDbY4WQYUMJsG5RElHGYPXd9dDhy
-         S1p3kiIsU32s9fpFoT3ABrNtngUbJ2bllcCCNUcyYYL2KAcaA0027slT8dydyrUc2Us1
-         GsNHyr+Mk373Qc1Cp6IY3yPWY/6kpA8GhIP0DgiN4eky2RAxi1NM/Xb7XEXDUahCTwdp
-         lya7XJtszn0E6xzmzY82KpkR8wDCAXh8hoaVGxBHyzuzE/dITdbPDnVWzVz/zb7oBe9i
-         WPAw==
-X-Gm-Message-State: AOAM530fDM5yQZv8SnZ+MwIYFC3yiT0Alu6tthiHnP8tCaZvhQhhzKHt
-        UlQA/D0e1pfJ0x165Q0N9z8f1pYDhbUmXg==
-X-Google-Smtp-Source: ABdhPJwyOOGrfzUtvh0bzgyzCD9OdFf8HsVYlqBtL8jzJNuBwgt45xYpvdBEwHia444d6IN47WvOGQ==
-X-Received: by 2002:a17:907:36b:: with SMTP id rs11mr19095297ejb.544.1597729480728;
-        Mon, 17 Aug 2020 22:44:40 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id j24sm15574395ejv.32.2020.08.17.22.44.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 22:44:40 -0700 (PDT)
-Subject: Re: [PATCH 00/16] wirless: convert tasklets to use new
- tasklet_setup()
-To:     Allen Pais <allen.cryptic@gmail.com>, kvalo@codeaurora.org,
-        kuba@kernel.org, mickflemm@gmail.com, mcgrof@kernel.org,
-        chunkeey@googlemail.com, Larry.Finger@lwfinger.net,
-        stas.yakovlev@gmail.com, helmut.schaa@googlemail.com,
-        pkshih@realtek.com, yhchuang@realtek.com, dsd@gentoo.org,
-        kune@deine-taler.de
-Cc:     keescook@chromium.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>
-References: <20200817090637.26887-1-allen.cryptic@gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <9cbb824a-5769-dd24-dcec-d9522d93e9b2@kernel.org>
-Date:   Tue, 18 Aug 2020 07:44:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200817090637.26887-1-allen.cryptic@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Aug 2020 01:45:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U66qVV-_1597729539;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U66qVV-_1597729539)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Aug 2020 13:45:39 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     axboe@kernel.dk
+Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang@linux.alibaba.com,
+        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/3] block: Remove blk_mq_attempt_merge() function
+Date:   Tue, 18 Aug 2020 13:45:30 +0800
+Message-Id: <5fa8de665d398cf49fd7c70fb427bb066556c764.1597727255.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
+References: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
+References: <cover.1597727255.git.baolin.wang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17. 08. 20, 11:06, Allen Pais wrote:
-> From: Allen Pais <allen.lkml@gmail.com>
-> 
-> Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
-> introduced a new tasklet initialization API. This series converts 
-> all the wireless drivers to use the new tasklet_setup() API
+The small blk_mq_attempt_merge() function is only called by
+__blk_mq_sched_bio_merge(), just open code it.
 
-General question for the whole series: have you considered the long-term
-aim instead? That is: convert away from tasklets completely? I.e. use
-threaded irqs or workqueues?
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ block/blk-mq-sched.c | 44 ++++++++++++++++----------------------------
+ 1 file changed, 16 insertions(+), 28 deletions(-)
 
-thanks,
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 5e63ede..397029d 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -382,28 +382,6 @@ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+ }
+ EXPORT_SYMBOL_GPL(blk_mq_sched_try_merge);
+ 
+-/*
+- * Reverse check our software queue for entries that we could potentially
+- * merge with. Currently includes a hand-wavy stop count of 8, to not spend
+- * too much time checking for merges.
+- */
+-static bool blk_mq_attempt_merge(struct request_queue *q,
+-				 struct blk_mq_hw_ctx *hctx,
+-				 struct blk_mq_ctx *ctx, struct bio *bio,
+-				 unsigned int nr_segs)
+-{
+-	enum hctx_type type = hctx->type;
+-
+-	lockdep_assert_held(&ctx->lock);
+-
+-	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
+-		ctx->rq_merged++;
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
+ 		unsigned int nr_segs)
+ {
+@@ -417,14 +395,24 @@ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
+ 		return e->type->ops.bio_merge(hctx, bio, nr_segs);
+ 
+ 	type = hctx->type;
+-	if ((hctx->flags & BLK_MQ_F_SHOULD_MERGE) &&
+-			!list_empty_careful(&ctx->rq_lists[type])) {
+-		/* default per sw-queue merge */
+-		spin_lock(&ctx->lock);
+-		ret = blk_mq_attempt_merge(q, hctx, ctx, bio, nr_segs);
+-		spin_unlock(&ctx->lock);
++	if (!(hctx->flags & BLK_MQ_F_SHOULD_MERGE) ||
++	    list_empty_careful(&ctx->rq_lists[type]))
++		return false;
++
++	/* default per sw-queue merge */
++	spin_lock(&ctx->lock);
++	/*
++	 * Reverse check our software queue for entries that we could
++	 * potentially merge with. Currently includes a hand-wavy stop
++	 * count of 8, to not spend too much time checking for merges.
++	 */
++	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
++		ctx->rq_merged++;
++		ret = true;
+ 	}
+ 
++	spin_unlock(&ctx->lock);
++
+ 	return ret;
+ }
+ 
 -- 
-js
-suse labs
+1.8.3.1
+
