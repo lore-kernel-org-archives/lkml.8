@@ -2,97 +2,190 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D18C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEA42245C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6152C208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHRPqB (ORCPT
+        id S1728067AbgHRPqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:46:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:39627 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgHRPpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:45:35 -0400
-IronPort-SDR: PqBHDbmlU/dRhgnHQEu6bpTIgeeX0MTUm+tGgQWqzJcBOIuqj3nzuGCHpadezj1fAlwZmu0jpW
- /DMUSR9/b7/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="156016569"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="156016569"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:44:47 -0700
-IronPort-SDR: T9Fg95g8XxLenJ5jQDfLCFegfIwxQ9pjRGDy3DrWpASLq6K2h2Wvzw2iMobVVHYE72TcDFbo6R
- MMHEABIuZ0uQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="497411171"
-Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Aug 2020 08:44:45 -0700
-Date:   Tue, 18 Aug 2020 18:44:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Coly Li <colyli@suse.de>, Stefan Berger <stefanb@linux.ibm.com>,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
-Message-ID: <20200818154444.GA137138@linux.intel.com>
-References: <20200815075143.47082-1-colyli@suse.de>
- <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
- <1597595769.8344.7.camel@linux.ibm.com>
- <f9d4c4a9-5059-eae2-bc89-51f16e8ca4d9@suse.de>
- <1597597933.8344.13.camel@linux.ibm.com>
+        Tue, 18 Aug 2020 11:46:17 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2639 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727122AbgHRPpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:45:39 -0400
+Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 8C3E2B9656467A8B2B83;
+        Tue, 18 Aug 2020 16:45:37 +0100 (IST)
+Received: from kstruczy-linux-box (10.204.65.138) by
+ lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 18 Aug 2020 16:45:35 +0100
+Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:45:38 +0200
+From:   <krzysztof.struczynski@huawei.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <containers@lists.linux-foundation.org>,
+        <linux-security-module@vger.kernel.org>
+CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
+        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
+        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
+        <jmorris@namei.org>, <christian@brauner.io>,
+        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Subject: [RFC PATCH 16/30] ima: Extend permissions to the ima securityfs entries
+Date:   Tue, 18 Aug 2020 17:42:16 +0200
+Message-ID: <20200818154230.14016-7-krzysztof.struczynski@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597597933.8344.13.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.204.65.138]
+X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
+ lhreml722-chm.china.huawei.com (10.201.108.73)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 10:12:13AM -0700, James Bottomley wrote:
-> On Mon, 2020-08-17 at 00:57 +0800, Coly Li wrote:
-> > On 2020/8/17 00:36, James Bottomley wrote:
-> > > On Sun, 2020-08-16 at 12:06 -0400, Stefan Berger wrote:
-> > > [...]
-> > > > A note in this file states this:
-> > > > 
-> > > > Note: When using a TPM 2.0 with a persistent key with handle
-> > > > 0x81000001, append 'keyhandle=0x81000001' to statements between
-> > > > quotes, such as "new 32 keyhandle=0x81000001".
-> > > > 
-> > > > Now if someone was (still) interested in TPM 1.2 
-> > > > adapt the  note to state that these keyhandle=... should be
-> > > > removed for the TPM 1.2 case.
-> > > 
-> > > Actually, I also have a plan to match what userspace does and
-> > > simply assume a keyhandle of 40000001 (generate an EC Storage
-> > > Primary Key on the fly) if it's not specified, which will make the
-> > > TPM1.2 and 2.0 versions of this the same.  Unfortunately the
-> > > necessary precursor patches are taking an age to get upstream.
-> > 
-> > Hi James,
-> > 
-> > Do you have a plan to push such patches into upstream soon? If yes
-> > than I may wait for your patch and withdraw this one.
-> 
-> Well, as I said above it depends on not yet upstream precursor patches.
->  They have been pending for about a year, so I've no real idea of the
-> timeline.
-> 
-> James
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-As far as I remember there was not much left in the previous version to
-do. Some time has passed when it was discussed but I recall it was
-mainly about documenting the key format.
+Add "others" permissions to the namespaced ima securityfs entries. It
+is necessary so that the root in the user namespace that is the parent
+of the given ima namespace has access to the ima related data.
 
-/Jarkko
+Loosened DAC restrictrions are compensated by an extra check for
+SYS_ADMIN capabilities in the ima code. The access is given
+only to the namespaced data, e.g. root user in the new ima namespace
+will see measurement list entries collected for that namespace and not
+for the other existing namespaces. The only exception is made for the
+admin in the initial user namespace, who has access to all the data.
+
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+---
+ security/integrity/ima/ima.h    |  4 ++--
+ security/integrity/ima/ima_fs.c | 31 +++++++++++++++++++++++++++----
+ 2 files changed, 29 insertions(+), 6 deletions(-)
+
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index e08f88aab0b5..7318fff3ccaa 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -523,9 +523,9 @@ static inline int ima_filter_rule_match(u32 secid, u32 field, u32 op,
+ #endif /* CONFIG_IMA_LSM_RULES */
+ 
+ #ifdef	CONFIG_IMA_READ_POLICY
+-#define	POLICY_FILE_FLAGS	(S_IWUSR | S_IRUSR)
++#define	POLICY_FILE_FLAGS	(S_IWUSR | S_IRUSR | S_IROTH | S_IWOTH)
+ #else
+-#define	POLICY_FILE_FLAGS	S_IWUSR
++#define	POLICY_FILE_FLAGS	(S_IWUSR | I_WOTH)
+ #endif /* CONFIG_IMA_READ_POLICY */
+ 
+ #endif /* __LINUX_IMA_H */
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index e2893f0b0f31..6d370874d80f 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -59,6 +59,16 @@ static const struct file_operations ima_htable_violations_ops = {
+ 	.llseek = generic_file_llseek,
+ };
+ 
++static int ima_open_measurements_count(struct inode *inode, struct file *file)
++{
++	struct ima_namespace *ima_ns = get_current_ns();
++
++	if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
++	return 0;
++}
++
+ static ssize_t ima_show_measurements_count(struct file *filp,
+ 					   char __user *buf,
+ 					   size_t count, loff_t *ppos)
+@@ -70,6 +80,7 @@ static ssize_t ima_show_measurements_count(struct file *filp,
+ }
+ 
+ static const struct file_operations ima_measurements_count_ops = {
++	.open = ima_open_measurements_count,
+ 	.read = ima_show_measurements_count,
+ 	.llseek = generic_file_llseek,
+ };
+@@ -242,6 +253,11 @@ static const struct seq_operations ima_measurments_seqops = {
+ 
+ static int ima_measurements_open(struct inode *inode, struct file *file)
+ {
++	struct ima_namespace *ima_ns = get_current_ns();
++
++	if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
+ 	return seq_open(file, &ima_measurments_seqops);
+ }
+ 
+@@ -308,6 +324,11 @@ static const struct seq_operations ima_ascii_measurements_seqops = {
+ 
+ static int ima_ascii_measurements_open(struct inode *inode, struct file *file)
+ {
++	struct ima_namespace *ima_ns = get_current_ns();
++
++	if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
+ 	return seq_open(file, &ima_ascii_measurements_seqops);
+ }
+ 
+@@ -429,13 +450,15 @@ static const struct seq_operations ima_policy_seqops = {
+  */
+ static int ima_open_policy(struct inode *inode, struct file *filp)
+ {
++	struct ima_namespace *ima_ns = get_current_ns();
++
+ 	if (!(filp->f_flags & O_WRONLY)) {
+ #ifndef	CONFIG_IMA_READ_POLICY
+ 		return -EACCES;
+ #else
+ 		if ((filp->f_flags & O_ACCMODE) != O_RDONLY)
+ 			return -EACCES;
+-		if (!capable(CAP_SYS_ADMIN))
++		if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
+ 			return -EPERM;
+ 		return seq_open(filp, &ima_policy_seqops);
+ #endif
+@@ -509,21 +532,21 @@ int __init ima_fs_init(void)
+ 
+ 	binary_runtime_measurements =
+ 	    securityfs_create_file("binary_runtime_measurements",
+-				   S_IRUSR | S_IRGRP, ima_dir, NULL,
++				   S_IRUSR | S_IRGRP | S_IROTH, ima_dir, NULL,
+ 				   &ima_measurements_ops);
+ 	if (IS_ERR(binary_runtime_measurements))
+ 		goto out;
+ 
+ 	ascii_runtime_measurements =
+ 	    securityfs_create_file("ascii_runtime_measurements",
+-				   S_IRUSR | S_IRGRP, ima_dir, NULL,
++				   S_IRUSR | S_IRGRP | S_IROTH, ima_dir, NULL,
+ 				   &ima_ascii_measurements_ops);
+ 	if (IS_ERR(ascii_runtime_measurements))
+ 		goto out;
+ 
+ 	runtime_measurements_count =
+ 	    securityfs_create_file("runtime_measurements_count",
+-				   S_IRUSR | S_IRGRP, ima_dir, NULL,
++				   S_IRUSR | S_IRGRP | S_IROTH, ima_dir, NULL,
+ 				   &ima_measurements_count_ops);
+ 	if (IS_ERR(runtime_measurements_count))
+ 		goto out;
+-- 
+2.20.1
+
