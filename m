@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C672BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAD12076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50C120706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHRMKo (ORCPT
+        id S1726880AbgHRMKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:10:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58750 "EHLO mga07.intel.com"
+        Tue, 18 Aug 2020 08:10:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58731 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgHRMKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:10:38 -0400
-IronPort-SDR: pPZiGNNpQ6eQL/lwVkEp7T7CFdjx0yWmSMSsLUwJEnAIkTFTwhap4q6H46bZhHRCAlOuk79aFg
- d/FD4ACUCF6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219200418"
+        id S1726688AbgHRMKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:10:32 -0400
+IronPort-SDR: dtl0N/mWoEBrTLaNd3t9iNpqtIWp4lTBNO+9/wH3xvxzLPGbBrDPlEKv7pEA6PQsODca/KqvTH
+ ZsED9yPESpbg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219200410"
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="219200418"
+   d="scan'208";a="219200410"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 05:10:32 -0700
-IronPort-SDR: sbvnmy6PWe1RDScMybKqjdm7i6I4RZOF7oBPe9HRz+CacZNc5XWv7p5YhPIjCPQIjKrSgPNnmT
- DCSHHvzRyTiQ==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 05:10:25 -0700
+IronPort-SDR: 5wiynQ+R3crV6FggJZEng6xVQF/YcRAlrD4oOCgWUK2XPNJa4tmQDFldvXCw+b6gun7Tglk/b+
+ 4P6azz3R6GBA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="326713095"
+   d="scan'208";a="326713069"
 Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 05:10:29 -0700
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 05:10:22 -0700
 From:   Tomas Winkler <tomas.winkler@intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Wang Yu <yu1.wang@intel.com>, Liu Shuo <shuo.a.liu@intel.com>
-Subject: [char-misc-next 13/13] mei: virtio: virtualization frontend driver
-Date:   Tue, 18 Aug 2020 14:51:47 +0300
-Message-Id: <20200818115147.2567012-14-tomas.winkler@intel.com>
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next 11/13] mei: add connect with vtag ioctl
+Date:   Tue, 18 Aug 2020 14:51:45 +0300
+Message-Id: <20200818115147.2567012-12-tomas.winkler@intel.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200818115147.2567012-1-tomas.winkler@intel.com>
 References: <20200818115147.2567012-1-tomas.winkler@intel.com>
@@ -55,941 +54,377 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This frontend driver implements MEI hw interface based on virtio
-framework to let MEI driver work without changes under virtualization.
-It requires a backend service in the ACRN device-model on the service
-OS side to make it work. The backend service will emulate mei routing
-and assign vtags for each mei vritio device.
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-The backend service is available in ACRN device-model at github.
-For more information, please refer to https://projectacrn.org
+This IOCTL is used to associate the current file descriptor
+with a FW Client (given by UUID), and virtual tag (vtag).
+The IOCTL opens a communication channel between a host client
+and a FW client on a tagged channel. From this point on,
+every reader  and write will communicate with the associated
+FW client on the tagged channel. Upon close() the communication
+is terminated.
 
-The ACRN virtio sub device id for MEI is is 0x8602.
+The IOCTL argument is a struct with a union that contains
+the input parameter and the output parameter for this IOCTL.
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+The input parameter is UUID of the FW Client, a vtag [0,255]
+The output parameter is the properties of the FW client
+
+Clients that do not support tagged connection
+will respond with -EOPNOTSUPP
+
 Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Wang Yu <yu1.wang@intel.com>
-Signed-off-by: Liu Shuo <shuo.a.liu@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
- drivers/misc/mei/Kconfig     |  10 +
- drivers/misc/mei/Makefile    |   3 +
- drivers/misc/mei/hw-virtio.c | 874 +++++++++++++++++++++++++++++++++++
- 3 files changed, 887 insertions(+)
- create mode 100644 drivers/misc/mei/hw-virtio.c
+ drivers/misc/mei/main.c  | 210 ++++++++++++++++++++++++++++++++++++---
+ include/uapi/linux/mei.h |  49 +++++++++
+ 2 files changed, 243 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/misc/mei/Kconfig b/drivers/misc/mei/Kconfig
-index f5fd5b786607..c06581ffa7bd 100644
---- a/drivers/misc/mei/Kconfig
-+++ b/drivers/misc/mei/Kconfig
-@@ -46,4 +46,14 @@ config INTEL_MEI_TXE
- 	  Supported SoCs:
- 	  Intel Bay Trail
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index 401bf8743689..9f6682033ed7 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -395,17 +395,18 @@ static ssize_t mei_write(struct file *file, const char __user *ubuf,
+  * mei_ioctl_connect_client - the connect to fw client IOCTL function
+  *
+  * @file: private data of the file object
+- * @data: IOCTL connect data, input and output parameters
++ * @in_client_uuid: requested UUID for connection
++ * @client: IOCTL connect data, output parameters
+  *
+  * Locking: called under "dev->device_lock" lock
+  *
+  * Return: 0 on success, <0 on failure.
+  */
+ static int mei_ioctl_connect_client(struct file *file,
+-			struct mei_connect_client_data *data)
++				    const uuid_le *in_client_uuid,
++				    struct mei_client *client)
+ {
+ 	struct mei_device *dev;
+-	struct mei_client *client;
+ 	struct mei_me_client *me_cl;
+ 	struct mei_cl *cl;
+ 	int rets;
+@@ -413,18 +414,15 @@ static int mei_ioctl_connect_client(struct file *file,
+ 	cl = file->private_data;
+ 	dev = cl->dev;
  
-+config INTEL_MEI_VIRTIO
-+	tristate "Intel MEI interface emulation with virtio framework"
-+	select INTEL_MEI
-+	depends on X86 && PCI && VIRTIO_PCI
-+	help
-+	  This module implements mei hw emulation over virtio transport.
-+	  The module will be called mei_virtio.
-+	  Enable this if your virtual machine supports virtual mei
-+	  device over virtio.
-+
- source "drivers/misc/mei/hdcp/Kconfig"
-diff --git a/drivers/misc/mei/Makefile b/drivers/misc/mei/Makefile
-index f1c76f7ee804..52aefaab5c1b 100644
---- a/drivers/misc/mei/Makefile
-+++ b/drivers/misc/mei/Makefile
-@@ -22,6 +22,9 @@ obj-$(CONFIG_INTEL_MEI_TXE) += mei-txe.o
- mei-txe-objs := pci-txe.o
- mei-txe-objs += hw-txe.o
+-	if (dev->dev_state != MEI_DEV_ENABLED)
+-		return -ENODEV;
+-
+ 	if (cl->state != MEI_FILE_INITIALIZING &&
+ 	    cl->state != MEI_FILE_DISCONNECTED)
+ 		return  -EBUSY;
  
-+obj-$(CONFIG_INTEL_MEI_VIRTIO) += mei-virtio.o
-+mei-virtio-objs := hw-virtio.o
-+
- mei-$(CONFIG_EVENT_TRACING) += mei-trace.o
- CFLAGS_mei-trace.o = -I$(src)
+ 	/* find ME client we're trying to connect to */
+-	me_cl = mei_me_cl_by_uuid(dev, &data->in_client_uuid);
++	me_cl = mei_me_cl_by_uuid(dev, in_client_uuid);
+ 	if (!me_cl) {
+ 		dev_dbg(dev->dev, "Cannot connect to FW Client UUID = %pUl\n",
+-			&data->in_client_uuid);
++			in_client_uuid);
+ 		rets = -ENOTTY;
+ 		goto end;
+ 	}
+@@ -434,7 +432,7 @@ static int mei_ioctl_connect_client(struct file *file,
+ 			 !dev->allow_fixed_address : !dev->hbm_f_fa_supported;
+ 		if (forbidden) {
+ 			dev_dbg(dev->dev, "Connection forbidden to FW Client UUID = %pUl\n",
+-				&data->in_client_uuid);
++				in_client_uuid);
+ 			rets = -ENOTTY;
+ 			goto end;
+ 		}
+@@ -448,7 +446,6 @@ static int mei_ioctl_connect_client(struct file *file,
+ 			me_cl->props.max_msg_length);
  
-diff --git a/drivers/misc/mei/hw-virtio.c b/drivers/misc/mei/hw-virtio.c
-new file mode 100644
-index 000000000000..899dc1c5e7ca
---- /dev/null
-+++ b/drivers/misc/mei/hw-virtio.c
-@@ -0,0 +1,874 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Management Engine Interface (Intel MEI) Linux driver
-+ * Copyright (c) 2018-2020, Intel Corporation.
-+ */
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/scatterlist.h>
-+#include <linux/spinlock.h>
-+#include <linux/slab.h>
-+#include <linux/virtio.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_ids.h>
-+#include <linux/atomic.h>
-+
-+#include "mei_dev.h"
-+#include "hbm.h"
-+#include "client.h"
-+
-+#define MEI_VIRTIO_RPM_TIMEOUT 500
-+/* ACRN virtio device types */
-+#ifndef VIRTIO_ID_MEI
-+#define VIRTIO_ID_MEI 0xFFFE /* virtio mei */
-+#endif
-+
+ 	/* prepare the output buffer */
+-	client = &data->out_client_properties;
+ 	client->max_msg_length = me_cl->props.max_msg_length;
+ 	client->protocol_version = me_cl->props.protocol_version;
+ 	dev_dbg(dev->dev, "Can connect?\n");
+@@ -460,6 +457,135 @@ static int mei_ioctl_connect_client(struct file *file,
+ 	return rets;
+ }
+ 
 +/**
-+ * struct mei_virtio_cfg - settings passed from the virtio backend
-+ * @buf_depth: read buffer depth in slots (4bytes)
-+ * @hw_ready: hw is ready for operation
-+ * @host_reset: synchronize reset with virtio backend
-+ * @reserved: reserved for alignment
-+ * @fw_status: FW status
-+ */
-+struct mei_virtio_cfg {
-+	u32 buf_depth;
-+	u8 hw_ready;
-+	u8 host_reset;
-+	u8 reserved[2];
-+	u32 fw_status[MEI_FW_STATUS_MAX];
-+} __packed;
-+
-+struct mei_virtio_hw {
-+	struct mei_device mdev;
-+	char name[32];
-+
-+	struct virtqueue *in;
-+	struct virtqueue *out;
-+
-+	bool host_ready;
-+	struct work_struct intr_handler;
-+
-+	u32 *recv_buf;
-+	u8 recv_rdy;
-+	size_t recv_sz;
-+	u32 recv_idx;
-+	u32 recv_len;
-+
-+	/* send buffer */
-+	atomic_t hbuf_ready;
-+	const void *send_hdr;
-+	const void *send_buf;
-+
-+	struct mei_virtio_cfg cfg;
-+};
-+
-+#define to_virtio_hw(_dev) container_of(_dev, struct mei_virtio_hw, mdev)
-+
-+/**
-+ * mei_virtio_fw_status() - read status register of mei
-+ * @dev: mei device
-+ * @fw_status: fw status register values
++ * mei_vt_support_check - check if client support vtags
 + *
-+ * Return: always 0
-+ */
-+static int mei_virtio_fw_status(struct mei_device *dev,
-+				struct mei_fw_status *fw_status)
-+{
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	fw_status->count = MEI_FW_STATUS_MAX;
-+	virtio_cread_bytes(vdev, offsetof(struct mei_virtio_cfg, fw_status),
-+			   fw_status->status, sizeof(fw_status->status));
-+	return 0;
-+}
-+
-+/**
-+ * mei_virtio_pg_state() - translate internal pg state
-+ *   to the mei power gating state
-+ *   There is no power management in ACRN mode always return OFF
-+ * @dev: mei device
++ * Locking: called under "dev->device_lock" lock
++ *
++ * @dev: mei_device
++ * @uuid: client UUID
 + *
 + * Return:
-+ * * MEI_PG_OFF - if aliveness is on (always)
-+ * * MEI_PG_ON  - (never)
++ *	0 - supported
++ *	-ENOTTY - no such client
++ *	-EOPNOTSUPP - vtags are not supported by client
 + */
-+static inline enum mei_pg_state mei_virtio_pg_state(struct mei_device *dev)
++static int mei_vt_support_check(struct mei_device *dev, const uuid_le *uuid)
 +{
-+	return MEI_PG_OFF;
-+}
-+
-+/**
-+ * mei_virtio_hw_config() - configure hw dependent settings
-+ *
-+ * @dev: mei device
-+ *
-+ * Return: always 0
-+ */
-+static int mei_virtio_hw_config(struct mei_device *dev)
-+{
-+	return 0;
-+}
-+
-+/**
-+ * mei_virtio_hbuf_empty_slots() - counts write empty slots.
-+ * @dev: the device structure
-+ *
-+ * Return: always return frontend buf size if buffer is ready, 0 otherwise
-+ */
-+static int mei_virtio_hbuf_empty_slots(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+
-+	return (atomic_read(&hw->hbuf_ready) == 1) ? hw->cfg.buf_depth : 0;
-+}
-+
-+/**
-+ * mei_virtio_hbuf_is_ready() - checks if write buffer is ready
-+ * @dev: the device structure
-+ *
-+ * Return: true if hbuf is ready
-+ */
-+static bool mei_virtio_hbuf_is_ready(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+
-+	return atomic_read(&hw->hbuf_ready) == 1;
-+}
-+
-+/**
-+ * mei_virtio_hbuf_max_depth() - returns depth of FE write buffer.
-+ * @dev: the device structure
-+ *
-+ * Return: size of frontend write buffer in bytes
-+ */
-+static u32 mei_virtio_hbuf_depth(const struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+
-+	return hw->cfg.buf_depth;
-+}
-+
-+/**
-+ * mei_virtio_intr_clear() - clear and stop interrupts
-+ * @dev: the device structure
-+ */
-+static void mei_virtio_intr_clear(struct mei_device *dev)
-+{
-+	/*
-+	 * In our virtio solution, there are two types of interrupts,
-+	 * vq interrupt and config change interrupt.
-+	 *   1) start/reset rely on virtio config changed interrupt;
-+	 *   2) send/recv rely on virtio virtqueue interrupts.
-+	 * They are all virtual interrupts. So, we don't have corresponding
-+	 * operation to do here.
-+	 */
-+}
-+
-+/**
-+ * mei_virtio_intr_enable() - enables mei BE virtqueues callbacks
-+ * @dev: the device structure
-+ */
-+static void mei_virtio_intr_enable(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	virtio_config_enable(vdev);
-+
-+	virtqueue_enable_cb(hw->in);
-+	virtqueue_enable_cb(hw->out);
-+}
-+
-+/**
-+ * mei_virtio_intr_disable() - disables mei BE virtqueues callbacks
-+ *
-+ * @dev: the device structure
-+ */
-+static void mei_virtio_intr_disable(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	virtio_config_disable(vdev);
-+
-+	virtqueue_disable_cb(hw->in);
-+	virtqueue_disable_cb(hw->out);
-+}
-+
-+/**
-+ * mei_virtio_synchronize_irq() - wait for pending IRQ handlers for all
-+ *     virtqueue
-+ * @dev: the device structure
-+ */
-+static void mei_virtio_synchronize_irq(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+
-+	/*
-+	 * Now, all IRQ handlers are converted to workqueue.
-+	 * Change synchronize irq to flush this work.
-+	 */
-+	flush_work(&hw->intr_handler);
-+}
-+
-+static void mei_virtio_free_outbufs(struct mei_virtio_hw *hw)
-+{
-+	kfree(hw->send_hdr);
-+	kfree(hw->send_buf);
-+	hw->send_hdr = NULL;
-+	hw->send_buf = NULL;
-+}
-+
-+/**
-+ * mei_virtio_write_message() - writes a message to mei virtio back-end service.
-+ * @dev: the device structure
-+ * @hdr: mei header of message
-+ * @hdr_len: header length
-+ * @data: message payload will be written
-+ * @data_len: message payload length
-+ *
-+ * Return:
-+ * *  0: on success
-+ * * -EIO: if write has failed
-+ * * -ENOMEM: on memory allocation failure
-+ */
-+static int mei_virtio_write_message(struct mei_device *dev,
-+				    const void *hdr, size_t hdr_len,
-+				    const void *data, size_t data_len)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct scatterlist sg[2];
-+	const void *hbuf, *dbuf;
++	struct mei_me_client *me_cl;
 +	int ret;
 +
-+	if (WARN_ON(!atomic_add_unless(&hw->hbuf_ready, -1, 0)))
-+		return -EIO;
++	if (!dev->hbm_f_vt_supported)
++		return -EOPNOTSUPP;
 +
-+	hbuf = kmemdup(hdr, hdr_len, GFP_KERNEL);
-+	hw->send_hdr = hbuf;
-+
-+	dbuf = kmemdup(data, data_len, GFP_KERNEL);
-+	hw->send_buf = dbuf;
-+
-+	if (!hbuf || !dbuf) {
-+		ret = -ENOMEM;
-+		goto fail;
++	me_cl = mei_me_cl_by_uuid(dev, uuid);
++	if (!me_cl) {
++		dev_dbg(dev->dev, "Cannot connect to FW Client UUID = %pUl\n",
++			uuid);
++		return -ENOTTY;
 +	}
-+
-+	sg_init_table(sg, 2);
-+	sg_set_buf(&sg[0], hbuf, hdr_len);
-+	sg_set_buf(&sg[1], dbuf, data_len);
-+
-+	ret = virtqueue_add_outbuf(hw->out, sg, 2, hw, GFP_KERNEL);
-+	if (ret) {
-+		dev_err(dev->dev, "failed to add outbuf\n");
-+		goto fail;
-+	}
-+
-+	virtqueue_kick(hw->out);
-+	return 0;
-+fail:
-+
-+	mei_virtio_free_outbufs(hw);
++	ret = me_cl->props.vt_supported ? 0 : -EOPNOTSUPP;
++	mei_me_cl_put(me_cl);
 +
 +	return ret;
 +}
 +
 +/**
-+ * mei_virtio_count_full_read_slots() - counts read full slots.
-+ * @dev: the device structure
++ * mei_ioctl_connect_vtag - connect to fw client with vtag IOCTL function
 + *
-+ * Return: -EOVERFLOW if overflow, otherwise filled slots count
++ * @file: private data of the file object
++ * @in_client_uuid: requested UUID for connection
++ * @client: IOCTL connect data, output parameters
++ * @vtag: vm tag
++ *
++ * Locking: called under "dev->device_lock" lock
++ *
++ * Return: 0 on success, <0 on failure.
 + */
-+static int mei_virtio_count_full_read_slots(struct mei_device *dev)
++static int mei_ioctl_connect_vtag(struct file *file,
++				  const uuid_le *in_client_uuid,
++				  struct mei_client *client,
++				  u8 vtag)
 +{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
++	struct mei_device *dev;
++	struct mei_cl *cl;
++	struct mei_cl *pos;
++	struct mei_cl_vtag *cl_vtag;
 +
-+	if (hw->recv_idx > hw->recv_len)
-+		return -EOVERFLOW;
++	cl = file->private_data;
++	dev = cl->dev;
 +
-+	return hw->recv_len - hw->recv_idx;
-+}
++	dev_dbg(dev->dev, "FW Client %pUl vtag %d\n", in_client_uuid, vtag);
 +
-+/**
-+ * mei_virtio_read_hdr() - Reads 32bit dword from mei virtio receive buffer
-+ *
-+ * @dev: the device structure
-+ *
-+ * Return: 32bit dword of receive buffer (u32)
-+ */
-+static inline u32 mei_virtio_read_hdr(const struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
++	switch (cl->state) {
++	case MEI_FILE_DISCONNECTED:
++		if (mei_cl_vtag_by_fp(cl, file) != vtag) {
++			dev_err(dev->dev, "reconnect with different vtag\n");
++			return -EINVAL;
++		}
++		break;
++	case MEI_FILE_INITIALIZING:
++		/* malicious connect from another thread may push vtag */
++		if (!IS_ERR(mei_cl_fp_by_vtag(cl, vtag))) {
++			dev_err(dev->dev, "vtag already filled\n");
++			return -EINVAL;
++		}
 +
-+	WARN_ON(hw->cfg.buf_depth < hw->recv_idx + 1);
++		list_for_each_entry(pos, &dev->file_list, link) {
++			if (pos == cl)
++				continue;
++			if (!pos->me_cl)
++				continue;
 +
-+	return hw->recv_buf[hw->recv_idx++];
-+}
++			/* only search for same UUID */
++			if (uuid_le_cmp(*mei_cl_uuid(pos), *in_client_uuid))
++				continue;
 +
-+static int mei_virtio_read(struct mei_device *dev, unsigned char *buffer,
-+			   unsigned long len)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	u32 slots = mei_data2slots(len);
++			/* if tag already exist try another fp */
++			if (!IS_ERR(mei_cl_fp_by_vtag(pos, vtag)))
++				continue;
 +
-+	if (WARN_ON(hw->cfg.buf_depth < hw->recv_idx + slots))
-+		return -EOVERFLOW;
++			/* replace cl with acquired one */
++			dev_dbg(dev->dev, "replacing with existing cl\n");
++			mei_cl_unlink(cl);
++			kfree(cl);
++			file->private_data = pos;
++			cl = pos;
++			break;
++		}
 +
-+	/*
-+	 * Assumption: There is only one MEI message in recv_buf each time.
-+	 * Backend service need follow this rule too.
-+	 */
-+	memcpy(buffer, hw->recv_buf + hw->recv_idx, len);
-+	hw->recv_idx += slots;
++		cl_vtag = mei_cl_vtag_alloc(file, vtag);
++		if (IS_ERR(cl_vtag))
++			return -ENOMEM;
++
++		list_add_tail(&cl_vtag->list, &cl->vtag_map);
++		break;
++	default:
++		return -EBUSY;
++	}
++
++	while (cl->state != MEI_FILE_INITIALIZING &&
++	       cl->state != MEI_FILE_DISCONNECTED &&
++	       cl->state != MEI_FILE_CONNECTED) {
++		mutex_unlock(&dev->device_lock);
++		wait_event_timeout(cl->wait,
++				   (cl->state == MEI_FILE_CONNECTED ||
++				    cl->state == MEI_FILE_DISCONNECTED ||
++				    cl->state == MEI_FILE_DISCONNECT_REQUIRED ||
++				    cl->state == MEI_FILE_DISCONNECT_REPLY),
++				   mei_secs_to_jiffies(MEI_CL_CONNECT_TIMEOUT));
++		mutex_lock(&dev->device_lock);
++	}
++
++	if (!mei_cl_is_connected(cl))
++		return mei_ioctl_connect_client(file, in_client_uuid, client);
++
++	client->max_msg_length = cl->me_cl->props.max_msg_length;
++	client->protocol_version = cl->me_cl->props.protocol_version;
 +
 +	return 0;
 +}
 +
-+static bool mei_virtio_pg_is_enabled(struct mei_device *dev)
-+{
-+	return false;
-+}
-+
-+static bool mei_virtio_pg_in_transition(struct mei_device *dev)
-+{
-+	return false;
-+}
-+
-+static void mei_virtio_add_recv_buf(struct mei_virtio_hw *hw)
-+{
-+	struct scatterlist sg;
-+
-+	if (hw->recv_rdy) /* not needed */
-+		return;
-+
-+	/* refill the recv_buf to IN virtqueue to get next message */
-+	sg_init_one(&sg, hw->recv_buf, mei_slots2data(hw->cfg.buf_depth));
-+	hw->recv_len = 0;
-+	hw->recv_idx = 0;
-+	hw->recv_rdy = 1;
-+	virtqueue_add_inbuf(hw->in, &sg, 1, hw->recv_buf, GFP_KERNEL);
-+	virtqueue_kick(hw->in);
-+}
-+
-+/**
-+ * mei_virtio_hw_is_ready() - check whether the BE(hw) has turned ready
-+ * @dev: mei device
-+ * Return: bool
-+ */
-+static bool mei_virtio_hw_is_ready(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	virtio_cread(vdev, struct mei_virtio_cfg,
-+		     hw_ready, &hw->cfg.hw_ready);
-+
-+	dev_dbg(dev->dev, "hw ready %d\n", hw->cfg.hw_ready);
-+
-+	return hw->cfg.hw_ready;
-+}
-+
-+/**
-+ * mei_virtio_hw_reset - resets virtio hw.
-+ *
-+ * @dev: the device structure
-+ * @intr_enable: virtio use data/config callbacks
-+ *
-+ * Return: 0 on success an error code otherwise
-+ */
-+static int mei_virtio_hw_reset(struct mei_device *dev, bool intr_enable)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	dev_dbg(dev->dev, "hw reset\n");
-+
-+	dev->recvd_hw_ready = false;
-+	hw->host_ready = false;
-+	atomic_set(&hw->hbuf_ready, 0);
-+	hw->recv_len = 0;
-+	hw->recv_idx = 0;
-+
-+	hw->cfg.host_reset = 1;
-+	virtio_cwrite(vdev, struct mei_virtio_cfg,
-+		      host_reset, &hw->cfg.host_reset);
-+
-+	mei_virtio_hw_is_ready(dev);
-+
-+	if (intr_enable)
-+		mei_virtio_intr_enable(dev);
-+
-+	return 0;
-+}
-+
-+/**
-+ * mei_virtio_hw_reset_release() - release device from the reset
-+ * @dev: the device structure
-+ */
-+static void mei_virtio_hw_reset_release(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	struct virtio_device *vdev = dev_to_virtio(dev->dev);
-+
-+	dev_dbg(dev->dev, "hw reset release\n");
-+	hw->cfg.host_reset = 0;
-+	virtio_cwrite(vdev, struct mei_virtio_cfg,
-+		      host_reset, &hw->cfg.host_reset);
-+}
-+
-+/**
-+ * mei_virtio_hw_ready_wait() - wait until the virtio(hw) has turned ready
-+ *  or timeout is reached
-+ * @dev: mei device
-+ *
-+ * Return: 0 on success, error otherwise
-+ */
-+static int mei_virtio_hw_ready_wait(struct mei_device *dev)
-+{
-+	mutex_unlock(&dev->device_lock);
-+	wait_event_timeout(dev->wait_hw_ready,
-+			   dev->recvd_hw_ready,
-+			   mei_secs_to_jiffies(MEI_HW_READY_TIMEOUT));
-+	mutex_lock(&dev->device_lock);
-+	if (!dev->recvd_hw_ready) {
-+		dev_err(dev->dev, "wait hw ready failed\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	dev->recvd_hw_ready = false;
-+	return 0;
-+}
-+
-+/**
-+ * mei_virtio_hw_start() - hw start routine
-+ * @dev: mei device
-+ *
-+ * Return: 0 on success, error otherwise
-+ */
-+static int mei_virtio_hw_start(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+	int ret;
-+
-+	dev_dbg(dev->dev, "hw start\n");
-+	mei_virtio_hw_reset_release(dev);
-+
-+	ret = mei_virtio_hw_ready_wait(dev);
-+	if (ret)
-+		return ret;
-+
-+	mei_virtio_add_recv_buf(hw);
-+	atomic_set(&hw->hbuf_ready, 1);
-+	dev_dbg(dev->dev, "hw is ready\n");
-+	hw->host_ready = true;
-+
-+	return 0;
-+}
-+
-+/**
-+ * mei_virtio_host_is_ready() - check whether the FE has turned ready
-+ * @dev: mei device
-+ *
-+ * Return: bool
-+ */
-+static bool mei_virtio_host_is_ready(struct mei_device *dev)
-+{
-+	struct mei_virtio_hw *hw = to_virtio_hw(dev);
-+
-+	dev_dbg(dev->dev, "host ready %d\n", hw->host_ready);
-+
-+	return hw->host_ready;
-+}
-+
-+/**
-+ * mei_virtio_data_in() - The callback of recv virtqueue of virtio mei
-+ * @vq: receiving virtqueue
-+ */
-+static void mei_virtio_data_in(struct virtqueue *vq)
-+{
-+	struct mei_virtio_hw *hw = vq->vdev->priv;
-+
-+	/* disable interrupts (enabled again from in the interrupt worker) */
-+	virtqueue_disable_cb(hw->in);
-+
-+	schedule_work(&hw->intr_handler);
-+}
-+
-+/**
-+ * mei_virtio_data_out() - The callback of send virtqueue of virtio mei
-+ * @vq: transmitting virtqueue
-+ */
-+static void mei_virtio_data_out(struct virtqueue *vq)
-+{
-+	struct mei_virtio_hw *hw = vq->vdev->priv;
-+
-+	schedule_work(&hw->intr_handler);
-+}
-+
-+static void mei_virtio_intr_handler(struct work_struct *work)
-+{
-+	struct mei_virtio_hw *hw =
-+		container_of(work, struct mei_virtio_hw, intr_handler);
-+	struct mei_device *dev = &hw->mdev;
-+	LIST_HEAD(complete_list);
-+	s32 slots;
-+	int rets = 0;
-+	void *data;
-+	unsigned int len;
-+
-+	mutex_lock(&dev->device_lock);
-+
-+	if (dev->dev_state == MEI_DEV_DISABLED) {
-+		dev_warn(dev->dev, "Interrupt in disabled state.\n");
-+		mei_virtio_intr_disable(dev);
-+		goto end;
-+	}
-+
-+	/* check if ME wants a reset */
-+	if (!mei_hw_is_ready(dev) && dev->dev_state != MEI_DEV_RESETTING) {
-+		dev_warn(dev->dev, "BE service not ready: resetting.\n");
-+		schedule_work(&dev->reset_work);
-+		goto end;
-+	}
-+
-+	/* check if we need to start the dev */
-+	if (!mei_host_is_ready(dev)) {
-+		if (mei_hw_is_ready(dev)) {
-+			dev_dbg(dev->dev, "we need to start the dev.\n");
-+			dev->recvd_hw_ready = true;
-+			wake_up(&dev->wait_hw_ready);
-+		} else {
-+			dev_warn(dev->dev, "Spurious Interrupt\n");
+ /**
+  * mei_ioctl_client_notify_request -
+  *     propagate event notification request to client
+@@ -516,7 +642,11 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
+ {
+ 	struct mei_device *dev;
+ 	struct mei_cl *cl = file->private_data;
+-	struct mei_connect_client_data connect_data;
++	struct mei_connect_client_data conn;
++	struct mei_connect_client_data_vtag conn_vtag;
++	const uuid_le *cl_uuid;
++	struct mei_client *props;
++	u8 vtag;
+ 	u32 notify_get, notify_req;
+ 	int rets;
+ 
+@@ -537,20 +667,68 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
+ 	switch (cmd) {
+ 	case IOCTL_MEI_CONNECT_CLIENT:
+ 		dev_dbg(dev->dev, ": IOCTL_MEI_CONNECT_CLIENT.\n");
+-		if (copy_from_user(&connect_data, (char __user *)data,
+-				   sizeof(connect_data))) {
++		if (copy_from_user(&conn, (char __user *)data, sizeof(conn))) {
++			dev_dbg(dev->dev, "failed to copy data from userland\n");
++			rets = -EFAULT;
++			goto out;
 +		}
-+		goto end;
-+	}
++		cl_uuid = &conn.in_client_uuid;
++		props = &conn.out_client_properties;
++		vtag = 0;
 +
-+	/* read */
-+	if (hw->recv_rdy) {
-+		data = virtqueue_get_buf(hw->in, &len);
-+		if (!data || !len) {
-+			dev_dbg(dev->dev, "No data %d", len);
-+		} else {
-+			dev_dbg(dev->dev, "data_in %d\n", len);
-+			WARN_ON(data != hw->recv_buf);
-+			hw->recv_len = mei_data2slots(len);
-+			hw->recv_rdy = 0;
++		rets = mei_vt_support_check(dev, cl_uuid);
++		if (rets == -ENOTTY)
++			goto out;
++		if (!rets)
++			rets = mei_ioctl_connect_vtag(file, cl_uuid, props,
++						      vtag);
++		else
++			rets = mei_ioctl_connect_client(file, cl_uuid, props);
++		if (rets)
++			goto out;
++
++		/* if all is ok, copying the data back to user. */
++		if (copy_to_user((char __user *)data, &conn, sizeof(conn))) {
++			dev_dbg(dev->dev, "failed to copy data to userland\n");
++			rets = -EFAULT;
++			goto out;
 +		}
-+	}
 +
-+	/* write */
-+	if (!atomic_read(&hw->hbuf_ready)) {
-+		if (!virtqueue_get_buf(hw->out, &len)) {
-+			dev_warn(dev->dev, "Failed to getbuf\n");
-+		} else {
-+			mei_virtio_free_outbufs(hw);
-+			atomic_inc(&hw->hbuf_ready);
++		break;
++
++	case IOCTL_MEI_CONNECT_CLIENT_VTAG:
++		dev_dbg(dev->dev, "IOCTL_MEI_CONNECT_CLIENT_VTAG\n");
++		if (copy_from_user(&conn_vtag, (char __user *)data,
++				   sizeof(conn_vtag))) {
+ 			dev_dbg(dev->dev, "failed to copy data from userland\n");
+ 			rets = -EFAULT;
+ 			goto out;
+ 		}
+ 
+-		rets = mei_ioctl_connect_client(file, &connect_data);
++		cl_uuid = &conn_vtag.connect.in_client_uuid;
++		props = &conn_vtag.out_client_properties;
++		vtag = conn_vtag.connect.vtag;
++
++		rets = mei_vt_support_check(dev, cl_uuid);
++		if (rets == -EOPNOTSUPP)
++			dev_dbg(dev->dev, "FW Client %pUl does not support vtags\n",
++				cl_uuid);
++		if (rets)
++			goto out;
++
++		if (!vtag) {
++			dev_dbg(dev->dev, "vtag can't be zero\n");
++			rets = -EINVAL;
++			goto out;
 +		}
-+	}
 +
-+	/* check slots available for reading */
-+	slots = mei_count_full_read_slots(dev);
-+	while (slots > 0) {
-+		dev_dbg(dev->dev, "slots to read = %08x\n", slots);
-+		rets = mei_irq_read_handler(dev, &complete_list, &slots);
-+
-+		if (rets &&
-+		    (dev->dev_state != MEI_DEV_RESETTING &&
-+		     dev->dev_state != MEI_DEV_POWER_DOWN)) {
-+			dev_err(dev->dev, "mei_irq_read_handler ret = %d.\n",
-+				rets);
-+			schedule_work(&dev->reset_work);
-+			goto end;
-+		}
-+	}
-+
-+	dev->hbuf_is_ready = mei_hbuf_is_ready(dev);
-+
-+	mei_irq_write_handler(dev, &complete_list);
-+
-+	dev->hbuf_is_ready = mei_hbuf_is_ready(dev);
-+
-+	mei_irq_compl_handler(dev, &complete_list);
-+
-+	mei_virtio_add_recv_buf(hw);
-+
-+end:
-+	if (dev->dev_state != MEI_DEV_DISABLED) {
-+		if (!virtqueue_enable_cb(hw->in))
-+			schedule_work(&hw->intr_handler);
-+	}
-+
-+	mutex_unlock(&dev->device_lock);
-+}
-+
-+static void mei_virtio_config_changed(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw = vdev->priv;
-+	struct mei_device *dev = &hw->mdev;
-+
-+	virtio_cread(vdev, struct mei_virtio_cfg,
-+		     hw_ready, &hw->cfg.hw_ready);
-+
-+	if (dev->dev_state == MEI_DEV_DISABLED) {
-+		dev_dbg(dev->dev, "disabled state don't start\n");
-+		return;
-+	}
-+
-+	/* Run intr handler once to handle reset notify */
-+	schedule_work(&hw->intr_handler);
-+}
-+
-+static void mei_virtio_remove_vqs(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw = vdev->priv;
-+
-+	virtqueue_detach_unused_buf(hw->in);
-+	hw->recv_len = 0;
-+	hw->recv_idx = 0;
-+	hw->recv_rdy = 0;
-+
-+	virtqueue_detach_unused_buf(hw->out);
-+
-+	mei_virtio_free_outbufs(hw);
-+
-+	vdev->config->del_vqs(vdev);
-+}
-+
-+/*
-+ * There are two virtqueues, one is for send and another is for recv.
++		rets = mei_ioctl_connect_vtag(file, cl_uuid, props, vtag);
+ 		if (rets)
+ 			goto out;
+ 
+ 		/* if all is ok, copying the data back to user. */
+-		if (copy_to_user((char __user *)data, &connect_data,
+-				 sizeof(connect_data))) {
++		if (copy_to_user((char __user *)data, &conn_vtag,
++				 sizeof(conn_vtag))) {
+ 			dev_dbg(dev->dev, "failed to copy data to userland\n");
+ 			rets = -EFAULT;
+ 			goto out;
+diff --git a/include/uapi/linux/mei.h b/include/uapi/linux/mei.h
+index c6aec86cc5de..4f3638489d01 100644
+--- a/include/uapi/linux/mei.h
++++ b/include/uapi/linux/mei.h
+@@ -66,4 +66,53 @@ struct mei_connect_client_data {
+  */
+ #define IOCTL_MEI_NOTIFY_GET _IOR('H', 0x03, __u32)
+ 
++/**
++ * struct mei_connect_client_vtag - mei client information struct with vtag
++ *
++ * @in_client_uuid: UUID of client to connect
++ * @vtag: virtual tag
++ * @reserved: reserved for future use
 + */
-+static int mei_virtio_init_vqs(struct mei_virtio_hw *hw,
-+			       struct virtio_device *vdev)
-+{
-+	struct virtqueue *vqs[2];
++struct mei_connect_client_vtag {
++	uuid_le in_client_uuid;
++	__u8 vtag;
++	__u8 reserved[3];
++};
 +
-+	vq_callback_t *cbs[] = {
-+		mei_virtio_data_in,
-+		mei_virtio_data_out,
++/**
++ * struct mei_connect_client_data_vtag - IOCTL connect data union
++ *
++ * @connect: input connect data
++ * @out_client_properties: output client data
++ */
++struct mei_connect_client_data_vtag {
++	union {
++		struct mei_connect_client_vtag connect;
++		struct mei_client out_client_properties;
 +	};
-+	static const char * const names[] = {
-+		"in",
-+		"out",
-+	};
-+	int ret;
-+
-+	ret = virtio_find_vqs(vdev, 2, vqs, cbs, names, NULL);
-+	if (ret)
-+		return ret;
-+
-+	hw->in = vqs[0];
-+	hw->out = vqs[1];
-+
-+	return 0;
-+}
-+
-+static const struct mei_hw_ops mei_virtio_ops = {
-+	.fw_status = mei_virtio_fw_status,
-+	.pg_state  = mei_virtio_pg_state,
-+
-+	.host_is_ready = mei_virtio_host_is_ready,
-+
-+	.hw_is_ready = mei_virtio_hw_is_ready,
-+	.hw_reset = mei_virtio_hw_reset,
-+	.hw_config = mei_virtio_hw_config,
-+	.hw_start = mei_virtio_hw_start,
-+
-+	.pg_in_transition = mei_virtio_pg_in_transition,
-+	.pg_is_enabled = mei_virtio_pg_is_enabled,
-+
-+	.intr_clear = mei_virtio_intr_clear,
-+	.intr_enable = mei_virtio_intr_enable,
-+	.intr_disable = mei_virtio_intr_disable,
-+	.synchronize_irq = mei_virtio_synchronize_irq,
-+
-+	.hbuf_free_slots = mei_virtio_hbuf_empty_slots,
-+	.hbuf_is_ready = mei_virtio_hbuf_is_ready,
-+	.hbuf_depth = mei_virtio_hbuf_depth,
-+
-+	.write = mei_virtio_write_message,
-+
-+	.rdbuf_full_slots = mei_virtio_count_full_read_slots,
-+	.read_hdr = mei_virtio_read_hdr,
-+	.read = mei_virtio_read,
 +};
 +
-+static int mei_virtio_probe(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw;
-+	int ret;
++/**
++ * DOC:
++ * This IOCTL is used to associate the current file descriptor with a
++ * FW Client (given by UUID), and virtual tag (vtag).
++ * The IOCTL opens a communication channel between a host client and
++ * a FW client on a tagged channel. From this point on, every read
++ * and write will communicate with the associated FW client with
++ * on the tagged channel.
++ * Upone close() the communication is terminated.
++ *
++ * The IOCTL argument is a struct with a union that contains
++ * the input parameter and the output parameter for this IOCTL.
++ *
++ * The input parameter is UUID of the FW Client, a vtag [0,255]
++ * The output parameter is the properties of the FW client
++ * (FW protocool version and max message size).
++ *
++ * Clients that do not support tagged connection
++ * will respond with -EOPNOTSUPP.
++ */
++#define IOCTL_MEI_CONNECT_CLIENT_VTAG \
++	_IOWR('H', 0x04, struct mei_connect_client_data_vtag)
 +
-+	hw = devm_kzalloc(&vdev->dev, sizeof(*hw), GFP_KERNEL);
-+	if (!hw)
-+		return -ENOMEM;
-+
-+	vdev->priv = hw;
-+
-+	INIT_WORK(&hw->intr_handler, mei_virtio_intr_handler);
-+
-+	ret = mei_virtio_init_vqs(hw, vdev);
-+	if (ret)
-+		goto vqs_failed;
-+
-+	virtio_cread(vdev, struct mei_virtio_cfg,
-+		     buf_depth, &hw->cfg.buf_depth);
-+
-+	hw->recv_buf = kzalloc(mei_slots2data(hw->cfg.buf_depth), GFP_KERNEL);
-+	if (!hw->recv_buf) {
-+		ret = -ENOMEM;
-+		goto hbuf_failed;
-+	}
-+	atomic_set(&hw->hbuf_ready, 0);
-+
-+	virtio_device_ready(vdev);
-+
-+	mei_device_init(&hw->mdev, &vdev->dev, &mei_virtio_ops);
-+
-+	pm_runtime_get_noresume(&vdev->dev);
-+	pm_runtime_set_active(&vdev->dev);
-+	pm_runtime_enable(&vdev->dev);
-+
-+	ret = mei_start(&hw->mdev);
-+	if (ret)
-+		goto mei_start_failed;
-+
-+	pm_runtime_set_autosuspend_delay(&vdev->dev, MEI_VIRTIO_RPM_TIMEOUT);
-+	pm_runtime_use_autosuspend(&vdev->dev);
-+
-+	ret = mei_register(&hw->mdev, &vdev->dev);
-+	if (ret)
-+		goto mei_failed;
-+
-+	pm_runtime_put(&vdev->dev);
-+
-+	return 0;
-+
-+mei_failed:
-+	mei_stop(&hw->mdev);
-+mei_start_failed:
-+	mei_cancel_work(&hw->mdev);
-+	mei_disable_interrupts(&hw->mdev);
-+	kfree(hw->recv_buf);
-+hbuf_failed:
-+	vdev->config->del_vqs(vdev);
-+vqs_failed:
-+	return ret;
-+}
-+
-+static int __maybe_unused mei_virtio_pm_runtime_idle(struct device *device)
-+{
-+	struct virtio_device *vdev = dev_to_virtio(device);
-+	struct mei_virtio_hw *hw = vdev->priv;
-+
-+	dev_dbg(&vdev->dev, "rpm: mei_virtio : runtime_idle\n");
-+
-+	if (!hw)
-+		return -ENODEV;
-+
-+	if (mei_write_is_idle(&hw->mdev))
-+		pm_runtime_autosuspend(device);
-+
-+	return -EBUSY;
-+}
-+
-+static int __maybe_unused mei_virtio_pm_runtime_suspend(struct device *device)
-+{
-+	return 0;
-+}
-+
-+static int __maybe_unused mei_virtio_pm_runtime_resume(struct device *device)
-+{
-+	return 0;
-+}
-+
-+static int __maybe_unused mei_virtio_freeze(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw = vdev->priv;
-+
-+	dev_dbg(&vdev->dev, "freeze\n");
-+
-+	if (!hw)
-+		return -ENODEV;
-+
-+	mei_stop(&hw->mdev);
-+	mei_disable_interrupts(&hw->mdev);
-+	cancel_work_sync(&hw->intr_handler);
-+	vdev->config->reset(vdev);
-+	mei_virtio_remove_vqs(vdev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mei_virtio_restore(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw = vdev->priv;
-+	int ret;
-+
-+	dev_dbg(&vdev->dev, "restore\n");
-+
-+	if (!hw)
-+		return -ENODEV;
-+
-+	ret = mei_virtio_init_vqs(hw, vdev);
-+	if (ret)
-+		return ret;
-+
-+	virtio_device_ready(vdev);
-+
-+	ret = mei_restart(&hw->mdev);
-+	if (ret)
-+		return ret;
-+
-+	/* Start timer if stopped in suspend */
-+	schedule_delayed_work(&hw->mdev.timer_work, HZ);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mei_virtio_pm_ops = {
-+	SET_RUNTIME_PM_OPS(mei_virtio_pm_runtime_suspend,
-+			   mei_virtio_pm_runtime_resume,
-+			   mei_virtio_pm_runtime_idle)
-+};
-+
-+static void mei_virtio_remove(struct virtio_device *vdev)
-+{
-+	struct mei_virtio_hw *hw = vdev->priv;
-+
-+	mei_stop(&hw->mdev);
-+	mei_disable_interrupts(&hw->mdev);
-+	cancel_work_sync(&hw->intr_handler);
-+	mei_deregister(&hw->mdev);
-+	vdev->config->reset(vdev);
-+	mei_virtio_remove_vqs(vdev);
-+	kfree(hw->recv_buf);
-+	pm_runtime_disable(&vdev->dev);
-+}
-+
-+static struct virtio_device_id id_table[] = {
-+	{ VIRTIO_ID_MEI, VIRTIO_DEV_ANY_ID },
-+	{ }
-+};
-+
-+static struct virtio_driver mei_virtio_driver = {
-+	.id_table = id_table,
-+	.probe = mei_virtio_probe,
-+	.remove = mei_virtio_remove,
-+	.config_changed = mei_virtio_config_changed,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.owner = THIS_MODULE,
-+		.pm = &mei_virtio_pm_ops,
-+	},
-+#ifdef CONFIG_PM_SLEEP
-+	.freeze = mei_virtio_freeze,
-+	.restore = mei_virtio_restore,
-+#endif
-+};
-+
-+module_virtio_driver(mei_virtio_driver);
-+MODULE_DEVICE_TABLE(virtio, id_table);
-+MODULE_DESCRIPTION("Virtio MEI frontend driver");
-+MODULE_LICENSE("GPL v2");
+ #endif /* _LINUX_MEI_H  */
 -- 
 2.25.4
 
