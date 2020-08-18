@@ -2,118 +2,117 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D829C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E5E20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B69220658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgHRRUh (ORCPT
+        id S1728750AbgHRRUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:20:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:24246 "EHLO pegase1.c-s.fr"
+        Tue, 18 Aug 2020 13:20:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25860 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbgHRRTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728626AbgHRRTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 13:19:35 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BWHhh5Nyvz9vCy3;
-        Tue, 18 Aug 2020 19:19:32 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eK0WypmNrd3Z; Tue, 18 Aug 2020 19:19:32 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhh4bHHz9vCxg;
-        Tue, 18 Aug 2020 19:19:32 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 840808B7EC;
-        Tue, 18 Aug 2020 19:19:34 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ZQ4LR3HHLaeN; Tue, 18 Aug 2020 19:19:34 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 476BA8B7D7;
-        Tue, 18 Aug 2020 19:19:34 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id CFF1A65CF4; Tue, 18 Aug 2020 17:19:33 +0000 (UTC)
-Message-Id: <06def97e87ac1c4ae8e3197e0982e1fab7b3c8ae.1597770847.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1597770847.git.christophe.leroy@csgroup.eu>
-References: <cover.1597770847.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 21/25] powerpc/signal32: Add and use unsafe_put_sigset_t()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 18 Aug 2020 17:19:33 +0000 (UTC)
+IronPort-SDR: bV0i7oYOkdMvwPUo4qFYS8Yu4N3Ceubo7wT6M8FRb+99/Av/JoPCyvajyMFHd+zY+KVRUSDCJb
+ 7dWxgryl5rzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="219269706"
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="219269706"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 10:19:34 -0700
+IronPort-SDR: 8J7Aa2Nrc0djSFRqGqEZJRldDbxlKUWMlH5U8Ia5SimZ5W1JVVcwwb5MQq2YgtnVSetNB5ey4T
+ azlfOYcZWT2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
+   d="scan'208";a="326798922"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 10:19:31 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k858I-009hcq-Fw; Tue, 18 Aug 2020 20:10:46 +0300
+Date:   Tue, 18 Aug 2020 20:10:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
+Message-ID: <20200818171046.GU1891694@smile.fi.intel.com>
+References: <20200817170535.17041-1-brgl@bgdev.pl>
+ <20200817170535.17041-2-brgl@bgdev.pl>
+ <20200817173908.GS1891694@smile.fi.intel.com>
+ <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
+ <20200818082500.GB1891694@smile.fi.intel.com>
+ <CAMRc=Md5yrgxnPf=qwKYhwHACcq-XeKOKZ76OwYdMGO8SgYmzQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md5yrgxnPf=qwKYhwHACcq-XeKOKZ76OwYdMGO8SgYmzQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-put_sigset_t() calls copy_to_user() for copying two words.
+On Tue, Aug 18, 2020 at 06:27:12PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Aug 18, 2020 at 10:40 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Aug 17, 2020 at 10:02:05PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > ...
+> >
+> > > > > +static struct devres *to_devres(void *data)
+> > > > > +{
+> > > > > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
+> > > > > +                                                 ARCH_KMALLOC_MINALIGN));
+> > > >
+> > > > Do you really need both explicit castings?
+> > > >
+> > >
+> > > Yeah, we can probably drop the (struct devres *) here.
+> >
+> > void * -> u8 * here is also not needed, it is considered byte access IIRC.
+> >
+> 
+> Actually it turns out that while we don't need the (void *) -> (u8 *)
+> casting, we must cast to (struct devres *) or the following error is
+> produced:
+> 
+> drivers/base/devres.c: In function ‘to_devres’:
+> drivers/base/devres.c:41:21: error: returning ‘u8 *’ {aka ‘unsigned
+> char *’} from a function with incompatible return type ‘struct devres
+> *’ [-Werror=incompatible-pointer-types]
+>   return ((u8 *)data - ALIGN(sizeof(struct devres),
+>          ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>         ARCH_KMALLOC_MINALIGN));
+>         ~~~~~~~~~~~~~~~~~~~~~~~
 
-This is terribly inefficient for copying two words.
+Of course, you have to drop u8 * casting as well.
 
-By switching to unsafe_put_user(), we end up with something as
-simple as:
-
- 3cc:   81 3d 00 00     lwz     r9,0(r29)
- 3d0:   91 26 00 b4     stw     r9,180(r6)
- 3d4:   81 3d 00 04     lwz     r9,4(r29)
- 3d8:   91 26 00 b8     stw     r9,184(r6)
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/signal_32.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 310d3b8d9ad5..3f9f315dd036 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -87,6 +87,8 @@ static inline int put_sigset_t(compat_sigset_t __user *uset, sigset_t *set)
- 	return put_compat_sigset(uset, set, sizeof(*uset));
- }
- 
-+#define unsafe_put_sigset_t	unsafe_put_compat_sigset
-+
- static inline int get_sigset_t(sigset_t *set,
- 			       const compat_sigset_t __user *uset)
- {
-@@ -141,6 +143,13 @@ static inline int put_sigset_t(sigset_t __user *uset, sigset_t *set)
- 	return copy_to_user(uset, set, sizeof(*uset));
- }
- 
-+#define unsafe_put_sigset_t(uset, set, label) do {			\
-+	sigset_t __user *__us = uset	;				\
-+	const sigset_t *__s = set;					\
-+									\
-+	unsafe_copy_to_user(__us, __s, sizeof(*__us), label);		\
-+} while (0)
-+
- static inline int get_sigset_t(sigset_t *set, const sigset_t __user *uset)
- {
- 	return copy_from_user(set, uset, sizeof(*uset));
-@@ -780,10 +789,10 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
- 				failed);
- 		unsafe_put_user(PPC_INST_SC, &mctx->mc_pad[1], failed);
- 	}
-+	unsafe_put_sigset_t(&frame->uc.uc_sigmask, oldset, failed);
-+
- 	user_write_access_end();
- 
--	if (put_sigset_t(&frame->uc.uc_sigmask, oldset))
--		goto badframe;
- 	if (copy_siginfo_to_user(&frame->info, &ksig->info))
- 		goto badframe;
- 
 -- 
-2.25.0
+With Best Regards,
+Andy Shevchenko
+
 
