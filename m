@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3703C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B595DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 770DB207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B3E2087D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597763923;
-	bh=DFgjPvI/vXV91uvzN+sme20WtWl/kJKoZupsBOJXfBQ=;
+	s=default; t=1597763935;
+	bh=pd6tPUt2ij5eVwUys1N2/je9Ueo/gXQuNWSa4Q9eWYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PR3t+QNV325dmvmMra459EDCRYH7eS2wRpIpgPvpUlJMcrNxOvel6zFF6AiHQ2494
-	 y84rJNnehX+eHfyPjHq8MOEw0+YyJweAdLHsy50SNw8UTOq8Cm8hOzxwKOP14IieS/
-	 0J5HkxwHXWqKQEzDnvb+Jpfwe8BGvjsKbrSOe31A=
+	b=N3OxvbqyQvrrV4+Y24rG317BXjS/2qyt7p39JnQm2RgcMT/S6sHR4goi4F9zPqwEo
+	 v5LIMyAmfWXCMBd0JPPierNJ6MNcVs8aGPiEbA2HQhTknx+B2hnj2tBX0oVJ/PYEUx
+	 Mna/udAVZCV4Bb5U8jkKj/n1RH7pxdgfBVL0jvxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHRPSk (ORCPT
+        id S1728106AbgHRPSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 11:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgHRPRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:17:33 -0400
+        id S1726736AbgHRPSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:18:17 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E54462054F;
-        Tue, 18 Aug 2020 15:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA7162087D;
+        Tue, 18 Aug 2020 15:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597763852;
-        bh=DFgjPvI/vXV91uvzN+sme20WtWl/kJKoZupsBOJXfBQ=;
+        s=default; t=1597763896;
+        bh=pd6tPUt2ij5eVwUys1N2/je9Ueo/gXQuNWSa4Q9eWYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sb4tO818fhfIY1L0sTQE8nDj+8mGi9uHOcqZnjg0uj3tpj6i4/rzppzDqqqompdjZ
-         iFUaYJr4fueUpI5iPhsaxdXJPjYQyvH1ESfKCPejy1fi1XGVCto65QLI3+mssBbcEL
-         8tsVYJMK/jhJgOVkQ7iYEV+fVy8vBFUiHXB5XJsI=
+        b=aMwnH14VB9pEvRif2kVXF2j9PC1kC4UCHLgZKwNXLzSUzRVbdfutiHYDJNbY4L5Cn
+         DSx/dIQT+xRpE9G7mTEjerjFtWAArSIBhoi9OW+Gl+/Arns44xtJv2oiFd0qu78t60
+         DniuPQvPK80yg3qGzD04yvXU+ZjlZwAlZl+BmuiU=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
@@ -73,11 +73,10 @@ Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
         openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 04/17] arm64: numa: simplify dummy_numa_init()
-Date:   Tue, 18 Aug 2020 18:16:21 +0300
-Message-Id: <20200818151634.14343-5-rppt@kernel.org>
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: [PATCH v3 08/17] memblock: make for_each_memblock_type() iterator private
+Date:   Tue, 18 Aug 2020 18:16:25 +0300
+Message-Id: <20200818151634.14343-9-rppt@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200818151634.14343-1-rppt@kernel.org>
 References: <20200818151634.14343-1-rppt@kernel.org>
@@ -90,97 +89,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-dummy_numa_init() loops over memblock.memory and passes nid=0 to
-numa_add_memblk() which essentially wraps memblock_set_node(). However,
-memblock_set_node() can cope with entire memory span itself, so the loop
-over memblock.memory regions is redundant.
-
-Using a single call to memblock_set_node() rather than a loop also fixes an
-issue with a buggy ACPI firmware in which the SRAT table covers some but
-not all of the memory in the EFI memory map.
-
-Jonathan Cameron says:
-
-  This issue can be easily triggered by having an SRAT table which fails
-  to cover all elements of the EFI memory map.
-
-  This firmware error is detected and a warning printed. e.g.
-  "NUMA: Warning: invalid memblk node 64 [mem 0x240000000-0x27fffffff]"
-  At that point we fall back to dummy_numa_init().
-
-  However, the failed ACPI init has left us with our memblocks all broken
-  up as we split them when trying to assign them to NUMA nodes.
-
-  We then iterate over the memblocks and add them to node 0.
-
-  numa_add_memblk() calls memblock_set_node() which merges regions that
-  were previously split up during the earlier attempt to add them to different
-  nodes during parsing of SRAT.
-
-  This means elements are moved in the memblock array and we can end up
-  in a different memblock after the call to numa_add_memblk().
-  Result is:
-
-  Unable to handle kernel paging request at virtual address 0000000000003a40
-  Mem abort info:
-    ESR = 0x96000004
-    EC = 0x25: DABT (current EL), IL = 32 bits
-    SET = 0, FnV = 0
-    EA = 0, S1PTW = 0
-  Data abort info:
-    ISV = 0, ISS = 0x00000004
-    CM = 0, WnR = 0
-  [0000000000003a40] user address but active_mm is swapper
-  Internal error: Oops: 96000004 [#1] PREEMPT SMP
-
-  ...
-
-  Call trace:
-    sparse_init_nid+0x5c/0x2b0
-    sparse_init+0x138/0x170
-    bootmem_init+0x80/0xe0
-    setup_arch+0x2a0/0x5fc
-    start_kernel+0x8c/0x648
-
-Replace the loop with a single call to memblock_set_node() to the entire
-memory.
+for_each_memblock_type() is not used outside mm/memblock.c, move it there
+from include/linux/memblock.h
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
 ---
- arch/arm64/mm/numa.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ include/linux/memblock.h | 5 -----
+ mm/memblock.c            | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 73f8b49d485c..8a97cd3d2dfe 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -423,19 +423,16 @@ static int __init numa_init(int (*init_func)(void))
-  */
- static int __init dummy_numa_init(void)
- {
-+	phys_addr_t start = memblock_start_of_DRAM();
-+	phys_addr_t end = memblock_end_of_DRAM();
- 	int ret;
--	struct memblock_region *mblk;
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 9d925db0d355..550faf69fc1c 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -552,11 +552,6 @@ static inline unsigned long memblock_region_reserved_end_pfn(const struct memblo
+ 	     region < (memblock.memblock_type.regions + memblock.memblock_type.cnt);	\
+ 	     region++)
  
- 	if (numa_off)
- 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
--	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
--		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
+-#define for_each_memblock_type(i, memblock_type, rgn)			\
+-	for (i = 0, rgn = &memblock_type->regions[0];			\
+-	     i < memblock_type->cnt;					\
+-	     i++, rgn = &memblock_type->regions[i])
 -
--	for_each_memblock(memory, mblk) {
--		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
--		if (!ret)
--			continue;
-+	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n", start, end - 1);
+ extern void *alloc_large_system_hash(const char *tablename,
+ 				     unsigned long bucketsize,
+ 				     unsigned long numentries,
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 45f198750be9..59f3998ae5db 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -132,6 +132,11 @@ struct memblock_type physmem = {
+ };
+ #endif
  
-+	ret = numa_add_memblk(0, start, end);
-+	if (ret) {
- 		pr_err("NUMA init failed\n");
- 		return ret;
- 	}
++#define for_each_memblock_type(i, memblock_type, rgn)			\
++	for (i = 0, rgn = &memblock_type->regions[0];			\
++	     i < memblock_type->cnt;					\
++	     i++, rgn = &memblock_type->regions[i])
++
+ int memblock_debug __initdata_memblock;
+ static bool system_has_some_mirror __initdata_memblock = false;
+ static int memblock_can_resize __initdata_memblock;
 -- 
 2.26.2
 
