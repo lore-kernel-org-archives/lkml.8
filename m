@@ -2,138 +2,71 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDC6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A10207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597763874;
-	bh=ylWhwiFM7Obo+eRxZUr7GmKhaKz7f1+YPfRZdPbto5M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDOdCUdh5K11+Rz5Gmu/sE/li3HI97g576LxxZiD8U8d30FTze/iweVNDhtU6Hr22
-	 rDgIe16IHKFy5kVVn0MEJi01wqgXGpY+E32XywG+GF3qmYpBOZD+QurHOtwtHEwHdj
-	 w4NxygtFkO80QBYFeYl9BomTBnhOMjGD+6ZxiYfY=
+	by mail.kernel.org (Postfix) with ESMTP id D611E2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHRPRu (ORCPT
+        id S1727849AbgHRPSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgHRPRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:17:00 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 263212076E;
-        Tue, 18 Aug 2020 15:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597763819;
-        bh=ylWhwiFM7Obo+eRxZUr7GmKhaKz7f1+YPfRZdPbto5M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVcTgt1q2F5hubs/cN48dtaOxOQJ9mV8AoapoK1n6LFrBWU+b0Sh8TD35ZAthEwP2
-         0ZOR7+CZefQJ1OGqXIc4A7CboGZjsKb+tVzVnqXN6rXS5knGCLHn6PfJBBX68c5L5F
-         CGQ5QOJJxEnTj567AbAKslG9FG0zccZ6gi7lSsdg=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>, Daniel Axtens <dja@axtens.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: [PATCH v3 01/17] KVM: PPC: Book3S HV: simplify kvm_cma_reserve()
-Date:   Tue, 18 Aug 2020 18:16:18 +0300
-Message-Id: <20200818151634.14343-2-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200818151634.14343-1-rppt@kernel.org>
-References: <20200818151634.14343-1-rppt@kernel.org>
+        Tue, 18 Aug 2020 11:18:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbgHRPRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:17:23 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D03EFC061389;
+        Tue, 18 Aug 2020 08:17:22 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k83MJ-000Ma4-5q; Tue, 18 Aug 2020 15:17:07 +0000
+Date:   Tue, 18 Aug 2020 16:17:07 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 2/5] coredump: Let dump_emit() bail out on short writes
+Message-ID: <20200818151707.GD1236603@ZenIV.linux.org.uk>
+References: <20200818061239.29091-1-jannh@google.com>
+ <20200818061239.29091-3-jannh@google.com>
+ <20200818134027.GF29865@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818134027.GF29865@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Tue, Aug 18, 2020 at 03:40:28PM +0200, Oleg Nesterov wrote:
+> On 08/18, Jann Horn wrote:
+> >
+> > +	if (dump_interrupted())
+> > +		return 0;
+> > +	n = __kernel_write(file, addr, nr, &pos);
+> > +	if (n != nr)
+> > +		return 0;
+> > +	file->f_pos = pos;
+> 
+> Just curious, can't we simply do
+> 
+> 	__kernel_write(file, addr, nr, &file->f_pos);
+> 
+> and avoid "loff_t pos" ?
 
-The memory size calculation in kvm_cma_reserve() traverses memblock.memory
-rather than simply call memblock_phys_mem_size(). The comment in that
-function suggests that at some point there should have been call to
-memblock_analyze() before memblock_phys_mem_size() could be used.
-As of now, there is no memblock_analyze() at all and
-memblock_phys_mem_size() can be used as soon as cold-plug memory is
-registerd with memblock.
+	Bloody bad pattern; it would be (probably) safe in this case,
+but in general ->f_pos is shared data.  Exposing it to fuckloads of
+->write() instances is a bad idea - we had bugs like that.
 
-Replace loop over memblock.memory with a call to memblock_phys_mem_size().
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv_builtin.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_hv_builtin.c b/arch/powerpc/kvm/book3s_hv_builtin.c
-index 073617ce83e0..8f58dd20b362 100644
---- a/arch/powerpc/kvm/book3s_hv_builtin.c
-+++ b/arch/powerpc/kvm/book3s_hv_builtin.c
-@@ -95,23 +95,15 @@ EXPORT_SYMBOL_GPL(kvm_free_hpt_cma);
- void __init kvm_cma_reserve(void)
- {
- 	unsigned long align_size;
--	struct memblock_region *reg;
--	phys_addr_t selected_size = 0;
-+	phys_addr_t selected_size;
- 
- 	/*
- 	 * We need CMA reservation only when we are in HV mode
- 	 */
- 	if (!cpu_has_feature(CPU_FTR_HVMODE))
- 		return;
--	/*
--	 * We cannot use memblock_phys_mem_size() here, because
--	 * memblock_analyze() has not been called yet.
--	 */
--	for_each_memblock(memory, reg)
--		selected_size += memblock_region_memory_end_pfn(reg) -
--				 memblock_region_memory_base_pfn(reg);
- 
--	selected_size = (selected_size * kvm_cma_resv_ratio / 100) << PAGE_SHIFT;
-+	selected_size = PAGE_ALIGN(memblock_phys_mem_size() * kvm_cma_resv_ratio / 100);
- 	if (selected_size) {
- 		pr_info("%s: reserving %ld MiB for global area\n", __func__,
- 			 (unsigned long)selected_size / SZ_1M);
--- 
-2.26.2
-
+	General rule: never pass an address of ->f_pos to anything,
+and limit access to it as much as possible.
