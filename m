@@ -2,174 +2,198 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3571520897
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23010221E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHRPtj (ORCPT
+        id S1728143AbgHRPtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:49:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:19062 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbgHRPrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:47:43 -0400
-IronPort-SDR: Mz1t5CA8kOdhDzkun7Ex0ZFdUaNXcUY3T4NKBCx/aaOnS+qTQJ31IqVRFm9YvaW0N5xag8cuVR
- VZSiWIXxmyCw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216462407"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="216462407"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:47:42 -0700
-IronPort-SDR: 09c499aMls2KbkOZSO5zefoQMtktWpFRNiUMUqt2Gry/scLKkyRdk6o9TPPDQ8aD3QD89iQW97
- MiyoxuLI0WIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="400530357"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:47:39 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>
-Subject: [PATCH v6 07/10] net: eth: altera: change tx functions to type netdev_tx_t
-Date:   Tue, 18 Aug 2020 23:46:10 +0800
-Message-Id: <20200818154613.148921-8-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
-References: <20200818154613.148921-1-joyce.ooi@intel.com>
+        Tue, 18 Aug 2020 11:49:52 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2649 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728218AbgHRPsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:48:02 -0400
+Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 582E3AB7CD1EE9FB02EE;
+        Tue, 18 Aug 2020 16:48:01 +0100 (IST)
+Received: from kstruczy-linux-box (10.204.65.138) by
+ lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 18 Aug 2020 16:47:59 +0100
+Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:48:02 +0200
+From:   <krzysztof.struczynski@huawei.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <containers@lists.linux-foundation.org>,
+        <linux-security-module@vger.kernel.org>
+CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
+        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
+        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
+        <jmorris@namei.org>, <christian@brauner.io>,
+        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Subject: [RFC PATCH 26/30] ima: Add key domain to the ima namespace
+Date:   Tue, 18 Aug 2020 17:42:26 +0200
+Message-ID: <20200818154230.14016-17-krzysztof.struczynski@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.204.65.138]
+X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
+ lhreml722-chm.china.huawei.com (10.201.108.73)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-Modify all msgdma and sgdma tx_buffer functions to be of type
-netdev_tx_t, and also modify main tx function to be of
-netdev_tx_t type.
+Add key domain to the ima namespace. This will allow to bind the
+appraisal keys with the namespace and store all appraisal keys in the
+ima system keyring.
 
-Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 ---
-v2: this patch is added in patch version 2
-v3: no change
-v4: no change
-v5: no change
-v6: no change
----
- drivers/net/ethernet/altera/altera_msgdma.c | 5 +++--
- drivers/net/ethernet/altera/altera_msgdma.h | 4 ++--
- drivers/net/ethernet/altera/altera_sgdma.c  | 5 +++--
- drivers/net/ethernet/altera/altera_sgdma.h  | 4 ++--
- drivers/net/ethernet/altera/altera_tse.h    | 4 ++--
- 5 files changed, 12 insertions(+), 10 deletions(-)
+ include/linux/ima.h               |  3 +++
+ security/integrity/ima/ima_init.c |  8 ++++++++
+ security/integrity/ima/ima_ns.c   | 14 ++++++++++++++
+ security/keys/key.c               | 10 +++++++---
+ 4 files changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index ac1efd08267a..ac68151a7f47 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -106,7 +106,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv)
- }
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 158028834747..7db4995c66cf 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -208,6 +208,9 @@ struct ima_namespace {
+ 	char *policy_path_for_children;
+ 	char *x509_path_for_children;
+ 	struct ima_policy_setup_data *policy_setup_for_children;
++#ifdef CONFIG_KEYS
++	struct key_tag *key_domain;
++#endif
+ } __randomize_layout;
  
- /* return 0 to indicate transmit is pending */
--int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+netdev_tx_t
-+msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- {
- 	csrwr32(lower_32_bits(buffer->dma_addr), priv->tx_dma_desc,
- 		msgdma_descroffs(read_addr_lo));
-@@ -120,7 +121,7 @@ int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- 		msgdma_descroffs(stride));
- 	csrwr32(MSGDMA_DESC_CTL_TX_SINGLE, priv->tx_dma_desc,
- 		msgdma_descroffs(control));
--	return 0;
-+	return NETDEV_TX_OK;
- }
+ extern struct ima_namespace init_ima_ns;
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index d14c6689f422..1668edf3ed32 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -18,6 +18,7 @@
+ #include <linux/kref.h>
+ #include <linux/proc_ns.h>
+ #include <linux/user_namespace.h>
++#include <linux/key.h>
  
- u32 msgdma_tx_completions(struct altera_tse_private *priv)
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.h b/drivers/net/ethernet/altera/altera_msgdma.h
-index 23f5b2a13898..d816b24dfa7f 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.h
-+++ b/drivers/net/ethernet/altera/altera_msgdma.h
-@@ -16,8 +16,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv);
- u32 msgdma_tx_completions(struct altera_tse_private *priv);
- void msgdma_add_rx_desc(struct altera_tse_private *priv,
- 			struct tse_buffer *buffer);
--int msgdma_tx_buffer(struct altera_tse_private *priv,
--		     struct tse_buffer *buffer);
-+netdev_tx_t msgdma_tx_buffer(struct altera_tse_private *priv,
-+			     struct tse_buffer *buffer);
- u32 msgdma_rx_status(struct altera_tse_private *priv);
- int msgdma_initialize(struct altera_tse_private *priv);
- void msgdma_uninitialize(struct altera_tse_private *priv);
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
-index fe6276c7e4a3..6898ec682425 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.c
-+++ b/drivers/net/ethernet/altera/altera_sgdma.c
-@@ -166,7 +166,8 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
-  *   will now actually look at the code, so from now, 0 is good and return
-  *   NETDEV_TX_BUSY when busy.
-  */
--int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+netdev_tx_t
-+sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- {
- 	struct sgdma_descrip __iomem *descbase =
- 		(struct sgdma_descrip __iomem *)priv->tx_dma_desc;
-@@ -196,7 +197,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- 	/* enqueue the request to the pending transmit queue */
- 	queue_tx(priv, buffer);
+ #include "ima.h"
  
--	return 0;
-+	return NETDEV_TX_OK;
- }
+@@ -25,6 +26,10 @@
+ const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
  
++#ifdef CONFIG_KEYS
++static struct key_tag init_ima_key_domain = { .usage = REFCOUNT_INIT(1) };
++#endif
++
+ struct ima_namespace init_ima_ns = {
+ 	.kref = KREF_INIT(2),
+ 	.user_ns = &init_user_ns,
+@@ -41,6 +46,9 @@ struct ima_namespace init_ima_ns = {
+ 	.measurements = &ima_measurements,
+ 	.ml_len = ATOMIC_LONG_INIT(0),
+ 	.violations = ATOMIC_LONG_INIT(0),
++#ifdef CONFIG_KEYS
++	.key_domain = &init_ima_key_domain,
++#endif
+ };
+ EXPORT_SYMBOL(init_ima_ns);
  
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.h b/drivers/net/ethernet/altera/altera_sgdma.h
-index 3fb201417820..6a41833f0965 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.h
-+++ b/drivers/net/ethernet/altera/altera_sgdma.h
-@@ -13,8 +13,8 @@ void sgdma_disable_rxirq(struct altera_tse_private *priv);
- void sgdma_disable_txirq(struct altera_tse_private *priv);
- void sgdma_clear_rxirq(struct altera_tse_private *priv);
- void sgdma_clear_txirq(struct altera_tse_private *priv);
--int sgdma_tx_buffer(struct altera_tse_private *priv,
--		    struct tse_buffer *buffer);
-+netdev_tx_t sgdma_tx_buffer(struct altera_tse_private *priv,
-+			    struct tse_buffer *buffer);
- u32 sgdma_tx_completions(struct altera_tse_private *priv);
- void sgdma_add_rx_desc(struct altera_tse_private *priv,
- 		       struct tse_buffer *buffer);
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index fa24ab3c7d6a..79d02748c89d 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -392,8 +392,8 @@ struct altera_dmaops {
- 	void (*disable_rxirq)(struct altera_tse_private *priv);
- 	void (*clear_txirq)(struct altera_tse_private *priv);
- 	void (*clear_rxirq)(struct altera_tse_private *priv);
--	int (*tx_buffer)(struct altera_tse_private *priv,
--			 struct tse_buffer *buffer);
-+	netdev_tx_t (*tx_buffer)(struct altera_tse_private *priv,
-+				 struct tse_buffer *buffer);
- 	u32 (*tx_completions)(struct altera_tse_private *priv);
- 	void (*add_rx_desc)(struct altera_tse_private *priv,
- 			    struct tse_buffer *buffer);
+diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
+index ec3abc803c82..872dc6a96a96 100644
+--- a/security/integrity/ima/ima_ns.c
++++ b/security/integrity/ima/ima_ns.c
+@@ -28,6 +28,7 @@
+ #include <linux/mutex.h>
+ #include <linux/string.h>
+ #include <linux/kernel.h>
++#include <linux/key.h>
+ 
+ #include "ima.h"
+ 
+@@ -65,8 +66,16 @@ static struct ima_namespace *ima_ns_alloc(void)
+ 	if (!ima_ns->iint_tree)
+ 		goto policy_free;
+ 
++#ifdef CONFIG_KEYS
++	ima_ns->key_domain = kzalloc(sizeof(struct key_tag), GFP_KERNEL);
++	if (!ima_ns->key_domain)
++		goto iint_free;
++#endif
++
+ 	return ima_ns;
+ 
++iint_free:
++	kfree(ima_ns->iint_tree);
+ policy_free:
+ 	kfree(ima_ns->policy_data);
+ ns_free:
+@@ -171,6 +180,9 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
+ 	rwlock_init(&ns->iint_tree->lock);
+ 	ns->iint_tree->root = RB_ROOT;
+ 
++#ifdef CONFIG_KEYS
++	refcount_set(&ns->key_domain->usage, 1);
++#endif
+ 	ns->policy_path_for_children = NULL;
+ 	ns->x509_path_for_children = NULL;
+ 	ns->policy_setup_for_children = NULL;
+@@ -184,6 +196,7 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
+ fail_free:
+ 	kfree(ns->iint_tree);
+ 	kfree(ns->policy_data);
++	kfree(ns->key_domain);
+ 	kfree(ns);
+ fail_dec:
+ 	dec_ima_namespaces(ucounts);
+@@ -239,6 +252,7 @@ static void destroy_ima_ns(struct ima_namespace *ns)
+ 	bool is_init_ns = (ns == &init_ima_ns);
+ 
+ 	dec_ima_namespaces(ns->ucounts);
++	key_remove_domain(ns->key_domain);
+ 	put_user_ns(ns->user_ns);
+ 	ns_free_inum(&ns->ns);
+ 	integrity_iint_tree_free(ns->iint_tree);
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 1b0183d33bbc..fca0d12f5c71 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -285,10 +285,14 @@ struct key *key_alloc(struct key_type *type, const char *desc,
+ 
+ 		/* set domain tag if it's not predefined for the key type */
+ 		if ((!type->flags) && (flags & KEY_ALLOC_DOMAIN_IMA))
+-			/* Set it to something meaningful after adding a key
+-			 * domain to the ima namespace.
++			/* Use ima_ns_for_children, not ima_ns. ima_ns_for
++			 * children is equal to ima_ns, unless ima namespace was
++			 * unshared and the new namespace is being configured.
++			 * In that case, new keys should be associated with the
++			 * new ima namespace.
+ 			 */
+-			key->index_key.domain_tag = NULL;
++			key->index_key.domain_tag =
++				current->nsproxy->ima_ns_for_children->key_domain;
+ 	}
+ 
+ 	key->index_key.desc_len = desclen;
 -- 
-2.13.0
+2.20.1
 
