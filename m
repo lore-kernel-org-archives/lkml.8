@@ -2,170 +2,189 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F056C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB437C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4342D206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87265206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PaqdYeZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHRJDZ convert rfc822-to-8bit (ORCPT
+        id S1726482AbgHRJFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:03:25 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2612 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726043AbgHRJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:03:24 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id D4ECC6C33E78F3F0A705;
-        Tue, 18 Aug 2020 10:03:22 +0100 (IST)
-Received: from localhost (10.52.121.15) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 18 Aug
- 2020 10:03:22 +0100
-Date:   Tue, 18 Aug 2020 10:01:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Sean V Kelley <sean.v.kelley@intel.com>, <rjw@rjwysocki.net>,
-        <bhelgaas@google.com>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
-Message-ID: <20200818100150.00007f29@Huawei.com>
-In-Reply-To: <20200817222433.GA1453800@bjorn-Precision-5520>
-References: <20200810103252.00000318@Huawei.com>
-        <20200817222433.GA1453800@bjorn-Precision-5520>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 18 Aug 2020 05:05:31 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:50619 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726203AbgHRJFb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:05:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597741529; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=AKEs3FjP4gzSXoMLGbgZjGNeqGkQDTm0T08hGb1hPTA=;
+ b=PaqdYeZ8QNKo1w47fEe0jx+s+J3WfaxQ5tnWnmjQZPEkMjyds7m3ytgqjtbePFJjd3nvMR9w
+ GLXMjmRevoGYxuYQbqP4r7fIIrvqwbqN5Cd6mvsDGwJt37SIsrSY01NUNysG1j88bhN1Nt0F
+ V0XPx/nMjV//sWlkOn//K626tRA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f3b9959668ab3fef60a8606 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 09:03:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 73540C43391; Tue, 18 Aug 2020 09:03:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E090C433C6;
+        Tue, 18 Aug 2020 09:03:20 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.121.15]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 14:33:20 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-kernel-owner@vger.kernel.org,
+        Kevin Hilman <khilman@kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] PM / Domains: Add GENPD_FLAG_SUSPEND_ON flag
+In-Reply-To: <CAPDyKFoPEEvrBgs4D45027+HgdNPbcM+WVHm=QVrGWgWMR61Ng@mail.gmail.com>
+References: <20200811190252.10559-1-sibis@codeaurora.org>
+ <CAPDyKFqNMEtHwcJFxYQP5H1Yjrsr1T3UUZoXes69EthSjAYs2A@mail.gmail.com>
+ <1ba3e4d703dd0a52547d63fa014451eb@codeaurora.org>
+ <CAPDyKFrH9WTg4O5L+e1AijNvsagLYZ9QVTeoD0x0SQgYd3hkBg@mail.gmail.com>
+ <1ca666c336ebee569a429e729d5ae547@codeaurora.org>
+ <CAPDyKFrqxRrWSX5VaMy4DSjFNaMikKBYsZy5NiPMJvUybYttsw@mail.gmail.com>
+ <33169e221707a2456397e478b275cfa9@codeaurora.org>
+ <CAPDyKFoPEEvrBgs4D45027+HgdNPbcM+WVHm=QVrGWgWMR61Ng@mail.gmail.com>
+Message-ID: <de2cde2767d303a1334c7aa71d178aa2@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 17:24:33 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 2020-08-18 14:01, Ulf Hansson wrote:
+> On Mon, 17 Aug 2020 at 18:49, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> 
+>> On 2020-08-17 14:14, Ulf Hansson wrote:
+>> > On Thu, 13 Aug 2020 at 19:26, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >>
+>> >> On 2020-08-13 18:04, Ulf Hansson wrote:
+>> >> > On Wed, 12 Aug 2020 at 19:03, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >> >>
+>> >> >> Uffe,
+>> >> >> Thanks for taking time to review the
+>> >> >> series!
+>> >> >>
+>> >> >> On 2020-08-12 15:15, Ulf Hansson wrote:
+>> >> >> > On Tue, 11 Aug 2020 at 21:03, Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >> >> >>
+>> >> >> >> This is for power domains which needs to stay powered on for suspend
+>> >> >> >> but can be powered on/off as part of runtime PM. This flag is aimed at
+>> >> >> >> power domains coupled to remote processors which enter suspend states
+>> >> >> >> independent to that of the application processor. Such power domains
+>> >> >> >> are turned off only on remote processor crash/shutdown.
+>> >> >> >
+>> >> >> > As Kevin also requested, please elaborate more on the use case.
+>> >> >> >
+>> >> >> > Why exactly must the PM domain stay powered on during system suspend?
+>> >> >> > Is there a wakeup configured that needs to be managed - or is there a
+>> >> >> > co-processor/FW behaviour that needs to be obeyed to?
+>> >> >>
+>> >> >> Yes this is a co-processor behavior that
+>> >> >> needs to be obeyed. Specifically application
+>> >> >> processor notifies the Always on Subsystem
+>> >> >> (AOSS) that a particular co-processor is up
+>> >> >> using the power domains exposed by AOSS QMP
+>> >> >> driver. AOSS uses this information to wait
+>> >> >> for the co-processors to suspend before
+>> >> >> starting its sleep sequence. The application
+>> >> >> processor powers off these power domains only
+>> >> >> if the co-processor has crashed or powered
+>> >> >> off.
+>> >> >
+>> >> > Thanks for clarifying!
+>> >> >
+>> >> > Although, can you please elaborate a bit more on the actual use case?
+>> >> > What are the typical co-processor and what drivers are involved in
+>> >> > managing it?
+>> >>
+>> >> The co-processors using the power domains
+>> >> exposed by qcom_aoss driver are modem,
+>> >> audio dsp, compute dsp managed using
+>> >> qcom_q6v5_mss and qcom_q6v5_pas driver.
+>> >>
+>> >> >
+>> >> > As you may know, runtime PM becomes disabled during system suspend of
+>> >> > a device. Which means, if the driver tries to power off the
+>> >> > coprocessor (via calling pm_runtime_put() for example), somewhere in
+>> >> > the system suspend phase of the corresponding device, its attached PM
+>> >> > domain stays powered on when managed by genpd.
+>> >>
+>> >> The drivers aren't really expected
+>> >> do anything during suspend/resume
+>> >> pretty much because the co-processors
+>> >> enter low-power modes independent to
+>> >> that of the application processor. On
+>> >> co-processor crash the remoteproc core
+>> >> does a pm_stay_awake followed by a
+>> >> pm_relax after crash recovery.
+>> >
+>> > Okay, thanks again for clarifying. You have convinced me about the
+>> > need for a new flag to cope with these use cases.
+>> >
+>> > Would you mind updating the commit message with some of the
+>> > information you just provided?
+>> >
+>> > Additionally, to make it clear that the flag should be used to keep
+>> > the PM domain powered on during system suspend, but only if it's
+>> > already powered on - please rename the flag to GENPD_FLAG_NO_SUSPEND,
+>> > and update the corresponding description of it in the header file.
+>> 
+>> Thanks, naming it ^^ makes more sense :)
+>> 
+>> https://lore.kernel.org/lkml/340a7aafcf0301ff3158a4e211992041@codeaurora.org/
+>> 
+>> Also we wouldn't want to power on
+>> runtime suspended power domains with
+>> the NO_SUSPEND flag set, on resume as
+>> explained ^^. Do you agree with that
+>> as well?
+> 
+> Actually no.
+> 
+> Instead, I think that deserves a separate flag, as it may very well
+> turn out that resuming can be skipped for other cases than
+> "NO_SUSPEND".
+> 
+> Therefore, please add a GENPD_FLAG_NO_RESUME for this.
 
-> On Mon, Aug 10, 2020 at 10:32:52AM +0100, Jonathan Cameron wrote:
-> > On Fri, 7 Aug 2020 17:55:17 -0700
-> > Sean V Kelley <sean.v.kelley@intel.com> wrote:  
-> > > On 7 Aug 2020, at 15:53, Bjorn Helgaas wrote:  
-> > > > On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:    
-> 
-> > > >>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > > >> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
-> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
-> > > >>  		dev = dev->bus->self;  
-> 
-> I'm not sure I understand this "if" statement.  Previously (with no
-> RCEC support), the possible ways I see to call pcie_do_recovery() are
-> with:
-> 
->   AER native:   Root Port
->   AER via APEI: Root Port or other PCIe device (ACPI v6.3, 18.3.2.5)
->   DPC:          Root Port or Switch Downstream Port
->   EDR:          Root Port or Switch Downstream Port
-> 
-> I *guess* the reason we have this "if" statement is for the AER/APEI
-> case?  And the effect is that even if AER/APEI gives us an Endpoint,
-> we back up and handle it as though we got it from the Downstream Port
-> above it, i.e., we reset the Endpoint along with any other children of
-> that Downstream Port?
-> 
-> Then, IIUC, your patches add this case:
-> 
->   AER native:   Root Port or RCEC
->   AER via APEI: Root Port, RCEC, or other PCIe device
-> 
-> Just noodling here, but I wonder if this would be more understandable
-> as something like:
-> 
->   type = pci_pcie_type(dev);
->   if (type == PCI_EXP_TYPE_ROOT_PORT ||
->       type == PCI_EXP_TYPE_DOWNSTREAM ||
->       type == PCI_EXP_TYPE_RC_EC)
->     bridge = dev;
->   else if (type == PCI_EXP_TYPE_RC_END)
->     bridge = dev->rcec;
->   else
->     bridge = pci_upstream_bridge(dev);
-> 
-> and then we could do:
-> 
->   if (type == PCI_EXP_TYPE_RC_END)
->     flr_on_rciep(dev);
->   else
->     reset_link(bridge);
-> 
-> It's still awkward to have to deal with being supplied either
-> endpoints or bridges.  But I guess in the AER/APEI case, we aren't
-> allowed to touch the error registers so maybe we can't avoid the
-> awkwardness.
-
-Agreed with your analysis with one exception. It isn't just that we
-aren't allowed to touch the error registers, but also that they may
-not even exist (i.e. there is no RCEC).
-
-There are quite a lot of places where we have to then handle the
-cases separately.  For an RC_END in the APEI case we don't
-have to have an RCEC as we should never be touching it or
-any of its registers.  We have platforms that do it this way
-(obviously there is a hardware entity doing RCEC like stuff, but it is
-not visible to the OS).
-
-In these cases (bridge == NULL) and we can't call the bus_walk on it
-to call the various desired resets on the RCiEP.  We could
-do something like
-
-pci_walk_affected(bridge, dev, report_frozen, &status);
-
-and if bridge is NULL, perform the reset just on dev.
-
-Would that be clearer?
-
-Thanks,
-
-Jonathan
+Thanks I'll do that in v2
 
 > 
-> > > >>  		status = reset_link(dev);    
-> > > >
-> > > > reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
-> > > > is really to reset any devices below "dev."  Whether we do that by
-> > > > resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
-> > > > immaterial.  Some of those methods might be applicable for RCiEPs.
-> > > >
-> > > > But you didn't add that name; I'm just trying to understand this
-> > > > better.    
-> > > 
-> > > Yes, that’s a confusing term with the _link attached. It’s difficult 
-> > > to relate to the different resets that might be applicable. I was 
-> > > thinking about that when looking at the callback path via the 
-> > > “reset_link” of the RCiEP to the RCEC for the sole purpose of 
-> > > clearing the Root Port Error Status. It would be worth time to spend 
-> > > looking at better descriptive naming/methods.  
-> > 
-> > Agreed, this caused me some some confusion as well so more descriptive
-> > naming would be good.  
-> 
-> Maybe something like reset_subordinate_devices()?  Then it's clear
-> that we pass a bridge and reset the devices *below* it.  It's not
-> quite as obvious for RCECs, since they aren't bridges and the RCiEPs
-> aren't actually *subordinates*, but maybe it's still suggestive of the
-> logical relationship?
-> 
-> Bjorn
+> Kind regards
+> Uffe
 
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
