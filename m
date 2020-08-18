@@ -2,294 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DBDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C501A22CBE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C1F20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTsd1Ljs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgHRP63 (ORCPT
+        id S1726576AbgHRP7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:58:29 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2643 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726896AbgHRPqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:46:48 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 4971565230692438BF5F;
-        Tue, 18 Aug 2020 16:46:47 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:46:45 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:46:48 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 20/30] ima: Parse per ima namespace policy file
-Date:   Tue, 18 Aug 2020 17:42:20 +0200
-Message-ID: <20200818154230.14016-11-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+        Tue, 18 Aug 2020 11:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgHRPqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:46:42 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E57C061342;
+        Tue, 18 Aug 2020 08:46:41 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id b17so21600548ion.7;
+        Tue, 18 Aug 2020 08:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=gpcsNzkAMDE+NE5CExnC5iIWbWS0MQMV+dfpRNB/riw=;
+        b=LTsd1LjsrCLzPuwc2S7Ages4odkwdUd/orSwwvAaVGSMmkNy2rzr6rxpbZXywiYzmd
+         wRhaoEjAEbvHfBa9PM0FMk/jjghuWw8VOWdA7p3ImauoyymzPLC+AbT+nUvLfO13KGxf
+         PrQFpYM7gDrvoUCoecNEeao9rXU7cprR2MdWerdiNT1MjzICwuybSGauPjzDqjEUxEfm
+         fINxhoIOsH7bNRwheI23g2Ifvgqg3ZINRrlALCC02M2mTfA/G8VB9UzxUbT1WlahPx53
+         V7Qr1SVW8+uw5akLVM9YgUQxoZfx8PrCcI3SJRxtMVo1yjw42u76YFi/o29VHLLvlkNh
+         DrGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=gpcsNzkAMDE+NE5CExnC5iIWbWS0MQMV+dfpRNB/riw=;
+        b=kN7hw++4kMxQZoHXUIHK09RIj+WlUtst0O1+CsHn4fx8ikXyYDL9sqSZH/CZhaQiwi
+         eL7TWu3kFGasxRU4DqJs4jCu4VQQmZoJecgciU1Oh6eQ8f/+1wf726LGqf0afu8Bg6Tl
+         nM2Lfh+BDHrRyJNukwQp+SmiyUvmUMtlPx/TB4kJjiZheq+9QZwFrE1KhqZmmT18CL5L
+         NynOyNIj3NP5ZIQXwserOPiYUxq8OtsPU9aGQZ7Fqix14GESAbNYH8cONLYd1sdnt8hv
+         DZhTWIKWiNn6DXXiC19vogrX+++EPZ/iS9ZqZeHZwgbaJZ1ss1wxecuKJgbvC4Eei0H9
+         tMhA==
+X-Gm-Message-State: AOAM532wnXMWb8ZN9+H1xAbsFIn9v4JYe43PZNr7KDLa/NVen0CbnTYY
+        /yjGlmPYKhM88SQC+oXK307tPLq2Hwqp8A==
+X-Google-Smtp-Source: ABdhPJwx8qWomQtlosTWe8r6s7ROViav8P/asi0DxBNbpGIMpnE0w4BCLWsczjGwYLtI7jbNca/y5g==
+X-Received: by 2002:a02:7786:: with SMTP id g128mr19118716jac.45.1597765600813;
+        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id z1sm3113625ilh.13.2020.08.18.08.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH 2/2] ARM: omap2plus_defconfig: Enable OMAP3_THERMAL
+Date:   Tue, 18 Aug 2020 10:46:33 -0500
+Message-Id: <20200818154633.5421-2-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200818154633.5421-1-aford173@gmail.com>
+References: <20200818154633.5421-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+With the additional power management options enabled,
+this patch enables OMAP3_THERMAL by default.
 
-Parse per ima namespace policy file if the file path is set.
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
----
- security/integrity/ima/ima.h        |  7 ++++---
- security/integrity/ima/ima_fs.c     | 17 +++++++++++------
- security/integrity/ima/ima_ns.c     | 18 ++++++++++++++++--
- security/integrity/ima/ima_policy.c | 25 +++++++++++--------------
- 4 files changed, 42 insertions(+), 25 deletions(-)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 48d09efaffbe..b55d25c2bf63 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -309,10 +309,10 @@ int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
- void ima_init_policy(void);
- void ima_init_ns_policy(struct ima_namespace *ima_ns,
- 			const struct ima_policy_setup_data *policy_setup_data);
--void ima_update_policy(void);
-+void ima_update_policy(struct ima_namespace *ima_ns);
- void ima_update_policy_flag(struct ima_namespace *ima_ns);
--ssize_t ima_parse_add_rule(char *);
--void ima_delete_rules(void);
-+ssize_t ima_parse_add_rule(char *rule, struct ima_namespace *ima_ns);
-+void ima_delete_rules(struct ima_namespace *ima_ns);
- int ima_check_policy(const struct ima_namespace *ima_ns);
- void *ima_policy_start(struct seq_file *m, loff_t *pos);
- void *ima_policy_next(struct seq_file *m, void *v, loff_t *pos);
-@@ -439,6 +439,7 @@ static inline struct ima_namespace *get_current_ns(void)
- 
- void ima_delete_ns_rules(struct ima_policy_data *policy_data,
- 			 bool is_root_ns);
-+ssize_t ima_read_ns_policy(char *path, struct ima_namespace *ima_ns);
- 
- ssize_t ima_ns_write_policy_for_children(struct ima_namespace *ima_ns,
- 					 char *policy_path);
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 6c033857f521..7b93c338a478 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -343,7 +343,7 @@ static const struct file_operations ima_ascii_measurements_ops = {
- 	.release = seq_release,
- };
- 
--static ssize_t ima_read_policy(char *path)
-+static ssize_t ima_read_policy(char *path, struct ima_namespace *ima_ns)
- {
- 	void *data;
- 	char *datap;
-@@ -365,7 +365,7 @@ static ssize_t ima_read_policy(char *path)
- 	datap = data;
- 	while (size > 0 && (p = strsep(&datap, "\n"))) {
- 		pr_debug("rule: %s\n", p);
--		rc = ima_parse_add_rule(p);
-+		rc = ima_parse_add_rule(p, ima_ns);
- 		if (rc < 0)
- 			break;
- 		size -= rc;
-@@ -406,7 +406,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 		goto out_free;
- 
- 	if (data[0] == '/') {
--		result = ima_read_policy(data);
-+		result = ima_read_policy(data, ima_ns);
- 	} else if (ima_ns->policy_data->ima_appraise & IMA_APPRAISE_POLICY) {
- 		pr_err("signed policy file (specified as an absolute pathname) required\n");
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-@@ -414,7 +414,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 				    1, 0);
- 		result = -EACCES;
- 	} else {
--		result = ima_parse_add_rule(data);
-+		result = ima_parse_add_rule(data, ima_ns);
- 	}
- 	mutex_unlock(&ima_write_mutex);
- out_free:
-@@ -502,13 +502,13 @@ static int ima_release_policy(struct inode *inode, struct file *file)
- 			    "policy_update", cause, !valid_policy, 0);
- 
- 	if (!valid_policy) {
--		ima_delete_rules();
-+		ima_delete_rules(ima_ns);
- 		valid_policy = 1;
- 		clear_bit(IMA_FS_BUSY, &ima_fs_flags);
- 		return 0;
- 	}
- 
--	ima_update_policy();
-+	ima_update_policy(ima_ns);
- #if !defined(CONFIG_IMA_WRITE_POLICY) && !defined(CONFIG_IMA_READ_POLICY)
- 	securityfs_remove(ima_policy);
- 	ima_policy = NULL;
-@@ -629,6 +629,11 @@ static const struct file_operations ima_kcmd_for_children_ops = {
- 	.open = ima_open_for_children,
- 	.write = ima_write_kcmd_for_children,
- };
-+
-+ssize_t ima_read_ns_policy(char *path, struct ima_namespace *ima_ns)
-+{
-+	return ima_read_policy(path, ima_ns);
-+}
- #endif /* CONFIG_IMA_NS */
- 
- int __init ima_fs_init(void)
-diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
-index dd0328ee715f..ec3abc803c82 100644
---- a/security/integrity/ima/ima_ns.c
-+++ b/security/integrity/ima/ima_ns.c
-@@ -91,10 +91,24 @@ static int ima_set_ns_policy(struct ima_namespace *ima_ns)
- 		setup_data.ima_appraise = IMA_APPRAISE_ENFORCE;
- #endif
- 		ima_init_ns_policy(ima_ns, &setup_data);
--		return result;
-+	} else {
-+		ima_init_ns_policy(ima_ns, ima_ns->policy_setup_for_children);
- 	}
- 
--	ima_init_ns_policy(ima_ns, ima_ns->policy_setup_for_children);
-+	if (ima_ns->policy_path_for_children) {
-+		result = ima_read_ns_policy(ima_ns->policy_path_for_children,
-+					    ima_ns);
-+		if ((result >= 0) && !ima_check_policy(ima_ns)) {
-+			integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-+					    "policy_update", "completed", 0, 0);
-+			ima_update_policy(ima_ns);
-+		} else {
-+			ima_delete_rules(ima_ns);
-+			ima_delete_ns_rules(ima_ns->policy_data, false);
-+			integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-+					    "policy_update", "failed", 1, 0);
-+		}
-+	}
- 
- 	return result;
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 3d712c062ed0..d4774eab6a98 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -735,7 +735,8 @@ static void add_rules(struct ima_namespace *ima_ns,
- 	}
- }
- 
--static int ima_parse_rule(char *rule, struct ima_rule_entry *entry);
-+static int ima_parse_rule(char *rule, struct ima_rule_entry *entry,
-+			  struct ima_namespace *ima_ns);
- 
- static int __init ima_init_arch_policy(void)
- {
-@@ -765,7 +766,8 @@ static int __init ima_init_arch_policy(void)
- 		result = strlcpy(rule, *rules, sizeof(rule));
- 
- 		INIT_LIST_HEAD(&arch_policy_entry[i].list);
--		result = ima_parse_rule(rule, &arch_policy_entry[i]);
-+		result = ima_parse_rule(rule, &arch_policy_entry[i],
-+					&init_ima_ns);
- 		if (result) {
- 			pr_warn("Skipping unknown architecture policy rule: %s\n",
- 				rule);
-@@ -895,10 +897,8 @@ int ima_check_policy(const struct ima_namespace *ima_ns)
-  * Policy rules are never deleted so ima_policy_flag gets zeroed only once when
-  * we switch from the default policy to user defined.
-  */
--void ima_update_policy(void)
-+void ima_update_policy(struct ima_namespace *ima_ns)
- {
--	/* Update only the current ima namespace */
--	struct ima_namespace *ima_ns = get_current_ns();
- 	struct list_head *policy = &ima_ns->policy_data->ima_policy_rules;
- 
- 	list_splice_tail_init_rcu(&ima_ns->policy_data->ima_temp_rules,
-@@ -1151,7 +1151,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 	return true;
- }
- 
--static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
-+static int ima_parse_rule(char *rule, struct ima_rule_entry *entry,
-+			  struct ima_namespace *ima_ns)
- {
- 	struct audit_buffer *ab;
- 	char *from;
-@@ -1160,7 +1161,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 	struct ima_template_desc *template_desc;
- 	int result = 0;
- 	size_t keyrings_len;
--	struct ima_namespace *ima_ns = get_current_ns();
- 
- 	ab = integrity_audit_log_start(audit_context(), GFP_KERNEL,
- 				       AUDIT_INTEGRITY_POLICY_RULE);
-@@ -1547,19 +1547,18 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- /**
-  * ima_parse_add_rule - add a rule to ima_policy_rules
-  * @rule - ima measurement policy rule
-+ * @ima_ns - pointer to the ima namespace the rule will be added to
-  *
-  * Avoid locking by allowing just one writer at a time in ima_write_policy()
-  * Returns the length of the rule parsed, an error code on failure
-  */
--ssize_t ima_parse_add_rule(char *rule)
-+ssize_t ima_parse_add_rule(char *rule, struct ima_namespace *ima_ns)
- {
- 	static const char op[] = "update_policy";
- 	char *p;
- 	struct ima_rule_entry *entry;
- 	ssize_t result, len;
- 	int audit_info = 0;
--	/* Add rules only to the current ima namespace */
--	struct ima_namespace *ima_ns = get_current_ns();
- 
- 	p = strsep(&rule, "\n");
- 	len = strlen(p) + 1;
-@@ -1577,7 +1576,7 @@ ssize_t ima_parse_add_rule(char *rule)
- 
- 	INIT_LIST_HEAD(&entry->list);
- 
--	result = ima_parse_rule(p, entry);
-+	result = ima_parse_rule(p, entry, ima_ns);
- 	if (result) {
- 		ima_free_rule(entry);
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL,
-@@ -1597,10 +1596,8 @@ ssize_t ima_parse_add_rule(char *rule)
-  * different from the active one.  There is also only one user of
-  * ima_delete_rules() at a time.
-  */
--void ima_delete_rules(void)
-+void ima_delete_rules(struct ima_namespace *ima_ns)
- {
--	/* Delete rules only from the current ima namespace */
--	struct ima_namespace *ima_ns = get_current_ns();
- 	struct ima_rule_entry *entry, *tmp;
- 
- 	ima_ns->policy_data->temp_ima_appraise = 0;
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index fe383f5a92fb..efcc46305a47 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -303,6 +303,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
+ CONFIG_THERMAL_GOV_USER_SPACE=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_TI_THERMAL=y
++CONFIG_OMAP3_THERMAL=y
+ CONFIG_OMAP4_THERMAL=y
+ CONFIG_OMAP5_THERMAL=y
+ CONFIG_DRA752_THERMAL=y
 -- 
-2.20.1
+2.17.1
 
