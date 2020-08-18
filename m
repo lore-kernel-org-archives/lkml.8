@@ -2,2647 +2,757 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05735C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E892020738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sXRHvkB5"
+	by mail.kernel.org (Postfix) with ESMTP id C82A82065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHRXJc (ORCPT
+        id S1726815AbgHRXMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:09:32 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:55564 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726983AbgHRXJc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:09:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597792167; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=kn3watH3hli3dAgzsMRgQm7XYiqVwltXPq+JxapPYSA=; b=sXRHvkB5wybzPMhDwvliuSpPRM6OZX7BpEID4mGbXk/A1TtIEsZcHRnaOM1ol2G17Mp0hYNn
- yeXpDtvUk26P+D8Qo7+b+N4lQc/pI0YV/OebAPbt+CbTjhlI+m2WZfhuXiuQVYo/S3YqQR96
- 4dMTzgYq0VxpslRkf1xzhviOiyA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f3c5f9f85672017510913ce (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 23:09:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9B3F2C433CB; Tue, 18 Aug 2020 23:09:18 +0000 (UTC)
-Received: from khsieh-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: khsieh)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 584ADC433C6;
-        Tue, 18 Aug 2020 23:09:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 584ADC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=khsieh@codeaurora.org
-From:   Kuogee Hsieh <khsieh@codeaurora.org>
-To:     robdclark@gmail.com, sean@poorly.run, swboyd@chromium.org
-Cc:     tanmay@codeaurora.org, abhinavk@codeaurora.org,
-        aravindh@codeaurora.org, khsieh@codeaurora.org, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
-Date:   Tue, 18 Aug 2020 16:09:00 -0700
-Message-Id: <20200818230900.29294-1-khsieh@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 18 Aug 2020 19:12:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51272 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726991AbgHRXMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 19:12:01 -0400
+IronPort-SDR: PpnIyXMja4wOk7OsY+fIDTP/ilsGO4Kc/DVDtTIEP9SwsZ4K0Q3gVz2F5K6ktjkkQqi9ddK2lA
+ TYjn3db6vB9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="152431674"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="gz'50?scan'50,208,50";a="152431674"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 15:45:59 -0700
+IronPort-SDR: kmhXsgb1G/CJPYtS4YMMXcYSugmm8PSO8Uxj2gOQIQdPZaHg0GRlqGP5/nH4RBa/rTooFya0d/
+ YZurk1pho7Lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="gz'50?scan'50,208,50";a="471995263"
+Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 18 Aug 2020 15:45:56 -0700
+Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k8AMe-0001QT-8F; Tue, 18 Aug 2020 22:45:56 +0000
+Date:   Wed, 19 Aug 2020 06:45:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: include/vdso/helpers.h:37:9: sparse: sparse: context imbalance in
+ 'vdso_update_begin' - wrong count at exit
+Message-ID: <202008190646.bz9uHEhA%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="azLHFNyN32YCQGCU"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add event thread to execute events serially from event queue. Also
-timeout mode is supported  which allow an event be deferred to be
-executed at later time. Both link and phy compliant tests had been
-done successfully.
 
-Changes in v2:
-- Fix potential deadlock by removing redundant connect_mutex
-- Check and enable link clock during modeset
-- Drop unused code and fix function prototypes.
-- set sink power to normal operation state (D0) before DPCD read
+--azLHFNyN32YCQGCU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes in v3:
-- push idle pattern at main link before timing generator off
-- add timeout handles for both connect and disconnect
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   06a4ec1d9dc652e17ee3ac2ceb6c7cf6c2b75cdd
+commit: 19d0070a2792181f79df01277fe00b83b9f7eda7 timekeeping/vsyscall: Provide vdso_update_begin/end()
+date:   13 days ago
+config: arm64-randconfig-s031-20200818 (attached as .config)
+compiler: aarch64-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # apt-get install sparse
+        # sparse version: v0.6.2-183-gaa6ede3b-dirty
+        git checkout 19d0070a2792181f79df01277fe00b83b9f7eda7
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm64 
 
-Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-This patch depends-on following series:
-https://patchwork.kernel.org/project/dri-devel/list/?series=334239
 
-This patch depends-on following series:
-https://patchwork.kernel.org/project/dri-devel/list/?series=334239
+sparse warnings: (new ones prefixed by >>)
+
+   kernel/time/vsyscall.c: note: in included file:
+>> include/vdso/helpers.h:37:9: sparse: sparse: context imbalance in 'vdso_update_begin' - wrong count at exit
+   kernel/time/vsyscall.c:163:6: sparse: sparse: context imbalance in 'vdso_update_end' - unexpected unlock
+
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=19d0070a2792181f79df01277fe00b83b9f7eda7
+git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+git fetch --no-tags linus master
+git checkout 19d0070a2792181f79df01277fe00b83b9f7eda7
+vim +/vdso_update_begin +37 include/vdso/helpers.h
+
+00b26474c2f161 Vincenzo Frascino 2019-06-21  29  
+00b26474c2f161 Vincenzo Frascino 2019-06-21  30  static __always_inline void vdso_write_begin(struct vdso_data *vd)
+00b26474c2f161 Vincenzo Frascino 2019-06-21  31  {
+00b26474c2f161 Vincenzo Frascino 2019-06-21  32  	/*
+00b26474c2f161 Vincenzo Frascino 2019-06-21  33  	 * WRITE_ONCE it is required otherwise the compiler can validly tear
+00b26474c2f161 Vincenzo Frascino 2019-06-21  34  	 * updates to vd[x].seq and it is possible that the value seen by the
+00b26474c2f161 Vincenzo Frascino 2019-06-21  35  	 * reader it is inconsistent.
+00b26474c2f161 Vincenzo Frascino 2019-06-21  36  	 */
+00b26474c2f161 Vincenzo Frascino 2019-06-21 @37  	WRITE_ONCE(vd[CS_HRES_COARSE].seq, vd[CS_HRES_COARSE].seq + 1);
+00b26474c2f161 Vincenzo Frascino 2019-06-21  38  	WRITE_ONCE(vd[CS_RAW].seq, vd[CS_RAW].seq + 1);
+00b26474c2f161 Vincenzo Frascino 2019-06-21  39  	smp_wmb();
+00b26474c2f161 Vincenzo Frascino 2019-06-21  40  }
+00b26474c2f161 Vincenzo Frascino 2019-06-21  41  
+
+:::::: The code at line 37 was first introduced by commit
+:::::: 00b26474c2f1613d7ab894c525f775c67c8a9e8f lib/vdso: Provide generic VDSO implementation
+
+:::::: TO: Vincenzo Frascino <vincenzo.frascino@arm.com>
+:::::: CC: Thomas Gleixner <tglx@linutronix.de>
+
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |   6 +
- drivers/gpu/drm/msm/dp/dp_aux.c             |   3 +
- drivers/gpu/drm/msm/dp/dp_aux.h             |   1 +
- drivers/gpu/drm/msm/dp/dp_catalog.c         |  77 +-
- drivers/gpu/drm/msm/dp/dp_ctrl.c            | 370 +++++++---
- drivers/gpu/drm/msm/dp/dp_ctrl.h            |   3 +-
- drivers/gpu/drm/msm/dp/dp_display.c         | 747 +++++++++++++-------
- drivers/gpu/drm/msm/dp/dp_display.h         |   1 -
- drivers/gpu/drm/msm/dp/dp_drm.c             |   4 -
- drivers/gpu/drm/msm/dp/dp_hpd.c             |   2 +-
- drivers/gpu/drm/msm/dp/dp_hpd.h             |   1 +
- drivers/gpu/drm/msm/dp/dp_link.c            |  22 +-
- drivers/gpu/drm/msm/dp/dp_panel.c           |  78 +-
- drivers/gpu/drm/msm/dp/dp_panel.h           |   9 +-
- drivers/gpu/drm/msm/dp/dp_parser.c          |  42 +-
- drivers/gpu/drm/msm/dp/dp_parser.h          |   2 +
- drivers/gpu/drm/msm/dp/dp_power.c           |  46 +-
- drivers/gpu/drm/msm/dp/dp_power.h           |  13 +
- drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
- drivers/gpu/drm/msm/msm_drv.h               |   1 +
- 20 files changed, 971 insertions(+), 458 deletions(-)
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 6a9e257d2fe6..81373bd38f0b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1221,6 +1221,11 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	/* wait for idle */
- 	dpu_encoder_wait_for_event(drm_enc, MSM_ENC_TX_COMPLETE);
- 
-+	if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS && priv->dp) {
-+		if (msm_dp_display_pre_disable(priv->dp, drm_enc))
-+			DPU_ERROR_ENC(dpu_enc, "dp display push idle failed\n");
-+	}
-+
- 	dpu_encoder_resource_control(drm_enc, DPU_ENC_RC_EVENT_PRE_STOP);
- 
- 	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
-@@ -1230,6 +1235,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 			phys->ops.disable(phys);
- 	}
- 
-+
- 	/* after phys waits for frame-done, should be no more frames pending */
- 	if (atomic_xchg(&dpu_enc->frame_done_timeout_ms, 0)) {
- 		DPU_ERROR("enc%d timeout pending\n", drm_enc->base.id);
-diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c b/drivers/gpu/drm/msm/dp/dp_aux.c
-index 582b551f8689..5aaa4b50c303 100644
---- a/drivers/gpu/drm/msm/dp/dp_aux.c
-+++ b/drivers/gpu/drm/msm/dp/dp_aux.c
-@@ -189,6 +189,8 @@ static void dp_aux_native_handler(struct dp_aux_private *aux)
- 		aux->aux_error_num = DP_AUX_ERR_TOUT;
- 	if (isr & DP_INTR_NACK_DEFER)
- 		aux->aux_error_num = DP_AUX_ERR_NACK;
-+	if (isr & DP_INTR_AUX_ERROR)
-+		aux->aux_error_num = DP_AUX_ERR_DPPHY_AUX;
- 
- 	complete(&aux->comp);
- }
-@@ -359,6 +361,7 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *dp_aux,
- 					PHY_AUX_CFG1);
- 			dp_catalog_aux_reset(aux->catalog);
- 		}
-+		usleep_range(400, 500); /* at least 400us to next try */
- 		goto unlock_exit;
- 	}
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_aux.h b/drivers/gpu/drm/msm/dp/dp_aux.h
-index 2de11021d84a..1fbdfc9aa62e 100644
---- a/drivers/gpu/drm/msm/dp/dp_aux.h
-+++ b/drivers/gpu/drm/msm/dp/dp_aux.h
-@@ -15,6 +15,7 @@
- #define DP_AUX_ERR_NACK		-3
- #define DP_AUX_ERR_DEFER	-4
- #define DP_AUX_ERR_NACK_DEFER	-5
-+#define DP_AUX_ERR_DPPHY_AUX	-6
- 
- int dp_aux_register(struct drm_dp_aux *dp_aux);
- void dp_aux_unregister(struct drm_dp_aux *dp_aux);
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
-index d186424044b1..f92a8e37a312 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-@@ -524,16 +524,21 @@ void dp_catalog_ctrl_mainlink_ctrl(struct dp_catalog *dp_catalog,
- 		 * To make sure link reg writes happens before other operation,
- 		 * dp_write_link() function uses writel()
- 		 */
--		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
--				DP_MAINLINK_FB_BOUNDARY_SEL);
--		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
--					DP_MAINLINK_FB_BOUNDARY_SEL |
--					DP_MAINLINK_CTRL_RESET);
--		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
-+		mainlink_ctrl = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
-+
-+		mainlink_ctrl &= ~(DP_MAINLINK_CTRL_RESET |
-+						DP_MAINLINK_CTRL_ENABLE);
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
-+
-+		mainlink_ctrl |= DP_MAINLINK_CTRL_RESET;
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
-+
-+		mainlink_ctrl &= ~DP_MAINLINK_CTRL_RESET;
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
-+
-+		mainlink_ctrl |= (DP_MAINLINK_CTRL_ENABLE |
- 					DP_MAINLINK_FB_BOUNDARY_SEL);
--		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
--					DP_MAINLINK_FB_BOUNDARY_SEL |
--					DP_MAINLINK_CTRL_ENABLE);
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
- 	} else {
- 		mainlink_ctrl = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
- 		mainlink_ctrl &= ~DP_MAINLINK_CTRL_ENABLE;
-@@ -629,7 +634,7 @@ int dp_catalog_ctrl_set_pattern(struct dp_catalog *dp_catalog,
- 
- 	bit = BIT(pattern - 1);
- 	DRM_DEBUG_DP("hw: bit=%d train=%d\n", bit, pattern);
--	dp_write_link(catalog, REG_DP_STATE_CTRL, bit);
-+	dp_catalog_ctrl_state_ctrl(dp_catalog, bit);
- 
- 	bit = BIT(pattern - 1) << DP_MAINLINK_READY_LINK_TRAINING_SHIFT;
- 
-@@ -754,7 +759,7 @@ void dp_catalog_ctrl_hpd_config(struct dp_catalog *dp_catalog)
- 	/* enable HPD interrupts */
- 	dp_catalog_hpd_config_intr(dp_catalog,
- 		DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK
--		| DP_DP_HPD_UNPLUG_INT_MASK, true);
-+		| DP_DP_HPD_UNPLUG_INT_MASK | DP_DP_HPD_REPLUG_INT_MASK, true);
- 
- 	/* Configure REFTIMER and enable it */
- 	reftimer |= DP_DP_HPD_REFTIMER_ENABLE;
-@@ -866,15 +871,27 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
- 	dp_write_link(catalog, REG_DP_STATE_CTRL, 0x0);
- 
- 	switch (pattern) {
--	case DP_LINK_QUAL_PATTERN_D10_2:
-+	case DP_PHY_TEST_PATTERN_D10_2:
- 		dp_write_link(catalog, REG_DP_STATE_CTRL,
- 				DP_STATE_CTRL_LINK_TRAINING_PATTERN1);
--		return;
--	case DP_LINK_QUAL_PATTERN_PRBS7:
-+		break;
-+	case DP_PHY_TEST_PATTERN_ERROR_COUNT:
-+		value &= ~(1 << 16);
-+		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
-+					value);
-+		value |= SCRAMBLER_RESET_COUNT_VALUE;
-+		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
-+					value);
-+		dp_write_link(catalog, REG_DP_MAINLINK_LEVELS,
-+					DP_MAINLINK_SAFE_TO_EXIT_LEVEL_2);
-+		dp_write_link(catalog, REG_DP_STATE_CTRL,
-+					DP_STATE_CTRL_LINK_SYMBOL_ERR_MEASURE);
-+		break;
-+	case DP_PHY_TEST_PATTERN_PRBS7:
- 		dp_write_link(catalog, REG_DP_STATE_CTRL,
- 				DP_STATE_CTRL_LINK_PRBS7);
--		return;
--	case DP_LINK_QUAL_PATTERN_80BIT_CUSTOM:
-+		break;
-+	case DP_PHY_TEST_PATTERN_80BIT_CUSTOM:
- 		dp_write_link(catalog, REG_DP_STATE_CTRL,
- 				DP_STATE_CTRL_LINK_TEST_CUSTOM_PATTERN);
- 		/* 00111110000011111000001111100000 */
-@@ -886,14 +903,15 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
- 		/* 1111100000111110 */
- 		dp_write_link(catalog, REG_DP_TEST_80BIT_CUSTOM_PATTERN_REG2,
- 				0x0000F83E);
--		return;
--	case DP_LINK_QUAL_PATTERN_HBR2_EYE:
--	case DP_LINK_QUAL_PATTERN_ERROR_RATE:
--		value &= ~DP_HBR2_ERM_PATTERN;
--		if (pattern == DP_LINK_QUAL_PATTERN_HBR2_EYE)
--			value = DP_HBR2_ERM_PATTERN;
-+		break;
-+	case DP_PHY_TEST_PATTERN_CP2520:
-+		value = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
-+		value &= ~DP_MAINLINK_CTRL_SW_BYPASS_SCRAMBLER;
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, value);
-+
-+		value = DP_HBR2_ERM_PATTERN;
- 		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
--					value);
-+				value);
- 		value |= SCRAMBLER_RESET_COUNT_VALUE;
- 		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
- 					value);
-@@ -901,10 +919,19 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
- 					DP_MAINLINK_SAFE_TO_EXIT_LEVEL_2);
- 		dp_write_link(catalog, REG_DP_STATE_CTRL,
- 					DP_STATE_CTRL_LINK_SYMBOL_ERR_MEASURE);
--		return;
-+		value = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
-+		value |= DP_MAINLINK_CTRL_ENABLE;
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, value);
-+		break;
-+	case DP_PHY_TEST_PATTERN_SEL_MASK:
-+		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
-+				DP_MAINLINK_CTRL_ENABLE);
-+		dp_write_link(catalog, REG_DP_STATE_CTRL,
-+				DP_STATE_CTRL_LINK_TRAINING_PATTERN4);
-+		break;
- 	default:
- 		DRM_DEBUG_DP("No valid test pattern requested:0x%x\n", pattern);
--		return;
-+		break;
- 	}
- }
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-index ae07e43b541b..70b0e06953f6 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-@@ -26,6 +26,13 @@
- #define MR_LINK_SYMBOL_ERM 0x80
- #define MR_LINK_PRBS7 0x100
- #define MR_LINK_CUSTOM80 0x200
-+#define MR_LINK_TRAINING4  0x40
-+
-+enum {
-+	DP_TRAINING_NONE,
-+	DP_TRAINING_1,
-+	DP_TRAINING_2,
-+};
- 
- struct dp_tu_calc_input {
- 	u64 lclk;        /* 162, 270, 540 and 810 */
-@@ -58,7 +65,6 @@ struct dp_vc_tu_mapping_table {
- 
- struct dp_ctrl_private {
- 	struct dp_ctrl dp_ctrl;
--
- 	struct device *dev;
- 	struct drm_dp_aux *aux;
- 	struct dp_panel *panel;
-@@ -68,10 +74,16 @@ struct dp_ctrl_private {
- 	struct dp_catalog *catalog;
- 
- 	struct completion idle_comp;
--	struct mutex push_idle_mutex;
- 	struct completion video_comp;
- };
- 
-+struct dp_cr_status {
-+	u8 lane_0_1;
-+	u8 lane_2_3;
-+};
-+
-+#define DP_LANE0_1_CR_DONE	0x11
-+
- static int dp_aux_link_configure(struct drm_dp_aux *aux,
- 					struct dp_link_info *link)
- {
-@@ -97,8 +109,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
- 
- 	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
- 
--	mutex_lock(&ctrl->push_idle_mutex);
--
- 	reinit_completion(&ctrl->idle_comp);
- 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_PUSH_IDLE);
- 
-@@ -106,7 +116,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
- 			IDLE_PATTERN_COMPLETION_TIMEOUT_JIFFIES))
- 		pr_warn("PUSH_IDLE pattern timedout\n");
- 
--	mutex_unlock(&ctrl->push_idle_mutex);
- 	pr_debug("mainlink off done\n");
- }
- 
-@@ -979,7 +988,7 @@ static int dp_ctrl_wait4video_ready(struct dp_ctrl_private *ctrl)
- 
- 	if (!wait_for_completion_timeout(&ctrl->video_comp,
- 				WAIT_FOR_VIDEO_READY_TIMEOUT_JIFFIES)) {
--		DRM_ERROR("Link Train timedout\n");
-+		DRM_ERROR("wait4video timedout\n");
- 		ret = -ETIMEDOUT;
- 	}
- 	return ret;
-@@ -1000,13 +1009,13 @@ static int dp_ctrl_update_vx_px(struct dp_ctrl_private *ctrl)
- 	if (ret)
- 		return ret;
- 
--	if (voltage_swing_level > DP_TRAIN_VOLTAGE_SWING_MAX) {
-+	if (voltage_swing_level >= DP_TRAIN_VOLTAGE_SWING_MAX) {
- 		DRM_DEBUG_DP("max. voltage swing level reached %d\n",
- 				voltage_swing_level);
- 		max_level_reached |= DP_TRAIN_MAX_SWING_REACHED;
- 	}
- 
--	if (pre_emphasis_level == DP_TRAIN_PRE_EMPHASIS_MAX) {
-+	if (pre_emphasis_level >= DP_TRAIN_PRE_EMPHASIS_MAX) {
- 		DRM_DEBUG_DP("max. pre-emphasis level reached %d\n",
- 				pre_emphasis_level);
- 		max_level_reached  |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
-@@ -1038,8 +1047,11 @@ static bool dp_ctrl_train_pattern_set(struct dp_ctrl_private *ctrl,
- 	DRM_DEBUG_DP("sink: pattern=%x\n", pattern);
- 
- 	buf = pattern;
--	ret = drm_dp_dpcd_writeb(ctrl->aux,
--					DP_TRAINING_PATTERN_SET, buf);
-+
-+	if (pattern && pattern != DP_TRAINING_PATTERN_4)
-+		buf |= DP_LINK_SCRAMBLING_DISABLE;
-+
-+	ret = drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, buf);
- 	return ret == 1;
- }
- 
-@@ -1065,19 +1077,23 @@ static int dp_ctrl_read_link_status(struct dp_ctrl_private *ctrl,
- 	return -ETIMEDOUT;
- }
- 
--static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
-+static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl,
-+		struct dp_cr_status *cr, int *training_step)
- {
- 	int tries, old_v_level, ret = 0;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
--	int const maximum_retries = 5;
-+	int const maximum_retries = 4;
- 
- 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
-+	*training_step = DP_TRAINING_1;
-+
- 	ret = dp_catalog_ctrl_set_pattern(ctrl->catalog, DP_TRAINING_PATTERN_1);
- 	if (ret)
- 		return ret;
- 	dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
- 		DP_LINK_SCRAMBLING_DISABLE);
-+
- 	ret = dp_ctrl_update_vx_px(ctrl);
- 	if (ret)
- 		return ret;
-@@ -1091,12 +1107,15 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
- 		if (ret)
- 			return ret;
- 
-+		cr->lane_0_1 = link_status[0];
-+		cr->lane_2_3 = link_status[1];
-+
- 		if (drm_dp_clock_recovery_ok(link_status,
- 			ctrl->link->link_params.num_lanes)) {
--			return ret;
-+			return 0;
- 		}
- 
--		if (ctrl->link->phy_params.v_level >
-+		if (ctrl->link->phy_params.v_level >=
- 			DP_TRAIN_VOLTAGE_SWING_MAX) {
- 			DRM_ERROR_RATELIMITED("max v_level reached\n");
- 			return -EAGAIN;
-@@ -1119,8 +1138,10 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
- 	return -ETIMEDOUT;
- }
- 
--static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
-+static int dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
- {
-+	int ret = 0;
-+
- 	switch (ctrl->link->link_params.rate) {
- 	case 810000:
- 		ctrl->link->link_params.rate = 540000;
-@@ -1129,13 +1150,33 @@ static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
- 		ctrl->link->link_params.rate = 270000;
- 		break;
- 	case 270000:
-+		ctrl->link->link_params.rate = 162000;
-+		break;
- 	case 162000:
- 	default:
--		ctrl->link->link_params.rate = 162000;
-+		ret = -EINVAL;
- 		break;
- 	};
- 
--	DRM_DEBUG_DP("new rate=0x%x\n", ctrl->link->link_params.rate);
-+	if (!ret)
-+		DRM_DEBUG_DP("new rate=0x%x\n", ctrl->link->link_params.rate);
-+
-+	return ret;
-+}
-+
-+static int dp_ctrl_link_lane_down_shift(struct dp_ctrl_private *ctrl)
-+{
-+
-+	if (ctrl->link->link_params.num_lanes == 1)
-+		return -1;
-+
-+	ctrl->link->link_params.num_lanes /= 2;
-+	ctrl->link->link_params.rate = ctrl->panel->link_info.rate;
-+
-+	ctrl->link->phy_params.p_level = 0;
-+	ctrl->link->phy_params.v_level = 0;
-+
-+	return 0;
- }
- 
- static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private *ctrl)
-@@ -1144,7 +1185,8 @@ static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private *ctrl)
- 	drm_dp_link_train_channel_eq_delay(ctrl->panel->dpcd);
- }
- 
--static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
-+static int dp_ctrl_link_train_2(struct dp_ctrl_private *ctrl,
-+		struct dp_cr_status *cr, int *training_step)
- {
- 	int tries = 0, ret = 0;
- 	char pattern;
-@@ -1153,6 +1195,8 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
- 
- 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
-+	*training_step = DP_TRAINING_2;
-+
- 	if (drm_dp_tps3_supported(ctrl->panel->dpcd))
- 		pattern = DP_TRAINING_PATTERN_3;
- 	else
-@@ -1174,10 +1218,13 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
- 		ret = dp_ctrl_read_link_status(ctrl, link_status);
- 		if (ret)
- 			return ret;
-+		cr->lane_0_1 = link_status[0];
-+		cr->lane_2_3 = link_status[1];
- 
- 		if (drm_dp_channel_eq_ok(link_status,
--			ctrl->link->link_params.num_lanes))
--			return ret;
-+			ctrl->link->link_params.num_lanes)) {
-+			return 0;
-+		}
- 
- 		dp_link_adjust_levels(ctrl->link, link_status);
- 		ret = dp_ctrl_update_vx_px(ctrl);
-@@ -1189,15 +1236,15 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
- 	return -ETIMEDOUT;
- }
- 
--static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
-+static int dp_ctrl_reinitialize_mainlink(struct dp_ctrl_private *ctrl);
-+
-+static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl,
-+		struct dp_cr_status *cr, int *training_step)
- {
- 	int ret = 0;
- 	u8 encoding = DP_SET_ANSI_8B10B;
- 	struct dp_link_info link_info = {0};
- 
--	ctrl->link->phy_params.p_level = 0;
--	ctrl->link->phy_params.v_level = 0;
--
- 	dp_ctrl_config_ctrl(ctrl);
- 
- 	link_info.num_lanes = ctrl->link->link_params.num_lanes;
-@@ -1208,7 +1255,7 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
- 	drm_dp_dpcd_write(ctrl->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
- 				&encoding, 1);
- 
--	ret = dp_ctrl_link_train_1(ctrl);
-+	ret = dp_ctrl_link_train_1(ctrl, cr, training_step);
- 	if (ret) {
- 		DRM_ERROR("link training #1 failed. ret=%d\n", ret);
- 		goto end;
-@@ -1217,7 +1264,7 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
- 	/* print success info as this is a result of user initiated action */
- 	DRM_DEBUG_DP("link training #1 successful\n");
- 
--	ret = dp_ctrl_link_training_2(ctrl);
-+	ret = dp_ctrl_link_train_2(ctrl, cr, training_step);
- 	if (ret) {
- 		DRM_ERROR("link training #2 failed. ret=%d\n", ret);
- 		goto end;
-@@ -1229,58 +1276,36 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
- end:
- 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
--	dp_ctrl_clear_training_pattern(ctrl);
- 	return ret;
- }
- 
--static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl, bool train)
-+static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl,
-+		struct dp_cr_status *cr, int *training_step)
- {
--	bool mainlink_ready = false;
- 	int ret = 0;
- 
- 	dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, true);
- 
--	ret = dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, false);
--	if (ret)
--		return ret;
--
- 	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
- 		return ret;
- 
--	if (train) {
--		/*
--		 * As part of previous calls, DP controller state might have
--		 * transitioned to PUSH_IDLE. In order to start transmitting
--		 * a link training pattern, we have to first do soft reset.
--		 */
--		dp_catalog_ctrl_reset(ctrl->catalog);
--
--		ret = dp_ctrl_link_train(ctrl);
--		if (ret)
--			return ret;
--	}
--
- 	/*
--	 * Set up transfer unit values and set controller state to send
--	 * video.
-+	 * As part of previous calls, DP controller state might have
-+	 * transitioned to PUSH_IDLE. In order to start transmitting
-+	 * a link training pattern, we have to first do soft reset.
- 	 */
--	dp_ctrl_setup_tr_unit(ctrl);
--	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
-+	dp_catalog_ctrl_reset(ctrl->catalog);
- 
--	ret = dp_ctrl_wait4video_ready(ctrl);
--	if (ret)
--		return ret;
-+	ret = dp_ctrl_link_train(ctrl, cr, training_step);
- 
--	mainlink_ready = dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
--	DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT READY");
- 	return ret;
- }
- 
- static void dp_ctrl_set_clock_rate(struct dp_ctrl_private *ctrl,
--				   char *name, u32 rate)
-+			enum dp_pm_type module, char *name, u32 rate)
- {
--	u32 num = ctrl->parser->mp[DP_CTRL_PM].num_clk;
--	struct dss_clk *cfg = ctrl->parser->mp[DP_CTRL_PM].clk_config;
-+	u32 num = ctrl->parser->mp[module].num_clk;
-+	struct dss_clk *cfg = ctrl->parser->mp[module].clk_config;
- 
- 	while (num && strcmp(cfg->clk_name, name)) {
- 		num--;
-@@ -1302,16 +1327,33 @@ static int dp_ctrl_enable_mainlink_clocks(struct dp_ctrl_private *ctrl)
- 
- 	dp_power_set_link_clk_parent(ctrl->power);
- 
--	dp_ctrl_set_clock_rate(ctrl, "ctrl_link",
-+	dp_ctrl_set_clock_rate(ctrl, DP_CTRL_PM, "ctrl_link",
- 					ctrl->link->link_params.rate);
- 
--	dp_ctrl_set_clock_rate(ctrl, "stream_pixel",
--					ctrl->dp_ctrl.pixel_rate);
--
- 	ret = dp_power_clk_enable(ctrl->power, DP_CTRL_PM, true);
- 	if (ret)
- 		DRM_ERROR("Unable to start link clocks. ret=%d\n", ret);
- 
-+	DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
-+		ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel_rate);
-+
-+	return ret;
-+}
-+
-+static int dp_ctrl_enable_stream_clocks(struct dp_ctrl_private *ctrl)
-+{
-+	int ret = 0;
-+
-+	dp_ctrl_set_clock_rate(ctrl, DP_STREAM_PM, "stream_pixel",
-+					ctrl->dp_ctrl.pixel_rate);
-+
-+	ret = dp_power_clk_enable(ctrl->power, DP_STREAM_PM, true);
-+	if (ret)
-+		DRM_ERROR("Unabled to start pixel clocks. ret=%d\n", ret);
-+
-+	DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
-+			ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel_rate);
-+
- 	return ret;
- }
- 
-@@ -1401,37 +1443,30 @@ static int dp_ctrl_reinitialize_mainlink(struct dp_ctrl_private *ctrl)
- 		return ret;
- 	}
- 
--	dp_ctrl_configure_source_params(ctrl);
--	dp_catalog_ctrl_config_msa(ctrl->catalog,
--		ctrl->link->link_params.rate,
--		ctrl->dp_ctrl.pixel_rate, dp_ctrl_use_fixed_nvid(ctrl));
--	reinit_completion(&ctrl->idle_comp);
--
- 	return ret;
- }
- 
- static int dp_ctrl_link_maintenance(struct dp_ctrl_private *ctrl)
- {
- 	int ret = 0;
--	int tries;
-+	struct dp_cr_status cr;
-+	int training_step = DP_TRAINING_NONE;
- 
- 	dp_ctrl_push_idle(&ctrl->dp_ctrl);
- 	dp_catalog_ctrl_reset(ctrl->catalog);
- 
- 	ctrl->dp_ctrl.pixel_rate = ctrl->panel->dp_mode.drm_mode.clock;
- 
--	for (tries = 0; tries < 10; tries++) {
--		ret = dp_ctrl_reinitialize_mainlink(ctrl);
--		if (ret) {
--			DRM_ERROR("Failed to reinitialize mainlink. ret=%d\n",
--					ret);
--			break;
--		}
-+	ret = dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
-+	if (ret)
-+		goto end;
- 
--		ret = dp_ctrl_setup_main_link(ctrl, true);
--		if (ret == -EAGAIN) /* try with lower link rate */
--			dp_ctrl_link_rate_down_shift(ctrl);
--	}
-+	dp_ctrl_clear_training_pattern(ctrl);
-+
-+	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
-+
-+	ret = dp_ctrl_wait4video_ready(ctrl);
-+end:
- 	return ret;
- }
- 
-@@ -1444,22 +1479,22 @@ static int dp_ctrl_process_phy_test_request(struct dp_ctrl_private *ctrl)
- 		return ret;
- 	}
- 
--	dp_ctrl_push_idle(&ctrl->dp_ctrl);
- 	/*
- 	 * The global reset will need DP link related clocks to be
- 	 * running. Add the global reset just before disabling the
- 	 * link clocks and core clocks.
- 	 */
--	dp_catalog_ctrl_reset(ctrl->catalog);
- 	ret = dp_ctrl_off(&ctrl->dp_ctrl);
- 	if (ret) {
- 		DRM_ERROR("failed to disable DP controller\n");
- 		return ret;
- 	}
- 
--	ret = dp_ctrl_on(&ctrl->dp_ctrl);
--	if (ret)
--		DRM_ERROR("failed to enable DP controller\n");
-+	ret = dp_ctrl_on_link(&ctrl->dp_ctrl);
-+	if (!ret)
-+		ret = dp_ctrl_on_stream(&ctrl->dp_ctrl);
-+	else
-+		DRM_ERROR("failed to enable DP link controller\n");
- 
- 	return ret;
- }
-@@ -1479,27 +1514,33 @@ static bool dp_ctrl_send_phy_test_pattern(struct dp_ctrl_private *ctrl)
- 		return false;
- 	}
- 	dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, pattern_requested);
-+	dp_ctrl_update_vx_px(ctrl);
- 	dp_link_send_test_response(ctrl->link);
- 
- 	pattern_sent = dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
- 
- 	switch (pattern_sent) {
- 	case MR_LINK_TRAINING1:
--		success = pattern_requested ==
--				DP_LINK_QUAL_PATTERN_D10_2;
-+		success = (pattern_requested ==
-+				DP_PHY_TEST_PATTERN_D10_2);
- 		break;
- 	case MR_LINK_SYMBOL_ERM:
--		success = (pattern_requested ==
--				DP_LINK_QUAL_PATTERN_ERROR_RATE)
--			|| (pattern_requested ==
--				DP_LINK_QUAL_PATTERN_HBR2_EYE);
-+		success = ((pattern_requested ==
-+			DP_PHY_TEST_PATTERN_ERROR_COUNT) ||
-+				(pattern_requested ==
-+				DP_PHY_TEST_PATTERN_CP2520));
- 		break;
- 	case MR_LINK_PRBS7:
--		success = pattern_requested == DP_LINK_QUAL_PATTERN_PRBS7;
-+		success = (pattern_requested ==
-+				DP_PHY_TEST_PATTERN_PRBS7);
- 		break;
- 	case MR_LINK_CUSTOM80:
--		success = pattern_requested ==
--				DP_LINK_QUAL_PATTERN_80BIT_CUSTOM;
-+		success = (pattern_requested ==
-+				DP_PHY_TEST_PATTERN_80BIT_CUSTOM);
-+		break;
-+	case MR_LINK_TRAINING4:
-+		success = (pattern_requested ==
-+				DP_PHY_TEST_PATTERN_SEL_MASK);
- 		break;
- 	default:
- 		success = false;
-@@ -1531,12 +1572,12 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *dp_ctrl)
- 		}
- 	}
- 
--	if (sink_request & DP_LINK_STATUS_UPDATED)
-+	if (sink_request & DP_LINK_STATUS_UPDATED) {
- 		if (dp_ctrl_link_maintenance(ctrl)) {
--			DRM_ERROR("LM failed: STATUS_UPDATED\n");
-+			DRM_ERROR("LM failed: TEST_LINK_TRAINING\n");
- 			return;
- 		}
--
-+	}
- 
- 	if (sink_request & DP_TEST_LINK_TRAINING) {
- 		dp_link_send_test_response(ctrl->link);
-@@ -1547,13 +1588,15 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *dp_ctrl)
- 	}
- }
- 
--int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
-+int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl)
- {
- 	int rc = 0;
- 	struct dp_ctrl_private *ctrl;
- 	u32 rate = 0;
--	u32 link_train_max_retries = 10;
-+	int link_train_max_retries = 5;
- 	u32 const phy_cts_pixel_clk_khz = 148500;
-+	struct dp_cr_status cr;
-+	unsigned int training_step;
- 
- 	if (!dp_ctrl)
- 		return -EINVAL;
-@@ -1587,6 +1630,9 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
- 	if (rc)
- 		return rc;
- 
-+	ctrl->link->phy_params.p_level = 0;
-+	ctrl->link->phy_params.v_level = 0;
-+
- 	while (--link_train_max_retries &&
- 		!atomic_read(&ctrl->dp_ctrl.aborted)) {
- 		rc = dp_ctrl_reinitialize_mainlink(ctrl);
-@@ -1595,19 +1641,125 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
- 					rc);
- 			break;
- 		}
--		rc = dp_ctrl_setup_main_link(ctrl, true);
--		if (!rc)
-+
-+		training_step = DP_TRAINING_NONE;
-+		rc = dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
-+		if (rc == 0) {
-+			/* training completed successfully */
- 			break;
--		/* try with lower link rate */
--		dp_ctrl_link_rate_down_shift(ctrl);
-+		} else if (training_step == DP_TRAINING_1) {
-+			/* link train_1 failed */
-+			rc = dp_ctrl_link_rate_down_shift(ctrl);
-+			if (rc < 0) { /* already in RBR = 1.6G */
-+				if (cr.lane_0_1 & DP_LANE0_1_CR_DONE) {
-+					/*
-+					 * some lanes are ready,
-+					 * reduce lane number
-+					 */
-+					rc = dp_ctrl_link_lane_down_shift(ctrl);
-+					if (rc < 0) { /* lane == 1 already */
-+						/* end with failure */
-+						break;
-+					}
-+				} else {
-+					/* end with failure */
-+					break; /* lane == 1 already */
-+				}
-+			}
-+		} else if (training_step == DP_TRAINING_2) {
-+			/* link train_2 failed, lower lane rate */
-+			rc = dp_ctrl_link_lane_down_shift(ctrl);
-+			if (rc < 0) {
-+				/* end with failure */
-+				break; /* lane == 1 already */
-+			}
-+		}
- 	}
- 
- 	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
--		dp_ctrl_send_phy_test_pattern(ctrl);
-+		return rc;
-+
-+	/* stop txing train pattern */
-+	dp_ctrl_clear_training_pattern(ctrl);
-+
-+	/*
-+	 * keep transmitting idle pattern until video ready
-+	 * to avoid main link from loss of sync
-+	 */
-+	if (rc == 0)  /* link train successfully */
-+		dp_ctrl_push_idle(dp_ctrl);
- 
- 	return rc;
- }
- 
-+int dp_ctrl_on_stream(struct dp_ctrl *dp_ctrl)
-+{
-+	u32 rate = 0;
-+	int ret = 0;
-+	bool mainlink_ready = false;
-+	struct dp_ctrl_private *ctrl;
-+
-+	if (!dp_ctrl)
-+		return -EINVAL;
-+
-+	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
-+
-+	rate = ctrl->panel->link_info.rate;
-+
-+	ctrl->link->link_params.rate = rate;
-+	ctrl->link->link_params.num_lanes = ctrl->panel->link_info.num_lanes;
-+	ctrl->dp_ctrl.pixel_rate = ctrl->panel->dp_mode.drm_mode.clock;
-+
-+	DRM_DEBUG_DP("rate=%d, num_lanes=%d, pixel_rate=%d\n",
-+		ctrl->link->link_params.rate,
-+		ctrl->link->link_params.num_lanes, ctrl->dp_ctrl.pixel_rate);
-+
-+	if (!dp_power_clk_status(ctrl->power, DP_CTRL_PM)) { /* link clk is off */
-+		ret = dp_ctrl_enable_mainlink_clocks(ctrl);
-+		if (ret) {
-+			DRM_ERROR("Failed to start link clocks. ret=%d\n", ret);
-+			goto end;
-+		}
-+	}
-+
-+	ret = dp_ctrl_enable_stream_clocks(ctrl);
-+	if (ret) {
-+		DRM_ERROR("Failed to start pixel clocks. ret=%d\n", ret);
-+		goto end;
-+	}
-+
-+	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN) {
-+		dp_ctrl_send_phy_test_pattern(ctrl);
-+		return 0;
-+	}
-+
-+	/*
-+	 * Set up transfer unit values and set controller state to send
-+	 * video.
-+	 */
-+	dp_ctrl_configure_source_params(ctrl);
-+
-+	dp_catalog_ctrl_config_msa(ctrl->catalog,
-+		ctrl->link->link_params.rate,
-+		ctrl->dp_ctrl.pixel_rate, dp_ctrl_use_fixed_nvid(ctrl));
-+
-+	reinit_completion(&ctrl->video_comp);
-+
-+	dp_ctrl_setup_tr_unit(ctrl);
-+
-+	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
-+
-+	ret = dp_ctrl_wait4video_ready(ctrl);
-+	if (ret)
-+		return ret;
-+
-+	mainlink_ready = dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
-+	DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT READY");
-+
-+end:
-+	return ret;
-+}
-+
- int dp_ctrl_off(struct dp_ctrl *dp_ctrl)
- {
- 	struct dp_ctrl_private *ctrl;
-@@ -1619,11 +1771,16 @@ int dp_ctrl_off(struct dp_ctrl *dp_ctrl)
- 	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
- 
- 	dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, false);
-+
- 	dp_catalog_ctrl_reset(ctrl->catalog);
-+
-+	ret = dp_power_clk_enable(ctrl->power, DP_STREAM_PM, false);
-+	if (ret)
-+		DRM_ERROR("Failed to disable pixel clocks. ret=%d\n", ret);
-+
- 	ret = dp_power_clk_enable(ctrl->power, DP_CTRL_PM, false);
- 	if (ret) {
--		DRM_ERROR("Failed to disable clocks. ret=%d\n", ret);
--		return ret;
-+		DRM_ERROR("Failed to disable link clocks. ret=%d\n", ret);
- 	}
- 
- 	DRM_DEBUG_DP("DP off done\n");
-@@ -1674,7 +1831,6 @@ struct dp_ctrl *dp_ctrl_get(struct device *dev, struct dp_link *link,
- 
- 	init_completion(&ctrl->idle_comp);
- 	init_completion(&ctrl->video_comp);
--	mutex_init(&ctrl->push_idle_mutex);
- 
- 	/* in parameters */
- 	ctrl->parser   = parser;
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.h b/drivers/gpu/drm/msm/dp/dp_ctrl.h
-index 94713a0daff0..f60ba93c8678 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.h
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.h
-@@ -21,7 +21,8 @@ struct dp_ctrl {
- 
- int dp_ctrl_host_init(struct dp_ctrl *dp_ctrl, bool flip);
- void dp_ctrl_host_deinit(struct dp_ctrl *dp_ctrl);
--int dp_ctrl_on(struct dp_ctrl *dp_ctrl);
-+int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl);
-+int dp_ctrl_on_stream(struct dp_ctrl *dp_ctrl);
- int dp_ctrl_off(struct dp_ctrl *dp_ctrl);
- void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl);
- void dp_ctrl_isr(struct dp_ctrl *dp_ctrl);
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 36b6ee4131bb..97f076324242 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -9,6 +9,7 @@
- #include <linux/debugfs.h>
- #include <linux/component.h>
- #include <linux/of_irq.h>
-+#include <linux/delay.h>
- 
- #include "msm_drv.h"
- #include "msm_kms.h"
-@@ -28,6 +29,45 @@
- static struct msm_dp *g_dp_display;
- #define HPD_STRING_SIZE 30
- 
-+enum {
-+	ISR_DISCONNECTED,
-+	ISR_CONNECT_PENDING,
-+	ISR_CONNECTED,
-+	ISR_HPD_REPLUG_COUNT,
-+	ISR_IRQ_HPD_PULSE_COUNT,
-+	ISR_HPD_LO_GLITH_COUNT,
-+};
-+
-+/* event thread connection state */
-+enum {
-+	ST_DISCONNECTED,
-+	ST_CONNECT_PENDING,
-+	ST_CONNECTED,
-+	ST_DISCONNECT_PENDING,
-+};
-+
-+enum {
-+	EV_NO_EVENT,
-+	/* hpd events */
-+	EV_HPD_INIT_SETUP,
-+	EV_HPD_PLUG_INT,
-+	EV_IRQ_HPD_INT,
-+	EV_HPD_REPLUG_INT,
-+	EV_HPD_UNPLUG_INT,
-+	EV_USER_NOTIFICATION,
-+	EV_CONNECT_PENDING_TIMEOUT,
-+	EV_DISCONNECT_PENDING_TIMEOUT,
-+};
-+
-+#define EVENT_TIMEOUT	(HZ/10)	/* 100ms */
-+#define DP_EVENT_Q_MAX	8
-+
-+struct dp_event {
-+	u32 event_id;
-+	u32 data;
-+	u32 delay;
-+};
-+
- struct dp_display_private {
- 	char *name;
- 	int irq;
-@@ -37,11 +77,9 @@ struct dp_display_private {
- 	bool power_on;
- 	bool hpd_irq_on;
- 	bool audio_supported;
--	atomic_t hpd_isr_status;
- 
- 	struct platform_device *pdev;
- 	struct dentry *root;
--	struct completion notification_comp;
- 
- 	struct dp_usbpd   *usbpd;
- 	struct dp_parser  *parser;
-@@ -52,12 +90,20 @@ struct dp_display_private {
- 	struct dp_link    *link;
- 	struct dp_panel   *panel;
- 	struct dp_ctrl    *ctrl;
-+	struct dp_debug   *debug;
- 
- 	struct dp_usbpd_cb usbpd_cb;
- 	struct dp_display_mode dp_mode;
- 	struct msm_dp dp_display;
- 
--	struct delayed_work config_hpd_work;
-+	/* event related only access by event thread */
-+	struct mutex event_mutex;
-+	wait_queue_head_t event_q;
-+	atomic_t hpd_state;
-+	u32 event_pndx;
-+	u32 event_gndx;
-+	struct dp_event event_list[DP_EVENT_Q_MAX];
-+	spinlock_t event_lock;
- };
- 
- static const struct of_device_id dp_dt_match[] = {
-@@ -65,79 +111,58 @@ static const struct of_device_id dp_dt_match[] = {
- 	{}
- };
- 
--static irqreturn_t dp_display_irq(int irq, void *dev_id)
-+static int dp_add_event(struct dp_display_private *dp_priv, u32 event,
-+						u32 data, u32 delay)
- {
--	struct dp_display_private *dp = dev_id;
--	irqreturn_t ret = IRQ_HANDLED;
--	u32 hpd_isr_status;
--
--	if (!dp) {
--		DRM_ERROR("invalid data\n");
--		return IRQ_NONE;
-+	unsigned long flag;
-+	struct dp_event *todo;
-+	int pndx;
-+
-+	spin_lock_irqsave(&dp_priv->event_lock, flag);
-+	pndx = dp_priv->event_pndx + 1;
-+	pndx %= DP_EVENT_Q_MAX;
-+	if (pndx == dp_priv->event_gndx) {
-+		pr_err("event_q is full: pndx=%d gndx=%d\n",
-+			dp_priv->event_pndx, dp_priv->event_gndx);
-+		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-+		return -EPERM;
- 	}
-+	todo = &dp_priv->event_list[dp_priv->event_pndx++];
-+	dp_priv->event_pndx %= DP_EVENT_Q_MAX;
-+	todo->event_id = event;
-+	todo->data = data;
-+	todo->delay = delay;
-+	wake_up(&dp_priv->event_q);
-+	spin_unlock_irqrestore(&dp_priv->event_lock, flag);
- 
--	hpd_isr_status = dp_catalog_hpd_get_intr_status(dp->catalog);
--
--	if (hpd_isr_status & DP_DP_HPD_INT_MASK) {
--		atomic_set(&dp->hpd_isr_status, hpd_isr_status);
--		ret = IRQ_WAKE_THREAD;
--	}
--
--	/* DP controller isr */
--	dp_ctrl_isr(dp->ctrl);
--
--	/* DP aux isr */
--	dp_aux_isr(dp->aux);
--
--	return ret;
-+	return 0;
- }
- 
--static irqreturn_t dp_display_hpd_isr_work(int irq, void *data)
-+static int dp_del_event(struct dp_display_private *dp_priv, u32 event)
- {
--	struct dp_display_private *dp;
--	struct dp_usbpd *hpd;
--	u32 isr = 0;
--
--	dp = (struct dp_display_private *)data;
--	if (!dp)
--		return IRQ_NONE;
--
--	isr = atomic_read(&dp->hpd_isr_status);
--
--	/* reset to default */
--	atomic_set(&dp->hpd_isr_status, 0);
--
--	hpd = dp->usbpd;
--	if (!hpd)
--		return IRQ_NONE;
--
--	if (isr & DP_DP_HPD_PLUG_INT_MASK &&
--		isr & DP_DP_HPD_STATE_STATUS_CONNECTED) {
--		hpd->hpd_high = 1;
--		dp->usbpd_cb.configure(&dp->pdev->dev);
--	} else if (isr & DP_DP_HPD_UNPLUG_INT_MASK &&
--		(isr & DP_DP_HPD_STATE_STATUS_MASK) ==
--			 DP_DP_HPD_STATE_STATUS_DISCONNECTED) {
--
--		/* disable HPD plug interrupt until disconnect is done
--		 */
--		dp_catalog_hpd_config_intr(dp->catalog,
--			DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK,
--			false);
--
--		hpd->hpd_high = 0;
--
--		/* We don't need separate work for disconnect as
--		 * connect/attention interrupts are disabled
--		 */
--		dp->usbpd_cb.disconnect(&dp->pdev->dev);
-+	unsigned long flag;
-+	struct dp_event *todo;
-+	u32	gndx;
-+
-+	spin_lock_irqsave(&dp_priv->event_lock, flag);
-+	if (dp_priv->event_pndx == dp_priv->event_gndx) {
-+		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-+		return -ENOENT;
-+	}
- 
--		dp_catalog_hpd_config_intr(dp->catalog,
--			DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK,
--			true);
-+	gndx = dp_priv->event_gndx;
-+	while (dp_priv->event_pndx != gndx) {
-+		todo = &dp_priv->event_list[gndx];
-+		if (todo->event_id == event) {
-+			todo->event_id = EV_NO_EVENT;	/* deleted */
-+			todo->delay = 0;
-+		}
-+		gndx++;
-+		gndx %= DP_EVENT_Q_MAX;
- 	}
-+	spin_unlock_irqrestore(&dp_priv->event_lock, flag);
- 
--	return IRQ_HANDLED;
-+	return 0;
- }
- 
- static int dp_display_bind(struct device *dev, struct device *master,
-@@ -178,7 +203,6 @@ static int dp_display_bind(struct device *dev, struct device *master,
- 		DRM_ERROR("Power client create failed\n");
- 		goto end;
- 	}
--
- end:
- 	return rc;
- }
-@@ -237,11 +261,9 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
- 	struct msm_drm_private *priv = dp->dp_display.drm_dev->dev_private;
- 	struct msm_kms *kms = priv->kms;
- 
--	mutex_lock(&dp->dp_display.connect_mutex);
- 	if ((hpd && dp->dp_display.is_connected) ||
- 			(!hpd && !dp->dp_display.is_connected)) {
- 		DRM_DEBUG_DP("HPD already %s\n", (hpd ? "on" : "off"));
--		mutex_unlock(&dp->dp_display.connect_mutex);
- 		return 0;
- 	}
- 
-@@ -250,7 +272,6 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
- 		dp->panel->video_test = false;
- 
- 	dp->dp_display.is_connected = hpd;
--	reinit_completion(&dp->notification_comp);
- 
- 	if (dp->dp_display.is_connected && dp->dp_display.encoder
- 				&& !encoder_mode_set
-@@ -263,13 +284,6 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
- 
- 	dp_display_send_hpd_event(&dp->dp_display);
- 
--	if (!wait_for_completion_timeout(&dp->notification_comp, HZ * 2)) {
--		pr_warn("%s timeout\n", hpd ? "connect" : "disconnect");
--		mutex_unlock(&dp->dp_display.connect_mutex);
--		return -EINVAL;
--	}
--
--	mutex_unlock(&dp->dp_display.connect_mutex);
- 	return 0;
- }
- 
-@@ -278,23 +292,14 @@ static int dp_display_process_hpd_high(struct dp_display_private *dp)
- 	int rc = 0;
- 	struct edid *edid;
- 
--	if (dp->link->psm_enabled)
--		goto notify;
--
- 	dp->panel->max_dp_lanes = dp->parser->max_dp_lanes;
- 
- 	rc = dp_panel_read_sink_caps(dp->panel, dp->dp_display.connector);
- 	if (rc)
--		goto notify;
-+		goto end;
- 
- 	dp_link_process_request(dp->link);
- 
--	if (dp_display_is_sink_count_zero(dp)) {
--		DRM_DEBUG_DP("no downstream devices connected\n");
--		rc = -EINVAL;
--		goto end;
--	}
--
- 	edid = dp->panel->edid;
- 
- 	dp->audio_supported = drm_detect_monitor_audio(edid);
-@@ -302,8 +307,15 @@ static int dp_display_process_hpd_high(struct dp_display_private *dp)
- 
- 	dp->dp_display.max_pclk_khz = DP_MAX_PIXEL_CLK_KHZ;
- 	dp->dp_display.max_dp_lanes = dp->parser->max_dp_lanes;
--notify:
--	dp_display_send_hpd_notification(dp, true);
-+
-+	rc = dp_ctrl_on_link(dp->ctrl);
-+	if (rc) {
-+		DRM_ERROR("failed to complete DP link training\n");
-+		goto end;
-+	}
-+
-+	dp_add_event(dp, EV_USER_NOTIFICATION, true, 0);
-+
- 
- end:
- 	return rc;
-@@ -327,23 +339,6 @@ static void dp_display_host_init(struct dp_display_private *dp)
- 	dp->core_initialized = true;
- }
- 
--static void dp_display_host_deinit(struct dp_display_private *dp)
--{
--	if (!dp->core_initialized) {
--		DRM_DEBUG_DP("DP core already off\n");
--		return;
--	}
--
--	dp->core_initialized = false;
--}
--
--static void dp_display_process_hpd_low(struct dp_display_private *dp)
--{
--	dp_display_send_hpd_notification(dp, false);
--
--	dp_aux_deinit(dp->aux);
--}
--
- static int dp_display_usbpd_configure_cb(struct device *dev)
- {
- 	int rc = 0;
-@@ -364,18 +359,16 @@ static int dp_display_usbpd_configure_cb(struct device *dev)
- 
- 	dp_display_host_init(dp);
- 
--	if (dp->usbpd->hpd_high)
--		dp_display_process_hpd_high(dp);
-+	/*
-+	 * set sink to normal operation mode -- D0
-+	 * before dpcd read
-+	 */
-+	dp_link_psm_config(dp->link, &dp->panel->link_info, false);
-+	rc = dp_display_process_hpd_high(dp);
- end:
- 	return rc;
- }
- 
--static void dp_display_clean(struct dp_display_private *dp)
--{
--	dp_ctrl_push_idle(dp->ctrl);
--	dp_ctrl_off(dp->ctrl);
--}
--
- static int dp_display_usbpd_disconnect_cb(struct device *dev)
- {
- 	int rc = 0;
-@@ -383,16 +376,8 @@ static int dp_display_usbpd_disconnect_cb(struct device *dev)
- 
- 	dp = dev_get_drvdata(dev);
- 
--	rc = dp_display_send_hpd_notification(dp, false);
--
--	/* if cable is disconnected, reset psm_enabled flag */
--	if (!dp->usbpd->alt_mode_cfg_done)
--		dp->link->psm_enabled = false;
--
--	if ((rc < 0) && dp->power_on)
--		dp_display_clean(dp);
-+	dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
- 
--	dp_display_host_deinit(dp);
- 	return rc;
- }
- 
-@@ -407,11 +392,14 @@ static void dp_display_handle_video_request(struct dp_display_private *dp)
- 	}
- }
- 
--static int dp_display_handle_hpd_irq(struct dp_display_private *dp)
-+static int dp_display_handle_irq_hpd(struct dp_display_private *dp)
- {
--	if (dp->link->sink_request & DS_PORT_STATUS_CHANGED) {
--		dp_display_send_hpd_notification(dp, false);
-+	u32 sink_request;
- 
-+	sink_request = dp->link->sink_request;
-+
-+	if (sink_request & DS_PORT_STATUS_CHANGED) {
-+		dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
- 		if (dp_display_is_sink_count_zero(dp)) {
- 			DRM_DEBUG_DP("sink count is zero, nothing to do\n");
- 			return 0;
-@@ -422,7 +410,8 @@ static int dp_display_handle_hpd_irq(struct dp_display_private *dp)
- 
- 	dp_ctrl_handle_sink_request(dp->ctrl);
- 
--	dp_display_handle_video_request(dp);
-+	if (dp->link->sink_request & DP_TEST_LINK_VIDEO_PATTERN)
-+		dp_display_handle_video_request(dp);
- 
- 	return 0;
- }
-@@ -443,27 +432,152 @@ static int dp_display_usbpd_attention_cb(struct device *dev)
- 		return -ENODEV;
- 	}
- 
--	if (dp->usbpd->hpd_irq) {
--		dp->hpd_irq_on = true;
-+	/* check for any test request issued by sink */
-+	rc = dp_link_process_request(dp->link);
-+	if (!rc)
-+		dp_display_handle_irq_hpd(dp);
- 
--		rc = dp_link_process_request(dp->link);
--		/* check for any test request issued by sink */
--		if (!rc)
--			dp_display_handle_hpd_irq(dp);
-+	return rc;
-+}
- 
--		dp->hpd_irq_on = false;
--		goto end;
-+static int dp_hpd_plug_handle(struct dp_display_private *dp, u32 data)
-+{
-+	struct dp_usbpd *hpd = dp->usbpd;
-+	u32 state;
-+	int ret;
-+
-+	if (!hpd)
-+		return 0;
-+
-+	mutex_lock(&dp->event_mutex);
-+
-+	state =  atomic_read(&dp->hpd_state);
-+	if (state == ST_CONNECT_PENDING || state == ST_CONNECTED) {
-+		mutex_unlock(&dp->event_mutex);
-+		return 0;
- 	}
- 
--	if (!dp->usbpd->hpd_high) {
--		dp_display_process_hpd_low(dp);
--		goto end;
-+	if (state == ST_DISCONNECT_PENDING) {
-+		/* wait until ST_DISCONNECTED */
-+		dp_add_event(dp, EV_HPD_PLUG_INT, 0, 1); /* delay = 1 */
-+		mutex_unlock(&dp->event_mutex);
-+		return 0;
- 	}
- 
--	if (dp->usbpd->alt_mode_cfg_done)
--		dp_display_process_hpd_high(dp);
--end:
--	return rc;
-+	atomic_set(&dp->hpd_state, ST_CONNECT_PENDING);
-+
-+	hpd->hpd_high = 1;
-+
-+	ret = dp_display_usbpd_configure_cb(&dp->pdev->dev);
-+	if (ret) {	/* failed */
-+		hpd->hpd_high = 0;
-+		atomic_set(&dp->hpd_state, ST_DISCONNECTED);
-+	}
-+
-+	/* start sanity checking */
-+	dp_add_event(dp, EV_CONNECT_PENDING_TIMEOUT, 0, 50);
-+
-+	mutex_unlock(&dp->event_mutex);
-+
-+	/* uevent will complete connection part */
-+	return 0;
-+};
-+
-+static int dp_display_enable(struct dp_display_private *dp, u32 data);
-+static int dp_display_disable(struct dp_display_private *dp, u32 data);
-+
-+static int dp_connect_pending_timeout(struct dp_display_private *dp, u32 data)
-+{
-+	u32 state;
-+
-+	mutex_lock(&dp->event_mutex);
-+
-+	state =  atomic_read(&dp->hpd_state);
-+	if (state == ST_CONNECT_PENDING) {
-+		dp_display_enable(dp, 0);
-+		atomic_set(&dp->hpd_state, ST_CONNECTED);
-+	}
-+
-+	mutex_unlock(&dp->event_mutex);
-+
-+	return 0;
-+}
-+
-+static int dp_hpd_unplug_handle(struct dp_display_private *dp, u32 data)
-+{
-+	struct dp_usbpd *hpd = dp->usbpd;
-+	u32 state;
-+
-+	if (!hpd)
-+		return 0;
-+
-+	mutex_lock(&dp->event_mutex);
-+
-+	state = atomic_read(&dp->hpd_state);
-+	if (state == ST_DISCONNECT_PENDING || state == ST_DISCONNECTED) {
-+		mutex_unlock(&dp->event_mutex);
-+		return 0;
-+	}
-+
-+	if (state == ST_CONNECT_PENDING) {
-+		/* wait until CONNECTED */
-+		dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 1); /* delay = 1 */
-+		mutex_unlock(&dp->event_mutex);
-+		return 0;
-+	}
-+
-+	atomic_set(&dp->hpd_state, ST_DISCONNECT_PENDING);
-+
-+	/* disable HPD plug interrupt until disconnect is done */
-+	dp_catalog_hpd_config_intr(dp->catalog, DP_DP_HPD_PLUG_INT_MASK
-+				| DP_DP_IRQ_HPD_INT_MASK, false);
-+
-+	hpd->hpd_high = 0;
-+
-+	/*
-+	 * We don't need separate work for disconnect as
-+	 * connect/attention interrupts are disabled
-+	 */
-+	dp_display_usbpd_disconnect_cb(&dp->pdev->dev);
-+
-+	/* start sanity checking */
-+	dp_add_event(dp, EV_DISCONNECT_PENDING_TIMEOUT, 0, 50);
-+
-+	dp_catalog_hpd_config_intr(dp->catalog, DP_DP_HPD_PLUG_INT_MASK |
-+					DP_DP_IRQ_HPD_INT_MASK, true);
-+
-+	/* uevent will complete disconnection part */
-+	mutex_unlock(&dp->event_mutex);
-+	return 0;
-+}
-+
-+static int dp_disconnect_pending_timeout(struct dp_display_private *dp, u32 data)
-+{
-+	u32 state;
-+
-+	mutex_lock(&dp->event_mutex);
-+
-+	state =  atomic_read(&dp->hpd_state);
-+	if (state == ST_DISCONNECT_PENDING) {
-+		dp_display_disable(dp, 0);
-+		atomic_set(&dp->hpd_state, ST_DISCONNECTED);
-+	}
-+
-+	mutex_unlock(&dp->event_mutex);
-+
-+	return 0;
-+}
-+
-+static int dp_irq_hpd_handle(struct dp_display_private *dp, u32 data)
-+{
-+	/* irq_hpd can happen at either connected or disconnected state */
-+	mutex_lock(&dp->event_mutex);
-+
-+	dp_display_usbpd_attention_cb(&dp->pdev->dev);
-+
-+	mutex_unlock(&dp->event_mutex);
-+
-+	return 0;
- }
- 
- static void dp_display_deinit_sub_modules(struct dp_display_private *dp)
-@@ -599,106 +713,37 @@ static int dp_display_prepare(struct msm_dp *dp)
- 	return 0;
- }
- 
--static void dp_display_dump(struct msm_dp *dp_display)
--{
--	struct dp_display_private *dp;
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
--
--	dp_panel_dump_regs(dp->panel);
--}
--
--static int dp_display_enable(struct msm_dp *dp_display)
-+static int dp_display_enable(struct dp_display_private *dp, u32 data)
- {
- 	int rc = 0;
--	struct dp_display_private *dp;
--	bool dump_dp = false;
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
- 
- 	if (dp->power_on) {
- 		DRM_DEBUG_DP("Link already setup, return\n");
- 		return 0;
- 	}
- 
--	rc = dp_ctrl_on(dp->ctrl);
-+	rc = dp_ctrl_on_stream(dp->ctrl);
- 	if (!rc)
- 		dp->power_on = true;
- 
--	if (dump_dp != false)
--		dp_display_dump(dp_display);
--
- 	return rc;
- }
- 
- static int dp_display_post_enable(struct msm_dp *dp_display)
- {
--	struct dp_display_private *dp;
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
--
--	complete_all(&dp->notification_comp);
--	return 0;
--}
--
--static int dp_display_pre_disable(struct msm_dp *dp_display)
--{
--	struct dp_display_private *dp;
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
--
--	if (dp->usbpd->alt_mode_cfg_done)
--		dp_link_psm_config(dp->link, &dp->panel->link_info, true);
--
--	dp_ctrl_push_idle(dp->ctrl);
- 	return 0;
- }
- 
--static int dp_display_disable(struct msm_dp *dp_display)
-+static int dp_display_disable(struct dp_display_private *dp, u32 data)
- {
--	struct dp_display_private *dp;
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
--
--	if (!dp->power_on || !dp->core_initialized)
-+	if (!dp->power_on)
- 		return -EINVAL;
- 
- 	dp_ctrl_off(dp->ctrl);
- 
--	dp->power_on = false;
--
--	complete_all(&dp->notification_comp);
--	return 0;
--}
--
--int dp_display_request_irq(struct msm_dp *dp_display)
--{
--	int rc = 0;
--	struct dp_display_private *dp;
--
--	if (!dp_display) {
--		DRM_ERROR("invalid input\n");
--		return -EINVAL;
--	}
--
--	dp = container_of(dp_display, struct dp_display_private, dp_display);
--
--	dp->irq = irq_of_parse_and_map(dp->pdev->dev.of_node, 0);
--	if (dp->irq < 0) {
--		rc = dp->irq;
--		DRM_ERROR("failed to get irq: %d\n", rc);
--		return rc;
--	}
-+	dp->core_initialized = false;
- 
--	rc = devm_request_threaded_irq(&dp->pdev->dev, dp->irq,
--		dp_display_irq, dp_display_hpd_isr_work,
--		IRQF_TRIGGER_HIGH, "dp_display_isr", dp);
--	if (rc < 0) {
--		DRM_ERROR("failed to request IRQ%u: %d\n",
--				dp->irq, rc);
--		return rc;
--	}
--	disable_irq(dp->irq);
-+	dp->power_on = false;
- 
- 	return 0;
- }
-@@ -783,6 +828,189 @@ int dp_display_get_test_bpp(struct msm_dp *dp)
- 		dp_display->link->test_video.test_bit_depth);
- }
- 
-+static void dp_display_config_hpd(struct dp_display_private *dp)
-+{
-+
-+	dp_display_host_init(dp);
-+	dp_catalog_ctrl_hpd_config(dp->catalog);
-+
-+	/* Enable interrupt first time
-+	 * we are leaving dp clocks on during disconnect
-+	 * and never disable interrupt
-+	 */
-+	enable_irq(dp->irq);
-+}
-+
-+static int hpd_event_thread(void *data)
-+{
-+	struct dp_display_private *dp_priv;
-+	unsigned long flag;
-+	struct dp_event *todo;
-+	int timeout_mode = 0;
-+
-+	dp_priv = (struct dp_display_private *)data;
-+
-+	while (1) {
-+		if (timeout_mode) {
-+			wait_event_timeout(dp_priv->event_q,
-+				(dp_priv->event_pndx == dp_priv->event_gndx),
-+						EVENT_TIMEOUT);
-+		} else {
-+			wait_event_timeout(dp_priv->event_q,
-+				(dp_priv->event_pndx != dp_priv->event_gndx),
-+						EVENT_TIMEOUT);
-+		}
-+		spin_lock_irqsave(&dp_priv->event_lock, flag);
-+		todo = &dp_priv->event_list[dp_priv->event_gndx];
-+		if (todo->delay) {
-+			struct dp_event *todo_next;
-+
-+			dp_priv->event_gndx++;
-+			dp_priv->event_gndx %= DP_EVENT_Q_MAX;
-+
-+			/* re enter delay event into q */
-+			todo_next = &dp_priv->event_list[dp_priv->event_pndx++];
-+			dp_priv->event_pndx %= DP_EVENT_Q_MAX;
-+			todo_next->event_id = todo->event_id;
-+			todo_next->data = todo->data;
-+			todo_next->delay = todo->delay - 1;
-+
-+			/* clean up older event */
-+			todo->event_id = EV_NO_EVENT;
-+			todo->delay = 0;
-+
-+			/* switch to timeout mode */
-+			timeout_mode = 1;
-+			spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-+			continue;
-+		}
-+
-+		/* timeout with no events in q */
-+		if (dp_priv->event_pndx == dp_priv->event_gndx) {
-+			spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-+			continue;
-+		}
-+
-+		dp_priv->event_gndx++;
-+		dp_priv->event_gndx %= DP_EVENT_Q_MAX;
-+		timeout_mode = 0;
-+		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
-+
-+		switch (todo->event_id) {
-+		case EV_HPD_INIT_SETUP:
-+			dp_display_config_hpd(dp_priv);
-+			break;
-+		case EV_HPD_PLUG_INT:
-+			dp_hpd_plug_handle(dp_priv, todo->data);
-+			break;
-+		case EV_HPD_UNPLUG_INT:
-+			dp_hpd_unplug_handle(dp_priv, todo->data);
-+			break;
-+		case EV_IRQ_HPD_INT:
-+			dp_irq_hpd_handle(dp_priv, todo->data);
-+			break;
-+		case EV_HPD_REPLUG_INT:
-+			/* do nothing */
-+			break;
-+		case EV_USER_NOTIFICATION:
-+			dp_display_send_hpd_notification(dp_priv,
-+						todo->data);
-+			break;
-+		case EV_CONNECT_PENDING_TIMEOUT:
-+			dp_connect_pending_timeout(dp_priv,
-+						todo->data);
-+			break;
-+		case EV_DISCONNECT_PENDING_TIMEOUT:
-+			dp_disconnect_pending_timeout(dp_priv,
-+						todo->data);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void dp_hpd_event_setup(struct dp_display_private *dp_priv)
-+{
-+	init_waitqueue_head(&dp_priv->event_q);
-+	spin_lock_init(&dp_priv->event_lock);
-+
-+	kthread_run(hpd_event_thread, dp_priv, "dp_hpd_handler");
-+}
-+
-+static irqreturn_t dp_display_irq_handler(int irq, void *dev_id)
-+{
-+	struct dp_display_private *dp = dev_id;
-+	irqreturn_t ret = IRQ_HANDLED;
-+	u32 hpd_isr_status;
-+
-+	if (!dp) {
-+		DRM_ERROR("invalid data\n");
-+		return IRQ_NONE;
-+	}
-+
-+	hpd_isr_status = dp_catalog_hpd_get_intr_status(dp->catalog);
-+
-+	if (hpd_isr_status & 0x0F) {
-+		/* hpd related interrupts */
-+		if (hpd_isr_status & DP_DP_HPD_PLUG_INT_MASK ||
-+			hpd_isr_status & DP_DP_HPD_REPLUG_INT_MASK) {
-+			dp_add_event(dp, EV_HPD_PLUG_INT, 0, 0);
-+		}
-+
-+		if (hpd_isr_status & DP_DP_IRQ_HPD_INT_MASK)
-+			dp_add_event(dp, EV_IRQ_HPD_INT, 0, 0);
-+
-+		if (hpd_isr_status & DP_DP_HPD_REPLUG_INT_MASK)
-+			dp_add_event(dp, EV_HPD_REPLUG_INT, 0, 0);
-+
-+		if (hpd_isr_status & DP_DP_HPD_UNPLUG_INT_MASK)
-+			dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 0);
-+	}
-+
-+	/* DP controller isr */
-+	dp_ctrl_isr(dp->ctrl);
-+
-+	/* DP aux isr */
-+	dp_aux_isr(dp->aux);
-+
-+	return ret;
-+}
-+
-+int dp_display_request_irq(struct msm_dp *dp_display)
-+{
-+	int rc = 0;
-+	struct dp_display_private *dp;
-+
-+	if (!dp_display) {
-+		DRM_ERROR("invalid input\n");
-+		return -EINVAL;
-+	}
-+
-+	dp = container_of(dp_display, struct dp_display_private, dp_display);
-+
-+	dp->irq = irq_of_parse_and_map(dp->pdev->dev.of_node, 0);
-+	if (dp->irq < 0) {
-+		rc = dp->irq;
-+		DRM_ERROR("failed to get irq: %d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = devm_request_irq(&dp->pdev->dev, dp->irq,
-+			dp_display_irq_handler,
-+			IRQF_TRIGGER_HIGH, "dp_display_isr", dp);
-+	if (rc < 0) {
-+		DRM_ERROR("failed to request IRQ%u: %d\n",
-+				dp->irq, rc);
-+		return rc;
-+	}
-+	disable_irq(dp->irq);
-+
-+	return 0;
-+}
-+
- static int dp_display_probe(struct platform_device *pdev)
- {
- 	int rc = 0;
-@@ -797,8 +1025,6 @@ static int dp_display_probe(struct platform_device *pdev)
- 	if (!dp)
- 		return -ENOMEM;
- 
--	init_completion(&dp->notification_comp);
--
- 	dp->pdev = pdev;
- 	dp->name = "drm_dp";
- 
-@@ -810,7 +1036,7 @@ static int dp_display_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dp);
- 
--	mutex_init(&dp->dp_display.connect_mutex);
-+	mutex_init(&dp->event_mutex);
- 	g_dp_display = &dp->dp_display;
- 
- 	rc = component_add(&pdev->dev, &dp_display_comp_ops);
-@@ -861,26 +1087,6 @@ void __exit msm_dp_unregister(void)
- 	platform_driver_unregister(&dp_display_driver);
- }
- 
--static void dp_display_config_hpd_work(struct work_struct *work)
--{
--	struct dp_display_private *dp;
--	struct delayed_work *dw = to_delayed_work(work);
--
--	dp = container_of(dw, struct dp_display_private, config_hpd_work);
--
--	dp_display_host_init(dp);
--	dp_catalog_ctrl_hpd_config(dp->catalog);
--
--	/* set default to 0 */
--	atomic_set(&dp->hpd_isr_status, 0);
--
--	/* Enable interrupt first time
--	 * we are leaving dp clocks on during disconnect
--	 * and never disable interrupt
--	 */
--	enable_irq(dp->irq);
--}
--
- void msm_dp_irq_postinstall(struct msm_dp *dp_display)
- {
- 	struct dp_display_private *dp;
-@@ -890,8 +1096,9 @@ void msm_dp_irq_postinstall(struct msm_dp *dp_display)
- 
- 	dp = container_of(dp_display, struct dp_display_private, dp_display);
- 
--	INIT_DELAYED_WORK(&dp->config_hpd_work, dp_display_config_hpd_work);
--	queue_delayed_work(system_wq, &dp->config_hpd_work, HZ * 10);
-+	dp_hpd_event_setup(dp);
-+
-+	dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 100);
- }
- 
- int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *dev,
-@@ -938,54 +1145,74 @@ int msm_dp_display_enable(struct msm_dp *dp, struct drm_encoder *encoder)
- 		return -EINVAL;
- 	}
- 
-+	mutex_lock(&dp_display->event_mutex);
-+
- 	rc = dp_display_set_mode(dp, &dp_display->dp_mode);
- 	if (rc) {
- 		DRM_ERROR("Failed to perform a mode set, rc=%d\n", rc);
-+		mutex_unlock(&dp_display->event_mutex);
- 		return rc;
- 	}
- 
- 	rc = dp_display_prepare(dp);
- 	if (rc) {
- 		DRM_ERROR("DP display prepare failed, rc=%d\n", rc);
-+		mutex_unlock(&dp_display->event_mutex);
- 		return rc;
- 	}
- 
--	rc = dp_display_enable(dp);
--	if (rc) {
--		DRM_ERROR("DP display enable failed, rc=%d\n", rc);
--		dp_display_unprepare(dp);
--		return rc;
--	}
-+	dp_display_enable(dp_display, 0);
- 
- 	rc = dp_display_post_enable(dp);
- 	if (rc) {
- 		DRM_ERROR("DP display post enable failed, rc=%d\n", rc);
--		dp_display_disable(dp);
-+		dp_display_disable(dp_display, 0);
- 		dp_display_unprepare(dp);
- 	}
-+
-+	dp_del_event(dp_display, EV_CONNECT_PENDING_TIMEOUT);
-+
-+	/* completed connection */
-+	atomic_set(&dp_display->hpd_state, ST_CONNECTED);
-+
-+	mutex_unlock(&dp_display->event_mutex);
-+
- 	return rc;
- }
- 
-+int msm_dp_display_pre_disable(struct msm_dp *dp, struct drm_encoder *encoder)
-+{
-+	struct dp_display_private *dp_display;
-+
-+	dp_display = container_of(dp, struct dp_display_private, dp_display);
-+
-+	dp_ctrl_push_idle(dp_display->ctrl);
-+
-+	return 0;
-+}
-+
- int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder *encoder)
- {
- 	int rc = 0;
-+	struct dp_display_private *dp_display;
- 
--	rc = dp_display_pre_disable(dp);
--	if (rc) {
--		DRM_ERROR("DP display pre disable failed, rc=%d\n", rc);
--		return rc;
--	}
-+	dp_display = container_of(dp, struct dp_display_private, dp_display);
- 
--	rc = dp_display_disable(dp);
--	if (rc) {
--		DRM_ERROR("DP display disable failed, rc=%d\n", rc);
--		return rc;
--	}
-+	mutex_lock(&dp_display->event_mutex);
-+
-+	dp_display_disable(dp_display, 0);
- 
- 	rc = dp_display_unprepare(dp);
- 	if (rc)
- 		DRM_ERROR("DP display unprepare failed, rc=%d\n", rc);
- 
-+
-+	dp_del_event(dp_display, EV_DISCONNECT_PENDING_TIMEOUT);
-+
-+	/* completed disconnection */
-+	atomic_set(&dp_display->hpd_state, ST_DISCONNECTED);
-+
-+	mutex_unlock(&dp_display->event_mutex);
- 	return rc;
- }
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.h b/drivers/gpu/drm/msm/dp/dp_display.h
-index 4c53ed55d1cc..2f2d1279dfc6 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.h
-+++ b/drivers/gpu/drm/msm/dp/dp_display.h
-@@ -13,7 +13,6 @@ struct msm_dp {
- 	struct drm_connector *connector;
- 	struct drm_encoder *encoder;
- 	bool is_connected;
--	struct mutex connect_mutex;
- 	u32 max_pclk_khz;
- 	u32 max_dp_lanes;
- };
-diff --git a/drivers/gpu/drm/msm/dp/dp_drm.c b/drivers/gpu/drm/msm/dp/dp_drm.c
-index e58906f4ae1e..764f4b81017e 100644
---- a/drivers/gpu/drm/msm/dp/dp_drm.c
-+++ b/drivers/gpu/drm/msm/dp/dp_drm.c
-@@ -58,7 +58,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
- 	if (!dp_mode)
- 		return 0;
- 
--	mutex_lock(&dp->connect_mutex);
- 	/* pluggable case assumes EDID is read when HPD */
- 	if (dp->is_connected) {
- 		/*
-@@ -71,7 +70,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
- 		if (rc <= 0) {
- 			DRM_ERROR("failed to get DP sink modes, rc=%d\n", rc);
- 			kfree(dp_mode);
--			mutex_unlock(&dp->connect_mutex);
- 			return rc;
- 		}
- 		if (dp_mode->drm_mode.clock) { /* valid DP mode */
-@@ -83,7 +81,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
- 				       drm_mode.hdisplay,
- 				       drm_mode.vdisplay);
- 				kfree(dp_mode);
--				mutex_unlock(&dp->connect_mutex);
- 				return 0;
- 			}
- 			drm_mode_probed_add(connector, m);
-@@ -91,7 +88,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
- 	} else {
- 		DRM_DEBUG_DP("No sink connected\n");
- 	}
--	mutex_unlock(&dp->connect_mutex);
- 	kfree(dp_mode);
- 	return rc;
- }
-diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.c b/drivers/gpu/drm/msm/dp/dp_hpd.c
-index 5b08ce580702..5b8fe32022b5 100644
---- a/drivers/gpu/drm/msm/dp/dp_hpd.c
-+++ b/drivers/gpu/drm/msm/dp/dp_hpd.c
-@@ -24,7 +24,7 @@ struct dp_hpd_private {
- 	struct dp_usbpd dp_usbpd;
- };
- 
--static int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
-+int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
- {
- 	int rc = 0;
- 	struct dp_hpd_private *hpd_priv;
-diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.h b/drivers/gpu/drm/msm/dp/dp_hpd.h
-index c0178524bec7..5bc5bb64680f 100644
---- a/drivers/gpu/drm/msm/dp/dp_hpd.h
-+++ b/drivers/gpu/drm/msm/dp/dp_hpd.h
-@@ -75,5 +75,6 @@ struct dp_usbpd *dp_hpd_get(struct device *dev, struct dp_usbpd_cb *cb);
- 
- int dp_hpd_register(struct dp_usbpd *dp_usbpd);
- void dp_hpd_unregister(struct dp_usbpd *dp_usbpd);
-+int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd);
- 
- #endif /* _DP_HPD_H_ */
-diff --git a/drivers/gpu/drm/msm/dp/dp_link.c b/drivers/gpu/drm/msm/dp/dp_link.c
-index 7400a7ba45f8..5110fc8ccfae 100644
---- a/drivers/gpu/drm/msm/dp/dp_link.c
-+++ b/drivers/gpu/drm/msm/dp/dp_link.c
-@@ -38,7 +38,6 @@ struct dp_link_private {
- 	struct dp_link dp_link;
- 
- 	struct dp_link_request request;
--	struct mutex test_response_mutex;
- 	struct mutex psm_mutex;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
- };
-@@ -580,17 +579,18 @@ static int dp_link_parse_phy_test_params(struct dp_link_private *link)
- 		return rlen;
- 	}
- 
--	link->dp_link.phy_params.phy_test_pattern_sel = data;
-+	link->dp_link.phy_params.phy_test_pattern_sel = data & 0x07;
- 
- 	DRM_DEBUG_DP("phy_test_pattern_sel = 0x%x\n", data);
- 
- 	switch (data) {
--	case DP_LINK_QUAL_PATTERN_DISABLE:
--	case DP_LINK_QUAL_PATTERN_D10_2:
--	case DP_LINK_QUAL_PATTERN_ERROR_RATE:
--	case DP_LINK_QUAL_PATTERN_PRBS7:
--	case DP_LINK_QUAL_PATTERN_80BIT_CUSTOM:
--	case DP_LINK_QUAL_PATTERN_HBR2_EYE:
-+	case DP_PHY_TEST_PATTERN_SEL_MASK:
-+	case DP_PHY_TEST_PATTERN_NONE:
-+	case DP_PHY_TEST_PATTERN_D10_2:
-+	case DP_PHY_TEST_PATTERN_ERROR_COUNT:
-+	case DP_PHY_TEST_PATTERN_PRBS7:
-+	case DP_PHY_TEST_PATTERN_80BIT_CUSTOM:
-+	case DP_PHY_TEST_PATTERN_CP2520:
- 		return 0;
- 	default:
- 		return -EINVAL;
-@@ -661,7 +661,6 @@ static int dp_link_parse_request(struct dp_link_private *link)
- 
- 	DRM_DEBUG_DP("Test:(0x%x) requested\n", data);
- 	link->request.test_requested = data;
--
- 	if (link->request.test_requested == DP_TEST_LINK_PHY_TEST_PATTERN) {
- 		ret = dp_link_parse_phy_test_params(link);
- 		if (ret)
-@@ -789,10 +788,8 @@ bool dp_link_send_test_response(struct dp_link *dp_link)
- 
- 	link = container_of(dp_link, struct dp_link_private, dp_link);
- 
--	mutex_lock(&link->test_response_mutex);
- 	ret = drm_dp_dpcd_writeb(link->aux, DP_TEST_RESPONSE,
- 			dp_link->test_response);
--	mutex_unlock(&link->test_response_mutex);
- 
- 	return ret == 1;
- }
-@@ -1028,11 +1025,9 @@ int dp_link_process_request(struct dp_link *dp_link)
- 
- 	link = container_of(dp_link, struct dp_link_private, dp_link);
- 
--	mutex_lock(&link->test_response_mutex);
- 	dp_link_reset_data(link);
- 
- 	dp_link_parse_sink_status_field(link);
--	mutex_unlock(&link->test_response_mutex);
- 
- 	if (link->request.test_requested == DP_TEST_LINK_EDID_READ) {
- 		dp_link->sink_request |= DP_TEST_LINK_EDID_READ;
-@@ -1206,7 +1201,6 @@ struct dp_link *dp_link_get(struct device *dev, struct drm_dp_aux *aux)
- 	link->dev   = dev;
- 	link->aux   = aux;
- 
--	mutex_init(&link->test_response_mutex);
- 	mutex_init(&link->psm_mutex);
- 	dp_link = &link->dp_link;
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
-index 5ac4b017da8f..7cdf37c525d8 100644
---- a/drivers/gpu/drm/msm/dp/dp_panel.c
-+++ b/drivers/gpu/drm/msm/dp/dp_panel.c
-@@ -8,8 +8,6 @@
- #include <drm/drm_connector.h>
- #include <drm/drm_edid.h>
- 
--#define DP_MAX_DS_PORT_COUNT 1
--
- struct dp_panel_private {
- 	struct device *dev;
- 	struct dp_panel dp_panel;
-@@ -23,26 +21,32 @@ struct dp_panel_private {
- static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
- {
- 	int rc = 0;
--	size_t rlen;
-+	size_t len;
-+	ssize_t rlen;
- 	struct dp_panel_private *panel;
- 	struct dp_link_info *link_info;
- 	u8 *dpcd, major = 0, minor = 0, temp;
--	u32 dfp_count = 0, offset = DP_DPCD_REV;
-+	u32 offset = DP_DPCD_REV;
- 
- 	dpcd = dp_panel->dpcd;
- 
- 	panel = container_of(dp_panel, struct dp_panel_private, dp_panel);
- 	link_info = &dp_panel->link_info;
- 
--	rlen = drm_dp_dpcd_read(panel->aux,
--				DP_TRAINING_AUX_RD_INTERVAL, &temp, 1);
--	if (rlen < 0) {
--		DRM_ERROR("err reading DP_TRAINING_AUX_RD_INTERVAL,rlen=%zd\n",
--				rlen);
--		rc = -EINVAL;
-+	rlen = drm_dp_dpcd_read(panel->aux, offset,
-+			dpcd, (DP_RECEIVER_CAP_SIZE + 1));
-+	if (rlen < (DP_RECEIVER_CAP_SIZE + 1)) {
-+		DRM_ERROR("dpcd read failed, rlen=%zd\n", rlen);
-+		if (rlen == -ETIMEDOUT)
-+			rc = rlen;
-+		else
-+			rc = -EINVAL;
-+
- 		goto end;
- 	}
- 
-+	temp = dpcd[DP_TRAINING_AUX_RD_INTERVAL];
-+
- 	/* check for EXTENDED_RECEIVER_CAPABILITY_FIELD_PRESENT */
- 	if (temp & BIT(7)) {
- 		DRM_DEBUG_DP("using EXTENDED_RECEIVER_CAPABILITY_FIELD\n");
-@@ -61,9 +65,6 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
- 		goto end;
- 	}
- 
--	print_hex_dump(KERN_DEBUG, "[drm-dp] SINK DPCD: ",
--		DUMP_PREFIX_NONE, 8, 1, dp_panel->dpcd, rlen, false);
--
- 	link_info->revision = dpcd[DP_DPCD_REV];
- 	major = (link_info->revision >> 4) & 0x0f;
- 	minor = link_info->revision & 0x0f;
-@@ -85,14 +86,23 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
- 	if (drm_dp_enhanced_frame_cap(dpcd))
- 		link_info->capabilities |= DP_LINK_CAP_ENHANCED_FRAMING;
- 
--	dfp_count = dpcd[DP_DOWN_STREAM_PORT_COUNT] &
--						DP_DOWN_STREAM_PORT_COUNT;
-+	dp_panel->dfp_present = dpcd[DP_DOWNSTREAMPORT_PRESENT];
-+	dp_panel->dfp_present &= DP_DWN_STRM_PORT_PRESENT;
- 
--	if (dfp_count > DP_MAX_DS_PORT_COUNT) {
--		DRM_ERROR("DS port count %d greater that max (%d) supported\n",
--			dfp_count, DP_MAX_DS_PORT_COUNT);
--		return -EINVAL;
-+	if (dp_panel->dfp_present && (dpcd[DP_DPCD_REV] > 0x10)) {
-+		dp_panel->ds_port_cnt = dpcd[DP_DOWN_STREAM_PORT_COUNT];
-+		dp_panel->ds_port_cnt &= DP_PORT_COUNT_MASK;
-+		len = DP_DOWNSTREAM_PORTS * DP_DOWNSTREAM_CAP_SIZE;
-+
-+		rlen = drm_dp_dpcd_read(panel->aux,
-+			DP_DOWNSTREAM_PORT_0, dp_panel->ds_cap_info, len);
-+		if (rlen < len) {
-+			DRM_ERROR("ds port status failed, rlen=%zd\n", rlen);
-+			rc = -EINVAL;
-+			goto end;
-+		}
- 	}
-+
- end:
- 	return rc;
- }
-@@ -185,6 +195,7 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
- 	struct drm_connector *connector)
- {
- 	int rc = 0, bw_code;
-+	int rlen, count;
- 	struct dp_panel_private *panel;
- 
- 	if (!dp_panel || !connector) {
-@@ -202,11 +213,19 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
- 		DRM_ERROR("read dpcd failed %d\n", rc);
- 		return rc;
- 	}
--	rc = drm_dp_read_desc(panel->aux, &dp_panel->desc,
--			      drm_dp_is_branch(dp_panel->dpcd));
--	if (rc) {
--		DRM_ERROR("read sink/branch descriptor failed %d\n", rc);
--		return rc;
-+
-+	if (dp_panel->dfp_present) {
-+		rlen = drm_dp_dpcd_read(panel->aux, DP_SINK_COUNT,
-+				&count, 1);
-+		if (rlen == 1) {
-+			count = DP_GET_SINK_COUNT(count);
-+			if (!count) {
-+				DRM_ERROR("no downstream ports connected\n");
-+				panel->link->sink_count = 0;
-+				rc = -ENOTCONN;
-+				goto end;
-+			}
-+		}
- 	}
- 
- 	kfree(dp_panel->edid);
-@@ -216,7 +235,12 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
- 					      &panel->aux->ddc);
- 	if (!dp_panel->edid) {
- 		DRM_ERROR("panel edid read failed\n");
--		return -EINVAL;
-+
-+		/* fail safe edid */
-+		mutex_lock(&connector->dev->mode_config.mutex);
-+		if (drm_add_modes_noedid(connector, 640, 480))
-+			drm_set_preferred_mode(connector, 640, 480);
-+		mutex_unlock(&connector->dev->mode_config.mutex);
- 	}
- 
- 	if (panel->aux_cfg_update_done) {
-@@ -231,8 +255,8 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
- 		}
- 		panel->aux_cfg_update_done = false;
- 	}
--
--	return 0;
-+end:
-+	return rc;
- }
- 
- u32 dp_panel_get_mode_bpp(struct dp_panel *dp_panel,
-diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
-index f6f417eef2e9..9023e5bb4b8b 100644
---- a/drivers/gpu/drm/msm/dp/dp_panel.h
-+++ b/drivers/gpu/drm/msm/dp/dp_panel.h
-@@ -14,8 +14,10 @@
- 
- struct edid;
- 
--#define DP_MAX_DOWNSTREAM_PORTS 0x10
--#define DPRX_EXTENDED_DPCD_FIELD 0x2200
-+#define DPRX_EXTENDED_DPCD_FIELD	0x2200
-+
-+#define DP_DOWNSTREAM_PORTS		4
-+#define DP_DOWNSTREAM_CAP_SIZE		4
- 
- struct dp_display_mode {
- 	struct drm_display_mode drm_mode;
-@@ -35,6 +37,9 @@ struct dp_panel_in {
- struct dp_panel {
- 	/* dpcd raw data */
- 	u8 dpcd[DP_RECEIVER_CAP_SIZE + 1];
-+	u8 ds_cap_info[DP_DOWNSTREAM_PORTS * DP_DOWNSTREAM_CAP_SIZE];
-+	u32 ds_port_cnt;
-+	u32 dfp_present;
- 
- 	struct dp_link_info link_info;
- 	struct drm_dp_desc desc;
-diff --git a/drivers/gpu/drm/msm/dp/dp_parser.c b/drivers/gpu/drm/msm/dp/dp_parser.c
-index 1e480d01ddbb..255a800535d5 100644
---- a/drivers/gpu/drm/msm/dp/dp_parser.c
-+++ b/drivers/gpu/drm/msm/dp/dp_parser.c
-@@ -103,11 +103,12 @@ static inline bool dp_parser_check_prefix(const char *clk_prefix,
- static int dp_parser_init_clk_data(struct dp_parser *parser)
- {
- 	int num_clk, i, rc;
--	int core_clk_count = 0, ctrl_clk_count = 0;
-+	int core_clk_count = 0, ctrl_clk_count = 0, stream_clk_count = 0;
- 	const char *clk_name;
- 	struct device *dev = &parser->pdev->dev;
- 	struct dss_module_power *core_power = &parser->mp[DP_CORE_PM];
- 	struct dss_module_power *ctrl_power = &parser->mp[DP_CTRL_PM];
-+	struct dss_module_power *stream_power = &parser->mp[DP_STREAM_PM];
- 
- 	num_clk = of_property_count_strings(dev->of_node, "clock-names");
- 	if (num_clk <= 0) {
-@@ -128,7 +129,7 @@ static int dp_parser_init_clk_data(struct dp_parser *parser)
- 			ctrl_clk_count++;
- 
- 		if (dp_parser_check_prefix("stream", clk_name))
--			ctrl_clk_count++;
-+			stream_clk_count++;
- 	}
- 
- 	/* Initialize the CORE power module */
-@@ -159,6 +160,21 @@ static int dp_parser_init_clk_data(struct dp_parser *parser)
- 		return -EINVAL;
- 	}
- 
-+	/* Initialize the STREAM power module */
-+	if (stream_clk_count == 0) {
-+		DRM_ERROR("no stream (pixel) clocks are defined\n");
-+		return -EINVAL;
-+	}
-+
-+	stream_power->num_clk = stream_clk_count;
-+	stream_power->clk_config = devm_kzalloc(dev,
-+			sizeof(struct dss_clk) * stream_power->num_clk,
-+			GFP_KERNEL);
-+	if (!stream_power->clk_config) {
-+		stream_power->num_clk = 0;
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
-@@ -166,15 +182,13 @@ static int dp_parser_clock(struct dp_parser *parser)
- {
- 	int rc = 0, i = 0;
- 	int num_clk = 0;
--	int core_clk_index = 0, ctrl_clk_index = 0;
--	int core_clk_count = 0, ctrl_clk_count = 0;
-+	int core_clk_index = 0, ctrl_clk_index = 0, stream_clk_index = 0;
-+	int core_clk_count = 0, ctrl_clk_count = 0, stream_clk_count = 0;
- 	const char *clk_name;
- 	struct device *dev = &parser->pdev->dev;
- 	struct dss_module_power *core_power = &parser->mp[DP_CORE_PM];
- 	struct dss_module_power *ctrl_power = &parser->mp[DP_CTRL_PM];
--
--	core_power = &parser->mp[DP_CORE_PM];
--	ctrl_power = &parser->mp[DP_CTRL_PM];
-+	struct dss_module_power *stream_power = &parser->mp[DP_STREAM_PM];
- 
- 	rc =  dp_parser_init_clk_data(parser);
- 	if (rc) {
-@@ -184,8 +198,9 @@ static int dp_parser_clock(struct dp_parser *parser)
- 
- 	core_clk_count = core_power->num_clk;
- 	ctrl_clk_count = ctrl_power->num_clk;
-+	stream_clk_count = stream_power->num_clk;
- 
--	num_clk = core_clk_count + ctrl_clk_count;
-+	num_clk = core_clk_count + ctrl_clk_count + stream_clk_count;
- 
- 	for (i = 0; i < num_clk; i++) {
- 		rc = of_property_read_string_index(dev->of_node, "clock-names",
-@@ -201,14 +216,19 @@ static int dp_parser_clock(struct dp_parser *parser)
- 			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
- 			clk->type = DSS_CLK_AHB;
- 			core_clk_index++;
--		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
--			   dp_parser_check_prefix("stream", clk_name))  &&
-+		} else if (dp_parser_check_prefix("stream", clk_name) &&
-+				stream_clk_index < stream_clk_count) {
-+			struct dss_clk *clk =
-+				&stream_power->clk_config[stream_clk_index];
-+			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
-+			clk->type = DSS_CLK_PCLK;
-+			stream_clk_index++;
-+		} else if (dp_parser_check_prefix("ctrl", clk_name) &&
- 			   ctrl_clk_index < ctrl_clk_count) {
- 			struct dss_clk *clk =
- 				&ctrl_power->clk_config[ctrl_clk_index];
- 			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
- 			ctrl_clk_index++;
--
- 			if (dp_parser_check_prefix("ctrl_link", clk_name) ||
- 			    dp_parser_check_prefix("stream_pixel", clk_name))
- 				clk->type = DSS_CLK_PCLK;
-diff --git a/drivers/gpu/drm/msm/dp/dp_parser.h b/drivers/gpu/drm/msm/dp/dp_parser.h
-index aa0380b6a280..841e776124c4 100644
---- a/drivers/gpu/drm/msm/dp/dp_parser.h
-+++ b/drivers/gpu/drm/msm/dp/dp_parser.h
-@@ -19,6 +19,7 @@
- enum dp_pm_type {
- 	DP_CORE_PM,
- 	DP_CTRL_PM,
-+	DP_STREAM_PM,
- 	DP_PHY_PM,
- 	DP_MAX_PM
- };
-@@ -33,6 +34,7 @@ static inline const char *dp_parser_pm_name(enum dp_pm_type module)
- 	switch (module) {
- 	case DP_CORE_PM:	return "DP_CORE_PM";
- 	case DP_CTRL_PM:	return "DP_CTRL_PM";
-+	case DP_STREAM_PM:	return "DP_STREAM_PM";
- 	case DP_PHY_PM:		return "DP_PHY_PM";
- 	default:		return "???";
- 	}
-diff --git a/drivers/gpu/drm/msm/dp/dp_power.c b/drivers/gpu/drm/msm/dp/dp_power.c
-index 8b0a276d34a4..34fdb2e5d644 100644
---- a/drivers/gpu/drm/msm/dp/dp_power.c
-+++ b/drivers/gpu/drm/msm/dp/dp_power.c
-@@ -95,11 +95,12 @@ static int dp_power_regulator_init(struct dp_power_private *power)
- static int dp_power_clk_init(struct dp_power_private *power)
- {
- 	int rc = 0;
--	struct dss_module_power *core, *ctrl;
-+	struct dss_module_power *core, *ctrl, *stream;
- 	struct device *dev = &power->pdev->dev;
- 
- 	core = &power->parser->mp[DP_CORE_PM];
- 	ctrl = &power->parser->mp[DP_CTRL_PM];
-+	stream = &power->parser->mp[DP_STREAM_PM];
- 
- 	if (power->parser->pll && power->parser->pll->get_provider) {
- 		rc = power->parser->pll->get_provider(power->parser->pll,
-@@ -126,21 +127,33 @@ static int dp_power_clk_init(struct dp_power_private *power)
- 		return -ENODEV;
- 	}
- 
-+	rc = msm_dss_get_clk(dev, stream->clk_config, stream->num_clk);
-+	if (rc) {
-+		DRM_ERROR("failed to get %s clk. err=%d\n",
-+			dp_parser_pm_name(DP_CTRL_PM), rc);
-+		msm_dss_put_clk(core->clk_config, core->num_clk);
-+		return -ENODEV;
-+	}
-+
- 	return 0;
- }
- 
- static int dp_power_clk_deinit(struct dp_power_private *power)
- {
--	struct dss_module_power *core, *ctrl;
-+	struct dss_module_power *core, *ctrl, *stream;
- 
- 	core = &power->parser->mp[DP_CORE_PM];
- 	ctrl = &power->parser->mp[DP_CTRL_PM];
-+	stream = &power->parser->mp[DP_STREAM_PM];
- 
--	if (!core || !ctrl)
-+	if (!core || !ctrl || !stream) {
-+		DRM_ERROR("invalid power_data\n");
- 		return -EINVAL;
-+	}
- 
- 	msm_dss_put_clk(ctrl->clk_config, ctrl->num_clk);
- 	msm_dss_put_clk(core->clk_config, core->num_clk);
-+	msm_dss_put_clk(stream->clk_config, stream->num_clk);
- 	return 0;
- }
- 
-@@ -167,6 +180,20 @@ static int dp_power_clk_set_rate(struct dp_power_private *power,
- 	return 0;
- }
- 
-+int dp_power_clk_status(struct dp_power *dp_power, enum dp_pm_type pm_type)
-+{
-+	if (pm_type == DP_CORE_PM)
-+		return dp_power->core_clks_on;
-+
-+	if (pm_type == DP_CTRL_PM)
-+		return dp_power->link_clks_on;
-+
-+	if (pm_type == DP_STREAM_PM)
-+		return dp_power->stream_clks_on;
-+
-+	return 0;
-+}
-+
- int dp_power_clk_enable(struct dp_power *dp_power,
- 		enum dp_pm_type pm_type, bool enable)
- {
-@@ -175,7 +202,8 @@ int dp_power_clk_enable(struct dp_power *dp_power,
- 
- 	power = container_of(dp_power, struct dp_power_private, dp_power);
- 
--	if (pm_type != DP_CORE_PM && pm_type != DP_CTRL_PM) {
-+	if (pm_type != DP_CORE_PM && pm_type != DP_CTRL_PM &&
-+			pm_type != DP_STREAM_PM) {
- 		DRM_ERROR("unsupported power module: %s\n",
- 				dp_parser_pm_name(pm_type));
- 		return -EINVAL;
-@@ -192,6 +220,11 @@ int dp_power_clk_enable(struct dp_power *dp_power,
- 			return 0;
- 		}
- 
-+		if (pm_type == DP_STREAM_PM && dp_power->stream_clks_on) {
-+			DRM_DEBUG_DP("pixel clks already enabled\n");
-+			return 0;
-+		}
-+
- 		if ((pm_type == DP_CTRL_PM) && (!dp_power->core_clks_on)) {
- 			DRM_DEBUG_DP("Enable core clks before link clks\n");
- 
-@@ -215,13 +248,16 @@ int dp_power_clk_enable(struct dp_power *dp_power,
- 
- 	if (pm_type == DP_CORE_PM)
- 		dp_power->core_clks_on = enable;
-+	else if (pm_type == DP_STREAM_PM)
-+		dp_power->stream_clks_on = enable;
- 	else
- 		dp_power->link_clks_on = enable;
- 
- 	DRM_DEBUG_DP("%s clocks for %s\n",
- 			enable ? "enable" : "disable",
- 			dp_parser_pm_name(pm_type));
--	DRM_DEBUG_DP("link_clks:%s core_clks:%s\n",
-+	DRM_DEBUG_DP("strem_clks:%s link_clks:%s core_clks:%s\n",
-+		dp_power->stream_clks_on ? "on" : "off",
- 		dp_power->link_clks_on ? "on" : "off",
- 		dp_power->core_clks_on ? "on" : "off");
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_power.h b/drivers/gpu/drm/msm/dp/dp_power.h
-index 756341e290ed..5333a97d5c35 100644
---- a/drivers/gpu/drm/msm/dp/dp_power.h
-+++ b/drivers/gpu/drm/msm/dp/dp_power.h
-@@ -19,6 +19,7 @@
- struct dp_power {
- 	bool core_clks_on;
- 	bool link_clks_on;
-+	bool stream_clks_on;
- };
- 
- /**
-@@ -43,6 +44,18 @@ int dp_power_init(struct dp_power *power, bool flip);
-  */
- int dp_power_deinit(struct dp_power *power);
- 
-+/**
-+ * dp_power_clk_status() - display controller clocks status
-+ *
-+ * @power: instance of power module
-+ * @pm_type: type of pm, core/ctrl/phy
-+ * return: status of power clocks
-+ *
-+ * This API return status of DP clocks
-+ */
-+
-+int dp_power_clk_status(struct dp_power *dp_power, enum dp_pm_type pm_type);
-+
- /**
-  * dp_power_clk_enable() - enable display controller clocks
-  *
-diff --git a/drivers/gpu/drm/msm/dp/dp_reg.h b/drivers/gpu/drm/msm/dp/dp_reg.h
-index 6b3e297e4e04..d8bc175246da 100644
---- a/drivers/gpu/drm/msm/dp/dp_reg.h
-+++ b/drivers/gpu/drm/msm/dp/dp_reg.h
-@@ -101,6 +101,7 @@
- #define REG_DP_MAINLINK_CTRL			(0x00000000)
- #define DP_MAINLINK_CTRL_ENABLE			(0x00000001)
- #define DP_MAINLINK_CTRL_RESET			(0x00000002)
-+#define DP_MAINLINK_CTRL_SW_BYPASS_SCRAMBLER	(0x00000010)
- #define DP_MAINLINK_FB_BOUNDARY_SEL		(0x02000000)
- 
- #define REG_DP_STATE_CTRL			(0x00000004)
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index b4b213e57f99..a0e3c0b8bd4e 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -387,6 +387,7 @@ int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *dev,
- 			 struct drm_encoder *encoder);
- int msm_dp_display_enable(struct msm_dp *dp, struct drm_encoder *encoder);
- int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder *encoder);
-+int msm_dp_display_pre_disable(struct msm_dp *dp, struct drm_encoder *encoder);
- void msm_dp_display_mode_set(struct msm_dp *dp, struct drm_encoder *encoder,
- 				struct drm_display_mode *mode,
- 				struct drm_display_mode *adjusted_mode);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--azLHFNyN32YCQGCU
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+qcOY+0//qNQmrn+CqzeL+bBqXL9NrZRqZoV7qk+4T+Ok1K5MRc+VRVtD+CFlQOL9qvf4xLt6
+/3B/vsyyh+fv//RRxsYba5HzfpYpW9VI0x3BKggMeMIG3HImFJxhvLd6dREc4niTpwUP9VZs
+ZHBj2SVU1ZVZpfhdMxqm9w90i9nbRA48//jh68P76XHS7s2coX9zFFAMKIWqqcpZwiNrf1hB
+OL0/3LkKxbdFCBfDvNk4xCig3GNek3CD/y4r2dGTDiADzLssUZQvZduI2qtrcXi1EE2VDsz+
+enh8P7+e7yenN1bI4/nuHf5+n/xrzYHJk5r4X+Yihi/lT6ySKL2yQPicWO3Wnua6eKQTM5XT
+8yQvq4ZMkYdZVqJLDZaJWIUy4iV9pkedhafVluXONqMozbIQ9DH55od3vNPz3cPj4+n1B/FK
+JPaytg2jbZ/o9P3+4fLvk/+ECc+9U7yeGIFbFPUe5k7f3y+/DSPz54/Jv0JGEQSzuH/147sf
+suRlsA3m7nKvjD/cm/x/KEa0GjILhasvpcHRMfaYlCb8D9XimI16GSXTdstdkQyOxdrvz6MP
+sf+Hmpo5g2e1SvW2pmJtHAbe0rkCogtKDLoMda3oMggWNJi3Hn6iU7Bj5DleYMN8JFRibGbF
+8mg2awJn2vcx21Um61e2L8II/XcnBdyLvb2zyXd6vZ/88nZ6Pz8+Pryff538JUt4s7DecW8t
+/3PCZsTr+e0d3EkTiVhdf2uu5wss7eSXj/OJZKEEHLYNQ4vL6/u3Sfh0fn24Oz3/fnN5PZ+e
+J+2Y8e8Rr3Tc7ok80ib+iYpwLtyi//GTSftNX+GaXJ4ff0zeYdG8/V5l2bDkk6j/8vVudid/
+XV5Fd/ZM0eXp6fI8SftYmJNfkoLJ9577K+3vVCzQy+XxDRzosGzPj5eXyfP5v1BV1e/cLs9v
+u3Vibgfm3skz37yeXr493BHuifabEBzrjh9gSeAf4U21Uz/AQl8HtBBUtW6VyoSSOjmEGVYb
+rE1X0CGjqd6fZSNU8r+NyYVaIqi4JtJ6iSdav56ezpM/v//1F3is06PXrJksl0NQS+V+g9GK
+sk3XtypJ+Tutc+6Nky3yGKWK2H9MfM9qIZ9jICqrW5YqNIAUoqStshQnaW4bOi8AyLwAoPNi
+YnOSboouKdi2VCBoVbbbkT6MBiDsHwGQ4gbjYMW0TDwymbRWlKojpjUIYOukrplYqurFQIls
+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
+1aoBFtWOLF5yQbQq2+L/BwgXZ+CSGQIA
+
+--azLHFNyN32YCQGCU--
