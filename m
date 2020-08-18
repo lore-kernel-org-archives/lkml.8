@@ -2,169 +2,151 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA1820772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSpO836N"
+	by mail.kernel.org (Postfix) with ESMTP id 6C037204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHRFaE (ORCPT
+        id S1726593AbgHRFaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 01:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgHRFaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 01:30:01 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87110C061389;
-        Mon, 17 Aug 2020 22:30:01 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id f19so9820265qtp.2;
-        Mon, 17 Aug 2020 22:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=clmrhtEHnkuE6LcwVqYnlSll443zoXYKCOx0MPBjbtk=;
-        b=FSpO836Nu0sLIbjI7R0n/GywVAllnHSOgajQheJ4LvlGzRNwCoH3uDem8Jo6zEd4vk
-         eJszO1iJn48dQRINgqIQmPkHV7uVFN6l/+QNGjsnHrJ9s0jeNf/otsuCZ4FHRcJ8+Ebz
-         x61E+o5Xaj2knzR/y3bLubXK/Mg0Avr2H83z6y9OxeSJSON3O676Prq6R/St4ZdtX3Qe
-         Srm7D0uwzC18T7FNWau0Z01qTP6XvY739+/KI/4sbb7Tpe6cqwvKpsoAFtO62qzpR3HJ
-         H+w3Ge0cNXAXg3ci23NfqPqGN3kaub3EocUQj2nFmrxPbbMRZPz+5Leoe3MK3mHdo7Ma
-         JfVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=clmrhtEHnkuE6LcwVqYnlSll443zoXYKCOx0MPBjbtk=;
-        b=lPPOUx7XTufGALZPMwFWxlq82Bl1rwABsGea0pmFgbj136/xUOZPLaxD1LApH4i4Dn
-         6upV4Jhp5oXnApG/0HjHU+Wk71tjjCQqbzWEf1EcqcuLexwPi1EymtvCwZuc4HWCv9m3
-         tuOrf9BzOVevkz8XNN+53vP0nf8R2E3k6ip7WDLzVOFQ2u6hOJKG7fbxrwb6mq66OztV
-         dXQKddD9ROxBntuZAHuEh6OZuVWhsck2096Pol0DSG5yaHDqkabSjiJRp4LTLXnkoeQk
-         gvhJQ+cNskiVbhuANspYtmqdXadZ8qIMBNoXtshItPrZ6xk0Q9eqKF6mZsmuMU0klIxf
-         hG3Q==
-X-Gm-Message-State: AOAM5320QXdOP9XIdbmdscGHKiDL2s7f0Y5JZJyrreCRTzRDcaHx3eXx
-        zIKwPKouZ1gEL/oU3lqshFg=
-X-Google-Smtp-Source: ABdhPJwP6biy1fYwTP/ol1yzd5B7Y+r/WWD+1xf5w/MqzJsO+dHku2euAsV/d5OlG0IHy2iylSek5A==
-X-Received: by 2002:ac8:1c3:: with SMTP id b3mr16860962qtg.240.1597728599880;
-        Mon, 17 Aug 2020 22:29:59 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id o48sm23401139qtf.14.2020.08.17.22.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 22:29:58 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 22:29:57 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Brooke Basile <brookebasile@gmail.com>
-Cc:     danil.kipnis@cloud.ionos.com, jinpu.wang@cloud.ionos.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] block: rnbd: rnbd-srv: silence uninitialized variable
- warning
-Message-ID: <20200818052957.GA2253299@ubuntu-n2-xlarge-x86>
-References: <20200818040317.5926-1-brookebasile@gmail.com>
+        Tue, 18 Aug 2020 01:30:35 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23245 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgHRFae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 01:30:34 -0400
+IronPort-SDR: HYJEAGVrbfq6DqtPpiji/3BNcVCu6/m+vVSpmKiRagfoak6KzXeU4f+kSw0Iad53hbAiVtGiFu
+ IyA/6tk/hFmg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142671900"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="142671900"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 22:30:33 -0700
+IronPort-SDR: JCeOFRprVuwng85bEu6hJrSPQv4h6XQZrKdSlv/9/73LvIJ3QNcbWjyrYwtbXogMDgree0RS59
+ Q1pGXk7ylpaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="326628848"
+Received: from lcrossx-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.46.217])
+  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2020 22:30:30 -0700
+Date:   Tue, 18 Aug 2020 08:30:29 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
+Message-ID: <20200818053029.GE44714@linux.intel.com>
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+ <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+ <20200724092746.GD517988@gmail.com>
+ <20200725031648.GG17052@linux.intel.com>
+ <20200726081408.GB2927915@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818040317.5926-1-brookebasile@gmail.com>
+In-Reply-To: <20200726081408.GB2927915@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:03:18AM -0400, Brooke Basile wrote:
-> Clang warns:
-> 	drivers/block/rnbd/rnbd-srv.c:150:6: warning: variable 'err' is used
-> 	uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
->         	if (IS_ERR(bio)) {
->             	^~~~~~~~~~~
-> 	drivers/block/rnbd/rnbd-srv.c:177:9: note: uninitialized use occurs here
-> 		return err;
-> 		^~~
-> 	drivers/block/rnbd/rnbd-srv.c:126:9: note: initialize the variable 'err'
-> 	to silence this warning
->         	int err;
->                	^
->                 	= 0
+On Sun, Jul 26, 2020 at 11:14:08AM +0300, Mike Rapoport wrote:
+> On Sat, Jul 25, 2020 at 06:16:48AM +0300, Jarkko Sakkinen wrote:
+> > > I've read the observations in the other threads, but this #ifdef 
+> > > jungle is silly, it's a de-facto open coded text_alloc() with a 
+> > > module_alloc() fallback...
+> > 
+> > In the previous version I had:
+> > 
+> >   https://lore.kernel.org/lkml/20200717030422.679972-4-jarkko.sakkinen@linux.intel.com/
+> > 
+> > and I had just calls to text_alloc() and text_free() in corresponding
+> > snippet to the above.
+> > 
+> > I got this feedback from Mike:
+> > 
+> >   https://lore.kernel.org/lkml/20200718162359.GA2919062@kernel.org/
+> > 
+> > I'm not still sure that I fully understand this feedback as I don't see
+> > any inherent and obvious difference to the v4. In that version fallbacks
+> > are to module_alloc() and module_memfree() and text_alloc() and
+> > text_memfree() can be overridden by arch.
 > 
-> Silence this by replacing `err` with `ret`, returning ret = 0 upon
-> success.
+> Let me try to elaborate.
 > 
-> Signed-off-by: Brooke Basile <brookebasile@gmail.com>
-> ---
->  drivers/block/rnbd/rnbd-srv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> There are several subsystems that need to allocate memory for executable
+> text. As it happens, they use module_alloc() with some abilities for
+> architectures to override this behaviour.
 > 
-> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-> index 0fb94843a495..f515d1a048a9 100644
-> --- a/drivers/block/rnbd/rnbd-srv.c
-> +++ b/drivers/block/rnbd/rnbd-srv.c
-> @@ -123,10 +123,10 @@ static int process_rdma(struct rtrs_srv *sess,
->  	struct rnbd_io_private *priv;
->  	struct rnbd_srv_sess_dev *sess_dev;
->  	u32 dev_id;
-> -	int err;
->  	struct rnbd_dev_blk_io *io;
->  	struct bio *bio;
->  	short prio;
-> +	int ret = 0;
->  
->  	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
-> @@ -138,7 +138,7 @@ static int process_rdma(struct rtrs_srv *sess,
->  	if (IS_ERR(sess_dev)) {
->  		pr_err_ratelimited("Got I/O request on session %s for unknown device id %d\n",
->  				   srv_sess->sessname, dev_id);
-> -		err = -ENOTCONN;
-> +		ret = -ENOTCONN;
->  		goto err;
->  	}
->  
-> @@ -168,13 +168,13 @@ static int process_rdma(struct rtrs_srv *sess,
->  
->  	submit_bio(bio);
->  
-> -	return 0;
-> +	return ret;
->  
->  sess_dev_put:
->  	rnbd_put_sess_dev(sess_dev);
->  err:
->  	kfree(priv);
-> -	return err;
-> +	return ret;
->  }
->  
->  static void destroy_device(struct rnbd_srv_dev *dev)
+> For many architectures, it would be enough to rename modules_alloc() to
+> text_alloc(), make it built-in and this way allow removing dependency on
+> MODULES.
+> 
+> Yet, some architectures have different restrictions for code allocation
+> for different subsystems so it would make sense to have more than one
+> variant of text_alloc() and a single config option ARCH_HAS_TEXT_ALLOC
+> won't be sufficient.
+> 
+> I liked Mark's suggestion to have text_alloc_<something>() and proposed
+> a way to introduce text_alloc_kprobes() along with
+> HAVE_KPROBES_TEXT_ALLOC to enable arch overrides of this function.
+> 
+> The major difference between your v4 and my suggestion is that I'm not
+> trying to impose a single ARCH_HAS_TEXT_ALLOC as an alternative to
+> MODULES but rather to use per subsystem config option, e.g.
+> HAVE_KPROBES_TEXT_ALLOC.
+> 
+> Another thing, which might be worth doing regardless of the outcome of
+> this discussion is to rename alloc_insn_pages() to text_alloc_kprobes()
+> because the former is way too generic and does not emphasize that the 
+> instruction page is actually used by kprobes only.
+
+What if we in kernel/kprobes.c just:
+
+#ifndef CONFIG_ARCH_HAS_TEXT_ALLOC
+void __weak *alloc_insn_page(void)
+{
+	return module_alloc(PAGE_SIZE);
+}
+
+void __weak free_insn_page(void *page)
+{
+	module_memfree(page);
+}
+#endif
+
+In Kconfig (as in v5):
+
+config KPROBES
+	bool "Kprobes"
+	depends on MODULES || ARCH_HAS_TEXT_ALLOC
+
+I checked architectures that override alloc_insn_page(). With the
+exception of x86, they do not call module_alloc().
+
+If no rename was done, then with this approach a more consistent.
+config flag name would be CONFIG_ARCH_HAS_ALLOC_INSN_PAGE.
+
+I'd call the function just as kprobes_alloc_page(). Then the
+config flag would become CONFIG_HAS_KPROBES_ALLOC_PAGE.
+
 > -- 
-> 2.28.0
-> 
+> Sincerely yours,
+> Mike.
 
-I don't think this is a proper fix since the root cause of the warning
-appears to be that we are ignoring the return value of
-rnbd_bio_map_kern. Should we not set err to that value like this
-(completely untested)?
+Thanks for the feedback!
 
-Cheers,
-Nathan
-
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 0fb94843a495..1b71cb2a885d 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -148,7 +148,8 @@ static int process_rdma(struct rtrs_srv *sess,
- 	/* Generate bio with pages pointing to the rdma buffer */
- 	bio = rnbd_bio_map_kern(data, sess_dev->rnbd_dev->ibd_bio_set, datalen, GFP_KERNEL);
- 	if (IS_ERR(bio)) {
--		rnbd_srv_err(sess_dev, "Failed to generate bio, err: %ld\n", PTR_ERR(bio));
-+		err = PTR_ERR(bio);
-+		rnbd_srv_err(sess_dev, "Failed to generate bio, err: %ld\n", err);
- 		goto sess_dev_put;
- 	}
- 
+/Jarkko
