@@ -2,107 +2,110 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8907AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0EA20855
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6737920855
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597732063;
-	bh=6sam980i8nu2tM59pReLKjc8Vd78afzBLEkduMMs5Oo=;
+	s=default; t=1597732161;
+	bh=zBw9hFO+H66X4Rr03LngM7OaVXF0mK9y8qCEVNvyBVw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmyqYCgFF0GHznw6B+GPVEBKe7z+4XZcocHg1I7V8HspghcSw0+JeQPqhWkyCbOcb
-	 c8EOTRyvHF1V071qrN9wVB0MA8Z0oLRba9i7akRhc7V4qw0trTYsTuej2j60vKOWVw
-	 cFDbQaxhE5fU8oo1WrUrpLMY0rgUzprqzHgfS92E=
+	b=X/dgp+axSqbIXDYPFOkX5sD43LusvPQd4q+ohYnRksBT4l17ojJOkQCXEivde3OiD
+	 Awh4hrxAteb9/oukdhAbtKXVZt1ODiM6r1sRlvS3qW39HrrUfSTVhVobF/CmtUqF9t
+	 gfcsHWrRkezIW9WNa/MKUUdywf8tgIDcoB5LV228=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgHRG1m (ORCPT
+        id S1726514AbgHRG3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48966 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 02:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgHRG1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:27:41 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1726381AbgHRG3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:29:19 -0400
+Received: from localhost (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D95FE20829;
-        Tue, 18 Aug 2020 06:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B24B20825;
+        Tue, 18 Aug 2020 06:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597732060;
-        bh=6sam980i8nu2tM59pReLKjc8Vd78afzBLEkduMMs5Oo=;
+        s=default; t=1597732159;
+        bh=zBw9hFO+H66X4Rr03LngM7OaVXF0mK9y8qCEVNvyBVw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DQMzmJqMKAa/Q6GxxrH0+XkN6TZlv//VGpLUEmUtSUjDnuqpR0j1T4LYqbXzwMv5+
-         HzmM+kZtwVlSJFq2jbFzpHcTckaAUVnOUk7eBNxZQ4RHN43yUTgewxLj6YQv+5NvcT
-         QtCLtIyHvOFB/yS2uTmzSMm2/kEYhojin+3MPMAw=
-Date:   Tue, 18 Aug 2020 09:27:36 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     dsterba@suse.cz, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v2] overflow: Add __must_check attribute to check_*()
- helpers
-Message-ID: <20200818062736.GL7555@unreal>
-References: <202008151007.EF679DF@keescook>
- <20200817090854.GA2026@twin.jikos.cz>
- <202008171235.816B3AD@keescook>
+        b=BdGkNHmLk2pD8vhckIj7kQXtI+aSrPKhj9pKMOHnMPS+QaPuN8td+x1ZzXfkOMgaz
+         Sb7XmZP1K4Y2i/7naBcfrKZXcR6wL2fzwmNgf9zTHsy2e1knLwsWsAJCa7SVWm3vvC
+         EkVIEdHbsKHoDTlzVRmPuqctTDKnKWBq0nx1oz/0=
+Date:   Tue, 18 Aug 2020 11:59:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 00/13] soundwire: intel: add power management support
+Message-ID: <20200818062915.GT2639@vkoul-mobl>
+References: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+ <20200817120841.GQ2639@vkoul-mobl>
+ <d8f8f64f-34db-9c9a-c821-83dda3b2db9a@linux.intel.com>
+ <093dcb7d-e2b7-b568-6a23-aeaf9bfb6004@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202008171235.816B3AD@keescook>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <093dcb7d-e2b7-b568-6a23-aeaf9bfb6004@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:36:51PM -0700, Kees Cook wrote:
-> On Mon, Aug 17, 2020 at 11:08:54AM +0200, David Sterba wrote:
-> > On Sat, Aug 15, 2020 at 10:09:24AM -0700, Kees Cook wrote:
-> > > +static inline bool __must_check __must_check_overflow(bool overflow)
-> > > +{
-> > > +	return unlikely(overflow);
-> >
-> > How does the 'unlikely' hint propagate through return? It is in a static
-> > inline so compiler has complete information in order to use it, but I'm
-> > curious if it actually does.
->
-> It may not -- it depends on how the compiler decides to deal with it. :)
+On 17-08-20, 11:10, Pierre-Louis Bossart wrote:
+> 
+> 
+> > > I had applied except 3 & 9 (few skipped in middle due to conflict while
+> > > applying), BUT I get a build failure on patch 2 onwards :(
+> > > 
+> > > drivers/soundwire/intel_init.c: In function ‘sdw_intel_cleanup’:
+> > > drivers/soundwire/intel_init.c:72:4: error: implicit declaration of
+> > > function ‘pm_runtime_disable’
+> > > [-Werror=implicit-function-declaration]
+> > >     72 |    pm_runtime_disable(&link->pdev->dev);
+> > > 
+> > > I suspect due to missing header? I was on x64 build with allmodconfig
+> > > 
+> > > So only patch 1 is applied and pushed now
+> > 
+> > I just tried on these series applied on top of soundwire/next
+> > 
+> > commit 9b3b4b3f2f2af863d2f6dd65afd295a5a673afa2 (soundwire/next)
+> > 
+> >      soundwire: intel: Add basic power management support
+> > 
+> > And I don't see any issue?
+> 
+> Sorry, I misunderstood the issue. Yes indeed the #include
+> <linux/pm_runtime.h> is added to the wrong patch, I see Bard fixed this in
+> our tree. Not sure what happened here, I ran a patch-by-patch compilation
+> test a long time ago and kbuild was silent. Thanks for spotting this.
+> 
+> > If you want to double-check merge issues, I pushed the code here:
+> > https://github.com/plbossart/sound/tree/sdw/pm_runtime_soundwire_next
+> > 
+> > I am really not sure what conflicts you are referring to, git am worked
+> > fine for me, only skipped the first patch that's already applied.
+> 
+> But the point about conflicts does remain, I am not sure why you skipped
+> patches, I have no merge conflicts on my side.
 
-In theory yes, in practice, the compilers will ignore this macro.
+As noted above, I tried to apply except 3 & 9 due to questions on them.
+It is quite normal that dependencies fail to apply, not sure why you are
+confused.
 
-And if you success to force compiler to use this macro, it won't give
-any real performance advantage.
-
-We (RDMA) tried very hard to see any performance gain by instrumenting
-code with likely/unlikely in our performance critical data path both in
-user space and kernel. The performance results were statistically equal.
-
-If you are interested, we had a very intense discussion about it when
-likely/unlikely can still be usable (hint random input).
-https://lore.kernel.org/linux-rdma/20200807160956.GO4432@unreal
-
-Thanks
-
->
-> > In case the hint gets dropped, the fix would probably be
-> >
-> > #define check_add_overflow(a, b, d) unlikely(__must_check_overflow(({	\
-> >  	typeof(a) __a = (a);			\
-> >  	typeof(b) __b = (b);			\
-> >  	typeof(d) __d = (d);			\
-> >  	(void) (&__a == &__b);			\
-> >  	(void) (&__a == __d);			\
-> >  	__builtin_add_overflow(__a, __b, __d);	\
-> > })))
->
-> Unfortunately not, as the unlikely() ends up eating the __must_check
-> attribute. :(
->
-> --
-> Kees Cook
+-- 
+~Vinod
