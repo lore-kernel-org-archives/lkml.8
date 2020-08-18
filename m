@@ -2,87 +2,71 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC17C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5977DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37B0204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3645A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHRKnt (ORCPT
+        id S1726796AbgHRKoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:43:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39312 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHRKns (ORCPT
+        Tue, 18 Aug 2020 06:44:08 -0400
+Received: from mail.windriver.com ([147.11.1.11]:47119 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgHRKoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:43:48 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k7z5m-0003jk-JH; Tue, 18 Aug 2020 10:43:46 +0000
-Date:   Tue, 18 Aug 2020 12:43:45 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        criu@openvz.org, bpf@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH 12/17] proc/fd: In fdinfo seq_show don't use
- get_files_struct
-Message-ID: <20200818104345.n5ugxlzuv5iuggqs@wittgenstein>
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
- <20200817220425.9389-12-ebiederm@xmission.com>
+        Tue, 18 Aug 2020 06:44:08 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 07IAhrxr008368
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Tue, 18 Aug 2020 03:43:54 -0700 (PDT)
+Received: from pek-lpggp1.wrs.com (128.224.153.74) by ALA-HCB.corp.ad.wrs.com
+ (147.11.189.41) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
+ 03:43:40 -0700
+From:   <yanfei.xu@windriver.com>
+To:     <akpm@linux-foundation.org>, <david@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [PATCH v2] mm/memory: Fix typo in __do_fault() comment
+Date:   Tue, 18 Aug 2020 18:43:39 +0800
+Message-ID: <20200818104339.5310-1-yanfei.xu@windriver.com>
+X-Mailer: git-send-email 2.18.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817220425.9389-12-ebiederm@xmission.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:04:20PM -0500, Eric W. Biederman wrote:
-> When discussing[1] exec and posix file locks it was realized that none
-> of the callers of get_files_struct fundamentally needed to call
-> get_files_struct, and that by switching them to helper functions
-> instead it will both simplify their code and remove unnecessary
-> increments of files_struct.count.  Those unnecessary increments can
-> result in exec unnecessarily unsharing files_struct which breaking
-> posix locks, and it can result in fget_light having to fallback to
-> fget reducing system performance.
-> 
-> Instead hold task_lock for the duration that task->files needs to be
-> stable in seq_show.  The task_lock was already taken in
-> get_files_struct, and so skipping get_files_struct performs less work
-> overall, and avoids the problems with the files_struct reference
-> count.
-> 
-> [1] https://lkml.kernel.org/r/20180915160423.GA31461@redhat.com
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
+From: Yanfei Xu <yanfei.xu@windriver.com>
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+It's "pte_alloc_one", not "pte_alloc_pne". Let's fix that.
+
+Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+---
+ v2: modify the commit message 
+
+ mm/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index c3a83f4ca851..9cc3d0dc816c 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3446,7 +3446,7 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
+ 	 *				unlock_page(A)
+ 	 * lock_page(B)
+ 	 *				lock_page(B)
+-	 * pte_alloc_pne
++	 * pte_alloc_one
+ 	 *   shrink_page_list
+ 	 *     wait_on_page_writeback(A)
+ 	 *				SetPageWriteback(B)
+-- 
+2.18.2
+
