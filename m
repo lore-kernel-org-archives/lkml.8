@@ -2,102 +2,144 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED7020789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA3C20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ec+Zcl4x"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ryao98Z2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHRKE7 (ORCPT
+        id S1726690AbgHRKFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRKE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:04:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF99C061389;
-        Tue, 18 Aug 2020 03:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pE8vmQW7SZy0+JnQJV6um55H7ktisT4GBi3Ij24COKw=; b=Ec+Zcl4xLw+ZX6xKNyn+LxSmLG
-        EZ0TRWdmzTaNznp3475KXmL3ObxYB8nifTSAaMXiLeZUks0Nj5dKNXO1Xn7KLLyXdVmocwwsjI4lS
-        vle42FQMDNCGwBA718/gxyq2awU9AUycF2AWtY7YvO2anUpmOw2nxD9NNLylDwT1Y8AgDnFt0tIMK
-        aXjKb+XCYELLhPQAQvh3b4tpgmLWW2qDfIU9Sookz16wBzOHVP9oWOoFLBkp/Z9O3ds+gd5jHL6Rv
-        yKky0b51qKBgFHHFuKF0rKJf3lONp/eBNtXBzBQs52mYwF+8Rn0gH3SW7XRRift4xDJ6wOYiRrsi7
-        klLCmhAg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7yU0-00009c-R9; Tue, 18 Aug 2020 10:04:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48FD9301179;
-        Tue, 18 Aug 2020 12:04:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2F8A722E9BD47; Tue, 18 Aug 2020 12:04:44 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 12:04:44 +0200
-From:   peterz@infradead.org
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-Message-ID: <20200818100444.GN2674@hirez.programming.kicks-ass.net>
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200818091453.GL2674@hirez.programming.kicks-ass.net>
- <20200818092737.GA148695@chrisdown.name>
+        Tue, 18 Aug 2020 06:05:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:45202 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgHRKFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:05:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597745107; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=T1CCGquylX71KDdCAwA2iJHahtHl1/4eQuBxd7BGCEw=; b=Ryao98Z27uF+QR4rZM0/4Rr9IZRghu47p6EMbX3z72dqxJ0PsAcu6Kzg6EgEKJIxuPrYp7Uv
+ mcyMXLH4zEpefKKj5Fo4EQ1JFvv3J8KLPb2Cx3nPvh/CfSwaHvLsGFHTo6nJCgGAQocTI6YX
+ iZ/whtzj2EAuxZM98E1tJx/hYwY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f3ba7b51e4d3989d41f4651 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 10:04:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4B65FC433CA; Tue, 18 Aug 2020 10:04:37 +0000 (UTC)
+Received: from codeaurora.org (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B6E7C433C6;
+        Tue, 18 Aug 2020 10:04:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B6E7C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Tue, 18 Aug 2020 15:34:31 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix indefinite loop scanning for free nid
+Message-ID: <20200818100431.GB5062@codeaurora.org>
+References: <1597392335-4998-1-git-send-email-stummala@codeaurora.org>
+ <e1251327-bd48-215d-e558-08780474bddb@huawei.com>
+ <20200818095547.GA5062@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818092737.GA148695@chrisdown.name>
+In-Reply-To: <20200818095547.GA5062@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:27:37AM +0100, Chris Down wrote:
-> peterz@infradead.org writes:
-> > On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
-> > > Memory controller can be used to control and limit the amount of
-> > > physical memory used by a task. When a limit is set in "memory.high" in
-> > > a v2 non-root memory cgroup, the memory controller will try to reclaim
-> > > memory if the limit has been exceeded. Normally, that will be enough
-> > > to keep the physical memory consumption of tasks in the memory cgroup
-> > > to be around or below the "memory.high" limit.
-> > > 
-> > > Sometimes, memory reclaim may not be able to recover memory in a rate
-> > > that can catch up to the physical memory allocation rate. In this case,
-> > > the physical memory consumption will keep on increasing.
+On Tue, Aug 18, 2020 at 03:25:47PM +0530, Sahitya Tummala wrote:
+> On Tue, Aug 18, 2020 at 04:29:05PM +0800, Chao Yu wrote:
+> > On 2020/8/14 16:05, Sahitya Tummala wrote:
+> > >If the sbi->ckpt->next_free_nid is not NAT block aligned and if there
+> > >are free nids in that NAT block between the start of the block and
+> > >next_free_nid, then those free nids will not be scanned in scan_nat_page().
+> > >This results into mismatch between nm_i->available_nids and the sum of
+> > >nm_i->free_nid_count of all NAT blocks scanned. And nm_i->available_nids
+> > >will always be greater than the sum of free nids in all the blocks.
+> > >Under this condition, if we use all the currently scanned free nids,
+> > >then it will loop forever in f2fs_alloc_nid() as nm_i->available_nids
+> > >is still not zero but nm_i->free_nid_count of that partially scanned
+> > >NAT block is zero.
+> > >
+> > >Fix this to align the nm_i->next_scan_nid to the first nid of the
+> > >corresponding NAT block.
+> > >
+> > >Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > >---
+> > >  fs/f2fs/node.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > >diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> > >index 9bbaa26..d615e59 100644
+> > >--- a/fs/f2fs/node.c
+> > >+++ b/fs/f2fs/node.c
+> > >@@ -2402,6 +2402,8 @@ static int __f2fs_build_free_nids(struct f2fs_sb_info *sbi,
+> > >  			if (IS_ERR(page)) {
+> > >  				ret = PTR_ERR(page);
+> > >  			} else {
+> > >+				if (nid % NAT_ENTRY_PER_BLOCK)
+> > >+					nid = NAT_BLOCK_OFFSET(nid) * NAT_ENTRY_PER_BLOCK;
 > > 
-> > Then slow down the allocator? That's what we do for dirty pages too, we
-> > slow down the dirtier when we run against the limits.
+> > How about moving this logic to the beginning of __f2fs_build_free_nids(),
+> > after nid reset?
+> > 
 > 
-> We already do that since v5.4. I'm wondering whether Waiman's customer is
-> just running with a too-old kernel without 0e4b01df865 ("mm, memcg: throttle
-> allocators when failing reclaim over memory.high") backported.
+> Sure, I will move it.
+> 
+> > BTW, it looks we can add unlikely in this judgment condition?
+> 
+> But it may not be an unlikely as it can happen whenever checkpoint is done,
+> based on the next available free nid in function next_free_nid(), which can happen
+> quite a few times, right?
+> 
+> Hitting the loop forever issue condition due to this could be a rare/difficult to
+> reproduce but this check itself may not be unlikely in my opinion.
+> 
 
-That commit is fundamentally broken, it doesn't guarantee anything.
+Sorry, I was wrong above. During CP we update only ckpt->next_free_nid but not
+the nm_i->next_free_nid, which is done only once during boot up.
 
-Please go read how the dirty throttling works (unless people wrecked
-that since..).
+So yes, I will mark it as unlikely conditiona.
+
+Thanks,
+
+> Thanks,
+> 
+> > 
+> > Thanks,
+> > 
+> > >  				ret = scan_nat_page(sbi, page, nid);
+> > >  				f2fs_put_page(page, 1);
+> > >  			}
+> > >
+> 
+> -- 
+> --
+> Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
