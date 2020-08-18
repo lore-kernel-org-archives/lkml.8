@@ -2,173 +2,290 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8184C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ECEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF822207DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597743379;
-	bh=jf7Mx1Ot8arfUuf6gg/Wk5ylCL0JP7drPzwJqzU4itw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ajVyo40zbGoEaGjXkx3cpiuX8S4ElN6/UGaw3b0qngQmjy8LxvzOS7Zj8MA/Rs/t3
-	 BH3ZaTI/DsevQcNWk4MbNKNt4jyLdlc38P5aCQx232YpFrRrh5RUXuzoI6dvlW3vja
-	 mo0BbKDB21nHPSGeH2jS68PN8jbqBVeBgdTaFIfM=
+	by mail.kernel.org (Postfix) with ESMTP id 96FE920639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RbTwLnu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgHRJgS (ORCPT
+        id S1726513AbgHRJk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgHRJgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:36:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 18 Aug 2020 05:40:29 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:54797 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726370AbgHRJk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:40:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597743626; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=uvO1Cuom7MQDHiD5guU9iypdCG5Ah4NoX6vDWiRvJqY=;
+ b=RbTwLnu2fWW/fBQCjd/5rEkMJbsnMRqjc4L3CZsgmcDlOTvskWtUjRUmx3a66XvRsD8/lwPD
+ dvWZD+2shL/RMqs1AREY3kB7zE9DRTHY2A+FL835kL3+lCYb2/lWs8X/HHM/bwXFTUTcOVF1
+ W288Sf64vkQlKJyxhNn1nD8hdLo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f3ba1fa2f4952907d7ab132 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 09:40:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A2E6C433CB; Tue, 18 Aug 2020 09:40:10 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F1A72078B;
-        Tue, 18 Aug 2020 09:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597743376;
-        bh=jf7Mx1Ot8arfUuf6gg/Wk5ylCL0JP7drPzwJqzU4itw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kncx4qd2AeaHd89DpmQpPvAWG2MJRYJkGWXg7bKYSHDqCKc3NXVxtfyxGvaKapyL7
-         OOmMHwYltbvwO8xVLm4X924GpUWRtTwD6omZKLuFCTWymoLruGjkXM4KV/Q323bOPz
-         +8BbwgbRO1Z7qEgQblVXZ5XIaL9o9UzrTS9NLlsw=
-Date:   Tue, 18 Aug 2020 11:36:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sergey Korolev <s.korolev@ndmsystems.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Rob Gill <rrobgill@protonmail.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Johan Hovold <johan@kernel.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: core: remove polling for
- /sys/kernel/debug/usb/devices
-Message-ID: <20200818093640.GC34785@kroah.com>
-References: <20200809161233.13135-1-s.korolev@ndmsystems.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB677C433C6;
+        Tue, 18 Aug 2020 09:40:08 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809161233.13135-1-s.korolev@ndmsystems.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 15:10:08 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+Message-ID: <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 07:12:30PM +0300, Sergey Korolev wrote:
-> The latest reference to usbfs_conn_disc_event() removed in
-> commit fb28d58b72aa ("USB: remove CONFIG_USB_DEVICEFS")
-> in 2012 and now a user poll() waits infinitely for content changes.
+Hi,
+
+On 2020-08-18 02:35, Doug Anderson wrote:
+> Hi,
 > 
-> Signed-off-by: Sergey Korolev <s.korolev@ndmsystems.com>
-> ---
->  drivers/usb/core/devices.c | 41 --------------------------------------
->  drivers/usb/core/usb.h     |  1 -
->  2 files changed, 42 deletions(-)
+> On Mon, Aug 17, 2020 at 7:47 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
+>> 
+>> Older chipsets may not be allowed to configure certain LLCC registers
+>> as that is handled by the secure side software. However, this is not
+>> the case for newer chipsets and they must configure these registers
+>> according to the contents of the SCT table, while keeping in mind that
+>> older targets may not have these capabilities. So add support to allow
+>> such configuration of registers to enable capacity based allocation
+>> and power collapse retention for capable chipsets.
 > 
-> diff --git a/drivers/usb/core/devices.c b/drivers/usb/core/devices.c
-> index 696b2b692b83..1ef2de6e375a 100644
-> --- a/drivers/usb/core/devices.c
-> +++ b/drivers/usb/core/devices.c
-> @@ -39,7 +39,6 @@
->  #include <linux/fs.h>
->  #include <linux/mm.h>
->  #include <linux/gfp.h>
-> -#include <linux/poll.h>
->  #include <linux/usb.h>
->  #include <linux/usbdevice_fs.h>
->  #include <linux/usb/hcd.h>
-> @@ -97,22 +96,6 @@ static const char format_endpt[] =
->  /* E:  Ad=xx(s) Atr=xx(ssss) MxPS=dddd Ivl=D?s */
->    "E:  Ad=%02x(%c) Atr=%02x(%-4s) MxPS=%4d Ivl=%d%cs\n";
->  
-> -/*
-> - * Wait for an connect/disconnect event to happen. We initialize
-> - * the event counter with an odd number, and each event will increment
-> - * the event counter by two, so it will always _stay_ odd. That means
-> - * that it will never be zero, so "event 0" will never match a current
-> - * event, and thus 'poll' will always trigger as readable for the first
-> - * time it gets called.
-> - */
-> -static struct device_connect_event {
-> -	atomic_t count;
-> -	wait_queue_head_t wait;
-> -} device_event = {
-> -	.count = ATOMIC_INIT(1),
-> -	.wait = __WAIT_QUEUE_HEAD_INITIALIZER(device_event.wait)
-> -};
-> -
->  struct class_info {
->  	int class;
->  	char *class_name;
-> @@ -146,12 +129,6 @@ static const struct class_info clas_info[] = {
->  
->  /*****************************************************************/
->  
-> -void usbfs_conn_disc_event(void)
-> -{
-> -	atomic_add(2, &device_event.count);
-> -	wake_up(&device_event.wait);
-> -}
-> -
->  static const char *class_decode(const int class)
->  {
->  	int ix;
-> @@ -623,25 +600,7 @@ static ssize_t usb_device_read(struct file *file, char __user *buf,
->  	return total_written;
->  }
->  
-> -/* Kernel lock for "lastev" protection */
-> -static __poll_t usb_device_poll(struct file *file,
-> -				    struct poll_table_struct *wait)
-> -{
-> -	unsigned int event_count;
-> -
-> -	poll_wait(file, &device_event.wait, wait);
-> -
-> -	event_count = atomic_read(&device_event.count);
-> -	if (file->f_version != event_count) {
-> -		file->f_version = event_count;
-> -		return EPOLLIN | EPOLLRDNORM;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  const struct file_operations usbfs_devices_fops = {
->  	.llseek =	no_seek_end_llseek,
->  	.read =		usb_device_read,
-> -	.poll =		usb_device_poll,
->  };
-> diff --git a/drivers/usb/core/usb.h b/drivers/usb/core/usb.h
-> index 98e7d1ee63dc..c893f54a3420 100644
-> --- a/drivers/usb/core/usb.h
-> +++ b/drivers/usb/core/usb.h
-> @@ -191,7 +191,6 @@ extern const struct attribute_group *usb_interface_groups[];
->  extern struct usb_driver usbfs_driver;
->  extern const struct file_operations usbfs_devices_fops;
->  extern const struct file_operations usbdev_file_operations;
-> -extern void usbfs_conn_disc_event(void);
->  
->  extern int usb_devio_init(void);
->  extern void usb_devio_cleanup(void);
+> I have very little idea about what the above means.  That being said,
+> what's broken that this patch fixes?  Please include this in the CL
+> description.  It should answer, in the very least, the following two
+> questions:
+> 
 
-Why not fix this up instead?  The debugfs file can be polled and this
-should be fixed to accurately handle that.
+As the commit message says about secure software configuring these LLCC 
+registers,
+usually 2 things can happen in that case.
 
-It's kind of proof though that no one really cares about this option in
-that no one has noticed it being gone for so long, so if you don't want
-to fix it, I will just take this patch for now.
+1) Accessing those registers in non secure world like Kernel would 
+result in a
+fault which is trapped by secure side.
 
-Let me know.
+2) Access to those registers may be just ignored and there will be no 
+faults.
 
-thanks,
+So for older chipsets, this is a fix to not allow them to access those 
+registers.
+For newer chipsets, we follow the recommended settings from HW/SW arch 
+teams.
+But... upstream llcc driver only supports SDM845 currently which is not 
+required
+to configure those registers and as per my testing, no crash is observed 
+on SDM845.
+So we won't need fixes tag.
 
-greg k-h
+> a) Were existing attempts to do capacity based allocation failing, or
+> is capacity based allocation a new whizbang feature that a future
+> patch will add and you need this one to land first?
+> 
+
+Capacity-based allocation and Way-based allocation are cache 
+partitioning
+schemes/algorithms usually used in shared LLCs. Now which one to use or 
+why
+one is preferred over the other are decided by HW/SW architecture teams 
+and are
+recommended by them. So if the question is what is capacity based 
+allocation and
+how it works, then I am afraid that I will not be able to explain that 
+algorithm
+just like that.
+
+> b) Why was it bad not to enable power collapse retention?  Was this
+> causing things to get corrupted after resume?  Was this causing us to
+> fail to suspend?  Were we burning too little power in S3 and the
+> battery vendors are looking for an excuse to sell bigger batteries?
+> 
+> I'm not very smart and am also lacking documentation for what the heck
+> all this is, so I'm looking for the "why" of your patch.
+> 
+
+That's a fair point. I will try to dig through to find some context for 
+"question b"
+and check if there were any battery vendors involved in this decision ;)
+
+> 
+>> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+>> (sai: use table instead of dt property and minor commit msg change)
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>> 
+>> Changes in v2:
+>>  * Fix build errors reported by kernel test robot.
+>> 
+>> ---
+>>  drivers/soc/qcom/llcc-qcom.c | 27 +++++++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>> 
+>> diff --git a/drivers/soc/qcom/llcc-qcom.c 
+>> b/drivers/soc/qcom/llcc-qcom.c
+>> index 429b5a60a1ba..865f607cf502 100644
+>> --- a/drivers/soc/qcom/llcc-qcom.c
+>> +++ b/drivers/soc/qcom/llcc-qcom.c
+>> @@ -45,6 +45,9 @@
+>>  #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
+>>  #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
+>> 
+>> +#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
+>> +#define LLCC_TRP_PCB_ACT              0x21F04
+>> +
+>>  #define BANK_OFFSET_STRIDE           0x80000
+>> 
+>>  /**
+>> @@ -318,6 +321,11 @@ size_t llcc_get_slice_size(struct llcc_slice_desc 
+>> *desc)
+>>  }
+>>  EXPORT_SYMBOL_GPL(llcc_get_slice_size);
+>> 
+>> +static const struct of_device_id __maybe_unused 
+>> qcom_llcc_configure_of_match[] = {
+>> +       { .compatible = "qcom,sc7180-llcc" },
+>> +       { }
+>> +};
+> 
+> Why are you introducing a whole second table?  Shouldn't you just add
+> a field to "struct qcom_llcc_config" ?
+> 
+
+This was my 2nd option, first one was to have this based on the version 
+of LLCC
+which are exposed by hw info registers. But that didn't turn out good 
+since I
+couldn't find any relation of this property with LLCC version.
+
+Second option was as you mentioned to have a field to qcom_llcc_config. 
+Now this is good,
+but then I thought that if we add LLCC support for 20(random number) 
+SoCs of which
+10 is capable of supporting cap_based_alloc and rest 10 are not, then we 
+will still be adding
+20 more lines to each SoC's llcc_config if we follow this 2nd option.
+
+So why not opt for a 3rd option with the table where you just need to 
+specify only the capable
+targets which is just 10 in our sample case above.
+
+Am I just overthinking this too much and should just go with the 2nd 
+option as you mentioned?
+
+> 
+>> +
+>>  static int qcom_llcc_cfg_program(struct platform_device *pdev)
+>>  {
+>>         int i;
+>> @@ -327,13 +335,17 @@ static int qcom_llcc_cfg_program(struct 
+>> platform_device *pdev)
+>>         u32 attr0_val;
+>>         u32 max_cap_cacheline;
+>>         u32 sz;
+>> +       u32 disable_cap_alloc = 0, retain_pc = 0;
+> 
+> Don't init to 0.  See below.
+> 
+> 
+>>         int ret = 0;
+>>         const struct llcc_slice_config *llcc_table;
+>>         struct llcc_slice_desc desc;
+>> +       const struct of_device_id *llcc_configure;
+>> 
+>>         sz = drv_data->cfg_size;
+>>         llcc_table = drv_data->cfg;
+>> 
+>> +       llcc_configure = of_match_node(qcom_llcc_configure_of_match, 
+>> pdev->dev.of_node);
+>> +
+> 
+> As per above, just use the existing config.
+> 
+
+See above explanation.
+
+> 
+>>         for (i = 0; i < sz; i++) {
+>>                 attr1_cfg = 
+>> LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
+>>                 attr0_cfg = 
+>> LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
+>> @@ -369,6 +381,21 @@ static int qcom_llcc_cfg_program(struct 
+>> platform_device *pdev)
+>>                                         attr0_val);
+>>                 if (ret)
+>>                         return ret;
+>> +
+>> +               if (llcc_configure) {
+>> +                       disable_cap_alloc |= 
+>> llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
+> 
+> Don't "|=".  You're the only place touching this variable.  Just set 
+> it.
+> 
+
+Ack, will change.
+
+> 
+>> +                       ret = regmap_write(drv_data->bcast_regmap,
+>> +                                               
+>> LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
+>> +                       if (ret)
+>> +                               return ret;
+>> +
+>> +                       retain_pc |= llcc_table[i].retain_on_pc << 
+>> llcc_table[i].slice_id;
+> 
+> Don't "|=".  You're the only place touching this variable.  Just set 
+> it.
+> 
+
+Ack, will change.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
