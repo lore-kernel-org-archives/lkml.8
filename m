@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A9120706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA6720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgHRMKb (ORCPT
+        id S1726870AbgHRMKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:10:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58731 "EHLO mga07.intel.com"
+        Tue, 18 Aug 2020 08:10:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58739 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgHRMKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:10:17 -0400
-IronPort-SDR: ZY/UoZQiqBHmbkLnIATtIk0fnJ4l8iqI8pZBnalYoM+V4EjKij84+H28YUvQhVnMVKLCCFsASj
- NIsY/yUdgV3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219200396"
+        id S1726792AbgHRMKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:10:23 -0400
+IronPort-SDR: mss5JKyw5bR37BTig66GpIaVZ7J11/Xx/yxgLG9Syh8ia8Hjnx6nqYIn+dmrNOcdWoiMj8DHHc
+ p5wZ/x6+mArA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219200404"
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="219200396"
+   d="scan'208";a="219200404"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 05:10:17 -0700
-IronPort-SDR: NiRLWa7pniPOnGQ5riFMZvIC2gtrvvpkTW3KxnoaJbaYB1I2XlvRnEIE/8yI43pOLcYnVOS2GQ
- oHOj9nYbPsng==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 05:10:22 -0700
+IronPort-SDR: zSuB06hyksvsmMMuIP6as8mjjlqkZ3hBWy5xVqaEyU84k1/Xie1+GafoiiGPM0liAP9IPuA/K9
+ +4nwSTWMkFeg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="326713029"
+   d="scan'208";a="326713055"
 Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 05:10:13 -0700
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 05:10:20 -0700
 From:   Tomas Winkler <tomas.winkler@intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         linux-kernel@vger.kernel.org,
         Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next 08/13] mei: handle tx queue flushing for vtag connections
-Date:   Tue, 18 Aug 2020 14:51:42 +0300
-Message-Id: <20200818115147.2567012-9-tomas.winkler@intel.com>
+Subject: [char-misc-next 10/13] mei: bus: unconditionally enable clients with vtag support
+Date:   Tue, 18 Aug 2020 14:51:44 +0300
+Message-Id: <20200818115147.2567012-11-tomas.winkler@intel.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200818115147.2567012-1-tomas.winkler@intel.com>
 References: <20200818115147.2567012-1-tomas.winkler@intel.com>
@@ -56,73 +56,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-Since multiple file pointers (fp) can be associated
-with a single host client, upon close() only objects
-associated with the fp has to flushed from the tx queues.
-The control queues should be flushed only when all
-the connections are closed and the client is disconnected.
+The list of clients is only visible via mei client bus.
+Enabling vtag clients on the mei client bus allows user-space to
+enumerate clients with vtag support by traversing the mei bus on sysfs.
+This feature is required for ACRN device model service.
 
 Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
- drivers/misc/mei/client.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/misc/mei/bus-fixup.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
-index 3904fce18261..d5c3f7d54634 100644
---- a/drivers/misc/mei/client.c
-+++ b/drivers/misc/mei/client.c
-@@ -429,14 +429,16 @@ static void mei_io_list_flush_cl(struct list_head *head,
-  *
-  * @head: An instance of our list structure
-  * @cl: host client
-+ * @fp: file pointer (matching cb file object), may be NULL
-  */
- static void mei_io_tx_list_free_cl(struct list_head *head,
--				   const struct mei_cl *cl)
-+				   const struct mei_cl *cl,
-+				   const struct file *fp)
- {
- 	struct mei_cl_cb *cb, *next;
- 
- 	list_for_each_entry_safe(cb, next, head, list) {
--		if (cl == cb->cl)
-+		if (cl == cb->cl && (!fp || fp == cb->fp))
- 			mei_tx_cb_dequeue(cb);
- 	}
+diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
+index 07ba16d46690..4e30fa98fe7d 100644
+--- a/drivers/misc/mei/bus-fixup.c
++++ b/drivers/misc/mei/bus-fixup.c
+@@ -463,6 +463,17 @@ static void mei_nfc(struct mei_cl_device *cldev)
+ 	dev_dbg(bus->dev, "end of fixup match = %d\n", cldev->do_match);
  }
-@@ -574,13 +576,14 @@ int mei_cl_flush_queues(struct mei_cl *cl, const struct file *fp)
- 	dev = cl->dev;
  
- 	cl_dbg(dev, cl, "remove list entry belonging to cl\n");
--	mei_io_tx_list_free_cl(&cl->dev->write_list, cl);
--	mei_io_tx_list_free_cl(&cl->dev->write_waiting_list, cl);
--	mei_io_list_flush_cl(&cl->dev->ctrl_wr_list, cl);
--	mei_io_list_flush_cl(&cl->dev->ctrl_rd_list, cl);
--	/* free pending cb only in final flush */
--	if (!fp)
-+	mei_io_tx_list_free_cl(&cl->dev->write_list, cl, fp);
-+	mei_io_tx_list_free_cl(&cl->dev->write_waiting_list, cl, fp);
-+	/* free pending and control cb only in final flush */
-+	if (!fp) {
-+		mei_io_list_flush_cl(&cl->dev->ctrl_wr_list, cl);
-+		mei_io_list_flush_cl(&cl->dev->ctrl_rd_list, cl);
- 		mei_cl_free_pending(cl);
-+	}
- 	spin_lock(&cl->rd_completed_lock);
- 	mei_io_list_free_fp(&cl->rd_completed, fp);
- 	spin_unlock(&cl->rd_completed_lock);
-@@ -798,8 +801,8 @@ static void mei_cl_set_disconnected(struct mei_cl *cl)
- 		return;
++/**
++ * vt_support - enable on bus clients with vtag support
++ *
++ * @cldev: me clients device
++ */
++static void vt_support(struct mei_cl_device *cldev)
++{
++	if (cldev->me_cl->props.vt_supported == 1)
++		cldev->do_match = 1;
++}
++
+ #define MEI_FIXUP(_uuid, _hook) { _uuid, _hook }
  
- 	cl->state = MEI_FILE_DISCONNECTED;
--	mei_io_tx_list_free_cl(&dev->write_list, cl);
--	mei_io_tx_list_free_cl(&dev->write_waiting_list, cl);
-+	mei_io_tx_list_free_cl(&dev->write_list, cl, NULL);
-+	mei_io_tx_list_free_cl(&dev->write_waiting_list, cl, NULL);
- 	mei_io_list_flush_cl(&dev->ctrl_rd_list, cl);
- 	mei_io_list_flush_cl(&dev->ctrl_wr_list, cl);
- 	mei_cl_wake_all(cl);
+ static struct mei_fixup {
+@@ -476,6 +487,7 @@ static struct mei_fixup {
+ 	MEI_FIXUP(MEI_UUID_WD, mei_wd),
+ 	MEI_FIXUP(MEI_UUID_MKHIF_FIX, mei_mkhi_fix),
+ 	MEI_FIXUP(MEI_UUID_HDCP, whitelist),
++	MEI_FIXUP(MEI_UUID_ANY, vt_support),
+ };
+ 
+ /**
 -- 
 2.25.4
 
