@@ -2,189 +2,161 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E397C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439DC20789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070AE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="EE8JgXr6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiDJx6Af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgHRWZN (ORCPT
+        id S1727014AbgHRWZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:25:13 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:61734 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgHRWZM (ORCPT
+        Tue, 18 Aug 2020 18:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgHRWZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:25:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=5sA1HBIbrK4jPVJcP+jI4izFpNEEHPxFg/NXWJXMC4g=;
-        b=EE8JgXr61Z3ufTYRqqa2+xQCNvdAVubtYA8pVgrJgxTVxG8EEIxd6MeQYaCdLjFar0MJ
-        9gwlxNGcp1eSa7aIxrdxWTEnHwH3NahaWyPZQ8Y0s2/2serz4I49TgmOId5GaTi2M5FsY1
-        izV4PoCNyveAD2h9wFc3WuJ7YGL+qoff8=
-Received: by filterdrecv-p3iad2-5c98798b7-8vpdr with SMTP id filterdrecv-p3iad2-5c98798b7-8vpdr-18-5F3C5546-43
-        2020-08-18 22:25:10.778364702 +0000 UTC m=+453341.494334549
-Received: from [192.168.1.14] (unknown)
-        by ismtpd0008p1lon1.sendgrid.net (SG) with ESMTP
-        id -eqZ85VSTrOUcbmstS8KlQ
-        Tue, 18 Aug 2020 22:25:10.310 +0000 (UTC)
-Subject: Re: [PATCH v3 16/19] media: rkvdec: Drop unneeded per_request
- driver-specific control flag
-References: <20200814133634.95665-1-ezequiel@collabora.com>
- <20200814133634.95665-17-ezequiel@collabora.com>
- <7ce53e65-1a05-bef7-afe7-9a5113d5bd4f@kwiboo.se>
- <57e324f9e3e7e56aa634bcfa0aeebf08c118776d.camel@collabora.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <b97351fc-1238-e3ee-e7ec-6e74b19725fb@kwiboo.se>
-Date:   Tue, 18 Aug 2020 22:25:10 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 18:25:47 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5407C061389;
+        Tue, 18 Aug 2020 15:25:46 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id m7so19856435qki.12;
+        Tue, 18 Aug 2020 15:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E0QpYwyGeyQNgnfTu+fVlzDEmX7vUQ4dpPBQoUXRMU8=;
+        b=LiDJx6Af77Yfx/KOJmUbrwaOM0pjIOPBgSqafLu8msU038FAz1lgQYc13goXLwmnGS
+         PRtWZSoyuxX8ADBJiQEXDfMZyJQXOw5Iwbftk1JCbDvAomejgCwxZZvAE62+LiITbHu3
+         MY96GJbmo65Am2iPZd7VO7O49qkMLI7/b2XVyW3ZFn31Wc8UWMOGM6Bkv2YY5Yy2kclL
+         VEKepqX2qE4CtFkYWF9ckJJLreQiFKQmyQqAd/i0wq3063wbn/tjrL1+Q8aOtQa0Jz/9
+         AT5MwDuglFViEJBhhwATLWA20UY7zdcCmqn9fFMdSZ4BlCdKWp54f0SEP5EBCGcjoCYQ
+         Yv0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=E0QpYwyGeyQNgnfTu+fVlzDEmX7vUQ4dpPBQoUXRMU8=;
+        b=MXU4yDIijzUdOE3/H8gYphdlBjSbnNlpNRzvbe85hLgQDZRo+kDgLKVtGYo2UBqdRl
+         a+susrLNtZk41NxBTAR+AfJ8Rge/Ypj9fKd81FOfN4EVpoI8E7PRLRicn8/HjIaiIsmG
+         RCSLN+vfj239MJikM6E/UEjjJMobgrHIHzssqF0xcnTcWlT3z/hv/mn837M72zP2EcUC
+         S9cnAPu66l2MJy+s8Yth9F4Y2Rv81zZGcpx5ynscPygzq8hkvr9wkqlKm5dMzg0aVeV5
+         Qjx9zqPAEPw85lh2egMwKcXReo3va87ElD1Esj71I8SDL3tHdrfMQ8SYG2/CDkhmxFsS
+         KSKQ==
+X-Gm-Message-State: AOAM530p1uRvB5Xmn4d96bTqcxZxQZWbETlId144Ef7+mREfKXbw0kT0
+        BfNePpia20eBmrjVuO8cVEw=
+X-Google-Smtp-Source: ABdhPJz1BvS1mecTszCrz26nQmYNf0KrJygAksbrsrMDxgHR0Qb2LBxMo9Ydj9TwYEngt+9ARsmIhQ==
+X-Received: by 2002:a05:620a:b8d:: with SMTP id k13mr19606873qkh.450.1597789545799;
+        Tue, 18 Aug 2020 15:25:45 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d196sm22358541qkg.96.2020.08.18.15.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 15:25:45 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 18 Aug 2020 18:25:42 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Message-ID: <20200818222542.GA3254379@rani.riverdale.lan>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <57e324f9e3e7e56aa634bcfa0aeebf08c118776d.camel@collabora.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h5iAJJICWQucZEPgD?=
- =?us-ascii?Q?lkqTvuNTWM3C5i3gOLtfyiv5E68eDvDkpYtAXPL?=
- =?us-ascii?Q?t2qGRvwlMz4AEvoER=2FVvPngnMtPDj8DO7qAlze5?=
- =?us-ascii?Q?Z5Id1jg+K391ZyuHfKZu0TL4fpwNmixPVU7Atec?=
- =?us-ascii?Q?KB1yPzltKwC4t1XVo6jes0qQBZ3QUFnSOwb6+m3?=
- =?us-ascii?Q?KRshQuTGvlh7YobEf4jMA=3D=3D?=
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Language: sv
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200817220212.338670-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-18 23:38, Ezequiel Garcia wrote:
-> On Tue, 2020-08-18 at 20:17 +0000, Jonas Karlman wrote:
->> Hi Ezequiel,
->>
->> On 2020-08-14 15:36, Ezequiel Garcia wrote:
->>> Currently, the drivers makes no distinction between per_request
->>> and mandatory, as both are used in the same request validate check.
->>>
->>> The driver only cares to know if a given control is
->>> required to be part of a request, so only one flag is needed.
->>
->> This patch cause decoding issues with ffmpeg.
->>
->> The removal of per_request makes DECODE_MODE and START_CODE ctrls
->> mandatory to be included in the request.
->>
+On Mon, Aug 17, 2020 at 03:02:08PM -0700, Nick Desaulniers wrote:
+> -ffreestanding typically inhibits "libcall optimizations" where calls to
+> certain library functions can be replaced by the compiler in certain
+> cases to calls to other library functions that may be more efficient.
+> This can be problematic for embedded targets that don't provide full
+> libc implementations.
 > 
-> Ugh, I just failed boolean logic 101.
+> -ffreestanding inhibits all such optimizations, which is the safe
+> choice, but generally we want the optimizations that are performed. The
+> Linux kernel does implement a fair amount of libc routines. Instead of
+> -ffreestanding (which makes more sense in smaller images like kexec's
+> purgatory image), prefer -fno-builtin-* flags to disable the compiler
+> from emitting calls to functions which may not be defined.
 > 
-> Yeah, we those controls shouldn't be mandatory.
-
-Yep, removing mandatory flag makes rkvdec decoding work again :-)
-
+> If you see a linkage failure due to a missing symbol that's typically
+> defined in a libc, and not explicitly called from the source code, then
+> the compiler may have done such a transform.  You can either implement
+> such a function (ie. in lib/string.c) or disable the transform outright
+> via -fno-builtin-* flag (where * is the name of the library routine, ie.
+> -fno-builtin-bcmp).
 > 
-> I'll send a fix for that. Other than this, can I add your tested-by to the series?
-
-Yes, with above fix this series is
-
-Tested-by: Jonas Karlman <jonas@kwiboo.se>
-
-using ffmpeg [1] on rk3288 (hantro) and rk3399 (rkvdec).
-
-
-I have also done limited testing of field decoding on H.264 conformance
-video samples and rkvdec manage to generate matching checksums.
-On hantro the output is slightly different for fld and picaff samples
-and match for frm and mbaff samples.
-
-Because field decoding works correctly with rkvdec I am confident that
-uapi contains everything needed to support field decoding.
-
-
-[1] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3.1
-
-Best regards,
-Jonas
-
+> Patch 1 unbreaks the build with ToT clang, which has been red all
+> weekend, by adding -fno-builtin-stpcpy.
+> Patch 2 is a revert but adds -fno-builtin-bcmp.
+> Patch 3 does the same for x86 purgatory.
+> Patch 4 removes -ffreestanding from i386.
 > 
-> Thanks,
-> Ezequiel
+> The first patch makes sense for Kbuild, the second maybe akpm@, the
+> third and forth for x86.  Not sure who should pick up the series (they
+> can be merged out of order, technically) but I really need the first
+> patch soon. The 3 latter patches are cleanups.
 > 
->> Best regards,
->> Jonas
->>
->>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->>> ---
->>>  drivers/staging/media/rkvdec/rkvdec.c | 6 +-----
->>>  drivers/staging/media/rkvdec/rkvdec.h | 1 -
->>>  2 files changed, 1 insertion(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
->>> index 7c5129593921..cd720d726d7f 100644
->>> --- a/drivers/staging/media/rkvdec/rkvdec.c
->>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
->>> @@ -55,23 +55,19 @@ static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
->>>  
->>>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
->>>  	{
->>> -		.per_request = true,
->>>  		.mandatory = true,
->>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
->>>  	},
->>>  	{
->>> -		.per_request = true,
->>>  		.mandatory = true,
->>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
->>>  		.cfg.ops = &rkvdec_ctrl_ops,
->>>  	},
->>>  	{
->>> -		.per_request = true,
->>>  		.mandatory = true,
->>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PPS,
->>>  	},
->>>  	{
->>> -		.per_request = true,
->>>  		.mandatory = true,
->>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
->>>  	},
->>> @@ -615,7 +611,7 @@ static int rkvdec_request_validate(struct media_request *req)
->>>  		u32 id = ctrls->ctrls[i].cfg.id;
->>>  		struct v4l2_ctrl *ctrl;
->>>  
->>> -		if (!ctrls->ctrls[i].per_request || !ctrls->ctrls[i].mandatory)
->>> +		if (!ctrls->ctrls[i].mandatory)
->>>  			continue;
->>>  
->>>  		ctrl = v4l2_ctrl_request_hdl_ctrl_find(hdl, id);
->>> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
->>> index 2fc9f46b6910..77a137cca88e 100644
->>> --- a/drivers/staging/media/rkvdec/rkvdec.h
->>> +++ b/drivers/staging/media/rkvdec/rkvdec.h
->>> @@ -25,7 +25,6 @@
->>>  struct rkvdec_ctx;
->>>  
->>>  struct rkvdec_ctrl_desc {
->>> -	u32 per_request : 1;
->>>  	u32 mandatory : 1;
->>>  	struct v4l2_ctrl_config cfg;
->>>  };
->>>
+> Nick Desaulniers (4):
+>   Makefile: add -fno-builtin-stpcpy
+>   Revert "lib/string.c: implement a basic bcmp"
+>   x86/boot: use -fno-builtin-bcmp
+>   x86: don't build CONFIG_X86_32 as -ffreestanding
 > 
+>  Makefile               |  7 +++++++
+>  arch/x86/Makefile      |  3 ---
+>  arch/x86/boot/Makefile |  1 +
+>  arch/x86/boot/string.c |  8 --------
+>  include/linux/string.h |  3 ---
+>  lib/string.c           | 20 --------------------
+>  6 files changed, 8 insertions(+), 34 deletions(-)
 > 
+> -- 
+> 2.28.0.220.ged08abb693-goog
+> 
+
+Another thing that needs to be fixed is that at least lib/string.c needs
+to be compiled with -ffreestanding.
+
+gcc-10 optimizes the generic memset implementation in there into a call
+to memset. Now that's on x86 which doesn't use the generic
+implementation, but this is just waiting to bite us.
+
+https://godbolt.org/z/6EhG15
