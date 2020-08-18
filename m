@@ -2,118 +2,94 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C839C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7375C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514C520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE81A205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nlkSlFbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHRLfX (ORCPT
+        id S1726653AbgHRLfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:35:23 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44242 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbgHRLdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:33:24 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD99gvDtfbm0KAA--.22S2;
-        Tue, 18 Aug 2020 19:32:48 +0800 (CST)
-From:   Youling Tang <tangyouling@loongson.cn>
-To:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
-Date:   Tue, 18 Aug 2020 19:32:48 +0800
-Message-Id: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
+        Tue, 18 Aug 2020 07:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgHRLfc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:35:32 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4EBC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pg9bLsU6l9G88ZYLI6rak6/wPwxiNcw3KCO9a4fmWsM=; b=nlkSlFbouJ1ClxHCFQY5iGX0xc
+        aLu9eYFhsZHUuVWklwB2srnsEqXYNGme2lwL6slSz1gJ36gJ8UConPZkLGx3wuDP07BCfqf1iv+8n
+        flTBEOZToc4ubMFGmY5lpj2ggl0ADRbJ6i3vuPPOlLSc2KSwlfpMbHyPWv84g/k01zhxgKhRaA5ah
+        CK4ifbZMYQeqBO8U5XMpu8p1rCPz5RVel2Yi8GlcbEmuluzsL0u+tNrYTzbth9rkHhz0K6zgh3FEd
+        Qm+z+4v7Qo+e2SIt/NgOo+DQMgatCmoGVvggR5eFx2ngvh1mnLXiqlPX3iPNH+PSUbWDFix/c2Z6/
+        JCmUr65g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7ztI-0002c1-G1; Tue, 18 Aug 2020 11:34:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D6973301179;
+        Tue, 18 Aug 2020 13:34:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 96452200D4C26; Tue, 18 Aug 2020 13:34:54 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 13:34:54 +0200
+From:   peterz@infradead.org
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Jiang Biao <benbjiang@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Subject: Re: [PATCH v3] sched/fair: simplfy the work when reweighting entity
+Message-ID: <20200818113454.GS2674@hirez.programming.kicks-ass.net>
+References: <20200811113209.34057-1-benbjiang@tencent.com>
+ <CAKfTPtBReSax0AK9sanzcSzBMJzx7jK-K8Umc3kfH_n11N7f3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxD99gvDtfbm0KAA--.22S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw1DAr4kKw1xZF1UAFyDAwb_yoW8tFy8pa
-        nrAwn5Gr4DWrW3AFn5ArW8uryrAa98GrW2qFW29F1YgasIqFy0qrs8GFn5ArsFyF45Ka4x
-        WrySgry7GFnrAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWxJVW8Jr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8KwCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc8nYUUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBReSax0AK9sanzcSzBMJzx7jK-K8Umc3kfH_n11N7f3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
+On Tue, Aug 18, 2020 at 11:07:37AM +0200, Vincent Guittot wrote:
+> On Tue, 11 Aug 2020 at 13:32, Jiang Biao <benbjiang@gmail.com> wrote:
+> >
+> > From: Jiang Biao <benbjiang@tencent.com>
+> >
+> > The code in reweight_entity() can be simplified.
+> >
+> > For a sched entity on the rq, the entity accounting can be replaced by
+> > cfs_rq instantaneous load updates currently called from within the
+> > entity accounting.
+> >
+> > Even though an entity on the rq can't represent a task in
+> > reweight_entity() (a task is always dequeued before calling this
+> > function) and so the numa task accounting and the rq->cfs_tasks list
+> > management of the entity accounting are never called, the redundant
+> > cfs_rq->nr_running decrement/increment will be avoided.
+> >
+> > Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> 
+> Minor typo of the subject: s/simplfy/simplify/
 
-Fix the following build error:
+I've made it "Simplify" :-)
 
-drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
-  VIRTUAL,
-  ^
-In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
-                 from ./arch/mips/include/asm/mmzone.h:12,
-                 from ./include/linux/mmzone.h:962,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/slab.h:15,
-                 from ./include/linux/genhd.h:16,
-                 from ./include/linux/blkdev.h:8,
-                 from drivers/md/persistent-data/dm-block-manager.h:11,
-                 from drivers/md/dm-thin-metadata.h:10,
-                 from drivers/md/dm-thin.c:7:
-./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
-definition of ‘VIRTUAL’ was here VIRTUAL = 3
-                                 ^
-scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
-make[2]: *** [drivers/md/dm-thin.o] Error 1
-
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
- arch/mips/loongson64/env.c                         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
-index afc92b7..a4ef4ac 100644
---- a/arch/mips/include/asm/mach-loongson64/boot_param.h
-+++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-@@ -195,7 +195,7 @@ struct boot_params {
- enum loongson_bridge_type {
- 	LS7A = 1,
- 	RS780E = 2,
--	VIRTUAL = 3
-+	VIRT = 3
- };
- 
- struct loongson_system_configuration {
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 134cb8e..623b3f1 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -180,8 +180,8 @@ void __init prom_init_env(void)
- 		loongson_sysconf.early_config = rs780e_early_config;
- 		break;
- 	default:
--		pr_info("The bridge chip is VIRTUAL\n");
--		loongson_sysconf.bridgetype = VIRTUAL;
-+		pr_info("The bridge chip is VIRT\n");
-+		loongson_sysconf.bridgetype = VIRT;
- 		loongson_sysconf.early_config = virtual_early_config;
- 		loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
- 		break;
--- 
-2.1.0
-
+Thanks guys!
