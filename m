@@ -2,117 +2,162 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2890CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3961206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIqydpEt"
+	by mail.kernel.org (Postfix) with ESMTP id 036A020789
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597789110;
+	bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jSuXjm2sOQdbWqmttC2O5exq6MnEPPKjdTJMriPacXa1am6BbZuTc28sLL0XBjZDP
+	 0edO62cFekbEPX1C0MoxX/sdhFZQxn/7MWDo26c66MmZcpZcQ603TClSHZOLr7EvmG
+	 hePbN65DkbQBX1A3XTORawPjJizBLR5S47tRZqR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgHRWSQ (ORCPT
+        id S1726956AbgHRWS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgHRWSO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:18:14 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDE3C061389;
-        Tue, 18 Aug 2020 15:18:12 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h8so11038955lfp.9;
-        Tue, 18 Aug 2020 15:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nn5mkrGFBbPg90QSTX4ScoaPazdulb+v6hO8tmlQUhM=;
-        b=OIqydpEtkNgTroF3lnVBbcPUKQ2ogcmEFiN7wEqPDoyKdbDTrVZZ+NzClaB1tmtiGg
-         1q5dVw3gvA1HPNIt4f5Vr2bR4NBZwxXhiEUf3tzRwKt7NekpaA3/ibZvmA16+OG3grZ+
-         Y0pgD14ByceFmFxwkAMy97PtaHPZGmMkTHmHfX1qI8cguewQrhSEyNet//D8uLt3URbX
-         wtAIYHJxjbyMRdcrkRjXE+IjNA6JaY3Jp4v8SILylCVLQ416pwm5RG8VS/kkCIf9Vupf
-         N2rIlz5ZIsghwkVWwHdlgrBINrap6VQaSjRwMPYFZcqiCFlD1Cw4CyHiSO7wqpA8NX8m
-         GJbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nn5mkrGFBbPg90QSTX4ScoaPazdulb+v6hO8tmlQUhM=;
-        b=T08e/G4Rv7ZydfUv5SrjM5//sHT1keh1xSGWshvjQVB6krwsWrejAyXW7yR+ho3jpW
-         yhd6r9KlDJepdRrluYSvIgl4V834DWRsZF8urwaE8k7t91v8OT7+cGy0BMGCpYqOsWX4
-         JCLmRKdbIjJS4c3sc4qRNPeydcAAwVj7TDG4l1VGVFr87VMOiqwjdAA+xqTChMw7FZv3
-         G4r6ToJ6bLnG7KxSQ9VnwTsDtRz8CeUC4RNyVVt38bj03/w6vhWDDn4CRN7FAP0rl1S1
-         UG0yqhh+7uKd6iTNIWq1i7g5N1hRCGzrWd8ibHDp6gPSUj7RYsDHTBE3xPJzBAMAc8Sj
-         CAWA==
-X-Gm-Message-State: AOAM530wrsGT0b34kll89/8Jiujhg5U2J38dXPFZKi56bNHC4BJPRxIx
-        0p2gy8ivNPzL8wglXSdigCkat2Cx5/sphMQ/y8E=
-X-Google-Smtp-Source: ABdhPJyYNUN3v5scOCVMaoKuHu78eqvAibUFuUkJdpzA5rqp/I7KCAgyGHrlcUN+z5qLySo7/N7W852szcke7k/pYlA=
-X-Received: by 2002:a19:cb51:: with SMTP id b78mr10676996lfg.130.1597789091106;
- Tue, 18 Aug 2020 15:18:11 -0700 (PDT)
+        Tue, 18 Aug 2020 18:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgHRWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 18:18:27 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AA320786;
+        Tue, 18 Aug 2020 22:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597789106;
+        bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=v8SmAx6Dcfc89wEfDqt1kmeDO4WnuQLkRXFolTVKDYa8EI7+hfFnddkn/T9/J3ciC
+         mD5HXDEjvbbh2RWPfz3lviIg/jsPYV6/O0/IJxHCyCL5+4AxUbtCxdIY7hvpMTQpnG
+         YWQCfK9FufDmA68sG1fNEnq/PqND+xOHu5ujf7a8=
+Date:   Wed, 19 Aug 2020 00:18:21 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200819001821.651a7dcd@coco.lan>
+In-Reply-To: <20200818170755.GA3603438@bogus>
+References: <cover.1597647359.git.mchehab+huawei@kernel.org>
+        <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+        <20200817201211.GA1437827@bogus>
+        <20200818111351.7e3fc780@coco.lan>
+        <20200818170755.GA3603438@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200818151634.14343-1-rppt@kernel.org> <20200818151634.14343-11-rppt@kernel.org>
-In-Reply-To: <20200818151634.14343-11-rppt@kernel.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 19 Aug 2020 00:18:00 +0200
-Message-ID: <CANiq72mnzTv7SphVxsYy++rAPdaKVVLGGHauxNLY5D4dzq3CPA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/17] memblock: reduce number of parameters in for_each_mem_range()
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>, Daniel Axtens <dja@axtens.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
-        sparclinux@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 5:19 PM Mike Rapoport <rppt@kernel.org> wrote:
->
->  .clang-format                          |  2 ++
+Em Tue, 18 Aug 2020 11:07:55 -0600
+Rob Herring <robh@kernel.org> escreveu:
 
-For the .clang-format bit:
+> > > > +  spmi-channel:
+> > > > +    description: number of the SPMI channel where the PMIC is connected    
+> > > 
+> > > This looks like a common (to SPMI), but it's not something defined in 
+> > > spmi.txt   
+> > 
+> > This one is not part of the SPMI core. It is stored inside a private 
+> > structure inside at the HiSilicon spmi controller driver. It is stored 
+> > there as ctrl_dev->channel, and it is used to calculate the register offset
+> > for readl():
+> > 
+> > 	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
+> > 	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
+> > 	do {
+> > 		status = readl(base + offset);
+> > 	...
+> > 
+> > The SPMI bus is somewhat similar to I2C: it is a 2-wire serial bus
+> > with up to 16 devices connected to it.
+> > 
+> > Now, most modern I2C chipsets provide multiple independent I2C
+> > channels, on different pins. Also, on some chipsets, certain
+> > GPIO pins can be used either as GPIO or as I2C.
+> > 
+> > I strongly suspect that this is the case here: according with
+> > the Hikey 970 schematics:
+> > 
+> > 	https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/files/hikey970-schematics.pdf
+> > 
+> > The pins used by SPMI clock/data can also be used as GPIO.
+> > 
+> > While I don't have access to the datasheets for Kirin 970 (or any other
+> > chipsets on this board), for me, it sounds that different GPIO pins
+> > are allowed to use SPMI. The "spmi-channel" property specifies
+> > what pins will be used for SPMI, among the ones that are
+> > compatible with MIPI SPMI specs.  
+> 
+> Based on this, I think it should be called 'hisilicon,spmi-channel' as 
+> it is vendor specific. 
 
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+I'm fine with "hisilicon,spmi-channel".
 
-Cheers,
-Miguel
+> > > > +
+> > > > +          vsel-reg:
+> > > > +            description: Voltage selector register.    
+> > > 
+> > > 'reg' can have multiple entries if you want.  
+> > 
+> > Yes, I know. I was in doubt if I should either place vsel-reg on
+> > a separate property or together with reg. I ended keeping it
+> > in separate on the submitted patch series.
+> > 
+> > What makes more sense?  
+> 
+> Really, not putting it in DT. Like other things, it's fixed for the 
+> chip.
+
+I agree, but, as I said before, without the datasheet, we can only
+hardcode a small subset of the LDO settings.
+
+Due to that, I prefer keeping it at DT - either grouped together at "reg" or 
+as two separated properties (reg and vsel-reg).
+
+> > > > +description: |
+> > > > +  The HiSilicon SPMI controller is found on some Kirin-based designs.
+> > > > +  It is a MIPI System Power Management (SPMI) controller.
+> > > > +
+> > > > +  The PMIC part is provided by
+> > > > +  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
+> > > > +
+> > > > +properties:
+> > > > +  $nodename:
+> > > > +    pattern: "spmi@[0-9a-f]"
+> > > > +
+> > > > +  compatible:
+> > > > +    const: hisilicon,spmi-controller    
+> > > 
+> > > Needs an SoC specific compatible.  
+> > 
+> > What about:
+> > 	hisilicon,kirin970-spmi-controller   
+> 
+> Is 'kirin970' really the SoC name? The older ones are all 'hi[0-9]+'.
+
+This SoC is named Kirin 970. Yet, you can see places where 3670 is
+used, like:
+
+	https://en.wikichip.org/wiki/hisilicon/kirin/970
+
+There, it says that Hi3670 is the part number.
+
+Thanks,
+Mauro
