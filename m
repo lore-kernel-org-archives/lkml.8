@@ -2,114 +2,98 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD396C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D188FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A912053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dLLXMFeS"
+	by mail.kernel.org (Postfix) with ESMTP id B0B3320716
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHRDaw (ORCPT
+        id S1726802AbgHRDbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:30:52 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:12239 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726370AbgHRDav (ORCPT
+        Mon, 17 Aug 2020 23:31:03 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:47372 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726228AbgHRDbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:30:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597721451; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=psmnIK96LVmzjgyxsy7KLyLKGPkuGV7CKjAoGhgNyVI=;
- b=dLLXMFeSrUrxNqhx2rbDuN+k8wts9EIhLgC9bgkw8yt6x3/hcr+kMG6ZQfxLcR+O4IcZHEYq
- ucRNJOcXbu16rH3Cef3i7Bi7bIcGWuumY+AJ5C1cgw0GNbeqGUWDCLYR4ZW5ijdOc0TSZ7YM
- eWLEUW+LE70Aqf2KHAi51Pkd4Bg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f3b4b632b87d6604902d06a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 03:30:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1EEEAC433CB; Tue, 18 Aug 2020 03:30:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B60EC433C6;
-        Tue, 18 Aug 2020 03:30:41 +0000 (UTC)
+        Mon, 17 Aug 2020 23:31:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U668IKE_1597721458;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U668IKE_1597721458)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Aug 2020 11:30:58 +0800
+Date:   Tue, 18 Aug 2020 11:30:58 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 3/5] block: Add a new helper to attempt to merge a
+ bio
+Message-ID: <20200818033058.GB46480@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
+ <5b932aa51fc2b46c381d7b83d591a6ddbf05b199.1597637287.git.baolin.wang@linux.alibaba.com>
+ <20200817062634.GC12248@lst.de>
+ <20200817121002.GB79836@VM20190228-100.tbsite.net>
+ <20200817122440.GA2213@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 20:30:41 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org
-Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add Display Port dt node
-In-Reply-To: <159771027430.2423498.17739000479526174339@swboyd.mtv.corp.google.com>
-References: <20200817225300.2209-1-tanmay@codeaurora.org>
- <159771027430.2423498.17739000479526174339@swboyd.mtv.corp.google.com>
-Message-ID: <13f4d59cf655287632a281ab7538e5bd@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817122440.GA2213@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-17 17:24, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-08-17 15:53:00)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 31b9217bb5bf..bf2f2bb1aa79 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
->> 
->>                                 status = "disabled";
->>                         };
->> +
->> +                       msm_dp: displayport-controller@ae90000 {
+On Mon, Aug 17, 2020 at 02:24:40PM +0200, Christoph Hellwig wrote:
+> On Mon, Aug 17, 2020 at 08:10:02PM +0800, Baolin Wang wrote:
+> > On Mon, Aug 17, 2020 at 08:26:34AM +0200, Christoph Hellwig wrote:
+> > > On Mon, Aug 17, 2020 at 12:09:17PM +0800, Baolin Wang wrote:
+> > > > There are lots of duplicated code when trying to merge a bio from
+> > > > plug list and sw queue, we can introduce a new helper to attempt
+> > > > to merge a bio, which can simplify the blk_mq_bio_list_merge()
+> > > > and blk_attempt_plug_merge().
+> > > 
+> > > Looks sensible, but two comments:
+> > > 
+> > > > +enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
+> > > > +					    struct request *rq,
+> > > > +					    struct bio *bio,
+> > > > +					    unsigned int nr_segs)
+> > > > +{
+> > > > +	bool merged = false;
+> > > > +
+> > > > +	if (!blk_rq_merge_ok(rq, bio))
+> > > > +		return BIO_MERGE_NONE;
+> > > > +
+> > > > +	switch (blk_try_merge(rq, bio)) {
+> > > > +	case ELEVATOR_BACK_MERGE:
+> > > > +		merged = bio_attempt_back_merge(rq, bio, nr_segs);
+> > > > +		break;
+> > > > +	case ELEVATOR_FRONT_MERGE:
+> > > > +		merged = bio_attempt_front_merge(rq, bio, nr_segs);
+> > > > +		break;
+> > > > +	case ELEVATOR_DISCARD_MERGE:
+> > > > +		merged = bio_attempt_discard_merge(q, rq, bio);
+> > > > +		break;
+> > > 
+> > > Can't we also switch the bio_attempt_*merge helpers to return
+> > > enum bio_merge_status to simplify this a bit?
+> > 
+> > Yes, will do.
+> > 
+> > > 
+> > > Also I think these helpers can be marked static now, although I didn't
+> > > actually apply your series, so I might have missed something.
+> > 
+> > Cause this function will be used by blk_mq_bio_list_merge() in
+> > blk-mq-sched.c, it should be exported.
 > 
-> This should come before dsi-phy and dsi node. It should be sorted by 
-> the
-> address (0xae90000).
-> 
->> +                               status = "disabled";
->> +                               compatible = "qcom,sc7180-dp";
->> +
->> +                               reg = <0 0x0ae90000 0 0x1400>;
->> +
->> +                               interrupt-parent = <&mdss>;
->> +                               interrupts = <12>;
->> +
-> [...]
->>                 };
->> 
->>                 dispcc: clock-controller@af00000 {
->> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
->>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
->>                                  <&dsi_phy 0>,
->>                                  <&dsi_phy 1>,
->> -                                <0>,
->> -                                <0>;
->> +                                <&msm_dp 0>,
->> +                                <&msm_dp 1>;
-> 
-> Don't think we should apply this still because the binding will change
-> when the phy is split out to qmp node. Maybe just leave this part off
-> for now?
-Ok fine. But, that will break DP driver functionality.
+> Shouldn't blk_mq_bio_list_merge move to blk-merge.c as well?
+
+Yes, I can move it to blk-merge.c and rename to a generic name.
+
