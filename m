@@ -6,80 +6,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B442C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF76C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3825B20855
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C57B207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769991;
-	bh=ak6+QCL5n29G4GLWbvhUOxpo7V6NC6tHUrZDrPnF8Pc=;
+	s=default; t=1597769998;
+	bh=BWBBTN7rTGTLtp33vxw316/R9Nel85083V49L7dQbD0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=2CL0RGoQjR+Kh4p8jWbhlqJb7UC3S0KxAtagyegE23yWY6WgXT2HsZqacvTN6ZO5t
-	 PvPiBbYUYckMJriJS1e+i4UhAiUddbjjvxTLUy94eWbBoyPFXcnPm9rK0ULNF1bVxw
-	 KHJG5SBLZDoJiotjRXOckkF43pDS9g7IhDHtbh9I=
+	b=E2GnsMGtidYEJkONU6Tdk728ltdV77KJjhF3s6E9bi0SzIUdv3jI5lzCrwCs/WFQa
+	 aI1OvwGVrd7YfCoBPP/9nG/TSGupwSfhzOtDMkNH9VdIBb51GAQlrUlu7GJBRts8Yv
+	 m2uDXHz/YmBe+b8LdRElSCoav+COylpI3KMZGMW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgHRQ5W (ORCPT
+        id S1728556AbgHRQ7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:57:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38528 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbgHRQ4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:56:17 -0400
+        id S1728540AbgHRQ47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:56:59 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D82F920825;
-        Tue, 18 Aug 2020 16:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B06207D3;
+        Tue, 18 Aug 2020 16:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769776;
-        bh=ak6+QCL5n29G4GLWbvhUOxpo7V6NC6tHUrZDrPnF8Pc=;
+        s=default; t=1597769819;
+        bh=BWBBTN7rTGTLtp33vxw316/R9Nel85083V49L7dQbD0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Q4zuPDC4Obrg7RPGEUput1lScWOndJrBqR+KVJcVRXyS42FLRHADsncbSCT2jMp4r
-         1seJ867b9hUM6uZ2/rwGB7e/pzCLsdtgx5NmkHrPnrNbAz5Y3wX6pYIfbKGjsv1yWL
-         R6LGyEqG4l9fZGzun99/SOoEWm0UcbzElnd+SLi4=
-Date:   Tue, 18 Aug 2020 17:55:45 +0100
+        b=1szPJUCLS4sVpwHO0f1/OU8Roip4O4e0yrLCdCnPKChDBZcAEz9y2dvAnwdcNPOP3
+         6g2p0w6Q+du42uYgO4vtcZn0S78P4WAakFGEx0QfHJIjdKEAfjLyBRpuYtpS1Xx0Xm
+         pkvDfWsm3j3OV9trXNLiy14AzfhyRKnGZGBFhAI8=
+Date:   Tue, 18 Aug 2020 17:56:28 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        alsa-devel@alsa-project.org
-In-Reply-To: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level probe/remove
-Message-Id: <159776961932.56094.1814239239605160041.b4-ty@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, yibin.gong@nxp.com
+Cc:     Linux-imx@nxp.com
+In-Reply-To: <1596421439-19591-1-git-send-email-Anson.Huang@nxp.com>
+References: <1596421439-19591-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] dt-bindings: regulator: Convert pfuze100 to json-schema
+Message-Id: <159776976827.56451.8318882621000296228.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 17:57:22 +0100, Adam Thomson wrote:
-> This patch set reorganises and fixes device and codec level probe/remove
-> handling within the driver, to allow clean probe and remove at the codec level.
-> 
-> This set relates to an issue raised by Yong Zhi where a codec level re-probe
-> would fail due to clks still being registered from the previous instantiation.
-> In addition some improvements around regulator handling and soft reset have
-> also been included.
-> 
-> [...]
+On Mon, 3 Aug 2020 10:23:59 +0800, Anson Huang wrote:
+> Convert the pfuze100 regulator binding to DT schema format using
+> json-schema.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/3] ASoC: da7219: Move required devm_* allocations to device level code
-      commit: 21f279f34c212e82f0330697394840898908f7a6
-[2/3] ASoC: da7219: Move soft reset handling to codec level probe
-      commit: aa5b18d1c29023b315073661b74c67f91bf2f27c
-[3/3] ASoC: da7219: Fix clock handling around codec level probe
-      commit: 78013a1cf2971684775f6956d5666237ac53a1aa
+[1/1] regulator: Convert pfuze100 to json-schema
+      commit: b2ad0be5087470f4a5ba29129e611df00cd183a7
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
