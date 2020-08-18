@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6499EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD402075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C512067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHRI5e (ORCPT
+        id S1726784AbgHRI5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:57:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37990 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 04:57:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37854 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgHRI5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:57:11 -0400
+        id S1726696AbgHRI5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:57:08 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E793BB039;
-        Tue, 18 Aug 2020 08:57:33 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C33DBAC48;
+        Tue, 18 Aug 2020 08:57:32 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 10/16] vc_screen: sanitize types in vcs_read
-Date:   Tue, 18 Aug 2020 10:57:00 +0200
-Message-Id: <20200818085706.12163-10-jslaby@suse.cz>
+Subject: [PATCH 02/16] vt: declare xy for get/putconsxy properly
+Date:   Tue, 18 Aug 2020 10:56:52 +0200
+Message-Id: <20200818085706.12163-2-jslaby@suse.cz>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200818085706.12163-1-jslaby@suse.cz>
 References: <20200818085706.12163-1-jslaby@suse.cz>
@@ -41,65 +41,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* pos is derived from the passed ppos, so make it long enough, i.e.
-  loff_t
-* attr and uni_mode are booleans, so...
-* size is limited by vcs_size() which returns an int
-* read, p, orig_count and this_round are always ">= 0" and "< size",
-  so uint is enough
-* row, col, and max_col are derived from vc->vc_cols (uint) and p, so
-  make them uint too
-* tmp_count is derived from this_round, so make it an uint too.
-* use u16 * for org (instead of unsigned short *). No need to initialize
-  org too.
+That is:
+1) call the parameter 'xy' to denote what it really is, not generic 'p'
+2) tell the compiler and users that we expect an array:
+   * with at least 2 chars (static 2)
+   * which we don't modify in putconsxy (const)
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vc_screen.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/tty/vt/vt.c       | 10 +++++-----
+ include/linux/selection.h |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index 36b967825f68..c62c590ed816 100644
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -256,12 +256,12 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 	struct inode *inode = file_inode(file);
- 	struct vc_data *vc;
- 	struct vcs_poll_data *poll;
--	long pos, read;
--	int attr, uni_mode, row, col, maxcol;
--	unsigned short *org = NULL;
-+	u16 *org;
-+	unsigned int read, row, col, maxcol;
- 	ssize_t ret;
- 	char *con_buf;
--	bool viewed;
-+	loff_t pos;
-+	bool viewed, attr, uni_mode;
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 8f283221330e..a0da7771c327 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -4769,17 +4769,17 @@ unsigned short *screen_pos(const struct vc_data *vc, int w_offset, int viewed)
+ }
+ EXPORT_SYMBOL_GPL(screen_pos);
  
- 	con_buf = (char *) __get_free_page(GFP_KERNEL);
- 	if (!con_buf)
-@@ -295,9 +295,8 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 	ret = 0;
- 	while (count) {
- 		char *con_buf0, *con_buf_start;
--		long this_round, size;
--		ssize_t orig_count;
--		long p = pos;
-+		unsigned int this_round, orig_count, p = pos;
-+		int size;
+-void getconsxy(const struct vc_data *vc, unsigned char *p)
++void getconsxy(const struct vc_data *vc, unsigned char xy[static 2])
+ {
+ 	/* clamp values if they don't fit */
+-	p[0] = min(vc->state.x, 0xFFu);
+-	p[1] = min(vc->state.y, 0xFFu);
++	xy[0] = min(vc->state.x, 0xFFu);
++	xy[1] = min(vc->state.y, 0xFFu);
+ }
  
- 		/* Check whether we are above size each round,
- 		 * as copy_to_user at the end of this loop
-@@ -362,7 +361,7 @@ vcs_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 			}
- 		} else {
- 			if (p < HEADER_SIZE) {
--				size_t tmp_count;
-+				unsigned int tmp_count;
+-void putconsxy(struct vc_data *vc, unsigned char *p)
++void putconsxy(struct vc_data *vc, unsigned char xy[static const 2])
+ {
+ 	hide_cursor(vc);
+-	gotoxy(vc, p[0], p[1]);
++	gotoxy(vc, xy[0], xy[1]);
+ 	set_cursor(vc);
+ }
  
- 				/* clamp header values if they don't fit */
- 				con_buf0[0] = min(vc->vc_rows, 0xFFu);
+diff --git a/include/linux/selection.h b/include/linux/selection.h
+index 34404a019ebf..15e36e7ef869 100644
+--- a/include/linux/selection.h
++++ b/include/linux/selection.h
+@@ -40,8 +40,8 @@ extern u32 screen_glyph_unicode(const struct vc_data *vc, int offset);
+ extern void complement_pos(struct vc_data *vc, int offset);
+ extern void invert_screen(struct vc_data *vc, int offset, int count, int shift);
+ 
+-extern void getconsxy(const struct vc_data *vc, unsigned char *p);
+-extern void putconsxy(struct vc_data *vc, unsigned char *p);
++extern void getconsxy(const struct vc_data *vc, unsigned char xy[static 2]);
++extern void putconsxy(struct vc_data *vc, unsigned char xy[static const 2]);
+ 
+ extern u16 vcs_scr_readw(const struct vc_data *vc, const u16 *org);
+ extern void vcs_scr_writew(struct vc_data *vc, u16 val, u16 *org);
 -- 
 2.28.0
 
