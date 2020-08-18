@@ -2,158 +2,104 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D71AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBD420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734F620706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597755614;
+	bh=CQD8sK5DjgJUpNfSMNaQ4i+mwaXuBUpNfeOBV+uPWZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w+Ktex7Ee0rz7vGvbGGkbtlhUxMIBnDd3Ca5OQ7RbkTngQVP0jniJySbr3YVbJOUr
+	 3Bxmg8YPFA8KElfCyDlRV6hAizwipmgO/cHD3nUnAg3cTxEh1820nXaP1HrfGBDXIH
+	 7yl/xMJYdr3vBZcFlzdJmL36nIKi+JYsorPH1sDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHRM6a (ORCPT
+        id S1726635AbgHRNAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:58:30 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:33854 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgHRM60 (ORCPT
+        Tue, 18 Aug 2020 09:00:13 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:38464 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgHRNAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:58:26 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k81C3-002tmZ-LA; Tue, 18 Aug 2020 06:58:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k81C2-000283-Se; Tue, 18 Aug 2020 06:58:23 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     kernel test robot <lkp@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
-        linux-fsdevel@vger.kernel.org, criu@openvz.org,
-        bpf@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>
-References: <20200817220425.9389-11-ebiederm@xmission.com>
-        <202008181316.x96Qp7qo%lkp@intel.com>
-Date:   Tue, 18 Aug 2020 07:54:50 -0500
-In-Reply-To: <202008181316.x96Qp7qo%lkp@intel.com> (kernel test robot's
-        message of "Tue, 18 Aug 2020 13:39:44 +0800")
-Message-ID: <87364k3yhx.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 18 Aug 2020 09:00:09 -0400
+Received: by mail-ej1-f68.google.com with SMTP id d6so21950884ejr.5;
+        Tue, 18 Aug 2020 06:00:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cSuu9gAxM27c2HwTJectOIw2FPcVqL/0YfKReIGIkYc=;
+        b=rGEeaq7RWTVaYFGXNtSzYYcL9qmzfrO5zPdhfD8SzyGV0YO7xHfx9Hvm1kShhyeiJy
+         xpd3jM/6VsQDdMYiEfnPrRW3DpIBe6/YmjHxX+J0AhnCkv/KnsOGC8V5TxuypnYC3oAE
+         PpsQN4Uj5rVhLiKA9jXhsE1vn5ktet2ECj9jffUgo8XohW+bwykS6NHAF3XPYuxxSPqH
+         rSOAVBtk/ljCtMGs0J9ISF/l6JUXnV7SY0Mb1cBcuj9LM8ZboabmAn4wtk7qBRs+Mu9w
+         0UqMUY479fdLGaZy34bWXJmZULQHE6FYrA2HDUyDebZ1j10xyqeGCyK4A0MRklGk5eJA
+         ZGKQ==
+X-Gm-Message-State: AOAM533AImzvUo27Jrcn7VqviUk/EYkbJnfFTL89jQnykU3ixJHVBI6d
+        Dgb1JMmktsIcB8lEUszz8P0=
+X-Google-Smtp-Source: ABdhPJwosAfMR3xhPweMt01uCeyYoJLV2QMUo+QcmEWYgOxTHeYkdfhDkqT+piq9CgYRa7o137chOw==
+X-Received: by 2002:a17:907:372:: with SMTP id rs18mr19344022ejb.146.1597755606437;
+        Tue, 18 Aug 2020 06:00:06 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id h22sm16631871ejf.100.2020.08.18.06.00.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Aug 2020 06:00:05 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 15:00:03 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     rogerq@ti.com, tony@atomide.com, bbrezillon@kernel.org,
+        ladis@linux-mips.org, peter.ujfalusi@ti.com,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] memory: omap-gpmc: Fix build error without CONFIG_OF
+Message-ID: <20200818130003.GA20340@kozik-lap>
+References: <20200818125338.58148-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k81C2-000283-Se;;;mid=<87364k3yhx.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX199+9M7+Xk2NQhTl3vv/R8uMu696mUUptA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 11/17] bpf/task_iter: In task_file_seq_get_next use fnext_task
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818125338.58148-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel test robot <lkp@intel.com> writes:
-
-> Hi "Eric,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on bpf/master]
-> [also build test WARNING on linus/master v5.9-rc1 next-20200817]
-> [cannot apply to bpf-next/master linux/master]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Eric-W-Biederman/exec-Move-unshare_files-to-fix-posix-file-locking-during-exec/20200818-061552
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
-> config: i386-randconfig-m021-20200818 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> smatch warnings:
-> kernel/bpf/task_iter.c:162 task_file_seq_get_next() warn: ignoring unreachable code.
-
-What is smatch warning about?
-
-Perhaps I am blind but I don't see any unreachable code there.
-
-Doh!  I see it.  That loop will never loop so curr_fd++ is unreachable.
-Yes that should get fixed just so the code is readable.
-
-I will change that.
-
-Eric
-
-
->    128	
->    129	static struct file *
->    130	task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
->    131			       struct task_struct **task)
->    132	{
->    133		struct pid_namespace *ns = info->common.ns;
->    134		u32 curr_tid = info->tid;
->    135		struct task_struct *curr_task;
->    136		unsigned int curr_fd = info->fd;
->    137	
->    138		/* If this function returns a non-NULL file object,
->    139		 * it held a reference to the task/file.
->    140		 * Otherwise, it does not hold any reference.
->    141		 */
->    142	again:
->    143		if (*task) {
->    144			curr_task = *task;
->    145			curr_fd = info->fd;
->    146		} else {
->    147			curr_task = task_seq_get_next(ns, &curr_tid);
->    148			if (!curr_task)
->    149				return NULL;
->    150	
->    151			/* set *task and info->tid */
->    152			*task = curr_task;
->    153			if (curr_tid == info->tid) {
->    154				curr_fd = info->fd;
->    155			} else {
->    156				info->tid = curr_tid;
->    157				curr_fd = 0;
->    158			}
->    159		}
->    160	
->    161		rcu_read_lock();
->  > 162		for (;; curr_fd++) {
->    163			struct file *f;
->    164	
->    165			f = fnext_task(curr_task, &curr_fd);
->    166			if (!f)
->    167				break;
->    168	
->    169			/* set info->fd */
->    170			info->fd = curr_fd;
->    171			get_file(f);
->    172			rcu_read_unlock();
->    173			return f;
->    174		}
->    175	
->    176		/* the current task is done, go to the next task */
->    177		rcu_read_unlock();
->    178		put_task_struct(curr_task);
->    179		*task = NULL;
->    180		info->fd = 0;
->    181		curr_tid = ++(info->tid);
->    182		goto again;
->    183	}
->    184	
->
+On Tue, Aug 18, 2020 at 08:53:38PM +0800, YueHaibing wrote:
+> If CONFIG_OF is n, gcc fails:
+> 
+> drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
+> omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
+> 
+> Add helper function to fix this.
+> 
+> Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  drivers/memory/omap-gpmc.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+> index ce0e7e2d7cff..332bb4580817 100644
+> --- a/drivers/memory/omap-gpmc.c
+> +++ b/drivers/memory/omap-gpmc.c
+> @@ -1176,6 +1176,7 @@ struct gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *reg, int cs)
+>  }
+>  EXPORT_SYMBOL_GPL(gpmc_omap_get_nand_ops);
+>  
+> +#ifdef CONFIG_OF
+
+
+Hi,
+
+Instead add empty stub for gpmc_read_settings_dt() in existing #ifdef
+section - around line 2314.  Less ifdefs and actually seems to me
+appropriate place to group !OF stubs.
+
+Best regards,
+Krzysztof
+
