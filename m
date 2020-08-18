@@ -2,192 +2,110 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13552C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6898205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXlGAiGL"
+	by mail.kernel.org (Postfix) with ESMTP id AA59520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHRPKm (ORCPT
+        id S1727040AbgHRPL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgHRPKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:10:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E756C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:10:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so18630287wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zxe+HJmIWMfQ1RElqmaY0GiV1Gl7b0KgtI/GKiLoLwc=;
-        b=UXlGAiGLTmMimNPojD1cHSTRsErRHNBbtrZT5pI3TeFxNQmf20CwFIdDFAcb0a7n4+
-         vmKVl8ds6JZwjQwoEtNGzQL7v/yP6SqgzMeGFesFIPLs4fKR2BNPUoR/6xUfk19656yl
-         JRTAGLhb+3nGmbMEI88v/pCOE7murI68EWPJQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zxe+HJmIWMfQ1RElqmaY0GiV1Gl7b0KgtI/GKiLoLwc=;
-        b=LgnWp2bPiipfZOIsU62kgVhYiAPwtCC33q17idO8ndwaiWWKR/Vs9Z6816WQthGl6e
-         q5q3icbdhth3ETePXqMnUeDi0RhhGfcbsPxeR8fKaazdJUoaJjluo1/SRCPDFqUL3fQr
-         PFpC0U68+ZsCerJhc4DOGIaVacL84gyFmU/6XfeJkWUdoy4joUJ3CvwLUS2Rhx0njMz0
-         /IOA/IH6at9kPvP8f4lXXT9XggX8ftHHlBp7GrkNWc1TyBjWP6BKSXBb8MgLXW7+hptX
-         DX7MUCh5OOhqfDaSr1laBB+ak12wXaRdeicErsU4ylR00NfJFRAMS3uMITj23r/XDb3I
-         Xv2w==
-X-Gm-Message-State: AOAM530hmOEQWQhQcbmhQuvkyGbupaoPY6c5N55hXGLhUd9LEF04CsMt
-        5I7T5n7GTwt23tVYgqbm1AkUEw==
-X-Google-Smtp-Source: ABdhPJwMZXOzExdHgzzwPRNZtVauhbOakNrr5oH3e0Yl8Lg/4VVrGTLwLZqELVDHQ2B0C62wz/T+gw==
-X-Received: by 2002:adf:e504:: with SMTP id j4mr21174389wrm.205.1597763435276;
-        Tue, 18 Aug 2020 08:10:35 -0700 (PDT)
-Received: from [192.168.2.66] ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id z6sm279421wml.41.2020.08.18.08.10.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 08:10:34 -0700 (PDT)
-Subject: Re: [PATCH bpf-next v8 5/7] bpf: Implement bpf_local_storage for
- inodes
-To:     Martin KaFai Lau <kafai@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-References: <20200803164655.1924498-1-kpsingh@chromium.org>
- <20200803164655.1924498-6-kpsingh@chromium.org>
- <20200818012758.4666zlknkr4x6cbl@kafai-mbp.dhcp.thefacebook.com>
-From:   KP Singh <kpsingh@chromium.org>
-Message-ID: <60344fad-f761-0fee-a6ef-4880c45c3e52@chromium.org>
-Date:   Tue, 18 Aug 2020 17:10:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 11:11:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54595 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726570AbgHRPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:11:26 -0400
+IronPort-SDR: VLJ01JHyOp6SbVB/gOumoQmlR+hiS6MuzCRFG611NJZLYJP3mhY2dbjLX2cJ+urJw0Ma8e+WWN
+ w3As+iJPQfUw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134986578"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="134986578"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:11:26 -0700
+IronPort-SDR: wpnUt6l9zL5pTGol124Nt0/IN+bZOQ6r1M/bJ27aHUxqFKdewMwDsMoP6G4BixKoPq1AWF6CgK
+ U7y3y3zpprQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="441253428"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga004.jf.intel.com with ESMTP; 18 Aug 2020 08:11:24 -0700
+Date:   Tue, 18 Aug 2020 23:07:38 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
+Subject: Re: [PATCH v3 0/2] add regmap-spi-avmm & Intel Max10 BMC chip support
+Message-ID: <20200818150738.GA11659@yilunxu-OptiPlex-7050>
+References: <1596614456-20182-1-git-send-email-yilun.xu@intel.com>
+ <20200817082410.GB19661@yilunxu-OptiPlex-7050>
+ <20200817091252.GV4354@dell>
+ <20200818083647.GE22873@yilunxu-OptiPlex-7050>
+ <5a2d4761-e800-bfb6-d67b-8740b8039ecc@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818012758.4666zlknkr4x6cbl@kafai-mbp.dhcp.thefacebook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5a2d4761-e800-bfb6-d67b-8740b8039ecc@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I think that's a good optimization. I'll include this change and send a
+v4.
 
+Thanks.
 
-On 8/18/20 3:27 AM, Martin KaFai Lau wrote:
-> On Mon, Aug 03, 2020 at 06:46:53PM +0200, KP Singh wrote:
->> From: KP Singh <kpsingh@google.com>
->>
->> Similar to bpf_local_storage for sockets, add local storage for inodes.
->> The life-cycle of storage is managed with the life-cycle of the inode.
->> i.e. the storage is destroyed along with the owning inode.
->>
->> The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
->> security blob which are now stackable and can co-exist with other LSMs.
->>
->> Signed-off-by: KP Singh <kpsingh@google.com>
->> ---
->>  include/linux/bpf_local_storage.h             |  10 +
->>  include/linux/bpf_lsm.h                       |  21 ++
->>  include/linux/bpf_types.h                     |   3 +
->>  include/uapi/linux/bpf.h                      |  38 +++
->>  kernel/bpf/Makefile                           |   1 +
-
-[...]
-
-ata *inode_storage_lookup(struct inode *inode,
->> +							   struct bpf_map *map,
->> +							   bool cacheit_lockit)
->> +{
->> +	struct bpf_local_storage *inode_storage;
->> +	struct bpf_local_storage_map *smap;
->> +	struct bpf_storage_blob *bsb;
->> +
->> +	bsb = bpf_inode(inode);
->> +	if (!bsb)
->> +		return ERR_PTR(-ENOENT);
-> ERR_PTR is returned here...
+On Tue, Aug 18, 2020 at 07:40:45AM -0700, Tom Rix wrote:
+> Yilun,
 > 
->> +
->> +	inode_storage = rcu_dereference(bsb->storage);
->> +	if (!inode_storage)
->> +		return NULL;
->> +
-
-[...]
-
->> +		kfree_rcu(local_storage, rcu);
->> +}
->> +
->> +
->> +static void *bpf_fd_inode_storage_lookup_elem(struct bpf_map *map, void *key)
->> +{
->> +	struct bpf_local_storage_data *sdata;
->> +	struct file *f;
->> +	int fd;
->> +
->> +	fd = *(int *)key;
->> +	f = fcheck(fd);
->> +	if (!f)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	get_file(f);
->> +	sdata = inode_storage_lookup(f->f_inode, map, true);
->> +	fput(f);
->> +	return sdata ? sdata->data : NULL;
-> sdata can be ERR_PTR here and a few other cases below.
+> I was looking at the tx side a bit and think the padding function could be moved into the pkt/phy function.  The pky/phy function already is looking for the eop's so reuse it and remove the search for eop and exchange the loops that do char moving and padding to mem* functions.  The logic is something like.                                                          
+> if (tb == tb_end - 1 && !eop_inserted) {
+>         *pb = PKT_EOP;
 > 
-> May be inode_storage_lookup() should just return NULL.
-
-I think returning NULL is a better option. Thanks!
-
+>         p_eop = pb;
 > 
->> +}
->> +
->> +static int bpf_fd_inode_storage_update_elem(struct bpf_map *map, void *key,
->> +					 void *value, u64 map_flags)
->> +{
->> +	struct bpf_local_storage_data *sdata;
->> +	struct file *f;
->> +	int fd;
->> +
->> +	fd = *(int *)key;
->> +	f = fcheck(fd);
->> +	if (!f)
->> +		return -EINVAL;
->> +
->> +	get_file(f);> get_file() does atomic_long_inc() instead of atomic_long_inc_not_zero().
-> I don't see how that helps here.  Am I missing something?
-
-You are right, this should not not be an fcheck followed by a get_file
-rather fcheck followed by get_file_rcu:
-
-#define get_file_rcu_many(x, cnt)	\
-	atomic_long_add_unless(&(x)->f_count, (cnt), 0)
-#define get_file_rcu(x) get_file_rcu_many((x), 1)
-#define file_count(x)	atomic_long_read(&(x)->f_count)
-
-But there is an easier way than all of this and this is to use 
-fget_raw which also calls get_file_rcu_many 
-and ensures a non-zero count before getting a reference.
-
-- KP
-
+> ...
 > 
->> +	sdata = bpf_local_storage_update(f->f_inode, map, value, map_flags);
->> +	fput(f);
->> +	return PTR_ERR_OR_ZERO(sdata);
->> +}
->> +
+>     dst_pb = &br->phy_buf[aligned_len];
+>     size_t s = pb - p_eop + 1;
+>     /* move EOP and bytes after EOP to the end of aligned size */
+>     memmove(dst_pb - s, p_eop, s);
+>     /* fill the hole with PHY_IDLEs */
+>     memset(p_eop, PHY_IDLE, aligned_len - br->phy_len);
+>     /* update the phy data length */
+> 
+> Tom
+> 
+>  
+> 
+> On 8/18/20 1:36 AM, Xu Yilun wrote:
+> > On Mon, Aug 17, 2020 at 10:12:52AM +0100, Lee Jones wrote:
+> >> On Mon, 17 Aug 2020, Xu Yilun wrote:
+> >>
+> >>> Hi Brown & jones:
+> >>>
+> >>> I tried to refacor the regmap code and add comments in this patchset. I
+> >>> made big changes to the rx flow and remove some tricky parts in it.
+> >>>
+> >>> Would it be more understandable than last version? I'm expecting your
+> >>> comments on it when you have time, thanks in advance.
+> >> Just resubmit please.  We can review the code itself.
+> > Ok. I'll rebase it to 5.9-rc1 and resubmit it.
+> >
+> > Thanks,
+> > Yilun
+> >
+> >> -- 
+> >> Lee Jones [李琼斯]
+> >> Senior Technical Lead - Developer Services
+> >> Linaro.org │ Open source software for Arm SoCs
+> >> Follow Linaro: Facebook | Twitter | Blog
