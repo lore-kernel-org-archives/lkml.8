@@ -2,162 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0485C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E69C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8574A2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817232076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PWOYNWoo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TEZ9FT5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHRT7N (ORCPT
+        id S1726868AbgHRT7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:59:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12337 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHRT7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgHRT7H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 15:59:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597780746; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=zZL+Wq+UWx6ZdXVL+KawbcxWSyrD/Dh71Ipog7tgjDM=; b=PWOYNWooqOBfDh2TcnwbiKJHUc9J7PwnoOxJ8T0EarQR8fy4emFSBmv+miFTxjaSM0A0EDT5
- gVoBqPDqnngIQskYcXh6BI99s+Ov8CMLiloMRfuW6RK7YqGH2G2d+QSaklMxSGDqGi6SH8qG
- 0obLFtMRBpHREl2SJ414axkSmlQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f3c32e8440a07969a72c008 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 19:58:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9AF1FC43391; Tue, 18 Aug 2020 19:58:31 +0000 (UTC)
-Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 450AAC433C6;
-        Tue, 18 Aug 2020 19:58:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 450AAC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
- requirements
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <20200624022848.7765-1-wcheng@codeaurora.org>
- <20200624022848.7765-2-wcheng@codeaurora.org> <87d03yptxi.fsf@kernel.org>
- <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
- <877du5pseu.fsf@kernel.org>
- <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
-Message-ID: <35c02c96-01f1-a7f1-e5d7-c26df77ecccd@codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:58:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8892DC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f5so9704490plr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UtvEIM7NJb9DV7eM9Gem48qF3l7pVpCdEzxyrXC+k2g=;
+        b=TEZ9FT5UQ0c4hTw4uTo0tXnl21MyitKB/Hm0BA/xD94N+19fOdggAxLE1SHPhZXHqD
+         Rly/Wc9mUw8GyMUu9e4rUX+5GtFA6peIE4GDgziPYwtFtihtofk84dfTXvuz5Z+I5Lt0
+         XAw8PgnIzVDU+KymMURjkfxZx0R0EvGunb2/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UtvEIM7NJb9DV7eM9Gem48qF3l7pVpCdEzxyrXC+k2g=;
+        b=bT8UnwfIm/fw/KYkCUmfbp9gVMio0BHE2lpzWIxjiRRrVokwefpvD6vrede3yfzZjQ
+         pPubz7+itHdNZncLYZ36Sy6TwKEypgoU3M9FXhE/gWQjSU+RjnMlsBLWoH/zL5H8HgGG
+         OmtlYKqgweOj7splRkflggv1Ae2B21M+t6GbFhCgCnfIX51vqw/3Th1znv19Tncd4IYP
+         sjS3o49ltHPGs2Qq/ULzMHw6pazfC/TBhYBJ4DeM5BFD9spuZxBFsrm0CsPR+uJYCXNP
+         PcgTZ/JI+a6Tk1igo97fmIeuYwf+q5VW9fZA656wwLoDb4CBcyNgr5lSCJhcgupyykml
+         cabg==
+X-Gm-Message-State: AOAM533pNTo1nmCDKUJi9titdDnHlEoL2w0JV6utvc8ccXgHQBIOovgh
+        Z86LB9fjktcH9gE/1CCqA5Xw1imRe5jz3w==
+X-Google-Smtp-Source: ABdhPJz5S+aFMIAllTf6EeyEL2d4ft+e+kahg8U05QAv6xwSUo7qPqGWeSmxI0LB5EZTcNSgAu3TAg==
+X-Received: by 2002:a17:902:b20e:: with SMTP id t14mr16722140plr.58.1597780747129;
+        Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f17sm26147059pfq.67.2020.08.18.12.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:59:06 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:59:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
+Message-ID: <202008181258.CEC4B8B3@keescook>
+References: <20200817073212.830069-1-hch@lst.de>
+ <20200817073212.830069-9-hch@lst.de>
+ <202008181244.BBDA7DAB@keescook>
+ <20200818195539.GB32691@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818195539.GB32691@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/12/2020 11:34 AM, Wesley Cheng wrote:
->>
->> awesome, thanks a lot for this :-) It's a considerable increase in your
->> setup. My only fear here is that we may end up creating a situation
->> where we can't allocate enough FIFO for all endpoints. This is, of
->> course, a consequence of the fact that we enable one endpoint at a
->> time.
->>
->> Perhaps we could envision a way where function driver requests endpoints
->> in bulk, i.e. combines all endpoint requirements into a single method
->> call for gadget framework and, consequently, for UDC.
->>
-> Hi Felipe,
+On Tue, Aug 18, 2020 at 09:55:39PM +0200, Christoph Hellwig wrote:
+> On Tue, Aug 18, 2020 at 12:44:49PM -0700, Kees Cook wrote:
+> > On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
+> > > For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
+> > 
+> > typo: thing
+> > 
+> > > need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
+> > > definition to escape the explicit unsigned long cast.  This just works
+> > > because __PAGE_OFFSET is defined using _AC itself and thus never needs
+> > > the cast anyway.
+> > 
+> > Shouldn't this be folded into the prior patch so there's no bisection
+> > problem?
 > 
-> I agree...Resizing the txfifo is not as straightforward as it sounds :).
->  Would be interesting to see how this affects tput on other platforms as
-> well.  We had a few discussions within our team, and came up with the
-> logic implemented in this patch to reserve at least 1 txfifo per
-> endpoint. Then we allocate any additional fifo space requests based on
-> the remaining space left.  That way we could avoid over allocating, but
-> the trade off is that we may have unused EPs taking up fifo space.
-> 
-> I didn't consider branching out to changing the gadget framework, so let
-> me take a look at your suggestion to see how it turns out.
-> 
+> I didn't see a problem bisecting, do you have something particular in
+> mind?
 
-Hi Felipe,
-
-Instead of catching the out of FIFO memory issue during the ep enable
-stage, I was thinking if we could do it somewhere during the bind.  Then
-this would allow for at least failing the bind instead of having an
-enumerated device which doesn't work. (will happen if we bail out during
-ep enable phase)  The idea I had was the following:
-
-Introduce a new USB gadget function pointer, say
-usb_gadget_check_config(struct usb_gadget *gadget, unsigned long ep_map)
-
-The purpose for the ep_map is to carry information about the endpoints
-the configuration requires, since each function driver will define the
-endpoint descriptor(s) it will advertise to the host.  We have access to
-these ep desc after the bind() routine is executed for the function
-driver, so we can update this map after every bind.  The configfs driver
-will call the check config API every time a configuration is added.
-
-static int configfs_composite_bind(struct usb_gadget *gadget,
-		struct usb_gadget_driver *gdriver)
-{
-...
-  /* Go through all configs, attach all functions */
-  list_for_each_entry(c, &gi->cdev.configs, list) {
-  ...
-    list_for_each_entry_safe(f, tmp, &cfg->func_list, list) {
-    ...
-      	if (f->ss_descriptors) {
-	  struct usb_descriptor_header **descriptors;
-	  descriptors = f->ss_descriptors;
-	  for (; *descriptors; ++descriptors) {
-	    struct usb_endpoint_descriptor *ep;
-	    int addr;
-		
-	    if ((*descriptors)->bDescriptorType != USB_DT_ENDPOINT)
-		continue;
-		
-	    ep = (struct usb_endpoint_descriptor *)*descriptors;
-	    addr = ((ep->bEndpointAddress & 0x80) >> 3)
-	    |  (ep->bEndpointAddress & 0x0f);
-	    set_bit(addr, &ep_map);
-	  }
-	}
-    usb_gadget_check_config(cdev->gadget, ep_map);
-
-What it'll allow us to do is to decode the ep_map in the dwc3/udc driver
-to determine if we have enough fifo space. Also, if we wanted to utilize
-this ep map for the actual resizing stage, we could eliminate the issue
-of not knowing how many EPs will be enabled, and allocating potentially
-unused fifos due to unused eps.
-
-
-Thanks
-Wesley
+Oh, I misunderstood this patch to be a fix for compilation. Is this just
+a correctness fix?
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Kees Cook
