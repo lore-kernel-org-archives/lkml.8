@@ -2,197 +2,95 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4B02076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500EC206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+45X+g7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SH63MKzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgHRNmt (ORCPT
+        id S1726698AbgHRNp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgHRNmm (ORCPT
+        Tue, 18 Aug 2020 09:45:59 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50224 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbgHRNp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:42:42 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B038C061389;
-        Tue, 18 Aug 2020 06:42:41 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mt12so9430248pjb.4;
-        Tue, 18 Aug 2020 06:42:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ow1P/kTAenyLhoRfseJEbrLtN3GqtrG+/0CKngcazsU=;
-        b=G+45X+g7/VtCi5pAAiZ1kpTO/B5OIOgETH4OHKeMw4aqGggFu6LL7tAaYYFaCEVioR
-         9ecZxDoz4HUsXUS3tmfupGtH/2cp/KR27Bh6XdIDsQbqJqT/trYEeUzssMHW5+IHnEOr
-         XAuzLK6FQudbKvOA6uJMWmTf7FBjDpXdAlXPOOtFqV8hsLVWs8rVFXTfQn7renRT7w3q
-         BHJhbWVl6nnkOcn8k6HKEEZELWDUWTSuMOLiXZALBoa5GHs9k7oegF/Pjzor4/+oAbxq
-         TWHK6OIPmgAVYUCjZYyYw0R/vazZDf4nPAg4ZVW6qgGObWYfc/+ZE/+Kum+CEnE+JcAU
-         zJAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ow1P/kTAenyLhoRfseJEbrLtN3GqtrG+/0CKngcazsU=;
-        b=DFVrJpZrYfiBHpShn0ryFBJ+ImoDZEfb6jA8XhdhU1GaucHrStZd/hFow2V0h9DnsN
-         qey3RkYvcGkm2m+w22W+VTJW6MdrFbrcf1grHTxIJcOXf5nKwMo9tzenYZ1coJokExqs
-         PCv2n1+9VmyO3UVn0sOEqqk1B3MgR2FW4RrM6Fi2dUezlVgEqAE/TClyS+nEjfQS18Ot
-         mp5P45WmUdUjm7vgYVJ/eU5zEPvjEMXCiMzq25ulr/xUUH6cC/sglWEls2JYP+LrwETh
-         84M9OwVEzWbeV7LSo+J5a/oyFgRGPl0M/Iqc5Vo6FpwZ9ej/nbwdwyeP5ZdLfCyMxIh4
-         NzHQ==
-X-Gm-Message-State: AOAM533w0buUIInOpNz1FHN+og/qQHQSsjE8nQn2HHlmlnWbPRTsw1GS
-        TokiUS85i+TfVDI/eRxd8mt+WmOWE/0=
-X-Google-Smtp-Source: ABdhPJweD5JuSU92yAWpqdS//keXAJW7T+0LhYnZFYJRMD2HVipKHFOD2SuXhqR88Iutq0JNmYfhPQ==
-X-Received: by 2002:a17:90a:de09:: with SMTP id m9mr13448pjv.231.1597758160736;
-        Tue, 18 Aug 2020 06:42:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z1sm31361pjn.34.2020.08.18.06.42.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 06:42:39 -0700 (PDT)
-Subject: Re: [PATCH v2] hwmon: corsair-cpro: fix ccp_probe, add delay [HID
- related]
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org
-References: <20200817070040.7952-1-mail@mariuszachmann.de>
- <20200817153533.GA243558@roeck-us.net> <79890342.HV0Al07Iil@marius>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <41856a82-f15f-e1d8-fa65-2b2912cffece@roeck-us.net>
-Date:   Tue, 18 Aug 2020 06:42:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 09:45:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597758355;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CZRumnYOrFgt3qoT6t+nLLJKuANtNAnklm5YHpJrh+8=;
+        b=SH63MKzYz7r2sN/Wyk5h769y2OcKXiKXQ1q6NaWGVLFIExR0/Zutdnh7ACdj/1ahehyQHm
+        GtvIpJGukIs8tmT43j8c9lpob9/ecmgBVqCdsv+kVEilVF2Ge4O1ujBJGK086vLYDBxt31
+        lOsxuWr0ETgQRPxVndPQHkOMRvxN7YY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295--bgF-J0OOsq5LKkAuenMIQ-1; Tue, 18 Aug 2020 09:45:53 -0400
+X-MC-Unique: -bgF-J0OOsq5LKkAuenMIQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 261251015C92;
+        Tue, 18 Aug 2020 13:45:52 +0000 (UTC)
+Received: from krava (unknown [10.40.193.152])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AFBDE7A401;
+        Tue, 18 Aug 2020 13:45:44 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 15:45:43 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
+        andriin@fb.com, Mark Wielaard <mjw@redhat.com>
+Subject: Re: Kernel build error on BTFIDS vmlinux
+Message-ID: <20200818134543.GD177896@krava>
+References: <20200818105555.51fc6d62@carbon>
+ <20200818091404.GB177896@krava>
+ <20200818105602.GC177896@krava>
 MIME-Version: 1.0
-In-Reply-To: <79890342.HV0Al07Iil@marius>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818105602.GC177896@krava>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 6:12 AM, Marius Zachmann wrote:
-> On 18.08.20 at 17:35:33 CEST, Guenter Roeck wrote
->> On Mon, Aug 17, 2020 at 09:00:40AM +0200, Marius Zachmann wrote:
->>> Possibly because of the changes in usbhid/hid-core.c the first
->>> raw input report is not received during ccp_probe function and it will
->>> timeout. I am not sure, whether this behaviour is expected after
->>> hid_device_io_start or if I am missing something.
->>> As a solution this adds msleep(50) to ccp_probe so that all initial
->>> input reports can be received.
->>>
->>> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
->>
->> Let's just ask the HID maintainers. Is this expected, and the correct fix ?
->>
->> Thanks,
->> Guenter
->>
+On Tue, Aug 18, 2020 at 12:56:08PM +0200, Jiri Olsa wrote:
+> On Tue, Aug 18, 2020 at 11:14:10AM +0200, Jiri Olsa wrote:
+> > On Tue, Aug 18, 2020 at 10:55:55AM +0200, Jesper Dangaard Brouer wrote:
+> > > 
+> > > On latest DaveM net-git tree (06a4ec1d9dc652), after linking (LD vmlinux) the
+> > > "BTFIDS vmlinux" fails. Are anybody else experiencing this? Are there already a
+> > > fix? (just returned from vacation so not fully up-to-date on ML yet)
+> > > 
+> > > The tool which is called and error message:
+> > >   ./tools/bpf/resolve_btfids/resolve_btfids vmlinux
+> > >   FAILED elf_update(WRITE): invalid section alignment
+> > 
+> > hi,
+> > could you send your .config as well?
 > 
-> This seems to be a problem with "HID: usbhid: do not sleep when opening
-> device". There is a bug report with some Logitech devices at the correct
-> thread. These drivers also use hid_device_io_start and fail. Seems to me,
-> this is the same problem and I retract this (not so beautiful) fix until
-> this is sorted out.
-> 
+> reproduced.. checking on fix
 
-I even was involved in that patch. Sigh.
+I discussed this with Mark (cc-ed) it seems to be a problem
+with linker when dealing with compressed debug info data,
+which is enabled in your .config
 
-Guenter
+it works for me when I disable CONFIG_DEBUG_INFO_COMPRESSED option
 
-> Thanks,
-> Marius
-> 
->>> ---
->>> v2:
->>> - fix accidentally deleted comment
->>>
->>> ---
->>>  drivers/hwmon/corsair-cpro.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
->>> index 591929ec217a..c04fac1d820f 100644
->>> --- a/drivers/hwmon/corsair-cpro.c
->>> +++ b/drivers/hwmon/corsair-cpro.c
->>> @@ -10,6 +10,7 @@
->>>
->>>  #include <linux/bitops.h>
->>>  #include <linux/completion.h>
->>> +#include <linux/delay.h>
->>>  #include <linux/hid.h>
->>>  #include <linux/hwmon.h>
->>>  #include <linux/kernel.h>
->>> @@ -513,6 +514,7 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
->>>  	init_completion(&ccp->wait_input_report);
->>>
->>>  	hid_device_io_start(hdev);
->>> +	msleep(50); /* wait before events can be received */
->>>
->>>  	/* temp and fan connection status only updates when device is powered on */
->>>  	ret = get_temp_cnct(ccp);
->>> --
->>> 2.28.0
->>
-> 
-> 
-> 
-> 
+Mark will fix this upstream, meanwhile he suggested workaround
+we can do in resolve_btfids tool, that I'll try to send shortly
+
+thanks,
+jirka
 
