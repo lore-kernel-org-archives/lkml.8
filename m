@@ -2,191 +2,204 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1C120639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7049320639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="zRQv5bHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHRGve (ORCPT
+        id S1726357AbgHRGxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:51:34 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59555 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726228AbgHRGvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:51:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U67H.h6_1597733485;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U67H.h6_1597733485)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Aug 2020 14:51:26 +0800
-Subject: Re: [RFC PATCH 2/3] mm: Drop use of test_and_set_skip in favor of
- just setting skip
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
-        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
-        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
-        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
-        akpm@linux-foundation.org, richard.weiyang@gmail.com,
-        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
-References: <20200813035100.13054.25671.stgit@localhost.localdomain>
- <20200813040232.13054.82417.stgit@localhost.localdomain>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <176fae1b-b95b-51c3-d8cc-4380f0972666@linux.alibaba.com>
-Date:   Tue, 18 Aug 2020 14:50:25 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 18 Aug 2020 02:53:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12149 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgHRGxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:53:13 -0400
+IronPort-SDR: iCRE8/yTGGxWFc50yOBIiJsxLGbjivM0PdBlY1EOS4ho4sDBpyPSc1kmdKRcFlXrDwbkudm4L9
+ 2lJxNjgTKBuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134373703"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="134373703"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 23:53:12 -0700
+IronPort-SDR: BDfQ+H3/mW5WVADCzkX9OmoWX0ZyabG24ib7/I8otiEHyNG1h5cMPjNd+gfpwTCtoNSLYWzPne
+ syyvhKz2JaFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="471693982"
+Received: from orsmsx602-2.jf.intel.com (HELO ORSMSX602.amr.corp.intel.com) ([10.22.229.82])
+  by orsmga005.jf.intel.com with ESMTP; 17 Aug 2020 23:53:08 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 17 Aug 2020 23:53:08 -0700
+Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 17 Aug 2020 23:53:08 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX162.amr.corp.intel.com (10.22.240.85) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 17 Aug 2020 23:53:07 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 17 Aug 2020 23:53:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CwHzeE1u5VJ4RsYnN9HKCmwxLFAniEqytrhfqQ1EcnvJtRXH5+TaweFQm88OS1nSEwAQlWTemT+DC735OnAp/WLlwzMeVrh2JWKPbkDknx7rtsX0k5inygfDhfKcFQI/AOqPm9M69DZQ0eBE01ooocU6JQmEufX81/EyjC8PG6uXTLBh7uGwyL7XGg3Ven28QrI/tJonleN1oYnY2+FycxEy1gNPgo00UQu6xtEnZpHW1DC1FyN898huOYFMWvJzUEnV4qowAz0q0WQLYJFvoOInOxRDTUURp93zVR1EqY0FM2O34tyxClNElN/hbF1gWQPHY4MVhbtCjvy7gj6Zhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=caibVuZKzfJh0S0Hnqs9hLZGAMR2x3hXhmmiYbnpvoc=;
+ b=Lwog5vHHo6TBH2aBulrt9ypWGebdJFGcx2G9zIQ34mg61BwIFoSso3ybIPJfkWqoC35X1el9sM6kOhBbTUhjkT00mPvmYbedWBJ/nlXhhsmXmy+7QH3L0T9/5Ia8Z51lG/N52mDsewlHOdSfsFEGCicSu39pcVR7lBt9HZOXNxgpe6r2PT9LPJ7irQbLGE9fzKrdLZG455DdfRM3wNaLKka/8o8Qc2WA+q6sQMs5SyxReyOWY7KlflJqGeXS2+ZKu6Iq8HLvO1Y+iyY+wIIwZCKaP5ZRMoTU9l0N1Xbv8gEAwimwBSUnefy45ag2bO5KAwWi+03B8Og60Mv5k53TeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=caibVuZKzfJh0S0Hnqs9hLZGAMR2x3hXhmmiYbnpvoc=;
+ b=zRQv5bHR8jWFE7xj4qbjwABCSG/wvazXrqh9J9b1M6KXvr0dEYrCK7zipxKXJ3lANBxW5wkLypaKwl9rG9y9cLaVhfkdrmBd2tdufWflquOBoNzdqPKRNtwnuE+2Fdq+oaJiFbDzE7koqVVNXQmwBkpDAS/T+CikXiN7EP+biQs=
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
+ DM5PR1101MB2107.namprd11.prod.outlook.com (2603:10b6:4:5a::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.20; Tue, 18 Aug 2020 06:53:06 +0000
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::a061:bd5e:c46a:fa40]) by DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::a061:bd5e:c46a:fa40%3]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
+ 06:53:06 +0000
+From:   "Liao, Bard" <bard.liao@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: RE: [PATCH 1/2] soundwire: add definition for maximum number of ports
+Thread-Topic: [PATCH 1/2] soundwire: add definition for maximum number of
+ ports
+Thread-Index: AQHWdSI8ybKAPOyQqUWJUXX/RtQZPKk9aU0AgAAEipA=
+Date:   Tue, 18 Aug 2020 06:53:05 +0000
+Message-ID: <DM6PR11MB4074A817AEBB4636095581F2FF5C0@DM6PR11MB4074.namprd11.prod.outlook.com>
+References: <20200817174727.15139-1-yung-chuan.liao@linux.intel.com>
+ <20200817174727.15139-2-yung-chuan.liao@linux.intel.com>
+ <20200818063538.GV2639@vkoul-mobl>
+In-Reply-To: <20200818063538.GV2639@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [220.133.4.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c32739f4-7b2b-40f3-029e-08d843435c1b
+x-ms-traffictypediagnostic: DM5PR1101MB2107:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR1101MB210758A06EDBF72154A7A5F9FF5C0@DM5PR1101MB2107.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C9G4StQvuwrnIoGwjfKnyipoWIWA2lM/M9mARiGfEiL51ttwQXPvzZFPopaxaKBTgrv+OW+CSKkitsq776DaxlLgaU/t561IEw0kPsi4eTzC++As8jQxVyoapAjQD9/ot7GzqcyS/J/Yq79CTxr0VQ+s54ihxDgsrHNd1wad3TJFbk4y/3sdjmTBEXvA96iuOTiyOZHEuJxZuWymwQ7V8J5hMcgBqJeJTUnMbZo86ETb1U7NNrfRw2yaTOxejfBnU25ShrqJYAAB3eV+FDK6GtKGaF5qo+ztWMx51Fjdy6YEA3kBq6iskCS6P2ZU6DtdYZZrIA8bgf6JNJ14HyHukA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(316002)(4326008)(7696005)(26005)(54906003)(53546011)(6506007)(71200400001)(9686003)(52536014)(55016002)(186003)(110136005)(478600001)(66556008)(64756008)(66446008)(7416002)(86362001)(83380400001)(8676002)(2906002)(33656002)(76116006)(5660300002)(66476007)(66946007)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: O33brgqi6+54FfF12jfBCsszHnKwvuPOCVo2A7lTsftc5bYMeMjZwmU3LJyYg8fvVa2vjdgsU2wDNBqtDKU8SndTgwxX5E/DNfbKe/FDHL/X2Cah2fTeSgFz2JnopUxb487BpGSW1SfJwPgX9WR2FZqWfyWLmAhrNEYTONE4dgPJeY7r/nvtAP70PG/EYRSCgdMIzQfD6ZIftxhiAhnfixDFKUaEzMFW2hcdfHI3/Nuv1LxLT9gZvZ2VYtT0bB7DeTrT7o7z9aDfgOUNFnFEniPMLDHLL4K4SJQqCm6N1CPRSTRQVi1QSLr3rEYViRH9ON8IN/6WT4g5aKv7mOi2aBlybNAJ2gvBnDq7evczfiAhxKfYlrG78tEje5HkXhfhAua9PKtYBoDcv4U5b7K9/tJuKuDNBWrFM+rWBMq2WOAxWsPxNfVYHfkjJdtvgQcHt5gLUBZlblRznD4rYeu76zHU4nUekG5cBKLSyfSF5fQQJJ8RgpWw/sQ/FrOYM9E6mDYxN21csGB+OzTPd/OUDmzk1IL/z0xwi30p6jXGYzk0WNw6VzcglDQZjXI9lVdoJOvLKhrww77Jgih30nWFCBtFBDknb/KG7w3W2oaq5C+LHDj4vBLYeus2yVDl0pgqQV87sHcFHp0z3mcb88gpUw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200813040232.13054.82417.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4074.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c32739f4-7b2b-40f3-029e-08d843435c1b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 06:53:05.8320
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XO2yjdj4Ubcm/JIhzFuefpHzrSDGQ0Zb4yOJt3hBWqnA5pG/LuMz3n9lhJ84Jz3mtTIp/cmjI7LDbuuKeSuSrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2107
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Tuesday, August 18, 2020 2:36 PM
+> To: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse=
+.de;
+> broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
+> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
+> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
+> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>; =
+Lin,
+> Mengdong <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
+> Subject: Re: [PATCH 1/2] soundwire: add definition for maximum number of
+> ports
+>=20
+> On 18-08-20, 01:47, Bard Liao wrote:
+> > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> >
+> > A Device may have at most 15 physical ports (DP0, DP1..DP14).
+> >
+> > Signed-off-by: Pierre-Louis Bossart
+> > <pierre-louis.bossart@linux.intel.com>
+> > Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+> > Reviewed-by: Guennadi Liakhovetski
+> > <guennadi.liakhovetski@linux.intel.com>
+> > Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > ---
+> >  include/linux/soundwire/sdw.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/soundwire/sdw.h
+> > b/include/linux/soundwire/sdw.h index 76052f12c9f7..0aa4c6af7554
+> > 100644
+> > --- a/include/linux/soundwire/sdw.h
+> > +++ b/include/linux/soundwire/sdw.h
+> > @@ -38,7 +38,8 @@ struct sdw_slave;
+> >  #define SDW_FRAME_CTRL_BITS		48
+> >  #define SDW_MAX_DEVICES			11
+> >
+> > -#define SDW_VALID_PORT_RANGE(n)		((n) <=3D 14 && (n) >=3D 1)
+> > +#define SDW_MAX_PORTS			15
+> > +#define SDW_VALID_PORT_RANGE(n)		((n) <
+> SDW_MAX_PORTS && (n) >=3D 1)
+>=20
+> What is the use of this one if we are allocating all ports always, Also, =
+I dont
+> see it used in second patch?
 
+It is used in drivers/soundwire/stream.c and drivers/soundwire/debugfs.c.
 
-在 2020/8/13 下午12:02, Alexander Duyck 写道:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> The only user of test_and_set_skip was isolate_migratepages_block and it
-> was using it after a call that was testing and clearing the LRU flag. As
-> such it really didn't need to be behind the LRU lock anymore as it wasn't
-> really fulfilling its purpose.
-> 
-> With that being the case we can simply drop the bit and instead directly
-> just call the set_pageblock_skip function if the page we are working on is
-> the valid_page at the start of the pageblock. It shouldn't be possible for
-> us to encounter the bit being set since we obtained the LRU flag for the
-> first page in the pageblock which means we would have exclusive access to
-> setting the skip bit. As such we don't need to worry about the abort case
-> since no other thread will be able to call what used to be
-> test_and_set_skip.
-> 
-> Since we have dropped the late abort case we can drop the code that was
-> clearing the LRU flag and calling page_put since the abort case will now
-> not be holding a reference to a page.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-
-After my false sharing remove on pageblock_flags, this patch looks fine with
-a minor change
-
-> ---
->  mm/compaction.c |   50 +++++++-------------------------------------------
->  1 file changed, 7 insertions(+), 43 deletions(-)
-> 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 5021a18ef722..c1e9918f9dd4 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -399,29 +399,6 @@ void reset_isolation_suitable(pg_data_t *pgdat)
->  	}
->  }
->  
-> -/*
-> - * Sets the pageblock skip bit if it was clear. Note that this is a hint as
-> - * locks are not required for read/writers. Returns true if it was already set.
-> - */
-> -static bool test_and_set_skip(struct compact_control *cc, struct page *page,
-> -							unsigned long pfn)
-> -{
-> -	bool skip;
-> -
-> -	/* Do no update if skip hint is being ignored */
-> -	if (cc->ignore_skip_hint)
-> -		return false;
-> -
-> -	if (!IS_ALIGNED(pfn, pageblock_nr_pages))
-> -		return false;
-> -
-> -	skip = get_pageblock_skip(page);
-> -	if (!skip && !cc->no_set_skip_hint)
-> -		skip = !set_pageblock_skip(page);
-> -
-> -	return skip;
-> -}
-> -
->  static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
->  {
->  	struct zone *zone = cc->zone;
-> @@ -480,12 +457,6 @@ static inline void update_pageblock_skip(struct compact_control *cc,
->  static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
->  {
->  }
-> -
-> -static bool test_and_set_skip(struct compact_control *cc, struct page *page,
-> -							unsigned long pfn)
-> -{
-> -	return false;
-> -}
->  #endif /* CONFIG_COMPACTION */
->  
->  /*
-> @@ -895,7 +866,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
->  		if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
->  			if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
->  				low_pfn = end_pfn;
-> -				page = NULL;
->  				goto isolate_abort;
->  			}
->  			valid_page = page;
-> @@ -991,6 +961,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
->  		if (!TestClearPageLRU(page))
->  			goto isolate_fail_put;
->  
-> +		/* Indicate that we want exclusive access to this pageblock */
-> +		if (page == valid_page) {
-> +			skip_updated = true;
-> +			if (!cc->ignore_skip_hint)
-
-                        if (!cc->ignore_skip_hint && !cc->no_set_skip_hint)
-no_set_skip_hint needs to add here.
-
-Thanks
-Alex
-
-> +				set_pageblock_skip(page);
-> +		}
-> +
->  		/* If we already hold the lock, we can skip some rechecking */
->  		if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec)) {
->  			if (lruvec)
-> @@ -1002,13 +979,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
->  
->  			lruvec_memcg_debug(lruvec, page);
->  
-> -			/* Try get exclusive access under lock */
-> -			if (!skip_updated) {
-> -				skip_updated = true;
-> -				if (test_and_set_skip(cc, page, low_pfn))
-> -					goto isolate_abort;
-> -			}
-> -
->  			/*
->  			 * Page become compound since the non-locked check,
->  			 * and it's on LRU. It can only be a THP so the order
-> @@ -1094,15 +1064,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
->  	if (unlikely(low_pfn > end_pfn))
->  		low_pfn = end_pfn;
->  
-> -	page = NULL;
-> -
->  isolate_abort:
->  	if (lruvec)
->  		unlock_page_lruvec_irqrestore(lruvec, flags);
-> -	if (page) {
-> -		SetPageLRU(page);
-> -		put_page(page);
-> -	}
->  
->  	/*
->  	 * Updated the cached scanner pfn once the pageblock has been scanned
-> 
+>=20
+> >
+> >  enum {
+> >  	SDW_PORT_DIRN_SINK =3D 0,
+> > --
+> > 2.17.1
+>=20
+> --
+> ~Vinod
