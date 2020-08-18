@@ -2,122 +2,86 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6A1C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7584D2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597746627;
-	bh=9ED5nbVPRnIiQLubybjj1HI9b9VbQnnui7vFmaJAEic=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Boir3OYk+tiSyXF6TLhqntAJB2/hncH2hitDX1qf5aoKfwg8P8sE/EBExrXCncjju
-	 NvOFN7vfmUbYLvNC9oLYCOhgfO88X3h3StYFQNesHgEBX5hFOPkKoQ+T4TdqRTEQi6
-	 GomJx0NUWC0PVTB1v4oCr/tHgJ6XONunmXtZO6sU=
+	by mail.kernel.org (Postfix) with ESMTP id 99321207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgHRKaZ (ORCPT
+        id S1726646AbgHRKbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 06:31:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59240 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRKaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:30:21 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F286206DA;
-        Tue, 18 Aug 2020 10:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597746620;
-        bh=9ED5nbVPRnIiQLubybjj1HI9b9VbQnnui7vFmaJAEic=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fMVjPgLb4b5JwRaBdB4p22fsfoteyOLe+6GwBkR2d4S/o4JnOBawPAjxgG/nm+diq
-         fEcTj9f2IBYZs6ZxM2h173GZx7c21JRd/jJ1UyCLZQB0G5i6/vd9ANpIa8NNkbK8H5
-         No4d1/R/Nzprq1u2cR3njIhKGYthc6pMu7ro4fQ4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k7ysj-003rr2-Ft; Tue, 18 Aug 2020 11:30:18 +0100
+        id S1726043AbgHRKbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:31:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B3221AF8E;
+        Tue, 18 Aug 2020 10:31:25 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 12:30:59 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     peterz@infradead.org
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818103059.GP28270@dhcp22.suse.cz>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+ <20200818092617.GN28270@dhcp22.suse.cz>
+ <20200818095910.GM2674@hirez.programming.kicks-ass.net>
+ <20200818100516.GO28270@dhcp22.suse.cz>
+ <20200818101844.GO2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Aug 2020 11:30:17 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 0/2] KVM: arm64: Fix sleeping while atomic BUG() on OOM
-In-Reply-To: <20200818101607.GB15543@willie-the-truck>
-References: <20200811102725.7121-1-will@kernel.org>
- <ff1d4de2-f3f8-eafa-6ba5-3e5bb715ae05@redhat.com>
- <20200818101607.GB15543@willie-the-truck>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <edbd49c6ad999b71af3c2a64c920f418@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: will@kernel.org, pbonzini@redhat.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, suzuki.poulose@arm.com, james.morse@arm.com, tsbogend@alpha.franken.de, paulus@ozlabs.org, sean.j.christopherson@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818101844.GO2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-18 11:16, Will Deacon wrote:
-> On Tue, Aug 18, 2020 at 08:31:08AM +0200, Paolo Bonzini wrote:
->> On 11/08/20 12:27, Will Deacon wrote:
->> > Will Deacon (2):
->> >   KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
->> >   KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
->> >
->> >  arch/arm64/include/asm/kvm_host.h   |  2 +-
->> >  arch/arm64/kvm/mmu.c                | 19 ++++++++++++++-----
->> >  arch/mips/include/asm/kvm_host.h    |  2 +-
->> >  arch/mips/kvm/mmu.c                 |  3 ++-
->> >  arch/powerpc/include/asm/kvm_host.h |  3 ++-
->> >  arch/powerpc/kvm/book3s.c           |  3 ++-
->> >  arch/powerpc/kvm/e500_mmu_host.c    |  3 ++-
->> >  arch/x86/include/asm/kvm_host.h     |  3 ++-
->> >  arch/x86/kvm/mmu/mmu.c              |  3 ++-
->> >  virt/kvm/kvm_main.c                 |  3 ++-
->> >  10 files changed, 30 insertions(+), 14 deletions(-)
->> >
->> 
->> These would be okay for 5.9 too, so I plan to queue them myself before
->> we fork for 5.10.
+On Tue 18-08-20 12:18:44, Peter Zijlstra wrote:
+> On Tue, Aug 18, 2020 at 12:05:16PM +0200, Michal Hocko wrote:
+> > > But then how can it run-away like Waiman suggested?
+> > 
+> > As Chris mentioned in other reply. This functionality is quite new.
+> >  
+> > > /me goes look... and finds MEMCG_MAX_HIGH_DELAY_JIFFIES.
+> > 
+> > We can certainly tune a different backoff delays but I suspect this is
+> > not the problem here.
 > 
-> Thanks, Paolo. Let me know if you want me to rebase/repost.
+> Tuning? That thing needs throwing out, it's fundamentally buggered. Why
+> didn't anybody look at how the I/O drtying thing works first?
 > 
-> Please note that I'm planning on rewriting most of the arm64 KVM 
-> page-table
-> code for 5.10, so if you can get this series in early (e.g. for -rc2), 
-> then
-> it would _really_ help with managing the kvm/arm64 queue for the next 
-> merge
-> window.
+> What you need is a feeback loop against the rate of freeing pages, and
+> when you near the saturation point, the allocation rate should exactly
+> match the freeing rate.
 > 
-> Otherwise, could you and Marc please set up a shared branch with just 
-> these,
-> so I can use it as a base?
-> 
-> Please let me know.
+> But this thing has nothing what so ever like that.
 
-Given that this doesn't directly applies to -rc1, I'll push out a branch
-shortly with the conflicts resolved.
-
-Thanks,
-
-         M.
+Existing usecases seem to be doing fine with the existing
+implementation. If we find out that this is insufficient then we can
+work on that but I believe this is tangent to this email thread. There
+are no indications that the current implementation doesn't throttle
+enough. The proposal also aims at much richer interface to define the
+oom behavior.
 -- 
-Jazz is not dead. It just smells funny...
+Michal Hocko
+SUSE Labs
