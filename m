@@ -2,98 +2,110 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D188FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9677C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B3320716
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925B92053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:32:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R9rEOl7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHRDbD (ORCPT
+        id S1726599AbgHRDcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:31:03 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:47372 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726228AbgHRDbC (ORCPT
+        Mon, 17 Aug 2020 23:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgHRDcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:31:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U668IKE_1597721458;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U668IKE_1597721458)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 18 Aug 2020 11:30:58 +0800
-Date:   Tue, 18 Aug 2020 11:30:58 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 3/5] block: Add a new helper to attempt to merge a
- bio
-Message-ID: <20200818033058.GB46480@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
- <5b932aa51fc2b46c381d7b83d591a6ddbf05b199.1597637287.git.baolin.wang@linux.alibaba.com>
- <20200817062634.GC12248@lst.de>
- <20200817121002.GB79836@VM20190228-100.tbsite.net>
- <20200817122440.GA2213@lst.de>
+        Mon, 17 Aug 2020 23:32:12 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BD5C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 20:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=F5xFqaunYPNzZR8j8lPHydUHGVB0Vc0j165OWeHrHVw=; b=R9rEOl7ht4hVwd+uFqo95SqwUg
+        bE+Dpx+r1gDIRdlqifVRb1BmN1QIBmck8XJQ2D/Cnk/rgWQ6XYBq+Hpt880N1Dxumqf1Y8SILOxCn
+        1SoUsGQhKcPu3g/ntDNcrdWWpXo6AW37nd24PsH3Ux0sBzWbwB5mlNLM1ZDD/LkPhDfa9PLBEWDVw
+        VTq0v93JveKSBY2P4/BwzYhjcK+rDliIitNf7SALrF7MDSrZLTlRbHqp0rlMvOBJsH7yUirtyRAeG
+        9bJsfjySTEwtG+0ws4Qn6ssTDjWlclq5RH4iu3dCOckLyI8Nmf6YYHRcz5pmDHWQ7Eq6JhJrSOWn+
+        QqmzwJlQ==;
+Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7sM5-00028x-CO; Tue, 18 Aug 2020 03:32:09 +0000
+Subject: Re: [PATCH] genksyms: keywords: Use __restrict not _restrict
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <15f52e9b0e50296aba35871bc1575a684c4a258a.camel@perches.com>
+ <CAKwvOd=8C94K-9VCqdCn9FXiyfDhKxMu=4AGem1bGgp8m6z0fw@mail.gmail.com>
+ <CAHk-=wjjHN32BXdqu1iP8WSZoqdGPDDiqVLUbBgYG+=JO3MJCw@mail.gmail.com>
+ <bc2ca9785cb7cf86c59c8922269d2dfc077ec3cc.camel@perches.com>
+ <e5737af8-f38c-659a-9c10-9a106edf81a3@infradead.org>
+ <CAK7LNARc22dcj03=BKYxEi2PxBeNn91LBig-eXOBowXK+oUQoQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f264c943-2ce0-23ec-f9f4-83ca8bff8785@infradead.org>
+Date:   Mon, 17 Aug 2020 20:32:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817122440.GA2213@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAK7LNARc22dcj03=BKYxEi2PxBeNn91LBig-eXOBowXK+oUQoQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 02:24:40PM +0200, Christoph Hellwig wrote:
-> On Mon, Aug 17, 2020 at 08:10:02PM +0800, Baolin Wang wrote:
-> > On Mon, Aug 17, 2020 at 08:26:34AM +0200, Christoph Hellwig wrote:
-> > > On Mon, Aug 17, 2020 at 12:09:17PM +0800, Baolin Wang wrote:
-> > > > There are lots of duplicated code when trying to merge a bio from
-> > > > plug list and sw queue, we can introduce a new helper to attempt
-> > > > to merge a bio, which can simplify the blk_mq_bio_list_merge()
-> > > > and blk_attempt_plug_merge().
-> > > 
-> > > Looks sensible, but two comments:
-> > > 
-> > > > +enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
-> > > > +					    struct request *rq,
-> > > > +					    struct bio *bio,
-> > > > +					    unsigned int nr_segs)
-> > > > +{
-> > > > +	bool merged = false;
-> > > > +
-> > > > +	if (!blk_rq_merge_ok(rq, bio))
-> > > > +		return BIO_MERGE_NONE;
-> > > > +
-> > > > +	switch (blk_try_merge(rq, bio)) {
-> > > > +	case ELEVATOR_BACK_MERGE:
-> > > > +		merged = bio_attempt_back_merge(rq, bio, nr_segs);
-> > > > +		break;
-> > > > +	case ELEVATOR_FRONT_MERGE:
-> > > > +		merged = bio_attempt_front_merge(rq, bio, nr_segs);
-> > > > +		break;
-> > > > +	case ELEVATOR_DISCARD_MERGE:
-> > > > +		merged = bio_attempt_discard_merge(q, rq, bio);
-> > > > +		break;
-> > > 
-> > > Can't we also switch the bio_attempt_*merge helpers to return
-> > > enum bio_merge_status to simplify this a bit?
-> > 
-> > Yes, will do.
-> > 
-> > > 
-> > > Also I think these helpers can be marked static now, although I didn't
-> > > actually apply your series, so I might have missed something.
-> > 
-> > Cause this function will be used by blk_mq_bio_list_merge() in
-> > blk-mq-sched.c, it should be exported.
+On 8/17/20 6:05 PM, Masahiro Yamada wrote:
+> On Sun, Aug 16, 2020 at 7:46 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 8/14/20 8:17 PM, Joe Perches wrote:
+>>> On Fri, 2020-08-14 at 20:05 -0700, Linus Torvalds wrote:
+>>>> On Fri, Aug 14, 2020 at 7:14 PM Nick Desaulniers
+>>>> <ndesaulniers@google.com> wrote:
+>>>>> What's KAO? Urban dictionary has no entry. :^P
+>>>>
+>>>> It goes back to 2003 and the original keywords.gperf file, see
+>>>>
+>>>>    https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=46bd1da672d66ccd8a639d3c1f8a166048cca608
+>>>>
+>>>> from the BK history conversion.
+>>>>
+>>>> It might be Kai Germaschewski's tagger name?
+>>>
+>>> I think it was Keith Owens.
+>>
+>> Probably.  A.K.A. kaos.
+>>
+>> --
+>> ~Randy
+>>
 > 
-> Shouldn't blk_mq_bio_list_merge move to blk-merge.c as well?
+> 
+> Perhaps, we can remove "KAO"s ?
 
-Yes, I can move it to blk-merge.c and rename to a generic name.
+Should be OK to do that.
+
+> Anyway, I was trying to pick up this patch.
+> 
+> 
+> I take patches from patchwork, but it looks like
+> the server (https://lore.kernel.org/patchwork/project/lkml/list/)
+> has been down for a while...
+
+Yes, it is having some issues.
+I have asked for help on that.
+
+-- 
+~Randy
 
