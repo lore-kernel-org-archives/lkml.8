@@ -2,201 +2,127 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F64C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46941C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E656920829
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245E820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4dBPQHJF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sXkImByf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BlejnWNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHRK1L (ORCPT
+        id S1726731AbgHRK1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:27:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58184 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRK1J (ORCPT
+        Tue, 18 Aug 2020 06:27:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40654 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHRK1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:27:09 -0400
-Date:   Tue, 18 Aug 2020 10:27:05 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597746426;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T677TuOYH4gJXAAX90JVQVRADzTPTmfW7IQM+fHBwWQ=;
-        b=4dBPQHJFacuiX71p5N4efdjhds/qA9XzecDUVF0y7OT8/q6o+vSFxEPTXnoE+KCcEXuujx
-        Teq1Tnw0z9QGTlHo2o1I6JyjeJkYxXxj9UR5VpJzDGHMwRot/dUnwjN5UQYj/F2fq/jFWI
-        9C0223GCBMIeKKQ40+Cof9tISV2mvpxVtc60lunaF0/iX35+Lb3eSIGEbnWRguE0/Osf9Q
-        ZRebrHJdhZFU5txpNexhO+KHuM64xn38pFwZN3c3lwBAb+9CAJQc27u8WArQPFE82pucna
-        reGU0xBNoUumiO456tN69+jM0BvUACwoAHvnu20Eq+AaWJRLA1zYnhawArQNRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597746426;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T677TuOYH4gJXAAX90JVQVRADzTPTmfW7IQM+fHBwWQ=;
-        b=sXkImByfFXIv8MUzDWwELdl3WsTpxqNxtj5KcpJ8KARPBpeXY6amXsJGbHgxlM+tap+FmK
-        Kq+bPIvfpfKo5bDQ==
-From:   "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/MCE/AMD, EDAC/mce_amd: Remove struct smca_hwid.xec_bitmap
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200720145353.43924-1-Yazen.Ghannam@amd.com>
-References: <20200720145353.43924-1-Yazen.Ghannam@amd.com>
+        Tue, 18 Aug 2020 06:27:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReZO003390;
+        Tue, 18 Aug 2020 05:27:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597746460;
+        bh=8xkBadz85cSC+Zl1n9wGXqzdc8DH2yqT3Qiku2kAblw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=BlejnWNNhXfa2jmfFm5+Gu9xiQFI5A98q/H1lZVldl6GAy/Oi1m5IsPFRdbjW5Vpi
+         MHGr7oy7vKwnat4RaZwpxih/DBIdRyrzMBsXwTCChBtDu+hvHFW2QoFXoHnw0ptwwu
+         83Ya/fJ/l2wop6gc1uYBWeUygoD0tlbd2Qj/Ea18=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReWK096463;
+        Tue, 18 Aug 2020 05:27:40 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
+ Aug 2020 05:27:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 18 Aug 2020 05:27:40 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IARbcJ057381;
+        Tue, 18 Aug 2020 05:27:38 -0500
+Subject: Re: [PATCH v5 2/2] Add Intel LGM soc DMA support.
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>,
+        <dmaengine@vger.kernel.org>, <vkoul@kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>,
+        <chuanhua.lei@linux.intel.com>, <malliamireddy009@gmail.com>
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <cdd26d104000c060d85a0c5f8abe8492e4103de5.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <70848117-ec29-d293-6603-cbf47dec35d4@ti.com>
+Date:   Tue, 18 Aug 2020 13:29:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159774642543.3192.9053465482667765074.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+In-Reply-To: <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     5f2c67bd0f8a470a12c38a8786c42c043e100014
-Gitweb:        https://git.kernel.org/tip/5f2c67bd0f8a470a12c38a8786c42c043e100014
-Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Mon, 20 Jul 2020 14:53:53 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 18 Aug 2020 12:15:43 +02:00
 
-x86/MCE/AMD, EDAC/mce_amd: Remove struct smca_hwid.xec_bitmap
+On 18/08/2020 13.16, Peter Ujfalusi wrote:
 
-The Extended Error Code Bitmap (xec_bitmap) for a Scalable MCA bank type
-was intended to be used by the kernel to filter out invalid error codes
-on a system. However, this is unnecessary after a few product releases
-because the hardware will only report valid error codes. Thus, there's
-no need for it with future systems.
+=2E..
 
-Remove the xec_bitmap field and all references to it.
+>> +static void dma_issue_pending(struct dma_chan *chan)
+>> +{
+>> +	struct ldma_chan *c =3D to_ldma_chan(chan);
+>> +	struct ldma_dev *d =3D to_ldma_dev(c->vchan.chan.device);
+>> +	unsigned long flags;
+>> +
+>> +	if (d->ver =3D=3D DMA_VER22) {
+>> +		spin_lock_irqsave(&c->vchan.lock, flags);
+>> +		if (vchan_issue_pending(&c->vchan)) {
+>> +			struct virt_dma_desc *vdesc;
+>> +
+>> +			/* Get the next descriptor */
+>> +			vdesc =3D vchan_next_desc(&c->vchan);
+>> +			if (!vdesc) {
+>> +				c->ds =3D NULL;
+>> +				return;
+>> +			}
+>> +			list_del(&vdesc->node);
+>> +			c->ds =3D to_lgm_dma_desc(vdesc);
+>=20
+> you have set c->ds in dma_prep_slave_sg and the only way I can see that=
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200720145353.43924-1-Yazen.Ghannam@amd.com
----
- arch/x86/include/asm/mce.h    |  1 +-
- arch/x86/kernel/cpu/mce/amd.c | 44 +++++++++++++++++-----------------
- drivers/edac/mce_amd.c        |  4 +---
- 3 files changed, 23 insertions(+), 26 deletions(-)
+> you will not leak memory is that the client must terminate_sync() after=
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index cf50382..6adced6 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -328,7 +328,6 @@ enum smca_bank_types {
- struct smca_hwid {
- 	unsigned int bank_type;	/* Use with smca_bank_types for easy indexing. */
- 	u32 hwid_mcatype;	/* (hwid,mcatype) tuple */
--	u32 xec_bitmap;		/* Bitmap of valid ExtErrorCodes; current max is 21. */
- 	u8 count;		/* Number of instances. */
- };
- 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 99be063..0c6b02d 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -132,49 +132,49 @@ static enum smca_bank_types smca_get_bank_type(unsigned int bank)
- }
- 
- static struct smca_hwid smca_hwid_mcatypes[] = {
--	/* { bank_type, hwid_mcatype, xec_bitmap } */
-+	/* { bank_type, hwid_mcatype } */
- 
- 	/* Reserved type */
--	{ SMCA_RESERVED, HWID_MCATYPE(0x00, 0x0), 0x0 },
-+	{ SMCA_RESERVED, HWID_MCATYPE(0x00, 0x0)	},
- 
- 	/* ZN Core (HWID=0xB0) MCA types */
--	{ SMCA_LS,	 HWID_MCATYPE(0xB0, 0x0), 0x1FFFFF },
--	{ SMCA_LS_V2,	 HWID_MCATYPE(0xB0, 0x10), 0xFFFFFF },
--	{ SMCA_IF,	 HWID_MCATYPE(0xB0, 0x1), 0x3FFF },
--	{ SMCA_L2_CACHE, HWID_MCATYPE(0xB0, 0x2), 0xF },
--	{ SMCA_DE,	 HWID_MCATYPE(0xB0, 0x3), 0x1FF },
-+	{ SMCA_LS,	 HWID_MCATYPE(0xB0, 0x0)	},
-+	{ SMCA_LS_V2,	 HWID_MCATYPE(0xB0, 0x10)	},
-+	{ SMCA_IF,	 HWID_MCATYPE(0xB0, 0x1)	},
-+	{ SMCA_L2_CACHE, HWID_MCATYPE(0xB0, 0x2)	},
-+	{ SMCA_DE,	 HWID_MCATYPE(0xB0, 0x3)	},
- 	/* HWID 0xB0 MCATYPE 0x4 is Reserved */
--	{ SMCA_EX,	 HWID_MCATYPE(0xB0, 0x5), 0xFFF },
--	{ SMCA_FP,	 HWID_MCATYPE(0xB0, 0x6), 0x7F },
--	{ SMCA_L3_CACHE, HWID_MCATYPE(0xB0, 0x7), 0xFF },
-+	{ SMCA_EX,	 HWID_MCATYPE(0xB0, 0x5)	},
-+	{ SMCA_FP,	 HWID_MCATYPE(0xB0, 0x6)	},
-+	{ SMCA_L3_CACHE, HWID_MCATYPE(0xB0, 0x7)	},
- 
- 	/* Data Fabric MCA types */
--	{ SMCA_CS,	 HWID_MCATYPE(0x2E, 0x0), 0x1FF },
--	{ SMCA_PIE,	 HWID_MCATYPE(0x2E, 0x1), 0x1F },
--	{ SMCA_CS_V2,	 HWID_MCATYPE(0x2E, 0x2), 0x3FFF },
-+	{ SMCA_CS,	 HWID_MCATYPE(0x2E, 0x0)	},
-+	{ SMCA_PIE,	 HWID_MCATYPE(0x2E, 0x1)	},
-+	{ SMCA_CS_V2,	 HWID_MCATYPE(0x2E, 0x2)	},
- 
- 	/* Unified Memory Controller MCA type */
--	{ SMCA_UMC,	 HWID_MCATYPE(0x96, 0x0), 0xFF },
-+	{ SMCA_UMC,	 HWID_MCATYPE(0x96, 0x0)	},
- 
- 	/* Parameter Block MCA type */
--	{ SMCA_PB,	 HWID_MCATYPE(0x05, 0x0), 0x1 },
-+	{ SMCA_PB,	 HWID_MCATYPE(0x05, 0x0)	},
- 
- 	/* Platform Security Processor MCA type */
--	{ SMCA_PSP,	 HWID_MCATYPE(0xFF, 0x0), 0x1 },
--	{ SMCA_PSP_V2,	 HWID_MCATYPE(0xFF, 0x1), 0x3FFFF },
-+	{ SMCA_PSP,	 HWID_MCATYPE(0xFF, 0x0)	},
-+	{ SMCA_PSP_V2,	 HWID_MCATYPE(0xFF, 0x1)	},
- 
- 	/* System Management Unit MCA type */
--	{ SMCA_SMU,	 HWID_MCATYPE(0x01, 0x0), 0x1 },
--	{ SMCA_SMU_V2,	 HWID_MCATYPE(0x01, 0x1), 0x7FF },
-+	{ SMCA_SMU,	 HWID_MCATYPE(0x01, 0x0)	},
-+	{ SMCA_SMU_V2,	 HWID_MCATYPE(0x01, 0x1)	},
- 
- 	/* Microprocessor 5 Unit MCA type */
--	{ SMCA_MP5,	 HWID_MCATYPE(0x01, 0x2), 0x3FF },
-+	{ SMCA_MP5,	 HWID_MCATYPE(0x01, 0x2)	},
- 
- 	/* Northbridge IO Unit MCA type */
--	{ SMCA_NBIO,	 HWID_MCATYPE(0x18, 0x0), 0x1F },
-+	{ SMCA_NBIO,	 HWID_MCATYPE(0x18, 0x0)	},
- 
- 	/* PCI Express Unit MCA type */
--	{ SMCA_PCIE,	 HWID_MCATYPE(0x46, 0x0), 0x1F },
-+	{ SMCA_PCIE,	 HWID_MCATYPE(0x46, 0x0)	},
- };
- 
- struct smca_bank smca_banks[MAX_NR_BANKS];
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index 325aedf..d4168c4 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -990,10 +990,8 @@ static void decode_smca_error(struct mce *m)
- 	pr_emerg(HW_ERR "%s Ext. Error Code: %d", ip_name, xec);
- 
- 	/* Only print the decode of valid error codes */
--	if (xec < smca_mce_descs[bank_type].num_descs &&
--			(hwid->xec_bitmap & BIT_ULL(xec))) {
-+	if (xec < smca_mce_descs[bank_type].num_descs)
- 		pr_cont(", %s.\n", smca_mce_descs[bank_type].descs[xec]);
--	}
- 
- 	if (bank_type == SMCA_UMC && xec == 0 && decode_dram_ecc)
- 		decode_dram_ecc(cpu_to_node(m->extcpu), m);
+> each transfer so that the synchronize callback is invoked between each
+> prep_sg/issue_pending/competion.
+>=20
+>> +			spin_unlock_irqrestore(&c->vchan.lock, flags);
+>> +			ldma_chan_desc_hw_cfg(c, c->ds->desc_phys, c->ds->desc_cnt);
+>> +			ldma_chan_irq_en(c);
+>> +		}
+>=20
+> If there is nothing pending, you will leave the spinlock wide open...
+
+you leave it locked...
+
+>=20
+>> +	}
+>> +	ldma_chan_on(c);
+>> +}
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
