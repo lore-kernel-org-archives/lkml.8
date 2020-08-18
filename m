@@ -2,136 +2,170 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D62DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F056C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3CA206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kSkjdapH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p+ULuIdx"
+	by mail.kernel.org (Postfix) with ESMTP id 4342D206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgHRJCz (ORCPT
+        id S1726617AbgHRJDZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRJCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:02:55 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE3DC061389;
-        Tue, 18 Aug 2020 02:02:54 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 09:02:48 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597741369;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h4wqRwdS6S/rMMZ0V1KXv9qTHVRSZDZYPTwkqnmIat4=;
-        b=kSkjdapHvC0769w0zlx2uC3jx9xWvonSDAIOsFl9IhsDU+THtGQ5EKfKXsADL1gBbc08IY
-        udvtbao8maovqmZXgswgaNA6TcWpGkmvv9pKsFEDCpCOXtYiSnldsahhbyV777XmWKuSsS
-        GcjFyOM8ZWiupaF7qIY42vuFaGEko2BLyzEWd4wiqdw6spBoVvdCpkfDxcK8mHdmnZLjnE
-        B240UkOx1+SftlOeJN+pFd5ZQtnN2xxr4wBbYQ0eVGnA5ei0q6alhpzBJI6tkwUywOVWPR
-        XgDGUrdMkiHh6113/oC5rTOO1OtkmaddXzxqGOYl13oK8o9FbyRWcRWLJNElTw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597741369;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h4wqRwdS6S/rMMZ0V1KXv9qTHVRSZDZYPTwkqnmIat4=;
-        b=p+ULuIdx2GXIZl/GxUWp4CyMDoGT5AsGCgQmNGVwvNBsNhiTcV6KNFItDs87Qaav5TTaAx
-        8g2m0ExI7os0czAg==
-From:   "tip-bot2 for Luca Stefani" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] RAS/CEC: Fix cec_init() prototype
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Sami Tolvanen <samitolvanen@google.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
-References: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+        Tue, 18 Aug 2020 05:03:25 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2612 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726043AbgHRJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:03:24 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D4ECC6C33E78F3F0A705;
+        Tue, 18 Aug 2020 10:03:22 +0100 (IST)
+Received: from localhost (10.52.121.15) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 18 Aug
+ 2020 10:03:22 +0100
+Date:   Tue, 18 Aug 2020 10:01:50 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Sean V Kelley <sean.v.kelley@intel.com>, <rjw@rjwysocki.net>,
+        <bhelgaas@google.com>, <ashok.raj@intel.com>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 4/9] PCI/AER: Extend AER error handling to RCECs
+Message-ID: <20200818100150.00007f29@Huawei.com>
+In-Reply-To: <20200817222433.GA1453800@bjorn-Precision-5520>
+References: <20200810103252.00000318@Huawei.com>
+        <20200817222433.GA1453800@bjorn-Precision-5520>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Message-ID: <159774136801.3192.8560665046309043144.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.121.15]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+On Mon, 17 Aug 2020 17:24:33 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Commit-ID:     71aefb9a89d4ad751726ff5b902896c35c7df5b9
-Gitweb:        https://git.kernel.org/tip/71aefb9a89d4ad751726ff5b902896c35c7df5b9
-Author:        Luca Stefani <luca.stefani.ge1@gmail.com>
-AuthorDate:    Wed, 05 Aug 2020 11:57:08 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 18 Aug 2020 10:50:07 +02:00
+> On Mon, Aug 10, 2020 at 10:32:52AM +0100, Jonathan Cameron wrote:
+> > On Fri, 7 Aug 2020 17:55:17 -0700
+> > Sean V Kelley <sean.v.kelley@intel.com> wrote:  
+> > > On 7 Aug 2020, at 15:53, Bjorn Helgaas wrote:  
+> > > > On Tue, Aug 04, 2020 at 12:40:47PM -0700, Sean V Kelley wrote:    
+> 
+> > > >>  	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > > >> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
+> > > >> +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
+> > > >>  		dev = dev->bus->self;  
+> 
+> I'm not sure I understand this "if" statement.  Previously (with no
+> RCEC support), the possible ways I see to call pcie_do_recovery() are
+> with:
+> 
+>   AER native:   Root Port
+>   AER via APEI: Root Port or other PCIe device (ACPI v6.3, 18.3.2.5)
+>   DPC:          Root Port or Switch Downstream Port
+>   EDR:          Root Port or Switch Downstream Port
+> 
+> I *guess* the reason we have this "if" statement is for the AER/APEI
+> case?  And the effect is that even if AER/APEI gives us an Endpoint,
+> we back up and handle it as though we got it from the Downstream Port
+> above it, i.e., we reset the Endpoint along with any other children of
+> that Downstream Port?
+> 
+> Then, IIUC, your patches add this case:
+> 
+>   AER native:   Root Port or RCEC
+>   AER via APEI: Root Port, RCEC, or other PCIe device
+> 
+> Just noodling here, but I wonder if this would be more understandable
+> as something like:
+> 
+>   type = pci_pcie_type(dev);
+>   if (type == PCI_EXP_TYPE_ROOT_PORT ||
+>       type == PCI_EXP_TYPE_DOWNSTREAM ||
+>       type == PCI_EXP_TYPE_RC_EC)
+>     bridge = dev;
+>   else if (type == PCI_EXP_TYPE_RC_END)
+>     bridge = dev->rcec;
+>   else
+>     bridge = pci_upstream_bridge(dev);
+> 
+> and then we could do:
+> 
+>   if (type == PCI_EXP_TYPE_RC_END)
+>     flr_on_rciep(dev);
+>   else
+>     reset_link(bridge);
+> 
+> It's still awkward to have to deal with being supplied either
+> endpoints or bridges.  But I guess in the AER/APEI case, we aren't
+> allowed to touch the error registers so maybe we can't avoid the
+> awkwardness.
 
-RAS/CEC: Fix cec_init() prototype
+Agreed with your analysis with one exception. It isn't just that we
+aren't allowed to touch the error registers, but also that they may
+not even exist (i.e. there is no RCEC).
 
-late_initcall() expects a function that returns an integer. Update the
-function signature to match.
+There are quite a lot of places where we have to then handle the
+cases separately.  For an RC_END in the APEI case we don't
+have to have an RCEC as we should never be touching it or
+any of its registers.  We have platforms that do it this way
+(obviously there is a hardware entity doing RCEC like stuff, but it is
+not visible to the OS).
 
- [ bp: Massage commit message into proper sentences. ]
+In these cases (bridge == NULL) and we can't call the bus_walk on it
+to call the various desired resets on the RCiEP.  We could
+do something like
 
-Fixes: 9554bfe403nd ("x86/mce: Convert the CEC to use the MCE notifier")
-Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Sami Tolvanen <samitolvanen@google.com>
-Link: https://lkml.kernel.org/r/20200805095708.83939-1-luca.stefani.ge1@gmail.com
----
- drivers/ras/cec.c |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+pci_walk_affected(bridge, dev, report_frozen, &status);
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 569d9ad..6939aa5 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
- 	.priority	= MCE_PRIO_CEC,
- };
- 
--static void __init cec_init(void)
-+static int __init cec_init(void)
- {
- 	if (ce_arr.disabled)
--		return;
-+		return -ENODEV;
- 
- 	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
- 	if (!ce_arr.array) {
- 		pr_err("Error allocating CE array page!\n");
--		return;
-+		return -ENOMEM;
- 	}
- 
- 	if (create_debugfs_nodes()) {
- 		free_page((unsigned long)ce_arr.array);
--		return;
-+		return -ENOMEM;
- 	}
- 
- 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
-@@ -575,6 +575,7 @@ static void __init cec_init(void)
- 	mce_register_decode_chain(&cec_nb);
- 
- 	pr_info("Correctable Errors collector initialized.\n");
-+	return 0;
- }
- late_initcall(cec_init);
- 
+and if bridge is NULL, perform the reset just on dev.
+
+Would that be clearer?
+
+Thanks,
+
+Jonathan
+
+> 
+> > > >>  		status = reset_link(dev);    
+> > > >
+> > > > reset_link() might be misnamed.  IIUC "dev" is a bridge, and the point
+> > > > is really to reset any devices below "dev."  Whether we do that by
+> > > > resetting link, DPC trigger, secondary bus reset, FLR, etc, is sort of
+> > > > immaterial.  Some of those methods might be applicable for RCiEPs.
+> > > >
+> > > > But you didn't add that name; I'm just trying to understand this
+> > > > better.    
+> > > 
+> > > Yes, that’s a confusing term with the _link attached. It’s difficult 
+> > > to relate to the different resets that might be applicable. I was 
+> > > thinking about that when looking at the callback path via the 
+> > > “reset_link” of the RCiEP to the RCEC for the sole purpose of 
+> > > clearing the Root Port Error Status. It would be worth time to spend 
+> > > looking at better descriptive naming/methods.  
+> > 
+> > Agreed, this caused me some some confusion as well so more descriptive
+> > naming would be good.  
+> 
+> Maybe something like reset_subordinate_devices()?  Then it's clear
+> that we pass a bridge and reset the devices *below* it.  It's not
+> quite as obvious for RCECs, since they aren't bridges and the RCiEPs
+> aren't actually *subordinates*, but maybe it's still suggestive of the
+> logical relationship?
+> 
+> Bjorn
+
+
