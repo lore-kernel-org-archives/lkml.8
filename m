@@ -2,103 +2,165 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9686C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933C5206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759C72076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+erm+9y"
+	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="NJtnJvq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHRIQA (ORCPT
+        id S1726611AbgHRIR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
+        Tue, 18 Aug 2020 04:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgHRIP7 (ORCPT
+        with ESMTP id S1726043AbgHRIRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:15:59 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AB6C061389;
-        Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o5so9421042pgb.2;
-        Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
+        Tue, 18 Aug 2020 04:17:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7927C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:17:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 3so16118805wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=efKFji4wZbV4ryr84E81ykO6FthaFggVytOSX8yMq3Y=;
-        b=j+erm+9yXM4DR4o7ac1+SNFpUbtVt7I+meQmJ9mwt1rWnlVx3+DV0yFmieYZ9XpIUz
-         fj9fyWBBf0gLW3MQKfglYyXP62+cvv12b+wuDmpcOqZDvXab83Hf+/cMrnmlNSaItrO1
-         CpIw1hvTMf+QACLdXFmi7Y/BI3Ohgo17bIrAkONlOeYksHZ7jjNNYJWzRMdTENdsGqjO
-         PpG0yz734CNm3MvjDxWeG7hNf44ABwTgVnkf+CTRyIEWBaGklzmuAupD5C2idxmBfCPy
-         DruKenMqsbuJLjKLMpFo3J095x95IG9MMeoeCDmExu/OyAJUWoYwgZ7D5/+c7hkNDF3H
-         ITJA==
+        d=forissier-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KBMoIX0wDDizUWSV+BZ1wgLVBF7AgO627hD9co2j+K8=;
+        b=NJtnJvq8/z39J3VudGdLJM9ahaPuoBAe+pfv0cKRVhvmDXVHYUltRJIo7XM4Ah9840
+         DtLg1LCLQvEbnPj/jWaWBt8qz2p2MJotiIvPYVomKfINHV+kPCwp4kd4+Ik53tEuTdYH
+         kHFxGZdhnVHdY/09JbZJAroYaOZBHuj1DkxYcUU4uf9Ftc0P9mJahqnRA9J8fdKAOB3t
+         El+4HagOL3BVbHSFUnNi/Zi7+Z+p3RW2qEo/Z77VUp0VPhQNMRts3l/Y345A7iWshHKi
+         GQaPCD4so2tpkUGwyzYLx4HZHP8EYNrPG9zP/tIkR9FePIMJbYO4PRMpdHsEr3s6kofA
+         PefA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=efKFji4wZbV4ryr84E81ykO6FthaFggVytOSX8yMq3Y=;
-        b=r3IE5poXfBQCalz4YvMP01y5oHZm8c0246lXhlrX3snH+CCU48qVN4q73cD9l9yQ/y
-         g26X6MpcnLK1tlofc1o+IADaqZKhzFELX2mErQD7wD/zOhrxGDsEMcPSzWDFPoo83r9+
-         5hGYnIbIW6nd3Nbv+XQOWPEZThND5R9JM/jEINMaDIQ3vFW/T6utcjScSnacZqkoFsTs
-         nFCLWQF2KXYp/8SptEG8fgHAU0FhW2dlJBrgd7bUAiD0LczKsfXwjjMmLPW7DEcS8LEx
-         5MshqqfQuhUC/XjbwfsXNtZ7ahqRrFbvp111EDOT4kibk2n9rR8TYDx5UxEuekjA/lRM
-         w4dQ==
-X-Gm-Message-State: AOAM530Nsy8QmhAjXPUJnaybATvY8te2LhR0ShKpB1wV0ZFtGy4NX4Z0
-        ZLXpw3YkSj85m9fNfnt5pcLx+TvPT+M=
-X-Google-Smtp-Source: ABdhPJyHJGPp/aTkTMW7Ie/M2t3v4BMfISMnMoQO4IWHF2fIZIMsBP0/H7MRTu+ep8AUqS87MVWcQA==
-X-Received: by 2002:a62:9254:: with SMTP id o81mr14137225pfd.73.1597738558202;
-        Tue, 18 Aug 2020 01:15:58 -0700 (PDT)
-Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
-        by smtp.gmail.com with ESMTPSA id d13sm23367913pfq.118.2020.08.18.01.15.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KBMoIX0wDDizUWSV+BZ1wgLVBF7AgO627hD9co2j+K8=;
+        b=VMcgj9KR1fViFE2bSUPBuoGUS+3X+O8ay9ykYZpt5YOJzDx5z9U7ulVC87ZX3W1OOq
+         TFw7Uu8XK4CQFDuPNRtddUpYDv+t+796blLDnNDUkRwUa4rNdKMMpe3AQ4OGV9wnR1wI
+         +vA7mL84NMehumpw5vXGJj+laI0Zg6Sc47oa5wXB4ZQx/QLaMniLNwZRFT9/ysImPSY6
+         JZT592+gUDuzZ00XxQ+o/mRtFHKNOvtoOTNXDWJoiDYRuu8VRAD8IbDopO+TRvTCf+d1
+         B9ou05582Hf3b0ZepLz7jsUGTzzIQBJoDx6OXB1wKz2AZ/DPdRrY+1NpgpH/Nw4fKg0q
+         BeMg==
+X-Gm-Message-State: AOAM530gvMS0l3zxdNaESEEDlIIi7s7rGr9k+0vooIvu+M2Vp6ZDB79F
+        JkwfOeQ0kRYG80IDp24tULeQig==
+X-Google-Smtp-Source: ABdhPJxKJF28yU1uBpaF8TUfJ1tQZb/oMyzY8aoLJb7QvVPtrVuksCGg16xpYitkYxzRd9SkGVY6tg==
+X-Received: by 2002:a7b:c056:: with SMTP id u22mr18310189wmc.188.1597738673337;
+        Tue, 18 Aug 2020 01:17:53 -0700 (PDT)
+Received: from matebook.home ([2a01:e0a:3cb:7bb0:8875:d92:eae5:ceb5])
+        by smtp.gmail.com with ESMTPSA id h5sm37443151wrc.97.2020.08.18.01.17.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 01:15:57 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 16:15:55 +0800
-From:   Qingyu Li <ieatmuttonchuan@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
-        kuba@kernel.org, isdn@linux-pingi.de
-Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        Tue, 18 Aug 2020 01:17:52 -0700 (PDT)
+From:   Jerome Forissier <jerome@forissier.org>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] net/bluetooth/cmtp/sock.c: add CAP_NET_RAW check.
-Message-ID: <20200818081555.GA1349@oppo>
+Cc:     Jerome Forissier <jerome@forissier.org>
+Subject: [PATCH v4] checkpatch: add --kconfig-prefix
+Date:   Tue, 18 Aug 2020 10:17:32 +0200
+Message-Id: <20200818081732.800449-1-jerome@forissier.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200817095056.31001-1-jerome@forissier.org>
+References: <20200817095056.31001-1-jerome@forissier.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When creating a raw PF_BLUETOOTH socket,
-CAP_NET_RAW needs to be checked first.
+Kconfig allows to customize the CONFIG_ prefix via the $CONFIG_
+environment variable. Out-of-tree projects may therefore use Kconfig
+with a different prefix, or they may use a custom configuration tool
+which does not use the CONFIG_ prefix at all. Such projects may still
+want to adhere to the Linux kernel coding style and run checkpatch.pl.
 
-Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+One example is OP-TEE [1] which does not use Kconfig but does have
+configuration options prefixed with CFG_. It also mostly follows the
+kernel coding style and therefore being able to use checkpatch is quite
+valuable.
+
+To make this possible, add the --kconfig-prefix command line option.
+
+[1] https://github.com/OP-TEE/optee_os
+
+Signed-off-by: Jerome Forissier <jerome@forissier.org>
+Acked-by: Joe Perches <joe@perches.com>
 ---
- net/bluetooth/cmtp/sock.c | 3 +++
- 1 file changed, 3 insertions(+)
+ scripts/checkpatch.pl | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/net/bluetooth/cmtp/sock.c b/net/bluetooth/cmtp/sock.c
-index 96d49d9fae96..476ccc9bee7c 100644
---- a/net/bluetooth/cmtp/sock.c
-+++ b/net/bluetooth/cmtp/sock.c
-@@ -207,6 +207,9 @@ static int cmtp_sock_create(struct net *net, struct socket *sock, int protocol,
- 	if (sock->type != SOCK_RAW)
- 		return -ESOCKTNOSUPPORT;
+v4:
+- Add missing link
+- Apply Joe's Acked-by: tag
 
-+	if (!capable(CAP_NET_RAW))
-+		return -EPERM;
-+
- 	sk = sk_alloc(net, PF_BLUETOOTH, GFP_ATOMIC, &cmtp_proto, kern);
- 	if (!sk)
- 		return -ENOMEM;
---
-2.17.1
+v3:
+- Use ${CONFIG_} instead of $CONFIG_.
+- Expand the commit message to mention OP-TEE.
+
+v2:
+- Use a command-line/.checkpatch.conf option instead of the _CONFIG
+  environment variable.
+- Changed the patch subject (was: "checkpatch: get CONFIG_ prefix from
+  the environment").
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 2cbeae6d9aee..fd65f8c774ed 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -65,6 +65,7 @@ my $allow_c99_comments = 1; # Can be overridden by --ignore C99_COMMENT_TOLERANC
+ # git output parsing needs US English output, so first set backtick child process LANGUAGE
+ my $git_command ='export LANGUAGE=en_US.UTF-8; git';
+ my $tabsize = 8;
++my ${CONFIG_} = "CONFIG_";
+ 
+ sub help {
+ 	my ($exitcode) = @_;
+@@ -127,6 +128,8 @@ Options:
+   --typedefsfile             Read additional types from this file
+   --color[=WHEN]             Use colors 'always', 'never', or only when output
+                              is a terminal ('auto'). Default is 'auto'.
++  --kconfig-prefix=WORD      use WORD as a prefix for Kconfig symbols (default
++                             ${CONFIG_})
+   -h, --help, --version      display this help and exit
+ 
+ When FILE is - read standard input.
+@@ -235,6 +238,7 @@ GetOptions(
+ 	'color=s'	=> \$color,
+ 	'no-color'	=> \$color,	#keep old behaviors of -nocolor
+ 	'nocolor'	=> \$color,	#keep old behaviors of -nocolor
++	'kconfig-prefix=s'	=> \${CONFIG_},
+ 	'h|help'	=> \$help,
+ 	'version'	=> \$help
+ ) or help(1);
+@@ -6528,16 +6532,16 @@ sub process {
+ 		}
+ 
+ # check for IS_ENABLED() without CONFIG_<FOO> ($rawline for comments too)
+-		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^CONFIG_/) {
++		if ($rawline =~ /\bIS_ENABLED\s*\(\s*(\w+)\s*\)/ && $1 !~ /^${CONFIG_}/) {
+ 			WARN("IS_ENABLED_CONFIG",
+-			     "IS_ENABLED($1) is normally used as IS_ENABLED(CONFIG_$1)\n" . $herecurr);
++			     "IS_ENABLED($1) is normally used as IS_ENABLED(${CONFIG_}$1)\n" . $herecurr);
+ 		}
+ 
+ # check for #if defined CONFIG_<FOO> || defined CONFIG_<FOO>_MODULE
+-		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(CONFIG_[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
++		if ($line =~ /^\+\s*#\s*if\s+defined(?:\s*\(?\s*|\s+)(${CONFIG_}[A-Z_]+)\s*\)?\s*\|\|\s*defined(?:\s*\(?\s*|\s+)\1_MODULE\s*\)?\s*$/) {
+ 			my $config = $1;
+ 			if (WARN("PREFER_IS_ENABLED",
+-				 "Prefer IS_ENABLED(<FOO>) to CONFIG_<FOO> || CONFIG_<FOO>_MODULE\n" . $herecurr) &&
++				 "Prefer IS_ENABLED(<FOO>) to ${CONFIG_}<FOO> || ${CONFIG_}<FOO>_MODULE\n" . $herecurr) &&
+ 			    $fix) {
+ 				$fixed[$fixlinenr] = "\+#if IS_ENABLED($config)";
+ 			}
+-- 
+2.25.1
 
