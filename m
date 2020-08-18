@@ -2,147 +2,486 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A71206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:38:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZX/uvfC0"
+	by mail.kernel.org (Postfix) with ESMTP id BB3312075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597783731;
+	bh=F0Rt/Sa6XOeH6QhMbwY6pm7rAx3cgygvM77yHUKtrks=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2rfOLtSUrsKI+iEHag5Db6GwxtJTez0Kjo42XkhTP7JvaBm7bdbe1aZEw3r1DdznM
+	 HF51DmP02tZ+ugatZF3wQVL/o8uBL9yZ4nNoOd+ZkYKQ3vfEw3CXiUh6MedTGt+s/i
+	 N9Nh+1QikEecPo7thP62SiwbYXVbiyNS59SulhN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHRUiD (ORCPT
+        id S1726779AbgHRUsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHRUiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:38:03 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCD4C061389;
-        Tue, 18 Aug 2020 13:38:02 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h21so16170995qtp.11;
-        Tue, 18 Aug 2020 13:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qItOo82livW8QC37rDaz6rglqISGnPM5/lh3qaWaPNI=;
-        b=ZX/uvfC0x3e8wOKIXLWjSOXYMp2QEmZLFDh97gzPJZCWOKYQUKn+R1lAV4ESFVh5sV
-         KPPROIbWMowDLDHUCBDuZUcP39GRfHWEBh7KNllCa3KQV4WQutU22FSxTVpcR3qjxnMI
-         B9lAs/uPJ64RdVrd4cNaxPVDco30koDXjcJ/Y2P3SXDNnPFVI3J6naaLyNqHA2hwX9et
-         B4fo/wXbTM8LVDce0P37gr2wvLnNcjYiSSFe2uirjaAcrXeSP2max5+zS3PQG0Qz6gcu
-         jokf89jonwVcuwOSwc5wg9uhwp7AH7+mlcE4EDunL9smIYKZ/FJyT0fverX04KNg//FR
-         qrYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qItOo82livW8QC37rDaz6rglqISGnPM5/lh3qaWaPNI=;
-        b=K2/ZzaiwSYB3kvVHqSsxY2i8nl9haB1Raoa48htaAjp/E3rm1dBu2MXzMT/QKaGC/5
-         eLfIdv424UaK3kk1UN1XGHtKZjvL1dNyeu7W1BW6EIE9gb+XcPoZQjLhvA7vjZLTamPx
-         VF+Np/LrnCq4W9tGMp1Ocbp6kkvm9z1Uk6uyxFh2/ZrPlVADlboJcScnb7LxQCv6k+St
-         ItXEzzlvhy/bDKYQjEHp8l9LIx7klVPP3yp0XkjQwF8vEM4xwqJWDn4tHPWJr1MmpXL0
-         ViKdQpHJnaIENSDcWt/xZ5779ghQhnRwTqA4xzeTIzfjmL8Lhif797x4byHdtDT385Hg
-         JbRw==
-X-Gm-Message-State: AOAM533yKx2t9qsAE1GxbAeqg9GvZckdSvN0U02tphsqvQIAbfGig3wD
-        Z6Ba5eS1MSQi3kkFTI5S27/5HCHbgxC7dw==
-X-Google-Smtp-Source: ABdhPJzwhBwerDWFEP8tEmovT9GH2QM4AzKWy2B77z/LfntylA9XG8pPfxF/eR518aXYCiDQeLyQTQ==
-X-Received: by 2002:ac8:4741:: with SMTP id k1mr19855889qtp.41.1597783082027;
-        Tue, 18 Aug 2020 13:38:02 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id t8sm22575113qke.7.2020.08.18.13.38.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 13:38:01 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] mikroBUS driver for add-on boards
-To:     Vaishnav M A <vaishnav@beagleboard.org>,
-        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, johan@kernel.org,
-        elder@kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     robh@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        jkridner@beagleboard.org, drew@beagleboard.org,
-        robertcnelson@beagleboard.org, rajkovic@mikroe.com,
-        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com
-References: <20200818124815.11029-1-vaishnav@beagleboard.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d53f0014-db7c-902c-70c7-eacac41cc6ed@gmail.com>
-Date:   Tue, 18 Aug 2020 15:38:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200818124815.11029-1-vaishnav@beagleboard.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Aug 2020 16:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726176AbgHRUsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 16:48:47 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B622075E;
+        Tue, 18 Aug 2020 20:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597783724;
+        bh=F0Rt/Sa6XOeH6QhMbwY6pm7rAx3cgygvM77yHUKtrks=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yRTSIIGdTow+nFhoXqJCsUEExWajDUNMhWGh2rmQ4q7LdZANgOyfmLkFO/kdOmstr
+         CCrmpiJC6efPMUDQplhMF45LUIYao13m9C0JFtuNi7wMgwagZ3EyU1ePFP/qXFJ7bu
+         zzRwqSkIsRO5kVEX7J5oIYtm2Sbkvhtt8aUP1TNk=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k88XC-0041Rw-Vt; Tue, 18 Aug 2020 21:48:43 +0100
+Date:   Tue, 18 Aug 2020 21:48:41 +0100
+Message-ID: <87lfibn0ie.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Re: [PATCH v4 2/3] irqchip: Add Actions Semi Owl SIRQ controller
+In-Reply-To: <20200818174241.GA2020288@BV030612LT>
+References: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
+        <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
+        <8e43fe6c6246bfd5347dc21b6f5c3f50@kernel.org>
+        <20200818174241.GA2020288@BV030612LT>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, sravanhome@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vaishnav,
+On Tue, 18 Aug 2020 18:42:41 +0100,
+Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
+>=20
+> Hi Marc,
+>=20
+> Thanks for your quick and detailed review!
+>=20
+> On Mon, Aug 17, 2020 at 02:52:06PM +0100, Marc Zyngier wrote:
+> > On 2020-08-16 12:33, Cristian Ciocaltea wrote:
+> > > This controller appears on Actions Semi Owl family SoC's S500, S700 a=
+nd
+> > > S900 and provides support for 3 external interrupt controllers through
+> >=20
+> > Is that really 3 interrupt controllers? Or merely 3 interrupt lines?
+>=20
+> This is mostly a leftover statement from the previous patch revision.
+> I will change it to something like:
+>=20
+> "This interrupt controller is found in the Actions Semi Owl SoCs (S500,
+> S700 and S900) and provides support for handling up to 3 external
+> interrupt lines."
 
-+me +devicetree
+Looks good.
 
-Please add these two recipients to future versions.
+>=20
+> > > dedicated SIRQ pins.
+> > >=20
+> > > Each line can be independently configured as interrupt and triggers
+> > > on either of the edges (raising or falling) or either of the levels
+> > > (high or low). Each line can also be masked independently.
+> > >=20
+> > > This is based on the patch series submitted by Parthiban Nallathambi:
+> > > https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
+> > >=20
+> > > Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > [cristi: optimized DT, various fixes/cleanups/improvements]
+> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > ---
+> > >  drivers/irqchip/Makefile       |   1 +
+> > >  drivers/irqchip/irq-owl-sirq.c | 318 +++++++++++++++++++++++++++++++=
+++
+> > >  2 files changed, 319 insertions(+)
+> > >  create mode 100644 drivers/irqchip/irq-owl-sirq.c
+> > >=20
+> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > > index 133f9c45744a..b8eb5b8b766d 100644
+> > > --- a/drivers/irqchip/Makefile
+> > > +++ b/drivers/irqchip/Makefile
+> > > @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+=3D irq-ath79-cpu.o
+> > >  obj-$(CONFIG_ATH79)			+=3D irq-ath79-misc.o
+> > >  obj-$(CONFIG_ARCH_BCM2835)		+=3D irq-bcm2835.o
+> > >  obj-$(CONFIG_ARCH_BCM2835)		+=3D irq-bcm2836.o
+> > > +obj-$(CONFIG_ARCH_ACTIONS)		+=3D irq-owl-sirq.o
+> > >  obj-$(CONFIG_DAVINCI_AINTC)		+=3D irq-davinci-aintc.o
+> > >  obj-$(CONFIG_DAVINCI_CP_INTC)		+=3D irq-davinci-cp-intc.o
+> > >  obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+=3D exynos-combiner.o
+> > > diff --git a/drivers/irqchip/irq-owl-sirq.c
+> > > b/drivers/irqchip/irq-owl-sirq.c
+> > > new file mode 100644
+> > > index 000000000000..29b7ffc40ac7
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-owl-sirq.c
+> > > @@ -0,0 +1,318 @@
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * Actions Semi Owl SoCs SIRQ interrupt controller driver
+> > > + *
+> > > + * Copyright (C) 2014 Actions Semi Inc.
+> > > + * David Liu <liuwei@actions-semi.com>
+> > > + *
+> > > + * Author: Parthiban Nallathambi <pn@denx.de>
+> > > + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> > > + * Author: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > + */
+> > > +
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/irqchip.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/of_irq.h>
+> > > +
+> > > +#define NUM_SIRQ			3
+> > > +
+> > > +#define INTC_EXTCTL_PENDING		BIT(0)
+> > > +#define INTC_EXTCTL_CLK_SEL		BIT(4)
+> > > +#define INTC_EXTCTL_EN			BIT(5)
+> > > +#define INTC_EXTCTL_TYPE_MASK		GENMASK(7, 6)
+> > > +#define INTC_EXTCTL_TYPE_HIGH		0
+> > > +#define INTC_EXTCTL_TYPE_LOW		BIT(6)
+> > > +#define INTC_EXTCTL_TYPE_RISING		BIT(7)
+> > > +#define INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
+> > > +
+> > > +/* S900 SIRQ1 & SIRQ2 control register offsets, relative to SIRQ0 */
+> > > +#define INTC_EXTCTL1			0x0328
+> > > +#define INTC_EXTCTL2			0x032c
+> > > +
+> > > +struct owl_sirq_params {
+> > > +	/* INTC_EXTCTL reg shared for all three SIRQ lines */
+> > > +	bool reg_shared;
+> > > +	/* INTC_EXTCTL reg offsets relative to controller base address */
+> > > +	u16 reg_offset[NUM_SIRQ];
+> > > +};
+> > > +
+> > > +struct owl_sirq_chip_data {
+> > > +	const struct owl_sirq_params *params;
+> > > +	void __iomem *base;
+> > > +	raw_spinlock_t lock;
+> > > +	u32 ext_irqs[NUM_SIRQ];
+> > > +	u8 trigger;
+> >=20
+> > Nit: Please align data structure members vertically:
+> >=20
+> > struct owl_sirq_chip_data {
+> > 	const struct owl_sirq_params *params;
+> > 	void __iomem                 *base;
+> > 	raw_spinlock_t               lock;
+> > 	u32                          ext_irqs[NUM_SIRQ];
+> > 	u8                           trigger;
+> > };
+>=20
+> Done.
+>=20
+> > > +};
+> > > +
+> > > +/* S500 and S700 SoCs */
+> > > +static const struct owl_sirq_params owl_sirq_s500_params =3D {
+> > > +	.reg_shared =3D true,
+> > > +	.reg_offset =3D { 0, 0, 0 },
+> > > +};
+> > > +
+> > > +/* S900 SoC */
+> > > +static const struct owl_sirq_params owl_sirq_s900_params =3D {
+> > > +	.reg_shared =3D false,
+> > > +	.reg_offset =3D { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
+> >=20
+> > 0 *is* an offset, right? Why doesn't it have a name too?
+>=20
+> Right, I updated the defines section:
+>=20
+> /* S900 SIRQ control register offsets, relative to controller base addres=
+s */
+> #define INTC_EXTCTL0			0x0000
+> #define INTC_EXTCTL1			0x0328
+> [...]
+>=20
+> The controller base address points to SIRQ0 control register, so this
+> offset is always 0, but I totally agree we should have a name for it.
+>=20
+> > > +};
+> > > +
+> > > +static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32
+> > > index)
+> > > +{
+> > > +	u32 val;
+> > > +
+> > > +	val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
+> > > +	if (data->params->reg_shared)
+> > > +		val =3D (val >> (2 - index) * 8) & 0xff;
+> >=20
+> >         base =3D (2 - index) * 8;
+> >         val =3D FIELD_GET(GENMASK(base + 7, base), val);
+>=20
+> Unfortunately the context doesn't allow using FIELD_GET:
+>=20
+> ./include/linux/compiler.h:392:38: error: call to =E2=80=98__compiletime_=
+assert_159=E2=80=99=20
+>  declared with attribute error: FIELD_GET: mask is not constant
 
-I will comment more after reading the first version and v2.
+Bah. Turning the whole thing into compile-time values would actually
+be more readable, so how about this:
 
--Frank
+diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
+index 29b7ffc40ac7..b771acbda7d5 100644
+--- a/drivers/irqchip/irq-owl-sirq.c
++++ b/drivers/irqchip/irq-owl-sirq.c
+@@ -57,13 +57,39 @@ static const struct owl_sirq_params owl_sirq_s900_param=
+s =3D {
+ 	.reg_offset =3D { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
+ };
+=20
++static u32 owl_field_get(u32 val, int index)
++{
++	switch(index) {
++	case 0:
++		return FIELD_GET(GENMASK(23, 16), val);
++	case 1:
++		return FIELD_GET(GENMASK(15, 8), val);
++	case 2:
++	default:
++		return FIELD_GET(GENMASK(7, 0), val);
++	}
++}
++
++static u32 owl_field_prep(u32 val, int index)
++{
++	switch(index) {
++	case 0:
++		return FIELD_PREP(GENMASK(23, 16), val);
++	case 1:
++		return FIELD_PREP(GENMASK(15, 8), val);
++	case 2:
++	default:
++		return FIELD_PREP(GENMASK(7, 0), val);
++	}
++}
++
+ static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32 index)
+ {
+ 	u32 val;
+=20
+ 	val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
+ 	if (data->params->reg_shared)
+-		val =3D (val >> (2 - index) * 8) & 0xff;
++		val =3D owl_field_get(val, index);
+=20
+ 	return val;
+ }
+@@ -75,9 +101,8 @@ static void owl_sirq_write_extctl(struct owl_sirq_chip_d=
+ata *data,
+=20
+ 	if (data->params->reg_shared) {
+ 		val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
+-		val &=3D ~(0xff << (2 - index) * 8);
+-		extctl &=3D 0xff;
+-		extctl =3D (extctl << (2 - index) * 8) | val;
++		val &=3D ~owl_field_prep(0xff, index);
++		extctl =3D owl_field_prep(extctl, index) | val;
+ 	}
+=20
+ 	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
 
+Yes, this is a bit more code, but it *is* readable. Bonus points if
+you add proper defines for the masks.
 
-On 2020-08-18 07:48, Vaishnav M A wrote:
-> Hi,
-> 
-> This Patch series is an update to the mikroBUS driver
-> RFC v1 Patch : https://lkml.org/lkml/2020/7/24/518 .
-> The mikrobus driver is updated to add mikrobus ports from device-tree
-> overlays, the debug interfaces for adding mikrobus ports through sysFS
-> is removed, and the driver considers the extended usage of mikrobus
-> port pins from their standard purposes.
-> 
-> change log:
->         v2: support for adding mikroBUS ports from DT overlays,
->         remove debug sysFS interface for adding mikrobus ports,
->         consider extended pin usage/deviations from mikrobus standard
->         specifications,
->         use greybus CPort protocol enum instead of new protcol enums
->         Fix cases of wrong indendation, ignoring return values, freeing
->         allocated resources in case of errors and other style suggestions
->         in v1 review.
-> 
-> Vaishnav M A (3):
->   add mikrobus descriptors to greybus_manifest
->   mikroBUS driver for add-on boards on mikrobus ports
->   Add Device Tree Bindings for mikroBUS port
-> 
->  .../bindings/misc/linux,mikrobus.txt          |  81 ++
->  MAINTAINERS                                   |   6 +
->  drivers/misc/Kconfig                          |   1 +
->  drivers/misc/Makefile                         |   1 +
->  drivers/misc/mikrobus/Kconfig                 |  16 +
->  drivers/misc/mikrobus/Makefile                |   7 +
->  drivers/misc/mikrobus/mikrobus_core.c         | 692 ++++++++++++++++++
->  drivers/misc/mikrobus/mikrobus_core.h         | 191 +++++
->  drivers/misc/mikrobus/mikrobus_manifest.c     | 444 +++++++++++
->  drivers/misc/mikrobus/mikrobus_manifest.h     |  21 +
->  drivers/misc/mikrobus/mikrobus_port.c         | 171 +++++
->  include/linux/greybus/greybus_manifest.h      |  47 ++
->  12 files changed, 1678 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/linux,mikrobus.txt
->  create mode 100644 drivers/misc/mikrobus/Kconfig
->  create mode 100644 drivers/misc/mikrobus/Makefile
->  create mode 100644 drivers/misc/mikrobus/mikrobus_core.c
->  create mode 100644 drivers/misc/mikrobus/mikrobus_core.h
->  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.c
->  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.h
->  create mode 100644 drivers/misc/mikrobus/mikrobus_port.c
-> 
+>=20
+> > > +
+> > > +	return val;
+> > > +}
+> > > +
+> > > +static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
+> > > +				  u32 extctl, u32 index)
+> > > +{
+> > > +	u32 val;
+> > > +
+> > > +	if (data->params->reg_shared) {
+> > > +		val =3D readl_relaxed(data->base + data->params->reg_offset[index]=
+);
+> > > +		val &=3D ~(0xff << (2 - index) * 8);
+> > > +		extctl &=3D 0xff;
+> > > +		extctl =3D (extctl << (2 - index) * 8) | val;
+> >=20
+> > Please make use of FIELD_PREP, FIELD_GET and GENMASK.
+>=20
+> I'm not sure how to deal with the mask constness restriction, except
+> using static defines and if/else statements, which is not quite
+> elegant.
 
+See above.
+
+>=20
+> > > +	}
+> > > +
+> > > +	writel_relaxed(extctl, data->base + data->params->reg_offset[index]=
+);
+> > > +}
+> > > +
+> > > +static void owl_sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
+> > > +				      u32 clear, u32 set, u32 index)
+> > > +{
+> > > +	unsigned long flags;
+> > > +	u32 val;
+> > > +
+> > > +	raw_spin_lock_irqsave(&d->lock, flags);
+> > > +	val =3D owl_sirq_read_extctl(d, index);
+> > > +	val &=3D ~clear;
+> > > +	val |=3D set;
+> > > +	owl_sirq_write_extctl(d, val, index);
+> > > +	raw_spin_unlock_irqrestore(&d->lock, flags);
+> > > +}
+> > > +
+> > > +static void owl_sirq_eoi(struct irq_data *data)
+> > > +{
+> > > +	struct owl_sirq_chip_data *chip_data =3D
+> > > irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	/*
+> > > +	 * Software must clear external interrupt pending, when interrupt t=
+ype
+> > > +	 * is edge triggered, so we need per SIRQ based clearing.
+> > > +	 */
+> > > +	if (chip_data->trigger & (1 << data->hwirq))
+> >=20
+> > BIT(d->hwirq)
+> >=20
+> > But it also begs the question: we already have all the trigger informat=
+ion
+> > in the irqdesc. Why do you need some additional bookkeeping?
+>=20
+> That's another leftover from the original work. Thanks for pointing
+> this out, I missed it. I dropped the redundant handling of the IRQ
+> trigger information and just replaced this with:
+>=20
+>   if (!irqd_is_level_type(data))
+
+Yup.
+
+>=20
+> > > +		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_PENDING,
+> > > +					  data->hwirq);
+> > > +
+> > > +	irq_chip_eoi_parent(data);
+> > > +}
+> > > +
+> > > +static void owl_sirq_mask(struct irq_data *data)
+> > > +{
+> > > +	struct owl_sirq_chip_data *chip_data =3D
+> > > irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_EN, 0, data->hwirq=
+);
+> > > +	irq_chip_mask_parent(data);
+> > > +}
+> > > +
+> > > +static void owl_sirq_unmask(struct irq_data *data)
+> > > +{
+> > > +	struct owl_sirq_chip_data *chip_data =3D
+> > > irq_data_get_irq_chip_data(data);
+> > > +
+> > > +	owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_EN, data->hwirq=
+);
+> > > +	irq_chip_unmask_parent(data);
+> > > +}
+> > > +
+> > > +/*
+> > > + * GIC does not handle falling edge or active low, hence SIRQ shall =
+be
+> > > + * programmed to convert falling edge to rising edge signal and acti=
+ve
+> > > + * low to active high signal.
+> > > + */
+> > > +static int owl_sirq_set_type(struct irq_data *data, unsigned int typ=
+e)
+> > > +{
+> > > +	struct owl_sirq_chip_data *chip_data =3D
+> > > irq_data_get_irq_chip_data(data);
+> > > +	u32 sirq_type;
+> > > +
+> > > +	switch (type) {
+> > > +	case IRQ_TYPE_LEVEL_LOW:
+> > > +		sirq_type =3D INTC_EXTCTL_TYPE_LOW;
+> > > +		chip_data->trigger &=3D ~(1 << data->hwirq);
+> > > +		type =3D IRQ_TYPE_LEVEL_HIGH;
+> > > +		break;
+> > > +	case IRQ_TYPE_LEVEL_HIGH:
+> > > +		sirq_type =3D INTC_EXTCTL_TYPE_HIGH;
+> > > +		chip_data->trigger &=3D ~(1 << data->hwirq);
+> > > +		break;
+> > > +	case IRQ_TYPE_EDGE_FALLING:
+> > > +		sirq_type =3D INTC_EXTCTL_TYPE_FALLING;
+> > > +		chip_data->trigger |=3D 1 << data->hwirq;
+> > > +		type =3D IRQ_TYPE_EDGE_RISING;
+> > > +		break;
+> > > +	case IRQ_TYPE_EDGE_RISING:
+> > > +		sirq_type =3D INTC_EXTCTL_TYPE_RISING;
+> > > +		chip_data->trigger |=3D 1 << data->hwirq;
+> > > +		break;
+> > > +	default:
+> > > +		WARN_ON(1);
+> >=20
+> > No need for this WARN_ON(), the core kernel is loud enough.
+>=20
+> Done.
+>=20
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_TYPE_MASK, sirq_ty=
+pe,
+> > > +				  data->hwirq);
+> > > +
+> > > +	return irq_chip_set_type_parent(data, type);
+> > > +}
+> > > +
+> > > +static struct irq_chip owl_sirq_chip =3D {
+> > > +	.name		=3D "owl-sirq",
+> > > +	.irq_mask	=3D owl_sirq_mask,
+> > > +	.irq_unmask	=3D owl_sirq_unmask,
+> > > +	.irq_eoi	=3D owl_sirq_eoi,
+> > > +	.irq_set_type	=3D owl_sirq_set_type,
+> > > +	.irq_retrigger	=3D irq_chip_retrigger_hierarchy,
+> >=20
+> > How about irq_set_affinity? Or does it only exist on UP systems?
+>=20
+> I have just added:
+>=20
+> #ifdef CONFIG_SMP
+> 	.irq_set_affinity =3D irq_chip_set_affinity_parent,
+> #endif
+
+Looks OK.
+
+Cheers,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
