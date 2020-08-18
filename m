@@ -7,152 +7,230 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E91BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75209C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE5F208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE7D20897
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgHRPuC (ORCPT
+        id S1728292AbgHRPuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:50:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2652 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728241AbgHRPsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:48:17 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 055F67BBDC167B873813;
-        Tue, 18 Aug 2020 16:48:08 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:48:06 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:48:09 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 29/30] ima: Add dummy boot aggregate to per ima namespace measurement list
-Date:   Tue, 18 Aug 2020 17:42:29 +0200
-Message-ID: <20200818154230.14016-20-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+        Tue, 18 Aug 2020 11:50:18 -0400
+Received: from mga14.intel.com ([192.55.52.115]:41763 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728240AbgHRPsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:48:20 -0400
+IronPort-SDR: sR6D3MpIZelbM6yclzF6ZdW8hDarCnm8z5qnEzitlnlXAOKasBa6RK14RNZXzK0gGlXI7zcnRx
+ cEJjPPbfxfsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154194593"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="154194593"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:48:08 -0700
+IronPort-SDR: kZZ2AcB8IdQK7Yv26NjXFc0QfUWmTFCRMPNXvfbXsEHUVSTb2unZHo+IsuXOe0r6OCY4/JVrzx
+ 4XRaPBgvjfdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="400530454"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:48:05 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v6 10/10] net: eth: altera: update devicetree bindings documentation
+Date:   Tue, 18 Aug 2020 23:46:13 +0800
+Message-Id: <20200818154613.148921-11-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
+References: <20200818154613.148921-1-joyce.ooi@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Add dummy boot aggregate entry to the ima measurement list, for every
-new ima namespace, when the first process is born into that namespace.
+Update devicetree bindings documentation to include msgdma
+prefetcher and ptp bindings.
 
-There is at most one TPM chip in the system and one measurement list
-associated to one of its PCRs. IMA namespace IDs can be re-used after
-namespace is destroyed. The per namespace boot aggregate entry marks
-the moment of the ima namespace creation. It is useful when host's
-root parses the global measurement list to find entries for destroyed
-containers. If the ima namespace ID is reused, the user will know, that
-the given entry belongs to a different container.
-
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- security/integrity/ima/ima_ns.c | 61 +++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+v2: no change
+v3: no change
+v4: no change
+v5: no change
+v6: no change
+---
+ .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
+ 1 file changed, 84 insertions(+), 19 deletions(-)
 
-diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
-index 11e1d896f603..9b9c34e71cc6 100644
---- a/security/integrity/ima/ima_ns.c
-+++ b/security/integrity/ima/ima_ns.c
-@@ -48,6 +48,65 @@ static void dec_ima_namespaces(struct ucounts *ucounts)
- 	return dec_ucount(ucounts, UCOUNT_IMA_NAMESPACES);
- }
+diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
+index 0b7d4d3758ea..2f2d12603907 100644
+--- a/Documentation/devicetree/bindings/net/altera_tse.txt
++++ b/Documentation/devicetree/bindings/net/altera_tse.txt
+@@ -2,53 +2,86 @@
  
-+static int ima_ns_add_boot_aggregate(struct ima_namespace *ima_ns)
-+{
-+	static const char op[] = "ns_add_boot_aggregate";
-+	static const char ns_aggregate_name_prefix[] = "ns_aggregate_";
-+	const char *audit_cause = "ENOMEM";
-+	struct ima_template_entry *entry;
-+	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-+	struct ima_event_data event_data = { .iint = iint };
-+	int result = -ENOMEM;
-+	int violation = 0;
-+	struct {
-+		struct ima_digest_data hdr;
-+		char digest[TPM_DIGEST_SIZE];
-+	} hash;
-+	unsigned int ns_id = get_ns_id(ima_ns);
-+	char *ns_aggregate_name;
-+
-+	ns_aggregate_name = kmalloc(sizeof(ns_aggregate_name_prefix) +
-+				    sizeof(unsigned int),
-+				    GFP_KERNEL);
-+	if (!ns_aggregate_name)
-+		goto err_out;
-+
-+	sprintf(ns_aggregate_name, "%s%u", ns_aggregate_name_prefix, ns_id);
-+
-+	event_data.filename = ns_aggregate_name;
-+	event_data.ns_id = ns_id;
-+
-+	memset(iint, 0, sizeof(*iint));
-+	memset(&hash, 0, sizeof(hash));
-+	iint->ima_hash = &hash.hdr;
-+	iint->ima_hash->algo = HASH_ALGO_SHA1;
-+	iint->ima_hash->length = SHA1_DIGEST_SIZE;
-+
-+	result = ima_alloc_init_template(&event_data, &entry, NULL);
-+	if (result < 0) {
-+		audit_cause = "alloc_entry";
-+		goto err_out;
-+	}
-+
-+	result = ima_store_template(entry, violation, NULL,
-+				    ns_aggregate_name,
-+				    CONFIG_IMA_MEASURE_PCR_IDX,
-+				    ima_ns);
-+	if (result < 0) {
-+		ima_free_template_entry(entry);
-+		audit_cause = "store_entry";
-+	}
-+
-+err_out:
-+	if (result < 0)
-+		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
-+				    ns_aggregate_name, op, audit_cause,
-+				    result, 0);
-+	kfree(ns_aggregate_name);
-+
-+	return result;
-+}
-+
- #ifdef CONFIG_IMA_LOAD_X509
- static int ima_ns_load_x509(struct ima_namespace *ima_ns)
- {
-@@ -404,6 +463,8 @@ static int imans_activate(struct ima_namespace *ima_ns)
- 	list_add_tail(&ima_ns->list, &ima_ns_list);
- 	up_write(&ima_ns_list_lock);
+ Required properties:
+ - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
+-		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
++		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
++		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
++		implementations.
+ 		ALTR is supported for legacy device trees, but is deprecated.
+ 		altr should be used for all new designs.
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+-  "control_port": MAC configuration space region
+-  "tx_csr":       xDMA Tx dispatcher control and status space region
+-  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
+-  "rx_csr" :      xDMA Rx dispatcher control and status space region
+-  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
+-  "rx_resp":      MSGDMA Rx dispatcher response space region
+-  "s1":		  SGDMA descriptor memory
+ - interrupts: Should contain the TSE interrupts and it's mode.
+ - interrupt-names: Should contain the interrupt names
+-  "rx_irq":       xDMA Rx dispatcher interrupt
+-  "tx_irq":       xDMA Tx dispatcher interrupt
++  "rx_irq":       DMA Rx dispatcher interrupt
++  "tx_irq":       DMA Tx dispatcher interrupt
+ - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
+ - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
+ - phy-mode: See ethernet.txt in the same directory.
+ - phy-handle: See ethernet.txt in the same directory.
+ - phy-addr: See ethernet.txt in the same directory. A configuration should
+ 		include phy-handle or phy-addr.
+-- altr,has-supplementary-unicast:
+-		If present, TSE supports additional unicast addresses.
+-		Otherwise additional unicast addresses are not supported.
+-- altr,has-hash-multicast-filter:
+-		If present, TSE supports a hash based multicast filter.
+-		Otherwise, hash-based multicast filtering is not supported.
+-
+ - mdio device tree subnode: When the TSE has a phy connected to its local
+ 		mdio, there must be device tree subnode with the following
+ 		required properties:
+-
+ 	- compatible: Must be "altr,tse-mdio".
+ 	- #address-cells: Must be <1>.
+ 	- #size-cells: Must be <0>.
  
-+	ima_ns_add_boot_aggregate(ima_ns);
+ 	For each phy on the mdio bus, there must be a node with the following
+ 	fields:
+-
+ 	- reg: phy id used to communicate to phy.
+ 	- device_type: Must be "ethernet-phy".
+ 
+ The MAC address will be determined using the optional properties defined in
+ ethernet.txt.
+ 
++- altr,has-supplementary-unicast:
++		If present, TSE supports additional unicast addresses.
++		Otherwise additional unicast addresses are not supported.
++- altr,has-hash-multicast-filter:
++		If present, TSE supports a hash based multicast filter.
++		Otherwise, hash-based multicast filtering is not supported.
++- altr,has-ptp:
++		If present, TSE supports 1588 timestamping.  Currently only
++		supported with the msgdma prefetcher.
++- altr,tx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
++- altr,rx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
 +
- 	destroy_child_config(ima_ns);
- out:
- 	mutex_unlock(&frozen_lock);
++Required registers by compatibility string:
++ - "altr,tse-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"s1":		DMA descriptor memory
++
++ - "altr,tse-msgdma-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_desc":      DMA Tx dispatcher descriptor space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_desc":      DMA Rx dispatcher descriptor space region
++	"rx_resp":      DMA Rx dispatcher response space region
++
++ - "altr,tse-msgdma-2.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_pref":      DMA Tx prefetcher configuration space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_pref":      DMA Rx prefetcher configuration space region
++	"tod_ctrl":     Time of Day Control register only required when
++			timestamping support is enabled.  Timestamping is
++			only supported with the msgdma-2.0 implementation.
++
++Optional properties:
++- local-mac-address: See ethernet.txt in the same directory.
++- max-frame-size: See ethernet.txt in the same directory.
++
+ Example:
+ 
+ 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
+@@ -86,6 +119,11 @@ Example:
+ 				device_type = "ethernet-phy";
+ 			};
+ 
++			phy2: ethernet-phy@2 {
++				reg = <0x2>;
++				device_type = "ethernet-phy";
++			};
++
+ 		};
+ 	};
+ 
+@@ -111,3 +149,30 @@ Example:
+ 		altr,has-hash-multicast-filter;
+ 		phy-handle = <&phy1>;
+ 	};
++
++
++	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
++		compatible = "altr,tse-msgdma-2.0";
++		reg = 	<0x00000001 0x00002000 0x00000400>,
++			<0x00000001 0x00002400 0x00000020>,
++			<0x00000001 0x00002420 0x00000020>,
++			<0x00000001 0x00002440 0x00000020>,
++			<0x00000001 0x00002460 0x00000020>,
++			<0x00000001 0x00002480 0x00000040>;
++		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
++		interrupt-parent = <&hps_0_arm_gic_0>;
++		interrupts = <0 45 4>, <0 44 4>;
++		interrupt-names = "rx_irq", "tx_irq";
++		rx-fifo-depth = <2048>;
++		tx-fifo-depth = <2048>;
++		address-bits = <48>;
++		max-frame-size = <1500>;
++		local-mac-address = [ 00 00 00 00 00 00 ];
++		phy-mode = "sgmii";
++		altr,has-supplementary-unicast;
++		altr,has-hash-multicast-filter;
++		altr,has-ptp;
++		altr,tx-poll-cnt = <128>;
++		altr,rx-poll-cnt = <32>;
++		phy-handle = <&phy2>;
++	};
 -- 
-2.20.1
+2.13.0
 
