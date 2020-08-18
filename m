@@ -2,156 +2,126 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC5620706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GHHSzarw"
+	by mail.kernel.org (Postfix) with ESMTP id 4286020738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHRMrn (ORCPT
+        id S1726794AbgHRMr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgHRMrk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:47:40 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD812C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 05:47:39 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id m22so21871664eje.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 05:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iMDbLvcB25l+0rawk4vmc0yRtmJgi9WjSy4299BGbcs=;
-        b=GHHSzarwU/3M7mBfkeWifUOEbKaiJJm9fviyvqJU+b34aCmyCR7vk8L3t9fzMMJOzd
-         +m8lYUb98ryzLIxU9REN8lNS+fme8lBBvYvZAYaXl3kJucpQTOnC/0cFFwf7Aqr4nyt1
-         DoFon7sfFVbBK/ZZeSHeVgFgsDdMicF+IVE4qxamw62AhfAVhDYJ2PP+tObbJNBuYmia
-         5HzIYLLAaDjSelBVqoGZ3uHhW2kDZKr4TIDECKiRBav21VYF1nnJkGwgkCCj7Ctk4WNM
-         rrLz4Dz4GdjsruFY5DHyW8uu5oUjX1corCHzLwQHVBUIF+3vn9hmKbgebX722Ph0xRvz
-         Z1eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iMDbLvcB25l+0rawk4vmc0yRtmJgi9WjSy4299BGbcs=;
-        b=FiKews39EASpn/yprvOvjI2gCDcPdOg3NEt+BmMmhMSvOEnR26mtxnozodZZJW8GkX
-         8reneLQVqbkhZAUGPlTlCv5+zT3T3nR7+lHDHBQtV1p8ddq5FruB6sd2hdb8Su5vTG2h
-         zVM/BcmDhLC8w4mQ4taE5DeGTK5dWkW3Sjp/wivp0YSyBCG+B1TuSx5FNlpO0GFeL/Iz
-         0ZkGgMnMUlzTiTBHzQMf/Zn+8ek9IeL+WMhZC5mmkK+En0x55r5hiNFkn5bZ7JvVUby8
-         O1vYOUj5VUkPi3dDRff38cVywxvjpcpx/xTEvifqV/8eIz0JVJSb7i3kJQ8O0cmOnh/p
-         NlbA==
-X-Gm-Message-State: AOAM530uoXb/VSG7Bnh4ERDlVq+rE9T0sD1wGMWkMiVlGAYw6s6eDVFq
-        kttOPV1FIZTcie96viA5ytCX+gfeDs2vFfNb5KH5tw==
-X-Google-Smtp-Source: ABdhPJyCXGzUrpykW6o7qNDpvOmpZd7kJApCJVeHdCXodWCK1pgP9UjtxjcXF2XWViRFQ2DXBQSuQ6Wdofmt/4fcd44=
-X-Received: by 2002:a17:906:3911:: with SMTP id f17mr20823127eje.56.1597754858249;
- Tue, 18 Aug 2020 05:47:38 -0700 (PDT)
+        Tue, 18 Aug 2020 08:47:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48308 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbgHRMr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:47:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 69CAAAD60;
+        Tue, 18 Aug 2020 12:48:19 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Chris Leech <cleech@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Cong Wang <amwang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Hannes Reinecke <hare@suse.de>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.com>,
+        Jeff Layton <jlayton@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Lee Duncan <lduncan@suse.com>,
+        Mike Christie <michaelc@cs.wisc.edu>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>, stable@vger.kernel.org,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.com>
+Subject: [PATCH v6 0/6] Introduce sendpage_ok() to detect misused sendpage in network related drivers
+Date:   Tue, 18 Aug 2020 20:47:30 +0800
+Message-Id: <20200818124736.5790-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200818111057.19755-1-tingwei@codeaurora.org> <20200818111057.19755-2-tingwei@codeaurora.org>
-In-Reply-To: <20200818111057.19755-2-tingwei@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 18 Aug 2020 13:47:27 +0100
-Message-ID: <CAJ9a7VjatuzAJw8Bp6T7vkh8bCTwoNa1kve5exsedgy++Wys0g@mail.gmail.com>
-Subject: Re: [PATCH] coresight: cti: remove pm_runtime_get_sync() from CPU hotplug
-To:     Tingwei Zhang <tingwei@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 at 12:11, Tingwei Zhang <tingwei@codeaurora.org> wrote:
->
-> Below BUG is triggered by call pm_runtime_get_sync() in
-> cti_cpuhp_enable_hw(). It's in CPU hotplug callback with interrupt
-> disabled. Pm_runtime_get_sync() calls clock driver to enable clock
-> which could sleep. Remove pm_runtime_get_sync() in cti_cpuhp_enable_hw()
-> since pm_runtime_get_sync() is called in cti_enabld and pm_runtime_put()
-> is called in cti_disabled. No need to increase pm count when CPU gets
-> online since it's not decreased when CPU is offline.
->
-> [  105.800279] BUG: scheduling while atomic: swapper/1/0/0x00000002
-> [  105.800290] Modules linked in:
-> [  105.800327] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W
-> 5.9.0-rc1-gff1304be0a05-dirty #21
-> [  105.800337] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [  105.800353] Call trace:
-> [  105.800414]  dump_backtrace+0x0/0x1d4
-> [  105.800439]  show_stack+0x14/0x1c
-> [  105.800462]  dump_stack+0xc0/0x100
-> [  105.800490]  __schedule_bug+0x58/0x74
-> [  105.800523]  __schedule+0x590/0x65c
-> [  105.800538]  schedule+0x78/0x10c
-> [  105.800553]  schedule_timeout+0x188/0x250
-> [  105.800585]  qmp_send.constprop.10+0x12c/0x1b0
-> [  105.800599]  qmp_qdss_clk_prepare+0x18/0x20
-> [  105.800622]  clk_core_prepare+0x48/0xd4
-> [  105.800639]  clk_prepare+0x20/0x34
-> [  105.800663]  amba_pm_runtime_resume+0x54/0x90
-> [  105.800695]  __rpm_callback+0xdc/0x138
-> [  105.800709]  rpm_callback+0x24/0x78
-> [  105.800724]  rpm_resume+0x328/0x47c
-> [  105.800739]  __pm_runtime_resume+0x50/0x74
-> [  105.800768]  cti_starting_cpu+0x40/0xa4
-> [  105.800795]  cpuhp_invoke_callback+0x84/0x1e0
-> [  105.800814]  notify_cpu_starting+0x9c/0xb8
-> [  105.800834]  secondary_start_kernel+0xd8/0x164
-> [  105.800933] CPU1: Booted secondary processor 0x0000000100 [0x517f803c]
->
-> Fixes: e9b880581d55 ("coresight: cti: Add CPU Hotplug handling to CTI driver")
-> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> ---
->  drivers/hwtracing/coresight/coresight-cti.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 869569eb8c7f..baba6af83440 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -126,9 +126,7 @@ static int cti_enable_hw(struct cti_drvdata *drvdata)
->  static void cti_cpuhp_enable_hw(struct cti_drvdata *drvdata)
->  {
->         struct cti_config *config = &drvdata->config;
-> -       struct device *dev = &drvdata->csdev->dev;
->
-> -       pm_runtime_get_sync(dev->parent);
->         spin_lock(&drvdata->spinlock);
->         config->hw_powered = true;
->
-> @@ -148,7 +146,6 @@ static void cti_cpuhp_enable_hw(struct cti_drvdata *drvdata)
->         /* did not re-enable due to no claim / no request */
->  cti_hp_not_enabled:
->         spin_unlock(&drvdata->spinlock);
-> -       pm_runtime_put(dev->parent);
->  }
->
->  /* disable hardware */
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-Reviewed-by Mike Leach <mike.leach@linaro.org>
+This series was original by a bug fix in nvme-over-tcp driver which only
+checked whether a page was allocated from slab allcoator, but forgot to
+check its page_count: The page handled by sendpage should be neither a
+Slab page nor 0 page_count page.
+
+As Sagi Grimberg suggested, the original fix is refind to a more common
+inline routine:
+    static inline bool sendpage_ok(struct page *page)
+    {
+    	return  (!PageSlab(page) && page_count(page) >= 1);
+    }
+If sendpage_ok() returns true, the checking page can be handled by the
+zero copy sendpage method in network layer.
+
+The first patch in this series introduces sendpage_ok() in header file
+include/linux/net.h, the second patch fixes the page checking issue in
+nvme-over-tcp driver, the third patch adds page_count check by using
+sendpage_ok() in do_tcp_sendpages() as Eric Dumazet suggested, and all
+rested patches just replace existing open coded checks with the inline
+sendpage_ok() routine.
+
+Coly Li
+
+Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Chris Leech <cleech@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Cong Wang <amwang@redhat.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Ilya Dryomov <idryomov@gmail.com>
+Cc: Jan Kara <jack@suse.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Lee Duncan <lduncan@suse.com>
+Cc: Mike Christie <michaelc@cs.wisc.edu>
+Cc: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: stable@vger.kernel.org
+Cc: Vasily Averin <vvs@virtuozzo.com>
+Cc: Vlastimil Babka <vbabka@suse.com>
+---
+Changelog:
+v6: fix page check in do_tcp_sendpages(), and replace other open coded
+    checks with sendpage_ok() in libceph, iscsi drivers.
+v5, include linux/mm.h in include/linux/net.h
+v4, change sendpage_ok() as an inline helper, and post it as
+    separate patch.
+v3, introduce a more common sendpage_ok()
+v2, fix typo in patch subject
+v1, the initial version.
+
+Coly Li (6):
+  net: introduce helper sendpage_ok() in include/linux/net.h
+  nvme-tcp: check page by sendpage_ok() before calling kernel_sendpage()
+  tcp: use sendpage_ok() to detect misused .sendpage
+  drbd: code cleanup by using sendpage_ok() to check page for
+    kernel_sendpage()
+  scsi: libiscsi: use sendpage_ok() in iscsi_tcp_segment_map()
+  libceph: use sendpage_ok() in ceph_tcp_sendpage()
+
+ drivers/block/drbd/drbd_main.c |  2 +-
+ drivers/nvme/host/tcp.c        |  7 +++----
+ drivers/scsi/libiscsi_tcp.c    |  2 +-
+ include/linux/net.h            | 16 ++++++++++++++++
+ net/ceph/messenger.c           |  2 +-
+ net/ipv4/tcp.c                 |  3 ++-
+ 6 files changed, 24 insertions(+), 8 deletions(-)
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.26.2
+
