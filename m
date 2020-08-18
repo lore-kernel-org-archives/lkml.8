@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7489CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5766C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5273C2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663C82076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597764046;
-	bh=yru9/NdH9RLPoFs58u4GN0nY+Sogzjweg/tWDL+BinU=;
+	s=default; t=1597764080;
+	bh=Tc7JOtILZvhmn/QZSq/rDuumFmni1KkgrRzI9vNcyIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0UeuVBs3p6r3WKsxkf4l9ozru9tDauElJQJE5oGgp0JgR7DV5N8aEKaw80LZ1V4h
-	 akkiKHtOOW9/a/Ph04S/tyrys7nvQ8xDrzeTDuSVnjCKu+v2u+B5wLUtFmAbwLQBLe
-	 LPnOu/a/F/0hOffDfb9rNikjcz/4teeDifDP7094=
+	b=EeclwXX6MMgt071yho6nBOeHieobf1dRnA8PVRlMpXTuF7esD819YX/0aOJX0/NcJ
+	 bBV+zBYl8dNO2AKMFXnBOb2tV0lhkPAUuMkGvvZkuV6neGbhtqheEU8VkcmTfXfkrD
+	 EhOfefCNPPF5X7r2nVwhWq6chK2eS1R+qRqH4LKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgHRPUo (ORCPT
+        id S1728023AbgHRPVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43812 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 11:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbgHRPTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:19:23 -0400
+        id S1727956AbgHRPRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:17:11 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA0A22076E;
-        Tue, 18 Aug 2020 15:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3188A2054F;
+        Tue, 18 Aug 2020 15:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597763962;
-        bh=yru9/NdH9RLPoFs58u4GN0nY+Sogzjweg/tWDL+BinU=;
+        s=default; t=1597763830;
+        bh=Tc7JOtILZvhmn/QZSq/rDuumFmni1KkgrRzI9vNcyIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7/1L7PMB6ny+R6Ja3ZTgt7DiZrj2MhEUn1Baeko2Ljpt+IgAAd0BIY0K5+ddrHdy
-         0Cgsg9BHQIzldcepANhUopKY4V4j0vt9l3455AzJkS/6oRvNjT5K9fhzbiyGqh3U1M
-         mGXqQ6IOdYEbV7nbtMhzb+zOAQWJlqo2RxTvK8bI=
+        b=LGeqCVGqnjrha4TWndZaE/VnVhphBLSJIhWexklI8V6bUgoTtQfgaa8M9GXlf/+XT
+         WHUWAaZKTipeFUYBV6OLDTInvZP09FVWD6Y83cd7blmmE3C/RloP3ygxxjtDeRP+pl
+         Lwv5+wEO4Xr3K0oZUXYD0eSo61PTTILdUD0cRgzU=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
@@ -73,11 +73,10 @@ Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
         openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v3 14/17] x86/setup: simplify reserve_crashkernel()
-Date:   Tue, 18 Aug 2020 18:16:31 +0300
-Message-Id: <20200818151634.14343-15-rppt@kernel.org>
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: [PATCH v3 02/17] dma-contiguous: simplify cma_early_percent_memory()
+Date:   Tue, 18 Aug 2020 18:16:19 +0300
+Message-Id: <20200818151634.14343-3-rppt@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200818151634.14343-1-rppt@kernel.org>
 References: <20200818151634.14343-1-rppt@kernel.org>
@@ -90,110 +89,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-* Replace magic numbers with defines
-* Replace memblock_find_in_range() + memblock_reserve() with
-  memblock_phys_alloc_range()
-* Stop checking for low memory size in reserve_crashkernel_low(). The
-  allocation from limited range will anyway fail if there is no enough
-  memory, so there is no need for extra traversal of memblock.memory
+The memory size calculation in cma_early_percent_memory() traverses
+memblock.memory rather than simply call memblock_phys_mem_size(). The
+comment in that function suggests that at some point there should have been
+call to memblock_analyze() before memblock_phys_mem_size() could be used.
+As of now, there is no memblock_analyze() at all and
+memblock_phys_mem_size() can be used as soon as cold-plug memory is
+registerd with memblock.
+
+Replace loop over memblock.memory with a call to memblock_phys_mem_size().
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 40 ++++++++++++++--------------------------
- 1 file changed, 14 insertions(+), 26 deletions(-)
+ kernel/dma/contiguous.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 2cac39ade2e3..52e83ba607b3 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -420,13 +420,13 @@ static int __init reserve_crashkernel_low(void)
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index cff7e60968b9..0369fd5fda8f 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -73,16 +73,7 @@ early_param("cma", early_cma);
+ 
+ static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
  {
- #ifdef CONFIG_X86_64
- 	unsigned long long base, low_base = 0, low_size = 0;
--	unsigned long total_low_mem;
-+	unsigned long low_mem_limit;
- 	int ret;
- 
--	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-+	low_mem_limit = min(memblock_phys_mem_size(), CRASH_ADDR_LOW_MAX);
- 
- 	/* crashkernel=Y,low */
--	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
-+	ret = parse_crashkernel_low(boot_command_line, low_mem_limit, &low_size, &base);
- 	if (ret) {
- 		/*
- 		 * two parts from kernel/dma/swiotlb.c:
-@@ -444,23 +444,17 @@ static int __init reserve_crashkernel_low(void)
- 			return 0;
- 	}
- 
--	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-+	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
- 	if (!low_base) {
- 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
- 		       (unsigned long)(low_size >> 20));
- 		return -ENOMEM;
- 	}
- 
--	ret = memblock_reserve(low_base, low_size);
--	if (ret) {
--		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
--		return ret;
--	}
+-	struct memblock_region *reg;
+-	unsigned long total_pages = 0;
 -
--	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
-+	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (low RAM limit: %ldMB)\n",
- 		(unsigned long)(low_size >> 20),
- 		(unsigned long)(low_base >> 20),
--		(unsigned long)(total_low_mem >> 20));
-+		(unsigned long)(low_mem_limit >> 20));
+-	/*
+-	 * We cannot use memblock_phys_mem_size() here, because
+-	 * memblock_analyze() has not been called yet.
+-	 */
+-	for_each_memblock(memory, reg)
+-		total_pages += memblock_region_memory_end_pfn(reg) -
+-			       memblock_region_memory_base_pfn(reg);
++	unsigned long total_pages = PHYS_PFN(memblock_phys_mem_size());
  
- 	crashk_low_res.start = low_base;
- 	crashk_low_res.end   = low_base + low_size - 1;
-@@ -504,13 +498,13 @@ static void __init reserve_crashkernel(void)
- 		 * unless "crashkernel=size[KMG],high" is specified.
- 		 */
- 		if (!high)
--			crash_base = memblock_find_in_range(CRASH_ALIGN,
--						CRASH_ADDR_LOW_MAX,
--						crash_size, CRASH_ALIGN);
-+			crash_base = memblock_phys_alloc_range(crash_size,
-+						CRASH_ALIGN, CRASH_ALIGN,
-+						CRASH_ADDR_LOW_MAX);
- 		if (!crash_base)
--			crash_base = memblock_find_in_range(CRASH_ALIGN,
--						CRASH_ADDR_HIGH_MAX,
--						crash_size, CRASH_ALIGN);
-+			crash_base = memblock_phys_alloc_range(crash_size,
-+						CRASH_ALIGN, CRASH_ALIGN,
-+						CRASH_ADDR_HIGH_MAX);
- 		if (!crash_base) {
- 			pr_info("crashkernel reservation failed - No suitable area found.\n");
- 			return;
-@@ -518,19 +512,13 @@ static void __init reserve_crashkernel(void)
- 	} else {
- 		unsigned long long start;
- 
--		start = memblock_find_in_range(crash_base,
--					       crash_base + crash_size,
--					       crash_size, 1 << 20);
-+		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
-+						  crash_base + crash_size);
- 		if (start != crash_base) {
- 			pr_info("crashkernel reservation failed - memory is in use.\n");
- 			return;
- 		}
- 	}
--	ret = memblock_reserve(crash_base, crash_size);
--	if (ret) {
--		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
--		return;
--	}
- 
- 	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
- 		memblock_free(crash_base, crash_size);
+ 	return (total_pages * CONFIG_CMA_SIZE_PERCENTAGE / 100) << PAGE_SHIFT;
+ }
 -- 
 2.26.2
 
