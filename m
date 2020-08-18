@@ -4,84 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C5BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F78C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2812620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6205A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597760275;
-	bh=Z0Y7yKJ7hTNry0GWGXzM1eNHZTv8P/i3X65kNeToXdE=;
+	s=default; t=1597760345;
+	bh=q04K0Ou4ZszLumqF/XYpooMQUDyI6Hxy/aWw2HXfGYc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F7vD3kS5jDgVxdm/73bQJwoqyyear7CZgGrG1BCzMUKuCRL5CbfysvKFgtCrx4IGg
-	 aYrhnOoBsvDEDssaUGOjOZGTw1VrsOsnhhvZGyj5iYMWXFT+QlUGwvOFELjFruCkkN
-	 kdaa+NnhjRl6n06TL0fhq5TnVYYPw6lzNIxRDSD4=
+	b=B9YqDeX8AMZRQk84zfaC6kJxpNNd7uBFCxaiVP5igG1Xm1v44Bt0HkpiZVA40Xv8T
+	 syyq3BrCPKW7/BHmx2bqF/qxxgylqoCs7/N47jf/gWezj+MKUNSStQa/jsQizR6rAQ
+	 +0KnI+4Pia7s8EEiod0KFRDSQuWbFovo1fpFZfd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgHRORx (ORCPT
+        id S1726887AbgHROTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55146 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 10:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgHRORv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:17:51 -0400
+        id S1726612AbgHROS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:18:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87DB4207FF;
-        Tue, 18 Aug 2020 14:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E38C20786;
+        Tue, 18 Aug 2020 14:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597760271;
-        bh=Z0Y7yKJ7hTNry0GWGXzM1eNHZTv8P/i3X65kNeToXdE=;
+        s=default; t=1597760337;
+        bh=q04K0Ou4ZszLumqF/XYpooMQUDyI6Hxy/aWw2HXfGYc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bGCqTm2GNRIRopzsETHqC9xIrmKppJ0oVKW+FzrE6CjSCnQaKK/DbFQ+0ZE5B0oZa
-         GI9KVx87Klz0GX7oO7gYSythKpA+YSEv51aF8Ml9n3wtLnb3DjNGmAz3q8KfOBVlEw
-         CRGWFBXMGlBSRycHJPtFeQDjUoB2j749nuZGC70Y=
-Date:   Tue, 18 Aug 2020 16:18:14 +0200
+        b=w8rlkhsf+Vd2d9PmYMVpOj596PW4Bq4XMG2+b01zpNHJa3svDOEdLzRyUNUZRQDLX
+         Y4THoJ4MiqLCMgr04IJkdqv89On51IXV2GzA1fMb8H7SXp1gb1s33RVdPg/ETSD0rD
+         gNfalzLF1t7JoWB1823T1+m8jqxUSNi3ZO2cqKCo=
+Date:   Tue, 18 Aug 2020 16:19:21 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 42/44] MAINTAINERS: add an entry for HiSilicon
- 6421v600 drivers
-Message-ID: <20200818141814.GA608915@kroah.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
+        mauro.chehab@huawei.com, Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3.1 43/44] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200818141921.GB608639@kroah.com>
 References: <cover.1597647359.git.mchehab+huawei@kernel.org>
- <60a2766c2e64dc6957480231a4e9ad9e6b00ab40.1597647359.git.mchehab+huawei@kernel.org>
+ <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+ <20200818131024.6918c5ca@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <60a2766c2e64dc6957480231a4e9ad9e6b00ab40.1597647359.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200818131024.6918c5ca@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:11:01AM +0200, Mauro Carvalho Chehab wrote:
-> Add an entry for the SPMI, MFD and PMIC parts of the
-> HiSilicon 6421v600 support.
+On Tue, Aug 18, 2020 at 01:10:24PM +0200, Mauro Carvalho Chehab wrote:
+> From e464ec2c38c083403b556e60f189ee8ae2f2c9c6 Mon Sep 17 00:00:00 2001
+> From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Date: Fri, 31 Jul 2020 09:46:02 +0200
+> Subject: [PATCH] dt: document HiSilicon SPMI controller and mfd/regulator
+>  properties
+> 
+> Add documentation for the properties needed by the HiSilicon
+> 6421v600 driver, and by the SPMI controller used to access
+> the chipset.
 > 
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 956ecd5ba426..e2de0b2119fd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7824,6 +7824,12 @@ F:	drivers/crypto/hisilicon/sec2/sec_crypto.c
->  F:	drivers/crypto/hisilicon/sec2/sec_crypto.h
->  F:	drivers/crypto/hisilicon/sec2/sec_main.c
->  
-> +HISILICON STAGING DRIVERS FOR HIKEY 960/970
-> +M:	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> +L:	linux-kernel@vger.kernel.org
 
-staging driver patches are not sent to this list, please use the driver
-devel list instead of lkml.
+Did you mean to enclose the whole patch, headers and all in here?
+
+
+> ---
+> 
+> v3.1:
+>   - Changed the DT properties to better match upstream requirements
+> 
+> PS.: I opted to submit just this patch, instead of the entire
+> series, in order to avoid flooding people's ML.
+> 
+> I'll be posting the full series again after DT specs match
+> upstream requirements.
+> 
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+
+staging drivers should be self-contained, please keep dt files within
+the staging driver directory for the driver until they move out of
+staging if at all possible.
 
 thanks,
 
