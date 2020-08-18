@@ -2,108 +2,96 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289E720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBD520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljAN3lAl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XuMIov4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHRSw7 (ORCPT
+        id S1726723AbgHRSyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHRSw5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:52:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E160CC061389;
-        Tue, 18 Aug 2020 11:52:56 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s14so3670992plp.4;
-        Tue, 18 Aug 2020 11:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ytj+BpqeiCrlRi7pvlYx49LlX+2X2MCiIXaiNwEamZU=;
-        b=ljAN3lAlDQmWRLF/4kSakgZyYJqVjxliynG2w9uxzkZoHlpmCn/LRCXPYkuP6ix001
-         b4bfZdnL5idVfDF6BwQJlHs/CCqo1jPxDFX32xqMRR5Wee5DKc9OXbXY6TxOFEHNbhsG
-         q5PrNLeAyfkhUrThitvq+yh+0HP8zQJEdox4vvFKRBAxbW+JiekwNXZ08L8MvIp0iMUi
-         vvb8QzolBefq6C5G3rXen+6iBPcdMw+yARKM5ELB/i4j0TL+DD9NFn09NJdk9/VGL1YT
-         H1hZrpwX18v278lMfJVvp5Aui9+hCczxa69Bfchu8yHlX6DiYTK23XlfiPqeZ0puiXg8
-         3ZKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ytj+BpqeiCrlRi7pvlYx49LlX+2X2MCiIXaiNwEamZU=;
-        b=glqTEAn34T2Xhy+uqKFjD5oczhy7PVWSf/hcmX4cMDXthamq7vaLNtST1Wy/15anEJ
-         MV0rwtcyBg1Eufq19u3IEz8LetSVIvk+hNBBeE0E4zTDQlAEzwo0Or7SKg7HgIS9CgMb
-         jEDUu03ETw+Z6w22XwyErt6ER+0KpY2C5o2AXwATd43gkzjzbtV8fxglrM8eC0MV1wAI
-         dvzmQv7beSggDckftlvavQPuoQjYnGv9tJPuzIPGEQPds2h7sCJVsZ+QaexNeOiN7cVQ
-         DmhYowrEXQhO8oVoFCgjRDBhxHavsYzqgaVmKWmEISJUXM3nmoMoi+kLBtHM6y2JJSw9
-         QVZQ==
-X-Gm-Message-State: AOAM530Za9HN3cHzjAOuBUL18CxFiYP6fKYfBVl9FzeDbY04iO3J9v8M
-        kq7G6HsiLfCxJcTSjoRNT0qjHzc1mw3DRA==
-X-Google-Smtp-Source: ABdhPJzvh5vMEZUjEmQMj7IkexRr7QUmC8ecHyrzolXuv+AcJAzPPWTgacFUZ6kqI6LMaABbYD9Pmw==
-X-Received: by 2002:a17:902:b616:: with SMTP id b22mr15843878pls.246.1597776776405;
-        Tue, 18 Aug 2020 11:52:56 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.62.177])
-        by smtp.gmail.com with ESMTPSA id r15sm26774398pfq.189.2020.08.18.11.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 11:52:55 -0700 (PDT)
-From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
-To:     davem@davemloft.net
-Cc:     claudiu.manoil@nxp.com, kuba@kernel.org, Julia.Lawall@lip6.fr,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>
-Subject: [PATCH] net: gianfar: Add of_node_put() before goto statement
-Date:   Wed, 19 Aug 2020 00:22:41 +0530
-Message-Id: <20200818185241.22277-1-sylphrenadin@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 14:54:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27506 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726670AbgHRSye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 14:54:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597776873; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=qgjBQdmGdWynaWSNQfVd0+hOTs1Zz97WJ7gQC5huOBE=; b=XuMIov4d/y6g2EyevJtHgvjLsxMgRugjbeOUFe/ntEqMtHHMksdBDarbRRQZ1h/wUE/lQVpU
+ jNhmzDApxv71KmiFOCuPHYHd4iuzTcKKNffidh5W3DfKZyZLVgw/oOOSHK75/dJgPfMPoiog
+ xmEQjiZgKGXcOipbYNrQRBJKkQg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f3c23e4f2b697637a94ba29 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 18:54:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 04650C433CA; Tue, 18 Aug 2020 18:54:27 +0000 (UTC)
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F259C433A1;
+        Tue, 18 Aug 2020 18:54:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F259C433A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Elliot Berman <eberman@codeaurora.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>
+Subject: [RESEND PATCH v1 4/4] arm64: dts: qcom: pm8150: Add reboot magic
+Date:   Tue, 18 Aug 2020 11:54:16 -0700
+Message-Id: <1597776856-12014-5-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every iteration of for_each_available_child_of_node() decrements
-reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+Add reboot command magic values for pm8150 pon device.
 
-Fix a potential memory leak in gianfar.c by inserting of_node_put()
-before the goto statement.
-
-Issue found with Coccinelle.
-
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/pm8150.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index b513b8c5c3b5..41dd3d0f3452 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -750,8 +750,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
- 				continue;
- 
- 			err = gfar_parse_group(child, priv, model);
--			if (err)
-+			if (err) {
-+				of_node_put(child);
- 				goto err_grp_init;
-+			}
- 		}
- 	} else { /* SQ_SG_MODE */
- 		err = gfar_parse_group(np, priv, model);
+diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+index 1b64069..afd6231 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+@@ -50,6 +50,11 @@
+ 		pon: power-on@800 {
+ 			compatible = "qcom,pm8916-pon";
+ 			reg = <0x0800>;
++
++			reboot-mode-names = "bootloader", "recovery",
++					    "dm-verity device corrupted";
++			reboot-mode-magic = <0x1>, <0x2>, <0x4>;
++
+ 			pwrkey {
+ 				compatible = "qcom,pm8941-pwrkey";
+ 				interrupts = <0x0 0x8 0x0 IRQ_TYPE_EDGE_BOTH>;
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
