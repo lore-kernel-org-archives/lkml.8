@@ -2,204 +2,80 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0938AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7049320639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:53:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="zRQv5bHR"
+	by mail.kernel.org (Postfix) with ESMTP id E2BC520639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgHRGxS (ORCPT
+        id S1726570AbgHRGyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:53:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12149 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgHRGxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:53:13 -0400
-IronPort-SDR: iCRE8/yTGGxWFc50yOBIiJsxLGbjivM0PdBlY1EOS4ho4sDBpyPSc1kmdKRcFlXrDwbkudm4L9
- 2lJxNjgTKBuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134373703"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="134373703"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 23:53:12 -0700
-IronPort-SDR: BDfQ+H3/mW5WVADCzkX9OmoWX0ZyabG24ib7/I8otiEHyNG1h5cMPjNd+gfpwTCtoNSLYWzPne
- syyvhKz2JaFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="471693982"
-Received: from orsmsx602-2.jf.intel.com (HELO ORSMSX602.amr.corp.intel.com) ([10.22.229.82])
-  by orsmga005.jf.intel.com with ESMTP; 17 Aug 2020 23:53:08 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 17 Aug 2020 23:53:08 -0700
-Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 17 Aug 2020 23:53:08 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX162.amr.corp.intel.com (10.22.240.85) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 17 Aug 2020 23:53:07 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 17 Aug 2020 23:53:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CwHzeE1u5VJ4RsYnN9HKCmwxLFAniEqytrhfqQ1EcnvJtRXH5+TaweFQm88OS1nSEwAQlWTemT+DC735OnAp/WLlwzMeVrh2JWKPbkDknx7rtsX0k5inygfDhfKcFQI/AOqPm9M69DZQ0eBE01ooocU6JQmEufX81/EyjC8PG6uXTLBh7uGwyL7XGg3Ven28QrI/tJonleN1oYnY2+FycxEy1gNPgo00UQu6xtEnZpHW1DC1FyN898huOYFMWvJzUEnV4qowAz0q0WQLYJFvoOInOxRDTUURp93zVR1EqY0FM2O34tyxClNElN/hbF1gWQPHY4MVhbtCjvy7gj6Zhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=caibVuZKzfJh0S0Hnqs9hLZGAMR2x3hXhmmiYbnpvoc=;
- b=Lwog5vHHo6TBH2aBulrt9ypWGebdJFGcx2G9zIQ34mg61BwIFoSso3ybIPJfkWqoC35X1el9sM6kOhBbTUhjkT00mPvmYbedWBJ/nlXhhsmXmy+7QH3L0T9/5Ia8Z51lG/N52mDsewlHOdSfsFEGCicSu39pcVR7lBt9HZOXNxgpe6r2PT9LPJ7irQbLGE9fzKrdLZG455DdfRM3wNaLKka/8o8Qc2WA+q6sQMs5SyxReyOWY7KlflJqGeXS2+ZKu6Iq8HLvO1Y+iyY+wIIwZCKaP5ZRMoTU9l0N1Xbv8gEAwimwBSUnefy45ag2bO5KAwWi+03B8Og60Mv5k53TeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=caibVuZKzfJh0S0Hnqs9hLZGAMR2x3hXhmmiYbnpvoc=;
- b=zRQv5bHR8jWFE7xj4qbjwABCSG/wvazXrqh9J9b1M6KXvr0dEYrCK7zipxKXJ3lANBxW5wkLypaKwl9rG9y9cLaVhfkdrmBd2tdufWflquOBoNzdqPKRNtwnuE+2Fdq+oaJiFbDzE7koqVVNXQmwBkpDAS/T+CikXiN7EP+biQs=
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
- DM5PR1101MB2107.namprd11.prod.outlook.com (2603:10b6:4:5a::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3283.20; Tue, 18 Aug 2020 06:53:06 +0000
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::a061:bd5e:c46a:fa40]) by DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::a061:bd5e:c46a:fa40%3]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 06:53:06 +0000
-From:   "Liao, Bard" <bard.liao@intel.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jank@cadence.com" <jank@cadence.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
-        "ranjani.sridharan@linux.intel.com" 
-        <ranjani.sridharan@linux.intel.com>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
-        "Lin, Mengdong" <mengdong.lin@intel.com>
-Subject: RE: [PATCH 1/2] soundwire: add definition for maximum number of ports
-Thread-Topic: [PATCH 1/2] soundwire: add definition for maximum number of
- ports
-Thread-Index: AQHWdSI8ybKAPOyQqUWJUXX/RtQZPKk9aU0AgAAEipA=
-Date:   Tue, 18 Aug 2020 06:53:05 +0000
-Message-ID: <DM6PR11MB4074A817AEBB4636095581F2FF5C0@DM6PR11MB4074.namprd11.prod.outlook.com>
-References: <20200817174727.15139-1-yung-chuan.liao@linux.intel.com>
- <20200817174727.15139-2-yung-chuan.liao@linux.intel.com>
- <20200818063538.GV2639@vkoul-mobl>
-In-Reply-To: <20200818063538.GV2639@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.133.4.96]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c32739f4-7b2b-40f3-029e-08d843435c1b
-x-ms-traffictypediagnostic: DM5PR1101MB2107:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR1101MB210758A06EDBF72154A7A5F9FF5C0@DM5PR1101MB2107.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: C9G4StQvuwrnIoGwjfKnyipoWIWA2lM/M9mARiGfEiL51ttwQXPvzZFPopaxaKBTgrv+OW+CSKkitsq776DaxlLgaU/t561IEw0kPsi4eTzC++As8jQxVyoapAjQD9/ot7GzqcyS/J/Yq79CTxr0VQ+s54ihxDgsrHNd1wad3TJFbk4y/3sdjmTBEXvA96iuOTiyOZHEuJxZuWymwQ7V8J5hMcgBqJeJTUnMbZo86ETb1U7NNrfRw2yaTOxejfBnU25ShrqJYAAB3eV+FDK6GtKGaF5qo+ztWMx51Fjdy6YEA3kBq6iskCS6P2ZU6DtdYZZrIA8bgf6JNJ14HyHukA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(316002)(4326008)(7696005)(26005)(54906003)(53546011)(6506007)(71200400001)(9686003)(52536014)(55016002)(186003)(110136005)(478600001)(66556008)(64756008)(66446008)(7416002)(86362001)(83380400001)(8676002)(2906002)(33656002)(76116006)(5660300002)(66476007)(66946007)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: O33brgqi6+54FfF12jfBCsszHnKwvuPOCVo2A7lTsftc5bYMeMjZwmU3LJyYg8fvVa2vjdgsU2wDNBqtDKU8SndTgwxX5E/DNfbKe/FDHL/X2Cah2fTeSgFz2JnopUxb487BpGSW1SfJwPgX9WR2FZqWfyWLmAhrNEYTONE4dgPJeY7r/nvtAP70PG/EYRSCgdMIzQfD6ZIftxhiAhnfixDFKUaEzMFW2hcdfHI3/Nuv1LxLT9gZvZ2VYtT0bB7DeTrT7o7z9aDfgOUNFnFEniPMLDHLL4K4SJQqCm6N1CPRSTRQVi1QSLr3rEYViRH9ON8IN/6WT4g5aKv7mOi2aBlybNAJ2gvBnDq7evczfiAhxKfYlrG78tEje5HkXhfhAua9PKtYBoDcv4U5b7K9/tJuKuDNBWrFM+rWBMq2WOAxWsPxNfVYHfkjJdtvgQcHt5gLUBZlblRznD4rYeu76zHU4nUekG5cBKLSyfSF5fQQJJ8RgpWw/sQ/FrOYM9E6mDYxN21csGB+OzTPd/OUDmzk1IL/z0xwi30p6jXGYzk0WNw6VzcglDQZjXI9lVdoJOvLKhrww77Jgih30nWFCBtFBDknb/KG7w3W2oaq5C+LHDj4vBLYeus2yVDl0pgqQV87sHcFHp0z3mcb88gpUw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 02:54:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9829 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726366AbgHRGyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:54:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 248A3B2E10C626655782;
+        Tue, 18 Aug 2020 14:53:56 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 18 Aug 2020 14:53:49 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <tzimmermann@suse.de>,
+        <kraxel@redhat.com>, <alexander.deucher@amd.com>,
+        <tglx@linutronix.de>, <dri-devel@lists.freedesktop.org>,
+        <xinliang.liu@linaro.org>, <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH drm/hisilicon 2/4] drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_drm_vdac
+Date:   Tue, 18 Aug 2020 14:51:42 +0800
+Message-ID: <1597733504-30812-3-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
+References: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4074.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c32739f4-7b2b-40f3-029e-08d843435c1b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 06:53:05.8320
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XO2yjdj4Ubcm/JIhzFuefpHzrSDGQ0Zb4yOJt3hBWqnA5pG/LuMz3n9lhJ84Jz3mtTIp/cmjI7LDbuuKeSuSrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2107
-X-OriginatorOrg: intel.com
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Tuesday, August 18, 2020 2:36 PM
-> To: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse=
-.de;
-> broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
-> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
-> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
-> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>; =
-Lin,
-> Mengdong <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
-> Subject: Re: [PATCH 1/2] soundwire: add definition for maximum number of
-> ports
->=20
-> On 18-08-20, 01:47, Bard Liao wrote:
-> > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> >
-> > A Device may have at most 15 physical ports (DP0, DP1..DP14).
-> >
-> > Signed-off-by: Pierre-Louis Bossart
-> > <pierre-louis.bossart@linux.intel.com>
-> > Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-> > Reviewed-by: Guennadi Liakhovetski
-> > <guennadi.liakhovetski@linux.intel.com>
-> > Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> > ---
-> >  include/linux/soundwire/sdw.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/soundwire/sdw.h
-> > b/include/linux/soundwire/sdw.h index 76052f12c9f7..0aa4c6af7554
-> > 100644
-> > --- a/include/linux/soundwire/sdw.h
-> > +++ b/include/linux/soundwire/sdw.h
-> > @@ -38,7 +38,8 @@ struct sdw_slave;
-> >  #define SDW_FRAME_CTRL_BITS		48
-> >  #define SDW_MAX_DEVICES			11
-> >
-> > -#define SDW_VALID_PORT_RANGE(n)		((n) <=3D 14 && (n) >=3D 1)
-> > +#define SDW_MAX_PORTS			15
-> > +#define SDW_VALID_PORT_RANGE(n)		((n) <
-> SDW_MAX_PORTS && (n) >=3D 1)
->=20
-> What is the use of this one if we are allocating all ports always, Also, =
-I dont
-> see it used in second patch?
+Use drv_err instead of DRM_ERROR in hibmc_drm_vdac
 
-It is used in drivers/soundwire/stream.c and drivers/soundwire/debugfs.c.
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->=20
-> >
-> >  enum {
-> >  	SDW_PORT_DIRN_SINK =3D 0,
-> > --
-> > 2.17.1
->=20
-> --
-> ~Vinod
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+index ed12f61..376a05d 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+@@ -85,7 +85,7 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
+ 	ret = drm_encoder_init(dev, encoder, &hibmc_encoder_funcs,
+ 			       DRM_MODE_ENCODER_DAC, NULL);
+ 	if (ret) {
+-		DRM_ERROR("failed to init encoder: %d\n", ret);
++		drm_err(dev, "failed to init encoder: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -94,7 +94,7 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
+ 	ret = drm_connector_init(dev, connector, &hibmc_connector_funcs,
+ 				 DRM_MODE_CONNECTOR_VGA);
+ 	if (ret) {
+-		DRM_ERROR("failed to init connector: %d\n", ret);
++		drm_err(dev, "failed to init connector: %d\n", ret);
+ 		return ret;
+ 	}
+ 	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
+-- 
+2.7.4
+
