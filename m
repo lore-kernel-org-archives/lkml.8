@@ -2,293 +2,105 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF851C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1EA20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7675207DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597759588;
-	bh=u3NxKe1J7gn5NTkqggWGBIzwbb/5pNdg+Qc8gbCoV6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QLrHSam/YyMSQmHqDtO+he8tdgkosUFIbUA+UZ2uDs0ZZxCqmps3XwFNPP02miiyP
-	 wxyxUGAo51tbMp8pfLJpyofHBwVr64A5H7KQT2YudWeMed+J0JWsNfbzM6koVguSxd
-	 YO4GDZ3CCPtrfe93nGtJxkwIPtnGaC6wiZMp3iKA=
+	s=default; t=1597759706;
+	bh=gTniIHzq+b6N51aAyJt0DOJVvbWbr6c5Fi78zNiIl00=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=evTEfN8vkSjRq823v/ju+cyAHK5yaCWNs50WQgTq7zFm1KFWDKeuUCesm+ghqMLWs
+	 9w6e7kHxB4DZR8q4hyaxefWpk2sP648zra2QX6DLeqRnzLJM+MXIFvEh1Tw8ptRj5P
+	 Ywpd0siuUKbgUWu6C4zpEyD7/waKR1KKt5+vXipg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHROG0 (ORCPT
+        id S1726651AbgHROIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35356 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 10:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgHROGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:06:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726476AbgHROIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:08:25 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7994A2076D;
-        Tue, 18 Aug 2020 14:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD9320786;
+        Tue, 18 Aug 2020 14:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597759582;
-        bh=u3NxKe1J7gn5NTkqggWGBIzwbb/5pNdg+Qc8gbCoV6w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QeXf2Wu2ZaD4+i3bzRlTRTly2O+85gR5HH8KBegjIZp/vQ5eRoxgneKFkgnOuC3ST
-         4agPSfrfm8YOMiOQzdoTrytE1+CZXTDQyhK8QcgIPB6XM0dCI5Xy8rlxs/ojGsojtS
-         YYY0zv4/p93xDDYBfVobPZAN1HBJkdPMzWj6u9RM=
-Date:   Tue, 18 Aug 2020 16:06:45 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mohammed Rushad <mohammedrushad@gmail.com>
-Cc:     john.oldman@polehill.co.uk, kai.heng.feng@canonical.com,
-        luk@wybcz.pl, vkor@vkten.in, nachukannan@gmail.com,
-        hdegoede@redhat.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: os_dep: fix function-name print
- using __func__
-Message-ID: <20200818140645.GC547677@kroah.com>
-References: <20200812160745.7215-1-mohammedrushad@gmail.com>
+        s=default; t=1597759704;
+        bh=gTniIHzq+b6N51aAyJt0DOJVvbWbr6c5Fi78zNiIl00=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=UfT8HJN+60NmK5dY57smuSuAJ21H7qOEhN41xi9OhoWWw9nfrqqLWhXtNYOGdQ1HR
+         WXblTbgOe8fOmXpgbovnU6DbaMn4lbotVOcqIkTEDUOBMoFhnPLhR5FnTxzct5CLLG
+         FPNzNexkCsAD2I8ZoC/hgMC3LXx2WxdphqXCcMrI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 20A9C35228F5; Tue, 18 Aug 2020 07:08:24 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 07:08:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rcu tree
+Message-ID: <20200818140824.GA27891@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200818114354.6c7c2142@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812160745.7215-1-mohammedrushad@gmail.com>
+In-Reply-To: <20200818114354.6c7c2142@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:37:45PM +0530, Mohammed Rushad wrote:
-> This patch to the os_intfs.c fixes the printing of function names using
-> the preferred '"%s...", __func__' and alignment issues as pointed out by
-> the checkpatch.pl tool.
+On Tue, Aug 18, 2020 at 11:43:54AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Mohammed Rushad <mohammedrushad@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/os_dep/os_intfs.c | 56 +++++++++++----------
->  1 file changed, 29 insertions(+), 27 deletions(-)
+> After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
 > 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> index 27f990a01a23..0460db4ae660 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> @@ -400,17 +400,17 @@ u16 rtw_recv_select_queue(struct sk_buff *skb)
->  	memcpy(&eth_type, pdata + (ETH_ALEN << 1), 2);
->  
->  	switch (be16_to_cpu(eth_type)) {
-> -		case ETH_P_IP:
-> +	case ETH_P_IP:
->  
-> -			piphdr = (struct iphdr *)(pdata + ETH_HLEN);
-> +		piphdr = (struct iphdr *)(pdata + ETH_HLEN);
->  
-> -			dscp = piphdr->tos & 0xfc;
-> +		dscp = piphdr->tos & 0xfc;
->  
-> -			priority = dscp >> 5;
-> +		priority = dscp >> 5;
->  
-> -			break;
-> -		default:
-> -			priority = 0;
-> +		break;
-> +	default:
-> +		priority = 0;
->  	}
->  
->  	return rtw_1d_to_queue[priority];
-> @@ -539,7 +539,7 @@ u32 rtw_start_drv_threads(struct adapter *padapter)
->  {
->  	u32 _status = _SUCCESS;
->  
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_start_drv_threads\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
->  	padapter->xmitThread = kthread_run(rtw_xmit_thread, padapter, "RTW_XMIT_THREAD");
->  	if (IS_ERR(padapter->xmitThread))
->  		_status = _FAIL;
-> @@ -556,7 +556,7 @@ u32 rtw_start_drv_threads(struct adapter *padapter)
->  
->  void rtw_stop_drv_threads(struct adapter *padapter)
->  {
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_stop_drv_threads\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
->  
->  	rtw_stop_cmd_thread(padapter);
->  
-> @@ -710,7 +710,7 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
->  {
->  	u8 ret8 = _SUCCESS;
->  
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_init_drv_sw\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
->  
->  	rtw_init_default_value(padapter);
->  
-> @@ -773,29 +773,29 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
->  
->  exit:
->  
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-rtw_init_drv_sw\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-%s\n", __func__));
->  
->  	return ret8;
->  }
->  
->  void rtw_cancel_all_timer(struct adapter *padapter)
->  {
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+rtw_cancel_all_timer\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("+%s\n", __func__));
->  
->  	del_timer_sync(&padapter->mlmepriv.assoc_timer);
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel association timer complete!\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel association timer complete!\n", __func__));
->  
->  	del_timer_sync(&padapter->mlmepriv.scan_to_timer);
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel scan_to_timer!\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel scan_to_timer!\n", __func__));
->  
->  	del_timer_sync(&padapter->mlmepriv.dynamic_chk_timer);
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel dynamic_chk_timer!\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel dynamic_chk_timer!\n", __func__));
->  
->  	del_timer_sync(&(adapter_to_pwrctl(padapter)->pwr_state_check_timer));
->  
->  	del_timer_sync(&padapter->mlmepriv.set_scan_deny_timer);
->  	rtw_clear_scan_deny(padapter);
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("rtw_cancel_all_timer:cancel set_scan_deny_timer!\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("%s:cancel set_scan_deny_timer!\n", __func__));
->  
->  	del_timer_sync(&padapter->recvpriv.signal_stat_timer);
->  
-> @@ -805,7 +805,7 @@ void rtw_cancel_all_timer(struct adapter *padapter)
->  
->  u8 rtw_free_drv_sw(struct adapter *padapter)
->  {
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("==>rtw_free_drv_sw"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("==>%s", __func__));
->  
->  	free_mlme_ext_priv(&padapter->mlmeextpriv);
->  
-> @@ -829,7 +829,7 @@ u8 rtw_free_drv_sw(struct adapter *padapter)
->  
->  	rtw_hal_free_data(padapter);
->  
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("<==rtw_free_drv_sw\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("<==%s\n", __func__));
->  
->  	/* free the old_pnetdev */
->  	if (padapter->rereg_nd_name_priv.old_pnetdev) {
-> @@ -841,7 +841,7 @@ u8 rtw_free_drv_sw(struct adapter *padapter)
->  	if (padapter->pbuddy_adapter != NULL)
->  		padapter->pbuddy_adapter->pbuddy_adapter = NULL;
->  
-> -	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-rtw_free_drv_sw\n"));
-> +	RT_TRACE(_module_os_intfs_c_, _drv_info_, ("-%s\n", __func__));
->  
->  	return _SUCCESS;
->  }
-> @@ -994,7 +994,7 @@ static int  ips_netdrv_open(struct adapter *padapter)
->  
->  	status = rtw_hal_init(padapter);
->  	if (status == _FAIL) {
-> -		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("ips_netdrv_open(): Can't init h/w!\n"));
-> +		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("%s(): Can't init h/w!\n", __func__));
->  		goto netdev_open_error;
->  	}
->  
-> @@ -1007,7 +1007,7 @@ static int  ips_netdrv_open(struct adapter *padapter)
->  
->  netdev_open_error:
->  	/* padapter->bup = false; */
-> -	DBG_871X("-ips_netdrv_open - drv_open failure, bup =%d\n", padapter->bup);
-> +	DBG_871X("-%s - drv_open failure, bup =%d\n", __func__, padapter->bup);
->  
->  	return _FAIL;
->  }
-> @@ -1016,24 +1016,25 @@ static int  ips_netdrv_open(struct adapter *padapter)
->  int rtw_ips_pwr_up(struct adapter *padapter)
->  {
->  	int result;
-> -	DBG_871X("===>  rtw_ips_pwr_up..............\n");
-> +
-> +	DBG_871X("===>  %s..............\n", __func__);
->  
->  	result = ips_netdrv_open(padapter);
->  
-> -	DBG_871X("<===  rtw_ips_pwr_up..............\n");
-> +	DBG_871X("<===  %s..............\n", __func__);
->  	return result;
->  }
->  
->  void rtw_ips_pwr_down(struct adapter *padapter)
->  {
-> -	DBG_871X("===> rtw_ips_pwr_down...................\n");
-> +	DBG_871X("===> %s...................\n", __func__);
->  
->  	padapter->bCardDisableWOHSM = true;
->  	padapter->net_closed = true;
->  
->  	rtw_ips_dev_unload(padapter);
->  	padapter->bCardDisableWOHSM = false;
-> -	DBG_871X("<=== rtw_ips_pwr_down.....................\n");
-> +	DBG_871X("<=== %s.....................\n", __func__);
->  }
->  
->  void rtw_ips_dev_unload(struct adapter *padapter)
-> @@ -1087,7 +1088,8 @@ static int netdev_close(struct net_device *pnetdev)
->  
->  		rtw_dev_unload(padapter);
->  	}
-> -	else*/
-> +	else
-> +*/
->  	if (pwrctl->rf_pwrstate == rf_on) {
->  		DBG_871X("(2)871x_drv - drv_close, bup =%d, hw_init_completed =%d\n", padapter->bup, padapter->hw_init_completed);
->  
-> @@ -1144,7 +1146,7 @@ void rtw_dev_unload(struct adapter *padapter)
->  		if (padapter->intf_stop)
->  			padapter->intf_stop(padapter);
->  
-> -		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("@ rtw_dev_unload: stop intf complete!\n"));
-> +		RT_TRACE(_module_hci_intfs_c_, _drv_notice_, ("@ %s: stop intf complete!\n", __func__));
->  
->  		if (!pwrctl->bInternalAutoSuspend)
->  			rtw_stop_drv_threads(padapter);
-> -- 
-> 2.17.1
+> In file included from include/linux/kernel.h:15,
+>                  from kernel/rcu/rcuscale.c:13:
+> kernel/rcu/rcuscale.c: In function 'rcu_scale_writer':
+> kernel/rcu/rcuscale.c:430:6: error: 'perf_type' undeclared (first use in this function); did you mean 'kernfs_type'?
+>   430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
+>       |      ^~~~~~~~~
+> include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
+>   319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+>       |                                   ^~~~~~~~~~~
+> kernel/rcu/rcuscale.c:430:6: note: each undeclared identifier is reported only once for each function it appears in
+>   430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
+>       |      ^~~~~~~~~
+> include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
+>   319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+>       |                                   ^~~~~~~~~~~
+> kernel/rcu/rcuscale.c:430:17: error: 'PERF_FLAG' undeclared (first use in this function)
+>   430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
+>       |                 ^~~~~~~~~
+> include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
+>   319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+>       |                                   ^~~~~~~~~~~
+> kernel/rcu/rcuscale.c:431:27: error: 'n_rcu_perf_writer_finished' undeclared (first use in this function); did you mean 'n_rcu_scale_writer_finished'?
+>   431 |    if (atomic_inc_return(&n_rcu_perf_writer_finished) >=
+>       |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |                           n_rcu_scale_writer_finished
 > 
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+> Caused by commit
+> 
+>   a20b5bd09813 ("rcuperf: Change rcuperf to rcuscale")
+> 
+> I have used the rcu tree from next-20200817 for today.
 
-Hi,
+My test scripts clearly are not dealing gracefully with filename changes,
+are they?  :-/
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Thank you for catching this one!  I have queued a fix.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+							Thanx, Paul
