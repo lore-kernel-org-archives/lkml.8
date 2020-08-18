@@ -2,118 +2,78 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A01C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46305207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCKa9l+5"
+	by mail.kernel.org (Postfix) with ESMTP id D83DA206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgHRPHL (ORCPT
+        id S1727039AbgHRPHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgHRPHA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:07:00 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1EEC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:07:00 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id p20so18622832wrf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Kz3kTcwHF2a+OrN5byUdnh38//L2z+SfVrhYCq8FFBo=;
-        b=VCKa9l+59jL2AIGwzpE1bLZ9zsBeyMEYVRlQhSWSPl+5pYlXgfdOKQ3pR52dclz7DE
-         tBGoXFJ1lfUTKTrbr0VsQ6/8ubwrLcOIQt+iambwKD4vO94aBADs+hQIWWpNrxtrXhEG
-         Pq8vgtvBRd9k7SLvIun5McFrdZnoWsOhNZuDwixZ53kUUAlM0h0HNX3OglBjsqbGpgp6
-         0Jnp+k5TGdbjcdeDScBaqjfiEvJD9aVEvzp3QnJI9r/fzzPLFPVyg6sOapdlmbR25xYW
-         RA+gcEKSmrvaB+n8nKHJAa/P5c8OpPf8IKTEuxn1A8DE5FwXyKKsdvDbj8hAvwO+psUw
-         mUyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Kz3kTcwHF2a+OrN5byUdnh38//L2z+SfVrhYCq8FFBo=;
-        b=hCT/9L3mvXeFphTz0Io0JpsQTV3it0Eq8ebPKRBgHTd2nnHKzZbUxp42ppvHQGsOKR
-         sW3NW5zj/lOE4K4pszENqBT+LCH5/nFihjcYu7U0n45aroCWoOo7l5wLs4nk2WUAcAzg
-         HThFr8OqLPTyU9qTTpvchUkwHd7/aM4RktDIJIuCYh6weRn18eOpjlyqFkxcubKf88Kd
-         VnBczNiXX/kistMHhZ13M41rMpogOTtn5g0BE1eHRvMoFDD1O/kiCIDph7zjT50y2SUW
-         ZMgupmO31750PgsLMgfxqcAAd8XV0/P/gTeIenTBZaDxJQTkEGCRNF8RNWdnoYAD/xwr
-         xuHg==
-X-Gm-Message-State: AOAM532JL37MC/y7S6fTSw2JotMIybqPQAAWD7xAVMH/19PQq7WHGcYp
-        A6KrGo8qcw65pADQV2TFf00=
-X-Google-Smtp-Source: ABdhPJy/3VCGV4xF9tBIceW/kpcTFoTQQBkQNN7HbLL1XZZ1S4/04oQ+0xEn6uOZQ6BiXPKA5U2UYg==
-X-Received: by 2002:adf:e712:: with SMTP id c18mr21633963wrm.92.1597763218793;
-        Tue, 18 Aug 2020 08:06:58 -0700 (PDT)
-Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id v8sm275614wmb.24.2020.08.18.08.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 08:06:58 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Tue, 18 Aug 2020 16:06:56 +0100
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: emxx_udc: Use standard BIT() macro
-Message-ID: <20200818150656.4ikg6fwzmmnwqapx@medion>
-References: <20200818134922.409195-1-alex.dewar90@gmail.com>
- <baecb36e-1f82-1e0e-6460-d6759a9193c1@infradead.org>
+        Tue, 18 Aug 2020 11:07:53 -0400
+Received: from 8bytes.org ([81.169.241.247]:36174 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgHRPHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:07:50 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 298A32A4; Tue, 18 Aug 2020 17:07:48 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 17:07:46 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Mike Stunes <mstunes@vmware.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v5 00/75] x86: SEV-ES Guest Support
+Message-ID: <20200818150746.GA3319@8bytes.org>
+References: <20200724160336.5435-1-joro@8bytes.org>
+ <B65392F4-FD42-4AA3-8AA8-6C0C0D1FF007@vmware.com>
+ <20200730122645.GA3257@8bytes.org>
+ <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <baecb36e-1f82-1e0e-6460-d6759a9193c1@infradead.org>
+In-Reply-To: <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 07:29:02AM -0700, Randy Dunlap wrote:
-> On 8/18/20 6:49 AM, Alex Dewar wrote:
-> > Currently emxx_udc.h defines bit values using local macros. Use the
-> > standard one instead.
-> > 
-> > Also, combine bit values with bitwise-or rather than addition, as
-> > suggested by Coccinelle.
-> > 
-> > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> 
-> Hi,
-> 
-> Does this build?  Just checking.
-> 
-> Looks like it would need this:
-> 
-> #include <linux/bits.h>
-> 
-> since it (indirectly) provides definition of the BIT() macro.
+Hi Mike,
 
-Yeah, it builds, because emxx_udc.c includes emxx_udc.h after a bunch of
-standard headers. I agree that it would probably be cleaner to have the
-include in there explicitly, though.
+On Thu, Jul 30, 2020 at 11:23:50PM +0000, Mike Stunes wrote:
+> Yes, FSGSBASE was enabled. If I disable it*, this kernel boots fine, with
+> both CPUs online.
+> 
+> *That is, by forcing guest-CPUID[7].EBX bit 0 to 0.
 
-Best,
-Alex
+Can you please test whether
 
-> 
-> > ---
-> >  drivers/staging/emxx_udc/emxx_udc.h | 456 +++++++++++++---------------
-> >  1 file changed, 211 insertions(+), 245 deletions(-)
-> 
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=sev-es-client-tip-5.9
+
+still triggers this issue on your side?
+
+Thanks,
+
+	Joerg
