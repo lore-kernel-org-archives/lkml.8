@@ -2,104 +2,109 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03540C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F30F8206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09E920786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cWzzse+n"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="QjKJC3iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHRSMz (ORCPT
+        id S1726772AbgHRSNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59352 "EHLO
+        Tue, 18 Aug 2020 14:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbgHRSMy (ORCPT
+        with ESMTP id S1726588AbgHRSNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:12:54 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B42C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:12:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q19so9606881pll.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:12:54 -0700 (PDT)
+        Tue, 18 Aug 2020 14:13:12 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB12C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:13:12 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f24so23217692ejx.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B6ZJxFf2Z6gDyFzWzMEu+MxYBenSPrvaZMkOZhCrYpk=;
-        b=cWzzse+nzZalDgVtFalfBv5bPc3YtGZGFGJaWtJ3muGOvmJtvkQLCkSZFAc6JuSH71
-         hjGDE20kS2S4cKvJWOo/DeQT3FFkaKSKXmSDLLyjPWsx4a2CZQGxGpmhxVWi/QCL6T6A
-         ZtkmdiXDq8K3c5dHUpcaBPO9hjRl/4o0+bT55E9sLB8IHOrZN3hrT0ee3fX6VxaviUCF
-         UOlHpGLLyp/ULrC9A4dayNcqNhVxRMs6OypRd2yCSKoUKQC/Yj2xw6TYDhtetahAXEBw
-         ic6I+wlaeKoOFDOtBZqT7Fv+IbdyT+Lf/fmz4Jj+0Aq4+K7SkvDwPlHqG3yQdhOv3qgN
-         bAcw==
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RQfII6OqeocrTsbvngYvMEa5UN4ejkr0mhyGFMVV2I8=;
+        b=QjKJC3iySsR8dz9ujNbGV5R10NnYiIbC/ryuhLdDQ9lgembtRbnqd4a0rdupEFVNlO
+         yRwVn/5c82oryEoP9IEFcAg2+OObKL4tpoCfLlbSvPsQSi9V3W+gYd3n22c7aeTWqUZE
+         tRn061KbpJ0SCBNooN8wut1QHG5cL3tbUe6Pt3QP+VqoScwBCLld3dsgWBuvXcRk/Zno
+         8ajUIavPu7lx0uCaekPWbGEFzIjUPZGNBK0W/azNUVe4a0RwbjdN/SaDRP8Lb5srL6yI
+         cpeIjqzOwz4vsjTC677/uzbksSNx4G56hZao9qJC5bQWU6CwMNYCo1w37BAfITjdzW/1
+         Sh3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B6ZJxFf2Z6gDyFzWzMEu+MxYBenSPrvaZMkOZhCrYpk=;
-        b=h2XJeXGKSUAuJiMUXoKqypJCizUY7IkuM3oAB91WpLlx+00YCXo3GHhy52lpftOo08
-         ua/s9VTv+IEp5l28Hvh8JCRcQegIPaki9C2R/+votNFeM3cgeSKtptnKlOj9H1TrBw51
-         UzdFN8cRx96F7LfYMUiUcs1TPyLHXMRDm3iUinWeSxkhuNSCp1JYVZN0tRYXdogxUNGK
-         aPJfS7QFbtJlwNzbpnu3rpoo2vPajv6SoTMdz77LlWNJVG0RPZlzNxASgH8zEsz4cGpd
-         r2Lkb1Lx9J8kpPpBkjfgmsBnlDMrpJ3G8uEtby3rJc/fODjF5xsIjob5JAyv9XKXvjvG
-         TL7A==
-X-Gm-Message-State: AOAM530yVlO3oGonQcX/1UanRx3QRWAg4AqrVEZc8wcAYWmVYcaRsTtI
-        hRVJ09HO/01I+V8GlR1gbyda/kwK7sTD12fp
-X-Google-Smtp-Source: ABdhPJz6UYz5gqOxPOPAZaRpOrNzyaFiiZ4VQvMnWaHvJSDDyH1OWWmADBZG13GncGmKNIV/Oq8PcQ==
-X-Received: by 2002:a17:90a:6843:: with SMTP id e3mr931799pjm.89.1597774373413;
-        Tue, 18 Aug 2020 11:12:53 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:9214:36a5:5cec:a06d? ([2605:e000:100e:8c61:9214:36a5:5cec:a06d])
-        by smtp.gmail.com with ESMTPSA id r25sm21430047pgv.88.2020.08.18.11.12.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 11:12:52 -0700 (PDT)
-Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
- <20200818181117.GA34125@mit.edu>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
-Date:   Tue, 18 Aug 2020 11:12:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RQfII6OqeocrTsbvngYvMEa5UN4ejkr0mhyGFMVV2I8=;
+        b=hX3qfZSYfEXMhI5YzdNYeRN3K40VTZsvUDDI8Wwtc6gG0xSUgSeWEHkmal8eCkvTmB
+         XqQ58zCNsTMagF972+vIQtu6V/tpBn+cqZS2BcpwXlA6UMQ9qlW1qjZem9z0eMk18Qvy
+         diMAQalYxZK1U7sdHM4+HqVjPoQxDdMXILVKHMcOXq+mhQNfxo5prAeLu181DgtKevgk
+         Ibfa516ADOFiHTZOrgYRidFSL+2neoh3GSllZ2oNEBdALKU9x5zrFmqVQlE3GzzBjGyj
+         P6fmPWfb8U6WMZyy4isCfmyMoKFOKuU7b5B4XluzlIla0TeVO0y8PAQBQSYwX4v2Lbor
+         csVw==
+X-Gm-Message-State: AOAM531A/XkBc1SDu/GzI3S6/kvnGWQc67Z2Ru/9O5QiLyR6BViOMUIs
+        TnsYHNyMJHmnYhDd02M+RUkTQA==
+X-Google-Smtp-Source: ABdhPJyYTxGFLxcDuRDg/n92S6zWZuddbv3ZZNTVHZ8bxifAUCxXKO7s2DdTeLc9TBdj2q5NzpZHLg==
+X-Received: by 2002:a17:906:bccf:: with SMTP id lw15mr22472412ejb.415.1597774390879;
+        Tue, 18 Aug 2020 11:13:10 -0700 (PDT)
+Received: from localhost (5.186.127.235.cgn.fibianet.dk. [5.186.127.235])
+        by smtp.gmail.com with ESMTPSA id w18sm16870282ejf.37.2020.08.18.11.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 11:13:10 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 20:13:08 +0200
+From:   Javier Gonzalez <javier@javigon.com>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Kanchan Joshi <joshi.k@samsung.com>, Damien.LeMoal@wdc.com,
+        axboe@kernel.dk, sagi@grimberg.me, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, johannes.thumshirn@wdc.com,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+Message-ID: <20200818181308.7g3xom4lxwuoogev@MacBook-Pro.localdomain>
+References: <20200818052936.10995-1-joshi.k@samsung.com>
+ <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
+ <20200818052936.10995-3-joshi.k@samsung.com>
+ <20200818071249.GB2544@lst.de>
+ <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local>
+ <20200818165811.GA2979311@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200818172912.e54klrofz3tfhxhj@MacBook-Pro.localdomain>
+ <20200818173936.GA3097355@dhcp-10-100-145-180.wdl.wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818181117.GA34125@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200818173936.GA3097355@dhcp-10-100-145-180.wdl.wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 11:11 AM, Theodore Y. Ts'o wrote:
-> On Mon, Aug 03, 2020 at 05:02:11PM -0600, Jens Axboe wrote:
->> ext4 uses generic_file_read_iter(), which already supports this.
+On 18.08.2020 10:39, Keith Busch wrote:
+>On Tue, Aug 18, 2020 at 07:29:12PM +0200, Javier Gonzalez wrote:
+>> On 18.08.2020 09:58, Keith Busch wrote:
+>> > On Tue, Aug 18, 2020 at 11:50:33AM +0200, Javier Gonzalez wrote:
+>> > > a number of customers are requiring the use of normal writes, which we
+>> > > want to support.
+>> >
+>> > A device that supports append is completely usable for those customers,
+>> > too. There's no need to create divergence in this driver.
 >>
->> Cc: Theodore Ts'o <tytso@mit.edu>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>
->> ---
->>
->> Resending this one, as I've been carrying it privately since May. The
->> necessary bits are now upstream (and XFS/btrfs equiv changes as well),
->> please consider this one for 5.9. Thanks!
-> 
-> The necessary commit only hit upstream as of 5.9-rc1, unless I'm
-> missing something?  It's on my queue to send to Linus once I get my
-> (late) ext4 primary pull request for 5.9.
+>> Not really. You know as well as I do that some features are disabled for
+>> a particular SSD model on customer requirements. Generic models
+>> implementing append can submit both I/Os, but those that remove append
+>> are left out.
+>
+>You are only supporting my point: if your device supports append, you
+>get to work in every ZNS use case, otherwise you only get to work in a
+>subset.
 
-Right, it went in at the start of the merge window for 5.9. Thanks Ted!
-
--- 
-Jens Axboe
+There are several devices. Some of them enable append and some do not. I
+would like to support the later too.
 
