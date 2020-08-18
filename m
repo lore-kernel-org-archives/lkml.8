@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47354C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF04C206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D06A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597757818;
-	bh=gL4zAM22UgQE+PipA9UIen3zyMO6OfT4nN9ybOsWnjU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UGkHHL6bfYtKoQmzYIoAZkFJ2gk0WqdZoIDGyMiqM5qOkxf7cjuWycaq43HlLf02F
-	 77Qw3HlBZ6ssphXZEEKqBzgBihzbWnmOP4sYpNQHjK3xaeoHwlecRrFefks3gJGr9J
-	 q24XG+R0Gl3o8xVI0FTbvTE/HsdEqIdZl+41GLfU=
+	s=default; t=1597757861;
+	bh=7GfMx+3DL1strby6wKxSFzxulPkZi4asMsiaClpBxe8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=17SPRFjgMfd95gwvpc9a3hdh3hgpO7A4YbwPba3I915XZ/6X6RNRSilTY8ktI29Gs
+	 DAuEQr1eQolHD2SlYKD2sXFhFyqcQmbiGnxoTEmzwPNgynlj9OT/AjK/ESQUSIgEf/
+	 iGnf4ngTW6PDRNvnrVMmkliiTNkBQoKdxWgIUf9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgHRNgn (ORCPT
+        id S1726890AbgHRNh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 09:37:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgHRNgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:36:04 -0400
+        id S1726542AbgHRNhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:37:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B5A207DA;
-        Tue, 18 Aug 2020 13:36:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F358F206B5;
+        Tue, 18 Aug 2020 13:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597757763;
-        bh=gL4zAM22UgQE+PipA9UIen3zyMO6OfT4nN9ybOsWnjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FamVaIy9upQcdF+LYSUsfuazAEw2bWBPtJ7jkuSW4Em4QThy3k52gWNCJWmN2G7IT
-         TxNOET3ijSpkGAYD/iuKrheSz39SIiQtscfXkYak8I6c0zK1wMCXuhx/J2mT7vM20I
-         UthKqD3y+hz4cACLNAqc13/2BIlQnlnuGxOnrJ2g=
+        s=default; t=1597757838;
+        bh=7GfMx+3DL1strby6wKxSFzxulPkZi4asMsiaClpBxe8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bYw3M+Bw2yipIZCR47U4l57CfeltMX1PWV/R1cnD7Fp91pcNd8BT4CPuHm+/Anla0
+         xKjePM0rjqfW070Eq4RArDJl6QDYIy6z1MrKBj0ImWYj3u5mB5sSOm12Tmuow8RawY
+         aIkEFpX4Fh8HlV7Xmg6bktJti+v4hn8TfmdAHX5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-media@vger.kernel.org
+To:     linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jean-Christophe Trotin <jean-christophe.trotin@st.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] media: sti: no need to check return value of debugfs_create functions
-Date:   Tue, 18 Aug 2020 15:36:06 +0200
-Message-Id: <20200818133608.462514-5-gregkh@linuxfoundation.org>
+Subject: [PATCH] PCI: tegra: no need to check return value of debugfs_create functions
+Date:   Tue, 18 Aug 2020 15:37:39 +0200
+Message-Id: <20200818133739.463193-1-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200818133608.462514-1-gregkh@linuxfoundation.org>
-References: <20200818133608.462514-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,136 +65,113 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Cc: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Jean-Christophe Trotin <jean-christophe.trotin@st.com>
-Cc: linux-media@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Vidya Sagar <vidyas@nvidia.com>
+Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../media/platform/sti/bdisp/bdisp-debug.c    | 29 ++++---------------
- drivers/media/platform/sti/bdisp/bdisp-v4l2.c |  7 +----
- drivers/media/platform/sti/bdisp/bdisp.h      |  2 +-
- drivers/media/platform/sti/hva/hva-debugfs.c  | 22 +++-----------
- 4 files changed, 12 insertions(+), 48 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 20 +++++------------
+ drivers/pci/controller/pci-tegra.c         | 25 +++++-----------------
+ 2 files changed, 10 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-debug.c b/drivers/media/platform/sti/bdisp/bdisp-debug.c
-index 77ca7517fa3e..2b270093009c 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-debug.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-debug.c
-@@ -637,35 +637,18 @@ DEFINE_SHOW_ATTRIBUTE(last_nodes_raw);
- DEFINE_SHOW_ATTRIBUTE(last_request);
- DEFINE_SHOW_ATTRIBUTE(perf);
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 70498689d0c0..87f8dd63df0a 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -699,23 +699,16 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
+ 	dw_pcie_writel_dbi(pci, PORT_LOGIC_ACK_F_ASPM_CTRL, val);
+ }
  
--int bdisp_debugfs_create(struct bdisp_dev *bdisp)
-+void bdisp_debugfs_create(struct bdisp_dev *bdisp)
+-static int init_debugfs(struct tegra_pcie_dw *pcie)
++static void init_debugfs(struct tegra_pcie_dw *pcie)
  {
- 	char dirname[16];
- 
- 	snprintf(dirname, sizeof(dirname), "%s%d", BDISP_NAME, bdisp->id);
- 	bdisp->dbg.debugfs_entry = debugfs_create_dir(dirname, NULL);
--	if (!bdisp->dbg.debugfs_entry)
--		goto err;
- 
--	if (!bdisp_dbg_create_entry(regs))
--		goto err;
+-	struct dentry *d;
 -
--	if (!bdisp_dbg_create_entry(last_nodes))
--		goto err;
--
--	if (!bdisp_dbg_create_entry(last_nodes_raw))
--		goto err;
--
--	if (!bdisp_dbg_create_entry(last_request))
--		goto err;
--
--	if (!bdisp_dbg_create_entry(perf))
--		goto err;
+-	d = debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt",
+-					pcie->debugfs, aspm_state_cnt);
+-	if (IS_ERR_OR_NULL(d))
+-		dev_err(pcie->dev,
+-			"Failed to create debugfs file \"aspm_state_cnt\"\n");
 -
 -	return 0;
--
--err:
--	bdisp_debugfs_remove(bdisp);
--	return -ENOMEM;
-+	bdisp_dbg_create_entry(regs);
-+	bdisp_dbg_create_entry(last_nodes);
-+	bdisp_dbg_create_entry(last_nodes_raw);
-+	bdisp_dbg_create_entry(last_request);
-+	bdisp_dbg_create_entry(perf);
++	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
++				    aspm_state_cnt);
  }
+ #else
+ static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
+ static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
+ static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
+-static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
++static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
+ #endif
  
- void bdisp_debugfs_remove(struct bdisp_dev *bdisp)
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-index af2d5eb782ce..7d50d6cd073d 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
-@@ -1360,11 +1360,7 @@ static int bdisp_probe(struct platform_device *pdev)
+ static void tegra_pcie_enable_system_interrupts(struct pcie_port *pp)
+@@ -1641,10 +1634,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
  	}
  
- 	/* Debug */
--	ret = bdisp_debugfs_create(bdisp);
--	if (ret) {
--		dev_err(dev, "failed to create debugfs\n");
--		goto err_v4l2;
--	}
-+	bdisp_debugfs_create(bdisp);
+ 	pcie->debugfs = debugfs_create_dir(name, NULL);
+-	if (!pcie->debugfs)
+-		dev_err(dev, "Failed to create debugfs\n");
+-	else
+-		init_debugfs(pcie);
++	init_debugfs(pcie);
  
- 	/* Power management */
- 	pm_runtime_enable(dev);
-@@ -1401,7 +1397,6 @@ static int bdisp_probe(struct platform_device *pdev)
- 	pm_runtime_put(dev);
- err_dbg:
- 	bdisp_debugfs_remove(bdisp);
--err_v4l2:
- 	v4l2_device_unregister(&bdisp->v4l2_dev);
- err_clk:
- 	if (!IS_ERR(bdisp->clock))
-diff --git a/drivers/media/platform/sti/bdisp/bdisp.h b/drivers/media/platform/sti/bdisp/bdisp.h
-index e309cde379ca..3fb009d24791 100644
---- a/drivers/media/platform/sti/bdisp/bdisp.h
-+++ b/drivers/media/platform/sti/bdisp/bdisp.h
-@@ -209,6 +209,6 @@ int bdisp_hw_get_and_clear_irq(struct bdisp_dev *bdisp);
- int bdisp_hw_update(struct bdisp_ctx *ctx);
+ 	return ret;
  
- void bdisp_debugfs_remove(struct bdisp_dev *bdisp);
--int bdisp_debugfs_create(struct bdisp_dev *bdisp);
-+void bdisp_debugfs_create(struct bdisp_dev *bdisp);
- void bdisp_dbg_perf_begin(struct bdisp_dev *bdisp);
- void bdisp_dbg_perf_end(struct bdisp_dev *bdisp);
-diff --git a/drivers/media/platform/sti/hva/hva-debugfs.c b/drivers/media/platform/sti/hva/hva-debugfs.c
-index 7d12a5b5d914..a86a07b6fbc7 100644
---- a/drivers/media/platform/sti/hva/hva-debugfs.c
-+++ b/drivers/media/platform/sti/hva/hva-debugfs.c
-@@ -337,25 +337,11 @@ DEFINE_SHOW_ATTRIBUTE(regs);
- void hva_debugfs_create(struct hva_dev *hva)
- {
- 	hva->dbg.debugfs_entry = debugfs_create_dir(HVA_NAME, NULL);
--	if (!hva->dbg.debugfs_entry)
--		goto err;
- 
--	if (!hva_dbg_create_entry(device))
--		goto err;
--
--	if (!hva_dbg_create_entry(encoders))
--		goto err;
--
--	if (!hva_dbg_create_entry(last))
--		goto err;
--
--	if (!hva_dbg_create_entry(regs))
--		goto err;
--
--	return;
--
--err:
--	hva_debugfs_remove(hva);
-+	hva_dbg_create_entry(device);
-+	hva_dbg_create_entry(encoders);
-+	hva_dbg_create_entry(last);
-+	hva_dbg_create_entry(regs);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index c1d34353c29b..e1a6f9db36f7 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2601,24 +2601,12 @@ static void tegra_pcie_debugfs_exit(struct tegra_pcie *pcie)
+ 	pcie->debugfs = NULL;
  }
  
- void hva_debugfs_remove(struct hva_dev *hva)
+-static int tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
++static void tegra_pcie_debugfs_init(struct tegra_pcie *pcie)
+ {
+-	struct dentry *file;
+-
+ 	pcie->debugfs = debugfs_create_dir("pcie", NULL);
+-	if (!pcie->debugfs)
+-		return -ENOMEM;
+-
+-	file = debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs,
+-				   pcie, &tegra_pcie_ports_ops);
+-	if (!file)
+-		goto remove;
+-
+-	return 0;
+ 
+-remove:
+-	tegra_pcie_debugfs_exit(pcie);
+-	return -ENOMEM;
++	debugfs_create_file("ports", S_IFREG | S_IRUGO, pcie->debugfs, pcie,
++			    &tegra_pcie_ports_ops);
+ }
+ 
+ static int tegra_pcie_probe(struct platform_device *pdev)
+@@ -2672,11 +2660,8 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 		goto pm_runtime_put;
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+-		err = tegra_pcie_debugfs_init(pcie);
+-		if (err < 0)
+-			dev_err(dev, "failed to setup debugfs: %d\n", err);
+-	}
++	if (IS_ENABLED(CONFIG_DEBUG_FS))
++		tegra_pcie_debugfs_init(pcie);
+ 
+ 	return 0;
+ 
 -- 
 2.28.0
 
