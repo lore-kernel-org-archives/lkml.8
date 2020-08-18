@@ -2,102 +2,194 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27C1F20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTsd1Ljs"
+	by mail.kernel.org (Postfix) with ESMTP id A694620897
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgHRP7B (ORCPT
+        id S1728116AbgHRP7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbgHRPqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:46:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E57C061342;
-        Tue, 18 Aug 2020 08:46:41 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id b17so21600548ion.7;
-        Tue, 18 Aug 2020 08:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gpcsNzkAMDE+NE5CExnC5iIWbWS0MQMV+dfpRNB/riw=;
-        b=LTsd1LjsrCLzPuwc2S7Ages4odkwdUd/orSwwvAaVGSMmkNy2rzr6rxpbZXywiYzmd
-         wRhaoEjAEbvHfBa9PM0FMk/jjghuWw8VOWdA7p3ImauoyymzPLC+AbT+nUvLfO13KGxf
-         PrQFpYM7gDrvoUCoecNEeao9rXU7cprR2MdWerdiNT1MjzICwuybSGauPjzDqjEUxEfm
-         fINxhoIOsH7bNRwheI23g2Ifvgqg3ZINRrlALCC02M2mTfA/G8VB9UzxUbT1WlahPx53
-         V7Qr1SVW8+uw5akLVM9YgUQxoZfx8PrCcI3SJRxtMVo1yjw42u76YFi/o29VHLLvlkNh
-         DrGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gpcsNzkAMDE+NE5CExnC5iIWbWS0MQMV+dfpRNB/riw=;
-        b=kN7hw++4kMxQZoHXUIHK09RIj+WlUtst0O1+CsHn4fx8ikXyYDL9sqSZH/CZhaQiwi
-         eL7TWu3kFGasxRU4DqJs4jCu4VQQmZoJecgciU1Oh6eQ8f/+1wf726LGqf0afu8Bg6Tl
-         nM2Lfh+BDHrRyJNukwQp+SmiyUvmUMtlPx/TB4kJjiZheq+9QZwFrE1KhqZmmT18CL5L
-         NynOyNIj3NP5ZIQXwserOPiYUxq8OtsPU9aGQZ7Fqix14GESAbNYH8cONLYd1sdnt8hv
-         DZhTWIKWiNn6DXXiC19vogrX+++EPZ/iS9ZqZeHZwgbaJZ1ss1wxecuKJgbvC4Eei0H9
-         tMhA==
-X-Gm-Message-State: AOAM532wnXMWb8ZN9+H1xAbsFIn9v4JYe43PZNr7KDLa/NVen0CbnTYY
-        /yjGlmPYKhM88SQC+oXK307tPLq2Hwqp8A==
-X-Google-Smtp-Source: ABdhPJwx8qWomQtlosTWe8r6s7ROViav8P/asi0DxBNbpGIMpnE0w4BCLWsczjGwYLtI7jbNca/y5g==
-X-Received: by 2002:a02:7786:: with SMTP id g128mr19118716jac.45.1597765600813;
-        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id z1sm3113625ilh.13.2020.08.18.08.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 08:46:40 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] ARM: omap2plus_defconfig: Enable OMAP3_THERMAL
-Date:   Tue, 18 Aug 2020 10:46:33 -0500
-Message-Id: <20200818154633.5421-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200818154633.5421-1-aford173@gmail.com>
-References: <20200818154633.5421-1-aford173@gmail.com>
+        Tue, 18 Aug 2020 11:59:15 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2640 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727956AbgHRPpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:45:41 -0400
+Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 73998FDD20F951A0F884;
+        Tue, 18 Aug 2020 16:45:40 +0100 (IST)
+Received: from kstruczy-linux-box (10.204.65.138) by
+ lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 18 Aug 2020 16:45:38 +0100
+Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:45:40 +0200
+From:   <krzysztof.struczynski@huawei.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <containers@lists.linux-foundation.org>,
+        <linux-security-module@vger.kernel.org>
+CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
+        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
+        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
+        <jmorris@namei.org>, <christian@brauner.io>,
+        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Subject: [RFC PATCH 17/30] ima: Add the violation counter to the namespace
+Date:   Tue, 18 Aug 2020 17:42:17 +0200
+Message-ID: <20200818154230.14016-8-krzysztof.struczynski@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.204.65.138]
+X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
+ lhreml722-chm.china.huawei.com (10.201.108.73)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the additional power management options enabled,
-this patch enables OMAP3_THERMAL by default.
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+The violations are now tracked per namespace.
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index fe383f5a92fb..efcc46305a47 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -303,6 +303,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
- CONFIG_THERMAL_GOV_USER_SPACE=y
- CONFIG_CPU_THERMAL=y
- CONFIG_TI_THERMAL=y
-+CONFIG_OMAP3_THERMAL=y
- CONFIG_OMAP4_THERMAL=y
- CONFIG_OMAP5_THERMAL=y
- CONFIG_DRA752_THERMAL=y
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+---
+ include/linux/ima.h                |  1 +
+ security/integrity/ima/ima.h       |  1 -
+ security/integrity/ima/ima_api.c   |  2 +-
+ security/integrity/ima/ima_fs.c    | 18 +++++++++++++++---
+ security/integrity/ima/ima_init.c  |  1 +
+ security/integrity/ima/ima_ns.c    |  1 +
+ security/integrity/ima/ima_queue.c |  1 -
+ 7 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index d59ed38a4305..7eb7a008c5fe 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -204,6 +204,7 @@ struct ima_namespace {
+ 	struct integrity_iint_tree *iint_tree;
+ 	struct list_head *measurements;
+ 	atomic_long_t ml_len; /* number of stored measurements in the list */
++	atomic_long_t violations;
+ } __randomize_layout;
+ 
+ extern struct ima_namespace init_ima_ns;
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 7318fff3ccaa..ef95522cc710 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -193,7 +193,6 @@ extern spinlock_t ima_queue_lock;
+ 
+ struct ima_h_table {
+ 	atomic_long_t len;	/* number of stored measurements in the list */
+-	atomic_long_t violations;
+ 	struct hlist_head queue[IMA_MEASURE_HTABLE_SIZE];
+ };
+ extern struct ima_h_table ima_htable;
+diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+index b01451b34a98..f91516885033 100644
+--- a/security/integrity/ima/ima_api.c
++++ b/security/integrity/ima/ima_api.c
+@@ -151,7 +151,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+ 	event_data.ns_id = get_ns_id(ima_ns);
+ 
+ 	/* can overflow, only indicator */
+-	atomic_long_inc(&ima_htable.violations);
++	atomic_long_inc(&ima_ns->violations);
+ 
+ 	result = ima_alloc_init_template(&event_data, &entry, NULL);
+ 	if (result < 0) {
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 6d370874d80f..b71c2552ac15 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -51,10 +51,23 @@ static ssize_t ima_show_htable_violations(struct file *filp,
+ 					  char __user *buf,
+ 					  size_t count, loff_t *ppos)
+ {
+-	return ima_show_htable_value(buf, count, ppos, &ima_htable.violations);
++	struct ima_namespace *ima_ns = get_current_ns();
++
++	return ima_show_htable_value(buf, count, ppos, &ima_ns->violations);
++}
++
++static int ima_open_htable_violations(struct inode *inode, struct file *file)
++{
++	struct ima_namespace *ima_ns = get_current_ns();
++
++	if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
++		return -EPERM;
++
++	return 0;
+ }
+ 
+ static const struct file_operations ima_htable_violations_ops = {
++	.open = ima_open_htable_violations,
+ 	.read = ima_show_htable_violations,
+ 	.llseek = generic_file_llseek,
+ };
+@@ -76,7 +89,6 @@ static ssize_t ima_show_measurements_count(struct file *filp,
+ 	struct ima_namespace *ima_ns = get_current_ns();
+ 
+ 	return ima_show_htable_value(buf, count, ppos, &ima_ns->ml_len);
+-
+ }
+ 
+ static const struct file_operations ima_measurements_count_ops = {
+@@ -552,7 +564,7 @@ int __init ima_fs_init(void)
+ 		goto out;
+ 
+ 	violations =
+-	    securityfs_create_file("violations", S_IRUSR | S_IRGRP,
++	    securityfs_create_file("violations", S_IRUSR | S_IRGRP | S_IROTH,
+ 				   ima_dir, NULL, &ima_htable_violations_ops);
+ 	if (IS_ERR(violations))
+ 		goto out;
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index ac9509d8c0f0..f7b25b3f95de 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -37,6 +37,7 @@ struct ima_namespace init_ima_ns = {
+ 	.iint_tree = &init_iint_tree,
+ 	.measurements = &ima_measurements,
+ 	.ml_len = ATOMIC_LONG_INIT(0),
++	.violations = ATOMIC_LONG_INIT(0),
+ };
+ EXPORT_SYMBOL(init_ima_ns);
+ 
+diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
+index 81de492baa99..3012287b22d2 100644
+--- a/security/integrity/ima/ima_ns.c
++++ b/security/integrity/ima/ima_ns.c
+@@ -127,6 +127,7 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
+ 	ns->ucounts = ucounts;
+ 	ns->frozen = false;
+ 	atomic_long_set(&ns->ml_len, 0);
++	atomic_long_set(&ns->violations, 0);
+ 
+ 	rwlock_init(&ns->iint_tree->lock);
+ 	ns->iint_tree->root = RB_ROOT;
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index ec5b3ca3ef92..912e6097af5b 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -34,7 +34,6 @@ static unsigned long binary_runtime_size = ULONG_MAX;
+ /* key: inode (before secure-hashing a file) */
+ struct ima_h_table ima_htable = {
+ 	.len = ATOMIC_LONG_INIT(0),
+-	.violations = ATOMIC_LONG_INIT(0),
+ 	.queue[0 ... IMA_MEASURE_HTABLE_SIZE - 1] = HLIST_HEAD_INIT
+ };
+ 
 -- 
-2.17.1
+2.20.1
 
