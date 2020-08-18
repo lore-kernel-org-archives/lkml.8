@@ -2,88 +2,133 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F56C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C13206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A80206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gNipVl2c"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FB2IyJSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHRTny (ORCPT
+        id S1726818AbgHRTpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        Tue, 18 Aug 2020 15:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgHRTnv (ORCPT
+        with ESMTP id S1726773AbgHRTow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:43:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D806C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:43:50 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c6so19187pje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:43:50 -0700 (PDT)
+        Tue, 18 Aug 2020 15:44:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F270CC061345
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q19so9715985pll.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=07d8bMVK8nskANdMOYMjUqMmsVvTMTJi5HKNDrCq6hQ=;
-        b=gNipVl2c+/nOxG5DyICzsidC3YlLij/C0CSl9peKhMSGPdUxsXnT2I6jx1kAORkjSM
-         C4tUBV/kkenul4r6W7N5KQ16Bh0uIaoVMq7cUDJ6zjUKb+A1eOTZL2eQQRD/BSFPFViq
-         XVn0GEFQYbcbug0N+pnDa6t3XX6fNZsvlwQbE=
+        bh=i1d+U+ecDxUFOWl6onxWX2qBK/sZMPkIFOLpUTyn6uQ=;
+        b=FB2IyJSYdn0VUofa7i8Z80/FH61STbjzPiTrV7pXJ9/PanWHP8N2HBymNiDeDrDJZv
+         +bo27DTYRBIRVYJdtoXyyWfeS36z89yBxiuaIdCQyk9PY/jIhvuLnozoYsLcv/l7l7+3
+         H8tWRysm6mi5Tfast76wQOHwKrqDkZ0EWMgMg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=07d8bMVK8nskANdMOYMjUqMmsVvTMTJi5HKNDrCq6hQ=;
-        b=V8ocMvTSzJeiJnMp60ekYIuqlyYGkCumKs+Wr+9KhUjPohoWKbG6X9O//iUalaTE98
-         wnk+1pR8Sh4qChtV4LJ+lHsg3AQc7tRQD85CORU06VynGNr35up+lq3Yjj4rY1IfdCED
-         aw57/ZjEZyHRh1e1uRfEMdXScDKpOdEJ9LqnJ7qzTByOCP8/UHm/ZSX49rlyDo1N0Wcg
-         U9/YftYMM2blz1RZSCn+HEz2DAYb5bZ63+4/9ESgGBcrvWH7mdYhLxY3VOKMkxSWBzOK
-         tRHf81mmoXwGIEgCoEvHbNspevXaDlJs0pWdVwXxCcRT+/KJHyHjwAL/ipemuZX+z/cM
-         ABLg==
-X-Gm-Message-State: AOAM531DRCR1FMh3+j+8nWTygzRDnQmm6hWgsbhEKJy0wIL9tYjIwCHs
-        KdKG1n4WdPJd9i/ophVjLzPHMA==
-X-Google-Smtp-Source: ABdhPJy2gMhr8aECJvzZ3Ns6OMWEcvMDndJrwdoYkKTN1hLvIYEOowwCdxTiZwMiBrBTpO1TDIVE1g==
-X-Received: by 2002:a17:90a:5298:: with SMTP id w24mr1102634pjh.221.1597779829365;
-        Tue, 18 Aug 2020 12:43:49 -0700 (PDT)
+        bh=i1d+U+ecDxUFOWl6onxWX2qBK/sZMPkIFOLpUTyn6uQ=;
+        b=CqV2IcNUl05KYVoGn2HEc7NxvXaGukcjHJ6Qyf1iVgAmRbxdRj+HHJWOMYk/OvnRUY
+         TfpexJnYc26duIIfNfJte5b8WNU670ArD6db8a54WSInuMyGz664moNBxaY/dQW8WUZ2
+         6JdmD3HQwLRbEIvFHJwRLQucPp+xPptXJhdi6BcETj0xlWzcw+R86dmc+gxuGjIbiVoU
+         pBZAS4kGGKahNXGMkpBK9EYDrQF4k5zIdSAR5iGIxKWm+fiySurok/0aggcQ24d6rYlB
+         6bOgCwfmM0FZKXaZOP70fnAtm7Lbj19vYBcu/3Qwi/D6SilCicF15KTFahsXAnuWvbLw
+         ckTQ==
+X-Gm-Message-State: AOAM530Wfn3bvhzDVgdSHCxebu0WosAcoaHGQN5WmWcHZlk2FUaSWiIs
+        YAlGshbsF2CS5U3MPuFqNUDybg==
+X-Google-Smtp-Source: ABdhPJy5tKx9/xkhHJM6Odv3AsGblbIMbyJc2oObFFznMoC2GzzBneeXHhCf+Coy4KEA+Rmx1fZaDw==
+X-Received: by 2002:a17:90a:7488:: with SMTP id p8mr1244035pjk.158.1597779891291;
+        Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y1sm27334312pfr.207.2020.08.18.12.43.48
+        by smtp.gmail.com with ESMTPSA id b12sm22351411pga.87.2020.08.18.12.44.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:43:48 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:43:47 -0700
+        Tue, 18 Aug 2020 12:44:50 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:44:49 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 05/11] test_bitmap: skip user bitmap tests for
- !CONFIG_SET_FS
-Message-ID: <202008181243.162DE4D@keescook>
+Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
+Message-ID: <202008181244.BBDA7DAB@keescook>
 References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-6-hch@lst.de>
+ <20200817073212.830069-9-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817073212.830069-6-hch@lst.de>
+In-Reply-To: <20200817073212.830069-9-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:32:06AM +0200, Christoph Hellwig wrote:
-> We can't run the tests for userspace bitmap parsing if set_fs() doesn't
-> exist.
+On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
+> For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
+
+typo: thing
+
+> need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
+> definition to escape the explicit unsigned long cast.  This just works
+> because __PAGE_OFFSET is defined using _AC itself and thus never needs
+> the cast anyway.
+
+Shouldn't this be folded into the prior patch so there's no bisection
+problem?
+
+-Kees
+
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/include/asm/page_32_types.h | 4 ++--
+>  arch/x86/include/asm/page_64_types.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
+> index 26236925fb2c36..f462895a33e452 100644
+> --- a/arch/x86/include/asm/page_32_types.h
+> +++ b/arch/x86/include/asm/page_32_types.h
+> @@ -44,8 +44,8 @@
+>  /*
+>   * User space process size: 3GB (default).
+>   */
+> -#define IA32_PAGE_OFFSET	PAGE_OFFSET
+> -#define TASK_SIZE		PAGE_OFFSET
+> +#define IA32_PAGE_OFFSET	__PAGE_OFFSET
+> +#define TASK_SIZE		__PAGE_OFFSET
+>  #define TASK_SIZE_LOW		TASK_SIZE
+>  #define TASK_SIZE_MAX		TASK_SIZE
+>  #define DEFAULT_MAP_WINDOW	TASK_SIZE
+> diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+> index 996595c9897e0a..838515daf87b36 100644
+> --- a/arch/x86/include/asm/page_64_types.h
+> +++ b/arch/x86/include/asm/page_64_types.h
+> @@ -76,7 +76,7 @@
+>   *
+>   * With page table isolation enabled, we map the LDT in ... [stay tuned]
+>   */
+> -#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
+> +#define TASK_SIZE_MAX	((_AC(1,UL) << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
+>  
+>  #define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
+>  
+> -- 
+> 2.28.0
+> 
 
 -- 
 Kees Cook
