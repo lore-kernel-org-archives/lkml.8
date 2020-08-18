@@ -2,132 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB98DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484D120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C862320709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:24:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqI5vxxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHRUUd (ORCPT
+        id S1726707AbgHRUYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgHRUUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:20:32 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614D1206B5;
-        Tue, 18 Aug 2020 20:20:31 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 16:20:29 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Tue, 18 Aug 2020 16:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgHRUYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 16:24:10 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFEBEC061389;
+        Tue, 18 Aug 2020 13:24:10 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id b2so10203605qvp.9;
+        Tue, 18 Aug 2020 13:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FN5WVca8g0lZzsHLJ8keJk1VvNzHhQryY0MT+wdL1rs=;
+        b=fqI5vxxdAdZ19Zsfnqp0P429m0BNQqUJ+Z2vwxcaHb86Nx0pO1YP06Je/uHZ11JGGk
+         yv2r9Ri6hhRd5TnAaRruClLCgVEL0Fv+H/ZBFe65Qzz5epAShmFSdBe/BgtvGjO7GXNS
+         Ad9VX/m1TlYx4f7bgQwXeozOQPlmSglnWC5HXSRWmjzqZ9XEJrVNPYBO83s5jvQvs6bO
+         DBH5JYU8nwHiAT59xvaLkyyNOUzsqSsJ+fTfiNzUoSY/YfBVlL6pnB/7JW+mbmKstwHV
+         GTT+luueyxE66T3/+p+eLQ0hJlTjMeHghltgABfriINehdxa8gFLSPo/nSt7wGo2B1uN
+         biHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=FN5WVca8g0lZzsHLJ8keJk1VvNzHhQryY0MT+wdL1rs=;
+        b=sv1pn6tiPUldrsOCsMRttjSqjYsEb2Jc7gPRAmPOjHLyXAgR4+S9aWZ6wufehq6HeX
+         bE1Pixy/Eiqu3z5AnvUYhOwWqUxQtOE1SMryweE5IFVKnCT/g5KFzYJGyLImWr2lUwiW
+         JjHtcH3CTi5rKwzFRB16gF64OdFRiU9wNHMyiD/0wp+P1xnd/9MCL4mkOIMuCwYJW/P0
+         WB8E6a6AUNOXP4p3u6VywIoUA6WenONSPGHGvojx/zYwnx0/xMp/+WXiAU1DReFBXqsO
+         ckCt6+WBFTm08ZOIxx1himaOKHAfoVvi7fGh+dwHwgX1up9wsI8K5jgP1UJU5oS+7n8D
+         bbVQ==
+X-Gm-Message-State: AOAM531fqLzOJklR3G9AHD7n7QgU/SKrtl8HjFl5KGAAdT9VBw+Z8CMs
+        5HaW/d4l6URjlAfTpUHmTmU=
+X-Google-Smtp-Source: ABdhPJzfx+wkjFI8S8WDNpbHy7FYmQWpT5C9LnamhEYOIuxBqAwbpajb0e4u5sImu58IKRaTrUUajQ==
+X-Received: by 2002:ad4:518b:: with SMTP id b11mr21112217qvp.139.1597782249782;
+        Tue, 18 Aug 2020 13:24:09 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id i20sm21533483qka.17.2020.08.18.13.24.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 13:24:09 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 18 Aug 2020 16:24:07 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] sched/cputime: Mark function as __maybe_unused
-Message-ID: <20200818162029.1692fc82@oasis.local.home>
-In-Reply-To: <CAKwvOdn=32A4QumC_-Y8fJ29fqUPzPK0H_7-dn6rcsAT+O1xOw@mail.gmail.com>
-References: <20200818170337.805624-1-alex.dewar90@gmail.com>
-        <CAKwvOdk2fynn=-FGUniYLG+hCOkEFppRnAaTYe8DW=YRrT-siQ@mail.gmail.com>
-        <20200818195746.scpjm3dlg7cfst53@medion>
-        <CAKwvOdn=32A4QumC_-Y8fJ29fqUPzPK0H_7-dn6rcsAT+O1xOw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Message-ID: <20200818202407.GA3143683@rani.riverdale.lan>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
+ <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+ <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 13:02:26 -0700
-Nick Desaulniers <ndesaulniers@google.com> wrote:
-
-> On Tue, Aug 18, 2020 at 12:57 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
+> On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
 > >
-> > On Tue, Aug 18, 2020 at 11:13:10AM -0700, Nick Desaulniers wrote:  
-> > > On Tue, Aug 18, 2020 at 10:04 AM Alex Dewar <alex.dewar90@gmail.com> wrote:  
-> > > >
-> > > > Depending on config options, account_other_time() may not be called
-> > > > anywhere. Add __maybe_unused flag to fix clang warning.  
-> > >
-> > > Just curious, would moving this definition to be within an existing
-> > > preprocessor guard for a particular config also fix the issue? If so,
-> > > prefer that. If not, __maybe_unused is the way to go.  
-> >
-> > I don't think that'd work here: it's used within an "#ifdef
-> > CONFIG_IRQ_TIME_ACCOUNTING" block and a separate "#ifdef
-> > CONFIG_VIRT_CPU_ACCOUNTING_GEN" one. We could do:
-> >         #if defined(CONFIG_IRQ_TIME_ACCOUNTING) ||
-> >             defined(CONFIG_VIRT_CPU_ACCOUNTING)
-> >                 ...
-> > ... but that might be a bit ugly.  
+> > I'm not saying "change the semantics", nor am I saying that playing
+> > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
+> > to the compiler authors and get them to implement such a #pragma: "this
+> > freestanding implementation *does* support *this specific library function*,
+> > and you are free to call it."
 > 
-> Yeah, ok, in that case it's fine.  One issue with __maybe_unused is
-> that this function will stick around forever if all call sites get
-> removed.  But when the preprocessor checks start getting hairy,
-> __maybe_unused is maybe simpler.
-
-For the reasons you state above, I'm almost thinking ugly may be better. :-/
-
-But there's other places that have the "maybe_unused" in the scheduler
-code for basically the same reasons, thus I guess it's OK.
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-
-> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> I'd much rather just see the library functions as builtins that always
+> do the right thing (with the fallback being "just call the standard
+> function").
 > 
-> >  
-> > >  
-> > > >
-> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > > ---
-> > > >  kernel/sched/cputime.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> > > > index 5a55d2300452..43ede0d6661c 100644
-> > > > --- a/kernel/sched/cputime.c
-> > > > +++ b/kernel/sched/cputime.c
-> > > > @@ -252,7 +252,7 @@ static __always_inline u64 steal_account_process_time(u64 maxtime)
-> > > >  /*
-> > > >   * Account how much elapsed time was spent in steal, irq, or softirq time.
-> > > >   */
-> > > > -static inline u64 account_other_time(u64 max)
-> > > > +static inline u64 __maybe_unused account_other_time(u64 max)
-> > > >  {
-> > > >         u64 accounted;
-> > > >
-> > > > --
-> > > > 2.28.0
-> > > >
-> > > > --
-> > > > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > > > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200818170337.805624-1-alex.dewar90%40gmail.com.  
-> > >
-> > >
-> > >
-> > > --
-> > > Thanks,
-> > > ~Nick Desaulniers  
+> IOW, there's nothing wrong with -ffreestanding if you then also have
+> __builtin_memcpy() etc, and they do the sane compiler optimizations
+> for memcpy().
 > 
-> 
+> What we want to avoid is the compiler making *assumptions* based on
+> standard names, because we may implement some of those things
+> differently.
 > 
 
+-ffreestanding as it stands today does have __builtin_memcpy and
+friends. But you need to then use #define memcpy __builtin_memcpy etc,
+which is messy and also doesn't fully express what you want. #pragma, or
+even just allowing -fbuiltin-foo options would be useful.
+
+The two compilers have some peculiarities, which means you really can't
+have functions with the same name that do something else if you want to
+use builtins at all, and can also lead to missed optimizations.
+
+For eg, __builtin_strchr(s,'\0') can be optimized to strlen. gcc will
+optimize it that way even if -ffreestanding is used (so strlen has to
+mean strlen), while clang won't, so it misses a potential optimization.
+This is admittedly a silly example, but you could imagine something like
+strncpy being optimized to memcpy+memset if the source length was
+previously computed.
+
+PS: clang optimizes sprintf, but doesn't provide __builtin_sprintf?
