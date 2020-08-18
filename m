@@ -2,99 +2,90 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ABCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B4E20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="afnuTmEE"
+	by mail.kernel.org (Postfix) with ESMTP id 723DC20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHRMx1 (ORCPT
+        id S1726852AbgHRMyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:53:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:16414 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726634AbgHRMxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:53:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597755200; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=UshVlRQX3jZ8s1xPGct9LtJcj6s2/gfPz2Tpohm05y4=;
- b=afnuTmEEXSuAyAgpBuVZig0e0em1AxC7T7YUGN9Io62MySaDstvuGR34s3iVRbO/Lzq4pnec
- lEb9bUtPPXxs+iW7v6ox9Ms8duaQR3btj8yvtOI6zBh103NQYTGz8FhivH7qy5RWE+584vq0
- aPJWjlne5R4IYBvwuxCBsQUhCUA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f3bcf2eba4c2cd367c98965 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 12:53:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5F7B7C433A1; Tue, 18 Aug 2020 12:53:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08674C433CA;
-        Tue, 18 Aug 2020 12:52:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08674C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 18 Aug 2020 08:54:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51468 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726398AbgHRMyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:54:13 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A7AC5CAFD889A27B184B;
+        Tue, 18 Aug 2020 20:54:07 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
+ 20:53:58 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>,
+        <bbrezillon@kernel.org>, <ladis@linux-mips.org>,
+        <peter.ujfalusi@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] memory: omap-gpmc: Fix build error without CONFIG_OF
+Date:   Tue, 18 Aug 2020 20:53:38 +0800
+Message-ID: <20200818125338.58148-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rndis_wlan: tighten check of rndis_query_oid return
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200811140219.8412-1-trix@redhat.com>
-References: <20200811140219.8412-1-trix@redhat.com>
-To:     trix@redhat.com
-Cc:     jussi.kivilinna@iki.fi, davem@davemloft.net, kuba@kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200818125301.5F7B7C433A1@smtp.codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:53:01 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trix@redhat.com wrote:
+If CONFIG_OF is n, gcc fails:
 
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analysis reports this problem
-> 
-> rndis_wlan.c:3147:25: warning: Assigned value is garbage or undefined
->                 wiphy->max_num_pmkids = le32_to_cpu(caps.num_pmkids);
->                                       ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The setting of caps happens here, with a call to rndis_query_oid()
-> 
-> 	retval = rndis_query_oid(usbdev,
-> 	if (retval >= 0) {
-> 
-> Reviewing rndis_query_oid() shows that on success 0 is returned,
-> failure is otherwise.  So the retval check is not tight enough.
-> So tighten the retval check.  Similar problem in
-> rndis_wlan_get_caps().
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
+omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
 
-Patch applied to wireless-drivers-next.git, thanks.
+Add helper function to fix this.
 
-094dd0d73062 rndis_wlan: tighten check of rndis_query_oid return
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/memory/omap-gpmc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index ce0e7e2d7cff..332bb4580817 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -1176,6 +1176,7 @@ struct gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *reg, int cs)
+ }
+ EXPORT_SYMBOL_GPL(gpmc_omap_get_nand_ops);
+ 
++#ifdef CONFIG_OF
+ static void gpmc_omap_onenand_calc_sync_timings(struct gpmc_timings *t,
+ 						struct gpmc_settings *s,
+ 						int freq, int latency)
+@@ -1280,6 +1281,14 @@ int gpmc_omap_onenand_set_timings(struct device *dev, int cs, int freq,
+ 
+ 	return gpmc_cs_set_timings(cs, &gpmc_t, &gpmc_s);
+ }
++#else
++int gpmc_omap_onenand_set_timings(struct device *dev, int cs, int freq,
++				  int latency,
++				  struct gpmc_onenand_info *info)
++{
++	return -EINVAL;
++}
++#endif
+ EXPORT_SYMBOL_GPL(gpmc_omap_onenand_set_timings);
+ 
+ int gpmc_get_client_irq(unsigned int irq_config)
 -- 
-https://patchwork.kernel.org/patch/11709263/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
