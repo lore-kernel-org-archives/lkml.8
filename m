@@ -8,57 +8,61 @@ X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58385C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6292CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355E420772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D47B206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVho9R3B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQ/GzzWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgHRSrP (ORCPT
+        id S1726716AbgHRSrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
+        Tue, 18 Aug 2020 14:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgHRSrO (ORCPT
+        with ESMTP id S1726552AbgHRSrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:47:14 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116D6C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:14 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id r1so23439639ybg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:14 -0700 (PDT)
+        Tue, 18 Aug 2020 14:47:15 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7DFC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:15 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id q7so15055470qtd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/E5eAbEMdGecxil6UrL49SnbBNTAteYJO6ZYPEM5dLY=;
-        b=JVho9R3BbAEAJN3/ABbAA0Q8qoaA4DB7htuEZjfa/UrhMXpsJYFmC7+ZhNNZwKO2NQ
-         PUc5iLYdObTaoIIro8tIsaxuloxbDtq2BRHvJ4HImEh99kGzHSMlwGqvrpFkSNH5ILjH
-         7OMrfDapLBjDBr/Ron5FwpH8Ed9zJSRBQoNzjeni2Bb9CZZZzkBMHI6Mo9WOMW9GV3Ks
-         hGjjHW9qk302727BeP4WxexH6OJY479SyLXh2AXO/Et+r5tnXqWS8TzIEF24kDQVSBkz
-         TVXnU9sXK1hSVqkA4lJrmI7dZxvQJSTmBveDUy51OpONWhUYv5f7/rdQAsba4BdwvKED
-         meng==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=gehHRqDo170D8ggpcqt5L8gyM4hpiP3lcUb1NEGWSW0=;
+        b=bQ/GzzWCVMuhyt2laZU2VxcoEcEJ0awKHw177BB3iK9JBuhbMoqOMb55rEFzzispi4
+         ywbPZWNcaLgifIEPXSTOz563MWK+2uyPYoJ0xUHlueLw8MgtrLdr8wbNjMFUN+Or3S0P
+         iFQIqxP58WduRybClJ8bhoc927M7lCiLlkV056WLQRc3mFjEth5caAjZwDkc0tSlDRK7
+         PR4W0wMOT8pAoPiyhV5ylKxZPeOSn9Qj6yms7eHC9/mfODiKNLp2EDPyQcC/1OlsvYma
+         q9N9WYkzvVBiWbNQ07qYsS7ND29LTFcqHnC9eCJY4qJyPTjUgMP56T2G8gvL5L+zvWDx
+         lx8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/E5eAbEMdGecxil6UrL49SnbBNTAteYJO6ZYPEM5dLY=;
-        b=uiARhX3dWJ3DcW5pVaePWzG9Rt2qGZrb1y+F/3r8uhal/G1ZadHpI8kavQx9LuBkSN
-         JSFsADgnhaIyiGhQ3TpunoKWyLLd5RF4p59jcb360elU/NhptluMA9njVeu9IrkYoVe/
-         FnAK/IaeL10Ib/+bJ5d04XgYsLLL0vVDxhTcdlVdhlVmtliPKV2/QXIIBG2lJc1beILp
-         Zw2l+iwIpOUjUup6ewSvN05eGcv3/WPkLqijrYzNwHh7eqAgvn+JZwCX2O0CoHJYVitk
-         jN/n208HuPNZn9iPj8Bmx359befwuVMh6snVLxYGD5nEeQwh982WBfuab00DSOVOdkav
-         vNgg==
-X-Gm-Message-State: AOAM532836sve1nLrEsBbuID442/CvlgkZAdY+SAndt+Z1QtxbVhS7k+
-        JHBQz9D4kuW8xFzHUzLxStm9WJMP4es=
-X-Google-Smtp-Source: ABdhPJzU4R0PcrHVEc2b75WaWjsd33ALQzPjuw40VrEB0Drky/Odddmf1lW46QmY6IDqhw2oeSJVIkW1ZK8=
-X-Received: by 2002:a25:3b0d:: with SMTP id i13mr28488393yba.314.1597776432330;
- Tue, 18 Aug 2020 11:47:12 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:47:02 -0600
-Message-Id: <20200818184704.3625199-1-yuzhao@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=gehHRqDo170D8ggpcqt5L8gyM4hpiP3lcUb1NEGWSW0=;
+        b=Xv6WCYgR3Ucae1yFQbYBY2/rOhQmourMSQAretUZXbu30VBHk598qleFjG/5d4sqCi
+         ZaS4lBRo3eBqYNnlFtMiCzzrPnzzIMAnxgkHFqCWj8vPt5H3S+tNKhmjYr1nId5E/Yb0
+         csPjZZCWzmzPAoXdecJjyKODmwTII5fuTpXSqfgmtWZKkmOVtHL7ISk1SJdcOKfXtmGG
+         8JZFcXTkvrFMOG4Wbf+L07dELnAqg2LfnnDkDJLy2/efDYrlaBf3toKWgVMuLxJ4Ruqh
+         d820eUZpfRnRToFlaGAJ8X5XxGnfCSd2HHTR6YMRG0MEFMww3qYhNxZR2htVvOEVTFZt
+         ojXg==
+X-Gm-Message-State: AOAM532qrF0xrfsZLJ+2FeYuEusj0LNhszFfpjms9eY8zpmSEjbypaMR
+        kxbK7ai3sDhQcr84Fv2bZgdCyYYMRYg=
+X-Google-Smtp-Source: ABdhPJyX7PxrdwZp8JKMZ0YQglNCQFusxUHnYaz351dVMOTyN3ebFvNOcxIaiSUrRohWV46bcjlxOvwE/VU=
+X-Received: by 2002:ad4:54c6:: with SMTP id j6mr20694395qvx.126.1597776433446;
+ Tue, 18 Aug 2020 11:47:13 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:47:03 -0600
+In-Reply-To: <20200818184704.3625199-1-yuzhao@google.com>
+Message-Id: <20200818184704.3625199-2-yuzhao@google.com>
 Mime-Version: 1.0
+References: <20200818184704.3625199-1-yuzhao@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH v2 1/3] mm: remove activate_page() from unuse_pte()
+Subject: [PATCH v2 2/3] mm: remove superfluous __ClearPageActive()
 From:   Yu Zhao <yuzhao@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
@@ -78,72 +82,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't initially add anon pages to active lruvec after
-commit b518154e59aa ("mm/vmscan: protect the workingset on anonymous LRU").
-Remove activate_page() from unuse_pte(), which seems to be missed by
-the commit. And make the function static while we are at it.
+To activate a page, mark_page_accessed() always holds a reference
+on it. It either gets a new reference when adding a page to
+lru_pvecs.activate_page or reuses an existing one it previously
+got when it added a page to lru_pvecs.lru_add. So it doesn't call
+SetPageActive() on a page that doesn't have any reference left.
+Therefore, the race is impossible these days (I didn't brother to
+dig into its history).
 
-Before the commit, we called lru_cache_add_active_or_unevictable() to
-add new ksm pages to active lruvec. Therefore, activate_page() wasn't
-necessary for them in the first place.
+For other paths, namely reclaim and migration, a reference count is
+always held while calling SetPageActive() on a page.
+
+SetPageSlabPfmemalloc() also uses SetPageActive(), but it's irrelevant
+to LRU pages.
 
 Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
- include/linux/swap.h | 1 -
- mm/swap.c            | 4 ++--
- mm/swapfile.c        | 5 -----
- 3 files changed, 2 insertions(+), 8 deletions(-)
+ mm/memremap.c | 2 --
+ mm/swap.c     | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 661046994db4..df6207346078 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -340,7 +340,6 @@ extern void lru_note_cost_page(struct page *);
- extern void lru_cache_add(struct page *);
- extern void lru_add_page_tail(struct page *page, struct page *page_tail,
- 			 struct lruvec *lruvec, struct list_head *head);
--extern void activate_page(struct page *);
- extern void mark_page_accessed(struct page *);
- extern void lru_add_drain(void);
- extern void lru_add_drain_cpu(int cpu);
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 03e38b7a38f1..3a06eb91cb59 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -451,8 +451,6 @@ void free_devmap_managed_page(struct page *page)
+ 		return;
+ 	}
+ 
+-	/* Clear Active bit in case of parallel mark_page_accessed */
+-	__ClearPageActive(page);
+ 	__ClearPageWaiters(page);
+ 
+ 	mem_cgroup_uncharge(page);
 diff --git a/mm/swap.c b/mm/swap.c
-index d16d65d9b4e0..25c4043491b3 100644
+index 25c4043491b3..999a84dbe12c 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -348,7 +348,7 @@ static bool need_activate_page_drain(int cpu)
- 	return pagevec_count(&per_cpu(lru_pvecs.activate_page, cpu)) != 0;
- }
+@@ -900,8 +900,6 @@ void release_pages(struct page **pages, int nr)
+ 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+ 		}
  
--void activate_page(struct page *page)
-+static void activate_page(struct page *page)
- {
- 	page = compound_head(page);
- 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
-@@ -368,7 +368,7 @@ static inline void activate_page_drain(int cpu)
- {
- }
+-		/* Clear Active bit in case of parallel mark_page_accessed */
+-		__ClearPageActive(page);
+ 		__ClearPageWaiters(page);
  
--void activate_page(struct page *page)
-+static void activate_page(struct page *page)
- {
- 	pg_data_t *pgdat = page_pgdat(page);
- 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 12f59e641b5e..c287c560f96d 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1925,11 +1925,6 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
- 		lru_cache_add_inactive_or_unevictable(page, vma);
- 	}
- 	swap_free(entry);
--	/*
--	 * Move the page to the active list so it is not
--	 * immediately swapped out again after swapon.
--	 */
--	activate_page(page);
- out:
- 	pte_unmap_unlock(pte, ptl);
- 	if (page != swapcache) {
+ 		list_add(&page->lru, &pages_to_free);
 -- 
 2.28.0.220.ged08abb693-goog
 
