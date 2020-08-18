@@ -2,125 +2,134 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43580C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F924C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B41120709
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="0bhENrTR"
+	by mail.kernel.org (Postfix) with ESMTP id 0337B20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgHRVxC (ORCPT
+        id S1726882AbgHRVyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgHRVxB (ORCPT
+        Tue, 18 Aug 2020 17:54:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:47816 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbgHRVyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 17:53:01 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCC1C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 14:53:00 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t13so18940610ile.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 14:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y+eND3yUn7afYyyUX+ZOLNk8wIrEfdj82iS2j0XFFq0=;
-        b=0bhENrTR9TrSFAtLMEnlmOxvRDyoUzHRcavRD+sPcB/2RchhxjMr5TiCMqMaKLCdPJ
-         OeC7YF9Qwd9vWoxGQygSp+e82lOQOrsLnHplYkZV2mIJ17G3GqR+pV7j04BiOXZAfZFm
-         13qjnvWj0KfIyd4Ql4Zg5GbzYnhvWM9ZvcPhbWh1BaQUDk6IxKCFMFODwz1GlHTZ9h43
-         hd341+nSJWwotTvWwVyP2Ym1BS6HvqdGQm+E2RE5Sa3hmqFA4hW9hjgY41WKCNqwmHmU
-         3o9lJUoOXhGPoisbsy14XzY1IQHzhFnTPB1LCgxiKA7vl1lLANEm3tokEQAGL3Q6h/DP
-         gcUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y+eND3yUn7afYyyUX+ZOLNk8wIrEfdj82iS2j0XFFq0=;
-        b=I0mm7Trnuna6pf1n5QwbDqBVSjRIO9v5F+JQ+kuQTxZxYTzlT0j27qEdu/8fldbeoB
-         zjQq6EtAKNdZyJOfhXzZ/DocyJJxAeSLh6+aSf2OFEcWuJTxQ/DI04Sh6RFlAMgal2PQ
-         hd8PU0VzyWua6ZmfTcBJaS/jzjtWa262PtaLnuR1pQoEZsLic8GiIJetIEV14hFwqbmd
-         eicojahUbAnIWXqQXYbG6JVhgytoAVBF4zG46c82ezNGlc6IbcqaMHOhdjJD53tKaRMz
-         eZEP+IrGtNvTyxmgONV5QTks3E+mG01g+On2abCtzBT/hQEbB6ipTVkdcrQw/cvpnBwM
-         ep1Q==
-X-Gm-Message-State: AOAM530mgwZkIGl4/6T8PUCJFLVvvEGIOzMPwKCnpdCMG0H5jzJ7S9Bh
-        NQtesUuE96E/cLvjtW17VFZpghAqstysUoUihmpTiJeCyR1w
-X-Google-Smtp-Source: ABdhPJxLjWSNd7ynfl1wvpKbJ3WBA4UNitdVRIp3M1T7zGJJdKR2f+uQeJOcY3J32rROZjl8LKN8lBYVvmvS91peslo=
-X-Received: by 2002:a92:9955:: with SMTP id p82mr19435772ili.186.1597787579879;
- Tue, 18 Aug 2020 14:52:59 -0700 (PDT)
+        Tue, 18 Aug 2020 17:54:03 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-78-s7zujxQ1POq9Y79k-1joAA-1; Tue, 18 Aug 2020 22:53:59 +0100
+X-MC-Unique: s7zujxQ1POq9Y79k-1joAA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 18 Aug 2020 22:53:58 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 18 Aug 2020 22:53:58 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nick Desaulniers' <ndesaulniers@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        "Vamshi K Sthambamkadi" <vamshi.k.sthambamkadi@gmail.com>
+Subject: RE: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Thread-Topic: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Thread-Index: AQHWdaJrCHxBBIXDc0qCyrHmyOJpJ6k+ZqBw
+Date:   Tue, 18 Aug 2020 21:53:58 +0000
+Message-ID: <4f00a6bafca04f4ab2e070427cf9c2cc@AcuMS.aculab.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
+ <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+ <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan>
+ <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+In-Reply-To: <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200818124815.11029-1-vaishnav@beagleboard.org> <20200818152426.GA713928@kroah.com>
-In-Reply-To: <20200818152426.GA713928@kroah.com>
-From:   Vaishnav M A <vaishnav@beagleboard.org>
-Date:   Wed, 19 Aug 2020 03:22:48 +0530
-Message-ID: <CALudOK4jgtJiB8sn4CsDm2c=va=d8M7ocoa55f=NV9sTaBHJJg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] mikroBUS driver for add-on boards
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, johan@kernel.org, elder@kernel.org, robh@kernel.org,
-        mchehab+huawei@kernel.org, davem@davemloft.net,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Drew Fustini <drew@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        =?UTF-8?Q?Ivan_Rajkovi=C4=87?= <rajkovic@mikroe.com>,
-        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 8:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Aug 18, 2020 at 06:18:12PM +0530, Vaishnav M A wrote:
-> > Hi,
-> >
-> > This Patch series is an update to the mikroBUS driver
-> > RFC v1 Patch : https://lkml.org/lkml/2020/7/24/518 .
->
-> Please use lore.kernel.org for links, we have no idea if lkml.org will
-> be working tomorrow or not :)
->
-Hi Greg,
+RnJvbTogTmljayBEZXNhdWxuaWVycw0KPiBTZW50OiAxOCBBdWd1c3QgMjAyMCAyMTo1OQ0KPiAN
+Cj4gT24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMToyNyBQTSBOaWNrIERlc2F1bG5pZXJzDQo+IDxu
+ZGVzYXVsbmllcnNAZ29vZ2xlLmNvbT4gd3JvdGU6DQouLi4NCj4gPiA+IC1mZnJlZXN0YW5kaW5n
+IGFzIGl0IHN0YW5kcyB0b2RheSBkb2VzIGhhdmUgX19idWlsdGluX21lbWNweSBhbmQNCj4gPiA+
+IGZyaWVuZHMuIEJ1dCB5b3UgbmVlZCB0byB0aGVuIHVzZSAjZGVmaW5lIG1lbWNweSBfX2J1aWx0
+aW5fbWVtY3B5IGV0YywNCj4gPiA+IHdoaWNoIGlzIG1lc3N5IGFuZCBhbHNvIGRvZXNuJ3QgZnVs
+bHkgZXhwcmVzcyB3aGF0IHlvdSB3YW50LiAjcHJhZ21hLCBvcg0KPiA+ID4gZXZlbiBqdXN0IGFs
+bG93aW5nIC1mYnVpbHRpbi1mb28gb3B0aW9ucyB3b3VsZCBiZSB1c2VmdWwuDQo+IA0KPiBJIGRv
+IHJlYWxseSBsaWtlIHRoZSBpZGVhIG9mIC1mYnVpbHRpbi1mb28uICBGb3IgZXhhbXBsZSwgeW91
+J2Qgc3BlY2lmeToNCj4gDQo+IC1mZnJlZXN0YW5kaW5nIC1mYnVpbHRpbi1iY21wDQo+IA0KPiBh
+cyBhbiBleGFtcGxlLiBgLWZmcmVlc3RhbmRpbmdgIHdvdWxkIG9wdCB5b3Ugb3V0IG9mIEFMTCBs
+aWJjYWxsDQo+IG9wdGltaXphdGlvbnMsIGAtZmJ1aWx0aW4tYmNtcGAgd291bGQgdGhlbiBvcHQg
+eW91IGJhY2sgaW4gdG8NCj4gdHJhbnNmb3JtcyB0aGF0IHByb2R1Y2UgYmNtcC4gIFRoYXQgd2F5
+IHlvdSdyZSBpbmZvcm1pbmcgdGhlIGNvbXBpbGVyDQo+IG1vcmUgcHJlY2lzZWx5IGFib3V0IHRo
+ZSBlbnZpcm9ubWVudCB5b3UnZCBiZSB0YXJnZXRpbmcuICBJdCBmZWVscw0KPiBzeW1tZXRyaWMg
+dG8gZXhpc3RpbmcgYC1mbm8tYCBmbGFncyAoY2xhbmcgbWFrZXMgLWYgdnMgLWZuby0gcHJldHR5
+DQo+IGVhc3kgd2hlbiB0aGVyZSBpcyBzdWNoIHN5bW1ldHJ5KS4gIEFuZCBpdCdzIGFscmVhZHkg
+Y29udmVudGlvbiB0aGF0DQo+IGlmIHlvdSBzcGVjaWZ5IG11bHRpcGxlIGNvbmZsaWN0aW5nIGNv
+bXBpbGVyIGZsYWdzLCB0aGVuIHRoZSBsYXR0ZXINCj4gb25lIHNwZWNpZmllZCAid2lucy4iICBJ
+biB0aGF0IHNlbnNlLCB0dXJuaW5nIGJhY2sgb24gc3BlY2lmaWMNCj4gbGliY2FsbHMgYWZ0ZXIg
+ZGlzYWJsaW5nIHRoZSByZXN0IGxvb2tzIG1vcmUgZXJnb25vbWljIHRvIG1lLg0KPiANCj4gTWF5
+YmUgRWxpIG9yIERhdmlkIGhhdmUgdGhvdWdodHMgb24gd2h5IHRoYXQgbWF5IG9yIG1heSBub3Qg
+YmUgYXMNCj4gZXJnb25vbWljIG9yIHBvc3NpYmxlIHRvIGltcGxlbWVudCBhcyBJIGltYWdpbmU/
+DQoNCllvdSBtaWdodCB3YW50IC1mYnVpbHRpbi1iY21wPW15X2JjbXBfZnVuY3Rpb24gc28gdGhh
+dCB5b3UgY2FuIHNwZWNpZnkNCnRoZSBhY3R1YWwgZWxmIHN5bWJvbCBuYW1lIHRvIGJlIHVzZWQu
+DQoNCkkgd2FzIHJlY2VudGx5IHRyeWluZyB0byBjb21waWxlIGFuIGFwcGxpY2F0aW9uIHNvIHRo
+YXQgaXQgd291bGQNCnJ1biBvbiBhIHN5c3RlbSB3aXRoIGFuIG9sZCBsaWJjLg0KQXZvaWRpbmcg
+ZXhwbGljaXQgY2FsbHMgdG8gbmV3IGZ1bmN0aW9ucyB3YXNuJ3QgYSBwcm9ibGVtLCBidXQgSQ0K
+Y291bGRuJ3QgZG8gYW55dGhpbmcgYWJvdXQgdGhlIG1lbWNweSgpIGNhbGxzIGdlbmVyYXRlZCBi
+eSBnY2MNCmZvciBzdHJ1Y3R1cmUgY29waWVzLg0KRHVlIHRvIHRoZSBzaWxseSBnbGliYyBmaWFz
+Y28gd2l0aCBtZW1jcHkgZ29pbmcgYmFja3dhcmRzIEknZA0KZWl0aGVyIG5lZWQgdG8gZm9yY2Ug
+b3V0IGEgcmVmZXJlbmNlIHRvIHRoZSBvbGQgdmVyc2lvbiBvZiBtZW1jcHkNCm9yIGEgcmVmZXJl
+bmNlIHRvIG1lbW92ZSAtIGJ1dCBuZWl0aGVyIGlzIHBvc3NpYmxlLg0KDQpJIHRoZW4gdHJpZWQg
+YSBDKysgcHJvZ3JhbSBhbmQgZ2F2ZSB1cCBiZWNhdXNlICdjaGFyIHRyYWl0cycNCndhcyBhbGwg
+ZGlmZmVyZW50LiBJIHRoZW4gcmVhbGlzZWQgSSBuZWVkIHRvIHJlbW92ZSBhbGwgcmVmZXJlbmNl
+cw0KdG8gc3RkOjpzdHJpbmcgdG8gZ2V0IGFueSBraW5kIG9mIGVmZmljaWVudCBvYmplY3QgY29k
+ZSA6LSkNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
+eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
+aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Thanks, will use lore.kernel.org for the links, attaching the corresponding
-link to the v1 RFC patch thread for reference:
-https://lore.kernel.org/lkml/20200724120637.GA427284@vaishnav-VirtualBox/
-
-> > The mikrobus driver is updated to add mikrobus ports from device-tree
-> > overlays, the debug interfaces for adding mikrobus ports through sysFS
-> > is removed, and the driver considers the extended usage of mikrobus
-> > port pins from their standard purposes.
->
-> I don't know what "properties" and "device" mean with regards to things
-> here, any chance you can provide a patch to the greybus spec itself that
-> adds this information so we can better understand the reasoning here to
-> see if the kernel changes match up with the goals?
->
-> thanks,
->
-> greg k-h
-Sure, I will add a patch to the greybus-spec to describe the new descriptors,
-the property and device descriptors are introduced to add information
-about the SPI/I2C/UART chip/sensor which is required by the corresponding
-device drivers, With these descriptors, it will be possible to describe devices
-on I2C, SPI, UART, etc. behind a greybus device so as to bind existing kernel
-drivers to them, This is not what is currently being done within the mikroBUS
-driver, now it tries to instantiate devices on actual I2C, SPI, UART from
-describing manifests, but the ultimate goal is to describe the devices on
-I2C/SPI/UART behind a greybus device, thus enabling to attach existing
-kernel drivers to devices present in add-on boards attached to mikroBUS
-ports added via greybus.
-
-Shall I submit a pull request to https://github.com/projectara/greybus-spec
-for the specs, is there a different official upstream to greybus-spec?
-
-Thanks and Regards,
-Vaishnav M A
