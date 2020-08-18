@@ -2,81 +2,109 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E72BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0298F205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699E420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:22:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSPQYiEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHRHUY (ORCPT
+        id S1726466AbgHRHWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:20:24 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:51702 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726043AbgHRHUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:20:23 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowAD3O0hBgDtfCC8iAw--.22137S2;
-        Tue, 18 Aug 2020 15:16:17 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] libbpf: convert comma to semicolon
-Date:   Tue, 18 Aug 2020 07:16:11 +0000
-Message-Id: <20200818071611.21923-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowAD3O0hBgDtfCC8iAw--.22137S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47JFWDtw48Crg_yoW3GrX_Gw
-        1xJr48XrZ5KFWYyw43GrZa9a4Ut3Z5Wr4kGFW7Gr9xta4UCa1rXry3CF9rGFyaq3Z29Fy7
-        J3ykJrnrJF43CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l
-        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-        C2KfnxnUUI43ZEXa7VUbJDG5UUUUU==
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAwUMA13qZTpJ6QAAsB
+        Tue, 18 Aug 2020 03:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRHWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:22:40 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA7AC061389;
+        Tue, 18 Aug 2020 00:22:40 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t11so8810246plr.5;
+        Tue, 18 Aug 2020 00:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=ngrPbPBRbUsq6w+flBSZQV2nOcmo/y3wzfu+I9RjOwM=;
+        b=TSPQYiEu1Z3JAOqWBoqY0hkMurM6qzutlorBVGTCiYHNvCTc6oGO2lvpnf9ygeWYuk
+         /hGBax/Aor+9svcSrfngM0CKK3dbpDJc8onXTK9HHtR8G1nWkVBzOz/GzwYyI2Yydf0y
+         28NXnmPerG5D0pXpjDvuYp+cFFSYBQujB7GhYS9wU9QhpDn82QALLxrH4lMdBz4XlGEL
+         ZyWsXpMC/yMp1GmvYiGoqK5+pBRrbFENkDXjDALUFLx+piH1/xZ2McUr3DB0MXJB/zJR
+         Ev8G5+7QjObdSdOFB4uNtu0xANrJPcsSOfvdEN/I3bu5ZF5+xyaxjBcJno801fSmWgRr
+         yxkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=ngrPbPBRbUsq6w+flBSZQV2nOcmo/y3wzfu+I9RjOwM=;
+        b=kH4sSiZkvG3lgpfpA6m6pQZqax9CAYWEC4kXATYHvu2P8PsNCe2P5i1qGTcBvN/gGK
+         u9cac4MVGpaMTb+jOpxgOJkYORPXYU3jgGpySiuYwMEGqQ/XuCqn7LObN8WYQmYwXt4D
+         G4M23xlSuN/MfrOugPotPHLHFOfgfQ9aOVmf1iaE4Q9EWbJgl3BIE9IXYaPt3akKob8i
+         rwyrNRzp0hxoel1UeGeYA8TgSliKngCBEnETO5J8meGWpnIqRNuJ3mE7pD4EcurYxsBZ
+         eUvcVVX3XQBRsqFMbPflw6SNHqAHpxd3Y6iBeFoqthCn5r52ZDSqFAtVoHDCqTsxP/PF
+         S52w==
+X-Gm-Message-State: AOAM532xwEUMjEFrE2mkSTLl6JPsJSJzI5D13ftUWCRTaGfBZX+mzWJo
+        nGRX7ugDHnyA4TAV7/NceOE=
+X-Google-Smtp-Source: ABdhPJwWicVHjLC3nLnAfAzUswzycukvUhFKVQxdfOgfh/aUNHN6aaAIYbgqXGGLh0wn8G5+FzQeQw==
+X-Received: by 2002:a17:90a:e990:: with SMTP id v16mr16323320pjy.194.1597735359589;
+        Tue, 18 Aug 2020 00:22:39 -0700 (PDT)
+Received: from localhost (193-116-193-175.tpgi.com.au. [193.116.193.175])
+        by smtp.gmail.com with ESMTPSA id z26sm21152854pgc.44.2020.08.18.00.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 00:22:39 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 17:22:33 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+To:     peterz@infradead.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
+        <20200807111126.GI2674@hirez.programming.kicks-ass.net>
+        <1597220073.mbvcty6ghk.astroid@bobo.none>
+        <20200812103530.GL2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200812103530.GL2674@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Message-Id: <1597735273.s0usqkrlsk.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace a comma between expression statements by a semicolon.
+Excerpts from peterz@infradead.org's message of August 12, 2020 8:35 pm:
+> On Wed, Aug 12, 2020 at 06:18:28PM +1000, Nicholas Piggin wrote:
+>> Excerpts from peterz@infradead.org's message of August 7, 2020 9:11 pm:
+>> >=20
+>> > What's wrong with something like this?
+>> >=20
+>> > AFAICT there's no reason to actually try and add IRQ tracing here, it'=
+s
+>> > just a hand full of instructions at the most.
+>>=20
+>> Because we may want to use that in other places as well, so it would
+>> be nice to have tracing.
+>>=20
+>> Hmm... also, I thought NMI context was free to call local_irq_save/resto=
+re
+>> anyway so the bug would still be there in those cases?
+>=20
+> NMI code has in_nmi() true, in which case the IRQ tracing is disabled
+> (except for x86 which has CONFIG_TRACE_IRQFLAGS_NMI).
+>=20
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That doesn't help. It doesn't fix the lockdep irq state going out of
+synch with the actual irq state. The code which triggered this with the
+special powerpc irq disable has in_nmi() true as well.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 5d20b2da4427..5055e1531e43 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -8594,7 +8594,7 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
- 	struct perf_buffer_params p = {};
- 	struct perf_event_attr attr = { 0, };
- 
--	attr.config = PERF_COUNT_SW_BPF_OUTPUT,
-+	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
- 	attr.type = PERF_TYPE_SOFTWARE;
- 	attr.sample_type = PERF_SAMPLE_RAW;
- 	attr.sample_period = 1;
--- 
-2.17.1
-
+Thanks,
+Nick
