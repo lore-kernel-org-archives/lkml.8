@@ -2,103 +2,74 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10512C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8E120786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597752334;
-	bh=RG8k5N8jr2Ije4XNLGa5fF4PgNGEnTLxeO96UPPHtqI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KFGH1vrCKq7pW6LDqPAZByVSyFJqTo0Hcy5VdUZ9EyMuJvV51CwzTsNePnGJeBpks
-	 ZmurhrXoKhMXYjJYrZUio1PxkoXG+Bdhh1VmEpKj96anVOYLRhRG5xlLPOQ+B5YU8T
-	 LX9e0XYqGfor+HoCdNvnGUn3W5PkuurJUgIMDzRM=
+	by mail.kernel.org (Postfix) with ESMTP id 3EDD6204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHRMFc (ORCPT
+        id S1726681AbgHRMHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgHRMFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:05:31 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 18 Aug 2020 08:07:04 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:43902 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgHRMHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:07:03 -0400
+X-Greylist: delayed 465 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Aug 2020 08:07:01 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id B900F30EB543;
+        Tue, 18 Aug 2020 13:59:14 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TVKJud7BAoif; Tue, 18 Aug 2020 13:59:12 +0200 (CEST)
+Received: from latitude (geri.datenkhaos.de [81.7.17.45])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A76204EA;
-        Tue, 18 Aug 2020 12:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597752331;
-        bh=RG8k5N8jr2Ije4XNLGa5fF4PgNGEnTLxeO96UPPHtqI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Hf3BMha6+5e+xFzYO7irvAQfDRc/xg4HOtl3rV+y2sGbOEKl1d0oUWo7uJw5soDfn
-         phn4Uh5Dh6iC/XwNdKxClKtMlWrZpwgLL8idZFSnOZTMvDSRcd20k1WXsL5QD9+o7H
-         6/GR4YvrERrdhvZ/ZdDi7l10rg9LLYU2vpK2pdrk=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Roland Dreier <rolandd@cisco.com>,
-        Sean Hefty <sean.hefty@intel.com>
-Subject: [PATCH rdma-next 00/14] Cleanup locking and events in ucma
-Date:   Tue, 18 Aug 2020 15:05:12 +0300
-Message-Id: <20200818120526.702120-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Tue, 18 Aug 2020 13:59:12 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 13:59:06 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: usbhid: do not sleep when opening device
+Message-ID: <20200818115906.GA26874@latitude>
+References: <20200610043824.GA171503@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610043824.GA171503@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On 2020 Jun 09, Dmitry Torokhov wrote:
+> usbhid tries to give the device 50 milliseconds to drain its queues when
+> opening the device, but dies it naively by simply sleeping in open handler,
+> which slows down device probing (and thus may affect overall boot time).
+> 
+> However we do not need to sleep as we can instead mark a point of time in
+> the future when we should start processing the events.
+> 
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> 
 
-From Jason:
+This change breaks various Logitech devices: 
+https://bugzilla.kernel.org/show_bug.cgi?id=208935
 
-Rework how the uevents for new connections are handled so all the locking
-ends up simpler and a work queue can be removed. This should also speed up
-destruction of ucma_context's as a flush_workqueue() was replaced with
-cancel_work_sync().
-
-The simpler locking comes from narrowing what file->mut covers and moving
-other data to other locks, particularly by injecting the handler_mutex
-from the RDMA CM core as a construct available to ULPs. The handler_mutex
-directly prevents handlers from running without creating any ABBA locking
-problems.
-
-Fix various error cases and data races caused by missing locking.
-
-Thanks
-
-Jason Gunthorpe (14):
-  RDMA/ucma: Fix refcount 0 incr in ucma_get_ctx()
-  RDMA/ucma: Remove unnecessary locking of file->ctx_list in close
-  RDMA/ucma: Consolidate the two destroy flows
-  RDMA/ucma: Fix error cases around ucma_alloc_ctx()
-  RDMA/ucma: Remove mc_list and rely on xarray
-  RDMA/cma: Add missing locking to rdma_accept()
-  RDMA/ucma: Do not use file->mut to lock destroying
-  RDMA/ucma: Fix the locking of ctx->file
-  RDMA/ucma: Fix locking for ctx->events_reported
-  RDMA/ucma: Add missing locking around rdma_leave_multicast()
-  RDMA/ucma: Change backlog into an atomic
-  RDMA/ucma: Narrow file->mut in ucma_event_handler()
-  RDMA/ucma: Rework how new connections are passed through event
-    delivery
-  RDMA/ucma: Remove closing and the close_wq
-
- drivers/infiniband/core/cma.c  |  25 +-
- drivers/infiniband/core/ucma.c | 444 +++++++++++++++------------------
- include/rdma/rdma_cm.h         |   5 +
- 3 files changed, 226 insertions(+), 248 deletions(-)
-
---
-2.26.2
+-- 
+Regards,
+  Johannes Hirte
 
