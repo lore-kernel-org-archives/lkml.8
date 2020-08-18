@@ -2,158 +2,98 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA1C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7980320658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CDC20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c4DM5T7Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cSXYbK0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHRHKZ (ORCPT
+        id S1726473AbgHRHLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:10:25 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36725 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgHRHKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:10:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597734618; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mEEeTVMCmm28X/TonqAKjwo9yxTQLd+qrEsl7KAFN88=; b=c4DM5T7YOpZAInYdENApaOrYWFeoIr7ZmNlP45jKuifPl/tR9ZO4qHMLOJrU+fCcjxbQFDiZ
- Mgvf2jeB+Su/XeJHSlzSUuZiBo7aafogpMTD180gFByaVCbpe00xeB6boiDfud0uRApSBvRv
- wi+FoLbW9pTH11xKNIHuD9vwEBQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f3b7edaf2b697637afba1d1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:10:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 490BFC4339C; Tue, 18 Aug 2020 07:10:17 +0000 (UTC)
-Received: from [192.168.1.16] (unknown [61.3.19.112])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE156C433C6;
-        Tue, 18 Aug 2020 07:10:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE156C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 3/4] opp: Reused enabled flag and remove regulator_enabled
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, mka@chromium.org,
-        sibis@codeaurora.org, linux-kernel@vger.kernel.org
-References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
- <c6bba235a9a6fd777255bb4f1d16492fdcabc847.1597292833.git.viresh.kumar@linaro.org>
- <359b588928b7e58b009f786b17ddc088c6a7d18b.1597292833.git.viresh.kumar@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <e232d06c-f19f-a806-637b-8f0ffed19594@codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:40:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 03:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgHRHLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:11:32 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5967EC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 00:11:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o22so14405208qtt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 00:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n3a7THydnGAc5AUiVljLET4u580OnrFmLIy37AEhH7s=;
+        b=cSXYbK0KhcTVcj3BN3p2cBdYHCmnPysTZnSvj9ozXtLSA19RMMmA89oJO5/M1Xu2Sv
+         Q2CmHVgmJ/KCHNsetwkfVKIzQFCyjKAUb6lnuLbq1xJpxHek2X/hnt5SkFX8hXQbF2Io
+         7W9qXbc0V6MaWGjCotnlmRdc76WVPPRnUfJls=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n3a7THydnGAc5AUiVljLET4u580OnrFmLIy37AEhH7s=;
+        b=Kxtoj776RZWdnOM4SG1wy498BLqPd0Ejn8qatgyXRtOVB4ZU2zCJuPSp0UzSW1zn1B
+         iSo/nCo/nPs0A5yw2abQD7S6jbFkErhXxVrsnczirTHWHw0+xrG8+0f9UYQZF6naKPYD
+         TeDFeF5gR1llI2aPqQwrix0HxICMjt+i23hq87FfsA0pZlRQaE1ccB+Mqbd1XWBZ/gUP
+         be+D+SMYWQCggZiDqI7x+km43qFzEZvnyLklnNlhDp8/qdknoBlMsyB3v2OfIpuAOoY0
+         V0m/E4BbsBY948g+0OOpf9TUZvQQvOgDmm6rjsqO934OjXd6h1ACTozctf55+D+4n2hI
+         sBrQ==
+X-Gm-Message-State: AOAM530Kga7YjGTeu4R0Ko7ZAou0eRoUxv46fG4oQGSJWGS2vezFwRNB
+        y0cnMc1xj9lCdZk/qMYjCUaUh5aLp+dAJMgjvikD0Q==
+X-Google-Smtp-Source: ABdhPJyZusOXlJEolyPUq2uzLSLnrLlZCeUK74TdElz/4gT5+YLKvVKLVDF3+1Btr0gUklkg9hbaYCqMSoip66/ILus=
+X-Received: by 2002:aed:3587:: with SMTP id c7mr17004433qte.136.1597734691473;
+ Tue, 18 Aug 2020 00:11:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <359b588928b7e58b009f786b17ddc088c6a7d18b.1597292833.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200818013744.3327271-1-stevensd@chromium.org> <20200818055949.6si4jzuubba5dx5u@sirius.home.kraxel.org>
+In-Reply-To: <20200818055949.6si4jzuubba5dx5u@sirius.home.kraxel.org>
+From:   David Stevens <stevensd@chromium.org>
+Date:   Tue, 18 Aug 2020 00:11:21 -0700
+Message-ID: <CAD=HUj5xqNE=7VPMH5MDq8h735-OnbancrkemJGkDKYmeddfNQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] Support virtio cross-device resources
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Hmm, checkpatch still complains, full log below.
+>
+> IIRC "dim checkpatch" runs scripts/checkpatch.pl with --strict
+> so it is a bit more picky ...
 
-On 8/13/2020 9:59 AM, Viresh Kumar wrote:
-> The common "enabled" flag can be used here instead of
-> "regulator_enabled" now.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->   drivers/opp/core.c | 13 +++----------
->   drivers/opp/opp.h  |  2 --
->   2 files changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index e8882e7fd8a5..5f5da257f58a 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -703,12 +703,10 @@ static int _generic_set_opp_regulator(struct opp_table *opp_table,
->   	 * Enable the regulator after setting its voltages, otherwise it breaks
->   	 * some boot-enabled regulators.
->   	 */
-> -	if (unlikely(!opp_table->regulator_enabled)) {
-> +	if (unlikely(!opp_table->enabled)) {
->   		ret = regulator_enable(reg);
->   		if (ret < 0)
->   			dev_warn(dev, "Failed to enable regulator: %d", ret);
-> -		else
-> -			opp_table->regulator_enabled = true;
->   	}
->   
->   	return 0;
-> @@ -905,10 +903,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->   		if (ret)
->   			goto put_opp_table;
->   
-> -		if (opp_table->regulator_enabled) {
-> -			regulator_disable(opp_table->regulators[0]);
-> -			opp_table->regulator_enabled = false;
-> -		}
-> +		regulator_disable(opp_table->regulators[0]);
+Ah, I didn't know --strict was being used. I'll send an update
+momentarily. Sorry for the churn.
 
-unconditionally calling regulator_disable() here based on the common
-'enabled' flag results in a crash on platforms without regulators
-associated with the opp table.
+> -:250: CHECK:PREFER_KERNEL_TYPES: Prefer kernel type 'u32' over 'uint32_t'
+> #250: FILE: drivers/gpu/drm/virtio/virtgpu_vq.c:1118:
+> +       uint32_t resp_type = le32_to_cpu(resp->hdr.type);
+>
 
->   
->   		ret = _set_required_opps(dev, opp_table, NULL);
->   		if (!ret)
-> @@ -1795,11 +1790,9 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
->   	/* Make sure there are no concurrent readers while updating opp_table */
->   	WARN_ON(!list_empty(&opp_table->opp_list));
->   
-> -	if (opp_table->regulator_enabled) {
-> +	if (opp_table->enabled) {
->   		for (i = opp_table->regulator_count - 1; i >= 0; i--)
->   			regulator_disable(opp_table->regulators[i]);
-> -
-> -		opp_table->regulator_enabled = false;
->   	}
->   
->   	for (i = opp_table->regulator_count - 1; i >= 0; i--)
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index bd35802acc6e..0c3de3f6db5c 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -147,7 +147,6 @@ enum opp_table_access {
->    * @clk: Device's clock handle
->    * @regulators: Supply regulators
->    * @regulator_count: Number of power supply regulators. Its value can be -1
-> - * @regulator_enabled: Set to true if regulators were previously enabled.
->    * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
->    * property).
->    * @paths: Interconnect path handles
-> @@ -196,7 +195,6 @@ struct opp_table {
->   	struct clk *clk;
->   	struct regulator **regulators;
->   	int regulator_count;
-> -	bool regulator_enabled;
->   	struct icc_path **paths;
->   	unsigned int path_count;
->   	bool enabled;
-> 
+For consistency with the rest of the virtgpu code, I'll leave uint32_t.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers,
+David
