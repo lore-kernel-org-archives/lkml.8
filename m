@@ -2,137 +2,94 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA3CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B56C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2719206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="HSfPAi5z"
+	by mail.kernel.org (Postfix) with ESMTP id 31FBF20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHRSNb (ORCPT
+        id S1726634AbgHRSPd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHRSNX (ORCPT
+        Tue, 18 Aug 2020 14:15:33 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:11798 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726435AbgHRSPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:13:23 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60888C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:13:22 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id z3so18457231ilh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:13:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9U/Sx2QERcOCVX35hWobFoJ/Y77xMuuF+XP4kC4IsP8=;
-        b=HSfPAi5z56+1OQ56s/bVL/8m0nwvhOhVAl0upIKbSldrxDGbMzriinSM50HLJHfTQg
-         EDXziX69Qyvg9n2sgYPg855R9fycdB6u2HUvmVi6qsd1bb+QjAAQjB6Mx/jqzRolYbE+
-         bZ2cF53BTu9M6hyrrfIVZCFIjcSS9Fa+CGoDyVsSCJOljJOwpOih97f4LTuGLk3PNL0m
-         EIgBQd0dBFkt1JMZEtMDHIbCoOU5HgBc0gZ9WHu7AyBpKJ4Zu8RrnpoFCAOs7UTD77gI
-         pra1aG4x2NZfN2xAk23zrSVa0GzJ2PqqqZW+0zyP8TFrVV4oagPup6MLZdtXbUpf4dwL
-         fn9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9U/Sx2QERcOCVX35hWobFoJ/Y77xMuuF+XP4kC4IsP8=;
-        b=DlX9FytRemX9A1IX2PBQQw1LN0+b5W9L6upYmsN5guAi4POS6cABtENkKzEe48zzR0
-         1+eTsPDk80ruJExNq1mqL+SzxIT4OTs3DbSnIWwF/J34GmmPQB3LwhocCvmHqLeoRu7k
-         cWdihe44VP8YDedwLrahoW2VZQvKe+ZO7QF3rwv0zKqVA6aIYUN8gnmIwgfyqmjUqY0x
-         x9UdubIZkXPQz3siClRMcjJF+P4fVYk5vCD8qGDDU6BZiaGMQIkfh/QWCkVZzTKkjCwS
-         CTngdVupC2SFzQAdvRt3uQNTGgR4h9KqmzAsnv5VhDaXpDfTCzbunkxpmM53sgKUcLGC
-         2FVA==
-X-Gm-Message-State: AOAM531y0OGPusDqn2FGrBtxwbwtYI/gWTyNt/2C7PHP6FYvS83pqSyN
-        03iaebPeqp9zAARgJ/xWZ7lQU8kBuU8zrwKR7YPGcw==
-X-Google-Smtp-Source: ABdhPJwU0zjhfSycWdHZuFdxhvZP3nNBrtpPBCHl2IpLXWUKYq+9nUKXoWE1Im4HPtI8g4UpL17/nP0HqX7WQma6iho=
-X-Received: by 2002:a92:d30a:: with SMTP id x10mr18991938ila.287.1597774401599;
- Tue, 18 Aug 2020 11:13:21 -0700 (PDT)
+        Tue, 18 Aug 2020 14:15:31 -0400
+Subject: Re: Scheduler benchmarks
+To:     Muni Sekhar <munisekharrms@gmail.com>, Greg KH <greg@kroah.com>
+CC:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
+ <20200818143633.GA628293@kroah.com>
+ <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
+ <20200818171457.GA736234@kroah.com>
+ <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
+ <20200818173656.GA748290@kroah.com>
+ <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
+Date:   Tue, 18 Aug 2020 20:15:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200817170535.17041-1-brgl@bgdev.pl> <20200817170535.17041-2-brgl@bgdev.pl>
- <20200817173908.GS1891694@smile.fi.intel.com> <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
- <20200818082500.GB1891694@smile.fi.intel.com> <CAMRc=Md5yrgxnPf=qwKYhwHACcq-XeKOKZ76OwYdMGO8SgYmzQ@mail.gmail.com>
- <20200818171046.GU1891694@smile.fi.intel.com>
-In-Reply-To: <20200818171046.GU1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 18 Aug 2020 20:13:10 +0200
-Message-ID: <CAMRc=MfmmRweZ_WBkqA_FHVoTZ5KxNwyFLjwpypG5c=K9ki8XA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=2C6YHBdLAAAA:8 a=-lEIe7sNZIQA5pNoOQYA:9 a=QEXdDO2ut3YA:10 a=yxGMNg53M24zlVSZdvMH:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 7:19 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On 8/18/20 7:53 PM, Muni Sekhar wrote:
+> On Tue, Aug 18, 2020 at 11:06 PM Greg KH <greg@kroah.com> wrote:
+>> On Tue, Aug 18, 2020 at 11:01:35PM +0530, Muni Sekhar wrote:
+>>> On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
+>>>> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
+>>>>> On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
+>>>>>> On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> I’ve two identical Linux systems with only kernel differences.
+>>>>>> What are the differences in the kernels?
+>>>> You didn't answer this question, is this the same kernel source being
+>>>> compared here?  Same version?  Same compiler?  Everything identical?
+>>> Both systems are having exactly the same hardware configuration.
+>>> Compiler and kernel versions are different. One system has Ubuntu
+>>> 16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
+>>> the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
+>>> version 7.5.0).
+>> Those are _very_ different kernel versions, with many years and tens of
+>> thousands of different changes between them.
+>>
+>> Hopefully the newer kernel is faster, so just stick with that :)
+> But unfortunately the newer kernel is very slow, that is the reason
+> for starting this investigation :)
+> Any type of help,  and guidelines to dive deeper will be highly appreciated.
+
+On the 4.4 kernel you dont have
+
++CONFIG_RETPOLINE=y
++CONFIG_INTEL_RDT=y
+
+And your base is very different two.
+
+Try to use mainline on both system and see.
+
+You can also use the same base kernel version from ubuntu and
+
+run your test.
+
+
+>> greg k-h
 >
-> On Tue, Aug 18, 2020 at 06:27:12PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Aug 18, 2020 at 10:40 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Mon, Aug 17, 2020 at 10:02:05PM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > ...
-> > >
-> > > > > > +static struct devres *to_devres(void *data)
-> > > > > > +{
-> > > > > > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct=
- devres),
-> > > > > > +                                                 ARCH_KMALLOC_=
-MINALIGN));
-> > > > >
-> > > > > Do you really need both explicit castings?
-> > > > >
-> > > >
-> > > > Yeah, we can probably drop the (struct devres *) here.
-> > >
-> > > void * -> u8 * here is also not needed, it is considered byte access =
-IIRC.
-> > >
-> >
-> > Actually it turns out that while we don't need the (void *) -> (u8 *)
-> > casting, we must cast to (struct devres *) or the following error is
-> > produced:
-> >
-> > drivers/base/devres.c: In function =E2=80=98to_devres=E2=80=99:
-> > drivers/base/devres.c:41:21: error: returning =E2=80=98u8 *=E2=80=99 {a=
-ka =E2=80=98unsigned
-> > char *=E2=80=99} from a function with incompatible return type =E2=80=
-=98struct devres
-> > *=E2=80=99 [-Werror=3Dincompatible-pointer-types]
-> >   return ((u8 *)data - ALIGN(sizeof(struct devres),
-> >          ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >         ARCH_KMALLOC_MINALIGN));
-> >         ~~~~~~~~~~~~~~~~~~~~~~~
->
-> Of course, you have to drop u8 * casting as well.
 >
 
-Yes, of course. Duh
-
-Bart
