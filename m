@@ -2,114 +2,120 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F754C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29980C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC73207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A19D20825
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNH7Rb4U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPDS6jyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgHROhn (ORCPT
+        id S1727098AbgHROiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:37:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
+        Tue, 18 Aug 2020 10:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgHROhh (ORCPT
+        with ESMTP id S1727033AbgHROiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:37:37 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A812BC061389;
-        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so22356392eje.7;
-        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
+        Tue, 18 Aug 2020 10:38:01 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F67CC061389;
+        Tue, 18 Aug 2020 07:38:01 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so10074144pfh.3;
+        Tue, 18 Aug 2020 07:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
-        b=aNH7Rb4UjQ427P0G/2djpJOYW+4jNcYTY5ueMZJdI+aPHwfi9IVWQ5lmpfsxgPoOyD
-         2TembDjnXLlrJ/a8M5UAgVp4WnapO1DdLv6Z9TXH+CUQY9aWYahxInWFDBtnf2ZckZuK
-         AXKdp/x2y4mmrDILUtOyZd5aSuFkRAX+X5z2oiFaOrCkQ0ZugqWmLtDxySXxGmQA2Yvz
-         tep14aDEZDuEhoOfzeyidXqBxarz8eiwUJhOMdkx0QuWKYJN61zxdkXc/CgACP5Oco+T
-         xJgT5p2ERAXYe45DoMXsh1b+c31xNrWX9ZRHjX+1wIklQj71eMW19I/v0zCKuEdPPIax
-         Q5Sg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2r3YLIonviXk+yiTh2eL5fGwLG3nibOXqnr3jMeFSxw=;
+        b=vPDS6jyEFa2pVglVMhDsJUQB3MELfJ46P/i/Kx5bmZjr1wl0M1cBAfXE02msNjRehH
+         76vt2EQ44Wusv6N6rGb6Zyh3nbYbIlp04r8yzboE5YpsHEnqqDaIvKLe0E3ZlFsjHjLS
+         mgXHS9cePmDk4Ydxd7kHpKAkdVntxnylNRmF6QjOExWxBnxGuh41glOpahf9z1CiXYEf
+         QCIm5YBFoMQDns4qw8YCBKlc9eojA2XKdHlxjMUgknxV9IvTzchhAk+GTBEQ5tnB58bU
+         Vgo7urIRUdSba8NThKLzlbwEWiAO4IFllSZ9wXEw6b+C/OEKpiPITyiv/HM2155IHPqV
+         V1fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
-        b=iOs1Z572zUB+R5AVCxiLLMu7MoonkL0VNt3t0giKWs6WUomSi09Tqel/K0BfaR9F8/
-         8cb9P6yiqvuc5QHy2ZTyNkUkQmtuwH/IWbYGdMFJrR+nijFbqzBOfXqDclxdaFTrB1Zs
-         LkRYo9nZOvnN+Bg2Onp7uLJJR7L9AEGeDneNWISwjMlYMVcyrnrBH0sz+0etJ0PjcPWy
-         sG095oCKi13tjDF3iOVKelBI2Pkvp0vxyKcjXKs3CSjEQGHt3w1z52G/4dwqYyzttt7e
-         ttu9ntmdkUglUU/IZ7AEkz3lOzut1QReytJJ+NxroxqExbD4SRSb9bVkhCrNy+yd1La3
-         G0HA==
-X-Gm-Message-State: AOAM532zLNKSQkXNTV//AvTvfsPnZ1kM0UsGDIdeA60JCR+y1/MgwfYb
-        mG7ABhAvwkmViyqBh5gmS8M=
-X-Google-Smtp-Source: ABdhPJzVRX6brDlwaMQejDzk4wxMr/TJ+2T1mXXnWNI34f1CAvmV4y0EPIUTLj8CH4kNb+vCaskauA==
-X-Received: by 2002:a17:907:20e6:: with SMTP id rh6mr20096569ejb.301.1597761455170;
-        Tue, 18 Aug 2020 07:37:35 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r25sm16222575edy.93.2020.08.18.07.37.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:37:34 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
-Date:   Tue, 18 Aug 2020 16:37:26 +0200
-Message-Id: <20200818143727.5882-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2r3YLIonviXk+yiTh2eL5fGwLG3nibOXqnr3jMeFSxw=;
+        b=g5o260hgAsj3diP/+8fW52OCsGwI3SQhwoPrm4ZlnIXwuVrjbJNOd9ZWOmocVZPp4Y
+         nYE53mo25zDCfemmOQ1RbYKjtvVOrk58iWk1CM/5Kd0S75qKx9Elp20OKUNtgD3MixgG
+         CYl+SzU7xkLVpQovRdxVWJnhAwmO50GfJ/xeCaibX3sEG5P1abiFe59T05balV1KQ6Vo
+         7TGL+KxgO6jG2YRVCICTt93dV8nRE6BagnvAgqHuH2epQ0wYNxtCMc+k2ZTDQsbGmb1J
+         vkNoV5LkeS2OrSqBmq5TXdQUMbbP+X/gE8mMMkne9+iAygSSml7icmLkWLuHjqCDXqJK
+         C1DQ==
+X-Gm-Message-State: AOAM530xtP1plJvYs6Hut0ltbeobSV7mNDyyQwPl9/6GWynQPTNDkL32
+        dImFQWznnKeR56arfIvnek75PPXm11o=
+X-Google-Smtp-Source: ABdhPJwUON8dwXpoGVKSYuYs9uPXS4HjS7ngwVT1Jae5RghclPIexe/+chXmz79GW1A5l7N72s0PJw==
+X-Received: by 2002:a65:58cf:: with SMTP id e15mr13720757pgu.59.1597761480619;
+        Tue, 18 Aug 2020 07:38:00 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id z1sm158662pjn.34.2020.08.18.07.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 07:37:59 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 22:37:54 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 12/20] gpiolib: cdev: support setting debounce
+Message-ID: <20200818143754.GB17809@sol>
+References: <20200814030257.135463-1-warthog618@gmail.com>
+ <20200814030257.135463-13-warthog618@gmail.com>
+ <CAMpxmJXxUD9HqkEAzMjJA6dOem9aAkPwdT4BKyPXb-C06dGkqw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJXxUD9HqkEAzMjJA6dOem9aAkPwdT4BKyPXb-C06dGkqw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below shows that the compatible string
+On Mon, Aug 17, 2020 at 08:21:58PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Aug 14, 2020 at 5:05 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add support for setting debounce on a line via the GPIO uAPI.
+> > Where debounce is not supported by hardware, a software debounce is
+> > provided.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
 
-"rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
+[snip]
 
-is already in use, but is not added to a document.
-The current fallback string "rockchip,rk3328-spdif" points to a data
-set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
-in the mainline as in the manufacturer kernel.
-(Of the enum only RK_SPDIF_RK3288 is used.)
-So if the properties don't change we might as well use the first SoC
-in line as fallback string and add the description for rk3308 as:
+> > +       debounce_period = READ_ONCE(desc->debounce_period);
+> > +       if (debounce_period) {
+> > +               info->attrs[num_attrs].id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> > +               info->attrs[num_attrs].debounce_period = debounce_period;
+> > +               num_attrs++;
+> > +       }
+> > +       info->num_attrs = num_attrs;
+> 
+> AFAICT this (reading it in gpio_desc_to_lineinfo) is the only reason
+> to store the debounce period in struct gpio_desc. I'm wondering if we
+> can avoid extending this struct only for such uncommon case and store
+> it elsewhere. In all other cases where you read or write to it - you
+> have access to the underlying edge detector. Would the single-line
+> struct line I suggested elsewhere be a good place? On the other hand
+> I'm not sure how to get it having only the desc. I need to think about
+> it more.
+> 
 
-"rockchip,rk3308-spdif", "rockchip,rk3066-spdif"
+Yeah, it is stored there so it can be returned by lineinfo_get() for the
+GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL.
+And the same applies to any future config fields.
+I would also like to not pollute the desc, or anything else in gpiolib,
+but wasn't sure where else to put it.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+I'm open to suggestions.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changed V2:
-  rebase
----
- Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-index 7bad6f16f..62a61b68d 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-@@ -27,6 +27,7 @@ properties:
-           - enum:
-               - rockchip,rk3188-spdif
-               - rockchip,rk3288-spdif
-+              - rockchip,rk3308-spdif
-           - const: rockchip,rk3066-spdif
- 
-   reg:
--- 
-2.11.0
-
+Cheers,
+Kent.
