@@ -2,181 +2,228 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1BA20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="a5+c1N1V"
+	by mail.kernel.org (Postfix) with ESMTP id 14AF920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597768999;
+	bh=oC/yA8wRTM/Bkg0Mc98As5ejeDpYDPpx356KZLQ1mWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NjMTfy/VIMzSjrnbPsXoyY8VfBiojuqdyNVkZnWTVGsJghMRYWQ0Jz8lHU5+vkvrK
+	 j95lyHL759tn0bfJm9CuIIrdhEa9VGS2B/Oe86pYLgLFn4C/YULt5OjZHzjEA3TlKb
+	 8PWm7hUjugwHrRK2hLK6Ck+ow4YpAEyhpNNQMXvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHRQjH (ORCPT
+        id S1726983AbgHRQnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:39:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2670 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgHRQjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:39:00 -0400
-IronPort-SDR: vntvlb09i06F2be9M+FO17XSVcH0wW64VVXLszRTTAYrz8UYUl/+ECxHD1neTqgxlzQL2hqRZL
- 3JpErTA95dIA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="239780740"
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="239780740"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 09:38:58 -0700
-IronPort-SDR: qiJ3gSU67KhGoLRBaWM7jmzEz146Etnwt02zOc3TnKwTuMxsz8kJW9/MWN/fdHiyLnxWEiku50
- B9Ja1Zm3UCHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="310496148"
-Received: from fmsmsx603-2.cps.intel.com (HELO fmsmsx603.amr.corp.intel.com) ([10.18.84.213])
-  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2020 09:38:57 -0700
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 18 Aug 2020 09:38:57 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 18 Aug 2020 09:38:57 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 18 Aug 2020 09:38:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dUkx1I14PQzS5uJlZkFGYOWaP/+z2XS5uB+pJdJz5s5TXkBclg0jMSJ4vEf3lx76Swocecq7dzyn1pqjCXTkFos8c+jznSI1CXBP4+uZKFovQQqH1xVP5wNXF8pFpnTA8NSVkPdAR+J/m5ZWaeUpLb6wC7CgYvoOFk39b8ncIkJ5LajugkFV1LZXYobyxusRTt6qJv7zMFqP34Pqtz8yV5qWe8R8fB7yhByqlwY8sH+rBtB5op6hoKnWE5oZEYEuZSTQf6KM8kF3dAB9uNYcGhCvpULRNcfCLjPn93HlZ81OvOo70sTjqaoc2ruKQx3JKd8S6RDGf2BLaQ36hbGc0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rR2YvZ38/DkEurcIc7gkfnH2c/YL+9FEeNxd5Kfkla8=;
- b=enEAdVXBD2FGwwxP6XLjcbpSrYI0+Pp7qGrT4eOzu5CSMtXWO2W7pIAACtLQeHqMTE59CslOkEI9l460o3CRr0oBc7KgRhpaEU0vYQrgojw8dhucLGXqhaprwTthnDMS6WatTShDAcv+Vz0wCCsr2HjQPbTHw5pCNMcNQ864oYyuBGf5m4io0vObKXj1zY/DlsEy5XytvuagCogRfVE29qyCeVybovNZSszQQT6YfVVKX4gzYs+pAaF9Jw0Rv+HUzdWbHkabs6gI0m/snc8JXCInW/ZrUH03RpjE2FfrKz7rVZ8CxhB7Xi5TZUwXHTItjw8dN40u7qWKcNgG4YsW3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rR2YvZ38/DkEurcIc7gkfnH2c/YL+9FEeNxd5Kfkla8=;
- b=a5+c1N1Vkc5YimwcGDJne56DQ75Yq8ZmNFM+84vCdKTOcWhyuwfyZtZ0yO8MPvOxhJ0hdxF/qx66I0xTiOYle/du/CIbs9jP+wJChMPJB/Po0SGBgymAurJOW8Lt/8vprpVq2LpxEx5DlbsOg9fmmTPBXwOky/sP6Tbheiu8TMw=
-Received: from MW3PR11MB4665.namprd11.prod.outlook.com (2603:10b6:303:5d::12)
- by MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Tue, 18 Aug
- 2020 16:38:53 +0000
-Received: from MW3PR11MB4665.namprd11.prod.outlook.com
- ([fe80::18a3:e19c:fd98:f75a]) by MW3PR11MB4665.namprd11.prod.outlook.com
- ([fe80::18a3:e19c:fd98:f75a%9]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 16:38:53 +0000
-From:   "Zhi, Yong" <yong.zhi@intel.com>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>
-CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Support Opensource" <support.opensource@diasemi.com>
-Subject: RE: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level
- probe/remove
-Thread-Topic: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level
- probe/remove
-Thread-Index: AQHWcACDJNkriZkGX0yTzROdPr+vcqk+GLYQ
-Date:   Tue, 18 Aug 2020 16:38:53 +0000
-Message-ID: <MW3PR11MB4665D9AD35EF41A7F24F5208855C0@MW3PR11MB4665.namprd11.prod.outlook.com>
-References: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-In-Reply-To: <cover.1597164865.git.Adam.Thomson.Opensource@diasemi.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.5.1.3
-dlp-reaction: no-action
-authentication-results: diasemi.com; dkim=none (message not signed)
- header.d=none;diasemi.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [72.180.71.28]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1beb868b-a805-4563-d46b-08d843953160
-x-ms-traffictypediagnostic: MWHPR11MB2047:
-x-microsoft-antispam-prvs: <MWHPR11MB2047BE83056F8F4CB1A483AA855C0@MWHPR11MB2047.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Win53JuoCpVF+b868qS7QTwplM8Qpgs5nmMKkPOHltbhEb6BxrTcEW2wpFKU8nkc6/jLA4TxxvlTlRGQJAtQoW1NuzbyjeLhuD89DELczraD2CfRQLrGv7Okr31bSgfSEZv6JzOHW+xAf7/VGQ/xxfkiFBYtqSwltcqNmiuEx1pH+3TgL8r2CjstCMOu/ZTLlV0jLHzfXEdq3YTDMolGauVwodxnSMmF2Krs3Sc6/PYNATpPtRBcXV6iz3zMthPrN8YwvhtEueKAIw/Rj3+twMzldz4pfZNsfeAAvTqKZWWsdNbAK1Ld0Zj0YsmA5hPs1IWQERxLf3ZUrh/ICvpJfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR11MB4665.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(86362001)(7696005)(9686003)(53546011)(64756008)(186003)(76116006)(71200400001)(33656002)(55016002)(6506007)(66946007)(83380400001)(66476007)(26005)(66446008)(66556008)(2906002)(478600001)(54906003)(316002)(110136005)(4326008)(8936002)(8676002)(5660300002)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: uyuqo8OK7IC5r2hNvHD3JD76WIJz0Z0/+GbI803NciF+xuXQGUYizkcl/ceKqITN+TvLKfg4WRdsFIq1B9Pj4OXugFTDYCoURfD79sA6j4cThM9RbeqglfDFeLn85ZaH4CtTF5M3QlWAsx+bdhn94u9TcojnbfD7zc5MZvysawBlsMfgTJoQ8zoSI2rI+d5CwuRqDrfufVDhWJyXkFWNT/IL3ZS/cb5Wz5wFsMty412r4Z2xApJmHuxiMtapygWHnrvGnfR2JWUu6PFPQOP+8P2u6/Q/BAXXHPdPodciW2A/Fz9AdEjTqruIHLeeIzY/TN9tkCt/51917eFXH3Fv3GRpwcmy2kX6BjHrZbSrS6fCXA39wYK5sXSkev38Mp0G9mD578h8nt2Pc0/mEa0nNizYims/m9YvCUDJbPADtVU9cy1D96Pe2EkPJ5ElIIaMyjLt1gPCD5G1aBbD7w378x+QtOwFs0T4sQb0r20jr6k331Aaly5k4JEs6UWltJuAv2UotgFeg7XJp6Nb75n4+fFEikzr9t+ua17GWSjt3hts+tSEfmercIHqpsHkEl1ZDyD2tItu89OCtIdVUH2iLbh2rKaCKbL3Fs+1DHUPMZILfeWZ2Y7xi8FzfUKbm/p+Lq9qmMtJ2kOko1X1cTxScQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 12:43:18 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34025 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgHRQnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:43:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id q75so21899908iod.1;
+        Tue, 18 Aug 2020 09:43:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vNsX7ym346vZV2IXpFW1+Bm2l4MQVUC5xVcMg+Fr3KA=;
+        b=QN5bH4mh4Ai3Z/tLpVQXp0RgJJvT8paBuZH7ycaH7FBDmw2UmKd0QGkgX4FttK51ZS
+         TN8ZnVAhvoQiPkPWd1CrKV9tDtnQ3RA7X3CJMVXfT4ax3ug5hu1DVxgve6288yeMzbRQ
+         WJHkes4PhIq/599gPQO22Ur+acDFp6poxDac7Isc2hIvBYT8lkMGiE8Q+1WXccPEC0SD
+         kZyhYxLFp4lPbS+0dyVNZP8IsWDhBiMqM6JSJR0Yv+EaCiHFzY2foEms0eeJW25KrCig
+         c9fhjudwueHmGdpueqvGmwVLqev/RcLl/sXGCn2YMD5D4Yv9NmTed/FzOY27hZgd2Xs1
+         Snng==
+X-Gm-Message-State: AOAM532wHxNbDMWqp5mc+ysJh5hd2TLBOPoAYcXE8SbABXfGKglqsAbj
+        nYB4tvP3sq6DGjmTAZN6WA==
+X-Google-Smtp-Source: ABdhPJx385KHb6YSculwonpQTNTGvzgEP6qHocj7X3P7aeGKh6Y0OK69b+vt5KTREtklDkFnoqccsg==
+X-Received: by 2002:a05:6638:bd1:: with SMTP id g17mr20187356jad.132.1597768987428;
+        Tue, 18 Aug 2020 09:43:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id p7sm7761353ilj.56.2020.08.18.09.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 09:43:06 -0700 (PDT)
+Received: (nullmailer pid 3595784 invoked by uid 1000);
+        Tue, 18 Aug 2020 16:43:05 -0000
+Date:   Tue, 18 Aug 2020 10:43:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmurphy@ti.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
+Message-ID: <20200818164305.GB3586878@bogus>
+References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+ <20200817191723.22416-2-r-rivera-matos@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR11MB4665.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1beb868b-a805-4563-d46b-08d843953160
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 16:38:53.0283
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HStD/gtMftTeYztzLH82VVyPwzKev47JQehk9BD9vGMOtxUUztFlLJh8QkW2pgYm/scUNfS9jmYlgFdQjE8gIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB2047
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817191723.22416-2-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Adam,
+On Mon, Aug 17, 2020 at 02:17:22PM -0500, Ricardo Rivera-Matos wrote:
+> Add the bindings for the bq256xx series of battery charging ICs.
+> 
+> Datasheets:
+> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+> 
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> ---
+>  .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+> new file mode 100644
+> index 000000000000..67db4ba9fdb6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+> @@ -0,0 +1,99 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI bq256xx Switch Mode Buck Charger
+> +
+> +maintainers:
+> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> +
+> +description: |
+> +  The bq256xx devices are a family of highly-integrated battery charge
+> +  management and system power management ICs for single cell Li-ion and Li-
+> +  polymer batteries.
+> +
+> +  Datasheets:
+> +    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+> +    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq25600
+> +      - ti,bq25601
+> +      - ti,bq25600d
+> +      - ti,bq25601d
+> +      - ti,bq25611d
+> +      - ti,bq25618
+> +      - ti,bq25619
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,watchdog-timer:
 
-> -----Original Message-----
-> From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Sent: Tuesday, August 11, 2020 11:57 AM
-> To: Mark Brown <broonie@kernel.org>; Takashi Iwai <tiwai@suse.com>; Liam
-> Girdwood <lgirdwood@gmail.com>; Jaroslav Kysela <perex@perex.cz>
-> Cc: Zhi, Yong <yong.zhi@intel.com>; Pierre-Louis Bossart <pierre-
-> louis.bossart@linux.intel.com>; alsa-devel@alsa-project.org; linux-
-> kernel@vger.kernel.org; Support Opensource
-> <support.opensource@diasemi.com>
-> Subject: [PATCH 0/3] ASoC: da7219: Reorganise device/codec level
-> probe/remove
->=20
-> This patch set reorganises and fixes device and codec level probe/remove
-> handling within the driver, to allow clean probe and remove at the codec =
-level.
->=20
-> This set relates to an issue raised by Yong Zhi where a codec level re-pr=
-obe
-> would fail due to clks still being registered from the previous instantia=
-tion.
-> In addition some improvements around regulator handling and soft reset ha=
-ve
-> also been included.
->=20
+Poorly named since we have 'ti,watchdog-timers' already and is 
+completely different.
 
-Just to let you know that I tested this series on the JSL platform, the ori=
-ginal issue was resolved, also sanity checked basic use case like plug/unpl=
-ug and
-suspend/resume, no regression found.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog
 
-thanks,
-yong
-> Adam Thomson (3):
->   ASoC: da7219: Move required devm_* allocations to device level code
->   ASoC: da7219: Move soft reset handling to codec level probe
->   ASoC: da7219: Fix clock handling around codec level probe
->=20
->  sound/soc/codecs/da7219-aad.c |  85 +++++---
->  sound/soc/codecs/da7219-aad.h |   3 +
->  sound/soc/codecs/da7219.c     | 493 +++++++++++++++++++++++-------------=
-----
-> --
->  sound/soc/codecs/da7219.h     |   1 +
->  4 files changed, 328 insertions(+), 254 deletions(-)
->=20
-> --
-> 1.9.1
+If you have units, then you should use standard unit suffix.
 
+> +    minimum: 0
+> +    maximum: 160000
+> +    enum: [ 0, 40000, 80000, 160000]
+> +
+> +  input-voltage-limit-microvolt:
+> +    description: |
+> +       Minimum input voltage limit in micro volts with a 100000 micro volt step
+> +    minimum: 3900000
+> +    maximum: 5400000
+> +
+> +  input-current-limit-microamp:
+> +    description: |
+> +       Maximum input current limit in micro amps with a 100000 micro amp step
+> +    minimum: 100000
+> +    maximum: 3200000
+
+Aren't these properties of the battery, not the charger?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+monitored-battery not required?
+
+Add:
+
+additionalProperties: false
+
+
+> +
+> +examples:
+> +  - |
+> +    bat: battery {
+> +      compatible = "simple-battery";
+> +      constant-charge-current-max-microamp = <2040000>;
+> +      constant-charge-voltage-max-microvolt = <4352000>;
+> +      precharge-current-microamp = <180000>;
+> +      termination-current-microamp = <180000>;
+> +    };
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+
+i2c {
+
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&i2c2_pins>;
+
+Not relevant to the example.
+
+> +
+> +      status = "okay";
+
+Don't show status in examples.
+
+> +      clock-frequency = <400000>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bq25601@6b {
+
+charger@6b
+
+> +        compatible = "ti,bq25601";
+> +        reg = <0x6b>;
+> +        monitored-battery = <&bat>;
+> +
+> +        interrupt-parent = <&gpio1>;
+> +        interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+> +        watchdog-timer = <40000>;
+> +
+> +        input-voltage-limit-microvolt = <4500000>;
+> +        input-current-limit-microamp = <2400000>;
+> +       };
+> +    };
+> +...
+> -- 
+> 2.28.0
+> 
