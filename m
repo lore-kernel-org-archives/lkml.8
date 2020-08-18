@@ -2,52 +2,99 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA70EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386F2C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD9D206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C21206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgHRN6a (ORCPT
+        id S1726963AbgHRN7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgHRN6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:58:23 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87AEC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 06:58:22 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BWCDV0lgsz9sTR; Tue, 18 Aug 2020 23:58:17 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <07884ed033c31e074747b7eb8eaa329d15db07ec.1596641219.git.christophe.leroy@csgroup.eu>
-References: <07884ed033c31e074747b7eb8eaa329d15db07ec.1596641219.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] powerpc/32s: Fix is_module_segment() when MODULES_VADDR is defined
-Message-Id: <159775907962.1766076.11931243751061238558.b4-ty@ellerman.id.au>
-Date:   Tue, 18 Aug 2020 23:58:17 +1000 (AEST)
+        Tue, 18 Aug 2020 09:59:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6235 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgHRN7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:59:15 -0400
+IronPort-SDR: ECTFD+Vy/AiinvVFxYnyWe4OMVlGSGVDu14AoQjef55R9k5RHOvt+R8aghpU6DjeIzQjdcFqWE
+ EeVb8KqZx7HA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142727642"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="142727642"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:59:14 -0700
+IronPort-SDR: ZzBhsuvjm3xU3UhDw15q+h5fMIAQ25tpgRXhCD0E0mzNYgNdnf9rD+zGRHDuzLRRN2CdyO2wqU
+ wq6JWNqzHKGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="326735454"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 06:59:11 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k828r-009f0z-Mx; Tue, 18 Aug 2020 16:59:09 +0300
+Date:   Tue, 18 Aug 2020 16:59:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        stanekm@google.com, stable <stable@vger.kernel.org>,
+        Marcin Wojtas <mw@semihalf.com>, levinale@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200818135909.GS1891694@smile.fi.intel.com>
+References: <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com>
+ <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com>
+ <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+ <20200310144913.GY2540@lahna.fi.intel.com>
+ <20200417020641.GA145784@google.com>
+ <20200417090500.GM2586@lahna.fi.intel.com>
+ <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+ASDXM9mrkGfxtVVNWkqnDNzcok2LAqdfVbQL2RV7yWE0tMWw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020 15:27:28 +0000 (UTC), Christophe Leroy wrote:
-> When MODULES_VADDR is defined, is_module_segment() shall check the
-> address against it instead of checking agains VMALLOC_START.
+On Fri, Apr 17, 2020 at 05:55:44PM -0700, Brian Norris wrote:
+> - Michal (bouncing)
+> 
+> On Fri, Apr 17, 2020 at 2:05 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > I wonder if we can add back the previous GPIO base like this?
+> 
+> Thanks for the patch! At first glance, it looks like the right kind of
+> thing. Unfortunately, it doesn't appear to work quite right for me.
+> I'm out of time for today to look any further, but I (or perhaps
+> someone else on this email) will try to follow up next week sometime.
 
-Applied to powerpc/fixes.
+Just in case you are going to do something about this, take into consideration
+that Cherryview driver got several cleanups in the past, it may require to
+rework this on top of the made changes.
 
-[1/1] powerpc/32s: Fix is_module_segment() when MODULES_VADDR is defined
-      https://git.kernel.org/powerpc/c/7bee31ad8e2f6c276f36993346ac70f4d4c80e45
+P.S. Currently they are in my branch, but within couple of days it will be in
+Linux Next if nothing prevents it.
 
-cheers
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
