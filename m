@@ -2,148 +2,127 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD52C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4389C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B132076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eRd8YUFX"
+	by mail.kernel.org (Postfix) with ESMTP id 92AB2207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHRHi3 (ORCPT
+        id S1726435AbgHRHmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:38:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:45925 "EHLO m43-7.mailgun.net"
+        Tue, 18 Aug 2020 03:42:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53200 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRHi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:38:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597736308; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=oBlBFLNCfpm1tApUYPpLjT+H0f58c4Dojdn1tDV42qA=;
- b=eRd8YUFXBXF/4ff48m3/MzzAUz0nNrluMUFfG88XRipNISo29qsTFw4GzyfZDZ7lL1GJHdN+
- nzJjvMHxbGM2+yk0TlPM2eENIOVQ7dGxI+BOk3g6WUIQCUBXLh8H3RP0mugf2xHk4n5y+gte
- Wzz0loGQqODb4QlOU1snjLr4qP0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f3b8573ba4c2cd36742c78f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:38:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7369C433CB; Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E2EBC433CB;
-        Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
+        id S1726324AbgHRHmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:42:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AA283ABCC;
+        Tue, 18 Aug 2020 07:42:28 +0000 (UTC)
+Subject: Re: [PATCH drm/hisilicon 0/4] Use drv_err instead of DRM_ERROR in
+ hibmc driver
+To:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <ddeac968-cbea-9441-2fe5-d1223aa4d5f2@suse.de>
+Date:   Tue, 18 Aug 2020 09:41:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Aug 2020 13:08:26 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
-In-Reply-To: <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
-References: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
-Message-ID: <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="csRgyoghWyrutzR6kOCvUjcF7OhhuwMjJ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--csRgyoghWyrutzR6kOCvUjcF7OhhuwMjJ
+Content-Type: multipart/mixed; boundary="WxrrzYJaIrqhxDw9UDVpkbavTe5rN0CrA";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie, daniel@ffwll.ch,
+ kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <ddeac968-cbea-9441-2fe5-d1223aa4d5f2@suse.de>
+Subject: Re: [PATCH drm/hisilicon 0/4] Use drv_err instead of DRM_ERROR in
+ hibmc driver
+References: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1597733504-30812-1-git-send-email-tiantao6@hisilicon.com>
 
-On 2020-08-18 02:42, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Aug 16, 2020 at 9:04 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> There is only one LLCC logical bank on SC7180 SoC of size
->> 0x50000(320KB) not 2MB, so correct the size and fix copy
->> paste mistake from SDM845 which had 4 logical banks.
-> 
-> I guess SDM845 not only has 4 banks but each bank is bigger?  At first
-> I thought "yeah, 4 banks and 4 * 0x5 = 0x20" except that's not true in
-> hex.  ;-)
-> 
+--WxrrzYJaIrqhxDw9UDVpkbavTe5rN0CrA
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Hehe, no I didn't mean 0x5 * 4 = 0x20 because I mentioned 320KB and 2MB 
-specifically
-for the same reason in case people think that ;) I just meant that we 
-are correcting
-the copied size from SDM845, but I agree I need to make it clear in the 
-commit msg
-which warrants a V2.
+Hi
 
-> 
->> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
->> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache 
->> controller node")
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Without having any documentation ,this seems sane to me.  I guess it
-> doesn't do a whole lot because the driver just reads one register from
-> this whole space (at 0x0003000c bytes off).  So it's just a cleanup,
-> or is it needed to actually fix something?
-> 
+Am 18.08.20 um 08:51 schrieb Tian Tao:
+> patch #1 is using the drv_err instead of DRM_ERROR in hibmc_ttm.c
+> patch #2 is using the drv_err instead of DRM_ERROR in hibmc_drm_vdac.c
+> patch #3 is using the drv_err and drm_dbg_atomic  instead of DRM_ERROR
+> and DRM_DEBUG_ATOMIC  in hibmc_drm_de.c
+> patch #4 is using the drv_err and drm_warn instead of DRM_ERROR and
+> DRM_WARN in hibmc_drm_drv.c
+>=20
+> Tian Tao (4):
+>   drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_ttm
+>   drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_drm_vdac
+>   drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_drm_de
+>   drm/hisilicon: Use drv_err instead of DRM_ERROR in hibmc_drm_drv
 
-No, it is not required to fix any functional problems but is correcting 
-the
-wrong size which I think qualifies for a fixes tag? I don't have a 
-strong opinion
-though, so I can remove the tag if you feel strongly about it.
+Series is
 
-> ...the fact that there's a status register in the middle of this seems
-> strange, though.  Your commit message makes it sound as if this range
-> is describing the size of the cache itself and then I would think that
-> this was the address range where you could read from the cache memory
-> directly, but that doesn't seem to mesh in my mind with there being a
-> status register.  Hrm.  Am I just confused as usual?
-> 
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-It's not describing the cache size, it is the LLCC(LLC Controller) 
-register space.
-But I believe that the confusion is because of my commit msg, so I will 
-post a v2
-clearing this with something like below (I have removed the confusing 4 
-banks info
-of SDM845).
+>=20
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c   | 14 +++++++-------
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c  | 24 ++++++++++++----=
+--------
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c |  4 ++--
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c      |  2 +-
+>  4 files changed, 22 insertions(+), 22 deletions(-)
+>=20
 
-"
-There is one LLCC logical bank(LLCC0) on SC7180 SoC and the size of the 
-LLCC0 base
-is 0x50000(320KB) not 2MB, so correct the size and fix copy paste 
-mistake
-carried over from SDM845.
-"
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
-Thanks,
-Sai
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+--WxrrzYJaIrqhxDw9UDVpkbavTe5rN0CrA--
+
+--csRgyoghWyrutzR6kOCvUjcF7OhhuwMjJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl87hkoUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiP5fQf+NLJld/8hS8rL0w7LexD93Kjje1Gp
+yeaT/2rZDTZ//vC9+BZBNDdSKYwO1WAlhNILfJO12j8zXkVsa1NQEOLlL/dy8pFc
+KKBSoVQEeWxHPjbFnIMOXzj5NbNOYQGXNyWeY8LA2PdbgNRtvjO3RbqeI067Q/z8
+nAxS/md+SyKXQafqzZNQCpW9DDT/07ktrNeRWCoNsbrEmVkzwUA4nOOGhGUR/YoJ
+1k6TFxdyRHfyJKvxxnE5ehpAFGDfKTDuCeMPF5ghX7/PAiJDQwjatH2YlbBIpuxO
+KMj1B6q+Vt5iobC4HnSC1Q7qcpmVL3eScntTFN8Q33SKTpPRcceyTgYSUA==
+=8YPe
+-----END PGP SIGNATURE-----
+
+--csRgyoghWyrutzR6kOCvUjcF7OhhuwMjJ--
