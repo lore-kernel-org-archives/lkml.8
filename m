@@ -2,128 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88429C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4044C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679802075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFAA2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BNtp98LZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwISd+CW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgHRIGt (ORCPT
+        id S1726624AbgHRIHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:06:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15862 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRIGs (ORCPT
+        Tue, 18 Aug 2020 04:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgHRIHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:06:48 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3b8c090001>; Tue, 18 Aug 2020 01:06:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Aug 2020 01:06:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Aug 2020 01:06:47 -0700
-Received: from [10.25.96.247] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Aug
- 2020 08:06:41 +0000
-Subject: Re: [PATCH v2 3/9] ASoC: audio-graph: Identify 'no_pcm' DAI links for
- DPCM
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
-        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
-References: <1596605064-27748-1-git-send-email-spujar@nvidia.com>
- <1596605064-27748-4-git-send-email-spujar@nvidia.com>
- <87y2mcfzir.wl-kuninori.morimoto.gx@renesas.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <94e2c4ad-91a8-76c8-c956-8dbfdf68d1a8@nvidia.com>
-Date:   Tue, 18 Aug 2020 13:36:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 04:07:08 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACD7C061389;
+        Tue, 18 Aug 2020 01:07:08 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mw10so8894821pjb.2;
+        Tue, 18 Aug 2020 01:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=StFFVCyyrqOkn7U9cLGxAfuLpee/KXFwmS5u87kiIm4=;
+        b=iwISd+CWW2R7LQdicuTPCO4Djz+Ep8Wv035bwy+fTHpfPjAldOMn8249OlRIpvpyYZ
+         Es6G5h55Cgvnd5ZDOOavmtGyfZnD+VnPHVberGV9wsB8LFiNcn/CCEBvZihm+MMiKOkX
+         PfmRfyf3M4cNxWUJyD3RrKMTFpQ9FaIhU9R7OODxee8pa6G5EZAUreV2v6KCC+qgm3YY
+         EwdmAZMuo5VKfz2Sx/rmwABbnrjqwN4nR+MNGziHsy5iJIAd2Z5/XGrc3rrnE8wUfqnA
+         T0KRi/2W5GALncOgHIcHIwci8ERvgLydaFzAcNzFeG+BFq5lTQ8OdIDdcWIjCrGtuT44
+         HCTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=StFFVCyyrqOkn7U9cLGxAfuLpee/KXFwmS5u87kiIm4=;
+        b=TDb+jx0pDP3p5VDPnrONNz2imG8tIlQu0KppL6VzcxKq3qfNvE5YIvIyLvRDCmbnQW
+         ZhFzPDACYXZIXKng5Q/MZp53afYSTpM7E31vHBahiIRbr0nSGXlAQxBsPtDzAB34AYSR
+         2Gu8yegmzfNmzpYUHpdfjWsAFMVnsBxDKW+gGReQNYQy1EKm09L5IRGLzEV6sNglMnB2
+         lPCfzkoKcBTg29QVCNsYChcAjFv9I9rM+2P/wdUPX9MJlnfCwv9vUaV7XCGqaVcKB035
+         kNZznGNRQEw+dhiRmIZswxIWNkFWy2oLwxdeH4cntzXtVXi2Fbui6mTKh+tczxB+S70q
+         J2MA==
+X-Gm-Message-State: AOAM531MESycJtOOg0ZZuLb+tsWGWzFgycuG9sfk747GeICoIXZwkHWk
+        Y4K28LBU3DkhJjE4w6FOLjoOD1F9F1E=
+X-Google-Smtp-Source: ABdhPJz8H1EB4gkEEbz+CgswsYmcAgHxH1hWTh2rxtMgeriPdI0/FERnAKJJOo4zzNahWr410ikthA==
+X-Received: by 2002:a17:90a:8d85:: with SMTP id d5mr14752437pjo.45.1597738027502;
+        Tue, 18 Aug 2020 01:07:07 -0700 (PDT)
+Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
+        by smtp.gmail.com with ESMTPSA id kb2sm20369902pjb.34.2020.08.18.01.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 01:07:06 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 16:07:03 +0800
+From:   Qingyu Li <ieatmuttonchuan@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/bluetooth/bnep/sock.c: add CAP_NET_RAW check.
+Message-ID: <20200818080703.GA31526@oppo>
 MIME-Version: 1.0
-In-Reply-To: <87y2mcfzir.wl-kuninori.morimoto.gx@renesas.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597737994; bh=ZXSuf8dJcEyEX5k466eJpjxKeuZb+qrwyJvu3I6LwjU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=BNtp98LZzdUvqLCn9Us3RAOIqzAZ0wLoqExbNqAv86BlHIhfXic3cfKAN7i7HXrt1
-         FmjmmAystMbcyaREzFj1OxN2ENXvZJpkbWcRf/2bNONAcIDmez9mz/KeZYe9C74k86
-         nKI33jYsJGye/dIRVSTJWzZ7C3iCbdZb3QL3z7uE3Di874nnKsv13Pf7hIDHYuJhNv
-         6633KjbHupZDd/aKDJ7J6/AiRKHzrO/MTn+urn4UgIW4vWrHadSh+Bq17kQCZgGS9N
-         gUMhdeNGGKf4FZzZd6lLb7Ir3tjgZsaWx+kbcTBslUxLk37CLDdRcP6WEcyUyTnIWo
-         mTT5zLyJu6dnw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kuninori,
+When creating a raw PF_BLUETOOTH socket,
+CAP_NET_RAW needs to be checked first.
 
-On 8/18/2020 8:11 AM, Kuninori Morimoto wrote:
-> External email: Use caution opening links or attachments
->
->
-> Hi Sameer
->
->> PCM devices are created for FE dai links with 'no-pcm' flag as '0'.
->> Such DAI links have CPU component which implement either pcm_construct()
->> or pcm_new() at component or dai level respectively. Based on this,
->> current patch exposes a helper function to identify such components
->> and populate 'no_pcm' flag for DPCM DAI link.
->>
->> This helps to have BE<->BE component links where PCM devices need
->> not be created for CPU component involved in such links.
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
-> (snip)
->> @@ -259,6 +270,16 @@ static int graph_dai_link_of_dpcm(struct asoc_simple_priv *priv,
->>                if (ret < 0)
->>                        goto out_put_node;
->>
->> +             /*
->> +              * In BE<->BE connections it is not required to create
->> +              * PCM devices at CPU end of the dai link and thus 'no_pcm'
->> +              * flag needs to be set. It is useful when there are many
->> +              * BE components and some of these have to be connected to
->> +              * form a valid audio path.
->> +              */
->> +             if (!soc_component_is_pcm(cpus))
->> +                     dai_link->no_pcm = 1;
->> +
-> For safety, I want to judge with data->component_chaining.
->
->          if (data->component_chaining &&
->              !soc_component_is_pcm(cpus))
->                          dai_link->no_pcm = 1;
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+---
+ net/bluetooth/bnep/sock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-OK. I will keep the additional check. Thanks.
+diff --git a/net/bluetooth/bnep/sock.c b/net/bluetooth/bnep/sock.c
+index d515571b2afb..e06787a3b5ce 100644
+--- a/net/bluetooth/bnep/sock.c
++++ b/net/bluetooth/bnep/sock.c
+@@ -204,6 +204,9 @@ static int bnep_sock_create(struct net *net, struct socket *sock, int protocol,
+ 	if (sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
 
->
-> Thank you for your help !!
->
-> Best regards
-> ---
-> Kuninori Morimoto
++	if (!capable(CAP_NET_RAW))
++		return -EPERM;
++
+ 	sk = sk_alloc(net, PF_BLUETOOTH, GFP_ATOMIC, &bnep_proto, kern);
+ 	if (!sk)
+ 		return -ENOMEM;
+--
+2.17.1
+
