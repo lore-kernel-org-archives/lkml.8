@@ -2,133 +2,67 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F84C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A80206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FB2IyJSY"
+	by mail.kernel.org (Postfix) with ESMTP id 497052076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHRTpC (ORCPT
+        id S1726883AbgHRTpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
+        Tue, 18 Aug 2020 15:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHRTow (ORCPT
+        with ESMTP id S1726807AbgHRTpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:44:52 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F270CC061345
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q19so9715985pll.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i1d+U+ecDxUFOWl6onxWX2qBK/sZMPkIFOLpUTyn6uQ=;
-        b=FB2IyJSYdn0VUofa7i8Z80/FH61STbjzPiTrV7pXJ9/PanWHP8N2HBymNiDeDrDJZv
-         +bo27DTYRBIRVYJdtoXyyWfeS36z89yBxiuaIdCQyk9PY/jIhvuLnozoYsLcv/l7l7+3
-         H8tWRysm6mi5Tfast76wQOHwKrqDkZ0EWMgMg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i1d+U+ecDxUFOWl6onxWX2qBK/sZMPkIFOLpUTyn6uQ=;
-        b=CqV2IcNUl05KYVoGn2HEc7NxvXaGukcjHJ6Qyf1iVgAmRbxdRj+HHJWOMYk/OvnRUY
-         TfpexJnYc26duIIfNfJte5b8WNU670ArD6db8a54WSInuMyGz664moNBxaY/dQW8WUZ2
-         6JdmD3HQwLRbEIvFHJwRLQucPp+xPptXJhdi6BcETj0xlWzcw+R86dmc+gxuGjIbiVoU
-         pBZAS4kGGKahNXGMkpBK9EYDrQF4k5zIdSAR5iGIxKWm+fiySurok/0aggcQ24d6rYlB
-         6bOgCwfmM0FZKXaZOP70fnAtm7Lbj19vYBcu/3Qwi/D6SilCicF15KTFahsXAnuWvbLw
-         ckTQ==
-X-Gm-Message-State: AOAM530Wfn3bvhzDVgdSHCxebu0WosAcoaHGQN5WmWcHZlk2FUaSWiIs
-        YAlGshbsF2CS5U3MPuFqNUDybg==
-X-Google-Smtp-Source: ABdhPJy5tKx9/xkhHJM6Odv3AsGblbIMbyJc2oObFFznMoC2GzzBneeXHhCf+Coy4KEA+Rmx1fZaDw==
-X-Received: by 2002:a17:90a:7488:: with SMTP id p8mr1244035pjk.158.1597779891291;
-        Tue, 18 Aug 2020 12:44:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b12sm22351411pga.87.2020.08.18.12.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:44:50 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:44:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
-Message-ID: <202008181244.BBDA7DAB@keescook>
-References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-9-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817073212.830069-9-hch@lst.de>
+        Tue, 18 Aug 2020 15:45:19 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AC2C061389;
+        Tue, 18 Aug 2020 12:45:19 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 91896127A25A1;
+        Tue, 18 Aug 2020 12:28:32 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:45:17 -0700 (PDT)
+Message-Id: <20200818.124517.1912943894802724387.davem@davemloft.net>
+To:     linmiaohe@huawei.com
+Cc:     kuba@kernel.org, edumazet@google.com, kafai@fb.com, ast@kernel.org,
+        jakub@cloudflare.com, zhang.lin16@zte.com.cn,
+        keescook@chromium.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: Avoid strcmp current->comm with warncomm when
+ warned >= 5
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200818114132.17510-1-linmiaohe@huawei.com>
+References: <20200818114132.17510-1-linmiaohe@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 18 Aug 2020 12:28:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
-> For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
+From: Miaohe Lin <linmiaohe@huawei.com>
+Date: Tue, 18 Aug 2020 07:41:32 -0400
 
-typo: thing
+> @@ -417,7 +417,7 @@ static void sock_warn_obsolete_bsdism(const char *name)
+>  {
+>  	static int warned;
+>  	static char warncomm[TASK_COMM_LEN];
+> -	if (strcmp(warncomm, current->comm) && warned < 5) {
+> +	if (warned < 5 && strcmp(warncomm, current->comm)) {
+>  		strcpy(warncomm,  current->comm);
+>  		pr_warn("process `%s' is using obsolete %s SO_BSDCOMPAT\n",
+>  			warncomm, name);
 
-> need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
-> definition to escape the explicit unsigned long cast.  This just works
-> because __PAGE_OFFSET is defined using _AC itself and thus never needs
-> the cast anyway.
-
-Shouldn't this be folded into the prior patch so there's no bisection
-problem?
-
--Kees
-
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/include/asm/page_32_types.h | 4 ++--
->  arch/x86/include/asm/page_64_types.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
-> index 26236925fb2c36..f462895a33e452 100644
-> --- a/arch/x86/include/asm/page_32_types.h
-> +++ b/arch/x86/include/asm/page_32_types.h
-> @@ -44,8 +44,8 @@
->  /*
->   * User space process size: 3GB (default).
->   */
-> -#define IA32_PAGE_OFFSET	PAGE_OFFSET
-> -#define TASK_SIZE		PAGE_OFFSET
-> +#define IA32_PAGE_OFFSET	__PAGE_OFFSET
-> +#define TASK_SIZE		__PAGE_OFFSET
->  #define TASK_SIZE_LOW		TASK_SIZE
->  #define TASK_SIZE_MAX		TASK_SIZE
->  #define DEFAULT_MAP_WINDOW	TASK_SIZE
-> diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-> index 996595c9897e0a..838515daf87b36 100644
-> --- a/arch/x86/include/asm/page_64_types.h
-> +++ b/arch/x86/include/asm/page_64_types.h
-> @@ -76,7 +76,7 @@
->   *
->   * With page table isolation enabled, we map the LDT in ... [stay tuned]
->   */
-> -#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
-> +#define TASK_SIZE_MAX	((_AC(1,UL) << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
->  
->  #define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
->  
-> -- 
-> 2.28.0
-> 
-
--- 
-Kees Cook
+We've been warning about SO_BSDCOMPAT usage for almost 20 years, I think
+we can remove this code completely now.
