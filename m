@@ -2,168 +2,210 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C79DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7DB2207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E923D20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sAK+0rf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHRRqe (ORCPT
+        id S1726699AbgHRRte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:46:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14412 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbgHRRqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:46:34 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BWJHm6yfkz9vCpm;
-        Tue, 18 Aug 2020 19:46:28 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PUJiHemN8w2H; Tue, 18 Aug 2020 19:46:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWJHm57LBz9vCpk;
-        Tue, 18 Aug 2020 19:46:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98DFD8B7EC;
-        Tue, 18 Aug 2020 19:46:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 23Wk_hhLKoET; Tue, 18 Aug 2020 19:46:30 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D7D58B7D7;
-        Tue, 18 Aug 2020 19:46:29 +0200 (CEST)
-Subject: Re: remove the last set_fs() in common code, and remove it for x86
- and powerpc
-To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20200817073212.830069-1-hch@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <319d15b1-cb4a-a7b4-3082-12bb30eb5143@csgroup.eu>
-Date:   Tue, 18 Aug 2020 19:46:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 13:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgHRRtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:49:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C28C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:49:31 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u10so9561237plr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OMrT9C5AFoMvfd0icRmwdmikCEIc/NXJSQt8b1yXCkw=;
+        b=sAK+0rf9juJXiwHzeHjlRJRWIPHclN8Phlv51l+2QJIKpBcC34ipELa2VfI7E17BvK
+         m68XbGNzwGepUZZ1Pr0P9h9Jc/7bg6spmjHt5NSFaLNagz7dalWVtN1tKYuM5bOPi6Op
+         If24cwckYg9jm6rdn6n4Um6N2mlzxhZT+GRBTkAydj+iXoS0a+0v7+kWnPZcETMabcbp
+         iSUiSqH6yqjsQkeFOrUegOfeNTUVWwfScVhxUMh8qRsKYl1J7qDnzRi771PmHHAXZ0aU
+         TmfaTSiINFimh+dbuxpQwh+YY6+u3LnHrKoqOfAQe1o3Y7mTernmzlxHt7P9FeyD1YmS
+         ZbWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OMrT9C5AFoMvfd0icRmwdmikCEIc/NXJSQt8b1yXCkw=;
+        b=UgCBwl4fqaIqL6X/iwQanst3N9/oviTzWdZf7EOe7jaaha6XLnlK6AbbkiE2ujcIXv
+         IeHAEQud7LjDVQZHL+O0z3TRn/6qP6QfFUS+G5l5J9Qc7JtsWj89YMapdpIkqdSU6JZV
+         85XuJk0j0ZCaeCB0TuFL7hO2bk8vc1S36V4/3B+0tpbf8vck56gXM+rSd8WM3aq0WVnT
+         vucQwAQskBt8EwmQ4vINctESkKQY3Aymwx/q/eJKzki7bUHbRy2BvudlaHY8szDwFvVp
+         2kn6gATUczNOT7pFc9TU5vqjEPubsoK0j/0hygzXZ/dErVzGhcCNbQJPJbIkdupZ6NVY
+         gy+Q==
+X-Gm-Message-State: AOAM532nIFLGWnpO2TGuo84a4Xns13+bfZgp5FWs8zP7vfH9pL8FoGjj
+        05aTmeD+O/kcbwcGQVo43ERrpI/NqDmFTMht2VZNAg==
+X-Google-Smtp-Source: ABdhPJzVVyPcZ+7Gs0AXJVZxiCetyUr6nk23IoYNH1FZlus2gp2HDkcMI/FTOQ/mx9fK0t2ODFmqRjeqa113FBmxApY=
+X-Received: by 2002:a17:90a:f98e:: with SMTP id cq14mr871303pjb.51.1597772970220;
+ Tue, 18 Aug 2020 10:49:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200817073212.830069-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
+ <87pn7qnabq.wl-maz@kernel.org> <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+ <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org> <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+ <72c10e43023289b9a4c36226fe3fd5d9@kernel.org>
+In-Reply-To: <72c10e43023289b9a4c36226fe3fd5d9@kernel.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 18 Aug 2020 10:48:54 -0700
+Message-ID: <CAGETcx-hkz8fyAHuhRi=JhBFu4YUmL2UpHfgs7doLHK-RdKA0A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 10:34 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-08-18 15:23, Rob Herring wrote:
+> > On Tue, Aug 18, 2020 at 1:35 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2020-08-17 17:12, Rob Herring wrote:
+> >> > On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
+> >> >>
+> >> >> On Sun, 16 Aug 2020 00:22:28 +0100,
+> >> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >> >> >
+> >> >> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+> >> >> > > Recent changes to the DT PCI bus parsing made it mandatory for
+> >> >> > > device tree nodes describing a PCI controller to have the
+> >> >> > > 'device_type = "pci"' property for the node to be matched.
+> >> >> > >
+> >> >> > > Although this follows the letter of the specification, it
+> >> >> > > breaks existing device-trees that have been working fine
+> >> >> > > for years.  Rockchip rk3399-based systems are a prime example
+> >> >> > > of such collateral damage, and have stopped discovering their
+> >> >> > > PCI bus.
+> >> >> > >
+> >> >> > > In order to paper over the blunder, let's add a workaround
+> >> >> > > to the pcie-rockchip driver, adding the missing property when
+> >> >> > > none is found at boot time. A warning will hopefully nudge the
+> >> >> > > user into updating their DT to a fixed version if they can, but
+> >> >> > > the insentive is obviously pretty small.
+> >> >> >
+> >> >> > s/insentive/incentive/ (Lorenzo or I can fix this up)
+> >> >> >
+> >> >> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> >> >> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
+> >> >> >
+> >> >> > s/Roh/Rob/ (similarly)
+> >> >>
+> >> >> Clearly not my day when it comes to proofreading commit messages.
+> >> >> Thanks for pointing this out, and in advance for fixing it up.
+> >> >>
+> >> >> >
+> >> >> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >> >> >
+> >> >> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+> >> >> > during the v5.9 merge window, right?
+> >> >>
+> >> >> Absolutely.
+> >> >>
+> >> >> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+> >> >> > checker has already looked?
+> >> >>
+> >> >> I've just managed to run the checker, which comes up with all kinds of
+> >> >> goodies. Apart from the above, it also spots the following:
+> >> >>
+> >> >> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
+> >> >>   in its main PCIe node, but not in the child nodes. It isn't obvious
+> >> >>   to me whether that's a violation or not (the spec doesn't say
+> >> >>   whether the property should be set on a per-port basis). Rob?
+> >> >
+> >> > The rule is bridge nodes should have 'device_type = "pci"'. But what's
+> >> > needed to fix these cases is setting device_type where we are parsing
+> >> > ranges or dma-ranges which we're not doing on the child ndes.
+> >> > Otherwise, I don't think it matters in this case unless you have child
+> >> > (grandchild here) nodes for PCI devices. If you did have child nodes,
+> >> > the address translation was already broken before this change.
+> >>
+> >> Fair enough.
+> >>
+> >> >> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
+> >> >>   PCIe nodes has the device_type property, probably broken similarly
+> >> >>   to rk3399.
+> >> >
+> >> > The only upstream board is DB820c, so probably not as wide an impact...
+> >> >
+> >> > There are also 92 (lots of duplicates due to multiple boards) more
+> >> > cases in arch/arm/. A log is here[1].
+> >>
+> >> Mostly Broadcom stuff, apparently. I'll see if I can have a stab
+> >> at it (although someone will have to test it).
+> >>
+> >> >
+> >> >> I could move the workaround to drivers/pci/of.c, and have it called
+> >> >> from the individual drivers. I don't have the HW to test those though.
+> >> >>
+> >> >> Thoughts?
+> >> >
+> >> > I think we should go with my other suggestion of looking at the node
+> >> > name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
+> >> > I don't see any cases.
+> >>
+> >> I really dislike it.
+> >>
+> >> Once we put this node name matching in, there is no incentive for
+> >> people to write their DT correctly at all. It also sound pretty
+> >> fragile (what if the PCIe node is named something else?).
+> >
+> > That would require 2 wrongs. Both missing device_type and wrong node
+> > name. You could still warn if we matched on node name.
+>
+> OK. So how about something like this?
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 590493e04b01..a7a6ee599b14 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -134,9 +134,13 @@ static int of_bus_pci_match(struct device_node *np)
+>          * "pciex" is PCI Express
+>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>          * "ht" is hypertransport
+> +        *
+> +        * If none of the device_type match, and that the node name is
+> +        * "pcie", accept the device as PCI (with a warning).
+>          */
+>         return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+> -               of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
+> +               of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
+> +               WARN_ON_ONCE(of_node_name_eq(np, "pcie"));
 
+I don't think we need the _ONCE. Otherwise, it'd warn only for the
+first device that has this problem.
 
-Le 17/08/2020 à 09:32, Christoph Hellwig a écrit :
-> Hi all,
-> 
-> this series removes the last set_fs() used to force a kernel address
-> space for the uaccess code in the kernel read/write/splice code, and then
-> stops implementing the address space overrides entirely for x86 and
-> powerpc.
-> 
-> The file system part has been posted a few times, and the read/write side
-> has been pretty much unchanced.  For splice this series drops the
-> conversion of the seq_file and sysctl code to the iter ops, and thus loses
-> the splice support for them.  The reasons for that is that it caused a lot
-> of churn for not much use - splice for these small files really isn't much
-> of a win, even if existing userspace uses it.  All callers I found do the
-> proper fallback, but if this turns out to be an issue the conversion can
-> be resurrected.
+How about?
+WARN(of_node_name_eq(np, "pcie"), "Missing device type in %pOF", np)
 
-I like this series.
+That'll even tell them which node is bad.
 
-I gave it a go on my powerpc mpc832x. I tested it on top of my newest 
-series that reworks the 32 bits signal handlers (see 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=196278) 
-with the microbenchmark test used is that series.
-
-With KUAP activated, on top of signal32 rework, performance is boosted 
-as system time for the microbenchmark goes from 1.73s down to 1.56s, 
-that is 10% quicker
-
-Surprisingly, with the kernel as is today without my signal's series, 
-your series degrades performance slightly (from 2.55s to 2.64s ie 3.5% 
-slower).
-
-
-I also observe, in both cases, a degradation on
-
-	dd if=/dev/zero of=/dev/null count=1M
-
-Without your series, it runs in 5.29 seconds.
-With your series, it runs in 5.82 seconds, that is 10% more time.
-
-Christophe
-
-
-> 
-> Besides x86 and powerpc I plan to eventually convert all other
-> architectures, although this will be a slow process, starting with the
-> easier ones once the infrastructure is merged.  The process to convert
-> architectures is roughtly:
-> 
->   - ensure there is no set_fs(KERNEL_DS) left in arch specific code
->   - implement __get_kernel_nofault and __put_kernel_nofault
->   - remove the arch specific address limitation functionality
-> 
-> Diffstat:
->   arch/Kconfig                           |    3
->   arch/alpha/Kconfig                     |    1
->   arch/arc/Kconfig                       |    1
->   arch/arm/Kconfig                       |    1
->   arch/arm64/Kconfig                     |    1
->   arch/c6x/Kconfig                       |    1
->   arch/csky/Kconfig                      |    1
->   arch/h8300/Kconfig                     |    1
->   arch/hexagon/Kconfig                   |    1
->   arch/ia64/Kconfig                      |    1
->   arch/m68k/Kconfig                      |    1
->   arch/microblaze/Kconfig                |    1
->   arch/mips/Kconfig                      |    1
->   arch/nds32/Kconfig                     |    1
->   arch/nios2/Kconfig                     |    1
->   arch/openrisc/Kconfig                  |    1
->   arch/parisc/Kconfig                    |    1
->   arch/powerpc/include/asm/processor.h   |    7 -
->   arch/powerpc/include/asm/thread_info.h |    5 -
->   arch/powerpc/include/asm/uaccess.h     |   78 ++++++++-----------
->   arch/powerpc/kernel/signal.c           |    3
->   arch/powerpc/lib/sstep.c               |    6 -
->   arch/riscv/Kconfig                     |    1
->   arch/s390/Kconfig                      |    1
->   arch/sh/Kconfig                        |    1
->   arch/sparc/Kconfig                     |    1
->   arch/um/Kconfig                        |    1
->   arch/x86/ia32/ia32_aout.c              |    1
->   arch/x86/include/asm/page_32_types.h   |   11 ++
->   arch/x86/include/asm/page_64_types.h   |   38 +++++++++
->   arch/x86/include/asm/processor.h       |   60 ---------------
->   arch/x86/include/asm/thread_info.h     |    2
->   arch/x86/include/asm/uaccess.h         |   26 ------
->   arch/x86/kernel/asm-offsets.c          |    3
->   arch/x86/lib/getuser.S                 |   28 ++++---
->   arch/x86/lib/putuser.S                 |   21 +++--
->   arch/xtensa/Kconfig                    |    1
->   drivers/char/mem.c                     |   16 ----
->   drivers/misc/lkdtm/bugs.c              |    2
->   drivers/misc/lkdtm/core.c              |    4 +
->   drivers/misc/lkdtm/usercopy.c          |    2
->   fs/read_write.c                        |   69 ++++++++++-------
->   fs/splice.c                            |  130 +++------------------------------
->   include/linux/fs.h                     |    2
->   include/linux/uaccess.h                |   18 ++++
->   lib/test_bitmap.c                      |   10 ++
->   46 files changed, 235 insertions(+), 332 deletions(-)
-> 
+-Saravana
