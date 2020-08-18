@@ -2,115 +2,82 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E79CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2078C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 137D42065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853DC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgHRIkZ (ORCPT
+        id S1726684AbgHRIkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:40:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40448 "EHLO mga06.intel.com"
+        Tue, 18 Aug 2020 04:40:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40470 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgHRIkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:40:23 -0400
-IronPort-SDR: Bw3/UnTlecjrMYlphDcIdI6ukoDIGKabc40cSWk3elHbBXsVNVo19bBu+WHNqqaSp115D7pR9w
- PiJa1+tHUoCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216388137"
+        id S1726451AbgHRIki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:40:38 -0400
+IronPort-SDR: T9R1fIU2ryonDXheVzsQIsdXIECAukWDZyc9KZWzhKhQVPqQVEb+Xt+LSlPnOikUPKaqBKa78I
+ KBeF3WNjd21g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216388157"
 X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="216388137"
+   d="scan'208";a="216388157"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 01:40:22 -0700
-IronPort-SDR: ZfQNn4ykMKuJGH4oqBnip9509BvoKhkE19++1eEWzlMEvYjXDHPJxm35N6ah0BYqxebZvr2VV2
- J3r5/xOjR9zA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 01:40:37 -0700
+IronPort-SDR: IyUEvBF20eM7Hhc/CZ3qTnf0ZmrCmOt13gqRWqWoG9St1mIjB8NkWCQimi3/J5zs6pS031RCB1
+ 4ol/IsdRznOg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="326668086"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 01:40:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k7wvU-009bYR-P5; Tue, 18 Aug 2020 11:25:00 +0300
-Date:   Tue, 18 Aug 2020 11:25:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
-Message-ID: <20200818082500.GB1891694@smile.fi.intel.com>
-References: <20200817170535.17041-1-brgl@bgdev.pl>
- <20200817170535.17041-2-brgl@bgdev.pl>
- <20200817173908.GS1891694@smile.fi.intel.com>
- <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
+   d="scan'208";a="471722425"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 18 Aug 2020 01:40:32 -0700
+Date:   Tue, 18 Aug 2020 16:36:47 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com
+Subject: Re: [PATCH v3 0/2] add regmap-spi-avmm & Intel Max10 BMC chip support
+Message-ID: <20200818083647.GE22873@yilunxu-OptiPlex-7050>
+References: <1596614456-20182-1-git-send-email-yilun.xu@intel.com>
+ <20200817082410.GB19661@yilunxu-OptiPlex-7050>
+ <20200817091252.GV4354@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200817091252.GV4354@dell>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:02:05PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-...
-
-> > > +static struct devres *to_devres(void *data)
-> > > +{
-> > > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
-> > > +                                                 ARCH_KMALLOC_MINALIGN));
-> >
-> > Do you really need both explicit castings?
-> >
+On Mon, Aug 17, 2020 at 10:12:52AM +0100, Lee Jones wrote:
+> On Mon, 17 Aug 2020, Xu Yilun wrote:
 > 
-> Yeah, we can probably drop the (struct devres *) here.
-
-void * -> u8 * here is also not needed, it is considered byte access IIRC.
-
-> > > +}
-
-...
-
-> >  - hasn't gone while you run a ksize()?
-
-> At some point you need to draw a line. In the end: how do you
-> guarantee a devres buffer hasn't been freed when you're using it? In
-> my comment to the previous version of this patch I clarified that we
-> need to protect all modifications of the devres linked list - we must
-> not realloc a chunk that contains the links without taking the
-> spinlock but also we must not call alloc() funcs with GFP_KERNEL with
-> spinlock taken. The issue we could run into is: someone modifies the
-> linked list by adding/removing other managed resources, not modifying
-> this one.
+> > Hi Brown & jones:
+> > 
+> > I tried to refacor the regmap code and add comments in this patchset. I
+> > made big changes to the rx flow and remove some tricky parts in it.
+> > 
+> > Would it be more understandable than last version? I'm expecting your
+> > comments on it when you have time, thanks in advance.
 > 
-> The way this function works now guarantees it but other than that:
-> it's up to the users to not free memory they're actively using.
+> Just resubmit please.  We can review the code itself.
 
-Thanks for clarification. I agree.
+Ok. I'll rebase it to 5.9-rc1 and resubmit it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Yilun
 
-
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Senior Technical Lead - Developer Services
+> Linaro.org │ Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
