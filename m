@@ -2,140 +2,153 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3814B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597736027;
-	bh=+l8ZIHYYdE8RD9Qj/I64++AlJvGHPOqSiV3mJ2HpmNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iQG3eumx+7CCevlhyEJHwmrIgv/M2cplT3pX+NcPf9/sMqyOwhhXrSfDA0ov8wK4D
-	 liJ8JXKulwtG9SMS8BJBQHobqYOpgvO2TTciBMd0LrJ/fzKn7eFNcJawLsJKSNWxRE
-	 HVSdvv4OFvdCmK11TV/qvoZNWAERwPuGbgRp/XL0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B89A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDFsWfnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHRHdp (ORCPT
+        id S1726519AbgHRHev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbgHRHdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:33:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 18 Aug 2020 03:34:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38923 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726302AbgHRHeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:34:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597736089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=izW5RGmy4WzZAXfNVOZvqXs2l+xhVFU9hbAD6tvI+nY=;
+        b=JDFsWfnld+qfm/MTtiFBM4PAybvURw+96lMf9VJjXU/TO/AWXxgbgv6tQoO/6JFLRLNCOx
+        EWDBAV6dFqf9lmaw/M8maKQyYQt1Mrb+oRChD+yfcceSpbGHtthTJLf62C8zfaDwAJDXpw
+        /M1y/HxaZ4oyAdqDYmtI/AUoeF8CX64=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-2TDrY03yPw6jfGgzk1nxjA-1; Tue, 18 Aug 2020 03:34:46 -0400
+X-MC-Unique: 2TDrY03yPw6jfGgzk1nxjA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D2B206B5;
-        Tue, 18 Aug 2020 07:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597736024;
-        bh=+l8ZIHYYdE8RD9Qj/I64++AlJvGHPOqSiV3mJ2HpmNQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=adtLg8XGFdMJbAYwQ+USeWVHO6NJasnpN07UEjD5SyBJk/l55Cyn+jXV7Zsbuyfsf
-         9swaGL4dFOyfw4m8JELBW45/YfY66lEL1n7z1a8qWfDnRwyNp8SVu/X/LOUKv+5Qnw
-         kZSl+rMuFLYRfnbJywcZ11LdpXjqXbOoyo0hqsmA=
-Date:   Tue, 18 Aug 2020 09:34:08 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, X86 ML <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
-Message-ID: <20200818073408.GA12514@kroah.com>
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <20200817220212.338670-2-ndesaulniers@google.com>
- <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
- <20200818072531.GC9254@kroah.com>
- <CAMj1kXF_RhV7D8D8J_fwTruiKWbHapeGe-omwyBoR8t4gRv7QA@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C811D1DDEE;
+        Tue, 18 Aug 2020 07:34:45 +0000 (UTC)
+Received: from [10.36.113.168] (ovpn-113-168.ams2.redhat.com [10.36.113.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C296D10013C4;
+        Tue, 18 Aug 2020 07:34:44 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory.c: Correct the function name in comment
+To:     yanfei.xu@windriver.com, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200818072910.27068-1-yanfei.xu@windriver.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <0eb405b4-a9a3-1840-0ca6-f9a801ab701c@redhat.com>
+Date:   Tue, 18 Aug 2020 09:34:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXF_RhV7D8D8J_fwTruiKWbHapeGe-omwyBoR8t4gRv7QA@mail.gmail.com>
+In-Reply-To: <20200818072910.27068-1-yanfei.xu@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:29:39AM +0200, Ard Biesheuvel wrote:
-> On Tue, 18 Aug 2020 at 09:25, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Aug 18, 2020 at 09:10:01AM +0200, Ard Biesheuvel wrote:
-> > > On Tue, 18 Aug 2020 at 00:02, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > > >
-> > > > LLVM implemented a recent "libcall optimization" that lowers calls to
-> > > > `sprintf(dest, "%s", str)` where the return value is used to
-> > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> > > > in parsing format strings. This optimization was introduced into
-> > > > clang-12. Because the kernel does not provide an implementation of
-> > > > stpcpy, we observe linkage failures for almost all targets when building
-> > > > with ToT clang.
-> > > >
-> > > > The interface is unsafe as it does not perform any bounds checking.
-> > > > Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
-> > > >
-> > > > Unlike
-> > > > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> > > > which cited failures with `-fno-builtin-*` flags being retained in LLVM
-> > > > LTO, that bug seems to have been fixed by
-> > > > https://reviews.llvm.org/D71193, so the above sha can now be reverted in
-> > > > favor of `-fno-builtin-bcmp`.
-> > > >
-> > > > Cc: stable@vger.kernel.org # 4.4
-> > >
-> > > Why does a fix for Clang-12 have to be backported all the way to v4.4?
-> > > How does that meet the requirements for stable patches?
-> >
-> > Because people like to build older kernels with new compliler versions.
-> >
-> > And those "people" include me, who doesn't want to keep around old
-> > compilers just because my distro moved to the latest one...
-> >
-> > We've been doing this for the past 4+ years, for new versions of gcc,
-> > keeping 4.4.y building properly with the bleeding edge of that compiler,
-> > why is clang any different here?
-> >
+On 18.08.20 09:29, yanfei.xu@windriver.com wrote:
+> From: Yanfei Xu <yanfei.xu@windriver.com>
 > 
-> Fair enough. I am just struggling to match stable-kernel-rules.rst
-> with the actual practices - perhaps it is time to update that
-> document?
+> Correct the function name which is "pte_alloc_pne" to "pte_alloc_one"
+> 
 
-The rules are tiny and simple for 99% of the issues involved.  Stuff
-like "add patches to fix build failures and warnings for newer compiler
-versions" are so rare (they only happen every 2 years or so), it's not
-worth it.
+I'd have phrased this like
 
-thanks,
+"mm/memory: Fix typo in __do_fault() comment
 
-greg k-h
+It's "pte_alloc_one", not "pte_alloc_pne". Let's fix that.
+"
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
+> ---
+>  mm/memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index c3a83f4ca851..9cc3d0dc816c 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3446,7 +3446,7 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
+>  	 *				unlock_page(A)
+>  	 * lock_page(B)
+>  	 *				lock_page(B)
+> -	 * pte_alloc_pne
+> +	 * pte_alloc_one
+>  	 *   shrink_page_list
+>  	 *     wait_on_page_writeback(A)
+>  	 *				SetPageWriteback(B)
+> 
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
