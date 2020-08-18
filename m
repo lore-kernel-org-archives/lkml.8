@@ -2,108 +2,131 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C078C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0693F20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6964520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgHRNM3 (ORCPT
+        id S1726676AbgHRNM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:12:29 -0400
-Received: from ms-10.1blu.de ([178.254.4.101]:59348 "EHLO ms-10.1blu.de"
+        Tue, 18 Aug 2020 09:12:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33132 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgHRNM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:12:27 -0400
-Received: from [78.43.71.214] (helo=marius.localnet)
-        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <mail@mariuszachmann.de>)
-        id 1k81Pb-00086x-EN; Tue, 18 Aug 2020 15:12:23 +0200
-From:   Marius Zachmann <mail@mariuszachmann.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: corsair-cpro: fix ccp_probe, add delay [HID related]
-Date:   Tue, 18 Aug 2020 15:12:22 +0200
-Message-ID: <79890342.HV0Al07Iil@marius>
-In-Reply-To: <20200817153533.GA243558@roeck-us.net>
-References: <20200817070040.7952-1-mail@mariuszachmann.de> <20200817153533.GA243558@roeck-us.net>
+        id S1726145AbgHRNM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:12:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5645DB178;
+        Tue, 18 Aug 2020 13:13:20 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Chris Leech <cleech@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Cong Wang <amwang@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.com>,
+        Jeff Layton <jlayton@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Lee Duncan <lduncan@suse.com>,
+        Mike Christie <michaelc@cs.wisc.edu>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.com>
+Subject: [PATCH v7 0/6] Introduce sendpage_ok() to detect misused sendpage in network related drivers
+Date:   Tue, 18 Aug 2020 21:12:21 +0800
+Message-Id: <20200818131227.37020-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Con-Id: 241080
-X-Con-U: 0-linux
-X-Originating-IP: 78.43.71.214
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.08.20 at 17:35:33 CEST, Guenter Roeck wrote
-> On Mon, Aug 17, 2020 at 09:00:40AM +0200, Marius Zachmann wrote:
-> > Possibly because of the changes in usbhid/hid-core.c the first
-> > raw input report is not received during ccp_probe function and it will
-> > timeout. I am not sure, whether this behaviour is expected after
-> > hid_device_io_start or if I am missing something.
-> > As a solution this adds msleep(50) to ccp_probe so that all initial
-> > input reports can be received.
-> > 
-> > Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
-> 
-> Let's just ask the HID maintainers. Is this expected, and the correct fix ?
-> 
-> Thanks,
-> Guenter
-> 
+This series was original by a bug fix in nvme-over-tcp driver which only
+checked whether a page was allocated from slab allcoator, but forgot to
+check its page_count: The page handled by sendpage should be neither a
+Slab page nor 0 page_count page.
 
-This seems to be a problem with "HID: usbhid: do not sleep when opening
-device". There is a bug report with some Logitech devices at the correct
-thread. These drivers also use hid_device_io_start and fail. Seems to me,
-this is the same problem and I retract this (not so beautiful) fix until
-this is sorted out.
+As Sagi Grimberg suggested, the original fix is refind to a more common
+inline routine:
+    static inline bool sendpage_ok(struct page *page)
+    {
+        return  (!PageSlab(page) && page_count(page) >= 1);
+    }
+If sendpage_ok() returns true, the checking page can be handled by the
+zero copy sendpage method in network layer.
 
-Thanks,
-Marius
+The first patch in this series introduces sendpage_ok() in header file
+include/linux/net.h, the second patch fixes the page checking issue in
+nvme-over-tcp driver, the third patch adds page_count check by using
+sendpage_ok() in do_tcp_sendpages() as Eric Dumazet suggested, and all
+rested patches just replace existing open coded checks with the inline
+sendpage_ok() routine.
 
-> > ---
-> > v2:
-> > - fix accidentally deleted comment
-> > 
-> > ---
-> >  drivers/hwmon/corsair-cpro.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> > index 591929ec217a..c04fac1d820f 100644
-> > --- a/drivers/hwmon/corsair-cpro.c
-> > +++ b/drivers/hwmon/corsair-cpro.c
-> > @@ -10,6 +10,7 @@
-> > 
-> >  #include <linux/bitops.h>
-> >  #include <linux/completion.h>
-> > +#include <linux/delay.h>
-> >  #include <linux/hid.h>
-> >  #include <linux/hwmon.h>
-> >  #include <linux/kernel.h>
-> > @@ -513,6 +514,7 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >  	init_completion(&ccp->wait_input_report);
-> > 
-> >  	hid_device_io_start(hdev);
-> > +	msleep(50); /* wait before events can be received */
-> > 
-> >  	/* temp and fan connection status only updates when device is powered on */
-> >  	ret = get_temp_cnct(ccp);
-> > --
-> > 2.28.0
-> 
+Coly Li
+
+Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Chris Leech <cleech@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Cong Wang <amwang@redhat.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Ilya Dryomov <idryomov@gmail.com>
+Cc: Jan Kara <jack@suse.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Lee Duncan <lduncan@suse.com>
+Cc: Mike Christie <michaelc@cs.wisc.edu>
+Cc: Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Vasily Averin <vvs@virtuozzo.com>
+Cc: Vlastimil Babka <vbabka@suse.com>
+---
+Changelog:
+v7: remove outer brackets from the return line of sendpage_ok() as
+    Eric Dumazet suggested.
+v6: fix page check in do_tcp_sendpages(), as Eric Dumazet suggested.
+    replace other open coded checks with sendpage_ok() in libceph,
+    iscsi drivers.
+v5, include linux/mm.h in include/linux/net.h
+v4, change sendpage_ok() as an inline helper, and post it as
+    separate patch, as Christoph Hellwig suggested.
+v3, introduce a more common sendpage_ok() as Sagi Grimberg suggested.
+v2, fix typo in patch subject
+v1, the initial version. 
 
 
+Coly Li (6):
+  net: introduce helper sendpage_ok() in include/linux/net.h
+  nvme-tcp: check page by sendpage_ok() before calling kernel_sendpage()
+  tcp: use sendpage_ok() to detect misused .sendpage
+  drbd: code cleanup by using sendpage_ok() to check page for
+    kernel_sendpage()
+  scsi: libiscsi: use sendpage_ok() in iscsi_tcp_segment_map()
+  libceph: use sendpage_ok() in ceph_tcp_sendpage()
 
+ drivers/block/drbd/drbd_main.c |  2 +-
+ drivers/nvme/host/tcp.c        |  7 +++----
+ drivers/scsi/libiscsi_tcp.c    |  2 +-
+ include/linux/net.h            | 16 ++++++++++++++++
+ net/ceph/messenger.c           |  2 +-
+ net/ipv4/tcp.c                 |  3 ++-
+ 6 files changed, 24 insertions(+), 8 deletions(-)
+
+-- 
+2.26.2
 
