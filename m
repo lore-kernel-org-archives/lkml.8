@@ -2,153 +2,158 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA1C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0CAB20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597734617;
-	bh=nvaUJNFyV4vcax39lj23nhAOIb3Ku6tgS77eD620sJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NxzQeFqIa+JXq66TYgWhaUlRYgdXf3jijSFYTzUavp0a+Y73ugDAsFObM5AwIYCYK
-	 g4VqjULheIi8oxai1HAWK+OdXpl43QxyflTj/T+uOZLinb2LJpzgJsdFXMH+K/hq0F
-	 7ainvL7yUI65ugsiu5Eslu/4doqAEStGLyK9jXPY=
+	by mail.kernel.org (Postfix) with ESMTP id 7980320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c4DM5T7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgHRHKQ (ORCPT
+        id S1726648AbgHRHKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:10:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 03:10:25 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36725 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgHRHKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:10:14 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        id S1726341AbgHRHKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:10:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597734618; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=mEEeTVMCmm28X/TonqAKjwo9yxTQLd+qrEsl7KAFN88=; b=c4DM5T7YOpZAInYdENApaOrYWFeoIr7ZmNlP45jKuifPl/tR9ZO4qHMLOJrU+fCcjxbQFDiZ
+ Mgvf2jeB+Su/XeJHSlzSUuZiBo7aafogpMTD180gFByaVCbpe00xeB6boiDfud0uRApSBvRv
+ wi+FoLbW9pTH11xKNIHuD9vwEBQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f3b7edaf2b697637afba1d1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:10:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 490BFC4339C; Tue, 18 Aug 2020 07:10:17 +0000 (UTC)
+Received: from [192.168.1.16] (unknown [61.3.19.112])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E913C20888;
-        Tue, 18 Aug 2020 07:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597734613;
-        bh=nvaUJNFyV4vcax39lj23nhAOIb3Ku6tgS77eD620sJU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e0WLaNjpcYHgH6zXxnkBdlCKn0O944BaciZPf+JQNO980yc9TgQNPCD2TcMz5Pjkf
-         Ng1v9pjMccdNPSQIJmrbgszTNpWm98fB8zsrHqS3oJ9WA0AnTwXeqzUbYFQ0iRtMCS
-         k5wTh75UzMHUECYh/LBWGl0S/F3lWeQnb49qTWoU=
-Received: by mail-oi1-f178.google.com with SMTP id h3so17066677oie.11;
-        Tue, 18 Aug 2020 00:10:12 -0700 (PDT)
-X-Gm-Message-State: AOAM531HtQ/KuLTl1RIBRkciRlKShYAop4G7xC4vAJWJeTbMUa/AFgkS
-        K1be+miq1s4YjGdubq47giNmA8Zj2QotONObPfA=
-X-Google-Smtp-Source: ABdhPJw9HzTUd9lQlRMwnPZQSdMbm1DoI/CKErme58AW//8FBa3prxqrmj0wo63+SxVt1FSeD/n6r9X9HX4Sh4zSvqE=
-X-Received: by 2002:aca:d8c5:: with SMTP id p188mr11327582oig.47.1597734612072;
- Tue, 18 Aug 2020 00:10:12 -0700 (PDT)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE156C433C6;
+        Tue, 18 Aug 2020 07:10:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE156C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 3/4] opp: Reused enabled flag and remove regulator_enabled
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>, mka@chromium.org,
+        sibis@codeaurora.org, linux-kernel@vger.kernel.org
+References: <1597043179-17903-1-git-send-email-rnayak@codeaurora.org>
+ <c6bba235a9a6fd777255bb4f1d16492fdcabc847.1597292833.git.viresh.kumar@linaro.org>
+ <359b588928b7e58b009f786b17ddc088c6a7d18b.1597292833.git.viresh.kumar@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <e232d06c-f19f-a806-637b-8f0ffed19594@codeaurora.org>
+Date:   Tue, 18 Aug 2020 12:40:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com> <20200817220212.338670-2-ndesaulniers@google.com>
-In-Reply-To: <20200817220212.338670-2-ndesaulniers@google.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 18 Aug 2020 09:10:01 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
-Message-ID: <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, X86 ML <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <359b588928b7e58b009f786b17ddc088c6a7d18b.1597292833.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 at 00:02, Nick Desaulniers <ndesaulniers@google.com> wr=
-ote:
->
-> LLVM implemented a recent "libcall optimization" that lowers calls to
-> `sprintf(dest, "%s", str)` where the return value is used to
-> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> in parsing format strings. This optimization was introduced into
-> clang-12. Because the kernel does not provide an implementation of
-> stpcpy, we observe linkage failures for almost all targets when building
-> with ToT clang.
->
-> The interface is unsafe as it does not perform any bounds checking.
-> Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
->
-> Unlike
-> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> which cited failures with `-fno-builtin-*` flags being retained in LLVM
-> LTO, that bug seems to have been fixed by
-> https://reviews.llvm.org/D71193, so the above sha can now be reverted in
-> favor of `-fno-builtin-bcmp`.
->
-> Cc: stable@vger.kernel.org # 4.4
 
-Why does a fix for Clang-12 have to be backported all the way to v4.4?
-How does that meet the requirements for stable patches?
-
-> Link: https://bugs.llvm.org/show_bug.cgi?id=3D47162
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-> Link: https://reviews.llvm.org/D85963
-> Reported-by: Sami Tolvanen <samitolvanen@google.com>
-> Suggested-by: D=C3=A1vid Bolvansk=C3=BD <david.bolvansky@gmail.com>
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+On 8/13/2020 9:59 AM, Viresh Kumar wrote:
+> The common "enabled" flag can be used here instead of
+> "regulator_enabled" now.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  Makefile | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 9cac6fde3479..211a1b6f6478 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -959,6 +959,12 @@ ifdef CONFIG_RETPOLINE
->  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
->  endif
->
-> +# The compiler may "libcall optimize" certain function calls into the be=
-low
-> +# functions, for architectures that don't use -ffreestanding. If we don'=
-t plan
-> +# to provide implementations of these routines, then prevent the compile=
-r from
-> +# emitting calls to what will be undefined symbols.
-> +KBUILD_CFLAGS  +=3D -fno-builtin-stpcpy
-> +
->  # include additional Makefiles when needed
->  include-y                      :=3D scripts/Makefile.extrawarn
->  include-$(CONFIG_KASAN)                +=3D scripts/Makefile.kasan
-> --
-> 2.28.0.220.ged08abb693-goog
->
+>   drivers/opp/core.c | 13 +++----------
+>   drivers/opp/opp.h  |  2 --
+>   2 files changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index e8882e7fd8a5..5f5da257f58a 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -703,12 +703,10 @@ static int _generic_set_opp_regulator(struct opp_table *opp_table,
+>   	 * Enable the regulator after setting its voltages, otherwise it breaks
+>   	 * some boot-enabled regulators.
+>   	 */
+> -	if (unlikely(!opp_table->regulator_enabled)) {
+> +	if (unlikely(!opp_table->enabled)) {
+>   		ret = regulator_enable(reg);
+>   		if (ret < 0)
+>   			dev_warn(dev, "Failed to enable regulator: %d", ret);
+> -		else
+> -			opp_table->regulator_enabled = true;
+>   	}
+>   
+>   	return 0;
+> @@ -905,10 +903,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>   		if (ret)
+>   			goto put_opp_table;
+>   
+> -		if (opp_table->regulator_enabled) {
+> -			regulator_disable(opp_table->regulators[0]);
+> -			opp_table->regulator_enabled = false;
+> -		}
+> +		regulator_disable(opp_table->regulators[0]);
+
+unconditionally calling regulator_disable() here based on the common
+'enabled' flag results in a crash on platforms without regulators
+associated with the opp table.
+
+>   
+>   		ret = _set_required_opps(dev, opp_table, NULL);
+>   		if (!ret)
+> @@ -1795,11 +1790,9 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+>   	/* Make sure there are no concurrent readers while updating opp_table */
+>   	WARN_ON(!list_empty(&opp_table->opp_list));
+>   
+> -	if (opp_table->regulator_enabled) {
+> +	if (opp_table->enabled) {
+>   		for (i = opp_table->regulator_count - 1; i >= 0; i--)
+>   			regulator_disable(opp_table->regulators[i]);
+> -
+> -		opp_table->regulator_enabled = false;
+>   	}
+>   
+>   	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index bd35802acc6e..0c3de3f6db5c 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -147,7 +147,6 @@ enum opp_table_access {
+>    * @clk: Device's clock handle
+>    * @regulators: Supply regulators
+>    * @regulator_count: Number of power supply regulators. Its value can be -1
+> - * @regulator_enabled: Set to true if regulators were previously enabled.
+>    * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
+>    * property).
+>    * @paths: Interconnect path handles
+> @@ -196,7 +195,6 @@ struct opp_table {
+>   	struct clk *clk;
+>   	struct regulator **regulators;
+>   	int regulator_count;
+> -	bool regulator_enabled;
+>   	struct icc_path **paths;
+>   	unsigned int path_count;
+>   	bool enabled;
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
