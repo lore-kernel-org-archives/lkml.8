@@ -2,102 +2,91 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA533C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF61C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8CD20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF9F20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597760808;
+	bh=v9wmnCwZq0StdpyeVbz/jpUx2XM7rEEGCM62t/WKJyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ma/iz4umdUptWXpqVX60Vz2xX8fMpjP9b3Xypd9dNbzVtW1az23v+O/GPtDsq9QxW
+	 YD4qoZdlJmLzwCt+bq9cWGUAdtqHmTFGEoXLY7B9/pSUQxSsfFOLVjuNPJgGaNCid9
+	 rDwGLM2PXETIxv1xR1JDYbB843xOm+zyJPeT8Lew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgHRO0f (ORCPT
+        id S1727072AbgHRO0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:26:35 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49348 "EHLO mga17.intel.com"
+        Tue, 18 Aug 2020 10:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgHRO0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:26:33 -0400
-IronPort-SDR: LOf5ZthRJlyv6JmDDA9awHUuWGHWJfUnUybI/0bw/ZiwPziWcYyPG/2eRJYGHXs+/4UF9QFIx3
- 2e2AlTESHlkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134968974"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="134968974"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 07:26:32 -0700
-IronPort-SDR: 6k2SbS6PyYJK8VDtr8rqyNjsVTFPQAc2p72UKWyp5AmkJ4gsKFaDYDiptWZFwNIwDgboNTydOs
- EjFziqeP3Idg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="334385459"
-Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Aug 2020 07:26:26 -0700
-Date:   Tue, 18 Aug 2020 17:26:25 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>, kai.huang@intel.com,
-        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
-        ludloff@google.com, luto@kernel.org,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200818142625.GB132200@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+        id S1726709AbgHRO0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:26:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0849420786;
+        Tue, 18 Aug 2020 14:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597760803;
+        bh=v9wmnCwZq0StdpyeVbz/jpUx2XM7rEEGCM62t/WKJyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jf5UOYbhgw+HeH7fm80qH8g2TIEWJwBDXi1tq+w5sxCZxE6ylbB5bcWNRqaWnsfGs
+         4ZiPAdVmVIm7Vk+GQEJqJ64+5k/Btm1RLbK5bkfmCDhh4rdCHC2OM1bzdDIVUmeEHT
+         +DcsdbGIWIeUBExsz3ayrfFHzrLgZ2uaSccLxZiA=
+Date:   Tue, 18 Aug 2020 16:27:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tomer Samara <tomersamara98@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Riley Andrews <riandrews@android.com>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH v2 1/4] staging: android: Replace BUG_ON with WARN_ON
+Message-ID: <20200818142707.GA626703@kroah.com>
+References: <cover.1597602783.git.tomersamara98@gmail.com>
+ <fd55c53cb20c4887a87c05fffa28c28a740cd314.1597602783.git.tomersamara98@gmail.com>
+ <20200818141106.GB562377@kroah.com>
+ <20200818141940.GA357037@tsnow>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200818141940.GA357037@tsnow>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:55:43AM -0400, Nathaniel McCallum wrote:
-> In a past revision of this patch, I had requested a void *misc
-> parameter that could be passed through vdso_sgx_enter_enclave_t into
-> sgx_enclave_exit_handler_t. This request encountered some push back
-> and I dropped the issue. However, I'd like to revisit it or something
-> similar.
-> 
-> One way to create a generic interface to SGX is to pass a structure
-> that captures the relevant CPU state from the handler so that it can
-> be evaluated in C code before reentry. Precedent for this approach can
-> be found in struct kvm_run[0]. Currently, however, there is no way to
-> pass a pointer to such a structure directly into the handler.
-> 
-> This can be done implicitly by wrapping the struct
-> sgx_enclave_exception in another structure and then using techniques
-> like container_of() to find another field. However, this is made more
-> difficult by the fact that the sgx_enclave_exit_handler_t is not
-> really using the x86_64 sysv calling convention. Therefore, the
-> sgx_enclave_exit_handler_t MUST be written in assembly. This also
-> implies that we can't use techniques like container_of() and must
-> calculate all the offsets manually, which is tedious, error prone and
-> fragile.
+On Tue, Aug 18, 2020 at 05:19:40PM +0300, Tomer Samara wrote:
+> On Tue, Aug 18, 2020 at 04:11:06PM +0200, Greg Kroah-Hartman wrote:
+> > On Sun, Aug 16, 2020 at 10:23:25PM +0300, Tomer Samara wrote:
+> > > BUG_ON() is replaced with WARN_ON at ion_page_pool.c
+> > 
+> > Why?
+> > 
+> > > Fixes the following issue:
+> > > Avoid crashing the kernel - try using WARN_ON & recovery code ratherthan BUG() or BUG_ON().
+> > 
+> > Ideally you can get rid of WARN_ON() too, right?
+> > 
+> > Many systems run in panic-on-warn mode, so this really does not change
+> > anything.  Try fixing this up properly to not crash at all.
+> > 
+> You mean by that to just remove the WARN_ON and leave the condition the
+> same?
 
-If instead of having a callback, kernel would run an optional bpf
-program, then a state structure could passed by the kernel to the
-execution context of the bpf program.
+Or fix the problem that could ever cause this check to fire.
 
-That would also sort out difficulty of writing exit handlers.
+thanks,
 
-/Jarkko
+greg k-h
