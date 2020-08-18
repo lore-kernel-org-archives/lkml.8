@@ -2,119 +2,188 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF88C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68D7C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681D8206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:50:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="1dqfVxQF"
+	by mail.kernel.org (Postfix) with ESMTP id B633820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHRJuj (ORCPT
+        id S1726650AbgHRJvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHRJuh (ORCPT
+        Tue, 18 Aug 2020 05:51:06 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:45630 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgHRJvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:50:37 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061C4C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:50:37 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k8so16376357wma.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i5vDKEZg30AIs6a0nWYqfPKaiEsU3ewP/cuwaplcd5Y=;
-        b=1dqfVxQFClI+zfejIh1qTvSsngHFLaKqPtzKLGLjelw3bC2aQD6QKBit3dijblXqri
-         4qIVwFR71xk25st/eAJvzncev4uETStFXHoVK9U48yYtee49fWBR/bl4kYMNejbhNhQ4
-         epGdb7Ih3XcfLxQKGu5WwJK6MitmuZtqC+aF/TbPUuLbq9//Flfs148+xhXZ0ONP6UdI
-         4e2WW1d28D7iKP6tqaCTR+bku4ZUdrbOt9+wFwU02wM4f7QcWnU3mPSBsCB2qKR1kcaB
-         La+Em2GybOQoR5kWGO4FflyNc/VDvPuM98HdRfBPIOBwY+JA4XqOzOIsUmI0/G9wMLzs
-         kMww==
+        Tue, 18 Aug 2020 05:51:04 -0400
+Received: by mail-oo1-f66.google.com with SMTP id u28so4003716ooe.12;
+        Tue, 18 Aug 2020 02:51:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i5vDKEZg30AIs6a0nWYqfPKaiEsU3ewP/cuwaplcd5Y=;
-        b=Tat7i6ZlbWmkIZyvgjSOr2w1vMqJldfSEAmMPlKGP46xeH6UhIpbcxskrHaf6/W/9B
-         x8FRjgyj/T5vLEqcDkORcJexmehduLrniRUzIhSOKyuMp0/TCUoyde0tUMFmo/zylELm
-         4SXP4P97ktieKifAD9qTLcDqk90JqbhFPw1zf+hM9e8vSMl1LJrgBWqAZ8I3NtFx+Uy5
-         pp4FHsa3RuaeYA+g4/NFEdPPJrxUvjcTWkrIGMZVi4hPOnOufwjQx4V35fdSl9CuN165
-         4Yw74cxGc1THvqutH7OpHwmLTucH7zSGIQ8CzydHlAMUDAjpIZayu1wt9aYVeyB7mEUR
-         ITtw==
-X-Gm-Message-State: AOAM5335VCSIiXMcjxA8GrWzvchQqoUk0pK50pZA9xS3e1kv3FXHl2bx
-        X2CcSIyb5dN7kN8Q9Of9l7PVgw==
-X-Google-Smtp-Source: ABdhPJwXe/4xueqeRf0J9LQvvAsnSGSbxMv4RuMbhh6K4fVUIj613NFz/q+cokvNq9g37PMJmlJj9A==
-X-Received: by 2002:a1c:4c17:: with SMTP id z23mr19576673wmf.49.1597744235584;
-        Tue, 18 Aug 2020 02:50:35 -0700 (PDT)
-Received: from localhost ([194.62.217.57])
-        by smtp.gmail.com with ESMTPSA id p3sm31479709wma.44.2020.08.18.02.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:50:34 -0700 (PDT)
-From:   Javier Gonzalez <javier@javigon.com>
-X-Google-Original-From: Javier Gonzalez <javier.gonz@samsung.com>
-Date:   Tue, 18 Aug 2020 11:50:33 +0200
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, kbusch@kernel.org,
-        Damien.LeMoal@wdc.com, axboe@kernel.dk, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        johannes.thumshirn@wdc.com, Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com>
- <20200818071249.GB2544@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N3KQiXoRal1lq/bHBedgDpxTZXDkuHPF5NF/4ozPA4Y=;
+        b=VQFwarOZlPOsEPbTY5eNudgeGV/2qfyoTs5+O1VXnt/nJ5btSROIgAuKlYqzcKf1/7
+         HIO5FLRT8WKrWVVnSz/txbOpHBPzejlmxSjDYQy7t79E7vuJMk1EA+49uPHzN5KEZvcV
+         xBRjnsGtDTdHB+tOCAhsAxgzHreA45jRFdnmqJoHphGhXCmNNfirBAR/9Dzh0evRXPoq
+         vY0/rNnFOit0gU9hUuMXtPRUJ9s/sVgpXY4AgThX2Vw3mgVSRHw6ebL1RAXwavrVLY36
+         vMgD8ptE0vy+NSG61ippsy2V+PA/n8KGfrBf4Ig7fwi4v30zlAaYDZzoraCk+2/nxrLJ
+         T4fQ==
+X-Gm-Message-State: AOAM532IKgu+janWL38EiHe3lmSqE/oU5ZyIiCiBw5QdlkseNThNgNgg
+        /Bltvvdu3pQBmDshqmt1Q8mmRDrC33TwZ30hyEs=
+X-Google-Smtp-Source: ABdhPJxB6zM/yyPNwUfUFu7JvOlqop8886ZCh/4k1BW096GuLnef3jyhFMETGMR876/vx9ybUme+OJvfr5N3XslvZUo=
+X-Received: by 2002:a4a:6c13:: with SMTP id q19mr14520084ooc.11.1597744263093;
+ Tue, 18 Aug 2020 02:51:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200818071249.GB2544@lst.de>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20200527071555.GA23912@lxhi-065.adit-jv.com> <20200605132900.on527xcggg6f6pil@uno.localdomain>
+ <20200605134124.GA28734@lxhi-065.adit-jv.com> <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+ <20200607024158.GD7339@pendragon.ideasonboard.com> <20200609142959.GA621@lxhi-065.adit-jv.com>
+ <20200612150032.pnqaqip54qfrbqst@uno.localdomain> <20200612151005.GA28336@pendragon.ideasonboard.com>
+ <20200612153607.GA23962@lxhi-065.adit-jv.com> <20200612155041.GB28336@pendragon.ideasonboard.com>
+In-Reply-To: <20200612155041.GB28336@pendragon.ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Aug 2020 11:50:51 +0200
+Message-ID: <CAMuHMdWwWs4avDMjWikFiE57Z7joYXBnsM557TzKa5Fd3XghxA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Dege <michael.dege@renesas.com>,
+        gotthard.voellmeke@renesas.com, efriedrich@de.adit-jv.com,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        ChaitanyaKumar.Borah@in.bosch.com,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.08.2020 09:12, Christoph Hellwig wrote:
->On Tue, Aug 18, 2020 at 10:59:36AM +0530, Kanchan Joshi wrote:
->> If drive does not support zone-append natively, enable emulation using
->> regular write.
->> Make emulated zone-append cmd write-lock the zone, preventing
->> concurrent append/write on the same zone.
+Hi Laurent,
+
+On Fri, Jun 12, 2020 at 5:51 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Fri, Jun 12, 2020 at 05:36:07PM +0200, Eugeniu Rosca wrote:
+> > On Fri, Jun 12, 2020 at 06:10:05PM +0300, Laurent Pinchart wrote:
+> > > On Fri, Jun 12, 2020 at 05:00:32PM +0200, Jacopo Mondi wrote:
+> > > > On Tue, Jun 09, 2020 at 04:29:59PM +0200, Eugeniu Rosca wrote:
+> > > > > On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
+> > > > > > Note that the CMM driver is controlled by the DU driver. As the DU
+> > > > > > driver will reenable the display during resume, it will call
+> > > > > > rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
+> > > > > > should thus be no need for manual suspend/resume handling in the CMM as
+> > > > > > far as I can tell, but we need to ensure that the CMM is suspended
+> > > > > > before and resumed after the DU. I believe this could be implemented
+> > > > > > using device links.
+> > > > >
+> > > > > Based on below quote [*] from Jacopo's commit [**], isn't the device
+> > > > > link relationship already in place?
+> > > >
+> > > > Yes, it's in place already.
+> > > >
+> > > > I added pm_ops to cmm just to be able to printout when suspend/resume
+> > > > happens and the sequence is what comment [*] reports
+> > > >
+> > > > [  222.909002] rcar_du_pm_suspend:505
+> > > > [  223.145497] rcar_cmm_pm_suspend:193
+> > > >
+> > > > [  223.208053] rcar_cmm_pm_resume:200
+> > > > [  223.460094] rcar_du_pm_resume:513
+> > > >
+> > > > However, Laurent mentioned that in his comment here that he expects
+> > > > the opposite sequence to happen (CMM to suspend before and resume after
+> > > > DU).
+> > > >
+> > > > I still think what is implemented is correct:
+> > > > - CMM is suspended after DU: when CMM is suspended, DU is not feeding
+> > > >   it with data
+> > > > - CMM is resumed before: once DU restart operations CMM is ready to
+> > > >   receive data.
+> > > >
+> > > > Laurent, what do you think ?
+> > >
+> > > I think I shouldn't have written the previous e-mail in the middle of
+> > > the night :-) Suspending CMM after DU is obviously correct.
+> >
+> > Thanks to Renesas team (kudos to Gotthard and Michael), we've
+> > figured out that below sequence of clock handling (happening during
+> > concurrent suspend and HDMI display unplug) leads to SoC lockup:
+> >
+> > cmm1 OFF      (caused by HDMI unplug)
+> > x21-clock OFF         (caused by HDMI unplug)
+> > du1 OFF       (caused by HDMI unplug)
+> > cmm1 ON (caused by suspend to ram, as preparation for CMM register save)
+> > # Freeze happens
+> >
+> > That seems to be explained by Chapter 35A.4.3 "Restriction of enabling
+> > clock signal of the CMM" of HW User's manual (Rev.2.00 Jul 2019):
+> >
+> >  -----8<-----
+> >  When the clock signal of the CMM is enabled (RMSTPCR7.CMMn or
+> >  SMSTPCR7.CMMn = 0), the clock signal of the DU should be also enabled
+> >  (RMSTPCR7.DUn or SMSTPCR7.DUn = 0).
+> >  -----8<-----
+> >
+> > So, the lesson learned from the above is: do not enable the CMMi clock
+> > while the DUi clock is disabled. I expect this to also potentially
+> > give some input w.r.t. what to suspend/resume first, CMM or DU.
 >
->I really don't think we should add this.  ZNS and the Linux support
->were all designed with Zone Append in mind, and then your company did
->the nastiest possible move violating the normal NVMe procedures to make
->it optional.  But that doesn't change the fact the Linux should keep
->requiring it, especially with the amount of code added here and how it
->hooks in the fast path.
+> This may be an ugly one. The DU driver needs to disable the CMM when
+> suspending, and enabling the CMM when resuming. To do so, it calls
+> functions of the CMM driver, and those functions access CMM registers.
+> We can't do so while the CMM is suspended, so the DU has to suspend
+> before the CMM, and resume after the CMM.
+>
+> On the other hand, as you state here, we need to make sure the CMM clock
+> is disabled first. The CMM thus needs to suspend before the DU, and
+> resume after the DU.
+>
+> Those are conflicting requirements.
+>
+> One option could be to use the .suspend_late() and .resume_early() PM
+> operations for the DU, to turn the DU clock off late and turn it back on
+> early. Integrating it with the DRM suspend/resume helpers will likely be
+> complicated though. I wonder if we could find a more elegant solution.
+>
+> I the above sequence, you list "cmm1 ON" as a preparation for CMM
+> register save. We don't need to save any register, the CMM driver has no
+> .suspend() handler. The PM core should really skip waking up the device
+> at that point (I recall complaining about the spurious wake ups at
+> suspend time a while ago, but that neevr got addressed). Geert, any
+> opinion on that ?
 
-I understand that the NVMe process was agitated and that the current ZNS
-implementation in Linux relies in append support from the device
-perspective. However, the current TP does allow for not implementing
-append, and a number of customers are requiring the use of normal
-writes, which we want to support.
+If there are issues with the PM core, please bring it up with the PM people.
 
-During the initial patch review we discussed this and we agreed that the
-block layer is designed for append on zone devices, and that for the
-foreseeable future this was not going to change. We therefore took the
-feedback and followed a similar approach as in the SCSI driver for
-implementing append emulation.
+If there's a (too) close integration of the CMM and the DU, perhaps the
+CMM should list the DU module clock in its clocks property, too?
+We have a similar construction for USB (module clocks 703 and 704).
 
-We are happy to do more characterization on the impact of these hooks in
-the non-zoned hast path and eventually changing the approach if this
-proves to be a problem. Our thought is to isolate any potential
-performance degradation to the zoned path using the emulation (we do not
-see any ATM).
+Gr{oetje,eeting}s,
 
-Do you have any early suggestion on how you this patch should look like
-to be upstreamable?
+                        Geert
 
-Javier
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
