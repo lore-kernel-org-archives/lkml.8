@@ -2,147 +2,152 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA49BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8146820897
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3862A2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qb1iiiUl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P1a0VDnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHRPxi (ORCPT
+        id S1727836AbgHRPxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
+        Tue, 18 Aug 2020 11:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgHRPxA (ORCPT
+        with ESMTP id S1726828AbgHRPxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:53:00 -0400
+        Tue, 18 Aug 2020 11:53:15 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3041C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:52:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41470C061389;
+        Tue, 18 Aug 2020 08:53:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Dn2I3qAdTWh3ORoWLS/wdmt8G2wMu07ZNwWGXI9oNjs=; b=qb1iiiUlJs54zsXMKWlg2x1a9/
-        FvxcTm+TKFQO/jivct0sZPJLWXsFQEC4GeYvrUkPjB90b2oJTM5OyZYCH3Pj+3eyzCkSVsjp7cPVV
-        W+2N1eosu/ockjKe+6h8sDHgrdGHx4OIGuL6vuWK5nX+wwgvAV+6sEQMfe3QWU1Fvy5KtuYZEBOiZ
-        5kkUImjabpoHnkPlMPdyF8v6D7i8eqs/XP7ytz8yhUlrJUKB46PCBxhUAbL8N9E9CuCaeGYAEgDsW
-        UHrJWr/ansON5yG70YsnhszZfv/oBemyU4kgr9IawBj3GCAKSiKk+lm5w6zxqImZI0Yw8xlCDO1aO
-        9AqOiUYg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k83uk-0005Ki-FG; Tue, 18 Aug 2020 15:52:43 +0000
-Subject: Re: [RFC][PATCH v2 10/10] irq_work: Add a few comments
-To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, will@kernel.org, paulmck@kernel.org,
-        hch@lst.de, axboe@kernel.dk, chris@chris-wilson.co.uk,
-        davem@davemloft.net, kuba@kernel.org, fweisbec@gmail.com,
-        oleg@redhat.com, vincent.guittot@linaro.org
-References: <20200818105102.926463950@infradead.org>
- <20200818112418.591210082@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <56be3f06-4d4a-4128-a8b4-dbe12d37ce78@infradead.org>
-Date:   Tue, 18 Aug 2020 08:52:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yyUh9iK9jX/VmP7LW1FKsmxWNdg6vDrQTUz1XOSD6GE=; b=P1a0VDnX9q5mwOMQk56KD1bYkd
+        e0VaIFb20psLt4A2GzwesTPRpbnt9rs4wnA/eCY48TWb2HV8dUbkjZVlDNyqQccTsdF1cdGP7JK8g
+        mhl0CkyxXfs3mf/udZpA1jym2lJSlyif4H0Nixl7a8Tby/uQDYIdQE8EZxfT7pznxE8W+vk/7hY6p
+        14CAFt27hJ4T3z7Jr0oFFLVkS5A+gGl8TQ8syfzf9dDFRK1XZy2hnlcoUO9ESTGGE2OiuAK+/w9I3
+        OJmQtXO4bjYPCBC2b5wZJgyTbnskrtg+8qydH/1KmZg/+57U7UQBRXVb7e4W9aOTfcegW/VJlsySn
+        Syu3fi2g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k83v7-0005Me-AC; Tue, 18 Aug 2020 15:53:05 +0000
+Date:   Tue, 18 Aug 2020 16:53:05 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V2] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200818155305.GR17456@casper.infradead.org>
+References: <20200818134618.2345884-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818112418.591210082@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818134618.2345884-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Tue, Aug 18, 2020 at 09:46:18PM +0800, Yu Kuai wrote:
+> changes from v1:
+>  - separate set dirty and clear dirty functions
+>  - don't test uptodate bit in iomap_writepage_map()
+>  - use one bitmap array for uptodate and dirty.
 
-a few typos below...
+This looks much better.
 
-On 8/18/20 3:51 AM, Peter Zijlstra wrote:
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/irq_work.h |   80 +++++++++++++++++++++++++++++++++++++++++------
->  kernel/irq_work.c        |   10 +++++
->  2 files changed, 80 insertions(+), 10 deletions(-)
-> 
-> --- a/include/linux/irq_work.h
-> +++ b/include/linux/irq_work.h
+> +	spinlock_t		state_lock;
+> +	/*
+> +	 * The first half bits are used to track sub-page uptodate status,
+> +	 * the second half bits are for dirty status.
+> +	 */
+> +	DECLARE_BITMAP(state, PAGE_SIZE / 256);
 
+It would be better to use the same wording as below:
 
-> @@ -48,12 +47,45 @@ static inline bool irq_work_is_busy(stru
->  
->  #ifdef CONFIG_IRQ_WORK
->  
-> +/*
-> + * irq_work_queue(): run @work in IRQ context on this CPU
-> + * @work: work to run
-> + *
-> + * Self-IPI, NMI-safe
-> + *
-> + * When the function returns false; @work is already queued and
-> + * any eventual execution of it's func() is guaranteed to see
+> +	bitmap_zero(iop->state, PAGE_SIZE * 2 / SECTOR_SIZE);
 
-                                its
+[...]
 
-> + * any state before the failing enqueue.
-> + */
->  bool irq_work_queue(struct irq_work *work);
+> +static void
+> +iomap_iop_set_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	struct iomap_page *iop = to_iomap_page(page);
+> +	struct inode *inode = page->mapping->host;
+> +	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
+> +	unsigned int first = off >> inode->i_blkbits;
+> +	unsigned int last = (off + len - 1) >> inode->i_blkbits;
+> +	unsigned long flags;
+> +	unsigned int i;
 > +
-> +/*
-> + * irq_work_queue_on(): run @work in IRQ context on @cpu
-> + * @work: work to run
-> + * @cpu: cpu to run @work on
-> + *
-> + * *NOT* NMI-safe
-> + *
-> + * When the function returns false; @work is already queued and
+> +	spin_lock_irqsave(&iop->state_lock, flags);
+> +	for (i = first; i <= last; i++)
+> +		set_bit(i + total, iop->state);
+> +	spin_unlock_irqrestore(&iop->state_lock, flags);
+> +}
 
-                                false,
+How about:
 
-> + * any eventual execution of it's func() is guaranteed to see
+-	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
+...
++	first += PAGE_SIZE / SECTOR_SIZE;
++	last += PAGE_SIZE / SECTOR_SIZE;
+...
+	for (i = first; i <= last; i++)
+-		set_bit(i + total, iop->state);
++		set_bit(i, iop->state);
 
-                                its
+We might want
 
-> + * any state before the failing enqueue.
-> + */
+#define	DIRTY_BITS(x)	((x) + PAGE_SIZE / SECTOR_SIZE)
 
-> @@ -67,8 +99,36 @@ static inline bool irq_work_needs_cpu(vo
+and then we could do:
 
-> +/*
-> + * irq_work_queue_remote_state(): like irq_work_queue_remote() except dangerous
-> + * @cpu:
-> + * @work:
-> + *
-> + * DO NOT USE, this function is horrible/dangerous.
-> + *
-> + * The test-and-set-PENDING is not atomic, it also doesn't set
-> + * the BUSY bit and with that breaks irq_work_sync().
-> + *
-> + * This means that the caller needs external serialization; life-time,
-> + * where relevant, also needs to be externally orchestated.
++	unsigned int last = DIRTY_BITS((off + len - 1) >> inode->i_blkbits);
 
-                                                  orchestrated.
+That might be overthinking things a bit though.
 
-> + *
-> + * There is no validation/debugging to help you if you get it wrong.
-> + */
->  extern int irq_work_queue_remote_static(int cpu, struct irq_work *work);
-> +
->  extern void irq_work_single(void *arg);
->  #endif
->  
+> @@ -705,6 +767,7 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+>  	if (unlikely(copied < len && !PageUptodate(page)))
+>  		return 0;
+>  	iomap_set_range_uptodate(page, offset_in_page(pos), len);
+> +	iomap_set_range_dirty(page, offset_in_page(pos), len);
+>  	iomap_set_page_dirty(page);
 
+I would move the call to iomap_set_page_dirty() into
+iomap_set_range_dirty() to parallel iomap_set_range_uptodate more closely.
+We don't want a future change to add a call to iomap_set_range_dirty()
+and miss the call to iomap_set_page_dirty().
 
--- 
-~Randy
+>  	return copied;
+>  }
+> @@ -1030,6 +1093,7 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		WARN_ON_ONCE(!PageUptodate(page));
+>  		iomap_page_create(inode, page);
+>  		set_page_dirty(page);
+> +		iomap_set_range_dirty(page, offset_in_page(pos), length);
 
+I would move all this from the mkwrite_actor() to iomap_page_mkwrite()
+and call it once with (0, PAGE_SIZE) rather than calling it once for
+each extent in the page.
+
+> @@ -1435,6 +1500,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+>  		 */
+>  		set_page_writeback_keepwrite(page);
+>  	} else {
+> +		iomap_clear_range_dirty(page, 0,
+> +				end_offset - page_offset(page) + 1);
+>  		clear_page_dirty_for_io(page);
+>  		set_page_writeback(page);
+
+I'm not sure it's worth doing this calculation.  Better to just clear
+the dirty bits on the entire page?  Opinions?
