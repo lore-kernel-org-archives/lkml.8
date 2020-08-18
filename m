@@ -2,105 +2,115 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE91C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4706E2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3C8yFsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1C67D20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHRKAW (ORCPT
+        id S1726583AbgHRKBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHRKAU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:00:20 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8502C061389;
-        Tue, 18 Aug 2020 03:00:19 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 74so9700573pfx.13;
-        Tue, 18 Aug 2020 03:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OOenSclepS0MABruprKXkVZk2CmkqltRlMtrV3FqKk0=;
-        b=c3C8yFsQurPTAqZp5ro2DQU9RyvdO3D6JEMGO6BND1O8fmHvaNLwU0BXpPovPyleiI
-         +vXOUOIV5DPz3DG4vLwFMIsz6T+xgq2IwLiRgPhPy4d8v9wY4s62RXr9TvMn8LmGjuTS
-         f+SrIXoOW/F3EGG9vAeSK0TtVfVl2PQJIy/QrFu2HVHmqlOjlGQJXUOskcapulDRaI5O
-         a6gAL2n/0Avbc9kKN1Zn/lYdzgZufygWn6HNwT4RXxKrxX39/OepzkCw8LKuyhlTdtGm
-         XHC5by/+f1aRJKJaqbbQrRwpDZi5tLFx1hcZsiLUBqiS3xHFUykRSDW0dj7Axmyx3f+k
-         JXOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OOenSclepS0MABruprKXkVZk2CmkqltRlMtrV3FqKk0=;
-        b=Kif4EUl0NjIj9coTGg6YFiGMuFXAp3jmp8fkgaWVYcXBMz4D75wgaq2XV7MOEOFSi7
-         4Lbly1msef+9u7fm00xxYe174PTQsCB7tNAX+S+0q3ITIE4pmJygDmB9Nme41mB3/o6p
-         +2YHjOR4Hbl1hf3BjQX5aRpjsh70BWtSERv1lxmpxuOuB66LHosbs46zIvEpkNWO2PjY
-         grzFQfolA8nk+PyShi0f4js3Ttw7rzSTUWQv4eyrXVYvi1Eyrg28jqMO2m/4XbSIHp8K
-         3VoOfJZ0iSTW7Ax2FeeN45kIkOqszWrHmWXWKSNOOrWWG7KNEoiq9Xvwrd6l9aesQYZe
-         15gg==
-X-Gm-Message-State: AOAM533A/B1B/5w6KOrDb5FWwH3LhkiZg7FGzv72P1xNzuQ52uiPKCrW
-        kCtiEwWKea/DyfvG/MdADw==
-X-Google-Smtp-Source: ABdhPJw8bM1oYpBq691mtUzOLfn8tTF4UwM50ybp3c0lFYLllJw5jJLjkMd01hKUBOnsJZw5Rm1Xig==
-X-Received: by 2002:a62:1ad0:: with SMTP id a199mr15047482pfa.56.1597744818002;
-        Tue, 18 Aug 2020 03:00:18 -0700 (PDT)
-Received: from PWN ([221.124.243.27])
-        by smtp.gmail.com with ESMTPSA id j5sm24157839pfg.80.2020.08.18.03.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 03:00:17 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 06:00:08 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 RESEND] usbhid: Fix
- slab-out-of-bounds write in hiddev_ioctl_usage()
-Message-ID: <20200818100008.GA2135@PWN>
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
- <20200729113712.8097-1-yepeilin.cs@gmail.com>
- <nycvar.YFH.7.76.2008171221290.27422@cbobk.fhfr.pm>
+        Tue, 18 Aug 2020 06:01:42 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9758 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbgHRKBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:01:42 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 39D7F7C5D9FE4F502BC5;
+        Tue, 18 Aug 2020 18:01:38 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 18 Aug
+ 2020 18:01:33 +0800
+Subject: Re: [PATCH] f2fs: fix indefinite loop scanning for free nid
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1597392335-4998-1-git-send-email-stummala@codeaurora.org>
+ <e1251327-bd48-215d-e558-08780474bddb@huawei.com>
+ <20200818095547.GA5062@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cf2eb391-65a0-a309-6ab7-950ff6f1d660@huawei.com>
+Date:   Tue, 18 Aug 2020 18:01:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2008171221290.27422@cbobk.fhfr.pm>
+In-Reply-To: <20200818095547.GA5062@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 12:21:41PM +0200, Jiri Kosina wrote:
-> On Wed, 29 Jul 2020, Peilin Ye wrote:
+On 2020/8/18 17:55, Sahitya Tummala wrote:
+> On Tue, Aug 18, 2020 at 04:29:05PM +0800, Chao Yu wrote:
+>> On 2020/8/14 16:05, Sahitya Tummala wrote:
+>>> If the sbi->ckpt->next_free_nid is not NAT block aligned and if there
+>>> are free nids in that NAT block between the start of the block and
+>>> next_free_nid, then those free nids will not be scanned in scan_nat_page().
+>>> This results into mismatch between nm_i->available_nids and the sum of
+>>> nm_i->free_nid_count of all NAT blocks scanned. And nm_i->available_nids
+>>> will always be greater than the sum of free nids in all the blocks.
+>>> Under this condition, if we use all the currently scanned free nids,
+>>> then it will loop forever in f2fs_alloc_nid() as nm_i->available_nids
+>>> is still not zero but nm_i->free_nid_count of that partially scanned
+>>> NAT block is zero.
+>>>
+>>> Fix this to align the nm_i->next_scan_nid to the first nid of the
+>>> corresponding NAT block.
+>>>
+>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>> ---
+>>>   fs/f2fs/node.c | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>>> index 9bbaa26..d615e59 100644
+>>> --- a/fs/f2fs/node.c
+>>> +++ b/fs/f2fs/node.c
+>>> @@ -2402,6 +2402,8 @@ static int __f2fs_build_free_nids(struct f2fs_sb_info *sbi,
+>>>   			if (IS_ERR(page)) {
+>>>   				ret = PTR_ERR(page);
+>>>   			} else {
+>>> +				if (nid % NAT_ENTRY_PER_BLOCK)
+>>> +					nid = NAT_BLOCK_OFFSET(nid) * NAT_ENTRY_PER_BLOCK;
+>>
+>> How about moving this logic to the beginning of __f2fs_build_free_nids(),
+>> after nid reset?
+>>
 > 
-> > `uref->usage_index` is not always being properly checked, causing
-> > hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
-> > 
-> > Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
-> > Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
-> > Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> > Change in v2:
-> >     - Add the same check for the `HIDIOCGUSAGE` case. (Suggested by
-> >       Dan Carpenter <dan.carpenter@oracle.com>)
+> Sure, I will move it.
 > 
-> Applied, thanks.
+>> BTW, it looks we can add unlikely in this judgment condition?
+> 
+> But it may not be an unlikely as it can happen whenever checkpoint is done,
+> based on the next available free nid in function next_free_nid(), which can happen
+> quite a few times, right?
 
-Thank you for reviewing the patch!
+Oh, yes, I missed that place, please ignore that suggestion.. :)
 
-Peilin Ye
+Thanks,
+
+> 
+> Hitting the loop forever issue condition due to this could be a rare/difficult to
+> reproduce but this check itself may not be unlikely in my opinion.
+> 
+> Thanks,
+> 
+>>
+>> Thanks,
+>>
+>>>   				ret = scan_nat_page(sbi, page, nid);
+>>>   				f2fs_put_page(page, 1);
+>>>   			}
+>>>
+> 
