@@ -2,210 +2,99 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D8DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E923D20866
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sAK+0rf9"
+	by mail.kernel.org (Postfix) with ESMTP id E693A20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597773105;
+	bh=J4/+5tA8Fug1dB4bZX92MmZfbq9+rUEgquwGY02+xII=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t0/iniKUbKTZgzpEdvYsFWKsyDKroa68Xk5bc+2o1CtXN35972Tvqvz6Iz4D7wuhp
+	 yJKsKNg0EhTRJIW4MrgWLg9etaF8P+2eAK6gdJQbiNYuYm9X1HY9LKToDL9UXXCn23
+	 UaQ4iD5E3c0MyhmyQiobf8UHCL3NzYWxwWlulcNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgHRRte (ORCPT
+        id S1726701AbgHRRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgHRRtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:49:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C28C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:49:31 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id u10so9561237plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OMrT9C5AFoMvfd0icRmwdmikCEIc/NXJSQt8b1yXCkw=;
-        b=sAK+0rf9juJXiwHzeHjlRJRWIPHclN8Phlv51l+2QJIKpBcC34ipELa2VfI7E17BvK
-         m68XbGNzwGepUZZ1Pr0P9h9Jc/7bg6spmjHt5NSFaLNagz7dalWVtN1tKYuM5bOPi6Op
-         If24cwckYg9jm6rdn6n4Um6N2mlzxhZT+GRBTkAydj+iXoS0a+0v7+kWnPZcETMabcbp
-         iSUiSqH6yqjsQkeFOrUegOfeNTUVWwfScVhxUMh8qRsKYl1J7qDnzRi771PmHHAXZ0aU
-         TmfaTSiINFimh+dbuxpQwh+YY6+u3LnHrKoqOfAQe1o3Y7mTernmzlxHt7P9FeyD1YmS
-         ZbWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OMrT9C5AFoMvfd0icRmwdmikCEIc/NXJSQt8b1yXCkw=;
-        b=UgCBwl4fqaIqL6X/iwQanst3N9/oviTzWdZf7EOe7jaaha6XLnlK6AbbkiE2ujcIXv
-         IeHAEQud7LjDVQZHL+O0z3TRn/6qP6QfFUS+G5l5J9Qc7JtsWj89YMapdpIkqdSU6JZV
-         85XuJk0j0ZCaeCB0TuFL7hO2bk8vc1S36V4/3B+0tpbf8vck56gXM+rSd8WM3aq0WVnT
-         vucQwAQskBt8EwmQ4vINctESkKQY3Aymwx/q/eJKzki7bUHbRy2BvudlaHY8szDwFvVp
-         2kn6gATUczNOT7pFc9TU5vqjEPubsoK0j/0hygzXZ/dErVzGhcCNbQJPJbIkdupZ6NVY
-         gy+Q==
-X-Gm-Message-State: AOAM532nIFLGWnpO2TGuo84a4Xns13+bfZgp5FWs8zP7vfH9pL8FoGjj
-        05aTmeD+O/kcbwcGQVo43ERrpI/NqDmFTMht2VZNAg==
-X-Google-Smtp-Source: ABdhPJzVVyPcZ+7Gs0AXJVZxiCetyUr6nk23IoYNH1FZlus2gp2HDkcMI/FTOQ/mx9fK0t2ODFmqRjeqa113FBmxApY=
-X-Received: by 2002:a17:90a:f98e:: with SMTP id cq14mr871303pjb.51.1597772970220;
- Tue, 18 Aug 2020 10:49:30 -0700 (PDT)
+        Tue, 18 Aug 2020 13:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726552AbgHRRvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:51:42 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7251C2080C;
+        Tue, 18 Aug 2020 17:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597773102;
+        bh=J4/+5tA8Fug1dB4bZX92MmZfbq9+rUEgquwGY02+xII=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=T3wpR2WBUlCabkr4fsPmJg4+KcnhOa796FGKnSRNr7m5pn8yGRiPDm4jc9BQkjccc
+         Bwa2CLWXsztXFXONIUPACeVTcvT3h8yHJynGrOaR07PEDVjC7K88faZ/xWoL6UzYNo
+         y1zS+yT0s4GxQqfW8EFz0g5mlVCch/a6PYSb+Q7Y=
+Date:   Tue, 18 Aug 2020 19:51:38 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Marius Zachmann <mail@mariuszachmann.de>
+cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: corsair-cpro: fix ccp_probe, add delay [HID
+ related]
+In-Reply-To: <79890342.HV0Al07Iil@marius>
+Message-ID: <nycvar.YFH.7.76.2008181948290.27422@cbobk.fhfr.pm>
+References: <20200817070040.7952-1-mail@mariuszachmann.de> <20200817153533.GA243558@roeck-us.net> <79890342.HV0Al07Iil@marius>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
- <87pn7qnabq.wl-maz@kernel.org> <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
- <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org> <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
- <72c10e43023289b9a4c36226fe3fd5d9@kernel.org>
-In-Reply-To: <72c10e43023289b9a4c36226fe3fd5d9@kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 18 Aug 2020 10:48:54 -0700
-Message-ID: <CAGETcx-hkz8fyAHuhRi=JhBFu4YUmL2UpHfgs7doLHK-RdKA0A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
- property in DT
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:34 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-08-18 15:23, Rob Herring wrote:
-> > On Tue, Aug 18, 2020 at 1:35 AM Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-08-17 17:12, Rob Herring wrote:
-> >> > On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
-> >> >>
-> >> >> On Sun, 16 Aug 2020 00:22:28 +0100,
-> >> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >> >> >
-> >> >> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
-> >> >> > > Recent changes to the DT PCI bus parsing made it mandatory for
-> >> >> > > device tree nodes describing a PCI controller to have the
-> >> >> > > 'device_type = "pci"' property for the node to be matched.
-> >> >> > >
-> >> >> > > Although this follows the letter of the specification, it
-> >> >> > > breaks existing device-trees that have been working fine
-> >> >> > > for years.  Rockchip rk3399-based systems are a prime example
-> >> >> > > of such collateral damage, and have stopped discovering their
-> >> >> > > PCI bus.
-> >> >> > >
-> >> >> > > In order to paper over the blunder, let's add a workaround
-> >> >> > > to the pcie-rockchip driver, adding the missing property when
-> >> >> > > none is found at boot time. A warning will hopefully nudge the
-> >> >> > > user into updating their DT to a fixed version if they can, but
-> >> >> > > the insentive is obviously pretty small.
-> >> >> >
-> >> >> > s/insentive/incentive/ (Lorenzo or I can fix this up)
-> >> >> >
-> >> >> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> >> >> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
-> >> >> >
-> >> >> > s/Roh/Rob/ (similarly)
-> >> >>
-> >> >> Clearly not my day when it comes to proofreading commit messages.
-> >> >> Thanks for pointing this out, and in advance for fixing it up.
-> >> >>
-> >> >> >
-> >> >> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >> >> >
-> >> >> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
-> >> >> > during the v5.9 merge window, right?
-> >> >>
-> >> >> Absolutely.
-> >> >>
-> >> >> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
-> >> >> > checker has already looked?
-> >> >>
-> >> >> I've just managed to run the checker, which comes up with all kinds of
-> >> >> goodies. Apart from the above, it also spots the following:
-> >> >>
-> >> >> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
-> >> >>   in its main PCIe node, but not in the child nodes. It isn't obvious
-> >> >>   to me whether that's a violation or not (the spec doesn't say
-> >> >>   whether the property should be set on a per-port basis). Rob?
-> >> >
-> >> > The rule is bridge nodes should have 'device_type = "pci"'. But what's
-> >> > needed to fix these cases is setting device_type where we are parsing
-> >> > ranges or dma-ranges which we're not doing on the child ndes.
-> >> > Otherwise, I don't think it matters in this case unless you have child
-> >> > (grandchild here) nodes for PCI devices. If you did have child nodes,
-> >> > the address translation was already broken before this change.
-> >>
-> >> Fair enough.
-> >>
-> >> >> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
-> >> >>   PCIe nodes has the device_type property, probably broken similarly
-> >> >>   to rk3399.
-> >> >
-> >> > The only upstream board is DB820c, so probably not as wide an impact...
-> >> >
-> >> > There are also 92 (lots of duplicates due to multiple boards) more
-> >> > cases in arch/arm/. A log is here[1].
-> >>
-> >> Mostly Broadcom stuff, apparently. I'll see if I can have a stab
-> >> at it (although someone will have to test it).
-> >>
-> >> >
-> >> >> I could move the workaround to drivers/pci/of.c, and have it called
-> >> >> from the individual drivers. I don't have the HW to test those though.
-> >> >>
-> >> >> Thoughts?
-> >> >
-> >> > I think we should go with my other suggestion of looking at the node
-> >> > name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
-> >> > I don't see any cases.
-> >>
-> >> I really dislike it.
-> >>
-> >> Once we put this node name matching in, there is no incentive for
-> >> people to write their DT correctly at all. It also sound pretty
-> >> fragile (what if the PCIe node is named something else?).
-> >
-> > That would require 2 wrongs. Both missing device_type and wrong node
-> > name. You could still warn if we matched on node name.
->
-> OK. So how about something like this?
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 590493e04b01..a7a6ee599b14 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -134,9 +134,13 @@ static int of_bus_pci_match(struct device_node *np)
->          * "pciex" is PCI Express
->          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
->          * "ht" is hypertransport
-> +        *
-> +        * If none of the device_type match, and that the node name is
-> +        * "pcie", accept the device as PCI (with a warning).
->          */
->         return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
-> -               of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
-> +               of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
-> +               WARN_ON_ONCE(of_node_name_eq(np, "pcie"));
+On Tue, 18 Aug 2020, Marius Zachmann wrote:
 
-I don't think we need the _ONCE. Otherwise, it'd warn only for the
-first device that has this problem.
+> > > Possibly because of the changes in usbhid/hid-core.c the first
+> > > raw input report is not received during ccp_probe function and it will
+> > > timeout. I am not sure, whether this behaviour is expected after
+> > > hid_device_io_start or if I am missing something.
+> > > As a solution this adds msleep(50) to ccp_probe so that all initial
+> > > input reports can be received.
+> > > 
+> > > Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+> > 
+> > Let's just ask the HID maintainers. Is this expected, and the correct fix ?
+> 
+> This seems to be a problem with "HID: usbhid: do not sleep when opening
+> device". There is a bug report with some Logitech devices at the correct
+> thread. These drivers also use hid_device_io_start and fail. Seems to me,
+> this is the same problem and I retract this (not so beautiful) fix until
+> this is sorted out.
 
-How about?
-WARN(of_node_name_eq(np, "pcie"), "Missing device type in %pOF", np)
+[ CCing Dmitry ]
 
-That'll even tell them which node is bad.
+Yeah, this problem popped out also in other contexts, where many Logitech 
+devices didn't probe properly, because of the race where the first IRQ is 
+dropped on the floor (after hid_device_io_start() happens, but before the 
+50ms timeout passess), and report descriptor never gets parsed and 
+populated.
 
--Saravana
+As this is just a boot time micro-optimization, I am going to revert the 
+patch for 5.9 now, and we can try to fix this properly for next merge 
+window.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
