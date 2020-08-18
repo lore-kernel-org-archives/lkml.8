@@ -2,77 +2,104 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEC020825
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A6B2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597732056;
+	bh=JSK9ci9WhE9/2a+BcV+RJI/GZdayBc/8ZdvTiCoeTGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ga9A7WICeBOmghp21z9zp/SwPBGSAstFyFCsjYxWKLw7t/obExHMe+OQICtQGH3zs
+	 lTcIs7o0Qt0WIkk4FZki6M5KYo8uU1YDpIyq0lVunqzEuM0PEzdrlovsiNfJ5SRIrW
+	 EBtWjVhdyVyXUT4Sb1LBmtVRJTFcHPVbnb5WJWCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgHRG1F (ORCPT
+        id S1726585AbgHRG1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:27:05 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:45286 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbgHRG1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:27:05 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowADn7xusdDtfJ2QgAw--.23702S2;
-        Tue, 18 Aug 2020 14:26:54 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] alarmtimer: convert comma to semicolon
-Date:   Tue, 18 Aug 2020 06:26:51 +0000
-Message-Id: <20200818062651.21680-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowADn7xusdDtfJ2QgAw--.23702S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4UZF15Zr47Gry5ur1Utrb_yoWDGrX_Ga
-        1UW3W8GFWjgr48Zr4Duw4rJryktr18CF1xAay2qw17JrWjva1Ikr1xJr1UCF98ua1Fgw4r
-        Aay5J3sxJr1ayjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbzkFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-        W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAK
-        I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-        xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-        jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-        0EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-        7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUv_M3UUUUU=
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwUMA1z4jXw+AAAAsq
+        Tue, 18 Aug 2020 02:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgHRG1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:27:34 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B66B20825;
+        Tue, 18 Aug 2020 06:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597732053;
+        bh=JSK9ci9WhE9/2a+BcV+RJI/GZdayBc/8ZdvTiCoeTGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wGw3PcUkzKlVCGYV8eKWpkIal8/JUgTDCMtBdO7CCK31U/1VWTvCMAuy5BlpYJM1s
+         ZKEEwXShBPr8QzhBWt6npd96Ftf4aS0BGnD/aGbueLot1Sqnwy9ehLXW1UwdYu1rFk
+         iivNWMnAt4cQVMj3Ks84ZeiibfC1L3ZhkH2m4ask=
+Date:   Tue, 18 Aug 2020 11:57:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: Re: [PATCH 09/13] soundwire: intel: add CLK_STOP_BUS_RESET support
+Message-ID: <20200818062729.GS2639@vkoul-mobl>
+References: <20200721203723.18305-1-yung-chuan.liao@linux.intel.com>
+ <20200721203723.18305-10-yung-chuan.liao@linux.intel.com>
+ <20200817114729.GP2639@vkoul-mobl>
+ <8aac898f-92d3-c907-ebb8-4642a618645b@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8aac898f-92d3-c907-ebb8-4642a618645b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace a comma between expression statements by a semicolon.
+On 17-08-20, 09:30, Pierre-Louis Bossart wrote:
+> 
+> 
+> 
+> > > +	} else if (clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) {
+> > > +		ret = sdw_cdns_clock_stop(cdns, true);
+> > > +		if (ret < 0) {
+> > > +			dev_err(dev, "cannot enable clock stop on suspend\n");
+> > > +			return ret;
+> > > +		}
+> > > +
+> > > +		ret = sdw_cdns_enable_interrupt(cdns, false);
+> > > +		if (ret < 0) {
+> > > +			dev_err(dev, "cannot disable interrupts on suspend\n");
+> > > +			return ret;
+> > > +		}
+> > > +
+> > > +		ret = intel_link_power_down(sdw);
+> > > +		if (ret) {
+> > > +			dev_err(dev, "Link power down failed: %d", ret);
+> > > +			return ret;
+> > > +		}
+> > 
+> > no cleanup on all the error cases here?
+> 
+> See above the 'else if' test, the clock stop on suspend will be followed by
+> a bus reset on resume. this is essentially a complete bus restart.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- kernel/time/alarmtimer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ok
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index ca223a89530a..f4ace1bf8382 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -908,7 +908,7 @@ static int __init alarmtimer_init(void)
- 	/* Initialize alarm bases */
- 	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
- 	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
--	alarm_bases[ALARM_REALTIME].get_timespec = ktime_get_real_ts64,
-+	alarm_bases[ALARM_REALTIME].get_timespec = ktime_get_real_ts64;
- 	alarm_bases[ALARM_BOOTTIME].base_clockid = CLOCK_BOOTTIME;
- 	alarm_bases[ALARM_BOOTTIME].get_ktime = &ktime_get_boottime;
- 	alarm_bases[ALARM_BOOTTIME].get_timespec = get_boottime_timespec;
+> The only open here is whether we should actually return an error while
+> suspending, or just log the error and squelch it. We decided to return the
+> status so that the pm_runtime suspend does not proceed: the state remains
+> active which is easier to detect than a single line in a dmesg log.
+
+right, returning makes sense and is done correctly above
+
 -- 
-2.17.1
-
+~Vinod
