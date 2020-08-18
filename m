@@ -2,101 +2,90 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E07DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DEA206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597744379;
-	bh=xdS+b75ghYmvRyp5w9RPdxKoug0EJ/G+RiOriB8x2Hk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WJKZU69V8nZC2m7loxWrv4tZyFjPUQigSrBp3+HJx84SiSeLxWlpi+U84oUWuNn+C
-	 6q0c+ML0wmtjfsgo3/ntIKGZJu/Km+PXt5Sw/u9DzVVM9h45SoQ+XtrjNTZMEXFf+F
-	 Mlv10rVgZo64vYgNvOgfq/gR/5lnpRsiv+jA/g3Q=
+	by mail.kernel.org (Postfix) with ESMTP id 52ADF20897
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:53:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IC9Mq5HH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHRJw6 (ORCPT
+        id S1726570AbgHRJxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 05:53:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43488 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbgHRJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:52:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726599AbgHRJxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:53:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597744395; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=xseSs+uXX4K+Rt2beTtAlDBtE7LPlu4q7dbUEk5XyIg=;
+ b=IC9Mq5HHpo7M7X08ZSdPI5OKg6SsKOYDdas5tjtYBsTL6ndmgFciinrgNNBUlmJuAotzUHgU
+ uR0DU0Kc6EC6d7e4uHIlKdS7UlB3DbUs9hqMFESDKApxxfRXVgHk83RLjgAp2RKheaOejlgD
+ vlhzqVYM4mu92q51eKEXwE3OtoI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f3ba4d14c787f237b6e75ab (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 09:52:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A81F2C43395; Tue, 18 Aug 2020 09:52:17 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5ED420738;
-        Tue, 18 Aug 2020 09:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597744375;
-        bh=xdS+b75ghYmvRyp5w9RPdxKoug0EJ/G+RiOriB8x2Hk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G2nzMHixlR6257icH9egqpc70o0BhDsW4O8+t+2Ivyzzp7ScpRlqfPKrVthkuEJst
-         1tngXqow2SmSDX0R9ZAAOq47rOq0J8lZ5kghwqVli8sXOW8WcX7Ee/KzcO9XXmaoY3
-         48Q+5RkPW2HFSN5b0NaKLDTTLHUjoTIVMufaB0oU=
-Date:   Tue, 18 Aug 2020 11:53:18 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
-        Lihong Kou <koulihong@huawei.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 027/168] Bluetooth: add a mutex lock to avoid UAF in
- do_enale_set
-Message-ID: <20200818095318.GA57268@kroah.com>
-References: <20200817143733.692105228@linuxfoundation.org>
- <20200817143735.099152549@linuxfoundation.org>
- <20200818094024.GB10974@amd>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80249C433C6;
+        Tue, 18 Aug 2020 09:52:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80249C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818094024.GB10974@amd>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath11k: Use fallthrough pseudo-keyword
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200727194415.GA1275@embeddedor>
+References: <20200727194415.GA1275@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200818095217.A81F2C43395@smtp.codeaurora.org>
+Date:   Tue, 18 Aug 2020 09:52:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:40:25AM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Lihong Kou <koulihong@huawei.com>
-> > 
-> > [ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
-> > 
-> > In the case we set or free the global value listen_chan in
-> > different threads, we can encounter the UAF problems because
-> > the method is not protected by any lock, add one to avoid
-> > this bug.
-> 
-> For this to be safe, bt_6lowpan_exit() needs same handling, no?
-> 
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-> 
-> diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-> index 9a75f9b00b51..2402ef5ac072 100644
-> --- a/net/bluetooth/6lowpan.c
-> +++ b/net/bluetooth/6lowpan.c
-> @@ -1304,10 +1304,12 @@ static void __exit bt_6lowpan_exit(void)
->  	debugfs_remove(lowpan_enable_debugfs);
->  	debugfs_remove(lowpan_control_debugfs);
->  
-> +	mutex_lock(&set_lock);
->  	if (listen_chan) {
->  		l2cap_chan_close(listen_chan, 0);
->  		l2cap_chan_put(listen_chan);
->  	}
-> +	mutex_unlock(&set_lock);
->  
->  	disconnect_devices();
->  
-> 
-> 
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Why you are sending this in this format seems very odd to me, you know
-better...
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
+> 
+> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+0b294aebb6a0 ath11k: Use fallthrough pseudo-keyword
+
+-- 
+https://patchwork.kernel.org/patch/11687467/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
