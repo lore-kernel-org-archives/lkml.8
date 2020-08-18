@@ -2,123 +2,95 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED7F206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD5B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597762980;
+	bh=/Au42xAltT4UIkIAu/0BCAbvou4lntMo5L1yDg87RPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j4V65rVOub90cspKbSxDQyT3eS8L7IrODfn9PbI+FbuR45TS9s8/9EUvJzvw9ayeJ
+	 Iz55l+kna7RC2hQhFQiqJe6nw93a4+uFpyikVgG1JB992hZ/HWCGnUVcKD3XkiCXS5
+	 lzjD5XK7MmuO5VFNqbfEWTO2QisFcREoNhw9bsV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHRPCi (ORCPT
+        id S1727966AbgHRPC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:02:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39618 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 11:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbgHRPCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:02:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 89C94AFC1;
-        Tue, 18 Aug 2020 15:02:59 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 17:02:32 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200818150232.GQ28270@dhcp22.suse.cz>
-References: <20200814174924.GI3982@worktop.programming.kicks-ass.net>
- <20200814180224.GQ4295@paulmck-ThinkPad-P72>
- <875z9lkoo4.fsf@nanos.tec.linutronix.de>
- <20200814204140.GT4295@paulmck-ThinkPad-P72>
- <20200814215206.GL3982@worktop.programming.kicks-ass.net>
- <20200816225655.GA17869@pc636>
- <20200817082849.GA28270@dhcp22.suse.cz>
- <20200817222803.GE23602@paulmck-ThinkPad-P72>
- <20200818074344.GL28270@dhcp22.suse.cz>
- <20200818135327.GF23602@paulmck-ThinkPad-P72>
+        id S1727013AbgHRPC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:02:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F985206B5;
+        Tue, 18 Aug 2020 15:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597762976;
+        bh=/Au42xAltT4UIkIAu/0BCAbvou4lntMo5L1yDg87RPo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gb+VTDOyjTUgtk3IQY10NgidC0k5bHEanm05OxqNw+2FD/GDTn3v6Zin6FqFGq/RO
+         22eOA+toA6ryOWhnLbiKhlqe0YvhboXwQ38lMHCYKsAu/uQeEW6sUG12uftGtfp/4s
+         Ov/N2VwdXqVu8XlYzXih7O7ErdO+/PnzQgZlnfDg=
+Date:   Tue, 18 Aug 2020 16:02:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Brent Lu <brent.lu@intel.com>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ASoC: hdac_hdmi: support 'ELD' mixer
+Message-ID: <20200818150225.GC5337@sirena.org.uk>
+References: <20200818004413.12852-1-brent.lu@intel.com>
+ <20200818143632.16539-1-brent.lu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
 Content-Disposition: inline
-In-Reply-To: <20200818135327.GF23602@paulmck-ThinkPad-P72>
+In-Reply-To: <20200818143632.16539-1-brent.lu@intel.com>
+X-Cookie: You're at Witt's End.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18-08-20 06:53:27, Paul E. McKenney wrote:
-> On Tue, Aug 18, 2020 at 09:43:44AM +0200, Michal Hocko wrote:
-> > On Mon 17-08-20 15:28:03, Paul E. McKenney wrote:
-> > > On Mon, Aug 17, 2020 at 10:28:49AM +0200, Michal Hocko wrote:
-> > > > On Mon 17-08-20 00:56:55, Uladzislau Rezki wrote:
-> > > 
-> > > [ . . . ]
-> > > 
-> > > > > wget ftp://vps418301.ovh.net/incoming/1000000_kmalloc_kfree_rcu_proc_percpu_pagelist_fractio_is_8.png
-> > > > 
-> > > > 1/8 of the memory in pcp lists is quite large and likely not something
-> > > > used very often.
-> > > > 
-> > > > Both these numbers just make me think that a dedicated pool of page
-> > > > pre-allocated for RCU specifically might be a better solution. I still
-> > > > haven't read through that branch of the email thread though so there
-> > > > might be some pretty convincing argments to not do that.
-> > > 
-> > > To avoid the problematic corner cases, we would need way more dedicated
-> > > memory than is reasonable, as in well over one hundred pages per CPU.
-> > > Sure, we could choose a smaller number, but then we are failing to defend
-> > > against flooding, even on systems that have more than enough free memory
-> > > to be able to do so.  It would be better to live within what is available,
-> > > taking the performance/robustness hit only if there isn't enough.
-> > 
-> > Thomas had a good point that it doesn't really make much sense to
-> > optimize for flooders because that just makes them more effective.
-> 
-> The point is not to make the flooders go faster, but rather for the
-> system to be robust in the face of flooders.  Robust as in harder for
-> a flooder to OOM the system.
 
-Do we see this to be a practical problem? I am really confused because
-the initial argument was revolving around an optimization now you are
-suggesting that this is actually system stability measure. And I fail to
-see how allowing an easy way to deplete pcp caches completely solves
-any of that. Please do realize that if allow that then every user who
-relies on pcp caches will have to take a slow(er) path and that will
-have performance consequences. The pool is a global and a scarce
-resource. That's why I've suggested a dedicated preallocated pool and
-use it instead of draining global pcp caches.
+--pAwQNkOnpTn9IO2O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> And reducing the number of post-grace-period cache misses makes it
-> easier for the callback-invocation-time memory freeing to keep up with
-> the flooder, thus avoiding (or at least delaying) the OOM.
-> 
-> > > My current belief is that we need a combination of (1) either the
-> > > GFP_NOLOCK flag or Peter Zijlstra's patch and
-> > 
-> > I must have missed the patch?
-> 
-> If I am keeping track, this one:
-> 
-> https://lore.kernel.org/lkml/20200814215206.GL3982@worktop.programming.kicks-ass.net/
+On Tue, Aug 18, 2020 at 10:36:32PM +0800, Brent Lu wrote:
+> Add a binary mixer 'ELD' to each HDMI PCM device so user-space can
+> read the ELD data of external HDMI display.
 
-OK, I have certainly noticed that one but didn't react but my response
-would be similar to the dedicated gfp flag. This is less of a hack than
-__GFP_NOLOCK  but it still exposes very internal parts of the allocator
-and I find that a quite problematic from the future maintenance of the
-allocator. The risk of an easy depletion of the pcp pool is also there
-of course.
--- 
-Michal Hocko
-SUSE Labs
+Please don't send new patches in the middle of existing threads, it
+makes it hard to keep track fo what is going on.
+
+--pAwQNkOnpTn9IO2O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl877YAACgkQJNaLcl1U
+h9ALXgf8COAHlHSEiVOtPyp/q80RUFjIinu+Fl/Ici/1rbVn2e6HfyoKPntkcdsN
+/MnEHoNs/YceorJgRS27MLtYuH/d7UcuVoaswd52DMV3Jat2VrBE18B4y9xdLgk3
+3sAlOgMpfmfvlnCGs1LMtxMjZXML3Ld8cXYAJNr4Eio1+ovXYnZ2ihNtoVXpEhMW
+zC9EShuuu0FatftsHxGvHo2wpxxoEeMYSSAQY9lR9Wq1LPQRib4zRubsjsshGp/Q
+i2Id2nM7bTrkSfhGtW9MXqNUr7rztZt9YyG/LkEGsUyzCZHBeYIrOKX4M9eZUQNR
+epCsSSEFOadhYuaoT+z5P+pxt1CMAA==
+=NwDr
+-----END PGP SIGNATURE-----
+
+--pAwQNkOnpTn9IO2O--
