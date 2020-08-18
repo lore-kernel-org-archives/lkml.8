@@ -8,69 +8,66 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F754C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCF42076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC73207DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCU2VExU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNH7Rb4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHROho (ORCPT
+        id S1727913AbgHROhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
+        Tue, 18 Aug 2020 10:37:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgHROhi (ORCPT
+        with ESMTP id S1727899AbgHROhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:37:38 -0400
+        Tue, 18 Aug 2020 10:37:37 -0400
 Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6582BC061342;
-        Tue, 18 Aug 2020 07:37:37 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id p24so22326012ejf.13;
-        Tue, 18 Aug 2020 07:37:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A812BC061389;
+        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so22356392eje.7;
+        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qW/vPODydHKoIxWkakc/8MljLCi8kAbWI/+HlLycii8=;
-        b=uCU2VExUgkOdf0CSnU7p7Lwj0HwQv0QnvrEuM3Q4DtTmfgcqJv7lIMg6wtWsqdRNtr
-         g5qApET1RisUjddrmMDVQXhqZkK6RUrIg+S1ft2ZwrIEdCpyOHTTzGA/R5EGMsKRwzj4
-         SsCX3rMM8bGiFd+wOqh1oFq4CbRFWaVCVBrrUQDeKee+Pz58Bzul52OIZy27Wlrou1/g
-         ECjwdYXY1HW5YzJlKL4uu7XevB8c/LCNUHqQtYNviTU3EXem5NfnQcAJiDbq94SJ3owE
-         fDqvczWzkV4IwcqGoE3pAqhNbOppeAUqbJV6zwa33ANkAs+92H9Szw3wOmS0e3n3/6YG
-         3HNA==
+        h=from:to:cc:subject:date:message-id;
+        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
+        b=aNH7Rb4UjQ427P0G/2djpJOYW+4jNcYTY5ueMZJdI+aPHwfi9IVWQ5lmpfsxgPoOyD
+         2TembDjnXLlrJ/a8M5UAgVp4WnapO1DdLv6Z9TXH+CUQY9aWYahxInWFDBtnf2ZckZuK
+         AXKdp/x2y4mmrDILUtOyZd5aSuFkRAX+X5z2oiFaOrCkQ0ZugqWmLtDxySXxGmQA2Yvz
+         tep14aDEZDuEhoOfzeyidXqBxarz8eiwUJhOMdkx0QuWKYJN61zxdkXc/CgACP5Oco+T
+         xJgT5p2ERAXYe45DoMXsh1b+c31xNrWX9ZRHjX+1wIklQj71eMW19I/v0zCKuEdPPIax
+         Q5Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qW/vPODydHKoIxWkakc/8MljLCi8kAbWI/+HlLycii8=;
-        b=e7rmFQTxaieWmrAADA3zqZ5Cop+wzjlaVuW1z9Jlw1HYUsRr2BhA2EqsewqoJMetEQ
-         RohJpUTEOcvvohm4X1nO4ZoiST1e+Vthf2tuC8kJPMgTbOIXMWxCCVwFvka+BzQIzH/x
-         /Fs6/mTHQ+3mXrJvvg0Hn1M9+4XIqAaMCraJ7zYE/emdY/7tTrzibaHNq+opu6dXJ47o
-         /aNdoMbnIECs5tPaK39UJXMU7dfAbQFeVylsgOhcFNgWPSxy5U4hH5D9n5kDji3ubuNc
-         ZzNm40ljQxLAqENpHvf2ISguu000X9U1ck3zHfyiL6DQKTQCur4nq7Pg/a8BUreqZkn+
-         6L2Q==
-X-Gm-Message-State: AOAM533fTgyjDU1tBVRY8U0s2cV8/aT7MnfCCz1O4HEOs5x/9AAVAswC
-        Rd9rJHkzgs1gHkTsdpzvKOYndTAjPy8=
-X-Google-Smtp-Source: ABdhPJwoKdEOnV0Xt2tgEw82my/fzFI9XtM+fHHICmtVeMhwZPUpUjoZ/RyxXNw3xpoCDJrZ+yHTpw==
-X-Received: by 2002:a17:906:a18e:: with SMTP id s14mr20008133ejy.168.1597761456090;
-        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r25sm16222575edy.93.2020.08.18.07.37.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
+        b=iOs1Z572zUB+R5AVCxiLLMu7MoonkL0VNt3t0giKWs6WUomSi09Tqel/K0BfaR9F8/
+         8cb9P6yiqvuc5QHy2ZTyNkUkQmtuwH/IWbYGdMFJrR+nijFbqzBOfXqDclxdaFTrB1Zs
+         LkRYo9nZOvnN+Bg2Onp7uLJJR7L9AEGeDneNWISwjMlYMVcyrnrBH0sz+0etJ0PjcPWy
+         sG095oCKi13tjDF3iOVKelBI2Pkvp0vxyKcjXKs3CSjEQGHt3w1z52G/4dwqYyzttt7e
+         ttu9ntmdkUglUU/IZ7AEkz3lOzut1QReytJJ+NxroxqExbD4SRSb9bVkhCrNy+yd1La3
+         G0HA==
+X-Gm-Message-State: AOAM532zLNKSQkXNTV//AvTvfsPnZ1kM0UsGDIdeA60JCR+y1/MgwfYb
+        mG7ABhAvwkmViyqBh5gmS8M=
+X-Google-Smtp-Source: ABdhPJzVRX6brDlwaMQejDzk4wxMr/TJ+2T1mXXnWNI34f1CAvmV4y0EPIUTLj8CH4kNb+vCaskauA==
+X-Received: by 2002:a17:907:20e6:: with SMTP id rh6mr20096569ejb.301.1597761455170;
         Tue, 18 Aug 2020 07:37:35 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id r25sm16222575edy.93.2020.08.18.07.37.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Aug 2020 07:37:34 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
         sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: change fallback string rockchip,rk3308-spdif
-Date:   Tue, 18 Aug 2020 16:37:27 +0200
-Message-Id: <20200818143727.5882-2-jbx6244@gmail.com>
+Subject: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
+Date:   Tue, 18 Aug 2020 16:37:26 +0200
+Message-Id: <20200818143727.5882-1-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200818143727.5882-1-jbx6244@gmail.com>
-References: <20200818143727.5882-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -95,22 +92,24 @@ DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changed V2:
+  rebase
+---
+ Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index e8b754d41..2560b9877 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -574,7 +574,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+index 7bad6f16f..62a61b68d 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -27,6 +27,7 @@ properties:
+           - enum:
+               - rockchip,rk3188-spdif
+               - rockchip,rk3288-spdif
++              - rockchip,rk3308-spdif
+           - const: rockchip,rk3066-spdif
  
- 	spdif_tx: spdif-tx@ff3a0000 {
--		compatible = "rockchip,rk3308-spdif", "rockchip,rk3328-spdif";
-+		compatible = "rockchip,rk3308-spdif", "rockchip,rk3066-spdif";
- 		reg = <0x0 0xff3a0000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru SCLK_SPDIF_TX>, <&cru HCLK_SPDIFTX>;
+   reg:
 -- 
 2.11.0
 
