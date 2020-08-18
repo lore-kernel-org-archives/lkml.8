@@ -2,114 +2,134 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6613EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E05C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1E6207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqxwybX4"
+	by mail.kernel.org (Postfix) with ESMTP id 6BC34207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHRQBM (ORCPT
+        id S1728001AbgHRPo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgHRPpN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:45:13 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3934C061389;
-        Tue, 18 Aug 2020 08:45:07 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v12so21953056ljc.10;
-        Tue, 18 Aug 2020 08:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DhzM7vDeu30fKWxKCWsmI+9HmQeO+RMonyIvtC+hDwA=;
-        b=SqxwybX42CIGvNAoGhhjU+9JlLP/BC7Mga9LqZvCW/UUWMQ6DQSFFa1MIbfeTOax4O
-         4gX/tWloNniS8fMgJSpgVre6Pz+rR4IvOSIJ+3hTy0a4yWfh/rDbOa+c7oLqKdGAwPP/
-         pXR2kOlWGuh9QgyoaZFEbT4Y9pRSWJbjLj18QlhAVxnZiK3nOKx+Uq+D+XWgaFGTLv5i
-         F+hwCGQ4sGgDITHAujFewbSoP1xC0Am1kMysavPQ+Y3b4cgFXVcRVMHGm3QWJreTCaFF
-         lFlyZ6Ahc65JNW0TcoEK5pafoZxs1wyQIpACb5OIo59grcOhxh5w6eqnkBphPe3kbc9P
-         7sTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DhzM7vDeu30fKWxKCWsmI+9HmQeO+RMonyIvtC+hDwA=;
-        b=hM2gTyc3gEt78h/fLw8dUMEl/BF7yRWQoN2d7Wi2ZxUNAMUdI3PIP2Oj9qCgYWRsgt
-         SB8QSxA+GNfJZFD3/Qpqkh5HXNQ+0gpO3zwFaYkYFwW/rjIsoNh5K9XFnwYRQMdfXWId
-         Y++Vwq1hohoXPR/BuvsGdMlPSqz4QbQrKqeDWqrXy/Xb92TV6j5N9FL14OPARjv+A10+
-         y/UzU4znq0JF9KO6i7mQ8r246riXZVh5cepJTQR7jcqZR5yz5knaGdD2Z4MRRKhY4UVY
-         uURv2Y09zw4Zj3/7Bhf9PMyt4NL3BE63/8fBAEKLZDVv6e9vKAU7Vb1kArq8xCdLOaRn
-         mc1A==
-X-Gm-Message-State: AOAM530iLigdHR+EWFgKf+8waxispOrkQ+xZqxZ9GrJflDaX6xXNQPJN
-        3RDm02gcXgnxsLbk9PwJfI4=
-X-Google-Smtp-Source: ABdhPJxJ1cguy3j9aaGW5J2byMGBQhOG8Nq7ELvlaUyvvEcVjRM7knWKdu3qF9HJwcbWT83xOhyEAg==
-X-Received: by 2002:a2e:7006:: with SMTP id l6mr8585166ljc.107.1597765506138;
-        Tue, 18 Aug 2020 08:45:06 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id d13sm6624392lfl.89.2020.08.18.08.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 08:45:05 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 18 Aug 2020 17:45:02 +0200
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-Message-ID: <20200818154502.GA32169@pc636>
-References: <20200814180224.GQ4295@paulmck-ThinkPad-P72>
- <875z9lkoo4.fsf@nanos.tec.linutronix.de>
- <20200814204140.GT4295@paulmck-ThinkPad-P72>
- <20200814215206.GL3982@worktop.programming.kicks-ass.net>
- <20200816225655.GA17869@pc636>
- <20200817082849.GA28270@dhcp22.suse.cz>
- <20200817222803.GE23602@paulmck-ThinkPad-P72>
- <20200818074344.GL28270@dhcp22.suse.cz>
- <20200818135327.GF23602@paulmck-ThinkPad-P72>
- <20200818150232.GQ28270@dhcp22.suse.cz>
+        Tue, 18 Aug 2020 11:44:59 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2636 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726685AbgHRPob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:44:31 -0400
+Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 87348B7096922947690A;
+        Tue, 18 Aug 2020 16:44:30 +0100 (IST)
+Received: from kstruczy-linux-box (10.204.65.138) by
+ lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 18 Aug 2020 16:44:28 +0100
+Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:44:31 +0200
+From:   <krzysztof.struczynski@huawei.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <containers@lists.linux-foundation.org>,
+        <linux-security-module@vger.kernel.org>
+CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
+        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
+        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
+        <jmorris@namei.org>, <christian@brauner.io>,
+        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Subject: [RFC PATCH 13/30] ima: Add a new ima template that includes namespace ID
+Date:   Tue, 18 Aug 2020 17:42:13 +0200
+Message-ID: <20200818154230.14016-4-krzysztof.struczynski@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818150232.GQ28270@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.204.65.138]
+X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
+ lhreml722-chm.china.huawei.com (10.201.108.73)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Michal.
+From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-You mentioned somewhere in the thread to show figures regarding hitting
-a fast path and "fallback one". We follow fallback when a page allocation fails.
+Add a new ima-ns template:
+"d-ng|n-ng|ns"
 
-Please see below the plot. I hope it is easy to understand:
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+---
+ security/integrity/ima/ima_template.c     |  5 ++++-
+ security/integrity/ima/ima_template_lib.c | 13 +++++++++++++
+ security/integrity/ima/ima_template_lib.h |  2 ++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-wget ftp://vps418301.ovh.net/incoming/1000000_kfree_rcu_fast_hit_vs_fallback_hit.png
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index 945e70fafd2e..2020bd5176a4 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -22,6 +22,7 @@ static struct ima_template_desc builtin_templates[] = {
+ 	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
+ 	{.name = "ima-buf", .fmt = "d-ng|n-ng|buf"},
+ 	{.name = "ima-modsig", .fmt = "d-ng|n-ng|sig|d-modsig|modsig"},
++	{.name = "ima-ns", .fmt = "d-ng|n-ng|ns"},
+ 	{.name = "", .fmt = ""},	/* placeholder for a custom format */
+ };
+ 
+@@ -45,6 +46,8 @@ static const struct ima_template_field supported_fields[] = {
+ 	 .field_show = ima_show_template_digest_ng},
+ 	{.field_id = "modsig", .field_init = ima_eventmodsig_init,
+ 	 .field_show = ima_show_template_sig},
++	{.field_id = "ns", .field_init = ima_eventns_init,
++	 .field_show = ima_show_template_buf},
+ };
+ 
+ /*
+@@ -52,7 +55,7 @@ static const struct ima_template_field supported_fields[] = {
+  * need to be accounted for since they shouldn't be defined in the same template
+  * description as 'd-ng' and 'n-ng' respectively.
+  */
+-#define MAX_TEMPLATE_NAME_LEN sizeof("d-ng|n-ng|sig|buf|d-modisg|modsig")
++#define MAX_TEMPLATE_NAME_LEN sizeof("d-ng|n-ng|sig|buf|d-modisg|modsig|ns")
+ 
+ static struct ima_template_desc *ima_template;
+ 
+diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+index 635c6ac05050..cda5374dbbc4 100644
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -484,3 +484,16 @@ int ima_eventmodsig_init(struct ima_event_data *event_data,
+ 	return ima_write_template_field_data(data, data_len, DATA_FMT_HEX,
+ 					     field_data);
+ }
++
++/*
++ *  ima_eventns_init - include the ima namespace id as part of the
++ *  template data
++ */
++int ima_eventns_init(struct ima_event_data *event_data,
++		     struct ima_field_data *field_data)
++{
++	return ima_write_template_field_data(&(event_data->ns_id),
++					     sizeof(event_data->ns_id),
++					     DATA_FMT_HEX,
++					     field_data);
++}
+diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
+index 9a88c79a7a61..7e67d1402192 100644
+--- a/security/integrity/ima/ima_template_lib.h
++++ b/security/integrity/ima/ima_template_lib.h
+@@ -46,4 +46,6 @@ int ima_eventbuf_init(struct ima_event_data *event_data,
+ 		      struct ima_field_data *field_data);
+ int ima_eventmodsig_init(struct ima_event_data *event_data,
+ 			 struct ima_field_data *field_data);
++int ima_eventns_init(struct ima_event_data *event_data,
++		     struct ima_field_data *field_data);
+ #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
+-- 
+2.20.1
 
-to summarize. When i tight loop is applied, i.e. flood simulation the fallback hit
-is negligible. It is a noise, out of 1 000 000 we have 1% or %2 of fallback hitting.
-
-Thanks!
-
---
-Vlad Rezki
