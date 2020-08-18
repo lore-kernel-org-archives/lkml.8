@@ -2,117 +2,94 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4530EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9905EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5302076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A4220885
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ID1kX5r7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CaDnHb2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHRTws (ORCPT
+        id S1726739AbgHRTw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:52:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43206 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726630AbgHRTws (ORCPT
+        Tue, 18 Aug 2020 15:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbgHRTw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:52:48 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07IJWkru076478;
-        Tue, 18 Aug 2020 15:51:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=k8HiwGiI6W+IU4siScj8bisxpCGNJQYvS818WjWSBx8=;
- b=ID1kX5r7z9b2F+dQ0eaYWDhW4tnH+1f3xG5cpXtToPGwUU2xh6O+8aX3U8qQyByfu+e8
- fznS1whhb2jApj/6+BBYc9SBG4fJdBsS8koVm7lsin4oJo/MvzKuCAVdAyFNpqyDbgKg
- Baa0NTpt+05nkp3+vQ17mO+il09gmdprxFYXRCL3tEcCwpnbyaW4Oa/Qlshzg9HpE0uX
- 3Iw+9b/JFO4RPHGywpu944OzycrL/6aSGgb5oN2J264pxZG0sPHtiSHnMnJ+Kt7LcVus
- ovN+zeXcCwe+3mhxvrj0Sd3wJHOHgJbYYpsd5XVRiu45BhXWcDuCdFrbXSfRlZ0ceSG+ RQ== 
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304swngd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 15:51:59 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07IJilcg019873;
-        Tue, 18 Aug 2020 19:51:58 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 3304tked05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 19:51:58 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07IJpw4127001310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 19:51:58 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D1BB112062;
-        Tue, 18 Aug 2020 19:51:58 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46F8F112065;
-        Tue, 18 Aug 2020 19:51:55 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.41.251])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 18 Aug 2020 19:51:54 +0000 (GMT)
-References: <20200817214658.103093-1-bauerman@linux.ibm.com> <20200818065911.GA2324@lst.de>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] powerpc/pseries/svm: Allocate SWIOTLB buffer anywhere in memory
-In-reply-to: <20200818065911.GA2324@lst.de>
-Date:   Tue, 18 Aug 2020 16:51:52 -0300
-Message-ID: <877dtvn353.fsf@morokweng.localdomain>
+        Tue, 18 Aug 2020 15:52:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE80C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:52:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c10so119638pjn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9oJ2zfjKJJiXgn03b7esdKzd42rBKqiMgP8CTxYlR44=;
+        b=CaDnHb2DPPFZ3mItkFuZdu+ViUsmHwSbos09211JJsLn3Ol/WlaJSGPMCX7WzRKr7B
+         pAScD3z9uCqffbd/9A0vHlDnFSWlanOTPNdr4mPvlh07kqUxuIJwHSbcyN0y5x7GWZV8
+         sfsvudehB07JsdS0kQ455gU2WI7mU7/NkUOwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9oJ2zfjKJJiXgn03b7esdKzd42rBKqiMgP8CTxYlR44=;
+        b=NyQz/ll8gmDRdIUa4rWRP6gwpLXaLvQcNNXo3gc3qaLETb7iAN0Jl7bOGhukL26Kms
+         wj9Q4BBE7bnnUgKmoyPU3tBIOg5WchMv6OnfsIhwVlrcDbPAZf6Z15uzc98MVkfsz9Mc
+         tqiEXt2h1sxStun06O2HeQ7x+MlSBQm+eK43ZsFgeeU7VZNcPvL2iI+HXfq3lOZPWs5h
+         w6oeXMcbfgGKtOykA4G+BS/hfTQ2XwnuGVUTj6QSIUEoKskW++7qcujliyCoe54AZyex
+         c3Fozcl5o6lUmM96tdUp5WCZQo40IYlEdityyB4IBQc7VngZwtzuACfRjOONrJtzAhrA
+         flLQ==
+X-Gm-Message-State: AOAM530FqUhUyFbxWyidA6/lM/oXEb2PcTDU9DdwIC6QxXM4SgrvBam6
+        draVxuR/+SIhHSxCMyBJyAcBYA==
+X-Google-Smtp-Source: ABdhPJyNRFjIYwrofkjNhSwiglIYTHnPVqwppmbBIFgjNQKAiRA+xOIr1l8+uIh1VuQ8P4aHkAbxVw==
+X-Received: by 2002:a17:90a:d249:: with SMTP id o9mr1136640pjw.233.1597780377087;
+        Tue, 18 Aug 2020 12:52:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h65sm25459943pfb.210.2020.08.18.12.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:52:56 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:52:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Scott Branden <scott.branden@broadcom.com>,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v2 0/3] Add Broadcom VK driver
+Message-ID: <202008181251.1CA80429@keescook>
+References: <20200806004631.8102-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_13:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxscore=0 malwarescore=0 spamscore=0 mlxlogscore=778 lowpriorityscore=0
- bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008180131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806004631.8102-1-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 05:46:28PM -0700, Scott Branden wrote:
+> This patch series drops previous patches in [1]
+> that were incorporated by Kees Cook into patch series
+> "Introduce partial kernel_read_file() support" [2].
+> 
+> Remaining patches are contained in this series to add Broadcom VK driver.
+> (which depends on request_firmware_into_buf API addition in
+> other patch series [2] being applied first).
+> 
+> Please note this patch series will not compile without [2].
+> 
+> [1] https://lore.kernel.org/lkml/20200706232309.12010-1-scott.branden@broadcom.com/
+> [2] https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/
 
-Christoph Hellwig <hch@lst.de> writes:
-
-> On Mon, Aug 17, 2020 at 06:46:58PM -0300, Thiago Jung Bauermann wrote:
->> POWER secure guests (i.e., guests which use the Protection Execution
->> Facility) need to use SWIOTLB to be able to do I/O with the hypervisor, but
->> they don't need the SWIOTLB memory to be in low addresses since the
->> hypervisor doesn't have any addressing limitation.
->> 
->> This solves a SWIOTLB initialization problem we are seeing in secure guests
->> with 128 GB of RAM: they are configured with 4 GB of crashkernel reserved
->> memory, which leaves no space for SWIOTLB in low addresses.
->> 
->> To do this, we use mostly the same code as swiotlb_init(), but allocate the
->> buffer using memblock_alloc() instead of memblock_alloc_low().
->> 
->> We also need to add swiotlb_set_no_iotlb_memory() in order to set the
->> no_iotlb_memory flag if initialization fails.
->
-> Do you really need the helper?  As far as I can tell the secure guests
-> very much rely on swiotlb for all I/O, so you might as well panic if
-> you fail to allocate it.
-
-That is true. Ok, I will do that.
+Greg, is your intention to take [2] into your tree? AFAICT, it's got the
+appropriate Acks, etc.
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Kees Cook
