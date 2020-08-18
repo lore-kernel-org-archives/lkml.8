@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45906C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CFEC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C5A2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC0A207DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PPgev+ZQ"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MMePVPja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgHRH1L (ORCPT
+        id S1726707AbgHRH1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:27:11 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:19919 "EHLO
+        Tue, 18 Aug 2020 03:27:39 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:20016 "EHLO
         smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgHRH1D (ORCPT
+        with ESMTP id S1726343AbgHRH1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:27:03 -0400
+        Tue, 18 Aug 2020 03:27:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597735622; x=1629271622;
+  t=1597735658; x=1629271658;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=IDHkic1gYAf9g3QrAFwx1LEoduynRqvj1VEruhEXvww=;
-  b=PPgev+ZQlHZYmhPlZ4sRv4XlmQ5EqQZs6dVKc/z8QNvp+94RHFNyDaZn
-   fsFE7uPIgvJd/71x3Ntoy7gpR+Tu/6oEqKEzBKo4dGfI0bnXP6pkR0qQy
-   FHx64yd9mqBYNzdGgGrkYZvJCTEvDQ3wETEk4QmBdP32TxEMMkvM9ooyg
-   g=;
+  bh=TaBhL5HojO46LzRrtNTJtjXeDGLmPmatGGRehayYLuY=;
+  b=MMePVPjabcs8Bo1cg2HShvXOsZeoYHI11j57FlnB2tAyBP49NnKAOGp9
+   uDhIQIcYgRxAFsO3hR7xMT2jsEVX2nlPh2CpUR0k2E1n6uwJIN5cBH0GI
+   Tf61u3arfai7HFCDn6O6ISKADQ8rmpli3MJMmRTq7Z7f5gcqxFc8rVS84
+   E=;
 X-IronPort-AV: E=Sophos;i="5.76,326,1592870400"; 
-   d="scan'208";a="68776218"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 18 Aug 2020 07:26:59 +0000
+   d="scan'208";a="68776302"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 18 Aug 2020 07:27:34 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 9F35AA1E78;
-        Tue, 18 Aug 2020 07:26:47 +0000 (UTC)
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 117A6A2195;
+        Tue, 18 Aug 2020 07:27:22 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 18 Aug 2020 07:26:46 +0000
+ id 15.0.1497.2; Tue, 18 Aug 2020 07:27:22 +0000
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.162.73) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 18 Aug 2020 07:26:30 +0000
+ id 15.0.1497.2; Tue, 18 Aug 2020 07:27:05 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC v7 04/10] selftests/damon/_chk_record: Do not check number of gaps
-Date:   Tue, 18 Aug 2020 09:24:55 +0200
-Message-ID: <20200818072501.30396-5-sjpark@amazon.com>
+Subject: [RFC v7 05/10] Docs/admin-guide/mm/damon: Document 'init_regions' feature
+Date:   Tue, 18 Aug 2020 09:24:56 +0200
+Message-ID: <20200818072501.30396-6-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200818072501.30396-1-sjpark@amazon.com>
 References: <20200818072501.30396-1-sjpark@amazon.com>
@@ -85,41 +85,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Now the regions can be explicitly set as users want.  Therefore checking
-the number of gaps doesn't make sense.  Remove the condition.
+This commit adds description of the 'init_regions' feature in the DAMON
+usage document.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/testing/selftests/damon/_chk_record.py | 6 ------
- 1 file changed, 6 deletions(-)
+ Documentation/admin-guide/mm/damon/usage.rst | 41 +++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/damon/_chk_record.py b/tools/testing/selftests/damon/_chk_record.py
-index 73e128904319..5f11be64abed 100644
---- a/tools/testing/selftests/damon/_chk_record.py
-+++ b/tools/testing/selftests/damon/_chk_record.py
-@@ -37,12 +37,9 @@ def chk_task_info(f):
-         print('too many regions: %d > %d' % (nr_regions, max_nr_regions))
-         exit(1)
+diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
+index 96278227f925..cf0d44ce0ac9 100644
+--- a/Documentation/admin-guide/mm/damon/usage.rst
++++ b/Documentation/admin-guide/mm/damon/usage.rst
+@@ -281,8 +281,9 @@ for at least 100 milliseconds using below commands::
+ debugfs Interface
+ =================
  
--    nr_gaps = 0
-     eaddr = 0
-     for r in range(nr_regions):
-         saddr = struct.unpack('L', f.read(8))[0]
--        if eaddr and saddr != eaddr:
--            nr_gaps += 1
-         eaddr = struct.unpack('L', f.read(8))[0]
-         nr_accesses = struct.unpack('I', f.read(4))[0]
+-DAMON exports five files, ``attrs``, ``target_ids``, ``record``, ``schemes``
+-and ``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
++DAMON exports six files, ``attrs``, ``target_ids``, ``init_regions``,
++``record``, ``schemes`` and ``monitor_on`` under its debugfs directory,
++``<debugfs>/damon/``.
  
-@@ -56,9 +53,6 @@ def chk_task_info(f):
-                 print('too high nr_access: expected %d but %d' %
-                         (max_nr_accesses, nr_accesses))
-                 exit(1)
--    if nr_gaps != 2:
--        print('number of gaps are not two but %d' % nr_gaps)
--        exit(1)
  
- def parse_time_us(bindat):
-     sec = struct.unpack('l', bindat[0:8])[0]
+ Attributes
+@@ -321,6 +322,42 @@ check it again::
+ Note that setting the target ids doesn't start the monitoring.
+ 
+ 
++Initial Monitoring Target Regions
++---------------------------------
++
++In case of the debugfs based monitoring, DAMON automatically sets and updates
++the monitoring target regions so that entire memory mappings of target
++processes can be covered. However, users might want to limit the monitoring
++region to specific address ranges, such as the heap, the stack, or specific
++file-mapped area.  Or, some users might know the initial access pattern of
++their workloads and therefore want to set optimal initial regions for the
++'adaptive regions adjustment'.
++
++In such cases, users can explicitly set the initial monitoring target regions
++as they want, by writing proper values to the ``init_regions`` file.  Each line
++of the input should represent one region in below form.::
++
++    <target id> <start address> <end address>
++
++The ``target id`` should already in ``target_ids`` file, and the regions should
++be passed in address order.  For example, below commands will set a couple of
++address ranges, ``1-100`` and ``100-200`` as the initial monitoring target
++region of process 42, and another couple of address ranges, ``20-40`` and
++``50-100`` as that of process 4242.::
++
++    # cd <debugfs>/damon
++    # echo "42   1       100
++            42   100     200
++            4242 20      40
++            4242 50      100" > init_regions
++
++Note that this sets the initial monitoring target regions only.  In case of
++virtual memory monitoring, DAMON will automatically updates the boundary of the
++regions after one ``regions update interval``.  Therefore, users should set the
++``regions update interval`` large enough in this case, if they don't want the
++update.
++
++
+ Record
+ ------
+ 
 -- 
 2.17.1
 
