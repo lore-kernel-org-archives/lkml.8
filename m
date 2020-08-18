@@ -2,246 +2,60 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD51C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1709DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742902075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F0A205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgHRLbG (ORCPT
+        id S1726699AbgHRLbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgHRLaV (ORCPT
+        Tue, 18 Aug 2020 07:31:15 -0400
+Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:50904 "EHLO
+        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgHRLaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:30:21 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E98C061343;
-        Tue, 18 Aug 2020 04:28:34 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id BB68D29817E
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kernel@collabora.com
-Subject: [PATCH v3 2/2] tty/sysrq: Add configurable handler to execute a compound action
-Date:   Tue, 18 Aug 2020 13:28:25 +0200
-Message-Id: <20200818112825.6445-3-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200818112825.6445-1-andrzej.p@collabora.com>
-References: <20200818112825.6445-1-andrzej.p@collabora.com>
+        Tue, 18 Aug 2020 07:30:35 -0400
+X-Greylist: delayed 1272 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Aug 2020 07:30:31 EDT
+Received: from [188.210.212.0] (helo=[192.168.0.104])
+        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1k7zUO-0005sK-8K; Tue, 18 Aug 2020 12:09:12 +0100
+Subject: Re: [PATCH 0/3] pinctrl: mcp23s08: Fixups for mcp23x17
+To:     Rob Herring <robh@kernel.org>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+ <26d33248-c07b-db2c-2989-3ca14aea7896@codethink.co.uk>
+ <20200817192957.GA1401599@bogus>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <13c56cdc-ecb4-6590-7233-887397f1cd97@codethink.co.uk>
+Date:   Tue, 18 Aug 2020 12:09:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200817192957.GA1401599@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userland might want to execute e.g. 'w' (show blocked tasks), followed
-by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
-upon a single magic SysRq. Or one might want to execute the famous "Raising
-Elephants Is So Utterly Boring" action. This patch adds a configurable
-handler, triggered with 'C', for this exact purpose. The user specifies the
-composition of the compound action using syntax similar to getopt, where
-each letter corresponds to an individual action and a colon followed by a
-number corresponds to a delay of that many milliseconds, e.g.:
+On 17/08/2020 20:29, Rob Herring wrote:
+> On Fri, Aug 14, 2020 at 02:56:54PM +0100, Thomas Preston wrote:
+>> Actually I think I'm wrong about the interrupt-controller changes in patches
+>> 0002 and 0003.
+> 
+> You are. Looking at the datasheet, the GPIOs have interrupt capability.
+> GPIO controllers are typically both an interrupt client and provider.
 
-ws:1000c
+Thanks for the clarification.
 
-or
-
-r:100eis:1000ub
-
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
- Documentation/admin-guide/sysrq.rst |  9 ++++
- drivers/tty/sysrq.c                 | 82 ++++++++++++++++++++++++++++-
- include/linux/sysrq.h               |  1 +
- 3 files changed, 91 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-index 67dfa4c29093..80bdd8bf9636 100644
---- a/Documentation/admin-guide/sysrq.rst
-+++ b/Documentation/admin-guide/sysrq.rst
-@@ -32,6 +32,7 @@ to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:
-          64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
-         128 =  0x80 - allow reboot/poweroff
-         256 = 0x100 - allow nicing of all RT tasks
-+        512 = 0x200 - allow compound action
- 
- You can set the value in the file by the following command::
- 
-@@ -148,6 +149,14 @@ Command	    Function
- 
- ``z``	    Dump the ftrace buffer
- 
-+``C``	    Execute a predefined, compound action. The action is defined with
-+	    sysrq.sysrq_compound_action module parameter, whose value contains known
-+	    command keys (except ``C`` to prevent recursion). The command keys can
-+	    be optionally followed by a colon and a number of milliseconds to wait
-+	    after executing the last action. For example:
-+
-+	    sysrq.sysrq_compound_action=r:100eis:1000ub
-+
- ``0``-``9`` Sets the console log level, controlling which kernel messages
-             will be printed to your console. (``0``, for example would make
-             it so that only emergency messages like PANICs or OOPSes would
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 959f9e121cc6..e4ddea87c6db 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -20,6 +20,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/task.h>
- #include <linux/ctype.h>
-+#include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/mm.h>
- #include <linux/fs.h>
-@@ -438,6 +439,15 @@ static const struct sysrq_key_op sysrq_unrt_op = {
- 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
- };
- 
-+static void sysrq_action_compound(int key);
-+
-+static struct sysrq_key_op sysrq_action_compound_op = {
-+	.handler	= sysrq_action_compound,
-+	.help_msg	= "execute-compound-action(C)",
-+	.action_msg	= "Execute compound action",
-+	.enable_mask	= SYSRQ_ENABLE_COMPOUND,
-+};
-+
- /* Key Operations table and lock */
- static DEFINE_SPINLOCK(sysrq_key_table_lock);
- 
-@@ -500,7 +510,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
- 	&sysrq_ftrace_dump_op,		/* z */
- 	NULL,				/* A */
- 	NULL,				/* B */
--	NULL,				/* C */
-+	&sysrq_action_compound_op,	/* C */
- 	NULL,				/* D */
- 	NULL,				/* E */
- 	NULL,				/* F */
-@@ -633,6 +643,7 @@ EXPORT_SYMBOL(handle_sysrq);
- 
- #ifdef CONFIG_INPUT
- static int sysrq_reset_downtime_ms;
-+static char *sysrq_compound_action;
- 
- /* Simple translation table for the SysRq keys */
- static const unsigned char sysrq_xlate[KEY_CNT] =
-@@ -786,6 +797,62 @@ static void sysrq_of_get_keyreset_config(void)
- {
- }
- #endif
-+#define SYSRQ_COMPOUND_ACTION_VALIDATE	0
-+#define SYSRQ_COMPOUND_ACTION_RUN	1
-+
-+static int sysrq_process_compound_action(int pass)
-+{
-+	const char *action = sysrq_compound_action;
-+	const struct sysrq_key_op *op_p;
-+	int ret;
-+	unsigned int delay;
-+
-+	while (*action) {
-+		op_p = __sysrq_get_key_op(*action);
-+		if (!op_p)
-+			return -EINVAL;
-+
-+		/* Don't allow calling ourselves recursively */
-+		if (op_p == &sysrq_action_compound_op)
-+			return -EINVAL;
-+
-+		if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-+			__handle_sysrq(*action, false);
-+
-+		if (*++action == ':') {
-+			ret = sscanf(action++, ":%u", &delay);
-+			if (ret < 1) /* we want at least ":[0-9]" => 1 item */
-+				return -EINVAL;
-+
-+			while (*action >= '0' && *action <= '9')
-+				++action;
-+			if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-+				mdelay(delay);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void sysrq_action_compound(int key)
-+{
-+	if (!sysrq_compound_action) {
-+		pr_err("Unconfigured compound action for %s\n",
-+		       sysrq_action_compound_op.help_msg);
-+
-+		return;
-+	}
-+
-+	if (sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_VALIDATE)) {
-+		pr_err("Incorrect compound action %s for %s\n",
-+		       sysrq_compound_action,
-+		       sysrq_action_compound_op.help_msg);
-+
-+		return;
-+	}
-+
-+	sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_RUN);
-+}
- 
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
-@@ -1077,8 +1144,21 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
- 
- module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
- 
-+module_param(sysrq_compound_action, charp, 0644);
-+MODULE_PARM_DESC(sysrq_compound_action,
-+	"\tCompound sysrq action to be executed on Alt-Shift-SysRq-C\n"
-+	"\tThe compound action definition consists of known SysRq action letters except 'C',\n"
-+	"\teach letter can be optionally followed by a colon and a number of milliseconds to wait\n"
-+	"\tafter executing the last action.\n"
-+	"\tExample:\n"
-+	"\tTo unRaw, wait 100ms, tErminate, kIll, Sync, wait 1000ms, Unmount, Boot\n"
-+	"\tsysrq.sysrq_compound_action=r:100eis:1000ub");
- #else
- 
-+static void sysrq_action_compound(int key)
-+{
-+}
-+
- static inline void sysrq_register_handler(void)
- {
- }
-diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-index 3a582ec7a2f1..6df4442f12a9 100644
---- a/include/linux/sysrq.h
-+++ b/include/linux/sysrq.h
-@@ -28,6 +28,7 @@
- #define SYSRQ_ENABLE_SIGNAL	0x0040
- #define SYSRQ_ENABLE_BOOT	0x0080
- #define SYSRQ_ENABLE_RTNICE	0x0100
-+#define SYSRQ_ENABLE_COMPOUND	0x0200
- 
- struct sysrq_key_op {
- 	void (* const handler)(int);
--- 
-2.17.1
-
+I still think the patch 0001 is required. The precious and volatile 
+ranges are broken.
