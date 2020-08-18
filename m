@@ -2,133 +2,189 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD39206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6D720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="HbnpJ5QN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgHRLHl (ORCPT
+        id S1726483AbgHRLHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:07:41 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:51341 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgHRLHg (ORCPT
+        Tue, 18 Aug 2020 07:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgHRLHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:07:36 -0400
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07IB7E6u053360;
-        Tue, 18 Aug 2020 20:07:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Tue, 18 Aug 2020 20:07:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07IB7DMZ053348
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 18 Aug 2020 20:07:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] lockdep: Introduce CONFIG_LOCKDEP_LARGE
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CACT4Y+YXT9iLij-AbrUwj=yPq-YNFw=Au9g0LQJCKwYonaHCDQ@mail.gmail.com>
- <46674d71-1e41-cb68-ed99-72c25a73dfef@i-love.sakura.ne.jp>
- <37b60b14-4eb6-36b3-1195-97c2d27b7ed8@i-love.sakura.ne.jp>
- <CACT4Y+Y0ptJDj1F89jKQEKB_L8U2yFCUUZ7pwxh+fcE-ZpsBkg@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <8fc12fea-bf70-874e-fc19-067d504fa5cc@i-love.sakura.ne.jp>
-Date:   Tue, 18 Aug 2020 20:07:09 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 07:07:43 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A86FC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:07:43 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so17867665wrh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=drdVPSYgqMc7dqGMBgLAeet5Si+cNYzh0V7KAWM73y4=;
+        b=HbnpJ5QNoEXhYruLjRRBC3XSjw1narQot9FBjqwrfyfJOd7RbgzX0VasnZdNCDoWeV
+         gLhK/sAiwxiehQ71zp6iPywxGgBdD/qQb6NJkt00/PeHH1vGHPd5EtZHY+5VFJzBRFP/
+         ZFIK9iMao5tEkWVUPxh+t6vFlIhKs0baoLd+pSKdl5PVbi6k1G4r7A1RZ3VEzaP4TCqD
+         0rX7x/8pmBFoLwsyaH8AvLudI0FYnuRHRRkxzDhga7fLqyv0KgFKO+l8yfZkEZyhhdr+
+         o5d04kpj8IOBpHvPVj5fKxojGOymyLBgh6ZpBOd3zF0hOjjcGVPifMFCW8hwv0K0lnUp
+         JHIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=drdVPSYgqMc7dqGMBgLAeet5Si+cNYzh0V7KAWM73y4=;
+        b=BH+qGqt5XoO/GmubifjUKmUKhNJTvlbdBOd6smTaM8FpfD9wYiGmJEODo1jVvUKv3F
+         0D4IK1aBKdz9hoHea9WMSx7caFlWQ//tvROmIN89a3xIdFDBoabJvYS0uX4K+JWYLnt3
+         cWwLPP9NTd6zEYA4sLGJzulGfo/RMue2QJ7znbkCAeQ9bYOynLgUg3lQLgG/DAvA2U4Q
+         sCmBjPepSOU3tSYnP+E9W+ibS0kni6Gc1tH/z3vQ2A+zBjjmgJOGfW67oV64BfAvTWKc
+         QkVSjNGG7PeHc7Xhc4T+Z/URDraN/oZWrcqd6mBJQn5o/QSFSwYInnWvFSuEkWufPTGU
+         9TNg==
+X-Gm-Message-State: AOAM5310xSqGMrvg4e04GjU6EBa62sabOghUbayQytt+z8ChIv1vcMq1
+        kuT7THUIWMt+Ug6w/hRD4mZtEOSBrgT0Is9W
+X-Google-Smtp-Source: ABdhPJxUcNMbG61CAzv1+ghtKHABVOnJMu095E+/m535tDRmxABwZXq/VtYImGvD4hfex35L1/o3Hw==
+X-Received: by 2002:adf:ed85:: with SMTP id c5mr19775656wro.307.1597748861915;
+        Tue, 18 Aug 2020 04:07:41 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id d14sm35403359wre.44.2020.08.18.04.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 04:07:41 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 13:07:40 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Moshe Shemesh <moshe@nvidia.com>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v2 13/13] devlink: Add
+ Documentation/networking/devlink/devlink-reload.rst
+Message-ID: <20200818110740.GC2627@nanopsycho>
+References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+ <1597657072-3130-14-git-send-email-moshe@mellanox.com>
+ <20200817163933.GB2627@nanopsycho>
+ <a786a68d-df60-cae3-5fb1-3648ca1c69d8@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+Y0ptJDj1F89jKQEKB_L8U2yFCUUZ7pwxh+fcE-ZpsBkg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a786a68d-df60-cae3-5fb1-3648ca1c69d8@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/18 18:57, Dmitry Vyukov wrote:
-> On Tue, Aug 4, 2020 at 4:36 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> Hello, Peter, Ingo and Will.
->>
->> (Q1) Can we change the capacity using kernel config?
->>
->> (Q2) If we can change the capacity, is it OK to specify these constants
->>      independently? (In other words, is there inter-dependency among
->>      these constants?)
-> 
-> 
-> I think we should do this.
-> syzbot uses a very beefy kernel config and very broad load.
-> We are hitting "BUG: MAX_LOCKDEP_ENTRIES too low!" for the part 428
-> days and already hit it 96K times. It's just harming overall kernel
-> testing:
-> https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
-> 
-> I think it's better if exact values are not hardcoded, but rather
-> specified in the config. Today we are switching from 4K to 8K, but as
-> we enable more configs and learn to reach more code, we may need 16K.
+Tue, Aug 18, 2020 at 11:14:16AM CEST, moshe@nvidia.com wrote:
+>
+>On 8/17/2020 7:39 PM, Jiri Pirko wrote:
+>> Mon, Aug 17, 2020 at 11:37:52AM CEST, moshe@mellanox.com wrote:
+>> > Add devlink reload rst documentation file.
+>> > Update index file to include it.
+>> > 
+>> > Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+>> > ---
+>> > - Instead of reload levels driver,fw_reset,fw_live_patch have reload
+>> >   actions driver_reinit,fw_activate,fw_live_patch
+>> > ---
+>> > .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
+>> > Documentation/networking/devlink/index.rst    |  1 +
+>> > 2 files changed, 55 insertions(+)
+>> > create mode 100644 Documentation/networking/devlink/devlink-reload.rst
+>> > 
+>> > diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
+>> > new file mode 100644
+>> > index 000000000000..9846ea727f3b
+>> > --- /dev/null
+>> > +++ b/Documentation/networking/devlink/devlink-reload.rst
+>> > @@ -0,0 +1,54 @@
+>> > +.. SPDX-License-Identifier: GPL-2.0
+>> > +
+>> > +==============
+>> > +Devlink Reload
+>> > +==============
+>> > +
+>> > +``devlink-reload`` provides mechanism to either reload driver entities,
+>> > +applying ``devlink-params`` and ``devlink-resources`` new values or firmware
+>> > +activation depends on reload action selected.
+>> > +
+>> > +Reload actions
+>> > +=============
+>> > +
+>> > +User may select a reload action.
+>> > +By default ``driver_reinit`` action is done.
+>> > +
+>> > +.. list-table:: Possible reload actions
+>> > +   :widths: 5 90
+>> > +
+>> > +   * - Name
+>> > +     - Description
+>> > +   * - ``driver-reinit``
+>> > +     - Driver entities re-initialization, including applying
+>> > +       new values to devlink entities which are used during driver
+>> > +       load such as ``devlink-params`` in configuration mode
+>> > +       ``driverinit`` or ``devlink-resources``
+>> > +   * - ``fw_activate``
+>> > +     - Firmware activate. Can be used for firmware reload or firmware
+>> > +       upgrade if new firmware is stored and driver supports such
+>> > +       firmware upgrade.
+>> Does this do the same as "driver-reinit" + fw activation? If yes, it
+>> should be written here. If no, it should be written here as well.
+>> 
+>
+>No, The only thing required here is the action of firmware activation. If a
+>driver needs to do reload to make that happen and do reinit that's ok, but
+>not required.
 
-For short term, increasing the capacity would be fine. But for long term, I doubt.
+What does the "FW activation" mean? I believe that this needs explicit
+documentation here.
 
-Learning more locks being held within one boot by enabling more configs, I suspect
-that it becomes more and more timing dependent and difficult to hold all locks that
-can generate a lockdep warning.
 
-> 
-> 
->> (Q3) Do you think that we can extend lockdep to be used as a tool for auditing
->>      locks held in kernel space and rebuilding lock dependency map in user space?
-> 
-> This looks like lots of work. Also unpleasant dependencies on
-> user-space. If there is a user-space component, it will need to be
-> deployed to _all_ of kernel testing systems and for all users of
-> syzkaller. And it will also be a dependency for reproducers. Currently
-> one can run a C reproducer and get the errors message from LOCKDEP. It
-> seems that a user-space component will make it significantly more
-> complicated.
-
-My suggestion is to detach lockdep warning from realtime alarming.
-
-Since not all locks are always held (e.g. some locks are held only if exceeding
-some threshold), requiring all locks being held within one boot sounds difficult.
-Such requirement results in flaky bisection like "Fix bisection: failed" in
-https://syzkaller.appspot.com/bug?id=b23ec126241ad0d86628de6eb5c1cff57d282632 .
-
-Then, I'm wishing that we could build non-realtime alarming based on all locks held
-across all boots on each vmlinux file.
-
-> 
-> 
->> On 2020/07/25 14:23, Tetsuo Handa wrote:
->>>> Also somebody may use it to _reduce_ size of the table for a smaller kernel.
->>>
->>> Maybe. But my feeling is that it is very rare that the kernel actually deadlocks
->>> as soon as lockdep warned the possibility of deadlock.
->>>
->>> Since syzbot runs many instances in parallel, a lot of CPU resource is spent for
->>> checking the same dependency tree. However, the possibility of deadlock can be
->>> warned for only locks held within each kernel boot, and it is impossible to hold
->>> all locks with one kernel boot.
->>>
->>> Then, it might be nice if lockdep can audit only "which lock was held from which
->>> context and what backtrace" and export that log like KCOV data (instead of evaluating
->>> the possibility of deadlock), and rebuild the whole dependency (and evaluate the
->>> possibility of deadlock) across multiple kernel boots in userspace.
->>
-
+>
+>> > +   * - ``fw_live_patch``
+>> > +     - Firmware live patch, applies firmware changes without reset.
+>> > +
+>> > +Change namespace
+>> > +================
+>> > +
+>> > +All devlink instances are created in init_net and stay there for a
+>> > +lifetime. Allow user to be able to move devlink instances into
+>> > +namespaces during devlink reload operation. That ensures proper
+>> > +re-instantiation of driver objects, including netdevices.
+>> > +
+>> > +example usage
+>> > +-------------
+>> > +
+>> > +.. code:: shell
+>> > +
+>> > +    $ devlink dev reload help
+>> > +    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
+>> > +
+>> > +    # Run reload command for devlink driver entities re-initialization:
+>> > +    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
+>> > +
+>> > +    # Run reload command to activate firmware:
+>> > +    $ devlink dev reload pci/0000:82:00.0 action fw_activate
+>> > diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
+>> > index 7684ae5c4a4a..d82874760ae2 100644
+>> > --- a/Documentation/networking/devlink/index.rst
+>> > +++ b/Documentation/networking/devlink/index.rst
+>> > @@ -20,6 +20,7 @@ general.
+>> >     devlink-params
+>> >     devlink-region
+>> >     devlink-resource
+>> > +   devlink-reload
+>> >     devlink-trap
+>> > 
+>> > Driver-specific documentation
+>> > -- 
+>> > 2.17.1
+>> > 
