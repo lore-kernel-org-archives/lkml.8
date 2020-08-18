@@ -2,100 +2,127 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A61E20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AB7206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597757772;
+	bh=3RDFnusPuTN/gUIFW524Igr1Ma20iPQgX1vJUa86zcc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BM2KLdPK7+nEndTMxY7tGbjo7roYXfa/RAJD2gLGMIqBCVcc5uDQPqNtdNMZxo2aj
+	 D8fmGyDhx/WlwcIEDlzF/Z7nSN1eCRAOqCI6LsKMisqt4oRDGLY9uFS/eYu+t3pMqW
+	 wGz3J8C1H0RQBwThESwzZc3hePandS9DCqXKCzn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgHRNa6 (ORCPT
+        id S1726592AbgHRNgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:30:58 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30975 "EHLO mga12.intel.com"
+        Tue, 18 Aug 2020 09:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgHRNaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:30:46 -0400
-IronPort-SDR: jNdtA3Y7TU7DSpeWm+hkBTwXujSn1HEyRfk+htIHdLshtAHxL8FfuYEqHF4ATvazDEXbR+iORW
- OSvMhmMhTEHw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="134417565"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="134417565"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:30:44 -0700
-IronPort-SDR: jXUvZvRc+cIhhVBV2rYBhufEk84sPAFYVdOiBEwrwpRlcSSFTst3dT741J0f+18reKSDfNcmNW
- VtGIKQJbXNxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="292764503"
-Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
-  by orsmga003.jf.intel.com with ESMTP; 18 Aug 2020 06:30:36 -0700
-Date:   Tue, 18 Aug 2020 16:30:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Darren Kenny <darren.kenny@oracle.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Andy Lutomirski <luto@kernel.org>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, nhorman@redhat.com,
-        npmccallum@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        sean.j.christopherson@intel.com, tglx@linutronix.de,
-        yaozhangx@google.com
-Subject: Re: [PATCH v36 15/24] x86/sgx: Allow a limited use of
- ATTRIBUTE.PROVISIONKEY for attestation
-Message-ID: <20200818133026.GA132200@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-16-jarkko.sakkinen@linux.intel.com>
- <m27dubr9pp.fsf@oracle.com>
+        id S1726480AbgHRNfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:35:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219472076D;
+        Tue, 18 Aug 2020 13:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597757753;
+        bh=3RDFnusPuTN/gUIFW524Igr1Ma20iPQgX1vJUa86zcc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YAji/SJ6m5Ii17h8yZsQkWBp16JjwEsppLu6q+XvKPAbDgAM2M1hUTrKQWdHdL7VE
+         s+zIu5JLujEF+LFjSrPR+rfsGipkzKwQL4+5VxyRYENf+u8aYF+Q4nbv0RaMrWnuSI
+         uVLyGF9hN2SwCQIez5mToI7C7U+Fh553z+dZGqb0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-media@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/7] media: cec: no need to check return value of debugfs_create functions
+Date:   Tue, 18 Aug 2020 15:36:02 +0200
+Message-Id: <20200818133608.462514-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <m27dubr9pp.fsf@oracle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 06:00:02PM +0100, Darren Kenny wrote:
-> On Thursday, 2020-07-16 at 16:52:54 +03, Jarkko Sakkinen wrote:
-> > Provisioning Certification Enclave (PCE), the root of trust for other
-> > enclaves, generates a signing key from a fused key called Provisioning
-> > Certification Key. PCE can then use this key to certify an attestation key
-> > of a Quoting Enclave (QE), e.g. we get the chain of trust down to the
-> > hardware if the Intel signed PCE is used.
-> >
-> > To use the needed keys, ATTRIBUTE.PROVISIONKEY is required but should be
-> > only allowed for those who actually need it so that only the trusted
-> > parties can certify QE's.
-> >
-> > Obviously the attestation service should know the public key of the used
-> > PCE and that way detect illegit attestation, but whitelisting the legit
-> > users still adds an additional layer of defence.
-> >
-> > Add new device file called /dev/sgx/provision. The sole purpose of this
-> > file is to provide file descriptors that act as privilege tokens to allow
-> > to build enclaves with ATTRIBUTE.PROVISIONKEY set. A new ioctl called
-> > SGX_IOC_ENCLAVE_SET_ATTRIBUTE is used to assign this token to an enclave.
-> >
-> > Cc: linux-security-module@vger.kernel.org
-> > Acked-by: Jethro Beekman <jethro@fortanix.com>
-> > Suggested-by: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> Reviewed-by: Darren Kenny <darren.kenny@oracle.com>
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-Thanks, I added your tags to the corresponding commits.
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/media/cec/core/cec-core.c | 27 ++++++++-------------------
+ include/media/cec.h               |  2 --
+ 2 files changed, 8 insertions(+), 21 deletions(-)
 
-/Jarkko
+diff --git a/drivers/media/cec/core/cec-core.c b/drivers/media/cec/core/cec-core.c
+index c599cd94dd62..562792f545ac 100644
+--- a/drivers/media/cec/core/cec-core.c
++++ b/drivers/media/cec/core/cec-core.c
+@@ -359,27 +359,16 @@ int cec_register_adapter(struct cec_adapter *adap,
+ 	if (!top_cec_dir)
+ 		return 0;
+ 
+-	adap->cec_dir = debugfs_create_dir(dev_name(&adap->devnode.dev), top_cec_dir);
+-	if (IS_ERR_OR_NULL(adap->cec_dir)) {
+-		pr_warn("cec-%s: Failed to create debugfs dir\n", adap->name);
+-		return 0;
+-	}
+-	adap->status_file = debugfs_create_devm_seqfile(&adap->devnode.dev,
+-		"status", adap->cec_dir, cec_adap_status);
+-	if (IS_ERR_OR_NULL(adap->status_file)) {
+-		pr_warn("cec-%s: Failed to create status file\n", adap->name);
+-		debugfs_remove_recursive(adap->cec_dir);
+-		adap->cec_dir = NULL;
+-		return 0;
+-	}
++	adap->cec_dir = debugfs_create_dir(dev_name(&adap->devnode.dev),
++					   top_cec_dir);
++
++	debugfs_create_devm_seqfile(&adap->devnode.dev, "status", adap->cec_dir,
++				    cec_adap_status);
++
+ 	if (!adap->ops->error_inj_show || !adap->ops->error_inj_parse_line)
+ 		return 0;
+-	adap->error_inj_file = debugfs_create_file("error-inj", 0644,
+-						   adap->cec_dir, adap,
+-						   &cec_error_inj_fops);
+-	if (IS_ERR_OR_NULL(adap->error_inj_file))
+-		pr_warn("cec-%s: Failed to create error-inj file\n",
+-			adap->name);
++	debugfs_create_file("error-inj", 0644, adap->cec_dir, adap,
++			    &cec_error_inj_fops);
+ #endif
+ 	return 0;
+ }
+diff --git a/include/media/cec.h b/include/media/cec.h
+index c48b5f2e4b50..cd35ae6b7560 100644
+--- a/include/media/cec.h
++++ b/include/media/cec.h
+@@ -248,8 +248,6 @@ struct cec_adapter {
+ #endif
+ 
+ 	struct dentry *cec_dir;
+-	struct dentry *status_file;
+-	struct dentry *error_inj_file;
+ 
+ 	u32 sequence;
+ 
+-- 
+2.28.0
+
