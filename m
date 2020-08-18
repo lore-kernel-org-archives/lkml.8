@@ -2,125 +2,136 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B953C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D572067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597768108;
-	bh=WoGVZDwIK/F9JyxPbF1fAg8BjUCeVwwHlyHeaJ96uK8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TzqPvlOGgUXU0QcPeUIVkCXqMFsBvYpsGst90++LBD8DdVph/QvKt3PxRcQ8jJFjr
-	 7jZUVLE7DuunXvLzP1P7BD4PfLJuBucND6BMm7ZX5x0qb03KrTJ3FeIlxN/V6aRDdo
-	 Dq+CoH+m1uwTywgBl9CDgCBmJEJviKkSDax2noYE=
+	by mail.kernel.org (Postfix) with ESMTP id 063C62067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7TB2s4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgHRQ2Q (ORCPT
+        id S1728121AbgHRQ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgHRQ03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:26:29 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 048802067C;
-        Tue, 18 Aug 2020 16:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597767989;
-        bh=WoGVZDwIK/F9JyxPbF1fAg8BjUCeVwwHlyHeaJ96uK8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Reyv3GJbcCmGMohVyAFQuL23NBpyCL5QalSakoQYkh8b699H1N+5EXpw7G1L904Ag
-         7fYDD7/k29a6R4CAIWxpiRuk04htTdgr6Qlly24vvza++Vaf5YTdPCKxftssimNqwT
-         L45gOej0uJkpVB/vBAAyZghx0nVAy+YNYcbW/smc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D84E535228F5; Tue, 18 Aug 2020 09:26:28 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 09:26:28 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bitops, kcsan: Partially revert instrumentation for
- non-atomic bitops
-Message-ID: <20200818162628.GG27891@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200813163859.1542009-1-elver@google.com>
- <CANpmjNOvS2FbvAk+j8N0uSuUJgbi=L2_zfK_koOKvJCuys7r7Q@mail.gmail.com>
+        Tue, 18 Aug 2020 12:28:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30217 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728254AbgHRQ1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597768047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=if9LpYICK0NhGXF5AA8XXB22L0fg+m6z8gcS1Q79zUU=;
+        b=c7TB2s4nJZZtfxADyn2lGRVDOg1erPbexqz5JyHkRdT+GVyKZIv8FYzpmAr1N2W1yhNfBo
+        WFTatipZ0ZxQuqde/DYFHWPh92se4d5i4khHQXSet1JybgZOjiQGC79wTJbqnebvWdl6oo
+        EAHIc2eh+REJPofVh8YIU9MWgLr50Bk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-496-Zoh9695HN-WCqpbPCsQrtA-1; Tue, 18 Aug 2020 12:27:25 -0400
+X-MC-Unique: Zoh9695HN-WCqpbPCsQrtA-1
+Received: by mail-wm1-f72.google.com with SMTP id p23so6300665wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:27:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=if9LpYICK0NhGXF5AA8XXB22L0fg+m6z8gcS1Q79zUU=;
+        b=CBRkvoqnIfNEkSSrpZQnxLsqAjH+383SiLud0NfnffSV/LXVvG4FVu1x4yAjZNuwWj
+         Pa5JVOXg56Gz8aa8FxisMbmb+MG0ORKzrohiHsKD9jpbvji9uVgKa9Q20AgqZ+Pcc8Bk
+         naWCI5UwEK0HJq9bsCjzYUjkrCXVqvLplk0UPuP6pKwoC4yXQ8Ob+P/bV4I+RIlHVFEi
+         R1oNLvVZNHCsOTqo6IAkTWuVUOc7/U7KQkU2x8OTkIfBCM92V4P/4Ot6ibbDbffLmSy5
+         uuANZT3UYYJTfB0nsCNe6RXgr8LuGERnuBKA5fVWDtCxiD/9FEigXkNS7MUwMvEfH4f3
+         1mAg==
+X-Gm-Message-State: AOAM531uqP5RbTZRCeViDNDZDK7UN/q+o/h4nHXK82z63Oo/piSfY4SM
+        Z48mTneWBayeL/ulpC60fGNKR71IeqnlWzz6oEUfWsL6SdPJJpGNLVo9m7eW2xH2Qti4L8BkOuj
+        CgAdzbSxOvQEZVDpekPxSP1nH
+X-Received: by 2002:a7b:cf29:: with SMTP id m9mr692508wmg.88.1597768044065;
+        Tue, 18 Aug 2020 09:27:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJykPaZdW75tblNPwohfUTSZAywU3pLEZHF86kgfsgbeUM6YEol+VFwyiwZdqftvl2orXJtznA==
+X-Received: by 2002:a7b:cf29:: with SMTP id m9mr692461wmg.88.1597768043853;
+        Tue, 18 Aug 2020 09:27:23 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:38e0:ccf8:ca85:3d9b? ([2001:b07:6468:f312:38e0:ccf8:ca85:3d9b])
+        by smtp.gmail.com with ESMTPSA id e5sm37696385wrc.37.2020.08.18.09.27.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 09:27:23 -0700 (PDT)
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200814133522.GE1152540@nvidia.com>
+ <MWHPR11MB16456D49F2F2E9646F0841488C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200818004343.GG1152540@nvidia.com>
+ <MWHPR11MB164579D1BBBB0F7164B07A228C5C0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200818115003.GM1152540@nvidia.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0711a4ce-1e64-a0cb-3e6d-f6653284e2e3@redhat.com>
+Date:   Tue, 18 Aug 2020 18:27:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOvS2FbvAk+j8N0uSuUJgbi=L2_zfK_koOKvJCuys7r7Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200818115003.GM1152540@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:34:28AM +0200, Marco Elver wrote:
-> On Thu, 13 Aug 2020 at 18:39, Marco Elver <elver@google.com> wrote:
-> > Previous to the change to distinguish read-write accesses, when
-> > CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=y is set, KCSAN would consider
-> > the non-atomic bitops as atomic. We want to partially revert to this
-> > behaviour, but with one important distinction: report racing
-> > modifications, since lost bits due to non-atomicity are certainly
-> > possible.
-> >
-> > Given the operations here only modify a single bit, assuming
-> > non-atomicity of the writer is sufficient may be reasonable for certain
-> > usage (and follows the permissible nature of the "assume plain writes
-> > atomic" rule). In other words:
-> >
-> >         1. We want non-atomic read-modify-write races to be reported;
-> >            this is accomplished by kcsan_check_read(), where any
-> >            concurrent write (atomic or not) will generate a report.
-> >
-> >         2. We do not want to report races with marked readers, but -do-
-> >            want to report races with unmarked readers; this is
-> >            accomplished by the instrument_write() ("assume atomic
-> >            write" with Kconfig option set).
-> >
-> > With the above rules, when KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected,
-> > it is hoped that KCSAN's reporting behaviour is better aligned with
-> > current expected permissible usage for non-atomic bitops.
-> >
-> > Note that, a side-effect of not telling KCSAN that the accesses are
-> > read-writes, is that this information is not displayed in the access
-> > summary in the report. It is, however, visible in inline-expanded stack
-> > traces. For now, it does not make sense to introduce yet another special
-> > case to KCSAN's runtime, only to cater to the case here.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Will Deacon <will@kernel.org>
-> > ---
-> > As discussed, partially reverting behaviour for non-atomic bitops when
-> > KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected.
-> >
-> > I'd like to avoid more special cases in KCSAN's runtime to cater to
-> > cases like this, not only because it adds more complexity, but it
-> > invites more special cases to be added. If there are other such
-> > primitives, we likely have to do it on a case-by-case basis as well, and
-> > justify carefully for each such case. But currently, as far as I can
-> > tell, the bitops are truly special, simply because we do know each op
-> > just touches a single bit.
-> > ---
-> >  .../bitops/instrumented-non-atomic.h          | 30 +++++++++++++++++--
-> >  1 file changed, 27 insertions(+), 3 deletions(-)
-> 
-> Paul, if it looks good to you, feel free to pick it up.
+On 18/08/20 13:50, Jason Gunthorpe wrote:
+> For instance, what about suspend/resume of containers using idxd?
+> Wouldn't you want to have the same basic approach of controlling the
+> wq from userspace that virtualization uses?
 
-Queued, thank you!
+The difference is that VFIO more or less standardizes the approach you
+use for live migration.  With another interface you'd have to come up
+with something for every driver, and add support in CRIU for every
+driver as well.
 
-							Thanx, Paul
+Paolo
+
