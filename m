@@ -2,80 +2,133 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE650C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C28FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9E52067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6B420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V8m3BO+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHRIeW (ORCPT
+        id S1726617AbgHRIen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:34:22 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:1399 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRIeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:34:22 -0400
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 07I8XRYb061208
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Aug 2020 16:33:27 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 18 Aug 2020 16:33:30 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <naoya.horiguchi@nec.com>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] mm/memory-failure: do pgoff calculation before for_each_process()
-Date:   Tue, 18 Aug 2020 16:26:47 +0800
-Message-ID: <20200818082647.34322-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 04:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRIem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:34:42 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC43C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:34:41 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id u24so16134205oic.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VaNLfRHzjmAhC1MdbIpHRe1zX0H+Foac1RDS2VP3MjY=;
+        b=V8m3BO+xQsaDn6apX6pTobxkTbSUhaMeuMiydfuHreAWCgHIaA991/fUS80QjjH6tr
+         9Lfd3ND0qs72vIyYPvdS6NX4eSyCjqJVLGkwnfxit5pv0DWj0rzvb75ZfUBuogBAKUEI
+         ZCM+qe2Qpg8RDHCsOOwIW77ytRIC3Oh97zJ80dKa7gO0DSp4imvOur356ErhatfrY7ow
+         4xJg4OQdWztwPcPMt/d45VF32M4g4plqkKxpWjzFAjts+apj2yvLW4Nw6pF6l2X1i6Lv
+         rBCIYWRNFhsVsun8E2QDtNBeFTf+/IwwbOb7SNoenOgPJJA9D6tXe9vH8SJJJ81AAEuf
+         LbHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VaNLfRHzjmAhC1MdbIpHRe1zX0H+Foac1RDS2VP3MjY=;
+        b=VP4HhgUk5miSNo6FaAinq6vncnxAHtql40+qJs1uSjONELFSqYj5QDYt6pwj/Twoi5
+         7SyU20oBfNeVA1xEhg8z2JoI+DqtS0vDRqOHrZBG1gYXs4JOrQ25t3CAWLr6rw2DdP2c
+         rm0wf+sgJcfbAZCpoqD9DTKWxitb2RDO5MpA3/iiPhMu8s20+ExKpPc4zijh6s2O+1Kz
+         ZakkUMK7PUjkGnBDqRee7Kxc8HOY175WJuXancOEZrqseUSuPRD7Piuoi9mydCwcz84I
+         sseeWYDnZZY/cTdRJcAMpB7Rnlg5f0p25GmSpIS8LjNGpcIFh9htsWyFJMdM+ED3Flv6
+         AC7g==
+X-Gm-Message-State: AOAM533bx8JOmNNZ9gQbYrZlwwwVQSkaGYnEZND3NriFgwcvwranE2qO
+        J2qVO8VXwIKhNTyUrKhwJerHpCJqTiZE3bKIOZf60Q==
+X-Google-Smtp-Source: ABdhPJyUI34+cEe7L+qs4oF73ktcijLK54TBk3MsXc7f1Mxc3Kxj21GJmXN46BOFLKz3XUly164YYJYQGgakd45oPhc=
+X-Received: by 2002:aca:5145:: with SMTP id f66mr12152867oib.172.1597739680577;
+ Tue, 18 Aug 2020 01:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 07I8XRYb061208
+References: <20200813163859.1542009-1-elver@google.com>
+In-Reply-To: <20200813163859.1542009-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 18 Aug 2020 10:34:28 +0200
+Message-ID: <CANpmjNOvS2FbvAk+j8N0uSuUJgbi=L2_zfK_koOKvJCuys7r7Q@mail.gmail.com>
+Subject: Re: [PATCH] bitops, kcsan: Partially revert instrumentation for
+ non-atomic bitops
+To:     Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to calcaulate pgoff in each loop of for_each_process(),
-so move it to the place before for_each_process(), which can save some
-CPU cycles.
+On Thu, 13 Aug 2020 at 18:39, Marco Elver <elver@google.com> wrote:
+> Previous to the change to distinguish read-write accesses, when
+> CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=y is set, KCSAN would consider
+> the non-atomic bitops as atomic. We want to partially revert to this
+> behaviour, but with one important distinction: report racing
+> modifications, since lost bits due to non-atomicity are certainly
+> possible.
+>
+> Given the operations here only modify a single bit, assuming
+> non-atomicity of the writer is sufficient may be reasonable for certain
+> usage (and follows the permissible nature of the "assume plain writes
+> atomic" rule). In other words:
+>
+>         1. We want non-atomic read-modify-write races to be reported;
+>            this is accomplished by kcsan_check_read(), where any
+>            concurrent write (atomic or not) will generate a report.
+>
+>         2. We do not want to report races with marked readers, but -do-
+>            want to report races with unmarked readers; this is
+>            accomplished by the instrument_write() ("assume atomic
+>            write" with Kconfig option set).
+>
+> With the above rules, when KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected,
+> it is hoped that KCSAN's reporting behaviour is better aligned with
+> current expected permissible usage for non-atomic bitops.
+>
+> Note that, a side-effect of not telling KCSAN that the accesses are
+> read-writes, is that this information is not displayed in the access
+> summary in the report. It is, however, visible in inline-expanded stack
+> traces. For now, it does not make sense to introduce yet another special
+> case to KCSAN's runtime, only to cater to the case here.
+>
+> Signed-off-by: Marco Elver <elver@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> ---
+> As discussed, partially reverting behaviour for non-atomic bitops when
+> KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected.
+>
+> I'd like to avoid more special cases in KCSAN's runtime to cater to
+> cases like this, not only because it adds more complexity, but it
+> invites more special cases to be added. If there are other such
+> primitives, we likely have to do it on a case-by-case basis as well, and
+> justify carefully for each such case. But currently, as far as I can
+> tell, the bitops are truly special, simply because we do know each op
+> just touches a single bit.
+> ---
+>  .../bitops/instrumented-non-atomic.h          | 30 +++++++++++++++++--
+>  1 file changed, 27 insertions(+), 3 deletions(-)
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- mm/memory-failure.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Paul, if it looks good to you, feel free to pick it up.
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 47b8ccb1f..7dc2c9d3b 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -484,11 +484,12 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
- 	struct vm_area_struct *vma;
- 	struct task_struct *tsk;
- 	struct address_space *mapping = page->mapping;
-+	pgoff_t pgoff;
- 
- 	i_mmap_lock_read(mapping);
- 	read_lock(&tasklist_lock);
-+	pgoff = page_to_pgoff(page);
- 	for_each_process(tsk) {
--		pgoff_t pgoff = page_to_pgoff(page);
- 		struct task_struct *t = task_early_kill(tsk, force_early);
- 
- 		if (!t)
--- 
-2.17.1
-
+Thanks,
+-- Marco
