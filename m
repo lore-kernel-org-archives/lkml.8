@@ -2,134 +2,88 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 931B6204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43246204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hgduRtMd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZIG+qq8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgHRKgi (ORCPT
+        id S1726861AbgHRKgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43096 "EHLO
+        Tue, 18 Aug 2020 06:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgHRKgc (ORCPT
+        with ESMTP id S1726836AbgHRKgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:36:32 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0A7C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 03:36:32 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f26be00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:be00:329c:23ff:fea6:a903])
+        Tue, 18 Aug 2020 06:36:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90132C061389;
+        Tue, 18 Aug 2020 03:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PxEaa92aYsiybSQz7oa3HYw1NYI/WkEv9koOqjkqg9g=; b=ZIG+qq8oCuBvwA6kUWik1qng6i
+        gsAHaPDDaBpBiqmSE+bS+HV0Am2meWwZ/5N2iApKqvG82BvkrYckosoFUPFeVdtoPIGxRJLIGHG5t
+        RE8DMo8VfBnHb1OVTyx9cXhLAtMAO79PAXH2sn7L5XgU7REAOmlfJIiASqIf6wGbS/Gxha5Z/XUzH
+        OAVioWo7QCzixURvFN8KwYPR/N9gkEcppIQDoY6sqf/DVwzGAhiOVqeRqAshnGTklMfHCDo6ojldT
+        7qUlMgUAAii5usQ4/2CQiOvYqv91YNC56GXLP24yc3ZhYTRLZsxbPnXU6bHz/Goss7ihx+L07PvAd
+        TK+aRVPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7yys-00020X-6A; Tue, 18 Aug 2020 10:36:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 09D491EC0242;
-        Tue, 18 Aug 2020 12:36:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597746985;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=oLuV1otE+FXjmTbf+3p7DVNs3egn/fXYLEmfGswqK8Q=;
-        b=hgduRtMdVqnlmKL/bI/1lMwTajg9X3GxtEQuufdoqkbHovXwrq8243OTAAqJbZ5/CIGmln
-        dZW+UwNOxlx0SlzgR4Bb4bm7h+/RcqWbhPsNBjb71MJQOpL0/NSzGptjbXHWHcp7z54NDI
-        VFWBseG0p3DkzlH8FiRDb36EITH6ppk=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/fsgsbase: Replace static_cpu_has() with boot_cpu_has()
-Date:   Tue, 18 Aug 2020 12:37:15 +0200
-Message-Id: <20200818103715.32736-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D802305DD1;
+        Tue, 18 Aug 2020 12:36:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3214D2B2C8DCD; Tue, 18 Aug 2020 12:36:37 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 12:36:37 +0200
+From:   peterz@infradead.org
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818103637.GR2674@hirez.programming.kicks-ass.net>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+ <20200818092617.GN28270@dhcp22.suse.cz>
+ <20200818095910.GM2674@hirez.programming.kicks-ass.net>
+ <20200818100516.GO28270@dhcp22.suse.cz>
+ <20200818101844.GO2674@hirez.programming.kicks-ass.net>
+ <20200818103059.GP28270@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818103059.GP28270@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Tue, Aug 18, 2020 at 12:30:59PM +0200, Michal Hocko wrote:
+> The proposal also aims at much richer interface to define the
+> oom behavior.
 
-ptrace and prctl() are not really fast paths to warrant the use of
-static_cpu_has() and cause alternatives patching for no good reason.
-Replace with boot_cpu_has() which is simple and fast enough.
+Oh yeah, I'm not defending any of that prctl() nonsense.
 
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/fsgsbase.h | 4 ++--
- arch/x86/kernel/process_64.c    | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
-index d552646411a9..35cff5f2becf 100644
---- a/arch/x86/include/asm/fsgsbase.h
-+++ b/arch/x86/include/asm/fsgsbase.h
-@@ -57,7 +57,7 @@ static inline unsigned long x86_fsbase_read_cpu(void)
- {
- 	unsigned long fsbase;
- 
--	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+	if (boot_cpu_has(X86_FEATURE_FSGSBASE))
- 		fsbase = rdfsbase();
- 	else
- 		rdmsrl(MSR_FS_BASE, fsbase);
-@@ -67,7 +67,7 @@ static inline unsigned long x86_fsbase_read_cpu(void)
- 
- static inline void x86_fsbase_write_cpu(unsigned long fsbase)
- {
--	if (static_cpu_has(X86_FEATURE_FSGSBASE))
-+	if (boot_cpu_has(X86_FEATURE_FSGSBASE))
- 		wrfsbase(fsbase);
- 	else
- 		wrmsrl(MSR_FS_BASE, fsbase);
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 9afefe325acb..df342bedea88 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -407,7 +407,7 @@ unsigned long x86_gsbase_read_cpu_inactive(void)
- {
- 	unsigned long gsbase;
- 
--	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+	if (boot_cpu_has(X86_FEATURE_FSGSBASE)) {
- 		unsigned long flags;
- 
- 		local_irq_save(flags);
-@@ -422,7 +422,7 @@ unsigned long x86_gsbase_read_cpu_inactive(void)
- 
- void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
- {
--	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+	if (boot_cpu_has(X86_FEATURE_FSGSBASE)) {
- 		unsigned long flags;
- 
- 		local_irq_save(flags);
-@@ -439,7 +439,7 @@ unsigned long x86_fsbase_read_task(struct task_struct *task)
- 
- 	if (task == current)
- 		fsbase = x86_fsbase_read_cpu();
--	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
-+	else if (boot_cpu_has(X86_FEATURE_FSGSBASE) ||
- 		 (task->thread.fsindex == 0))
- 		fsbase = task->thread.fsbase;
- 	else
-@@ -454,7 +454,7 @@ unsigned long x86_gsbase_read_task(struct task_struct *task)
- 
- 	if (task == current)
- 		gsbase = x86_gsbase_read_cpu_inactive();
--	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
-+	else if (boot_cpu_has(X86_FEATURE_FSGSBASE) ||
- 		 (task->thread.gsindex == 0))
- 		gsbase = task->thread.gsbase;
- 	else
--- 
-2.21.0
-
+Just saying that from a math / control theory point of view, the current
+thing is a abhorrent failure.
