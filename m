@@ -2,140 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0657DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0402083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41EC2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597765973;
+	bh=/bDijrbe0Io59V0lahxfMAjJqZmvoTOk4XcBOedRV+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Btf8A+sxqrZCxswRcNr/ia8WtxMAkxx852YVeRTs4n2Za3j24B9oLyH8Q2Y0GSmpp
+	 7oJahsGVDqAuP7Nwz2eANyt2Qkd7cLvWcnjtfi2vydnLKdNxEK/yv2GwkI32eQX80c
+	 w7hp7YY1Zn36eAuIOuExgoFFnoesReZGzVC6acHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgHRPwa (ORCPT
+        id S1726795AbgHRPww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:52:30 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2648 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727826AbgHRPsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:48:00 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id E729ED50D5FCC4DDD013;
-        Tue, 18 Aug 2020 16:47:58 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:47:56 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:47:59 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 25/30] keys: Allow to set key domain tag separately from the key type
-Date:   Tue, 18 Aug 2020 17:42:25 +0200
-Message-ID: <20200818154230.14016-16-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+        Tue, 18 Aug 2020 11:52:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34943 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgHRPvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:51:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id s189so21679557iod.2;
+        Tue, 18 Aug 2020 08:51:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Mf422wvmtHGB+fLAHqkYV5iliyU3plq01dFBfESJYS0=;
+        b=fQ033Hg+n30+M9X4XPrqW9mpP2fnBgDl2jbVloW3idniQlMSvwb/B8rkOb56NghyMH
+         RsfWG0S4TH1deKefT4lQgqAA3vY09GBUmTG2s412e95C/tDjg3g5Uo1ydUYZM6ActtYy
+         BKKIz9SdkbCBgfXtSMdna+5a1ZfVgcJtF8n1gtiVoKPKW8usoRRrIZKeewdU9c0SeQRh
+         L6KpLCRNDu48EovocK+ecjSN/Q4urIp1n0yropFRDjrC7WzHbmCvycPCTw13yqlmFmrH
+         vn4rccUxOk/8BDeNz1RocdZg7WCiPqH+XT6q30ds7a6TNRaQe3tkGo7WKOkgkLTWwxr8
+         Ba+Q==
+X-Gm-Message-State: AOAM531JqTfp99peAUucdQdI6JZ3lgcsg+/LkiVl1cCF1ruN5VK9y/BI
+        X740ZWDwU63NJ7ctAnfIDGNjMZRY5Q==
+X-Google-Smtp-Source: ABdhPJxucHnQnFfDvMaxcgX49sVszAnJBk6CGxr0tcEZLJF8jUkmB4GUT5sDMmAuZn81f35K4UToiQ==
+X-Received: by 2002:a02:cf26:: with SMTP id s6mr19858789jar.44.1597765912536;
+        Tue, 18 Aug 2020 08:51:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id v14sm11524845iln.76.2020.08.18.08.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 08:51:51 -0700 (PDT)
+Received: (nullmailer pid 3526978 invoked by uid 1000);
+        Tue, 18 Aug 2020 15:51:49 -0000
+Date:   Tue, 18 Aug 2020 09:51:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     linux-serial@vger.kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, fugang.duan@nxp.com, Linux-imx@nxp.com,
+        s.hauer@pengutronix.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        shawnguo@kernel.org, festevam@gmail.com
+Subject: Re: [PATCH V3 1/5] dt-bindings: clock: Update i.MX28 example
+Message-ID: <20200818155149.GA3526911@bogus>
+References: <1597721685-9280-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597721685-9280-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+On Tue, 18 Aug 2020 11:34:41 +0800, Anson Huang wrote:
+> Update the i.MX28 clock example to align with MXS AUART binding doc to
+> avoid below build error:
+> 
+> Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+>   serial@8006a000: clocks: [[4294967295, 45]] is too short
+> Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+>   serial@8006a000: compatible: Additional items are not allowed
+>   ('fsl,imx23-auart' was unexpected)
+> Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+>   serial@8006a000: compatible: ['fsl,imx28-auart', 'fsl,imx23-auart']
+>   is too long
+> Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+>   serial@8006a000: 'dmas' is a required property
+> Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+>   serial@8006a000: 'dma-names' is a required property
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> no change.
+> ---
+>  Documentation/devicetree/bindings/clock/imx28-clock.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
 
-Add KEY_ALLOC_DOMAIN_* flags so that the key domain tag can be
-specified on the key creation. This is done to separate the
-key domain setting from the key type.
-
-If applied to the keyring, it will set the requested domain tag for
-every key added to that keyring.
-
-IMA uses the existing key_type_asymmetric for appraisal, but also has
-to specify the key domain to bind appraisal key with the ima namespace.
-
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
----
- include/linux/key.h | 10 ++++++++++
- security/keys/key.c | 16 ++++++++++++++++
- 2 files changed, 26 insertions(+)
-
-diff --git a/include/linux/key.h b/include/linux/key.h
-index 223ab9d76d15..47430cd7fbc6 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -272,6 +272,12 @@ struct key {
- 	 * restriction.
- 	 */
- 	struct key_restriction *restrict_link;
-+
-+	/* This is set on a keyring to indicate that every key added to this
-+	 * keyring should be tagged with a given key domain tag. It is ignored
-+	 * for the non-keyring keys and can be overridden by the key-type flags.
-+	 */
-+	unsigned long key_alloc_domain;
- };
- 
- extern struct key *key_alloc(struct key_type *type,
-@@ -290,6 +296,10 @@ extern struct key *key_alloc(struct key_type *type,
- #define KEY_ALLOC_BYPASS_RESTRICTION	0x0008	/* Override the check on restricted keyrings */
- #define KEY_ALLOC_UID_KEYRING		0x0010	/* allocating a user or user session keyring */
- 
-+/* Only one domain can be set */
-+#define KEY_ALLOC_DOMAIN_IMA		0x0100  /* add IMA domain tag, based on the "current" */
-+#define KEY_ALLOC_DOMAIN_MASK		0xFF00
-+
- extern void key_revoke(struct key *key);
- extern void key_invalidate(struct key *key);
- extern void key_put(struct key *key);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index e282c6179b21..1b0183d33bbc 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -278,6 +278,19 @@ struct key *key_alloc(struct key_type *type, const char *desc,
- 	if (!key)
- 		goto no_memory_2;
- 
-+	if (flags & KEY_ALLOC_DOMAIN_MASK) {
-+		/* set alloc domain for all keys added to this keyring */
-+		if (type == &key_type_keyring)
-+			key->key_alloc_domain = (flags & KEY_ALLOC_DOMAIN_MASK);
-+
-+		/* set domain tag if it's not predefined for the key type */
-+		if ((!type->flags) && (flags & KEY_ALLOC_DOMAIN_IMA))
-+			/* Set it to something meaningful after adding a key
-+			 * domain to the ima namespace.
-+			 */
-+			key->index_key.domain_tag = NULL;
-+	}
-+
- 	key->index_key.desc_len = desclen;
- 	key->index_key.description = kmemdup(desc, desclen + 1, GFP_KERNEL);
- 	if (!key->index_key.description)
-@@ -925,6 +938,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 			perm |= KEY_POS_WRITE;
- 	}
- 
-+	if (keyring->key_alloc_domain)
-+		flags |= keyring->key_alloc_domain;
-+
- 	/* allocate a new key */
- 	key = key_alloc(index_key.type, index_key.description,
- 			cred->fsuid, cred->fsgid, cred, perm, flags, NULL);
--- 
-2.20.1
-
+Applied, thanks!
