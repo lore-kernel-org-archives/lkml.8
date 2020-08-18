@@ -2,90 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723DC20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F8D20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pUGj2Ixn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgHRMyO (ORCPT
+        id S1726682AbgHRM4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:54:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51468 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726398AbgHRMyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:54:13 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A7AC5CAFD889A27B184B;
-        Tue, 18 Aug 2020 20:54:07 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
- 20:53:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>,
-        <bbrezillon@kernel.org>, <ladis@linux-mips.org>,
-        <peter.ujfalusi@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] memory: omap-gpmc: Fix build error without CONFIG_OF
-Date:   Tue, 18 Aug 2020 20:53:38 +0800
-Message-ID: <20200818125338.58148-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 18 Aug 2020 08:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHRM4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:56:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289F3C061389;
+        Tue, 18 Aug 2020 05:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Mnr9o5vomenMnjGSwOgADsZNSiDQs16XxuJQkA6pw7A=; b=pUGj2IxnkHV9vZueIpbwqji2Jz
+        4osZe4zjTl6vy8j4O1GqSzuht1xZTlDq/nyo7Zt88MLI0EF3+bRsp7khSHVkul6jXPUt6jbUcGgqX
+        wB2TcbFBTZRD44Iz4OBsNLp9tT2pWHDXZxgDCYE1sqJxFC8/2qUdR7Gr5kHMA+fihdG3Xd3EPQgs3
+        1Yi3ukQgtyCHWgNKqxRmqGQFa7YJ77FBhxgwcSBJ0sTftYxwm0Zr5Kz0hFwQ+NrV3N+Gfdg3tiPoG
+        TFHH6wJpI5/01cnU9Z5jhHgml1eM1Aji19CV+ORA8lxPNw/zaz+KJse0bAZLt4mKIZPP3ziA3p9kW
+        bOdS3v4g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k819j-0001m3-9N; Tue, 18 Aug 2020 12:55:59 +0000
+Date:   Tue, 18 Aug 2020 13:55:59 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     peterz@infradead.org
+Cc:     Chris Down <chris@chrisdown.name>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818125559.GP17456@casper.infradead.org>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+ <20200818092737.GA148695@chrisdown.name>
+ <20200818100444.GN2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818100444.GN2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_OF is n, gcc fails:
+On Tue, Aug 18, 2020 at 12:04:44PM +0200, peterz@infradead.org wrote:
+> On Tue, Aug 18, 2020 at 10:27:37AM +0100, Chris Down wrote:
+> > peterz@infradead.org writes:
+> > > On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
+> > > > Memory controller can be used to control and limit the amount of
+> > > > physical memory used by a task. When a limit is set in "memory.high" in
+> > > > a v2 non-root memory cgroup, the memory controller will try to reclaim
+> > > > memory if the limit has been exceeded. Normally, that will be enough
+> > > > to keep the physical memory consumption of tasks in the memory cgroup
+> > > > to be around or below the "memory.high" limit.
+> > > > 
+> > > > Sometimes, memory reclaim may not be able to recover memory in a rate
+> > > > that can catch up to the physical memory allocation rate. In this case,
+> > > > the physical memory consumption will keep on increasing.
+> > > 
+> > > Then slow down the allocator? That's what we do for dirty pages too, we
+> > > slow down the dirtier when we run against the limits.
+> > 
+> > We already do that since v5.4. I'm wondering whether Waiman's customer is
+> > just running with a too-old kernel without 0e4b01df865 ("mm, memcg: throttle
+> > allocators when failing reclaim over memory.high") backported.
+> 
+> That commit is fundamentally broken, it doesn't guarantee anything.
+> 
+> Please go read how the dirty throttling works (unless people wrecked
+> that since..).
 
-drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
-omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
+Of course they did.
 
-Add helper function to fix this.
-
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/memory/omap-gpmc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index ce0e7e2d7cff..332bb4580817 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -1176,6 +1176,7 @@ struct gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *reg, int cs)
- }
- EXPORT_SYMBOL_GPL(gpmc_omap_get_nand_ops);
- 
-+#ifdef CONFIG_OF
- static void gpmc_omap_onenand_calc_sync_timings(struct gpmc_timings *t,
- 						struct gpmc_settings *s,
- 						int freq, int latency)
-@@ -1280,6 +1281,14 @@ int gpmc_omap_onenand_set_timings(struct device *dev, int cs, int freq,
- 
- 	return gpmc_cs_set_timings(cs, &gpmc_t, &gpmc_s);
- }
-+#else
-+int gpmc_omap_onenand_set_timings(struct device *dev, int cs, int freq,
-+				  int latency,
-+				  struct gpmc_onenand_info *info)
-+{
-+	return -EINVAL;
-+}
-+#endif
- EXPORT_SYMBOL_GPL(gpmc_omap_onenand_set_timings);
- 
- int gpmc_get_client_irq(unsigned int irq_config)
--- 
-2.17.1
-
-
+https://lore.kernel.org/linux-mm/ce7975cd-6353-3f29-b52c-7a81b1d07caa@kernel.dk/
