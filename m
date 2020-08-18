@@ -2,180 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF375C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D7720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9133520674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmI0xcwU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bxDdpiJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgHRRbw (ORCPT
+        id S1728640AbgHRRcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgHRRbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:31:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB98C061389;
-        Tue, 18 Aug 2020 10:31:49 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v12so22339390ljc.10;
-        Tue, 18 Aug 2020 10:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E6SkpU4jTKjuyYa1KoeZ1+SjC9XhD7REGKE6+aNvKF4=;
-        b=DmI0xcwUQ7Akv+E/NPE0adMGAvPlMHKBnBGKpP/23RJpUfmj++2MADef9mklcNdEuK
-         jNF19KPnUM1rUDYvNIf7qaY51RaVQy6HECRc7xLrudr+Kh8VU9iM5bM21SvY3DmJjPxF
-         7twf4dWwqpk9fE8uUQZZEfaiLNCnFeuyRIEIo4yHyrYFLRhN7JhKN+rJCuFLgmKTfQaX
-         mM54681ksd5ww4mWRx9zVqz5lt0NuQhg+5OwMzT3GF1thIYDkZOhbZiRmNMOeMijTea9
-         2BMw17iUm+thAB9OeCF9WfyGeso3r5S7BTFlxL60dsfKkWmIJHipW67nqBqUGZ4+abwl
-         DGMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E6SkpU4jTKjuyYa1KoeZ1+SjC9XhD7REGKE6+aNvKF4=;
-        b=dXadAxn5RSD3WUX9fAHovQtmPSqXTxOaWkxT+i/QTRSye1tzHL+GjJCRUC22v6q4Wc
-         mWzbL0LyzSEEyNpyqK1c4z07K63ObUbevlDSKyEzZxFIzPY8qH4m+ZtH1BKkCvfPr3lZ
-         93edH/J++odON8Z1SrzVbJH2uYWL/Mr5x/l/8bHt216FLgAHrA0r94VEUhzqOL9N47tc
-         T6hO2FqEqeTcPEzO6KwBjniZfw9jlxZcXreXL6UuC05sRwi3vJxyNUjrs4CxqYclAz6a
-         PuZr46KFlk+Xn1JrCk36kEdBGo5Nqw2wE8m6sJonTNTcyXrvHhZrasMNaCIZWoBd1Got
-         vGPg==
-X-Gm-Message-State: AOAM531xwkCYfVTYv7mtzAddjoSZznHSAEYmagPpakc4xoCjXYE6E4tO
-        brxpob8hhUI1wd1N8gfhpvOpCvCgdSSqMKvWx4M=
-X-Google-Smtp-Source: ABdhPJwKFZCeKWwly2bWeYf/XxnCr2IqcfbTcuVmc3eyw7boAnql3cPwv02+GIlUZ5byYgzixuBBlFfvJGktFNlmD6Y=
-X-Received: by 2002:a2e:b174:: with SMTP id a20mr7001381ljm.200.1597771908025;
- Tue, 18 Aug 2020 10:31:48 -0700 (PDT)
+        Tue, 18 Aug 2020 13:32:04 -0400
+Received: from mout.gmx.net ([212.227.15.19]:45577 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728561AbgHRRcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:32:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597771879;
+        bh=MuzodkzXFlQqlZOXkPhy7wbYV96XJcj5ljN9UAV22AI=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=bxDdpiJjndCI3UC/MOlheD0Zwd+8I4WIrgbVUKPLJJ4473ryoUygMcTywR689lVo4
+         L5gt8X0boORhnxRKqo+3lqwW0o0CulaGX8SGQ5BVTQ+3XwrxrRo2ZPttzj7lx3WxPR
+         +4czsL3mIigaP5AjunMDCX5IMHl/iY7MJY7tjJY4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-s9 ([185.53.43.192]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWAOW-1kAvuv1BcY-00XdDL; Tue, 18
+ Aug 2020 19:31:19 +0200
+Date:   Tue, 18 Aug 2020 19:31:01 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
+References: <cover.1597729692.git.landen.chao@mediatek.com> <a56f3029b913d31fbd27562b98d485e981815165.1597729692.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
- <20200818143633.GA628293@kroah.com> <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
- <20200818171457.GA736234@kroah.com>
-In-Reply-To: <20200818171457.GA736234@kroah.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Tue, 18 Aug 2020 23:01:35 +0530
-Message-ID: <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
-Subject: Re: Scheduler benchmarks
-To:     Greg KH <greg@kroah.com>
-Cc:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v2 3/7] net: dsa: mt7530: Extend device data ready for adding a new hardware
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Landen Chao <landen.chao@mediatek.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+CC:     devicetree@vger.kernel.org, dqfext@gmail.com,
+        netdev@vger.kernel.org, sean.wang@mediatek.com,
+        linux-kernel@vger.kernel.org, opensource@vdorst.com,
+        davem@davemloft.net
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <883BB20A-48CD-4B73-9D2F-E5CC21DD2B70@public-files.de>
+X-Provags-ID: V03:K1:RHA4uIrsqvBmFN2vJOdO4H+IjP89S5tlylzz2vL0VK7JvBRx6Zg
+ D2a9/54EsigXuEOoaa6ykZRzsCqJxH8BVSzQlxQMcnlf1RdYxa8ovqah6R/3d2kzFK3PMky
+ x/cq2s51kaoZ9F3ESokT3WIp815pypysw1/mAQehDEoopEiDUrN5JKceIjW34ySZTbyuEpz
+ YTWXV/lC4Hk4rOBll4UJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ysoVgdAP2ws=:7hZ0WFuTmv9t+qc2gunHBb
+ ezfwPSqdtyYobAeEzguiyOaA1byPYhC+x84rFOOSNNlvHFl7+2QLMACbva9t0k/h7yfJ2vjjH
+ aD8i25Mq1UGLE7iq1xh9qE59E0st8smtiazLD1OMv01D9dgILIZo5NDXucckz9Cti5yVOYY+u
+ 1dLjMzb5V3CXiujgUabv7fOzEDoBdnUc7mqR4x8ynAIVIXqhiWGMfB0jhE1zAGDqGsNAN/PkI
+ Vs0yW28amGgEw2lIOUS/jPsqSnhI+dclbx2ckHuuVuAqamz+PoOqD+yRVOIH6pAa/9nx1XlCz
+ pgoNaXu0kHuHSAzJRRDqT/KFPjieicTqE2ejiGHjI7YDlifPVzOFT3ctpSIku5+jf0/tpfreP
+ Jyz/9F4yUAMr0frYAbCwwncV9gS7Q5ucivdFLZZPw0MO+y4c5iWpw946WPJGFNa6Oa/BVILqf
+ VQMtGQtqqI9AuypK79mZbw1pjBN5y7l/fGWcKrrLGKV8iUCbaNXhq1PICjTQTAYaE4pRq79v6
+ bLuUHLu8IOQY1SJDpQrEPF3FflBOzDZMVO6Ppt2KStzbc59jGzlXrgBn9sO+v3LkvvJ/lHdgf
+ QF/ej9nebquSZUgMlkVRd1jMr+RlrCrt+g/n24NlJ5d2g1ZkUvNMMI65ZdvuTYmEgS0sDuwCl
+ Bd8Z+zxMiBpCGKsdsaYrx524SQRfOLWABi2YuYT9pOHLkNbgcMX4DgdykiUz46twAY/RIg0Lj
+ zZMyaC3Hmdk9VyEQXuO1r+m6uJOqNx7fZW69PmyWeZNHfzsd2t5If54PdCGVVjoHwHkoM6+1U
+ ANNmoW9MypPAv+8yUWDRcL/4DsuDfRw4C/LPgejZDrdryUmkOG+GzOp1LbLsTZ/64K+/w2F05
+ 9t4Lik0bL/rnBSpb6JUwtmB3tLvNsI/bfoTiw7qFVX5mFk5CY7ROnlOdKx7ksW+xNFkIoX3k2
+ eicVjkRMMvePORhNvVCGIoFWrgYReIB5th+1TktetOteZdmJ3WDFednsZ+01nF4fLg7v7Pxl8
+ j1LuJmsI6ZmdqJwugPfeUJpVyaNQXjZ+9My2maESx8HMA6cUuG6dQJ8ous7Eg2yxkZaBfVEYR
+ mXGOZ7hnhVAU/Qn6Q77IGX4Tg4BcCasVZBMFHLjUpQRLYP3/ByeZGlvUPKPM55Dep4498NMvW
+ IT6oWBUqARVoutnViYuNBshvYsMIfbF4H0mv+P5QmLzyVoA2UKQ5mzzUPyxlFIWrbvmxB6xmT
+ 0EXqjOGY9m4/e8AFST81v0bkWcwfnEPm+sIUh/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
-> > On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
-> > >
-> > > On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
-> > > > Hi all,
-> > > >
-> > > > I=E2=80=99ve two identical Linux systems with only kernel differenc=
-es.
-> > >
-> > > What are the differences in the kernels?
->
-> You didn't answer this question, is this the same kernel source being
-> compared here?  Same version?  Same compiler?  Everything identical?
-Both systems are having exactly the same hardware configuration.
-Compiler and kernel versions are different. One system has Ubuntu
-16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
-the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
-version 7.5.0).
+Just a little typo you've inherited from existing code
 
+>+/* Setup TX circuit incluing relevant PAD and driving */
 
+including
 
->
-> > > > While doing kernel profiling with perf, I got the below mentioned
-> > > > metrics for Scheduler benchmarks.
-> > > >
-> > > > 1st system (older kernel version compared to the other system) benc=
-hmark result:
-> > > >
-> > > > $ perf bench sched messaging -g 64
-> > > > # Running 'sched/messaging' benchmark:
-> > > > # 20 sender and receiver processes per group
-> > > > # 64 groups =3D=3D 2560 processes run
-> > > >
-> > > >      Total time: 2.936 [sec]
-> > > >
-> > > >
-> > > > 2nd system benchmark result:
-> > > >
-> > > > $ perf bench sched messaging -g 64
-> > > > # Running 'sched/messaging' benchmark:
-> > > > # 20 sender and receiver processes per group
-> > > > # 64 groups =3D=3D 2560 processes run
-> > > >
-> > > >      Total time: 10.074 [sec]
-> > > >
-> > > >
-> > > > So as per scheduler benchmark results, clearly a huge difference
-> > > > between two systems.
-> > > > Can anyone suggest to me how to dive deeper to know the root cause =
-for
-> > > > it.
-> > >
-> > > Look a the differences between your different kernels, that would be =
-a
-> > > great start :)
-> > I created the difference between two kernel config files and then
-> > tried to spot the CONFIG*SCHED* differences.
-> > Interestingly I see the difference in I/O scheduler config, 1st system
-> > is set to =E2=80=9Cdeadline=E2=80=9D and other one is set to =E2=80=9Cc=
-fq=E2=80=9D. So I made it equal
-> > by echoing to =E2=80=9C/sys/block/<disk device>/queue/scheduler" but st=
-ill no
-> > change in scheduler benchmark metrics.
-> >
-> > Is it the correct way to find the differences between kernels? If so,
-> > what other important CONFIG_* variables need to consider?
-> >
-> >
-> > $ cat config.patch | grep -i sched
-> >
-> >  CONFIG_HAVE_UNSTABLE_SCHED_CLOCK=3Dy
-> >  CONFIG_CGROUP_SCHED=3Dy
-> >  CONFIG_FAIR_GROUP_SCHED=3Dy
-> >  # CONFIG_RT_GROUP_SCHED is not set
-> >  # IO Schedulers
-> > @@ -369,10 +434,14 @@ CONFIG_IOSCHED_NOOP=3Dy
-> >  CONFIG_IOSCHED_DEADLINE=3Dy
-> >  CONFIG_IOSCHED_CFQ=3Dy
-> >  CONFIG_CFQ_GROUP_IOSCHED=3Dy
-> > -CONFIG_DEFAULT_IOSCHED=3D"deadline"
-> > +CONFIG_DEFAULT_IOSCHED=3D"cfq"
-> > +CONFIG_MQ_IOSCHED_DEADLINE=3Dm
-> > +CONFIG_MQ_IOSCHED_KYBER=3Dm
-> > +CONFIG_IOSCHED_BFQ=3Dm
-> > +CONFIG_BFQ_GROUP_IOSCHED=3Dy
-> >  CONFIG_SCHED_SMT=3Dy
-> >  CONFIG_SCHED_MC=3Dy
-> > +CONFIG_SCHED_MC_PRIO=3Dy
-> > +# CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL is not set
-> > +CONFIG_CPU_FREQ_GOV_SCHEDUTIL=3Dy
->
-> There's lots of other options that affect performance, depending on your
-> specific benchmark, other than these.
->
-> good luck!
->
-> greg k-h
-
-
-
---=20
-Thanks,
-Sekhar
+regards Frank
