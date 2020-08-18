@@ -2,144 +2,125 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9300820639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TKBIZQ9c"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED2F20639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHRJlq (ORCPT
+        id S1726656AbgHRJmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgHRJlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:41:44 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1D7C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:41:42 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id qc22so21299484ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dv1Xhl1bS+5jEQYbFML/aNrkT6FMSIT4YIWLINTkYuA=;
-        b=TKBIZQ9cEM0s7XlAhqk+9WuMaJ5WAzHt28fYx7z2YcY+Ky15uWjPK9XQAlE4GEUNqa
-         mV0SnmJ2Gpom5vx/h8sEIfNfZa5zbCrKs2dnoVh0T89qV+LR7R+5+3MROncxObXPQArg
-         /jnklxkh2Vw4IJ9BkaOQd5d8BqCmxE3VXbUS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dv1Xhl1bS+5jEQYbFML/aNrkT6FMSIT4YIWLINTkYuA=;
-        b=fJ5G3rqs6imjtTI2Qe2dubCZlzR9h6Ex26wUqMWLR9ED/GeRrt8DKHAj63pC603UZB
-         5ynBFG/SJITkkQOx9WUTDLgFNXoBwSUZQMiT86kKr6wTYb/T6BLufRFhvWf9Z/WtJKZZ
-         Y2LYyypuZx4SegGKDnKNz+aEG3guaX4SCduOVeU+Q2t+tBPmd7NA9lx+DzbMT95RslrT
-         TQ8kb5cEH2sqe7OjZiaOTZx9vuNQ6UlPRrdXd1oONTkZ79/bYD2jbH5IB8lRJYNOz7E6
-         +CQDOLuEE/Qi2+9XNdK3HowiSUR1sDg8Sl7eOwYTjsOoOAzibjDrd/FeZZD05k2qvAMU
-         /58w==
-X-Gm-Message-State: AOAM531p1ThMKIDgmC01Jn3JCMEULCSdG0Dbkty30C30OHRMJwj3J195
-        Haju2YQ906n2ABT0mFa68kXUAlUyvklF//6EJA4L6Q==
-X-Google-Smtp-Source: ABdhPJzt1EdcvKZCvCY2Z46UPxjvinPUBrda1Z9vw7Mvqcsu6bquKdK/yTIXHnA8ZslRVtZfcgEoy+b/s/oUX8tNtng=
-X-Received: by 2002:a17:907:94ca:: with SMTP id dn10mr19044858ejc.110.1597743701266;
- Tue, 18 Aug 2020 02:41:41 -0700 (PDT)
+        Tue, 18 Aug 2020 05:42:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:38700 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbgHRJmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:42:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E0231FB;
+        Tue, 18 Aug 2020 02:42:32 -0700 (PDT)
+Received: from [10.163.65.203] (unknown [10.163.65.203])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD78D3F6CF;
+        Tue, 18 Aug 2020 02:42:29 -0700 (PDT)
+Subject: Re: [PATCH 1/2] arm64/mm: Change THP helpers to comply with generic
+ MM semantics
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, will@kernel.org,
+        akpm@linux-foundation.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1597655984-15428-1-git-send-email-anshuman.khandual@arm.com>
+ <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
+ <20200818101301.000027ef@Huawei.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <8db455b6-8fe5-b552-119f-4abab0cc8501@arm.com>
+Date:   Tue, 18 Aug 2020 15:11:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
- <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
- <20200812143957.GQ1236603@ZenIV.linux.org.uk> <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
- <20200812150807.GR1236603@ZenIV.linux.org.uk> <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
- <20200812163347.GS1236603@ZenIV.linux.org.uk> <CAJfpegv8MTnO9YAiFUJPjr3ryeT82=KWHUpLFmgRNOcQfeS17w@mail.gmail.com>
- <20200812173911.GT1236603@ZenIV.linux.org.uk> <20200812183326.GU1236603@ZenIV.linux.org.uk>
- <20200812213041.GV1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200812213041.GV1236603@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 18 Aug 2020 11:41:29 +0200
-Message-ID: <CAJfpeguyQhfxrSnaH1mZkncgfiLFB2yM2ZgdMBzuhAdKdmmuxA@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200818101301.000027ef@Huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 11:30 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Wed, Aug 12, 2020 at 07:33:26PM +0100, Al Viro wrote:
->
-> > BTW, what would such opened files look like from /proc/*/fd/* POV?  And
-> > what would happen if you walk _through_ that symlink, with e.g. ".."
-> > following it?  Or with names of those attributes, for that matter...
-> > What about a normal open() of such a sucker?  It won't know where to
-> > look for your ->private_data...
-> >
-> > FWIW, you keep refering to regularity of this stuff from the syscall
-> > POV, but it looks like you have no real idea of what subset of the
-> > things available for normal descriptors will be available for those.
->
-> Another question: what should happen with that sucker on umount of
-> the filesystem holding the underlying object?  Should it be counted
-> as pinning that fs?
 
-Obviously yes.
 
-> Who controls what's in that tree?
+On 08/18/2020 02:43 PM, Jonathan Cameron wrote:
+> On Mon, 17 Aug 2020 14:49:43 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> pmd_present() and pmd_trans_huge() are expected to behave in the following
+>> manner during various phases of a given PMD. It is derived from a previous
+>> detailed discussion on this topic [1] and present THP documentation [2].
+>>
+>> pmd_present(pmd):
+>>
+>> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
+>> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
+>>
+>> pmd_trans_huge(pmd):
+>>
+>> - Returns true if pmd refers to system RAM and is a trans huge mapping
+>>
+>> -------------------------------------------------------------------------
+>> |	PMD states	|	pmd_present	|	pmd_trans_huge	|
+>> -------------------------------------------------------------------------
+>> |	Mapped		|	Yes		|	Yes		|
+>> -------------------------------------------------------------------------
+>> |	Splitting	|	Yes		|	Yes		|
+>> -------------------------------------------------------------------------
+>> |	Migration/Swap	|	No		|	No		|
+>> -------------------------------------------------------------------------
+>>
+>> The problem:
+>>
+>> PMD is first invalidated with pmdp_invalidate() before it's splitting. This
+>> invalidation clears PMD_SECT_VALID as below.
+>>
+>> PMD Split -> pmdp_invalidate() -> pmd_mkinvalid -> Clears PMD_SECT_VALID
+>>
+>> Once PMD_SECT_VALID gets cleared, it results in pmd_present() return false
+>> on the PMD entry. It will need another bit apart from PMD_SECT_VALID to re-
+>> affirm pmd_present() as true during the THP split process. To comply with
+>> above mentioned semantics, pmd_trans_huge() should also check pmd_present()
+>> first before testing presence of an actual transparent huge mapping.
+>>
+>> The solution:
+>>
+>> Ideally PMD_TYPE_SECT should have been used here instead. But it shares the
+>> bit position with PMD_SECT_VALID which is used for THP invalidation. Hence
+>> it will not be there for pmd_present() check after pmdp_invalidate().
+>>
+>> A new software defined PMD_PRESENT_INVALID (bit 59) can be set on the PMD
+>> entry during invalidation which can help pmd_present() return true and in
+>> recognizing the fact that it still points to memory.
+>>
+>> This bit is transient. During the split process it will be overridden by a
+>> page table page representing normal pages in place of erstwhile huge page.
+>> Other pmdp_invalidate() callers always write a fresh PMD value on the entry
+>> overriding this transient PMD_PRESENT_INVALID bit, which makes it safe.
+>>
+>> [1]: https://lkml.org/lkml/2018/10/17/231
+>> [2]: https://www.kernel.org/doc/Documentation/vm/transhuge.txt
+> 
+> Hi Anshuman,
+> 
+> One query on this.  From my reading of the ARM ARM, bit 59 is not
+> an ignored bit.  The exact requirements for hardware to be using
+> it are a bit complex though.
+> 
+> It 'might' be safe to use it for this, but if so can we have a comment
+> explaining why.  Also more than possible I'm misunderstanding things! 
 
-It could be several entities:
-
- - global (like mount info)
- - per inode (like xattr)
- - per fs (fs specific inode attributes)
- - etc..
-
->  If we plan to have xattrs there,
-> will they be in a flat tree, or should it mirror the hierarchy of
-> xattrs?  When is it populated?  open() time?  What happens if we
-> add/remove an xattr after that point?
-
-From the interface perspective it would be dynamic (i.e. would get
-updated on open or read).  From an implementation POV it could have
-caching, but that's not how I'd start out.
-
-> If we open the same file several times, what should we get?  A full
-> copy of the tree every time, with all coherency being up to whatever's
-> putting attributes there?
->
-> What are the permissions needed to do lookups in that thing?
-
-That would depend on what would need to be looked up.  Top level would
-be world readable, otherwise it would be up to the attribute/group.
-
->
-> All of that is about semantics and the answers are needed before we
-> start looking into implementations.  "Whatever my implementation
-> does" is _not_ a good way to go, especially since that'll be cast
-> in stone as soon as API becomes exposed to userland...
-
-Fine.
-
-Thanks,
-Miklos
+We are using this bit 59 only when the entry is not active from MMU
+perspective i.e PMD_SECT_VALID is clear.
