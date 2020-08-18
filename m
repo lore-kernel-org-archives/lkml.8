@@ -2,114 +2,143 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A321D20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597790270;
-	bh=n8ZUWUR1fw5KsIcOVN68eZDIppiBl2606EGjn3dTn5E=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xXtaSz+1OAaeRKHU8VNXhjp289BjbM9rGRDr+REGWjHWZSsyfTnZH1HlBqTI8f5ag
-	 V5lgNEDMGyRGBwa58YY1GTIopBmCuNWIhEK5jwvh1VnTP7a0Gy6fQKuXQ8R6lxKR+P
-	 0JBcTK5KEXLhIGGCmjAjrTyexK3YXOWQJ3uq37Xc=
+	by mail.kernel.org (Postfix) with ESMTP id ED67020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="bv2GeofM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHRWht (ORCPT
+        id S1726992AbgHRWov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgHRWhr (ORCPT
+        Tue, 18 Aug 2020 18:44:51 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50014 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgHRWov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:37:47 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD45C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:37:47 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id v21so17546913otj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8JaudXSe47REaUhBRI37iwPCitU5RP8AxqGNR29qyYc=;
-        b=fueNB182Ajr3jwXfkset+r8uY8pqzcomkZu0aa+JBLaEyLU/0P+jUshhm6DaKS6LFo
-         vBU4mjE79artkabyqpPO2PvJRqyYsr7Xemog3FUpwcQB10Y/fCKquWHt4jZ7slULpJ5E
-         2fGcbvJHufC06yUVbR8J1yI8pVb74qEGHt96Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8JaudXSe47REaUhBRI37iwPCitU5RP8AxqGNR29qyYc=;
-        b=NGJ93DPdE9aBIOVrlctU3udsvI1CXw+XCqz5GATnuf3wgNlX2iZbkIFLQDc+0RbJn2
-         ypgn7jjuSVMUWLAQd7ESUrywzp+o+RG0CjVd7Po+u1UuHdGTY9oK4BVPNqb0+hNW82IE
-         q68UTS6O1yws06mVhKJeD58aNH6KdVG11VIibsF41TxWSOYffkm/ufe+5yRkFhs71GyX
-         x1DgjpxBIzoeWhl1JhkQ6SeJITVLuAEwsoNXyfvaP5e4yUpuhQTFx9n4vZ+XUxM9Puqn
-         qsndd88lfpbBcWoJCWJZZ8TloEKW8N2EIkw7Wn8KkCZQ9024gzVTKSK4oo1+2cc7lLA0
-         awjA==
-X-Gm-Message-State: AOAM532eq74hvEZvz1jaHfXwfTx52bkDXCVJJAY3Td7evsupy5Q7Vqhq
-        0PFH3HNnTzVFojBhq4Q6lVxeQw==
-X-Google-Smtp-Source: ABdhPJxmFl5OHIe1QUDJ2v3wnAfEGs7SgjF678e5Dbzdv0cpUPo73Vl4JiIIIBRuy/E+uVCBdG7Zvw==
-X-Received: by 2002:a05:6830:1286:: with SMTP id z6mr15841798otp.240.1597790266813;
-        Tue, 18 Aug 2020 15:37:46 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id s135sm4212896oih.35.2020.08.18.15.37.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 15:37:46 -0700 (PDT)
-Subject: Re: [PATCH 4.19 000/168] 4.19.140-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200817143733.692105228@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <48c42513-7f3e-79be-f892-d716175dcd52@linuxfoundation.org>
-Date:   Tue, 18 Aug 2020 16:37:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200817143733.692105228@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 18 Aug 2020 18:44:51 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9A2918066C;
+        Wed, 19 Aug 2020 10:44:47 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1597790687;
+        bh=fwtJdtP2aFXeaf/0JABhrsBoQUmpTdQAy32Xi1uxMqk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=bv2GeofM2o6DbEqxMDDYkREArL/4LyeARqAbyxTwF1T7QKFbx0qfwtPNMTlO5RapD
+         lfJVZS2lNsYEyHj6UooazNQLsU44oPCi6hsjiTuKSf7czU0M7w53bXBKwDWL0RL1or
+         E5AhEJSYphxyOtHfVpCrTKCCRBHcWNmWDK3+64IlQLQnmKhPpK2RmD1/RpVO4zd9t6
+         0titQpnluQLnrencCGotr4X3Tn+6FlbPPvmHYBMWMCwwT8DYFMoh4LnVG92kDp2Bhg
+         QldPqEQgbdR+ecVXO2KSuffJG2Xz1DwOVwK6HxJyWpO3tD1G+tNaS9JZjst/IUHHLe
+         AIvYGFF+fEVHQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f3c59df0000>; Wed, 19 Aug 2020 10:44:47 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug 2020 10:44:42 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 19 Aug 2020 10:44:42 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "tiago.brusamarello@datacom.ind.br" 
+        <tiago.brusamarello@datacom.ind.br>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: fsl_espi errors on v5.7.15
+Thread-Topic: fsl_espi errors on v5.7.15
+Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAA==
+Date:   Tue, 18 Aug 2020 22:44:42 +0000
+Message-ID: <1bbb3726-b0a4-6eb9-9076-706b06dfb90f@alliedtelesis.co.nz>
+References: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
+ <c43a23bd-33ec-4ef2-2ca5-730342248db3@gmail.com>
+ <3c72eec1-41ba-7389-eceb-3de80065555a@alliedtelesis.co.nz>
+In-Reply-To: <3c72eec1-41ba-7389-eceb-3de80065555a@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0AE6BE69BE3A794D9A82C26FFAAC08A7@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 9:15 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.140 release.
-> There are 168 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 19 Aug 2020 14:36:49 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.140-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
-Compiled and booted on my test system. No dmesg regressions.
-
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
-
+SGkgQWdhaW4sDQoNCk9uIDE3LzA4LzIwIDk6MDkgYW0sIENocmlzIFBhY2toYW0gd3JvdGU6DQoN
+Cj4NCj4gT24gMTQvMDgvMjAgNjoxOSBwbSwgSGVpbmVyIEthbGx3ZWl0IHdyb3RlOg0KPj4gT24g
+MTQuMDguMjAyMCAwNDo0OCwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+PiBIaSwNCj4+Pg0KPj4+
+IEknbSBzZWVpbmcgYSBwcm9ibGVtIHdpdGggYWNjZXNzaW5nIHNwaS1ub3IgYWZ0ZXIgdXBncmFk
+aW5nIGEgVDIwODENCj4+PiBiYXNlZCBzeXN0ZW0gdG8gbGludXggdjUuNy4xNQ0KPj4+DQo+Pj4g
+Rm9yIHRoaXMgYm9hcmQgdS1ib290IGFuZCB0aGUgdS1ib290IGVudmlyb25tZW50IGxpdmUgb24g
+c3BpLW5vci4NCj4+Pg0KPj4+IFdoZW4gSSB1c2UgZndfc2V0ZW52IGZyb20gdXNlcnNwYWNlIEkg
+Z2V0IHRoZSBmb2xsb3dpbmcga2VybmVsIGxvZ3MNCj4+Pg0KPj4+ICMgZndfc2V0ZW52IGZvbz0x
+DQo+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04g
+aXNuJ3Qgc2V0IQ0KPj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0
+IFNQSUVfRE9OIGlzbid0IHNldCENCj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2Zl
+ciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNw
+aTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qgc2V0IQ0KPj4+IGZzbF9lc3BpIGZm
+ZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQSUVfRE9OIGlzbid0IHNldCENCj4+PiBm
+c2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBz
+ZXQhDQo+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9E
+T04gaXNuJ3Qgc2V0IQ0KPj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUg
+YnV0IFNQSUVfRE9OIGlzbid0IHNldCENCj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFu
+c2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4gZnNsX2VzcGkgZmZlMTEwMDAw
+LnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qgc2V0IQ0KPj4+IGZzbF9lc3Bp
+IGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQSUVfRE9OIGlzbid0IHNldCENCj4+
+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24n
+dCBzZXQhDQo+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJ
+RV9ET04gaXNuJ3Qgc2V0IQ0KPj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRv
+bmUgYnV0IFNQSUVfRE9OIGlzbid0IHNldCENCj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBU
+cmFuc2ZlciBkb25lIGJ1dCByeC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KPj4+IGZzbF9lc3Bp
+IGZmZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAxLCBTUElFX1RYQ05UID0gMzINCj4+PiBmc2xf
+ZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCByeC90eCBmaWZvJ3MgYXJlbid0
+IGVtcHR5IQ0KPj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAxLCBTUElF
+X1RYQ05UID0gMzINCj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1
+dCByeC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KPj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6
+IFNQSUVfUlhDTlQgPSAxLCBTUElFX1RYQ05UID0gMzINCj4+PiAuLi4NCj4+Pg0KPj4gVGhpcyBl
+cnJvciByZXBvcnRpbmcgZG9lc24ndCBleGlzdCB5ZXQgaW4gNC40LiBTbyB5b3UgbWF5IGhhdmUg
+YW4gaXNzdWUNCj4+IHVuZGVyIDQuNCB0b28sIGl0J3MganVzdCBub3QgcmVwb3J0ZWQuDQo+PiBE
+aWQgeW91IHZlcmlmeSB0aGF0IHVuZGVyIDQuNCBmd19zZXRlbnYgYWN0dWFsbHkgaGFzIGFuIGVm
+ZmVjdD8NCj4gSnVzdCBkb3VibGUgY2hlY2tlZCBhbmQgeWVzIHVuZGVyIDQuNCB0aGUgc2V0dGlu
+ZyBkb2VzIGdldCBzYXZlZC4NCj4+PiBJZiBJIHJ1biBmd19wcmludGVudiAoYmVmb3JlIGdldHRp
+bmcgaXQgaW50byBhIGJhZCBzdGF0ZSkgaXQgaXMgYWJsZSB0bw0KPj4+IGRpc3BsYXkgdGhlIGNv
+bnRlbnQgb2YgdGhlIGJvYXJkcyB1LWJvb3QgZW52aXJvbm1lbnQuDQo+Pj4NCj4+IFRoaXMgbWln
+aHQgaW5kaWNhdGUgYW4gaXNzdWUgd2l0aCBzcGkgYmVpbmcgbG9ja2VkLiBJJ3ZlIHNlZW4gcmVs
+YXRlZA0KPj4gcXVlc3Rpb25zLCBqdXN0IHVzZSB0aGUgc2VhcmNoIGVuZ2luZSBvZiB5b3VyIGNo
+b2ljZSBhbmQgY2hlY2sgZm9yDQo+PiBmd19zZXRlbnYgYW5kIGxvY2tlZC4NCj4gSSdtIHJ1bm5p
+bmcgYSB2ZXJzaW9uIG9mIGZ3X3NldGVudiB3aGljaCBpbmNsdWRlcyANCj4gaHR0cHM6Ly9naXRs
+YWIuZGVueC5kZS91LWJvb3QvdS1ib290Ly0vY29tbWl0L2RiODIwMTU5IHNvIGl0IHNob3VsZG4n
+dCANCj4gYmUgbG9ja2luZyB0aGluZ3MgdW5uZWNlc3NhcmlseS4NCj4+PiBJZiBiZWVuIHVuc3Vj
+Y2Vzc2Z1bCBpbiBwcm9kdWNpbmcgYSBzZXR1cCBmb3IgYmlzZWN0aW5nIHRoZSBpc3N1ZS4gSSBk
+bw0KPj4+IGtub3cgdGhlIGlzc3VlIGRvZXNuJ3Qgb2NjdXIgb24gdGhlIG9sZCA0LjQueCBiYXNl
+ZCBrZXJuZWwgYnV0IHRoYXQncw0KPj4+IHByb2JhYmx5IG5vdCBtdWNoIGhlbHAuDQo+Pj4NCj4+
+PiBBbnkgcG9pbnRlcnMgb24gd2hhdCB0aGUgaXNzdWUgKGFuZC9vciBzb2x1dGlvbikgbWlnaHQg
+YmUuDQoNCkkgZmluYWxseSBtYW5hZ2VkIHRvIGdldCBvdXIgYm9hcmQgcnVubmluZyB3aXRoIGEg
+dmFuaWxsYSBrZXJuZWwuIFdpdGggDQpjb3JlbmV0NjRfc21wX2RlZmNvbmZpZyBJIG9jY2FzaW9u
+YWxseSBzZWUNCg0KIMKgIGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0
+IFNQSUVfRE9OIGlzbid0IHNldCENCg0Kb3RoZXIgdGhhbiB0aGUgbWVzc2FnZSB0aGluZ3Mgc2Vl
+bSB0byBiZSB3b3JraW5nLg0KDQpXaXRoIGEgY3VzdG9tIGRlZmNvbmZpZyBJIHNlZQ0KDQogwqAg
+ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qg
+c2V0IQ0KIMKgIGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IHJ4L3R4
+IGZpZm8ncyBhcmVuJ3QgZW1wdHkhDQogwqAgZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogU1BJRV9S
+WENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0KIMKgIC4uLg0KDQphbmQgYWNjZXNzIHRvIHRoZSBz
+cGktbm9yIGRvZXMgbm90IHdvcmsgdW50aWwgdGhlIGJvYXJkIGlzIHJlc2V0Lg0KDQpJJ2xsIHRy
+eSBhbmQgcGljayBhcGFydCB0aGUgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgdHdvIGRlZmNvbmZp
+Z3MuDQo=
