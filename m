@@ -2,139 +2,106 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9B2C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A144C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94D020639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640962078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ovlkGX8q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oiYao3LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgHRJas (ORCPT
+        id S1726593AbgHRJcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60938 "EHLO
+        Tue, 18 Aug 2020 05:32:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgHRJao (ORCPT
+        with ESMTP id S1726165AbgHRJcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:30:44 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76BC6C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:30:43 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id d6so21259000ejr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:30:43 -0700 (PDT)
+        Tue, 18 Aug 2020 05:32:11 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDC8C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:32:09 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id z18so15772399otk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G6i6GBK3wCZWsxoTDmOd3ySKBv/GJjmU+V1QuwmXmlk=;
-        b=ovlkGX8qod/bhtZAl4qKbrC5By2+6D1ouRJLhibBITDMjhaNSGfIZF8qD5afYOF5Nw
-         cV3HmxMj4H3TwTUZZL+0v5NHdrDqt/ZYDq/gwxcfRy2TrsVF+JbuOfSgvwm+uVCQwinw
-         +XSe4C1sN6eZB5AEceOR647X9E3OJg51aCnWA=
+        bh=CukyYxKQagzxSnoAUerbnhafgFTcDCc+vCHDuzHrDm0=;
+        b=oiYao3LSY05RtHiCa7E8GRzIrl9VRRJYDZjBtQ/ubmceLYQblalUYWs7OwMluhpnUV
+         1OD/4u8SmwCBI4jQy+CFzB9DiOBMSi80AOG36VcptLnhf6mlFt3cEPpf08XASzer3N1U
+         8ju50bDwgsm8cIKentn09KT7dEn43UVXAcfqk+qtmEK0ijNDJx9xsmN1YdHBtsSuJmgX
+         XysM+f14J1mp0IjxEpAjmlNUmnhz1n1EVGQKFm+eyUG+fLys9+zxOsW+/DEZwSjDm1AD
+         eZY+FJmAR1IxLWdli8IGiG0WHu1UOvpZRaDlGQ0XHmg+jBupgMHOuue6LE6XSsPUVN5S
+         P/Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G6i6GBK3wCZWsxoTDmOd3ySKBv/GJjmU+V1QuwmXmlk=;
-        b=F3ygRcNj3Ir2feGfup1LNwUdMXnPkt/1gPx2gfZdfikV/u88IIfFnoXKCCu7DncivV
-         iusQqIpCZ23hAULSjToLYGUpafDxWX1UvY1rDV2BQCS1wS0ACAtuFKRTkHBmw1MfJm3f
-         s44r/VpGRd4zAPDpPNv8JMfPEUcJsJhnYoPnbfxG3w9Ezr39ATXj67VJciRseJ2oxib9
-         85igd5jrwqWR7+fgX1RJfK38A6hjmdstBz2d+Qh9n6VDYqkTLnhgmlR8hK7a+ExTxUfl
-         F0JNVk2zxpErlw7b9xFJQYWO5GK+CNqL2WnfDfJ4miBL9N0iA6T5uBnCdG90N1cR83AJ
-         ZYMw==
-X-Gm-Message-State: AOAM533NtA0l0bm9GnhGzovcB9M7Ol8oFwzr2/OCeEjZGEYykZReHjUL
-        ew3C0lInH39Cr6zPFpnNyXDPkW4EjQE01TfE9QuKLQ==
-X-Google-Smtp-Source: ABdhPJyWhZ+Aimi0ZuSzLKiWku7A6fJlEGDRdk6YXN2wx1FCgab6GIvDYrRG/JdcRLqANDa9XagvVxIlvjL5Gz03FEI=
-X-Received: by 2002:a17:906:4e4f:: with SMTP id g15mr18796618ejw.443.1597743042044;
- Tue, 18 Aug 2020 02:30:42 -0700 (PDT)
+        bh=CukyYxKQagzxSnoAUerbnhafgFTcDCc+vCHDuzHrDm0=;
+        b=Cl9Lrt0ZX5E+eEDYVvKJ+yRDd5McaDCEkmV8sPooVBNGRL45pOKJePg8aSURtxMMvx
+         DDnYi4BW/mBNppbkshxVf5/1sfDj2bu0y+mJ95AJ3fG8igKYvntVpuP/cUSKD+tq7M32
+         E9kN8hIcBYI320ebmT8qNnXLg/HOvxk4jfryNTkg/4T+zNhhbQLxRhI1VeMd9MXiGoXo
+         R1r+b3r0C3Cy+NtXLvk3j0DQFbbQP1BVg7OVwhxnm9E/jexxWai1Mu0GbGUxRu+lcI4T
+         KJqxcE5KamthCupZncnKhPNPENw37hr3aUQJSWuZzizDECjJD+fSMmrlFYH2gGLv8p5V
+         9kvA==
+X-Gm-Message-State: AOAM533GuIp8A02Wp+ES/mpxJ61kZeHBuGj24NQmzs0pxwiIaCJn7Xyl
+        aKfGBHHpMAOjYDmV30z6L4m8SEt7JwAjNM0nn58=
+X-Google-Smtp-Source: ABdhPJxWr9qkdSOHISPy+oYHPAYjGVOTOnZt44b3JJOq1hBBUFKJuivSXPClh61XAr/SYq05DdwSLWmaagZHOPuDyto=
+X-Received: by 2002:a9d:128c:: with SMTP id g12mr13892805otg.242.1597743128285;
+ Tue, 18 Aug 2020 02:32:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJfpeguh5VaDBdVkV3FJtRsMAvXHWUcBfEpQrYPEuX9wYzg9dA@mail.gmail.com>
- <CAHk-=whE42mFLi8CfNcdB6Jc40tXsG3sR+ThWAFihhBwfUbczA@mail.gmail.com>
- <CAJfpegtXtj2Q1wsR-3eUNA0S=_skzHF0CEmcK_Krd8dtKkWkGA@mail.gmail.com>
- <20200812143957.GQ1236603@ZenIV.linux.org.uk> <CAJfpegvFBdp3v9VcCp-wNDjZnQF3q6cufb-8PJieaGDz14sbBg@mail.gmail.com>
- <20200812150807.GR1236603@ZenIV.linux.org.uk> <CAJfpegsQF1aN4XJ_8j977rnQESxc=Kcn7Z2C+LnVDWXo4PKhTQ@mail.gmail.com>
- <20200812163347.GS1236603@ZenIV.linux.org.uk> <CAJfpegv8MTnO9YAiFUJPjr3ryeT82=KWHUpLFmgRNOcQfeS17w@mail.gmail.com>
- <20200812173911.GT1236603@ZenIV.linux.org.uk> <20200812183326.GU1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200812183326.GU1236603@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 18 Aug 2020 11:30:30 +0200
-Message-ID: <CAJfpegs2EkMNthnMvdr5NtLKxfQjTgJYSNhHOMROm0S98OJb4A@mail.gmail.com>
-Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200817085703.25732-1-allen.cryptic@gmail.com>
+ <s5hpn7pprl1.wl-tiwai@suse.de> <CAEogwTAGHOfBe4ztkx9To0gQGwHwFWzCBxn8nzWJP=wRJUJ56A@mail.gmail.com>
+ <s5hk0xxppz6.wl-tiwai@suse.de>
+In-Reply-To: <s5hk0xxppz6.wl-tiwai@suse.de>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Tue, 18 Aug 2020 15:01:56 +0530
+Message-ID: <CAOMdWSLJmiAxH5bvwh9b8O_MLdttU3Fsb4B_Y2tA08_P1b0BXQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] sound: convert tasklets to use new tasklet_setup()
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, perex@perex.cz,
+        tiwai@suse.com, clemens@ladisch.de, o-takashi@sakamocchi.jp,
+        timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        Kees Cook <keescook@chromium.org>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 8:33 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> On Wed, Aug 12, 2020 at 06:39:11PM +0100, Al Viro wrote:
-> > On Wed, Aug 12, 2020 at 07:16:37PM +0200, Miklos Szeredi wrote:
-> > > On Wed, Aug 12, 2020 at 6:33 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > >
-> > > > On Wed, Aug 12, 2020 at 05:13:14PM +0200, Miklos Szeredi wrote:
-> > >
-> > > > > Why does it have to have a struct mount?  It does not have to use
-> > > > > dentry/mount based path lookup.
-> > > >
-> > > > What the fuck?  So we suddenly get an additional class of objects
-> > > > serving as kinda-sorta analogues of dentries *AND* now struct file
-> > > > might refer to that instead of a dentry/mount pair - all on the VFS
-> > > > level?  And so do all the syscalls you want to allow for such "pathnames"?
-> > >
-> > > The only syscall I'd want to allow is open, everything else would be
-> > > on the open files themselves.
-> > >
-> > > file->f_path can refer to an anon mount/inode, the real object is
-> > > referred to by file->private_data.
-> > >
-> > > The change to namei.c would be on the order of ~10 lines.  No other
-> > > parts of the VFS would be affected.
+> Well, then at the next time, please mention it explicitly in the cover
+> letter.  Usually this kind of API conversion isn't done during rc.  Or
+> it's done systematically via script or such.  So unless mentioned,
+> it's not expected to be carried to 5.9.
+
+ Sorry for having missed the detail. Will take care of it in the future.
+
+>
+> In anyway, if the final purpose is to drop the old tasklet API and
+> that's the plan for 5.9, all tree-wide changes have to be done in
+> 5.9 beforehand.  Was that the decision?
+
+ The idea was to land the tree-wide changes as part of 5.9
+
+>
+> > > I have a patch set to drop the whole tasklet usage in sound/*
+> > > (destined for 5.10, to be submitted soon), so if that's for 5.10,
+> > > it'll be likely superfluous.
 > >
-> > If some of the things you open are directories (and you *have* said that
-> > directories will be among those just upthread, and used references to
-> > readdir() as argument in favour of your approach elsewhere in the thread),
-> > you will have to do something about fchdir().  And that's the least of
-> > the issues.
+> >  I have picked patches from your tree to adapt to this new API.
+> > Those can be picked in 5.10 I suppose.
 >
-> BTW, what would such opened files look like from /proc/*/fd/* POV?  And
-> what would happen if you walk _through_ that symlink, with e.g. ".."
-> following it?  Or with names of those attributes, for that matter...
-> What about a normal open() of such a sucker?  It won't know where to
-> look for your ->private_data...
->
-> FWIW, you keep refering to regularity of this stuff from the syscall
-> POV, but it looks like you have no real idea of what subset of the
-> things available for normal descriptors will be available for those.
+> Adapting the changes are trivial, don't worry.  It was just a question
+> of how to organize changes.
 
-I have said that IMO using a non-seekable anon-file would be okay for
-those.   All the answers fall out of that:  nothing works on those
-fd's except read/write/getdents.  No fchdir(), no /proc/*/fd deref,
-etc...
+Sure, Thank you.
 
-Starting with a very limited functionality and expanding on that if
-necessary is I think a good way to not get bogged down with the
-details.
-
-Thanks,
-Miklos
+- Allen
