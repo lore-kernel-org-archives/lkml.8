@@ -2,32 +2,32 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFF8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A694620897
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96B72063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgHRP7P (ORCPT
+        id S1726874AbgHRQAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:59:15 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2640 "EHLO huawei.com"
+        Tue, 18 Aug 2020 12:00:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2638 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727956AbgHRPpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:45:41 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 73998FDD20F951A0F884;
-        Tue, 18 Aug 2020 16:45:40 +0100 (IST)
+        id S1726990AbgHRPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:45:36 -0400
+Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 545BE99586F4F7D8E732;
+        Tue, 18 Aug 2020 16:45:35 +0100 (IST)
 Received: from kstruczy-linux-box (10.204.65.138) by
  lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:45:38 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:45:40 +0200
+ 15.1.1913.5; Tue, 18 Aug 2020 16:45:33 +0100
+Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:45:36 +0200
 From:   <krzysztof.struczynski@huawei.com>
 To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <containers@lists.linux-foundation.org>,
@@ -38,9 +38,9 @@ CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
         <jmorris@namei.org>, <christian@brauner.io>,
         <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
         Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 17/30] ima: Add the violation counter to the namespace
-Date:   Tue, 18 Aug 2020 17:42:17 +0200
-Message-ID: <20200818154230.14016-8-krzysztof.struczynski@huawei.com>
+Subject: [RFC PATCH 15/30] ima: Add a reader counter to the integrity inode data
+Date:   Tue, 18 Aug 2020 17:42:15 +0200
+Message-ID: <20200818154230.14016-6-krzysztof.struczynski@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
 References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
@@ -58,138 +58,259 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 
-The violations are now tracked per namespace.
+To detect ToMToU violations reader counter of the given inode is
+checked. This is not enough, because the reader may exist in a
+different ima namespace. Per inode reader counter tracks readers in all
+ima namespaces, whereas the per namespace counter is necessary to avoid
+false positives.
+
+Add a new reader counter to the integrity inode cache entry.
 
 Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 ---
- include/linux/ima.h                |  1 +
- security/integrity/ima/ima.h       |  1 -
- security/integrity/ima/ima_api.c   |  2 +-
- security/integrity/ima/ima_fs.c    | 18 +++++++++++++++---
- security/integrity/ima/ima_init.c  |  1 +
- security/integrity/ima/ima_ns.c    |  1 +
- security/integrity/ima/ima_queue.c |  1 -
- 7 files changed, 19 insertions(+), 6 deletions(-)
+ security/integrity/ima/ima_main.c | 71 ++++++++++++++++++++++---------
+ security/integrity/integrity.h    | 18 ++++++++
+ 2 files changed, 70 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index d59ed38a4305..7eb7a008c5fe 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -204,6 +204,7 @@ struct ima_namespace {
- 	struct integrity_iint_tree *iint_tree;
- 	struct list_head *measurements;
- 	atomic_long_t ml_len; /* number of stored measurements in the list */
-+	atomic_long_t violations;
- } __randomize_layout;
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index b933c7e6c8e1..6555cdf6b65e 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -28,6 +28,11 @@
  
- extern struct ima_namespace init_ima_ns;
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 7318fff3ccaa..ef95522cc710 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -193,7 +193,6 @@ extern spinlock_t ima_queue_lock;
+ #include "ima.h"
  
- struct ima_h_table {
- 	atomic_long_t len;	/* number of stored measurements in the list */
--	atomic_long_t violations;
- 	struct hlist_head queue[IMA_MEASURE_HTABLE_SIZE];
- };
- extern struct ima_h_table ima_htable;
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index b01451b34a98..f91516885033 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -151,7 +151,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
- 	event_data.ns_id = get_ns_id(ima_ns);
++struct ima_file_data {
++	struct ima_namespace *ima_ns;
++	bool is_readcount;
++};
++
+ int ima_hash_algo = HASH_ALGO_SHA1;
+ static int hash_setup_done;
  
- 	/* can overflow, only indicator */
--	atomic_long_inc(&ima_htable.violations);
-+	atomic_long_inc(&ima_ns->violations);
- 
- 	result = ima_alloc_init_template(&event_data, &entry, NULL);
- 	if (result < 0) {
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 6d370874d80f..b71c2552ac15 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -51,10 +51,23 @@ static ssize_t ima_show_htable_violations(struct file *filp,
- 					  char __user *buf,
- 					  size_t count, loff_t *ppos)
+@@ -116,8 +121,8 @@ static void ima_rdwr_violation_check(struct file *file,
+ 				iint = integrity_iint_rb_find(ima_ns->iint_tree,
+ 							      inode);
+ 			/* IMA_MEASURE is set from reader side */
+-			if (iint && test_bit(IMA_MUST_MEASURE,
+-						&iint->atomic_flags))
++			if (iint && atomic_read(&iint->readcount) &&
++			    test_bit(IMA_MUST_MEASURE, &iint->atomic_flags))
+ 				send_tomtou = true;
+ 		}
+ 	} else {
+@@ -171,7 +176,7 @@ static void ima_check_last_writer(struct integrity_iint_cache *iint,
  {
--	return ima_show_htable_value(buf, count, ppos, &ima_htable.violations);
-+	struct ima_namespace *ima_ns = get_current_ns();
+ 	fmode_t mode = file->f_mode;
+ 	bool update;
+-	struct ima_namespace *ima_ns = (struct ima_namespace *)file->f_ima;
++	struct ima_file_data *f_data = (struct ima_file_data *)file->f_ima;
+ 
+ 	if (!(mode & FMODE_WRITE))
+ 		return;
+@@ -186,7 +191,7 @@ static void ima_check_last_writer(struct integrity_iint_cache *iint,
+ 			iint->flags &= ~(IMA_DONE_MASK | IMA_NEW_FILE);
+ 			iint->measured_pcrs = 0;
+ 
+-			ima_check_active_ns(ima_ns, inode);
++			ima_check_active_ns(f_data->ima_ns, inode);
+ 
+ 			if (update)
+ 				ima_update_xattr(iint, file);
+@@ -207,8 +212,18 @@ static void ima_check_last_writer(struct integrity_iint_cache *iint,
+  */
+ int ima_file_alloc(struct file *file)
+ {
+-	file->f_ima = get_current_ns();
+-	get_ima_ns((struct ima_namespace *)file->f_ima);
++	struct ima_file_data *f_data;
 +
-+	return ima_show_htable_value(buf, count, ppos, &ima_ns->violations);
-+}
++	f_data = kmalloc(sizeof(struct ima_file_data), GFP_KERNEL);
++	if (!f_data)
++		return -ENOMEM;
 +
-+static int ima_open_htable_violations(struct inode *inode, struct file *file)
++	f_data->ima_ns = get_current_ns();
++	f_data->is_readcount = false;
++	get_ima_ns(f_data->ima_ns);
++
++	file->f_ima = f_data;
++
+ 	return 0;
+ }
+ 
+@@ -222,27 +237,33 @@ void ima_file_free(struct file *file)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct integrity_iint_cache *iint;
+-	struct ima_namespace *ima_ns = (struct ima_namespace *)file->f_ima;
++	struct ima_file_data *f_data = (struct ima_file_data *)file->f_ima;
+ 
+ 	if (unlikely(!(file->f_mode & FMODE_OPENED)))
+ 		goto out;
+ 
+-	if (!ima_ns->policy_data->ima_policy_flag || !S_ISREG(inode->i_mode))
++	if (!f_data->ima_ns->policy_data->ima_policy_flag ||
++	    !S_ISREG(inode->i_mode))
+ 		goto out;
+ 
+-	iint = integrity_iint_rb_find(ima_ns->iint_tree, inode);
++	iint = integrity_iint_rb_find(f_data->ima_ns->iint_tree, inode);
+ 	if (!iint)
+ 		goto out;
+ 
+ 	ima_check_last_writer(iint, inode, file);
++
++	if (f_data->is_readcount)
++		iint_readcount_dec(iint);
+ out:
+-	put_ima_ns(ima_ns);
++	put_ima_ns(f_data->ima_ns);
++	kfree(f_data);
+ }
+ 
+ static int process_ns_measurement(struct file *file, const struct cred *cred,
+ 				  u32 secid, char *buf, loff_t size, int mask,
+ 				  enum ima_hooks func,
+-				  struct ima_namespace *ima_ns)
++				  struct ima_namespace *ima_ns,
++				  bool readcount_open)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct integrity_iint_cache *iint = NULL;
+@@ -262,6 +283,12 @@ static int process_ns_measurement(struct file *file, const struct cred *cred,
+ 	if (!ima_ns->policy_data->ima_policy_flag)
+ 		return 0;
+ 
++	if (ima_ns != current_ima_ns) {
++		iint = integrity_iint_rb_find(ima_ns->iint_tree, inode);
++		if (!iint)
++			return 0;
++	}
++
+ 	/* Return an IMA_MEASURE, IMA_APPRAISE, IMA_AUDIT action
+ 	 * bitmask based on the appraise/audit/measurement policy.
+ 	 * Included is the appraise submask.
+@@ -282,12 +309,18 @@ static int process_ns_measurement(struct file *file, const struct cred *cred,
+ 
+ 	inode_lock(inode);
+ 
+-	if (action) {
++	if (action && !iint) {
+ 		iint = integrity_inode_rb_get(ima_ns->iint_tree, inode);
+ 		if (!iint)
+ 			rc = -ENOMEM;
+ 	}
+ 
++	if ((ima_ns == current_ima_ns) && iint && readcount_open &&
++	    ((file->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)) {
++		iint_readcount_inc(iint);
++		((struct ima_file_data *)file->f_ima)->is_readcount = true;
++	}
++
+ 	if (!rc && violation_check)
+ 		ima_rdwr_violation_check(file, iint, action & IMA_MEASURE,
+ 					 &pathbuf, &pathname, filename, ima_ns);
+@@ -429,7 +462,7 @@ static int process_ns_measurement(struct file *file, const struct cred *cred,
+ 
+ static int process_measurement(struct file *file, const struct cred *cred,
+ 			       u32 secid, char *buf, loff_t size, int mask,
+-			       enum ima_hooks func)
++			       enum ima_hooks func, bool readcount_open)
+ {
+ 	int ret;
+ 	struct ima_namespace *ima_ns;
+@@ -444,7 +477,7 @@ static int process_measurement(struct file *file, const struct cred *cred,
+ 			continue;
+ 
+ 		ret = process_ns_measurement(file, cred, secid, buf, size, mask,
+-					     func, ima_ns);
++					     func, ima_ns, readcount_open);
+ 		if (ret != 0)
+ 			break;
+ 	}
+@@ -471,7 +504,7 @@ int ima_file_mmap(struct file *file, unsigned long prot)
+ 	if (file && (prot & PROT_EXEC)) {
+ 		security_task_getsecid(current, &secid);
+ 		return process_measurement(file, current_cred(), secid, NULL,
+-					   0, MAY_EXEC, MMAP_CHECK);
++					   0, MAY_EXEC, MMAP_CHECK, true);
+ 	}
+ 
+ 	return 0;
+@@ -551,13 +584,13 @@ int ima_bprm_check(struct linux_binprm *bprm)
+ 
+ 	security_task_getsecid(current, &secid);
+ 	ret = process_measurement(bprm->file, current_cred(), secid, NULL, 0,
+-				  MAY_EXEC, BPRM_CHECK);
++				  MAY_EXEC, BPRM_CHECK, false);
+ 	if (ret)
+ 		return ret;
+ 
+ 	security_cred_getsecid(bprm->cred, &secid);
+ 	return process_measurement(bprm->file, bprm->cred, secid, NULL, 0,
+-				   MAY_EXEC, CREDS_CHECK);
++				   MAY_EXEC, CREDS_CHECK, false);
+ }
+ 
+ /**
+@@ -577,7 +610,7 @@ int ima_file_check(struct file *file, int mask)
+ 	security_task_getsecid(current, &secid);
+ 	return process_measurement(file, current_cred(), secid, NULL, 0,
+ 				   mask & (MAY_READ | MAY_WRITE | MAY_EXEC |
+-					   MAY_APPEND), FILE_CHECK);
++					   MAY_APPEND), FILE_CHECK, true);
+ }
+ EXPORT_SYMBOL_GPL(ima_file_check);
+ 
+@@ -779,7 +812,7 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 	func = read_idmap[read_id] ?: FILE_CHECK;
+ 	security_task_getsecid(current, &secid);
+ 	return process_measurement(file, current_cred(), secid, buf, size,
+-				   MAY_READ, func);
++				   MAY_READ, func, false);
+ }
+ 
+ /**
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 721d1850e4f9..c2981a98547e 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -17,6 +17,7 @@
+ #include <crypto/sha.h>
+ #include <linux/key.h>
+ #include <linux/audit.h>
++#include <linux/atomic.h>
+ 
+ /* iint action cache flags */
+ #define IMA_MEASURE		0x00000001
+@@ -138,6 +139,9 @@ struct integrity_iint_cache {
+ 	enum integrity_status ima_creds_status:4;
+ 	enum integrity_status evm_status:4;
+ 	struct ima_digest_data *ima_hash;
++	atomic_t readcount; /* Reader counter, incremented only in FILE_CHECK or
++			     * MMAP_CHECK hooks, used for ima violation check.
++			     */
+ };
+ 
+ struct integrity_iint_tree {
+@@ -294,3 +298,17 @@ static inline void __init add_to_platform_keyring(const char *source,
+ {
+ }
+ #endif
++
++#ifdef CONFIG_IMA
++static inline void iint_readcount_inc(struct integrity_iint_cache *iint)
 +{
-+	struct ima_namespace *ima_ns = get_current_ns();
++	atomic_inc(&iint->readcount);
++}
++static inline void iint_readcount_dec(struct integrity_iint_cache *iint)
++{
++	if (WARN_ON(!atomic_read(&iint->readcount)))
++		return;
 +
-+	if (!ns_capable(ima_ns->user_ns, CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	return 0;
- }
- 
- static const struct file_operations ima_htable_violations_ops = {
-+	.open = ima_open_htable_violations,
- 	.read = ima_show_htable_violations,
- 	.llseek = generic_file_llseek,
- };
-@@ -76,7 +89,6 @@ static ssize_t ima_show_measurements_count(struct file *filp,
- 	struct ima_namespace *ima_ns = get_current_ns();
- 
- 	return ima_show_htable_value(buf, count, ppos, &ima_ns->ml_len);
--
- }
- 
- static const struct file_operations ima_measurements_count_ops = {
-@@ -552,7 +564,7 @@ int __init ima_fs_init(void)
- 		goto out;
- 
- 	violations =
--	    securityfs_create_file("violations", S_IRUSR | S_IRGRP,
-+	    securityfs_create_file("violations", S_IRUSR | S_IRGRP | S_IROTH,
- 				   ima_dir, NULL, &ima_htable_violations_ops);
- 	if (IS_ERR(violations))
- 		goto out;
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index ac9509d8c0f0..f7b25b3f95de 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -37,6 +37,7 @@ struct ima_namespace init_ima_ns = {
- 	.iint_tree = &init_iint_tree,
- 	.measurements = &ima_measurements,
- 	.ml_len = ATOMIC_LONG_INIT(0),
-+	.violations = ATOMIC_LONG_INIT(0),
- };
- EXPORT_SYMBOL(init_ima_ns);
- 
-diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
-index 81de492baa99..3012287b22d2 100644
---- a/security/integrity/ima/ima_ns.c
-+++ b/security/integrity/ima/ima_ns.c
-@@ -127,6 +127,7 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
- 	ns->ucounts = ucounts;
- 	ns->frozen = false;
- 	atomic_long_set(&ns->ml_len, 0);
-+	atomic_long_set(&ns->violations, 0);
- 
- 	rwlock_init(&ns->iint_tree->lock);
- 	ns->iint_tree->root = RB_ROOT;
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index ec5b3ca3ef92..912e6097af5b 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -34,7 +34,6 @@ static unsigned long binary_runtime_size = ULONG_MAX;
- /* key: inode (before secure-hashing a file) */
- struct ima_h_table ima_htable = {
- 	.len = ATOMIC_LONG_INIT(0),
--	.violations = ATOMIC_LONG_INIT(0),
- 	.queue[0 ... IMA_MEASURE_HTABLE_SIZE - 1] = HLIST_HEAD_INIT
- };
- 
++	atomic_dec(&iint->readcount);
++}
++#endif
 -- 
 2.20.1
 
