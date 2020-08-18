@@ -3,286 +3,327 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE420C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8461520786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083AA20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="is4USddA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t32hTEXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHRUMF (ORCPT
+        id S1726685AbgHRUNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
+        Tue, 18 Aug 2020 16:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgHRUMD (ORCPT
+        with ESMTP id S1726318AbgHRUM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:12:03 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BDC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id i20so5306660qkk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:03 -0700 (PDT)
+        Tue, 18 Aug 2020 16:12:59 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D582FC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:58 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ep8so44859pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
-        b=is4USddA9HL0bmIjDMo1/up8AxbtbwKHhhxh23jSEjA//iEB2AlWSzij1O9BhVmaBx
-         f0lxWgAsQEOdKuqPld7g6GV3xeoS8Aka9K+OGyi/3Dum8qLSTtTokKXG5smmeS55Tu0z
-         hx7Qa73R2Ho5coZCveDCqdSENEXRPRLhCyUPJD57txa5emv/yOfpuzEnLDHeaJwIqvMT
-         UmQkx+O4eV1WSxSzOk+0I0plyVmHQofc4s33eZ16Ri44ZR8apPc+sdyvhWZvRmFPrIgy
-         P6DpNu6WBsGby80CH/twX/HurYxK8Mi+nQUomWqYZFHVxdxCSqtzvej5gSQ0mUU2WTMh
-         FJyQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p2yUnz09Iu1XrcEXbtkTyv2v4tIJD/opSkVWFBHYlhA=;
+        b=t32hTEXZvUaiQSGkDxEIzArY/zDEK8oIWAtd3/mdaedqX0E03d6ul1OxTH14+GdBep
+         WjHk2qcht9sZwwVpwBv3OJVeLVXsB0y7KHGuhxt2q+ruCBaE3yUxdR62I0cb0g8aymfj
+         hupDA9xjWocsHuqU9K7mL8/ehWHDOgCmKbMqhIcEr/9OZ3xrslaaCfPBfda8/+UgEAIW
+         Dm5YQeO8Q0VnXr0s7keAsjdfyQ2YK7ISyTzsXTTCcMCQTNsy7Vw+YtCYkqgCk6yKGEv2
+         VMq1i/hvJgZDwmg92796OrxJ2vIwGeJnjpUHG6u7Mo9sxbDF0J4X/ykqLLt379qa9HXZ
+         +phA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mCdseND4Q1yxnFtiQSLAgE22BOVS3DFVJQBnx+0FA1k=;
-        b=PNAGldCU/h6GWFTVlFsbZ29hs4S0xAJx98YlKuNkDTLTSNMkMEFs1eF2vKN3U26AIf
-         u+sdWjRtmcJ9YCPm4LW4ZeeIY/kTu0jkx1HBsllZBnNcvdHc2AQI6PB64m92axUN4hu5
-         BcUX8B8azc9UInObrWJrpi8d6xmmDW0N3OSfjI1uH2H2yu4n76fPgf+kd1EyTz08cfVS
-         6oXQMcXm+jmRPpaTBhnP3+iVVpwFYUO71e5ABuC6LJ8s9KtJuKed/nnP/3I9xjJ0OXGr
-         YYTlUBzIrleW/kbpYPz3EMM9NqjRO7hJ422NhG0nR4kIk3gFlOXGvWhzovAyOYVw82f5
-         FMjQ==
-X-Gm-Message-State: AOAM531zpSAccJDvBC2iyv0Umy9kwrDi1iFlShYpnzA8MAeP/Xhq8+Kk
-        CA3E5GrGXT1zvrgw76zyLMgbNA5B09WTHupr72+gpw==
-X-Google-Smtp-Source: ABdhPJwOKRYS2PwWBBYN4GFKNKJdQYmjkuOx3UDDgltvQa7vQlCXjb3kyJ+bQrzsi9ccw8z8SKrP/CgWTVGQkKsMYRc=
-X-Received: by 2002:a37:a5c1:: with SMTP id o184mr18448700qke.323.1597781522517;
- Tue, 18 Aug 2020 13:12:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p2yUnz09Iu1XrcEXbtkTyv2v4tIJD/opSkVWFBHYlhA=;
+        b=mPPoJuDElJONCl4KxJK4QHPc3E/B2bTTcPdBbbVdpCuX4I4BVDf1uKav0mFPFNK+kH
+         +poY4i2wL3DxVaq0HlbFKubj1ygGPkS3L4aXO+WYd5O2twj9VKBkN+rOVd9KiC6zhMd3
+         TGJTc3eB4xxWv/GDOBrY+GRnC4ufvRxz1CNYXTUQIrcBQ5ScImPsgMPyz//a9Fq6g7Id
+         ER6cUwVA+Eb0jqKYi3wqwEFCv41eoDn9HxT22GTLxoF8cQ93WMMQQoTO66ktuvoh2tFO
+         Lex40tZyKuqbGgCZrQSDQC6USHQ4lAWD3kn/4CeK1vgtowt9aONC7uMLkrFZ49yBeqIS
+         gVeA==
+X-Gm-Message-State: AOAM533G7RjydhKhBsplK+BH6Gz/Os8CB3PhBTkipz+R3wDVIqSapXYB
+        6nV3YwfjC8BdVufl+JN6CE3n0Q==
+X-Google-Smtp-Source: ABdhPJzeIOxLZQIQJ8njZkaDqFACOs8d0sMU9nYCv2xuRrkzIq0jsYiCZm5zDIBFWrYXaAejgWDYYg==
+X-Received: by 2002:a17:90a:ca17:: with SMTP id x23mr1279571pjt.194.1597781578144;
+        Tue, 18 Aug 2020 13:12:58 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b78sm26087180pfb.144.2020.08.18.13.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 13:12:57 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 14:12:55 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org
+Subject: Re: [PATCH 2/2] remoteproc: Move recovery debugfs entry to sysfs
+Message-ID: <20200818201255.GB3804229@xps15>
+References: <1595977697-15389-1-git-send-email-rishabhb@codeaurora.org>
+ <1595977697-15389-3-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com> <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1595513168-11965-2-git-send-email-srinivas.neeli@xilinx.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 18 Aug 2020 22:11:51 +0200
-Message-ID: <CAMpxmJXFXGGXebBDKhnk6W3J-KX+GLFUJOiQQY6ERNC7_D+_hw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/3] gpio: xilinx: Add clock adaptation support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595977697-15389-3-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 4:06 PM Srinivas Neeli
-<srinivas.neeli@xilinx.com> wrote:
->
-> Add support of clock adaptation for AXI GPIO driver.
->
-
-Please make the commit message more specific. I can tell from the
-patch that it's about power management but I've never heard anyone
-referring to it as clock adaptation. There's also a lot of runtime pm
-code in here. Be more descriptive.
-
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+On Tue, Jul 28, 2020 at 04:08:17PM -0700, Rishabh Bhatnagar wrote:
+> Expose recovery mechanism through sysfs rather than exposing through
+> debugfs. Some operating systems may limit access to debugfs through
+> access policies. This restricts user access to recovery mechanism,
+> hence move it to sysfs.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 > ---
-> Changes in V2:
-> Add check for return value of platform_get_irq() API.
-> ---
->  drivers/gpio/gpio-xilinx.c | 111 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 109 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 67f9f82e0db0..d103613e787a 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -14,6 +14,8 @@
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/clk.h>
+>  Documentation/ABI/testing/sysfs-class-remoteproc | 36 +++++++++++
 
-Alphabetical order of includes?
+Please disregard my previous comment about making this a separate patch.  I
+initially thought Jon Corbet would have to take this but it is not the case, it
+can go through Bjorn's tree.
 
->
->  /* Register Offset Definitions */
->  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
-> @@ -38,6 +40,7 @@
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
-> + * @clk: clock resource for this driver
->   */
->  struct xgpio_instance {
->         struct gpio_chip gc;
-> @@ -45,7 +48,8 @@ struct xgpio_instance {
->         unsigned int gpio_width[2];
->         u32 gpio_state[2];
->         u32 gpio_dir[2];
-> -       spinlock_t gpio_lock[2];
-> +       spinlock_t gpio_lock[2];        /* For serializing operations */
+>  drivers/remoteproc/remoteproc_debugfs.c          | 77 ------------------------
+>  drivers/remoteproc/remoteproc_sysfs.c            | 57 ++++++++++++++++++
+>  3 files changed, 93 insertions(+), 77 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
+> index 812582a..16c5267 100644
+> --- a/Documentation/ABI/testing/sysfs-class-remoteproc
+> +++ b/Documentation/ABI/testing/sysfs-class-remoteproc
+> @@ -98,3 +98,39 @@ Description:	Remote processor coredump configuration
+>  
+>  		Writing "disable" will disable the coredump collection for
+>  		that remoteproc.
+> +
+> +What:		/sys/class/remoteproc/.../recovery
+> +Date:		July 2020
+> +Contact:	Rishabh Bhatnagar <rishabhb@codeaurora.org>
 
-This looks like it was sneaked into an unrelated patch.
+Same comment as the previous patch
 
-> +       struct clk *clk;
+> +Description:	Remote processor recovery mechanism
+> +
+> +		Reports the recovery mechanism of the remote processor,
+> +		which will be one of:
+> +
+> +		"enabled"
+> +		"disabled"
+> +
+> +		"enabled" means, the remote processor will be automatically
+> +		recovered whenever it crashes. Moreover, if the remote
+> +		processor crashes while recovery is disabled, it will
+> +		be automatically recovered too as soon as recovery is enabled.
+> +
+> +		"disabled" means, a remote processor will remain in a crashed
+> +		state if it crashes. This is useful for debugging purposes;
+> +		without it, debugging a crash is substantially harder.
+> +
+> +		Writing this file controls the recovery mechanism of the
+> +		remote processor. The following options can be written:
+> +
+
+Same, I don't think we need to distinguish between reading and writing.  The
+above would do just fine.
+
+> +		"enabled"
+> +		"disabled"
+> +		"recover"
+> +
+> +		Writing "enabled" will enable recovery and recover the remote
+> +		processor if its crashed.
+> +
+> +		Writing "disabled" will disable recovery and if crashed the
+> +		remote processor will remain in crashed state.
+> +
+> +		Writing "recover" will trigger an immediate recovery if the
+> +		remote processor is in crashed state.
+> diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+> index 732770e..71194a0 100644
+> --- a/drivers/remoteproc/remoteproc_debugfs.c
+> +++ b/drivers/remoteproc/remoteproc_debugfs.c
+> @@ -84,81 +84,6 @@ static const struct file_operations rproc_name_ops = {
+>  	.llseek	= generic_file_llseek,
 >  };
->
->  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> @@ -256,6 +260,83 @@ static void xgpio_save_regs(struct xgpio_instance *chip)
->                        chip->gpio_dir[1]);
->  }
->
-> +static int xgpio_request(struct gpio_chip *chip, unsigned int offset)
+>  
+> -/* expose recovery flag via debugfs */
+> -static ssize_t rproc_recovery_read(struct file *filp, char __user *userbuf,
+> -				   size_t count, loff_t *ppos)
+> -{
+> -	struct rproc *rproc = filp->private_data;
+> -	char *buf = rproc->recovery_disabled ? "disabled\n" : "enabled\n";
+> -
+> -	return simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
+> -}
+> -
+> -/*
+> - * By writing to the 'recovery' debugfs entry, we control the behavior of the
+> - * recovery mechanism dynamically. The default value of this entry is "enabled".
+> - *
+> - * The 'recovery' debugfs entry supports these commands:
+> - *
+> - * enabled:	When enabled, the remote processor will be automatically
+> - *		recovered whenever it crashes. Moreover, if the remote
+> - *		processor crashes while recovery is disabled, it will
+> - *		be automatically recovered too as soon as recovery is enabled.
+> - *
+> - * disabled:	When disabled, a remote processor will remain in a crashed
+> - *		state if it crashes. This is useful for debugging purposes;
+> - *		without it, debugging a crash is substantially harder.
+> - *
+> - * recover:	This function will trigger an immediate recovery if the
+> - *		remote processor is in a crashed state, without changing
+> - *		or checking the recovery state (enabled/disabled).
+> - *		This is useful during debugging sessions, when one expects
+> - *		additional crashes to happen after enabling recovery. In this
+> - *		case, enabling recovery will make it hard to debug subsequent
+> - *		crashes, so it's recommended to keep recovery disabled, and
+> - *		instead use the "recover" command as needed.
+> - */
+> -static ssize_t
+> -rproc_recovery_write(struct file *filp, const char __user *user_buf,
+> -		     size_t count, loff_t *ppos)
+> -{
+> -	struct rproc *rproc = filp->private_data;
+> -	char buf[10];
+> -	int ret;
+> -
+> -	if (count < 1 || count > sizeof(buf))
+> -		return -EINVAL;
+> -
+> -	ret = copy_from_user(buf, user_buf, count);
+> -	if (ret)
+> -		return -EFAULT;
+> -
+> -	/* remove end of line */
+> -	if (buf[count - 1] == '\n')
+> -		buf[count - 1] = '\0';
+> -
+> -	if (!strncmp(buf, "enabled", count)) {
+> -		/* change the flag and begin the recovery process if needed */
+> -		rproc->recovery_disabled = false;
+> -		rproc_trigger_recovery(rproc);
+> -	} else if (!strncmp(buf, "disabled", count)) {
+> -		rproc->recovery_disabled = true;
+> -	} else if (!strncmp(buf, "recover", count)) {
+> -		/* begin the recovery process without changing the flag */
+> -		rproc_trigger_recovery(rproc);
+> -	} else {
+> -		return -EINVAL;
+> -	}
+> -
+> -	return count;
+> -}
+> -
+> -static const struct file_operations rproc_recovery_ops = {
+> -	.read = rproc_recovery_read,
+> -	.write = rproc_recovery_write,
+> -	.open = simple_open,
+> -	.llseek = generic_file_llseek,
+> -};
+>  
+>  /* expose the crash trigger via debugfs */
+>  static ssize_t
+> @@ -329,8 +254,6 @@ void rproc_create_debug_dir(struct rproc *rproc)
+>  
+>  	debugfs_create_file("name", 0400, rproc->dbg_dir,
+>  			    rproc, &rproc_name_ops);
+> -	debugfs_create_file("recovery", 0600, rproc->dbg_dir,
+> -			    rproc, &rproc_recovery_ops);
+>  	debugfs_create_file("crash", 0200, rproc->dbg_dir,
+>  			    rproc, &rproc_crash_ops);
+>  	debugfs_create_file("resource_table", 0400, rproc->dbg_dir,
+> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+> index 40949a0..49b846e 100644
+> --- a/drivers/remoteproc/remoteproc_sysfs.c
+> +++ b/drivers/remoteproc/remoteproc_sysfs.c
+> @@ -10,6 +10,62 @@
+>  
+>  #define to_rproc(d) container_of(d, struct rproc, dev)
+>  
+> +/* expose recovery flag via sysfs */
+> +static ssize_t recovery_show(struct device *dev,
+> +			     struct device_attribute *attr, char *buf)
 > +{
-> +       int ret = pm_runtime_get_sync(chip->parent);
+> +	struct rproc *rproc = to_rproc(dev);
 > +
-> +       /*
-> +        * If the device is already active pm_runtime_get() will return 1 on
-> +        * success, but gpio_request still needs to return 0.
-> +        */
-> +       return ret < 0 ? ret : 0;
+> +	return sprintf(buf, "%s", rproc->recovery_disabled ? "disabled\n" : "enabled\n");
 > +}
 > +
-> +static void xgpio_free(struct gpio_chip *chip, unsigned int offset)
+> +/*
+> + * By writing to the 'recovery' sysfs entry, we control the behavior of the
+> + * recovery mechanism dynamically. The default value of this entry is "enabled".
+> + *
+> + * The 'recovery' sysfs entry supports these commands:
+> + *
+> + * enabled:	When enabled, the remote processor will be automatically
+> + *		recovered whenever it crashes. Moreover, if the remote
+> + *		processor crashes while recovery is disabled, it will
+> + *		be automatically recovered too as soon as recovery is enabled.
+> + *
+> + * disabled:	When disabled, a remote processor will remain in a crashed
+> + *		state if it crashes. This is useful for debugging purposes;
+> + *		without it, debugging a crash is substantially harder.
+> + *
+> + * recover:	This function will trigger an immediate recovery if the
+> + *		remote processor is in a crashed state, without changing
+> + *		or checking the recovery state (enabled/disabled).
+> + *		This is useful during debugging sessions, when one expects
+> + *		additional crashes to happen after enabling recovery. In this
+> + *		case, enabling recovery will make it hard to debug subsequent
+> + *		crashes, so it's recommended to keep recovery disabled, and
+> + *		instead use the "recover" command as needed.
+> + */
+> +static ssize_t recovery_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t count)
 > +{
-> +       pm_runtime_put(chip->parent);
+> +	struct rproc *rproc = to_rproc(dev);
+> +
+> +	if (sysfs_streq(buf, "enabled")) {
+> +		/* change the flag and begin the recovery process if needed */
+> +		rproc->recovery_disabled = false;
+> +		rproc_trigger_recovery(rproc);
+> +	} else if (sysfs_streq(buf, "disabled")) {
+> +		rproc->recovery_disabled = true;
+> +	} else if (sysfs_streq(buf, "recover")) {
+> +		/* begin the recovery process without changing the flag */
+> +		rproc_trigger_recovery(rproc);
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	return count;
 > +}
+> +static DEVICE_ATTR_RW(recovery);
 > +
-> +static int __maybe_unused xgpio_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct irq_data *data;
-> +       int irq = platform_get_irq(pdev, 0);
-> +
-> +       if (irq < 0) {
-> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
-> +               return irq;
-> +       }
-> +
-> +       data = irq_get_irq_data(irq);
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_suspend(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct irq_data *data;
-> +       int irq = platform_get_irq(pdev, 0);
-> +
-> +       if (irq < 0) {
-> +               dev_info(&pdev->dev, "platform_get_irq returned %d\n", irq);
-> +               return irq;
-> +       }
+>  /*
+>   * A coredump-configuration-to-string lookup table, for exposing a
+>   * human readable configuration via sysfs. Always keep in sync with
+> @@ -201,6 +257,7 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+>  static DEVICE_ATTR_RO(name);
+>  
+>  static struct attribute *rproc_attrs[] = {
+> +	&dev_attr_recovery.attr,
 
-No, don't do this on every suspend/resume - just call
-platform_get_irq() in probe() and store the irq number for later use.
-This way you only check it once. Also why would you log the return
-value?
+Here too I think it would be a good idea to make the feature configurable.
 
-> +
-> +       data = irq_get_irq_data(irq);
-> +
-> +       if (!irqd_is_wakeup_set(data))
-> +               return pm_runtime_force_resume(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_suspend(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
-> +
-> +       clk_disable(gpio->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused xgpio_runtime_resume(struct device *dev)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct xgpio_instance *gpio = platform_get_drvdata(pdev);
-> +
-> +       return clk_enable(gpio->clk);
-> +}
-> +
-> +static const struct dev_pm_ops xgpio_dev_pm_ops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(xgpio_suspend, xgpio_resume)
-> +       SET_RUNTIME_PM_OPS(xgpio_runtime_suspend,
-> +                          xgpio_runtime_resume, NULL)
-> +};
-> +
->  /**
->   * xgpio_of_probe - Probe method for the GPIO device.
->   * @pdev: pointer to the platform device
-> @@ -324,6 +405,8 @@ static int xgpio_probe(struct platform_device *pdev)
->         chip->gc.direction_output = xgpio_dir_out;
->         chip->gc.get = xgpio_get;
->         chip->gc.set = xgpio_set;
-> +       chip->gc.request = xgpio_request;
-> +       chip->gc.free = xgpio_free;
->         chip->gc.set_multiple = xgpio_set_multiple;
->
->         chip->gc.label = dev_name(&pdev->dev);
-> @@ -334,15 +417,38 @@ static int xgpio_probe(struct platform_device *pdev)
->                 return PTR_ERR(chip->regs);
->         }
->
-> +       chip->clk = devm_clk_get_optional(&pdev->dev, "s_axi_aclk");
-> +       if (IS_ERR(chip->clk)) {
-> +               if (PTR_ERR(chip->clk) != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "Input clock not found\n");
+Thanks,
+Mathieu
 
-How is this an error if the clock is optional?
-
-> +               return PTR_ERR(chip->clk);
-> +       }
-> +       status = clk_prepare_enable(chip->clk);
-> +       if (status < 0) {
-> +               dev_err(&pdev->dev, "Failed to prepare clk\n");
-> +               return status;
-> +       }
-> +       pm_runtime_enable(&pdev->dev);
-> +       status = pm_runtime_get_sync(&pdev->dev);
-> +       if (status < 0)
-> +               goto err_unprepare_clk;
-> +
->         xgpio_save_regs(chip);
->
->         status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
->         if (status) {
->                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
-> -               return status;
-> +               goto err_pm_put;
->         }
->
-> +       pm_runtime_put(&pdev->dev);
->         return 0;
-> +err_pm_put:
-> +       pm_runtime_put(&pdev->dev);
-> +err_unprepare_clk:
-> +       pm_runtime_disable(&pdev->dev);
-> +       clk_unprepare(chip->clk);
-> +       return status;
->  }
->
->  static const struct of_device_id xgpio_of_match[] = {
-> @@ -357,6 +463,7 @@ static struct platform_driver xgpio_plat_driver = {
->         .driver         = {
->                         .name = "gpio-xilinx",
->                         .of_match_table = xgpio_of_match,
-> +                       .pm = &xgpio_dev_pm_ops,
->         },
->  };
->
-> --
-> 2.7.4
->
-
-Bart
+>  	&dev_attr_coredump.attr,
+>  	&dev_attr_firmware.attr,
+>  	&dev_attr_state.attr,
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
