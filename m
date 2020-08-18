@@ -2,103 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F44C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0600FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3ED207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16EF207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vh12em2j"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TLlcNKeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgHROzn (ORCPT
+        id S1727031AbgHROz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgHROzk (ORCPT
+        Tue, 18 Aug 2020 10:55:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41783 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726675AbgHROzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:55:40 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B30C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:55:39 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id j9so17820068ilc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hTTAJhh4NfjRHYn5UI6mlznlBlZYFizrT8lslR+Z18E=;
-        b=vh12em2jvehxMcRPxHt0I2lWNAsDN3sZSBXx4kJbYF0NfJXsSIE1NVVqTy/+6tKJMF
-         7RB2EYuxpr1PxGbqVNEez8GM8mwOByVxPSd//nQ8WoZoNLKX0s5deJPv5469v9sIjtgq
-         G0W0pU17InFXwODo47EKbwVzWeJy2mXrQ/8xTyTe+JvYDKk8PXR2c5IAQ+oylPbs7q/n
-         aUrX1f/Djm6IdJRF89V2qMW0DmEw/cvdPN5ZMpGWLCunkU8Ioc7AEfKYsqPZaqI/AliI
-         IltgHRorX6o2IcZX+N/J20iW5PEzuToOZ+bIIE//rL/pr+FsDUj65rt8QANZIIsJDrpM
-         X69Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hTTAJhh4NfjRHYn5UI6mlznlBlZYFizrT8lslR+Z18E=;
-        b=LOg4AXhc77t50P5YMYSwR6BijBkTbejonHyK39ALNYi3qd4rpD3+EIyZcWsNWc12LU
-         6lPdje7r9nRXtOvE9tAt+X7VhFbSZau1AoE5szfNTF2cIW97Qe93YZOmDKa5k0HNqqlz
-         tEf8SnV29HKun9AbIacsz6DFZuJ7GDxSRgV/yHaLt4361a2KBa4a+HzLulp0o/wVTpEG
-         ac+2OZ/nHS4ZAv6BC6XkMtg3AZ1NUffl07rgcSA2epNe2wOlXGusBGrOvIQR6KA7aCRk
-         hyQUQFQP9QVUtnwHvS4aRqP1eOvonAW8L6EehT6jhAqYs1rRxuwszTmzlO1QVXyCPXxc
-         Mc7A==
-X-Gm-Message-State: AOAM530dCzl6KmFHAGVfnDpLdczpkZBz/0HAIjcKQNbO8BdHwUAGJvP3
-        /Xe5yXhgZckzF9MYt879K57ur3k9tbd8sKreWRI=
-X-Google-Smtp-Source: ABdhPJyugOzq1mpedIjjSmTESPhs9cSE7mixc1n80W/RK28kNpOwE78cHLlZbvm3vZliI5m8Ws6AWgiGDZyM2eNZf40=
-X-Received: by 2002:a92:d646:: with SMTP id x6mr18734591ilp.237.1597762539068;
- Tue, 18 Aug 2020 07:55:39 -0700 (PDT)
+        Tue, 18 Aug 2020 10:55:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597762554; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=h7ieTAL6x5VkB6Wo/SxyyyfFM+5x9d9kB7SA6qlVaG0=; b=TLlcNKeuyA8mBrcnQzkCNCXGvVinbQD/fiKrkeiZSne9YJhI2ojI0JeIHGw9UE0WLGmuvWi7
+ Hxs2F2iGayW5lHRB9xIwwySKBY/+4CSKcHB0rPWtBtilYuV+Y8u789pz3wN6xpyUFoBD02rc
+ pVcRypjTjFJP9Wmuc7S61Dl4psA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f3bebe02889723bf845c375 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 14:55:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 616A0C43387; Tue, 18 Aug 2020 14:55:28 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FD5DC433CA;
+        Tue, 18 Aug 2020 14:55:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FD5DC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+Date:   Tue, 18 Aug 2020 20:25:14 +0530
+Message-Id: <20200818145514.16262-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200818084448.33969-1-richard.weiyang@linux.alibaba.com>
-In-Reply-To: <20200818084448.33969-1-richard.weiyang@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 18 Aug 2020 07:55:28 -0700
-Message-ID: <CAKgT0UfQ4BGygD-r+uVpMhF2RBAynhZp54H-6EVrEc7PdESNqQ@mail.gmail.com>
-Subject: Re: [Patch v2] mm/page_reporting: drop stale list head check in page_reporting_cycle
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 1:45 AM Wei Yang
-<richard.weiyang@linux.alibaba.com> wrote:
->
-> list_for_each_entry_safe() guarantees that we will never stumble over
-> the list head; "&page->lru != list" will always evaluate to true. Let's
-> simplify.
->
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_reporting.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-> index 3bbd471cfc81..aaaa3605123d 100644
-> --- a/mm/page_reporting.c
-> +++ b/mm/page_reporting.c
-> @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
->                  * the new head of the free list before we release the
->                  * zone lock.
->                  */
-> -               if (&page->lru != list && !list_is_first(&page->lru, list))
-> +               if (!list_is_first(&page->lru, list))
->                         list_rotate_to_front(&page->lru, list);
->
->                 /* release lock before waiting on report processing */
+There is one LLCC logical bank(LLCC0) on SC7180 SoC and the
+size of the LLCC0 base is 0x50000(320KB) not 2MB, so correct
+the size and fix copy paste mistake carried over from SDM845.
 
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
+Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache controller node")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+
+Changes in v2:
+ * Edit commit msg to remove confusing references (Doug).
+
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b3833e52f..e875f6c3b663 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2618,7 +2618,7 @@ dc_noc: interconnect@9160000 {
+ 
+ 		system-cache-controller@9200000 {
+ 			compatible = "qcom,sc7180-llcc";
+-			reg = <0 0x09200000 0 0x200000>, <0 0x09600000 0 0x50000>;
++			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
+ 			reg-names = "llcc_base", "llcc_broadcast_base";
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
