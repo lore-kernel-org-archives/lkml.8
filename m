@@ -2,148 +2,93 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F25C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CB020709
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982A820709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9ZazxWW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VPb/jaaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHRU2K (ORCPT
+        id S1726778AbgHRU2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52130 "EHLO
+        Tue, 18 Aug 2020 16:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHRU2H (ORCPT
+        with ESMTP id S1725767AbgHRU2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:28:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1101C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:28:06 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x25so10540570pff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xxbo8ts5YS429RzEU6ZgRNO13aJtTja8Ct2w5Hx3ELI=;
-        b=I9ZazxWW3yNjUs4lFGnzeJihSQFCQ2r/rN+yu5KLqpCghaUgoNqtf6TwLa8Zs4Ld3V
-         ZKcsVCz8OufKjRhyMG0CIadleSRk1SKaVJDzLUVsZ7aA3DpZiNQyHXy/AieFuNVleSdz
-         o9MsfLwNq1MCTxYBELvWTJ7/riY/rh7WCiQUMsDGntllK4zDoCSxonJON9YtejbA6VDk
-         2a0PWw6s87jLwUjwjhqhq7ZYwQfr6tIYL+BkCpjyY6GR8UAJMQVg0UJEQk3yKGdwICp0
-         dfyEVT4ClFeI+1FwC60kRM5LoF9IL0zuC1m+XgdKMRGzpkdG8Yiq5R2OeunyZG6J+F4/
-         4Brw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xxbo8ts5YS429RzEU6ZgRNO13aJtTja8Ct2w5Hx3ELI=;
-        b=Wa6QSoKYybsfZ/2mNpm5NOoKLB1E4AfETTqV1u+V0WCP/Q+2+EYlcLOl7TZQ7XzsRJ
-         c3P/WAvI33gh0beTioURyx+lsewoVUWjoGgye7eKLh/mFCK4FzgRnTZlGv6ibX6HQqd3
-         bY1QpoHUvbHlv/xR31y2ghAXNQHyejqR8F0B4LHD7w4LolkxU06/VUf46Ij28UsEOu9m
-         7Ukv2YeSa1DiMCDrLE4M7s15QbmYSab1kWKtzuurSlflNUzVxgz0ZOeooizjh7+4iDRd
-         7xF6M/NrNNLZw6lJP8aLMJv89P8S3Mrv3tqYZcAB+AdLd3fW2RTPj3hFmKpnlsdf0LWv
-         eCxQ==
-X-Gm-Message-State: AOAM530yV/qtBgwHp00RjkLtF3usxtnD7F9TcbOcK6si4x2MF6xeqg6+
-        sExTHsLkchzzjoeuxjXeV/6vVKAvMdUY7KgGkDdBLA==
-X-Google-Smtp-Source: ABdhPJw3r3c5zfHyeswmOG57fp7bxIYVb0RszFBCj3KKjt8kCRCEcn6gmG8pMyymVAA3R/3CtWzuceO4UwwxbAZmZwU=
-X-Received: by 2002:aa7:96e5:: with SMTP id i5mr13635550pfq.108.1597782485999;
- Tue, 18 Aug 2020 13:28:05 -0700 (PDT)
+        Tue, 18 Aug 2020 16:28:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95CA3C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3ePPQTqSgA3y882cmQuH4cZ0/NskoHX+u9okIl+XkXo=; b=VPb/jaaM5wPvJZro5z+2HSvqCX
+        9gh6d9rdLjBMT+/Rzt0XAeYCE7X5QxqjNMyDF/PepxRR+45kH2aMWQW6dVxp3UafRWC0QDWIeZoZb
+        yix/GbC5ffGQys759nAYh3aFm9pJ5bESz5QgrYJKbk5W4r38pYryySuHvuNi8zJADmB/s/Pn6Fyaf
+        sf58HlXSYYUp3PS7jC+RUoMp9WFsqR96qQhP1O9Bg8vvOeeiezXn3369DCi1o8pqp+gIMLaz9097n
+        f08h6R75VUaf6OVjySrLADNFJeWwmaemiKWHm8M6GQJfISHlfMGFB8PB+LKm0zwvOM191nSlodsRT
+        3ReNkIrQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k88DO-0007Di-IE; Tue, 18 Aug 2020 20:28:15 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Dave Airlie <airlied@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] drm: ast: fix double __iomem sparse warning
+Message-ID: <a8185578-a69a-16b0-6fdf-f4e46bc4f61f@infradead.org>
+Date:   Tue, 18 Aug 2020 13:28:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan>
-In-Reply-To: <20200818202407.GA3143683@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Aug 2020 13:27:54 -0700
-Message-ID: <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
-> > On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
-> > >
-> > > I'm not saying "change the semantics", nor am I saying that playing
-> > > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
-> > > to the compiler authors and get them to implement such a #pragma: "this
-> > > freestanding implementation *does* support *this specific library function*,
-> > > and you are free to call it."
-> >
-> > I'd much rather just see the library functions as builtins that always
-> > do the right thing (with the fallback being "just call the standard
-> > function").
-> >
-> > IOW, there's nothing wrong with -ffreestanding if you then also have
-> > __builtin_memcpy() etc, and they do the sane compiler optimizations
-> > for memcpy().
-> >
-> > What we want to avoid is the compiler making *assumptions* based on
-> > standard names, because we may implement some of those things
-> > differently.
-> >
->
-> -ffreestanding as it stands today does have __builtin_memcpy and
-> friends. But you need to then use #define memcpy __builtin_memcpy etc,
-> which is messy and also doesn't fully express what you want. #pragma, or
-> even just allowing -fbuiltin-foo options would be useful.
->
-> The two compilers have some peculiarities, which means you really can't
-> have functions with the same name that do something else if you want to
-> use builtins at all, and can also lead to missed optimizations.
->
-> For eg, __builtin_strchr(s,'\0') can be optimized to strlen. gcc will
-> optimize it that way even if -ffreestanding is used (so strlen has to
-> mean strlen), while clang won't, so it misses a potential optimization.
-> This is admittedly a silly example, but you could imagine something like
-> strncpy being optimized to memcpy+memset if the source length was
-> previously computed.
->
-> PS: clang optimizes sprintf, but doesn't provide __builtin_sprintf?
+From: Randy Dunlap <rdunlap@infradead.org>
 
-https://bugs.llvm.org/show_bug.cgi?id=47224
--- 
-Thanks,
-~Nick Desaulniers
+sparse complains about having 2 "__iomem" attributes on the same line
+where only one is needed since the first one applies to everything
+up to the ending ';'.
+However, to make it clear(er) that both of these pointers are
+"__iomem", use separate lines for them.
+
+../drivers/gpu/drm/ast/ast_cursor.c:256:26: CK: warning: duplicate [noderef]
+../drivers/gpu/drm/ast/ast_cursor.c:256:26: CK: error: multiple address space given: __iomem & __iomem
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+---
+ drivers/gpu/drm/ast/ast_cursor.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- lnx-59-rc1.orig/drivers/gpu/drm/ast/ast_cursor.c
++++ lnx-59-rc1/drivers/gpu/drm/ast/ast_cursor.c
+@@ -253,7 +253,8 @@ void ast_cursor_show(struct ast_private
+ 		     unsigned int offset_x, unsigned int offset_y)
+ {
+ 	u8 x_offset, y_offset;
+-	u8 __iomem *dst, __iomem *sig;
++	u8 __iomem *dst;
++	u8 __iomem *sig;
+ 	u8 jreg;
+ 
+ 	dst = ast->cursor.vaddr[ast->cursor.next_index];
+
