@@ -2,87 +2,130 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14959C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5325C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04A520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C774D20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHRNNp (ORCPT
+        id S1726882AbgHRNNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:13:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33628 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 09:13:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24130 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgHRNNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726705AbgHRNNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 09:13:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 929A8B17F;
-        Tue, 18 Aug 2020 13:13:59 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Vasily Averin <vvs@virtuozzo.com>,
-        Cong Wang <amwang@redhat.com>,
-        Mike Christie <michaelc@cs.wisc.edu>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v7 5/6] scsi: libiscsi: use sendpage_ok() in iscsi_tcp_segment_map()
-Date:   Tue, 18 Aug 2020 21:12:26 +0800
-Message-Id: <20200818131227.37020-6-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200818131227.37020-1-colyli@suse.de>
-References: <20200818131227.37020-1-colyli@suse.de>
+IronPort-SDR: L/NiWsOp261toAA83p3LNFrAVLaeAFmuEbMN+hnY8YNzoDqQc+mipTMStXyUNSQ5rMlVCNk9k4
+ U1wmz5SnGr2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154153858"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="154153858"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:13:33 -0700
+IronPort-SDR: 3B2z/bqLkMdhodrcZ4CfC+QANpEMODAmQBVCiyO0i7uvZxrbHhwOzf7bIfi4RZV4JlkF8xP+9D
+ MSmeX3+j2rzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="320082635"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Aug 2020 06:13:31 -0700
+Date:   Tue, 18 Aug 2020 21:21:11 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Yang Weijiang <weijiang.yang@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] selftests: kvm: Use a shorter encoding to clear RAX
+Message-ID: <20200818132111.GA14817@local-michael-cet-test.sh.intel.com>
+References: <20200817172034.26673-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817172034.26673-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In iscsci driver, iscsi_tcp_segment_map() uses the following code to
-check whether the page should or not be handled by sendpage:
-    if (!recv && page_count(sg_page(sg)) >= 1 && !PageSlab(sg_page(sg)))
+On Mon, Aug 17, 2020 at 01:20:34PM -0400, Paolo Bonzini wrote:
+> From: Yang Weijiang <weijiang.yang@intel.com>
+> 
+> If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
+> by the assembler:
+> 
+> asm volatile("ss_start: "
+>              "xor %%rax,%%rax\n\t"
+>              "cpuid\n\t"
+>              "movl $0x1a0,%%ecx\n\t"
+>              "rdmsr\n\t"
+>              : : : "rax", "ecx");
+> 
+> is translated to :
+> 
+>   000000000040194e <ss_start>:
+>   40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
+>   401950:       0f a2                   cpuid
+>   401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
+>   401957:       0f 32                   rdmsr
+> 
+> As you can see rax is replaced with eax in target binary code.
+> This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
+> and makes the hard-coded instruction length check fail:
+> 
+>         /* Instruction lengths starting at ss_start */
+>         int ss_size[4] = {
+>                 3,              /* xor */   <-------- 2 or 3?
+>                 2,              /* cpuid */
+>                 5,              /* mov */
+>                 2,              /* rdmsr */
+>         };
+> 
+> Encode the shorter version directly and, while at it, fix the "clobbers"
+> of the asm.
+> 
+> Reported-by: Yang Weijiang <weijiang.yang@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/x86_64/debug_regs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+> index 8162c58a1234..b8d14f9db5f9 100644
+> --- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
+> +++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+> @@ -40,11 +40,11 @@ static void guest_code(void)
+>  
+>  	/* Single step test, covers 2 basic instructions and 2 emulated */
+>  	asm volatile("ss_start: "
+> -		     "xor %%rax,%%rax\n\t"
+> +		     "xor %%eax,%%eax\n\t"
+>  		     "cpuid\n\t"
+>  		     "movl $0x1a0,%%ecx\n\t"
+>  		     "rdmsr\n\t"
+> -		     : : : "rax", "ecx");
+> +		     : : : "eax", "ebx", "ecx", "edx");
+>
+Hi, Paolo,
+Should we also change the below expected instruction length(xor) to 2 in
+accordance with above change?
 
-The "page_count(sg_page(sg)) >= 1 && !PageSlab(sg_page(sg)" part is to
-make sure the page can be sent to network layer's zero copy path. This
-part is exactly what sendpage_ok() does.
+int ss_size[4] = {
+        3,              /* xor */
+        2,              /* cpuid */
+        5,              /* mov */
+        2,              /* rdmsr */
 
-This patch uses  use sendpage_ok() in iscsi_tcp_segment_map() to replace
-the original open coded checks.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Vasily Averin <vvs@virtuozzo.com>
-Cc: Cong Wang <amwang@redhat.com>
-Cc: Mike Christie <michaelc@cs.wisc.edu>
-Cc: Lee Duncan <lduncan@suse.com>
-Cc: Chris Leech <cleech@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.de>
----
- drivers/scsi/libiscsi_tcp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/libiscsi_tcp.c b/drivers/scsi/libiscsi_tcp.c
-index 6ef93c7af954..31cd8487c16e 100644
---- a/drivers/scsi/libiscsi_tcp.c
-+++ b/drivers/scsi/libiscsi_tcp.c
-@@ -128,7 +128,7 @@ static void iscsi_tcp_segment_map(struct iscsi_segment *segment, int recv)
- 	 * coalescing neighboring slab objects into a single frag which
- 	 * triggers one of hardened usercopy checks.
- 	 */
--	if (!recv && page_count(sg_page(sg)) >= 1 && !PageSlab(sg_page(sg)))
-+	if (!recv && sendpage_ok(sg_page(sg)))
- 		return;
- 
- 	if (recv) {
--- 
-2.26.2
-
+>  	/* DR6.BD test */
+>  	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
+> -- 
+> 2.26.2
