@@ -2,101 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA4EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9686C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7630C2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933C5206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+erm+9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHRIL2 convert rfc822-to-8bit (ORCPT
+        id S1726483AbgHRIQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:11:28 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:18255 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbgHRIL1 (ORCPT
+        Tue, 18 Aug 2020 04:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgHRIP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:11:27 -0400
-Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
-        Paul Moore <paul@paul-moore.com>
-CC:     Nick Kralevich <nnk@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <selinux@vger.kernel.org>
-References: <20200817170729.2605279-1-tweek@google.com>
- <20200817170729.2605279-4-tweek@google.com>
- <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <6730ec4a-d11b-5c05-b64f-380104a86dab@sony.com>
-Date:   Tue, 18 Aug 2020 10:11:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 04:15:59 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AB6C061389;
+        Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o5so9421042pgb.2;
+        Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=efKFji4wZbV4ryr84E81ykO6FthaFggVytOSX8yMq3Y=;
+        b=j+erm+9yXM4DR4o7ac1+SNFpUbtVt7I+meQmJ9mwt1rWnlVx3+DV0yFmieYZ9XpIUz
+         fj9fyWBBf0gLW3MQKfglYyXP62+cvv12b+wuDmpcOqZDvXab83Hf+/cMrnmlNSaItrO1
+         CpIw1hvTMf+QACLdXFmi7Y/BI3Ohgo17bIrAkONlOeYksHZ7jjNNYJWzRMdTENdsGqjO
+         PpG0yz734CNm3MvjDxWeG7hNf44ABwTgVnkf+CTRyIEWBaGklzmuAupD5C2idxmBfCPy
+         DruKenMqsbuJLjKLMpFo3J095x95IG9MMeoeCDmExu/OyAJUWoYwgZ7D5/+c7hkNDF3H
+         ITJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=efKFji4wZbV4ryr84E81ykO6FthaFggVytOSX8yMq3Y=;
+        b=r3IE5poXfBQCalz4YvMP01y5oHZm8c0246lXhlrX3snH+CCU48qVN4q73cD9l9yQ/y
+         g26X6MpcnLK1tlofc1o+IADaqZKhzFELX2mErQD7wD/zOhrxGDsEMcPSzWDFPoo83r9+
+         5hGYnIbIW6nd3Nbv+XQOWPEZThND5R9JM/jEINMaDIQ3vFW/T6utcjScSnacZqkoFsTs
+         nFCLWQF2KXYp/8SptEG8fgHAU0FhW2dlJBrgd7bUAiD0LczKsfXwjjMmLPW7DEcS8LEx
+         5MshqqfQuhUC/XjbwfsXNtZ7ahqRrFbvp111EDOT4kibk2n9rR8TYDx5UxEuekjA/lRM
+         w4dQ==
+X-Gm-Message-State: AOAM530Nsy8QmhAjXPUJnaybATvY8te2LhR0ShKpB1wV0ZFtGy4NX4Z0
+        ZLXpw3YkSj85m9fNfnt5pcLx+TvPT+M=
+X-Google-Smtp-Source: ABdhPJyHJGPp/aTkTMW7Ie/M2t3v4BMfISMnMoQO4IWHF2fIZIMsBP0/H7MRTu+ep8AUqS87MVWcQA==
+X-Received: by 2002:a62:9254:: with SMTP id o81mr14137225pfd.73.1597738558202;
+        Tue, 18 Aug 2020 01:15:58 -0700 (PDT)
+Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
+        by smtp.gmail.com with ESMTPSA id d13sm23367913pfq.118.2020.08.18.01.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 01:15:57 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 16:15:55 +0800
+From:   Qingyu Li <ieatmuttonchuan@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, isdn@linux-pingi.de
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/bluetooth/cmtp/sock.c: add CAP_NET_RAW check.
+Message-ID: <20200818081555.GA1349@oppo>
 MIME-Version: 1.0
-In-Reply-To: <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=frmim2wf c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=meVymXHHAAAA:8 a=pGLkceISAAAA:8 a=1XWaLZrsAAAA:8 a=G-ZDcuA8YNwbPKHdF2YA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22 a=2JgSa4NbpEOStq-L5dxp:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 10:16 PM, Stephen Smalley wrote:
-> On 8/17/20 1:07 PM, Thiébaud Weksteen wrote:
->
->> From: Peter Enderborg <peter.enderborg@sony.com>
->>
->> In the print out add permissions, it will look like:
->>      <...>-1042  [007] ....   201.965142: selinux_audited:
->>      requested=0x4000000 denied=0x4000000 audited=0x4000000
->>      result=-13
->>      scontext=system_u:system_r:cupsd_t:s0-s0:c0.c1023
->>      tcontext=system_u:object_r:bin_t:s0
->>      tclass=file permissions={ !entrypoint }
->>
->> This patch is adding the "permissions={ !entrypoint }".
->> The permissions preceded by "!" have been denied and the permissions
->> without have been accepted.
->>
->> Note that permission filtering is done on the audited, denied or
->> requested attributes.
->>
->> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
->> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
->> Reviewed-by: Thiébaud Weksteen <tweek@google.com>
->> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
->> ---
->>   include/trace/events/avc.h | 11 +++++++++--
->>   security/selinux/avc.c     | 36 ++++++++++++++++++++++++++++++++++++
->>   2 files changed, 45 insertions(+), 2 deletions(-)
->>
->> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
->> index 7de5cc5169af..d585b68c2a50 100644
->> --- a/security/selinux/avc.c
->> +++ b/security/selinux/avc.c
->> @@ -695,6 +695,7 @@ static void avc_audit_pre_callback(struct audit_buffer *ab, void *a)
->>       audit_log_format(ab, " } for ");
->>   }
->>   +
->>   /**
->>    * avc_audit_post_callback - SELinux specific information
->>    * will be called by generic audit code
->
-> Also, drop the spurious whitespace change above.
->
->
-Is there any other things we need to fix? A part 1&2 now OK?
+When creating a raw PF_BLUETOOTH socket,
+CAP_NET_RAW needs to be checked first.
 
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+---
+ net/bluetooth/cmtp/sock.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/bluetooth/cmtp/sock.c b/net/bluetooth/cmtp/sock.c
+index 96d49d9fae96..476ccc9bee7c 100644
+--- a/net/bluetooth/cmtp/sock.c
++++ b/net/bluetooth/cmtp/sock.c
+@@ -207,6 +207,9 @@ static int cmtp_sock_create(struct net *net, struct socket *sock, int protocol,
+ 	if (sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
+
++	if (!capable(CAP_NET_RAW))
++		return -EPERM;
++
+ 	sk = sk_alloc(net, PF_BLUETOOTH, GFP_ATOMIC, &cmtp_proto, kern);
+ 	if (!sk)
+ 		return -ENOMEM;
+--
+2.17.1
 
