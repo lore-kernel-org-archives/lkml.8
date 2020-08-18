@@ -2,93 +2,137 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40299C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C1D206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDED206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l2ujWwd6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBeobjx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHRTe3 (ORCPT
+        id S1726684AbgHRTfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43744 "EHLO
+        Tue, 18 Aug 2020 15:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRTeX (ORCPT
+        with ESMTP id S1726632AbgHRTfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:34:23 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E2CC061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:34:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mt12so2048pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:34:23 -0700 (PDT)
+        Tue, 18 Aug 2020 15:35:22 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DDBC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:35:22 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x25so10475437pff.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:35:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Tc2Y/7wRUGR7GO4HI5D5o1JOg/02jGLqqiMyiLuhQfs=;
-        b=l2ujWwd6BMG71uJ+lE/u8hWi1z2UCA7KAWMpdnE1WzCwTe07wkyg50hoJQMVi/k5vS
-         10b1jlIwnAAB1jWtkPfeKBvqJMoyZBbScKD9sht7QrmX7W7SSdxi+jcaauUGkGBX0fzB
-         CHA2p5bBmBuY5K3LiVDClVPuHglS30NtSusnM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u9n/mt8PXTBKmKuG3o+opVNeX/HejppKa6InUAJeA7Y=;
+        b=fBeobjx20ZvqgMFkaNVq/ELQ1v5ovZ0pyk/PpsBmxpi2EOtH/EHH8lueVPAsHLePxq
+         YDawcnBGnH+daZxg1HfI4B8CtdqRIK/gYql0D3xoQ0TUhfRELDBak23SSWlBBE4LbVjM
+         GOcdv6i+CQyzRwJ8cpK17uf4nYxuLU6W0cMliF4pcpfMawc+sGUahhJuln49rIcQqoHm
+         OSxljVm9vdqfUgJmt4mCJKFsl9lTEDSfZgznOdmKH74aSCTe9uYNY2txxR95Y8g9Wf3o
+         hYgPfBsNJXhBJN8HzVJWdZxcdF4KCntNSoxeabAYJ+OODBWch4MTEyN02YpX5m3Otqjx
+         1jiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Tc2Y/7wRUGR7GO4HI5D5o1JOg/02jGLqqiMyiLuhQfs=;
-        b=riP//L8XNhJAfsjvSLf3PjUXb1+a8t3OOJn8++YgU55CXZzlcakQFpnlsTU+hpEsuD
-         wSrTUI3oxfr7MEptHJ696p33lKyg6rxb5p0YszaM68+qpguaszaiHjtIekdfS94V2Rp+
-         KyTcgVZfDsJhJEmoJAcHSxNedOHK/DytLvLV1JqvpI/KuwrnF+XiIMyRLElmj2skWwJ0
-         W4GyqtQ1a4WUNFqJG+xavQjJjYOq9iF0AX/75fpWUQEU5JTEXZYDllGfXuBdl6v9Dw3A
-         fhJSgqrb9RLynmxqo7Hs/beEBuhNLN8cyOhhULLiS63dGKme5zoMIsvnEMIXUct/gBN8
-         UTYA==
-X-Gm-Message-State: AOAM530PRYGCqqSbAS39QpWDTH6SrrtI7xgKVm9vZzqVvg0IdzNSNb/U
-        6hlZYsr2o7PGoxizt6nHzzoZ/Q==
-X-Google-Smtp-Source: ABdhPJyRtGUPEH8hQB3PYbEreefecpWhQ0b3Q4RWm7821VkslhtwepOtRIsUHn68CV2l8iU1xIwP+A==
-X-Received: by 2002:a17:902:9f8a:: with SMTP id g10mr16598513plq.158.1597779263268;
-        Tue, 18 Aug 2020 12:34:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k21sm22549273pgl.0.2020.08.18.12.34.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:34:22 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:34:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 02/11] fs: don't allow kernel reads and writes without
- iter ops
-Message-ID: <202008181234.B1D9572C@keescook>
-References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-3-hch@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u9n/mt8PXTBKmKuG3o+opVNeX/HejppKa6InUAJeA7Y=;
+        b=l3mt0BHgrd0v/p8cnlava3JB1kqVoF/i/oq4Y8j5B9Xt94DAGSiVfJ+tZIjzqinafY
+         uYKj/Z7FKdUxEG27CTl4hFsW5GyfvEtMnyoa9jNFLtzhLC7iI13mIZSJ5Y9uI0FXGSmy
+         vFhnV7EUXbW+B6kpmBlt9JiI0qicYp+Km4BONYZFhUzksCTjZlgJbMCmYrSGvQYrHWMq
+         xlveiAbbXOMsLDusUnD9/HwejIfm6GmMmGq1SR6ErMW8ZlGwMMgFO4Pvw3osBMtO5+VS
+         zp2iR3WlQxAvnp0uzRWNcCn3quikb3Pxi/f5T7psgVUF9rSf2664433VUx7pNWqoXXAx
+         V8zg==
+X-Gm-Message-State: AOAM531AH8VWfdmqb13GLU5eVOnPqmdYd6I9ahXJ7dntwKt3QAd4I0BL
+        dfRJz5X193HB//xTxQOoNH3uxgbXhKtBmAr64Uix3A==
+X-Google-Smtp-Source: ABdhPJwg/txuAGDnuge1cNZ+FrLSNw6Czt9c1sqa0XhG3sA4ynkEYxXs89gPXSKRX1CqOZzs+gt2l8OQKyvMRO6DFvg=
+X-Received: by 2002:a63:7d8:: with SMTP id 207mr14800708pgh.263.1597779321639;
+ Tue, 18 Aug 2020 12:35:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817073212.830069-3-hch@lst.de>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+In-Reply-To: <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Aug 2020 12:35:10 -0700
+Message-ID: <CAKwvOdmUB1VtfQNJaRgK-KKOyyhzP3XbcnH818gb_RygYFRUqA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:32:03AM +0200, Christoph Hellwig wrote:
-> Don't allow calling ->read or ->write with set_fs as a preparation for
-> killing off set_fs.  All the instances that we use kernel_read/write on
-> are using the iter ops already.
-> 
-> If a file has both the regular ->read/->write methods and the iter
-> variants those could have different semantics for messed up enough
-> drivers.  Also fails the kernel access to them in that case.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> I'm not saying "change the semantics", nor am I saying that playing
+> whack-a-mole *for a limited time* is unreasonable.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Ah, ok then.  Sorry I mischaracterized your position.
 
+> But I would like to go back
+> to the compiler authors and get them to implement such a #pragma: "this
+> freestanding implementation *does* support *this specific library function*,
+> and you are free to call it."
+
+I think the first thing that would be helpful is some more detailed
+write up of the problem statement, and analysis of why the current
+provided tools are close but not enough.  Maybe filing a Clang bug
+would be helpful to get more feedback from additional toolchain folks
+than just me (https://bugs.llvm.org/enter_bug.cgi?product=clang "new
+bug" component).  Alternatively, if you're planning on attending
+plumbers next week, I plan to propose a "kernel toolchain" mailing
+list for folks with whatever background to discuss future GNU C
+extensions and how they might be used in kernel development.  That
+might be more appropriate than a Clang bug, but it doesn't exist yet,
+and feedback might be that it's a terrible idea for some reason.
+
+> The only way we can get what we really need from
+> the compilers is by speaking up and requesting it, and we have done so very
+> successfully recently; further back we tended to get a lot of
+> language-lawyering, but these days both the gcc and the clang teams have been
+> wonderfully responsive.
+
+Just trying to avoid the shoe, again.  I'd really like to get to the
+point where we can untangle putting out fires from implementing
+feature requests though.
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
