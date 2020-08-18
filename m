@@ -2,101 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE78C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43A92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5802075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AhuqMZwj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QyAICf9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHRT1d (ORCPT
+        id S1726711AbgHRT17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:27:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28494 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726585AbgHRT1b (ORCPT
+        Tue, 18 Aug 2020 15:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgHRT16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:27:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597778850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EYREHDLi/OwVaks7d7Yd3+mLedE3CgJg65cYrNwwqcA=;
-        b=AhuqMZwjHMXxwIJLh2/xk46SPDY0TnodDuFG3LkQhEeE8xa4mG1jtLxCFpOQdaJ6sCUNwR
-        Vh7sebKCp+3mf99lrHZc9RSJItQB+jLbfofWTEOVq00TAss4hKcxbNcn02P4klILVMQ4go
-        +Y/TWvpLffwQrg8UUTw/b4bdVLjJfsg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-hQS0I0WjOQSRP7dtma0PCA-1; Tue, 18 Aug 2020 15:27:28 -0400
-X-MC-Unique: hQS0I0WjOQSRP7dtma0PCA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F6421DDF1;
-        Tue, 18 Aug 2020 19:27:25 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-51.rdu2.redhat.com [10.10.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 870857D91B;
-        Tue, 18 Aug 2020 19:27:23 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-To:     peterz@infradead.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200818091453.GL2674@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3a4d858c-0605-c5fc-4a9e-f05cf221d6ac@redhat.com>
-Date:   Tue, 18 Aug 2020 15:27:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Aug 2020 15:27:58 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25144C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:27:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t6so2895pjr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OKHnQstXsjpvLQxUlisdTJtu9Dd8qDjYq5doku9nVeE=;
+        b=QyAICf9KgEuQclheMs291Y2a3FseDYQnvIJBXSVKceC05GiYVUH/tD1F9dAAB5jkXy
+         Me3o5mBj6v6tVYtlZzju1/QJkfKLhC8WNZX9tDDnxjAN8yhxm10fq7Jif8C/bBou8u+w
+         jcMFSVqMPG6wDNRIQNDJc3hml8vNrisx1y6/o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OKHnQstXsjpvLQxUlisdTJtu9Dd8qDjYq5doku9nVeE=;
+        b=hdEUac8r3f5O86XcwQ5K8ta6PlLnnjhFsamRpZHPwGgEueEQRBmyxJKXWZ1OOvpgvN
+         xydqatbDNUqY24PR0XVKEUjZkP4mqHqlPKrgoopvPm8a5YhYhpNX249W2UmK4cJ2xxLU
+         /GtmR9UVvrhf3pqEuJfCfLD8WVpRxk3oAq2ucbniIxSJe0G9LEBztyn2MPEZchOo6oVN
+         AXhvAfQ760G6y9PsWLVMfWR9u7Z20dsa2Jd/wRKbL3AIxvRpzupXlV+sUJbLNpcz7PFQ
+         8YG214czvsAuFaXVQtAAHkrjdSMK/NwhftGx4gcUt1fct82ml3+LtKpqR0WNlTQtBFN0
+         2POg==
+X-Gm-Message-State: AOAM533A8R3uPRFUSUHsGh8AFwT11pTHLmgsLW6HG1huVkgRM2KxLIz/
+        ztow8Lf6L9prOxvzbh6G7v+iQQ==
+X-Google-Smtp-Source: ABdhPJxbgaFuRtRGjA2NiMRtgl4s0aHVu6/1aAGF8JszULXuHhAcX2HCnNgmwLKolI+rcXeKrqOhSg==
+X-Received: by 2002:a17:90a:8904:: with SMTP id u4mr1182215pjn.87.1597778877709;
+        Tue, 18 Aug 2020 12:27:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y19sm24777979pfn.77.2020.08.18.12.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:27:56 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:27:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 07/11] x86: move PAGE_OFFSET, TASK_SIZE & friends to
+ page_{32,64}_types.h
+Message-ID: <202008181227.C3A84957AD@keescook>
+References: <20200817073212.830069-1-hch@lst.de>
+ <20200817073212.830069-8-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200818091453.GL2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817073212.830069-8-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 5:14 AM, peterz@infradead.org wrote:
-> On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
->> Memory controller can be used to control and limit the amount of
->> physical memory used by a task. When a limit is set in "memory.high" in
->> a v2 non-root memory cgroup, the memory controller will try to reclaim
->> memory if the limit has been exceeded. Normally, that will be enough
->> to keep the physical memory consumption of tasks in the memory cgroup
->> to be around or below the "memory.high" limit.
->>
->> Sometimes, memory reclaim may not be able to recover memory in a rate
->> that can catch up to the physical memory allocation rate. In this case,
->> the physical memory consumption will keep on increasing.
-> Then slow down the allocator? That's what we do for dirty pages too, we
-> slow down the dirtier when we run against the limits.
->
-I missed that there are already allocator throttling done in upstream 
-code. So I will need to reexamine if this patch is necessary or not.
+On Mon, Aug 17, 2020 at 09:32:08AM +0200, Christoph Hellwig wrote:
+> At least for 64-bit this moves them closer to some of the defines
+> they are based on, and it prepares for using the TASK_SIZE_MAX
+> definition from assembly.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Thanks,
-Longman
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
+-- 
+Kees Cook
