@@ -2,143 +2,105 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB7F20789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597709332;
-	bh=jNXhqR+ASYKuYB0jNz/5hl9gOu/ZDZOHBscoCNS1+tM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BhaxAD8SccsXNcOfVDNAqckIzImoKa5f0wqx51Q/7CdbIvQEViPEbCjgdDsQmGhsL
-	 85AoeITuXSnJ87c7qUGbAuokOA9Vu4I98q0c22i4iX78r/XWiYYm8sQxQ/lJLZYYFe
-	 luArySh14Yvp25aSXjQFAfgHFkZCpS8OeFlbzKhA=
+	by mail.kernel.org (Postfix) with ESMTP id 379F12076D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTqEr0vy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHRAIv (ORCPT
+        id S1726715AbgHRASD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 20:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58268 "EHLO
+        Mon, 17 Aug 2020 20:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHRAIt (ORCPT
+        with ESMTP id S1726303AbgHRASB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 20:08:49 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D57C061342
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:47 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id h8so9279455lfp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:47 -0700 (PDT)
+        Mon, 17 Aug 2020 20:18:01 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0B8C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:18:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w25so19411125ljo.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:18:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7PUubmKG0qCUbLC0lny1sEZMsh6oDctj94eQbjDTgwk=;
-        b=Cc93yVMbx3RvLnq5PLotBg+roGGu69+/Dx9uDZdnFaQvTrkIzdLU5lhrEDOPiq2+fN
-         5E+MIu8qQiaA07jjpGceLS5/FUXItwiiQf3jrnqL+6nxCyP1OYWmoOUBc1tR+82IoQ3t
-         pB1HfO6+D8i21tTtZuIWUIjxWkjP3RCPMcq/k=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LdsjObCAX5Kb4UTHQq0gRsy2DSTJwMMoBCDl3JdgqEE=;
+        b=cTqEr0vyoDyQtbVoirAqD3kXkqXQ/Tg99YLssgivk3xLWH/VKSO8ooFF6B+628Cxef
+         WShnE93lpIf3iNPk0FCyz3CtN4XGwLwD312lT4cNzY1uRk/vN//5etahCNALNRNINCDi
+         2MMM+7/lMlWbhB6D+0k+RPWpjJ7CqI7cYB+pu4h4dsxHSImfVKL9KIwoUsoVKu8hjHEV
+         hs6HDw0XzoyMKn404XGcmHLuwlZ5Q1NkznSmChF/SjiSwzcXVeOVRpzV6Zx9v1g9mzap
+         IZgPp/jt81pwgwbSeciuXY/tbmDH1HEsEwBFNL0JibhTyt+spBSk/B4btoTTVHyycrOs
+         YvMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7PUubmKG0qCUbLC0lny1sEZMsh6oDctj94eQbjDTgwk=;
-        b=jIs1r9evR+44RAbAZ8/VyQYNpS6JutRgWqqx3Q7SwD4BUFmfFVH2yqRL9iGvLopPTX
-         lwR45qlcpt+vFiafg3OqhT9BPgnN2AGfoX/8aPz6GlX5en4o4pRUlPQNeOIYbeL8hifp
-         ULPix16z4WHNWOp4oksFqqpOcFOnB3hhiygT3MOl0AZ8YUZWHTILmwKV78PiXke6oI/s
-         NguOz7QKfi9wVmzFDPKt9Jkb4Nc2CM7CVsAHAMCI82dzE0D+FvlOv1Akf7XMSvQ8a40N
-         f8cbxL2bI5u+7nSvtr21P/kM3eW44j4AmcpooY8LES+au6ehkMfcVxiZiTBwsaTeOxxm
-         4wig==
-X-Gm-Message-State: AOAM530A7ODozDBko8TSNiSdkLOC/tmnEB5Y9TEfzgx5p3UTauGQYtVQ
-        5xzrMOMxHxr6PnPM3mtejIBYtHa3uDKe6w==
-X-Google-Smtp-Source: ABdhPJylLBiCu5wUtDB/iHx2DY1wEEcukgboW4GbKZwOPl4bdmV5o0/bOsjoZaCOt5DWeEqxZhx3Qg==
-X-Received: by 2002:a19:c197:: with SMTP id r145mr8436276lff.41.1597709325512;
-        Mon, 17 Aug 2020 17:08:45 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id h23sm5153153lji.139.2020.08.17.17.08.43
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LdsjObCAX5Kb4UTHQq0gRsy2DSTJwMMoBCDl3JdgqEE=;
+        b=TM8Bwpup+NiW+LyZzTVWrzfQsujSTbA3KjLfVcyN5v+Vhh1kI6zCfGIQv+Pd0K44IH
+         ZXu97ZOfZqucuwVzIHUWfqUx7TvcC69VkyK2XO1r+L0cUInr2LaLq5j5y3V134TfhQU4
+         rnWfjCe4Un+1zMWlquULK0Z8DI0sw8PqkT9Q/zDxCvVOwlpnBi7SS+vyU6kZgdQsnH4q
+         zW39UtrWsKEGTt9QhtSX6A89aLTH0skIuwQnYBvINSFh7PwLCcYAcbiOQazKIOAPR9RE
+         LPLYBmj2Top73k5b8iw0lQ2FUEKlAUB9QgRfz79Kd1EXHz+p9eiwv7l6fbDB/lclNvqM
+         SbkQ==
+X-Gm-Message-State: AOAM5334rsqAfzrjklOQUy2V99Sx1vMZOeLcLAqsvCPGlsBVDsLToU9U
+        M1ppnriQbJAUprBnXLwi0CU=
+X-Google-Smtp-Source: ABdhPJwbbuJkcgmWMr6m8HBCqjYvoq0MFe73AzlCI1RTpR3xNZOua4o2FFGGK1voJbbE6I/5hxxOEQ==
+X-Received: by 2002:a2e:8e9a:: with SMTP id z26mr7965868ljk.271.1597709879364;
+        Mon, 17 Aug 2020 17:17:59 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id a23sm5364034ljp.121.2020.08.17.17.17.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 17:08:44 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id v15so9259331lfg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:43 -0700 (PDT)
-X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr8518837lfp.10.1597709323252;
- Mon, 17 Aug 2020 17:08:43 -0700 (PDT)
+        Mon, 17 Aug 2020 17:17:58 -0700 (PDT)
+Subject: Re: [PATCH v6 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
+ Controller binding
+To:     Lubomir Rintel <lkundrak@v3.sk>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <20200709231228.11564-1-lkundrak@v3.sk>
+ <20200709231228.11564-2-lkundrak@v3.sk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6521970d-8aea-ddbb-e9d7-8b072a685872@gmail.com>
+Date:   Tue, 18 Aug 2020 03:17:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org> <20200817220425.9389-12-ebiederm@xmission.com>
-In-Reply-To: <20200817220425.9389-12-ebiederm@xmission.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 17 Aug 2020 17:08:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whnocSU8muZvmCBoJNz8vYO53fi8S06cSYwdqh1WfDqig@mail.gmail.com>
-Message-ID: <CAHk-=whnocSU8muZvmCBoJNz8vYO53fi8S06cSYwdqh1WfDqig@mail.gmail.com>
-Subject: Re: [PATCH 12/17] proc/fd: In fdinfo seq_show don't use get_files_struct
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>, criu@openvz.org,
-        bpf <bpf@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200709231228.11564-2-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 3:11 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Instead hold task_lock for the duration that task->files needs to be
-> stable in seq_show.  The task_lock was already taken in
-> get_files_struct, and so skipping get_files_struct performs less work
-> overall, and avoids the problems with the files_struct reference
-> count.
+10.07.2020 02:12, Lubomir Rintel пишет:
+> Add binding document for the ENE KB3930 Embedded Controller.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v5:
+> - s/a I2C bus/an I2C bus/
+> 
+> Changes since v4:
+> - Collected Rob's Reviewed-by
+> 
+> Changes since v1:
+> - Addressed binding validation failure
+> ---
 
-Hmm. Do we even need that task_lock() at all? Couldn't we do this all
-with just the RCU lock held for reading?
+Hello! I'm happy that I noted this patch on the ML because I'm preparing
+patches that will add support for KB930, which is compatible with
+KB3930. Will be nice to see this patch applied ASAP! I'm going to extend
+this binding with the KB930.
 
-As far as I can tell, we don't really need the task lock. We don't
-even need the get/pid_task_struct().
-
-Can't we just do
-
-        rcu_read_lock();
-        task = pid_task(proc_pid(inode), PIDTYPE_PID);
-        if (task) {
-                unsigned int fd = proc_fd(m->private);
-                struct file *file = fcheck_task(task, fd);
-                if (file)
-                        .. do the seq_printf ..
-
-and do it all with no refcount games or task locking at all?
-
-Anyway, I don't dislike your patch per se, I just get the feeling that
-you could go a bit further in that cleanup..
-
-And it's quite possible that I'm wrong, and you can't just use the RCU
-lock, but as far as I can tell, both the task lookup and the file
-lookup *already* really both depend on the RCU lock anyway, so the
-other locking and reference counting games really do seem superfluous.
-
-Please just send me a belittling email telling me what a nincompoop I
-am if I have missed something.
-
-             Linus
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
