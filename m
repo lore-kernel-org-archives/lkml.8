@@ -2,106 +2,132 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ADAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD3B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="SELtgIId"
+	by mail.kernel.org (Postfix) with ESMTP id 484D120709
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgHRUSs (ORCPT
+        id S1726751AbgHRUUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:18:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHRUSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:18:42 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB1CC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:18:41 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id ba10so16290589edb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QeMExisTCX54PfEU0UFsxsWYaAtAPl2dvOoQQ7l6gvs=;
-        b=SELtgIId7tpSP3rmyBh4NRgeVCONpRS3Kwr7JecG6Xg6+vzYRIisCUg3FJv+Cr6T6n
-         r4cGwCap2uiavvQL3GQY2HPmVJFtyyif7TGfGMQQV2oMQDdM+f6uaXHdF++Gpi5mVMhF
-         widzUPi29Qjx42/Abjmra+ObbS6HtZ+ev4gqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QeMExisTCX54PfEU0UFsxsWYaAtAPl2dvOoQQ7l6gvs=;
-        b=HDHzMg3n36c6xwrkgrGUo+RauaNs/RTz9ro8uFGpF1MzEBW4vaLkz1oeJXNHs4GR/T
-         BPc3SOoohNUWBd33y7ErEAKkRRx9NZ7dhcxFCPDsMUKuTmRxWlHUkaNwB+wszrtSOWmi
-         56cgyf9prFWQFsiq6K2f0VDmyXpMzZk7HD+ngKFwRbtptm2NFH9AKwg7VbZHeC7Hla9V
-         Jgv5ZP2xbVmN34mLXrCJZeSC7TeXx3i754m+yYgdXduOV3CR3lmbNGqPt3pCsmvq6e+4
-         dzaeSEGkDHjrOjJopMoPR3wGEzAamXdAJz8i1Xzqc+qty1QhtaCZIwF3RSWg064aYPLj
-         wY4Q==
-X-Gm-Message-State: AOAM531Ul5Keudz88onKhltwabiiwsQdw9K6uNuyG0uflWnJHuIaXVsd
-        RAQShu9GKFxvVivVbazcDJVaERfvHT92Vmjkq/j8+g==
-X-Google-Smtp-Source: ABdhPJwQ2obJGVbMSKVirBR81H6xRXbWQqC1R7MEO/Fz7AW23R0Arh8JQvECxjqKxtFxUrpY3WjBonHXIE3ypgOllSU=
-X-Received: by 2002:aa7:d5d0:: with SMTP id d16mr20989643eds.212.1597781920338;
- Tue, 18 Aug 2020 13:18:40 -0700 (PDT)
+        Tue, 18 Aug 2020 16:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgHRUUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 16:20:32 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614D1206B5;
+        Tue, 18 Aug 2020 20:20:31 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 16:20:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] sched/cputime: Mark function as __maybe_unused
+Message-ID: <20200818162029.1692fc82@oasis.local.home>
+In-Reply-To: <CAKwvOdn=32A4QumC_-Y8fJ29fqUPzPK0H_7-dn6rcsAT+O1xOw@mail.gmail.com>
+References: <20200818170337.805624-1-alex.dewar90@gmail.com>
+        <CAKwvOdk2fynn=-FGUniYLG+hCOkEFppRnAaTYe8DW=YRrT-siQ@mail.gmail.com>
+        <20200818195746.scpjm3dlg7cfst53@medion>
+        <CAKwvOdn=32A4QumC_-Y8fJ29fqUPzPK0H_7-dn6rcsAT+O1xOw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
- <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
- <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com> <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 18 Aug 2020 22:18:29 +0200
-Message-ID: <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 8:51 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, 18 Aug 2020 13:02:26 -0700
+Nick Desaulniers <ndesaulniers@google.com> wrote:
 
-> I think people who have problems parsing plain ASCII text are just
-> wrong. It's not that expensive. The thing that makes /proc/mounts
-> expensive is not the individual lines - it's that there are a lot of
-> them.
+> On Tue, Aug 18, 2020 at 12:57 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 11:13:10AM -0700, Nick Desaulniers wrote:  
+> > > On Tue, Aug 18, 2020 at 10:04 AM Alex Dewar <alex.dewar90@gmail.com> wrote:  
+> > > >
+> > > > Depending on config options, account_other_time() may not be called
+> > > > anywhere. Add __maybe_unused flag to fix clang warning.  
+> > >
+> > > Just curious, would moving this definition to be within an existing
+> > > preprocessor guard for a particular config also fix the issue? If so,
+> > > prefer that. If not, __maybe_unused is the way to go.  
+> >
+> > I don't think that'd work here: it's used within an "#ifdef
+> > CONFIG_IRQ_TIME_ACCOUNTING" block and a separate "#ifdef
+> > CONFIG_VIRT_CPU_ACCOUNTING_GEN" one. We could do:
+> >         #if defined(CONFIG_IRQ_TIME_ACCOUNTING) ||
+> >             defined(CONFIG_VIRT_CPU_ACCOUNTING)
+> >                 ...
+> > ... but that might be a bit ugly.  
+> 
+> Yeah, ok, in that case it's fine.  One issue with __maybe_unused is
+> that this function will stick around forever if all call sites get
+> removed.  But when the preprocessor checks start getting hairy,
+> __maybe_unused is maybe simpler.
 
-I agree completely with the above.
+For the reasons you state above, I'm almost thinking ugly may be better. :-/
 
-So why mix a binary structure into it?  Would it not make more sense
-to make it text only?
+But there's other places that have the "maybe_unused" in the scheduler
+code for basically the same reasons, thus I guess it's OK.
 
-I.e. NAME=VALUE pairs separated by newlines and quoting non-printable chars.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Thanks,
-Miklos
+-- Steve
+
+
+> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> 
+> >  
+> > >  
+> > > >
+> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > > > ---
+> > > >  kernel/sched/cputime.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> > > > index 5a55d2300452..43ede0d6661c 100644
+> > > > --- a/kernel/sched/cputime.c
+> > > > +++ b/kernel/sched/cputime.c
+> > > > @@ -252,7 +252,7 @@ static __always_inline u64 steal_account_process_time(u64 maxtime)
+> > > >  /*
+> > > >   * Account how much elapsed time was spent in steal, irq, or softirq time.
+> > > >   */
+> > > > -static inline u64 account_other_time(u64 max)
+> > > > +static inline u64 __maybe_unused account_other_time(u64 max)
+> > > >  {
+> > > >         u64 accounted;
+> > > >
+> > > > --
+> > > > 2.28.0
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200818170337.805624-1-alex.dewar90%40gmail.com.  
+> > >
+> > >
+> > >
+> > > --
+> > > Thanks,
+> > > ~Nick Desaulniers  
+> 
+> 
+> 
+
