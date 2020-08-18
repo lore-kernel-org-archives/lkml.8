@@ -8,118 +8,123 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE6C207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92EE20639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:04:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrAQkFT0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kt90pnhs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgHRQCm (ORCPT
+        id S1726798AbgHRQEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
+        Tue, 18 Aug 2020 12:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgHRQCd (ORCPT
+        with ESMTP id S1726640AbgHRQEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:02:33 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C8FC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:02:33 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 128so9956965pgd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:02:33 -0700 (PDT)
+        Tue, 18 Aug 2020 12:04:32 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1364C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:04:31 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id k18so15486387qtm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8CE3NEQmVRAQk8SeoQWuBofL/MMdsAZ7wPp6ycr/jPc=;
-        b=PrAQkFT0ao4oEqu0oXGLnDdvVaoItpjRDtF1+2PnvmWYEDH84b+Eqb8sXDCx9w4ZE5
-         paw+nQVHkxE4v9S2FRTJfzgs01qcsRT5zYK8whc3vwN9D92j5XeQapbEH9Em9eTVeop8
-         f+RS6/OmGSHfj4HLsMit9qOOl73V5XjA9fhCGq8HrYzq8Hbvbu3usR+g2klIq2NMkSuz
-         QKMCcU2wVZb59IGoS1xE8VqJiZreygOLAP+A7jA94AixnQob4jr2/OgScvLHdq8psgtj
-         8j7FPc2PXjodZhUJYsZi018Zfv9XWvm7BXEk+bU1lC+UuZmTOTKfRWTxGdt3g69bOduj
-         qGeA==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=JB8EfdnBuDNW3fHekM4Xs0GCzNgvaZJmFr6FyOpr2v0=;
+        b=kt90pnhsyVARanjQ9njLpjrSBJ5NQfpD0etrNKhdcS8EIcHIyORlTTXv62fx4/6P8F
+         NG0N3+QsMlFjdXgO0Z7wjYzJmzot9eYRdjcdOqWMPJwpLo+UhB/xuESEIPbKAxIdPzNJ
+         9Mum08CkckVIRCx0SjmdPeIMUCmAmP/JJBj9XPVFsVgVUilemL5CSklA2qYsOKcLyxtV
+         VRW1nNLF9ZPp7jVIMHb0/DinKg8pqGdyrkUsWKnltnuIzfpnTj2DBFf92nBgyj7/qtbb
+         y2M5XVFdLvu6WDXgccYp5obPyE4kkyjeFLK/5V2Bqc0xEg3y8CkA9ZDUhxnzpIit2bZs
+         GPew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8CE3NEQmVRAQk8SeoQWuBofL/MMdsAZ7wPp6ycr/jPc=;
-        b=qFn/one0xSAjOcMMhhBwhYfHRElDilf62E3iTo936LqvwUp3oEuvUj6vG4WvCrSPNf
-         DuyUnVwBma3H+WLDlvSU1c+1Cr08wVQBJDSR48ZAkRkP7JRvMe5ir+8hCQBQxWX/3x4q
-         d4Kax1fIl/jwlAD/2fuSodiyHpP6A7uuMKFxiWCJ93NbiUjt0aPKrRab7oUwL+OAkrZd
-         oqxVjCFaNozo42tYJpFmgaZrvRNPbyjDeVi3nZNS0XFwIZ1fW4LkT2hBuE4ytwNt2N2g
-         mHrYKh5j7xh8RgQVf8fcQL2C0fbihu3a022x5m6ESqFY8IcvwsGBwiWhMSDer6Ksq2qP
-         IXQQ==
-X-Gm-Message-State: AOAM530rBEv2nur2QHW9NRGRkxvI74IOShD4BRHteAg03FwhmU9KkRA7
-        5k/UbCMBdBkg2NsVIo8ZXh4=
-X-Google-Smtp-Source: ABdhPJzbc/f60fNKlmZkmTn6d7uXjcwOGKKY/TMIqF+fK3OP2elNRBEgf+BJEBdbs0ZK1z600GDsIQ==
-X-Received: by 2002:a62:3856:: with SMTP id f83mr16079581pfa.35.1597766552881;
-        Tue, 18 Aug 2020 09:02:32 -0700 (PDT)
-Received: from localhost.localdomain ([61.83.141.80])
-        by smtp.gmail.com with ESMTPSA id g16sm297997pjz.52.2020.08.18.09.02.29
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JB8EfdnBuDNW3fHekM4Xs0GCzNgvaZJmFr6FyOpr2v0=;
+        b=kPiUYnwlhk0WiMMUOW95cm8LhqDcvYBg4EKzNmlk/aHLflthVMmlUDpdD//WCCOBel
+         BpOxSVIGQR4yF+ir0p0/F0x8a5CiIm8kMwMa5/pOklpB2c5TvesEQYw+Rdf/mCutccCv
+         KJtz8uDWSdKyS2cAFgKgyJwjGegDvJZBZaSZQF/VxWgCAItpGukjecI24vLCsgaaxswS
+         gQRb4Sln34/H8yCQDqUuWOKOLZ4Cn92+6spRDoURZqPPaE9g9B3pJ6Zyf1vC6BNaqYl2
+         fFk1K3S3VjodNIt5muMjP2jmf+2MHRZCGYp4MLyNLuyvc2Q/IRcVEX+hywPfJVQlnjQH
+         RV9A==
+X-Gm-Message-State: AOAM5327QjP3jcvImLMwMduRhKQj5EDbOvOM2XaaG391KChnV7KVqlFY
+        ZjzM4vn6UZZKPR3QTHLEIQo=
+X-Google-Smtp-Source: ABdhPJyN3RqmwVch/jVdOrb3MMghfcbvWv6DZDeEJvGVjV5qAzSgFkOtIKhqEi9jgO1lrjiwLv1eNQ==
+X-Received: by 2002:aed:2986:: with SMTP id o6mr18435372qtd.105.1597766671154;
+        Tue, 18 Aug 2020 09:04:31 -0700 (PDT)
+Received: from tong-desktop.local ([2601:5c0:c100:b9d:f9e2:64b4:fbc4:6485])
+        by smtp.googlemail.com with ESMTPSA id z17sm20732979qkj.62.2020.08.18.09.04.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 09:02:32 -0700 (PDT)
-From:   Sidong Yang <realwakka@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     Sidong Yang <realwakka@gmail.com>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH] drm/vkms: Use alpha value to blend values.
-Date:   Tue, 18 Aug 2020 16:02:15 +0000
-Message-Id: <20200818160215.19550-1-realwakka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 09:04:30 -0700 (PDT)
+From:   Tong Zhang <ztong0001@gmail.com>
+To:     jikos@kernel.org, dsterba@suse.com, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org, ztong0001@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tty: ipwireless: fix error handling
+Date:   Tue, 18 Aug 2020 12:03:58 -0400
+Message-Id: <20200818160401.4736-1-ztong0001@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <b360242d-f488-da51-9d47-36b2abdf90cd@kernel.org>
+References: <b360242d-f488-da51-9d47-36b2abdf90cd@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wrote this patch for TODO list in vkms documentation.
+ipwireless_send_packet() can only return 0 on success and -ENOMEM on
+error, the caller should check non zero for error condition
 
-Use alpha value to blend source value and destination value Instead of
-just overwrite with source value.
+v2: - According to Jiri's comment, I made the checking consistent with
+the rest of the kernel. I also rebased the code using f684668a24ec.
+Thank you Jiri!
 
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-
-Signed-off-by: Sidong Yang <realwakka@gmail.com>
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/tty/ipwireless/network.c | 4 ++--
+ drivers/tty/ipwireless/tty.c     | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 4f3b07a32b60..e3230e2a99af 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -77,6 +77,9 @@ static void blend(void *vaddr_dst, void *vaddr_src,
- 
- 	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
- 		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
-+			u8 *src, *dst;
-+			u32 alpha, inv_alpha;
-+
- 			offset_dst = dest_composer->offset
- 				     + (i_dst * dest_composer->pitch)
- 				     + (j_dst++ * dest_composer->cpp);
-@@ -84,8 +87,15 @@ static void blend(void *vaddr_dst, void *vaddr_src,
- 				     + (i * src_composer->pitch)
- 				     + (j * src_composer->cpp);
- 
--			memcpy(vaddr_dst + offset_dst,
--			       vaddr_src + offset_src, sizeof(u32));
-+			src = vaddr_src + offset_src;
-+			dst = vaddr_dst + offset_dst;
-+			alpha = src[3] + 1;
-+			inv_alpha = 256 - src[3];
-+			dst[0] = (alpha * src[0] + inv_alpha * dst[0]) >> 8;
-+			dst[1] = (alpha * src[1] + inv_alpha * dst[1]) >> 8;
-+			dst[2] = (alpha * src[2] + inv_alpha * dst[2]) >> 8;
-+			dst[3] = 0xff;
-+
+diff --git a/drivers/tty/ipwireless/network.c b/drivers/tty/ipwireless/network.c
+index cf20616340a1..fe569f6294a2 100644
+--- a/drivers/tty/ipwireless/network.c
++++ b/drivers/tty/ipwireless/network.c
+@@ -117,7 +117,7 @@ static int ipwireless_ppp_start_xmit(struct ppp_channel *ppp_channel,
+ 					       skb->len,
+ 					       notify_packet_sent,
+ 					       network);
+-			if (ret == -1) {
++			if (ret < 0) {
+ 				skb_pull(skb, 2);
+ 				return 0;
+ 			}
+@@ -134,7 +134,7 @@ static int ipwireless_ppp_start_xmit(struct ppp_channel *ppp_channel,
+ 					       notify_packet_sent,
+ 					       network);
+ 			kfree(buf);
+-			if (ret == -1)
++			if (ret < 0)
+ 				return 0;
  		}
- 		i_dst++;
+ 		kfree_skb(skb);
+diff --git a/drivers/tty/ipwireless/tty.c b/drivers/tty/ipwireless/tty.c
+index fad3401e604d..23584769fc29 100644
+--- a/drivers/tty/ipwireless/tty.c
++++ b/drivers/tty/ipwireless/tty.c
+@@ -218,7 +218,7 @@ static int ipw_write(struct tty_struct *linux_tty,
+ 	ret = ipwireless_send_packet(tty->hardware, IPW_CHANNEL_RAS,
+ 			       buf, count,
+ 			       ipw_write_packet_sent_callback, tty);
+-	if (ret == -1) {
++	if (ret < 0) {
+ 		mutex_unlock(&tty->ipw_tty_mutex);
+ 		return 0;
  	}
 -- 
-2.17.1
+2.25.1
 
