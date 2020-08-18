@@ -1,127 +1,144 @@
-Return-Path: <SRS0=ysYr=B3=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC1362072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Aug 2020 23:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rcg717jp"
+	by mail.kernel.org (Postfix) with ESMTP id EFB7F20789
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 00:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597709332;
+	bh=jNXhqR+ASYKuYB0jNz/5hl9gOu/ZDZOHBscoCNS1+tM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BhaxAD8SccsXNcOfVDNAqckIzImoKa5f0wqx51Q/7CdbIvQEViPEbCjgdDsQmGhsL
+	 85AoeITuXSnJ87c7qUGbAuokOA9Vu4I98q0c22i4iX78r/XWiYYm8sQxQ/lJLZYYFe
+	 luArySh14Yvp25aSXjQFAfgHFkZCpS8OeFlbzKhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHQX7H (ORCPT
+        id S1726697AbgHRAIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        Mon, 17 Aug 2020 20:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgHQX7G (ORCPT
+        with ESMTP id S1726473AbgHRAIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:59:06 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D13C061389;
-        Mon, 17 Aug 2020 16:59:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so19427203ljc.3;
-        Mon, 17 Aug 2020 16:59:05 -0700 (PDT)
+        Mon, 17 Aug 2020 20:08:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D57C061342
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:47 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id h8so9279455lfp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MQe5ZScQDtzUfrz2foLiIf8STnJmMHgr25JkIASCkVs=;
-        b=rcg717jprkdOzrqr44VeUZpPY0cfVgH6lq9WPI+5TTUvvBmw4ufPyUj7EaRXy8epZE
-         1JwpcKQtZPSrIB7CLj1+/epP3uJE94WUAYPE4ZynlMwudDDIgQ65QPJrHewBr1/gEHp+
-         XiWz66Ief2YCtlF1BHc/53Nb7NPR8l7YjkadAOvzAoe3xkO+vI9ibzgxG0UAKG7rDvu9
-         3wGJJiVT+kjQmj6mo8R5/Y1U80XNVQKbw0uWLBnIy+c9wqbUWMIFOwMkKpvQEo26afmY
-         yUNhUithrTG0O7G4MVQIUzJvYJiHMs00pw9jBDhV6L/Lm0YLQnGPQ3rBoMWOC2wbC5XO
-         TAlA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7PUubmKG0qCUbLC0lny1sEZMsh6oDctj94eQbjDTgwk=;
+        b=Cc93yVMbx3RvLnq5PLotBg+roGGu69+/Dx9uDZdnFaQvTrkIzdLU5lhrEDOPiq2+fN
+         5E+MIu8qQiaA07jjpGceLS5/FUXItwiiQf3jrnqL+6nxCyP1OYWmoOUBc1tR+82IoQ3t
+         pB1HfO6+D8i21tTtZuIWUIjxWkjP3RCPMcq/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MQe5ZScQDtzUfrz2foLiIf8STnJmMHgr25JkIASCkVs=;
-        b=Cjirnu+kUqrIbZgtGFTwkmMTcHA5EPmbGjHsh4IjA1p8zV0Cvz1AYJ2IcI3bwBnoFS
-         VejpzLA1lKRcpron9EFYmN5gTAmPA+n1Ni+H27f6fWVXx6QXo54za9hhoDnQaCYg5VqK
-         T68TzzyCl2yUyY/drv9PhMvSnQR6Ac8hymMPvR3knxzr6vpefh+TxVTMXg3MW1vm5bGe
-         0Z3Y/uNa9ewN4WlAjExVyybd+Vk3yQMEOxgZF6RNRfZcYqSQusJe8KCHiBOgiBa9AIup
-         75nToY3T6Risk1VVh3+F/bpvMtjUrlfEbP2uVDC1LfMs09+fp+z/xix2DZ30hzjK5Af0
-         on5g==
-X-Gm-Message-State: AOAM530oOZSJFh0rDKTAeoHsdR9ttR7yTDylBGYvbMVKE1YTGgqq60q9
-        Llg3mHJjlBBLD0bACxwSrnk=
-X-Google-Smtp-Source: ABdhPJx9ZLv9dIwMy4XOdlBHoum7oNtiO/pJsyafsioDVNIIn5AbyuV3OqjBfFJKl0oDBgqt/JCoag==
-X-Received: by 2002:a2e:87cd:: with SMTP id v13mr9241119ljj.180.1597708744471;
-        Mon, 17 Aug 2020 16:59:04 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id h17sm5396507ljj.118.2020.08.17.16.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 16:59:03 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] thermal: core: Fix use-after-free in thermal_zone_device_unregister()
-Date:   Tue, 18 Aug 2020 02:58:54 +0300
-Message-Id: <20200817235854.26816-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7PUubmKG0qCUbLC0lny1sEZMsh6oDctj94eQbjDTgwk=;
+        b=jIs1r9evR+44RAbAZ8/VyQYNpS6JutRgWqqx3Q7SwD4BUFmfFVH2yqRL9iGvLopPTX
+         lwR45qlcpt+vFiafg3OqhT9BPgnN2AGfoX/8aPz6GlX5en4o4pRUlPQNeOIYbeL8hifp
+         ULPix16z4WHNWOp4oksFqqpOcFOnB3hhiygT3MOl0AZ8YUZWHTILmwKV78PiXke6oI/s
+         NguOz7QKfi9wVmzFDPKt9Jkb4Nc2CM7CVsAHAMCI82dzE0D+FvlOv1Akf7XMSvQ8a40N
+         f8cbxL2bI5u+7nSvtr21P/kM3eW44j4AmcpooY8LES+au6ehkMfcVxiZiTBwsaTeOxxm
+         4wig==
+X-Gm-Message-State: AOAM530A7ODozDBko8TSNiSdkLOC/tmnEB5Y9TEfzgx5p3UTauGQYtVQ
+        5xzrMOMxHxr6PnPM3mtejIBYtHa3uDKe6w==
+X-Google-Smtp-Source: ABdhPJylLBiCu5wUtDB/iHx2DY1wEEcukgboW4GbKZwOPl4bdmV5o0/bOsjoZaCOt5DWeEqxZhx3Qg==
+X-Received: by 2002:a19:c197:: with SMTP id r145mr8436276lff.41.1597709325512;
+        Mon, 17 Aug 2020 17:08:45 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id h23sm5153153lji.139.2020.08.17.17.08.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 17:08:44 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id v15so9259331lfg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 17:08:43 -0700 (PDT)
+X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr8518837lfp.10.1597709323252;
+ Mon, 17 Aug 2020 17:08:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org> <20200817220425.9389-12-ebiederm@xmission.com>
+In-Reply-To: <20200817220425.9389-12-ebiederm@xmission.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 17 Aug 2020 17:08:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whnocSU8muZvmCBoJNz8vYO53fi8S06cSYwdqh1WfDqig@mail.gmail.com>
+Message-ID: <CAHk-=whnocSU8muZvmCBoJNz8vYO53fi8S06cSYwdqh1WfDqig@mail.gmail.com>
+Subject: Re: [PATCH 12/17] proc/fd: In fdinfo seq_show don't use get_files_struct
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>, criu@openvz.org,
+        bpf <bpf@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
+        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user-after-free bug in thermal_zone_device_unregister() is reported by
-KASAN. It happens because struct thermal_zone_device is released during of
-device_unregister() invocation, and hence the "tz" variable shouldn't be
-touched by thermal_notify_tz_delete(tz->id).
+On Mon, Aug 17, 2020 at 3:11 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Instead hold task_lock for the duration that task->files needs to be
+> stable in seq_show.  The task_lock was already taken in
+> get_files_struct, and so skipping get_files_struct performs less work
+> overall, and avoids the problems with the files_struct reference
+> count.
 
-Fixes: 55cdf0a283b8 ("thermal: core: Add notifications call in the framework")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+Hmm. Do we even need that task_lock() at all? Couldn't we do this all
+with just the RCU lock held for reading?
 
-Changelog:
+As far as I can tell, we don't really need the task lock. We don't
+even need the get/pid_task_struct().
 
-v2: - Don't touch lines unrelated to the actual fix.
+Can't we just do
 
- drivers/thermal/thermal_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+        rcu_read_lock();
+        task = pid_task(proc_pid(inode), PIDTYPE_PID);
+        if (task) {
+                unsigned int fd = proc_fd(m->private);
+                struct file *file = fcheck_task(task, fd);
+                if (file)
+                        .. do the seq_printf ..
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 72bf159bcecc..a6616e530a84 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -1516,7 +1516,7 @@ EXPORT_SYMBOL_GPL(thermal_zone_device_register);
-  */
- void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- {
--	int i;
-+	int i, tz_id;
- 	const struct thermal_zone_params *tzp;
- 	struct thermal_cooling_device *cdev;
- 	struct thermal_zone_device *pos = NULL;
-@@ -1525,6 +1525,7 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- 		return;
- 
- 	tzp = tz->tzp;
-+	tz_id = tz->id;
- 
- 	mutex_lock(&thermal_list_lock);
- 	list_for_each_entry(pos, &thermal_tz_list, node)
-@@ -1567,7 +1568,7 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- 	mutex_destroy(&tz->lock);
- 	device_unregister(&tz->device);
- 
--	thermal_notify_tz_delete(tz->id);
-+	thermal_notify_tz_delete(tz_id);
- }
- EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
- 
--- 
-2.27.0
+and do it all with no refcount games or task locking at all?
 
+Anyway, I don't dislike your patch per se, I just get the feeling that
+you could go a bit further in that cleanup..
+
+And it's quite possible that I'm wrong, and you can't just use the RCU
+lock, but as far as I can tell, both the task lookup and the file
+lookup *already* really both depend on the RCU lock anyway, so the
+other locking and reference counting games really do seem superfluous.
+
+Please just send me a belittling email telling me what a nincompoop I
+am if I have missed something.
+
+             Linus
