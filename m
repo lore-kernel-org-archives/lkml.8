@@ -2,209 +2,246 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F9CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD51C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5FB205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="KHs2JfsW"
+	by mail.kernel.org (Postfix) with ESMTP id 742902075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHRLab (ORCPT
+        id S1726688AbgHRLbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:30:31 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38472 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbgHRL0I (ORCPT
+        Tue, 18 Aug 2020 07:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbgHRLaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:26:08 -0400
-Received: from myt5-23f0be3aa648.qloud-c.yandex.net (myt5-23f0be3aa648.qloud-c.yandex.net [IPv6:2a02:6b8:c12:3e29:0:640:23f0:be3a])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 8D6F32E0A3C;
-        Tue, 18 Aug 2020 14:25:48 +0300 (MSK)
-Received: from unknown (unknown [::1])
-        by myt5-23f0be3aa648.qloud-c.yandex.net (mxbackcorp/Yandex) with ESMTP id vHuKOy9zk8-PlvKSqRo;
-        Tue, 18 Aug 2020 14:25:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1597749948; bh=ECKQ/Oj2lGJ2TD0a4un2j5uH1GK1lGrY89R5qcKWhKs=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=KHs2JfsWVq7Ot9pPeYlHlScvHG0FoKkBxDlfpEuWW9KfJR+nTLwK1MCLWh9OPjUOr
-         RcSy5qy5y5ttznUXGC0U6bZPZg/4FdeU3ePfV64uhj3SNq1QRHQrGpoHRWkdeqECeY
-         47CkJhR/Ud5+Fcv7fZzvnpVo65Neoilo9B8dCZKY=
-Authentication-Results: myt5-23f0be3aa648.qloud-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-X-Yandex-Sender-Uid: 1120000000084479
-Received: by myt5-25048b11116f.qloud-c.yandex.net with HTTP;
-        Tue, 18 Aug 2020 14:25:47 +0300
-From:   =?utf-8?B?0JTQvNC40YLRgNC40Lkg0JzQvtC90LDRhdC+0LI=?= 
-        <dmtrmonakhov@yandex-team.ru>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "paolo.valente@linaro.org" <paolo.valente@linaro.org>,
-        "oleksandr@natalenko.name" <oleksandr@natalenko.name>
-In-Reply-To: <20200811064340.31284-1-dmtrmonakhov@yandex-team.ru>
-References: <20200811064340.31284-1-dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] bfq: fix blkio cgroup leakage v4
-MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Tue, 18 Aug 2020 14:25:47 +0300
-Message-Id: <167161597749243@mail.yandex-team.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+        Tue, 18 Aug 2020 07:30:21 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E98C061343;
+        Tue, 18 Aug 2020 04:28:34 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id BB68D29817E
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kernel@collabora.com
+Subject: [PATCH v3 2/2] tty/sysrq: Add configurable handler to execute a compound action
+Date:   Tue, 18 Aug 2020 13:28:25 +0200
+Message-Id: <20200818112825.6445-3-andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200818112825.6445-1-andrzej.p@collabora.com>
+References: <20200818112825.6445-1-andrzej.p@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Userland might want to execute e.g. 'w' (show blocked tasks), followed
+by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+upon a single magic SysRq. Or one might want to execute the famous "Raising
+Elephants Is So Utterly Boring" action. This patch adds a configurable
+handler, triggered with 'C', for this exact purpose. The user specifies the
+composition of the compound action using syntax similar to getopt, where
+each letter corresponds to an individual action and a colon followed by a
+number corresponds to a delay of that many milliseconds, e.g.:
 
+ws:1000c
 
-11.08.2020, 09:43, "Dmitry Monakhov" <dmtrmonakhov@yandex-team.ru>:
-> Changes from v1:
->     - update commit description with proper ref-accounting justification
-Ping paolo.valente@,  please take a look at the patch proposed, it works fine on our fleet. 
-Current situation is bad, it is impossible to use bfq with cgroup because of blkcg leackage since v5.6.
-IMHO, we definitely have to fix it asap.
+or
 
->
-> commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
-> introduce leak forbfq_group and blkcg_gq objects because of get/put
-> imbalance.
-> In fact whole idea of original commit is wrong because bfq_group entity
-> can not dissapear under us because it is referenced by child bfq_queue's
-> entities from here:
->  -> bfq_init_entity()
->     ->bfqg_and_blkg_get(bfqg);
->     ->entity->parent = bfqg->my_entity
->
->  -> bfq_put_queue(bfqq)
->     FINAL_PUT
->     ->bfqg_and_blkg_put(bfqq_group(bfqq))
->     ->kmem_cache_free(bfq_pool, bfqq);
->
-> So parent entity can not disappear while child entity is in tree,
-> and child entities already has proper protection.
-> This patch revert commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
->
-> bfq_group leak trace caused by bad commit:
-> -> blkg_alloc
->    -> bfq_pq_alloc
->      -> bfqg_get (+1)
-> ->bfq_activate_bfqq
->   ->bfq_activate_requeue_entity
->     -> __bfq_activate_entity
->        ->bfq_get_entity
->          ->bfqg_and_blkg_get (+1) <==== : Note1
-> ->bfq_del_bfqq_busy
->   ->bfq_deactivate_entity+0x53/0xc0 [bfq]
->     ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
->       -> bfq_forget_entity(is_in_service = true)
->          entity->on_st_or_in_serv = false <=== :Note2
->          if (is_in_service)
->              return; ==> do not touch reference
-> -> blkcg_css_offline
->  -> blkcg_destroy_blkgs
->   -> blkg_destroy
->    -> bfq_pd_offline
->     -> __bfq_deactivate_entity
->          if (!entity->on_st_or_in_serv) /* true, because (Note2)
->                 return false;
->  -> bfq_pd_free
->     -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
-> So bfq_group and blkcg_gq will leak forever, see test-case below.
->
-> ##TESTCASE_BEGIN:
-> #!/bin/bash
->
-> max_iters=${1:-100}
-> #prep cgroup mounts
-> mount -t tmpfs cgroup_root /sys/fs/cgroup
-> mkdir /sys/fs/cgroup/blkio
-> mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
->
-> # Prepare blkdev
-> grep blkio /proc/cgroups
-> truncate -s 1M img
-> losetup /dev/loop0 img
-> echo bfq > /sys/block/loop0/queue/scheduler
->
-> grep blkio /proc/cgroups
-> for ((i=0;i<max_iters;i++))
-> do
->     mkdir -p /sys/fs/cgroup/blkio/a
->     echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
->     dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
->     echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
->     rmdir /sys/fs/cgroup/blkio/a
->     grep blkio /proc/cgroups
-> done
-> ##TESTCASE_END:
->
-> Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-> ---
->  block/bfq-cgroup.c | 2 +-
->  block/bfq-iosched.h | 1 -
->  block/bfq-wf2q.c | 12 ++----------
->  3 files changed, 3 insertions(+), 12 deletions(-)
->
-> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-> index 68882b9..b791e20 100644
-> --- a/block/bfq-cgroup.c
-> +++ b/block/bfq-cgroup.c
-> @@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
->                  kfree(bfqg);
->  }
->
-> -void bfqg_and_blkg_get(struct bfq_group *bfqg)
-> +static void bfqg_and_blkg_get(struct bfq_group *bfqg)
->  {
->          /* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
->          bfqg_get(bfqg);
-> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-> index cd224aa..7038952 100644
-> --- a/block/bfq-iosched.h
-> +++ b/block/bfq-iosched.h
-> @@ -986,7 +986,6 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
->  struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
->  struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
->  struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
-> -void bfqg_and_blkg_get(struct bfq_group *bfqg);
->  void bfqg_and_blkg_put(struct bfq_group *bfqg);
->
->  #ifdef CONFIG_BFQ_GROUP_IOSCHED
-> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-> index eb0e2a6..26776bd 100644
-> --- a/block/bfq-wf2q.c
-> +++ b/block/bfq-wf2q.c
-> @@ -533,9 +533,7 @@ static void bfq_get_entity(struct bfq_entity *entity)
->                  bfqq->ref++;
->                  bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
->                               bfqq, bfqq->ref);
-> - } else
-> - bfqg_and_blkg_get(container_of(entity, struct bfq_group,
-> - entity));
-> + }
->  }
->
->  /**
-> @@ -649,14 +647,8 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
->
->          entity->on_st_or_in_serv = false;
->          st->wsum -= entity->weight;
-> - if (is_in_service)
-> - return;
-> -
-> - if (bfqq)
-> + if (bfqq && !is_in_service)
->                  bfq_put_queue(bfqq);
-> - else
-> - bfqg_and_blkg_put(container_of(entity, struct bfq_group,
-> - entity));
->  }
->
->  /**
-> --
-> 2.7.4
+r:100eis:1000ub
+
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+---
+ Documentation/admin-guide/sysrq.rst |  9 ++++
+ drivers/tty/sysrq.c                 | 82 ++++++++++++++++++++++++++++-
+ include/linux/sysrq.h               |  1 +
+ 3 files changed, 91 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
+index 67dfa4c29093..80bdd8bf9636 100644
+--- a/Documentation/admin-guide/sysrq.rst
++++ b/Documentation/admin-guide/sysrq.rst
+@@ -32,6 +32,7 @@ to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:
+          64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
+         128 =  0x80 - allow reboot/poweroff
+         256 = 0x100 - allow nicing of all RT tasks
++        512 = 0x200 - allow compound action
+ 
+ You can set the value in the file by the following command::
+ 
+@@ -148,6 +149,14 @@ Command	    Function
+ 
+ ``z``	    Dump the ftrace buffer
+ 
++``C``	    Execute a predefined, compound action. The action is defined with
++	    sysrq.sysrq_compound_action module parameter, whose value contains known
++	    command keys (except ``C`` to prevent recursion). The command keys can
++	    be optionally followed by a colon and a number of milliseconds to wait
++	    after executing the last action. For example:
++
++	    sysrq.sysrq_compound_action=r:100eis:1000ub
++
+ ``0``-``9`` Sets the console log level, controlling which kernel messages
+             will be printed to your console. (``0``, for example would make
+             it so that only emergency messages like PANICs or OOPSes would
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 959f9e121cc6..e4ddea87c6db 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -20,6 +20,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task.h>
+ #include <linux/ctype.h>
++#include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/mm.h>
+ #include <linux/fs.h>
+@@ -438,6 +439,15 @@ static const struct sysrq_key_op sysrq_unrt_op = {
+ 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
+ };
+ 
++static void sysrq_action_compound(int key);
++
++static struct sysrq_key_op sysrq_action_compound_op = {
++	.handler	= sysrq_action_compound,
++	.help_msg	= "execute-compound-action(C)",
++	.action_msg	= "Execute compound action",
++	.enable_mask	= SYSRQ_ENABLE_COMPOUND,
++};
++
+ /* Key Operations table and lock */
+ static DEFINE_SPINLOCK(sysrq_key_table_lock);
+ 
+@@ -500,7 +510,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
+ 	&sysrq_ftrace_dump_op,		/* z */
+ 	NULL,				/* A */
+ 	NULL,				/* B */
+-	NULL,				/* C */
++	&sysrq_action_compound_op,	/* C */
+ 	NULL,				/* D */
+ 	NULL,				/* E */
+ 	NULL,				/* F */
+@@ -633,6 +643,7 @@ EXPORT_SYMBOL(handle_sysrq);
+ 
+ #ifdef CONFIG_INPUT
+ static int sysrq_reset_downtime_ms;
++static char *sysrq_compound_action;
+ 
+ /* Simple translation table for the SysRq keys */
+ static const unsigned char sysrq_xlate[KEY_CNT] =
+@@ -786,6 +797,62 @@ static void sysrq_of_get_keyreset_config(void)
+ {
+ }
+ #endif
++#define SYSRQ_COMPOUND_ACTION_VALIDATE	0
++#define SYSRQ_COMPOUND_ACTION_RUN	1
++
++static int sysrq_process_compound_action(int pass)
++{
++	const char *action = sysrq_compound_action;
++	const struct sysrq_key_op *op_p;
++	int ret;
++	unsigned int delay;
++
++	while (*action) {
++		op_p = __sysrq_get_key_op(*action);
++		if (!op_p)
++			return -EINVAL;
++
++		/* Don't allow calling ourselves recursively */
++		if (op_p == &sysrq_action_compound_op)
++			return -EINVAL;
++
++		if (pass == SYSRQ_COMPOUND_ACTION_RUN)
++			__handle_sysrq(*action, false);
++
++		if (*++action == ':') {
++			ret = sscanf(action++, ":%u", &delay);
++			if (ret < 1) /* we want at least ":[0-9]" => 1 item */
++				return -EINVAL;
++
++			while (*action >= '0' && *action <= '9')
++				++action;
++			if (pass == SYSRQ_COMPOUND_ACTION_RUN)
++				mdelay(delay);
++		}
++	}
++
++	return 0;
++}
++
++static void sysrq_action_compound(int key)
++{
++	if (!sysrq_compound_action) {
++		pr_err("Unconfigured compound action for %s\n",
++		       sysrq_action_compound_op.help_msg);
++
++		return;
++	}
++
++	if (sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_VALIDATE)) {
++		pr_err("Incorrect compound action %s for %s\n",
++		       sysrq_compound_action,
++		       sysrq_action_compound_op.help_msg);
++
++		return;
++	}
++
++	sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_RUN);
++}
+ 
+ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+ {
+@@ -1077,8 +1144,21 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
+ 
+ module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
+ 
++module_param(sysrq_compound_action, charp, 0644);
++MODULE_PARM_DESC(sysrq_compound_action,
++	"\tCompound sysrq action to be executed on Alt-Shift-SysRq-C\n"
++	"\tThe compound action definition consists of known SysRq action letters except 'C',\n"
++	"\teach letter can be optionally followed by a colon and a number of milliseconds to wait\n"
++	"\tafter executing the last action.\n"
++	"\tExample:\n"
++	"\tTo unRaw, wait 100ms, tErminate, kIll, Sync, wait 1000ms, Unmount, Boot\n"
++	"\tsysrq.sysrq_compound_action=r:100eis:1000ub");
+ #else
+ 
++static void sysrq_action_compound(int key)
++{
++}
++
+ static inline void sysrq_register_handler(void)
+ {
+ }
+diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
+index 3a582ec7a2f1..6df4442f12a9 100644
+--- a/include/linux/sysrq.h
++++ b/include/linux/sysrq.h
+@@ -28,6 +28,7 @@
+ #define SYSRQ_ENABLE_SIGNAL	0x0040
+ #define SYSRQ_ENABLE_BOOT	0x0080
+ #define SYSRQ_ENABLE_RTNICE	0x0100
++#define SYSRQ_ENABLE_COMPOUND	0x0200
+ 
+ struct sysrq_key_op {
+ 	void (* const handler)(int);
+-- 
+2.17.1
+
