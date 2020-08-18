@@ -2,190 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D19C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68CF8207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:13:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XedNvxk9"
+	by mail.kernel.org (Postfix) with ESMTP id 8013B207DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597767241;
+	bh=i/osbT4JGLM2WHPj4a6FDQcQ9reu9lXtYu+uvpCBQEE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=WL0rJRKf8+2yzrT+YOO2HS3IVlVrY+gabK4oLWpKpDSmGW7aQhts2LU5yTokKwJro
+	 znSXC9voufkFnAH4kGfSJqWJcTy/Js0BYcJ1Ai9rUcPKLMZLgfH3JciiJWEcBtp321
+	 41V/nmLWd7UQcdyw+QsivKGe+yjBwIjag41DSV1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgHRQNY (ORCPT
+        id S1726870AbgHRQN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:13:24 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34578 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgHRQNV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:13:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IGCR6b076721;
-        Tue, 18 Aug 2020 16:12:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Z4JyWG9GYx40D449jT2SjIZ+/FrA45k/t7nbWC1W2ME=;
- b=XedNvxk9JX13hSSYLNXrWjhgbNP1hh4R07ULkgct1y9+gFtvsgtt4PSEEH2fcM9j3uvM
- F2CZgJvb50atFE53NE8F5K91J9zov24NAuLsixCcSG/eU/Kilo/87u/ttgicq2UBv054
- +piXEOWrprHZler9cm0LBJUVBiL/tguVYpRmwq3jufop97+YSv75eIVYL309EPswKvrZ
- Mz0ew/U53+lZHRm1Bm2oeBFVZyxlIjuEncZ3gijk9AffvyZGb0Gtjt8DSeuO59MGkqbQ
- UQWjWzKK/NHj5kdXJ41j6TCUNw0LR2iwiWDYMT/4g2c52+sNz9dHbtpluYqIjNgJlbUM Bg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32x74r5vc8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Aug 2020 16:12:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IFllTW076145;
-        Tue, 18 Aug 2020 16:12:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32xsm37mj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 16:12:34 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07IGCU8l025942;
-        Tue, 18 Aug 2020 16:12:30 GMT
-Received: from localhost (/10.159.245.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Aug 2020 09:12:30 -0700
-Date:   Tue, 18 Aug 2020 09:12:29 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Yu Kuai <yukuai3@huawei.com>, hch@infradead.org,
-        david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V2] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200818161229.GK6107@magnolia>
-References: <20200818134618.2345884-1-yukuai3@huawei.com>
- <20200818155305.GR17456@casper.infradead.org>
+        Tue, 18 Aug 2020 12:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbgHRQN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:13:56 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 596F4207DA;
+        Tue, 18 Aug 2020 16:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597767235;
+        bh=i/osbT4JGLM2WHPj4a6FDQcQ9reu9lXtYu+uvpCBQEE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=03MprkvPlHzEHpFG/RyjOx9tNAFMVa1A41U0L+2ALSxA7w6D+tul3V8CY1pTehgoq
+         ITIuXMiwan2NvpAe3sKyhJWrBvuWUyJMhI9ooE+UpM2qe2DXxlzlpIAuMoDXh47oav
+         l8MxfSgyn6Qa9lYNFTgrLRd7pWzhg9E1ONtUVjEA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 30C4135228F5; Tue, 18 Aug 2020 09:13:55 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 09:13:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
+Message-ID: <20200818161355.GE27891@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200814180224.GQ4295@paulmck-ThinkPad-P72>
+ <875z9lkoo4.fsf@nanos.tec.linutronix.de>
+ <20200814204140.GT4295@paulmck-ThinkPad-P72>
+ <20200814215206.GL3982@worktop.programming.kicks-ass.net>
+ <20200816225655.GA17869@pc636>
+ <20200817082849.GA28270@dhcp22.suse.cz>
+ <20200817222803.GE23602@paulmck-ThinkPad-P72>
+ <20200818074344.GL28270@dhcp22.suse.cz>
+ <20200818135327.GF23602@paulmck-ThinkPad-P72>
+ <87o8n8hv5p.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818155305.GR17456@casper.infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008180113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9717 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008180114
+In-Reply-To: <87o8n8hv5p.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 04:53:05PM +0100, Matthew Wilcox wrote:
-> On Tue, Aug 18, 2020 at 09:46:18PM +0800, Yu Kuai wrote:
-> > changes from v1:
-> >  - separate set dirty and clear dirty functions
-> >  - don't test uptodate bit in iomap_writepage_map()
-> >  - use one bitmap array for uptodate and dirty.
+On Tue, Aug 18, 2020 at 04:43:14PM +0200, Thomas Gleixner wrote:
+> On Tue, Aug 18 2020 at 06:53, Paul E. McKenney wrote:
+> > On Tue, Aug 18, 2020 at 09:43:44AM +0200, Michal Hocko wrote:
+> >> Thomas had a good point that it doesn't really make much sense to
+> >> optimize for flooders because that just makes them more effective.
+> >
+> > The point is not to make the flooders go faster, but rather for the
+> > system to be robust in the face of flooders.  Robust as in harder for
+> > a flooder to OOM the system.
+> >
+> > And reducing the number of post-grace-period cache misses makes it
+> > easier for the callback-invocation-time memory freeing to keep up with
+> > the flooder, thus avoiding (or at least delaying) the OOM.
 > 
-> This looks much better.
-> 
-> > +	spinlock_t		state_lock;
-> > +	/*
-> > +	 * The first half bits are used to track sub-page uptodate status,
-> > +	 * the second half bits are for dirty status.
-> > +	 */
-> > +	DECLARE_BITMAP(state, PAGE_SIZE / 256);
-> 
-> It would be better to use the same wording as below:
-> 
-> > +	bitmap_zero(iop->state, PAGE_SIZE * 2 / SECTOR_SIZE);
+> Throttling the flooder is incresing robustness far more than reducing
+> cache misses.
 
-ISTR there was some reason why '512' was hardcoded in here instead of
-SECTOR_SIZE.  I /think/ it was so that iomap.h did not then have a hard
-dependency on blkdev.h and everything else that requires...
+True, but it takes time to identify a flooding event that needs to be
+throttled (as in milliseconds).  This time cannot be made up.
 
-https://lore.kernel.org/linux-xfs/20181215105155.GD1575@lst.de/
+And in the absence of a flooding event, the last thing you want to do
+is to throttle call_rcu(), kfree_rcu(), and kvfree_rcu().
 
---D
-
-> 
-> [...]
-> 
-> > +static void
-> > +iomap_iop_set_range_dirty(struct page *page, unsigned int off,
-> > +		unsigned int len)
-> > +{
-> > +	struct iomap_page *iop = to_iomap_page(page);
-> > +	struct inode *inode = page->mapping->host;
-> > +	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
-> > +	unsigned int first = off >> inode->i_blkbits;
-> > +	unsigned int last = (off + len - 1) >> inode->i_blkbits;
-> > +	unsigned long flags;
-> > +	unsigned int i;
-> > +
-> > +	spin_lock_irqsave(&iop->state_lock, flags);
-> > +	for (i = first; i <= last; i++)
-> > +		set_bit(i + total, iop->state);
-> > +	spin_unlock_irqrestore(&iop->state_lock, flags);
-> > +}
-> 
-> How about:
-> 
-> -	unsigned int total = PAGE_SIZE / SECTOR_SIZE;
-> ...
-> +	first += PAGE_SIZE / SECTOR_SIZE;
-> +	last += PAGE_SIZE / SECTOR_SIZE;
-> ...
-> 	for (i = first; i <= last; i++)
-> -		set_bit(i + total, iop->state);
-> +		set_bit(i, iop->state);
-> 
-> We might want
-> 
-> #define	DIRTY_BITS(x)	((x) + PAGE_SIZE / SECTOR_SIZE)
-> 
-> and then we could do:
-> 
-> +	unsigned int last = DIRTY_BITS((off + len - 1) >> inode->i_blkbits);
-> 
-> That might be overthinking things a bit though.
-> 
-> > @@ -705,6 +767,7 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
-> >  	if (unlikely(copied < len && !PageUptodate(page)))
-> >  		return 0;
-> >  	iomap_set_range_uptodate(page, offset_in_page(pos), len);
-> > +	iomap_set_range_dirty(page, offset_in_page(pos), len);
-> >  	iomap_set_page_dirty(page);
-> 
-> I would move the call to iomap_set_page_dirty() into
-> iomap_set_range_dirty() to parallel iomap_set_range_uptodate more closely.
-> We don't want a future change to add a call to iomap_set_range_dirty()
-> and miss the call to iomap_set_page_dirty().
-> 
-> >  	return copied;
-> >  }
-> > @@ -1030,6 +1093,7 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
-> >  		WARN_ON_ONCE(!PageUptodate(page));
-> >  		iomap_page_create(inode, page);
-> >  		set_page_dirty(page);
-> > +		iomap_set_range_dirty(page, offset_in_page(pos), length);
-> 
-> I would move all this from the mkwrite_actor() to iomap_page_mkwrite()
-> and call it once with (0, PAGE_SIZE) rather than calling it once for
-> each extent in the page.
-> 
-> > @@ -1435,6 +1500,8 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
-> >  		 */
-> >  		set_page_writeback_keepwrite(page);
-> >  	} else {
-> > +		iomap_clear_range_dirty(page, 0,
-> > +				end_offset - page_offset(page) + 1);
-> >  		clear_page_dirty_for_io(page);
-> >  		set_page_writeback(page);
-> 
-> I'm not sure it's worth doing this calculation.  Better to just clear
-> the dirty bits on the entire page?  Opinions?
+							Thanx, Paul
