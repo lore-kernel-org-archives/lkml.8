@@ -2,181 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F74EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58385C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F25206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355E420772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KkF5v2Bu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVho9R3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHRSpX (ORCPT
+        id S1726694AbgHRSrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36142 "EHLO
+        Tue, 18 Aug 2020 14:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHRSpV (ORCPT
+        with ESMTP id S1726552AbgHRSrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:45:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1335C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:45:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id x6so10149308pgx.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:45:20 -0700 (PDT)
+        Tue, 18 Aug 2020 14:47:14 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116D6C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:14 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id r1so23439639ybg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Zsbv5mvCbZha5zbAj1OK4YZ+BCUk3LROR/vz9Y6QKVA=;
-        b=KkF5v2BuZGd2iCldjPP3synY06xB4ELU6I9s9TsaRG7KnLcwop4DMFGlpFTWv5Xy+X
-         ofRk7La8JMG3SwdgZUGh8eAUBFeB4o/6lLw2usFOzGVPB3BlayOuITC9g6xNcMC5Eno/
-         9UsIwRhcRBKGe4P2ubvHSxj/lyBPEBQFSM3Sg=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=/E5eAbEMdGecxil6UrL49SnbBNTAteYJO6ZYPEM5dLY=;
+        b=JVho9R3BbAEAJN3/ABbAA0Q8qoaA4DB7htuEZjfa/UrhMXpsJYFmC7+ZhNNZwKO2NQ
+         PUc5iLYdObTaoIIro8tIsaxuloxbDtq2BRHvJ4HImEh99kGzHSMlwGqvrpFkSNH5ILjH
+         7OMrfDapLBjDBr/Ron5FwpH8Ed9zJSRBQoNzjeni2Bb9CZZZzkBMHI6Mo9WOMW9GV3Ks
+         hGjjHW9qk302727BeP4WxexH6OJY479SyLXh2AXO/Et+r5tnXqWS8TzIEF24kDQVSBkz
+         TVXnU9sXK1hSVqkA4lJrmI7dZxvQJSTmBveDUy51OpONWhUYv5f7/rdQAsba4BdwvKED
+         meng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Zsbv5mvCbZha5zbAj1OK4YZ+BCUk3LROR/vz9Y6QKVA=;
-        b=FXztkxOLz6Fshc1Wnxeq8LYSv2AwD5JYOj21CsMfCMR1czq1llbodpI3wL3lvjFH4W
-         tcZQtT90m4fyMfo6I9t2uJFBCwZnnm3nJEoxnoeSgBYJNTXXQuYSsq+flvy3veDpIu1T
-         0qSMJwIpFqsLxfjRv0T4lXqyg8aHRw0W72FE4j3j3sdlFg4rcRFBKS3+du4K+CoSUWyA
-         iIvZOw60OOmjfIoO1IoLmh54AvhueBImdwNVhNZ5vaKEMztHX9jxgCTwyDtmfylQM5nx
-         aGIQM/NgrJOZEqScUn0Y7DF3qHZ8S+P4OTc+uieniKYMAJL/TuhA6V0wL0ik4I8PQBme
-         o6oA==
-X-Gm-Message-State: AOAM5308bkRU+0/O/6sG658Y1+3g5vRpGPURtu+8YsCDWhp36bLW4jR7
-        TQWZ/7CxRKmXuEInSjSjUIa7MA==
-X-Google-Smtp-Source: ABdhPJzlZUhxovAfWJU6AM4joByBcaCE6DP0XKdwA0weM+mLByskkNrau/g+/nJe8iuBfpPiTSD4tw==
-X-Received: by 2002:a63:d048:: with SMTP id s8mr13866840pgi.171.1597776319942;
-        Tue, 18 Aug 2020 11:45:19 -0700 (PDT)
-Received: from ub-XPS-13-9350.pdxnet.pdxeng.ch ([49.37.132.72])
-        by smtp.gmail.com with ESMTPSA id i14sm14459022pfu.50.2020.08.18.11.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 11:45:19 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] arm64: dts: rockchip: Fix power routing to support POE
-Date:   Wed, 19 Aug 2020 00:15:05 +0530
-Message-Id: <20200818184505.30064-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=/E5eAbEMdGecxil6UrL49SnbBNTAteYJO6ZYPEM5dLY=;
+        b=uiARhX3dWJ3DcW5pVaePWzG9Rt2qGZrb1y+F/3r8uhal/G1ZadHpI8kavQx9LuBkSN
+         JSFsADgnhaIyiGhQ3TpunoKWyLLd5RF4p59jcb360elU/NhptluMA9njVeu9IrkYoVe/
+         FnAK/IaeL10Ib/+bJ5d04XgYsLLL0vVDxhTcdlVdhlVmtliPKV2/QXIIBG2lJc1beILp
+         Zw2l+iwIpOUjUup6ewSvN05eGcv3/WPkLqijrYzNwHh7eqAgvn+JZwCX2O0CoHJYVitk
+         jN/n208HuPNZn9iPj8Bmx359befwuVMh6snVLxYGD5nEeQwh982WBfuab00DSOVOdkav
+         vNgg==
+X-Gm-Message-State: AOAM532836sve1nLrEsBbuID442/CvlgkZAdY+SAndt+Z1QtxbVhS7k+
+        JHBQz9D4kuW8xFzHUzLxStm9WJMP4es=
+X-Google-Smtp-Source: ABdhPJzU4R0PcrHVEc2b75WaWjsd33ALQzPjuw40VrEB0Drky/Odddmf1lW46QmY6IDqhw2oeSJVIkW1ZK8=
+X-Received: by 2002:a25:3b0d:: with SMTP id i13mr28488393yba.314.1597776432330;
+ Tue, 18 Aug 2020 11:47:12 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:47:02 -0600
+Message-Id: <20200818184704.3625199-1-yuzhao@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH v2 1/3] mm: remove activate_page() from unuse_pte()
+From:   Yu Zhao <yuzhao@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?=" <jglisse@redhat.com>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When POE used, the current power routing is failing to power-up
-the PMIC regulators which cause Linux boot hangs.
+We don't initially add anon pages to active lruvec after
+commit b518154e59aa ("mm/vmscan: protect the workingset on anonymous LRU").
+Remove activate_page() from unuse_pte(), which seems to be missed by
+the commit. And make the function static while we are at it.
 
-This patch is trying to update the power routing in order to
-support Type C0 and POE powering methods.
+Before the commit, we called lru_cache_add_active_or_unevictable() to
+add new ksm pages to active lruvec. Therefore, activate_page() wasn't
+necessary for them in the first place.
 
-As per the schematics, sys_12v is a common output power regulator
-when type c and POE power being used. sys_12v is supplied by dc_12v
-which is supplied from MP8859 in type c0 power routing and sys_12v
-is supplied by MP8009 PoE PD in POE power supply routing.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Tested-by: Suniel Mahesh <sunil@amarulasolutions.com>
+Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
- .../dts/rockchip/rk3399-roc-pc-mezzanine.dts   | 18 ++++++++++++++++--
- .../arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi | 12 ++++++++++--
- 2 files changed, 26 insertions(+), 4 deletions(-)
+ include/linux/swap.h | 1 -
+ mm/swap.c            | 4 ++--
+ mm/swapfile.c        | 5 -----
+ 3 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-index 2acb3d500fb9..754627d97144 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-@@ -11,6 +11,16 @@ / {
- 	model = "Firefly ROC-RK3399-PC Mezzanine Board";
- 	compatible = "firefly,roc-rk3399-pc-mezzanine", "rockchip,rk3399";
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 661046994db4..df6207346078 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -340,7 +340,6 @@ extern void lru_note_cost_page(struct page *);
+ extern void lru_cache_add(struct page *);
+ extern void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 			 struct lruvec *lruvec, struct list_head *head);
+-extern void activate_page(struct page *);
+ extern void mark_page_accessed(struct page *);
+ extern void lru_add_drain(void);
+ extern void lru_add_drain_cpu(int cpu);
+diff --git a/mm/swap.c b/mm/swap.c
+index d16d65d9b4e0..25c4043491b3 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -348,7 +348,7 @@ static bool need_activate_page_drain(int cpu)
+ 	return pagevec_count(&per_cpu(lru_pvecs.activate_page, cpu)) != 0;
+ }
  
-+	/* MP8009 PoE PD */
-+	poe_12v: poe-12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "poe_12v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
- 	vcc3v3_ngff: vcc3v3-ngff {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_ngff";
-@@ -22,7 +32,7 @@ vcc3v3_ngff: vcc3v3-ngff {
- 		regulator-boot-on;
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		vin-supply = <&dc_12v>;
-+		vin-supply = <&sys_12v>;
- 	};
+-void activate_page(struct page *page)
++static void activate_page(struct page *page)
+ {
+ 	page = compound_head(page);
+ 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+@@ -368,7 +368,7 @@ static inline void activate_page_drain(int cpu)
+ {
+ }
  
- 	vcc3v3_pcie: vcc3v3-pcie {
-@@ -34,10 +44,14 @@ vcc3v3_pcie: vcc3v3-pcie {
- 		pinctrl-0 = <&vcc3v3_pcie_en>;
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		vin-supply = <&dc_12v>;
-+		vin-supply = <&sys_12v>;
- 	};
- };
+-void activate_page(struct page *page)
++static void activate_page(struct page *page)
+ {
+ 	pg_data_t *pgdat = page_pgdat(page);
  
-+&sys_12v {
-+	vin-supply = <&poe_12v>;
-+};
-+
- &pcie_phy {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index b85ec31cd283..e7a459fa4322 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -110,6 +110,14 @@ vcc_vbus_typec0: vcc-vbus-typec0 {
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
-+	sys_12v: sys-12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sys_12v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&dc_12v>;
-+	};
-+
- 	/* switched by pmic_sleep */
- 	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		compatible = "regulator-fixed";
-@@ -141,7 +149,7 @@ vcc3v3_sys: vcc3v3-sys {
- 		regulator-boot-on;
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		vin-supply = <&dc_12v>;
-+		vin-supply = <&sys_12v>;
- 	};
- 
- 	vcca_0v9: vcca-0v9 {
-@@ -186,7 +194,7 @@ vcc_sys: vcc-sys {
- 		regulator-boot-on;
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
--		vin-supply = <&dc_12v>;
-+		vin-supply = <&sys_12v>;
- 	};
- 
- 	vdd_log: vdd-log {
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 12f59e641b5e..c287c560f96d 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1925,11 +1925,6 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
+ 		lru_cache_add_inactive_or_unevictable(page, vma);
+ 	}
+ 	swap_free(entry);
+-	/*
+-	 * Move the page to the active list so it is not
+-	 * immediately swapped out again after swapon.
+-	 */
+-	activate_page(page);
+ out:
+ 	pte_unmap_unlock(pte, ptl);
+ 	if (page != swapcache) {
 -- 
-2.25.1
+2.28.0.220.ged08abb693-goog
 
