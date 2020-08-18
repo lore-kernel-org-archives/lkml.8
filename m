@@ -2,217 +2,97 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90AA5208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEA42245C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgHRPpx (ORCPT
+        id S1728047AbgHRPqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:45:53 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2637 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726971AbgHRPoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:44:34 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id F38319593CBDEE2F0A10;
-        Tue, 18 Aug 2020 16:44:32 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:44:31 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:44:33 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 14/30] ima: Add per namespace view of the measurement list
-Date:   Tue, 18 Aug 2020 17:42:14 +0200
-Message-ID: <20200818154230.14016-5-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
+        Tue, 18 Aug 2020 11:46:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39627 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgHRPpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:45:35 -0400
+IronPort-SDR: PqBHDbmlU/dRhgnHQEu6bpTIgeeX0MTUm+tGgQWqzJcBOIuqj3nzuGCHpadezj1fAlwZmu0jpW
+ /DMUSR9/b7/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="156016569"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="156016569"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:44:47 -0700
+IronPort-SDR: T9Fg95g8XxLenJ5jQDfLCFegfIwxQ9pjRGDy3DrWpASLq6K2h2Wvzw2iMobVVHYE72TcDFbo6R
+ MMHEABIuZ0uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="497411171"
+Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Aug 2020 08:44:45 -0700
+Date:   Tue, 18 Aug 2020 18:44:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Coly Li <colyli@suse.de>, Stefan Berger <stefanb@linux.ibm.com>,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: Re: [PATCH RESEND] docs: update trusted-encrypted.rst
+Message-ID: <20200818154444.GA137138@linux.intel.com>
+References: <20200815075143.47082-1-colyli@suse.de>
+ <cf667ea0-dab7-a242-886c-938582c62ff6@linux.ibm.com>
+ <1597595769.8344.7.camel@linux.ibm.com>
+ <f9d4c4a9-5059-eae2-bc89-51f16e8ca4d9@suse.de>
+ <1597597933.8344.13.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597597933.8344.13.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+On Sun, Aug 16, 2020 at 10:12:13AM -0700, James Bottomley wrote:
+> On Mon, 2020-08-17 at 00:57 +0800, Coly Li wrote:
+> > On 2020/8/17 00:36, James Bottomley wrote:
+> > > On Sun, 2020-08-16 at 12:06 -0400, Stefan Berger wrote:
+> > > [...]
+> > > > A note in this file states this:
+> > > > 
+> > > > Note: When using a TPM 2.0 with a persistent key with handle
+> > > > 0x81000001, append 'keyhandle=0x81000001' to statements between
+> > > > quotes, such as "new 32 keyhandle=0x81000001".
+> > > > 
+> > > > Now if someone was (still) interested in TPM 1.2 
+> > > > adapt the  note to state that these keyhandle=... should be
+> > > > removed for the TPM 1.2 case.
+> > > 
+> > > Actually, I also have a plan to match what userspace does and
+> > > simply assume a keyhandle of 40000001 (generate an EC Storage
+> > > Primary Key on the fly) if it's not specified, which will make the
+> > > TPM1.2 and 2.0 versions of this the same.  Unfortunately the
+> > > necessary precursor patches are taking an age to get upstream.
+> > 
+> > Hi James,
+> > 
+> > Do you have a plan to push such patches into upstream soon? If yes
+> > than I may wait for your patch and withdraw this one.
+> 
+> Well, as I said above it depends on not yet upstream precursor patches.
+>  They have been pending for about a year, so I've no real idea of the
+> timeline.
+> 
+> James
 
-Modify ima securityfs interface, so that only measurement list entries
-that belong to the given ima namespace are visible/counted. The initial
-ima namespace is an exception, its processes have access to all
-measurement list entries.
+As far as I remember there was not much left in the previous version to
+do. Some time has passed when it was discussed but I recall it was
+mainly about documenting the key format.
 
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
----
- include/linux/ima.h                |  1 +
- security/integrity/ima/ima_fs.c    | 57 ++++++++++++++++++++++++++----
- security/integrity/ima/ima_init.c  |  1 +
- security/integrity/ima/ima_ns.c    |  1 +
- security/integrity/ima/ima_queue.c |  8 +++++
- 5 files changed, 61 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index df22143ffe30..d59ed38a4305 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -203,6 +203,7 @@ struct ima_namespace {
- 	struct ima_policy_data *policy_data;
- 	struct integrity_iint_tree *iint_tree;
- 	struct list_head *measurements;
-+	atomic_long_t ml_len; /* number of stored measurements in the list */
- } __randomize_layout;
- 
- extern struct ima_namespace init_ima_ns;
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 4758e14c4a7b..e2893f0b0f31 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -63,7 +63,9 @@ static ssize_t ima_show_measurements_count(struct file *filp,
- 					   char __user *buf,
- 					   size_t count, loff_t *ppos)
- {
--	return ima_show_htable_value(buf, count, ppos, &ima_htable.len);
-+	struct ima_namespace *ima_ns = get_current_ns();
-+
-+	return ima_show_htable_value(buf, count, ppos, &ima_ns->ml_len);
- 
- }
- 
-@@ -77,10 +79,36 @@ static void *ima_measurements_start(struct seq_file *m, loff_t *pos)
- {
- 	loff_t l = *pos;
- 	struct ima_queue_entry *qe;
-+	struct ima_namespace *ima_ns = get_current_ns();
-+	unsigned int ns_id = get_ns_id(ima_ns);
-+
-+	if (ima_ns == &init_ima_ns) {
-+		/* we need a lock since pos could point beyond last element */
-+		rcu_read_lock();
-+		list_for_each_entry_rcu(qe, &ima_measurements, later) {
-+			if (!l--) {
-+				rcu_read_unlock();
-+				return qe;
-+			}
-+		}
-+		rcu_read_unlock();
-+		return NULL;
-+	}
- 
--	/* we need a lock since pos could point beyond last element */
- 	rcu_read_lock();
--	list_for_each_entry_rcu(qe, &ima_measurements, later) {
-+	qe = list_next_or_null_rcu(&ima_measurements,
-+				   ima_ns->measurements,
-+				   struct ima_queue_entry,
-+				   later);
-+	if (!qe) {
-+		rcu_read_unlock();
-+		return NULL;
-+	}
-+
-+	list_for_each_entry_from_rcu(qe, &ima_measurements, later) {
-+		if (ns_id != qe->entry->ns_id)
-+			continue;
-+
- 		if (!l--) {
- 			rcu_read_unlock();
- 			return qe;
-@@ -93,12 +121,27 @@ static void *ima_measurements_start(struct seq_file *m, loff_t *pos)
- static void *ima_measurements_next(struct seq_file *m, void *v, loff_t *pos)
- {
- 	struct ima_queue_entry *qe = v;
-+	struct ima_namespace *ima_ns = get_current_ns();
-+	unsigned int ns_id = get_ns_id(ima_ns);
-+
-+	if (ima_ns == &init_ima_ns) {
-+		/* lock protects when reading beyond last element
-+		 * against concurrent list-extension
-+		 */
-+		rcu_read_lock();
-+		qe = list_entry_rcu(qe->later.next, struct ima_queue_entry,
-+				    later);
-+		rcu_read_unlock();
-+		(*pos)++;
-+
-+		return (&qe->later == &ima_measurements) ? NULL : qe;
-+	}
- 
--	/* lock protects when reading beyond last element
--	 * against concurrent list-extension
--	 */
- 	rcu_read_lock();
--	qe = list_entry_rcu(qe->later.next, struct ima_queue_entry, later);
-+	list_for_each_entry_continue_rcu(qe, &ima_measurements, later) {
-+		if (ns_id == qe->entry->ns_id)
-+			break;
-+	}
- 	rcu_read_unlock();
- 	(*pos)++;
- 
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 2100ee341dfc..ac9509d8c0f0 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -36,6 +36,7 @@ struct ima_namespace init_ima_ns = {
- 	.policy_data = &init_policy_data,
- 	.iint_tree = &init_iint_tree,
- 	.measurements = &ima_measurements,
-+	.ml_len = ATOMIC_LONG_INIT(0),
- };
- EXPORT_SYMBOL(init_ima_ns);
- 
-diff --git a/security/integrity/ima/ima_ns.c b/security/integrity/ima/ima_ns.c
-index f331187a4d3c..81de492baa99 100644
---- a/security/integrity/ima/ima_ns.c
-+++ b/security/integrity/ima/ima_ns.c
-@@ -126,6 +126,7 @@ static struct ima_namespace *clone_ima_ns(struct user_namespace *user_ns,
- 	ns->user_ns = get_user_ns(user_ns);
- 	ns->ucounts = ucounts;
- 	ns->frozen = false;
-+	atomic_long_set(&ns->ml_len, 0);
- 
- 	rwlock_init(&ns->iint_tree->lock);
- 	ns->iint_tree->root = RB_ROOT;
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index bd890778c5be..ec5b3ca3ef92 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -227,6 +227,14 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
- 		goto out;
- 	}
- 
-+	/* Initial ima namespace has access to all measurement list entries,
-+	 * therefore always increment its measurement list length. Other
-+	 * namespaces can see only their own entries.
-+	 */
-+	if (ima_ns != &init_ima_ns)
-+		atomic_long_inc(&ima_ns->ml_len);
-+	atomic_long_inc(&init_ima_ns.ml_len);
-+
- 	if (violation)		/* invalidate pcr */
- 		digests_arg = digests;
- 
--- 
-2.20.1
-
+/Jarkko
