@@ -2,108 +2,111 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10010C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8770BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9502083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505B92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XrifYsF5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeW9T1y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHRBwg (ORCPT
+        id S1726483AbgHRB4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 21:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46104 "EHLO
+        Mon, 17 Aug 2020 21:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgHRBwe (ORCPT
+        with ESMTP id S1726303AbgHRB4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 21:52:34 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3113EC061389
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:52:31 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id f19so9558451qtp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:52:31 -0700 (PDT)
+        Mon, 17 Aug 2020 21:56:41 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E8BC061389;
+        Mon, 17 Aug 2020 18:56:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c19so14311191wmd.1;
+        Mon, 17 Aug 2020 18:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=szzpFDA9AlK4enccjSiFaUNDWItaYlytHuvona3L4xE=;
-        b=XrifYsF5rKfoCWUjJR56iJTuvGs1mu+hofxMCRYvN1bgU+9hCume8MfdskDYx/GXUi
-         qvEoW0g2PrbsvnXO5CaiZC1mOPUQAVJ9FMbksSCTsWnT24/upbZp/dhWv4hX4hHLZZ+i
-         FLEIIS2aoHuICneFAVnJh2bcK/OldVdEs4CP0=
+        bh=wmkS2Ia+h+ApMIAh8GROqTADSC13UjF+XMotsJE/2dg=;
+        b=FeW9T1y6GFuUyT8vEZ6AA3oQ7jbmue2B9kbwH1q5mpTxdaxatd/9gTaotsQikHmy3F
+         xO5mReT7F5MJvCygN1kne8XlGTCa+E/ONajJOIdcz+kBVLEeg7vZL9Q0E9+PDnG/X7Eq
+         XUMKeFemFiHqcL9yTnYh14EN0gNnkNV4hMGzsOWFw/gJskL2FT50fYr5ADwpumCKn9D+
+         JZyJE58Z4w4JbPrssyzyVe1KQxi3hLdWsZA+NbilcltPewjefi5uc+7AAMmOLXr2LN3i
+         iL8gZgIzcGGvxsTT/hsY74Ebdtce5GPP/kvWt5jPRZ3rkkZnDQTNsSssH8FKUseDetKi
+         SVfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=szzpFDA9AlK4enccjSiFaUNDWItaYlytHuvona3L4xE=;
-        b=GcRT7EgOCyddY19UZytHtevuI+uIlWcXifr1g+kikPikOYvTgeeqsR8e6jyCmv6XcK
-         ZrEhAl1Iqfm6y0i9tqriTY57TZ9ZrXt7Zww+qgs4R719RASB/WVkftrKxdrk/P3cmcAk
-         xuea5/y0o4R26tagxiQkEayFVStgL6bloVWAD67ENIlPrC62YRZxOGHpN2gNcubDvp3c
-         IOBpbFTb8hP+0YoUcD1nwnKUNLXboVTK+CCZc2ztqQ54BZMZJSZlmHA9ohjcZedy9jLE
-         LoBmLeeqBfgZbpbx4GX5rVqjCZLjdmBoHlnxDAxMsrN1jlHmBIV4xCiDp9TN6Asfw/X9
-         28kQ==
-X-Gm-Message-State: AOAM5323nsMb5OVCRkhSs3FJ7fNkhSJyytpiFYKzwzBJM1jqSbyYoFHa
-        YiZEO04bj/c4TsWePJVoA7lOhmx7mSTteiZQbMMPDg==
-X-Google-Smtp-Source: ABdhPJxTMwbSOeJZ+JjlM+dBnOrWPf2Un6ZL7ISpGYM5sJBiPu9rwbZVoK+XvNs2l/kehDF6aM8NBGUpgV8YpoFB/PU=
-X-Received: by 2002:ac8:45c7:: with SMTP id e7mr16254448qto.187.1597715550749;
- Mon, 17 Aug 2020 18:52:30 -0700 (PDT)
+        bh=wmkS2Ia+h+ApMIAh8GROqTADSC13UjF+XMotsJE/2dg=;
+        b=UKgBPm0x81+vYOhUUqdTbNkTXK9SUzvEdPON1/Hj0wsLAkbIHnqv30QZulZcJojT/k
+         h77DkwTw1n9bzDxxYVz7nIOkVdy82v/zya7VvDbMCjhzUWO3TUl8bXmZQB55tcn61sli
+         FpgTkf2d+9UxXxy75WX2QS+mDG6agVtMo2N8MQQxpGKuNa4U3/L7FoioQInoLWqo2gcD
+         lv0hp1hcSfFX1OtUZZGicwjSKEUZ59bfpJyK3KXtliDhl+dGo0B2OcAs6ZMdOfBPAoNU
+         m6HLidZimZg0jyPG8VeQjLmIuwTrVt+Tb3/xs6bOyBBKdxxMD90scLLc95GWM60PoCMc
+         /b6w==
+X-Gm-Message-State: AOAM533jZNkV5rqmKSbkiNR596dwVdO4+kIeNSVJESpnDBspoo6FULHO
+        wrTShniqM2CIvgn5YVVw/O0Pq2VmvXIFFnDQ8L0=
+X-Google-Smtp-Source: ABdhPJz4sPFnbc7ctDgUsfyOTslCQY/PttwBMI08GOkL8ttcF8xgZtn05M1fx5hvVfiZealhpL9dldYxWM/Ibx+i8Zk=
+X-Received: by 2002:a1c:9803:: with SMTP id a3mr16266540wme.57.1597715799682;
+ Mon, 17 Aug 2020 18:56:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609012518.198908-1-stevensd@chromium.org>
- <20200609055021-mutt-send-email-mst@kernel.org> <CAD=HUj7wJfoKj_K44Cs9eEmh=OQHZ1+qz7ZHxoscHjYgOMXvZQ@mail.gmail.com>
- <20200817105008.mi3ukh6kxgi37gjs@sirius.home.kraxel.org> <20200817111234.i7pqtnnk2ciw4rqb@sirius.home.kraxel.org>
-In-Reply-To: <20200817111234.i7pqtnnk2ciw4rqb@sirius.home.kraxel.org>
-From:   David Stevens <stevensd@chromium.org>
-Date:   Mon, 17 Aug 2020 18:52:19 -0700
-Message-ID: <CAD=HUj65N3ejzYgUcpHLvPHguXFDC-B4OFeNOfvSML1zdoNRPg@mail.gmail.com>
-Subject: Re: [virtio-dev] Re: [PATCH v5 0/3] Support virtio cross-device resources
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org,
-        alex.williamson@redhat.com
+References: <cover.1597376585.git.huangqiwu@xiaomi.com> <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+ <20200814060909.GD1409566@kroah.com>
+In-Reply-To: <20200814060909.GD1409566@kroah.com>
+From:   Qiwu Huang <yanziily@gmail.com>
+Date:   Tue, 18 Aug 2020 09:56:28 +0800
+Message-ID: <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type property
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
+        Qiwu Huang <huangqiwu@xiaomi.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 4:12 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Fri, Aug 14, 2020 at 2:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> On Mon, Aug 17, 2020 at 12:50:08PM +0200, Gerd Hoffmann wrote:
-> > On Tue, Jun 23, 2020 at 10:31:28AM +0900, David Stevens wrote:
-> > > Unless there are any remaining objections to these patches, what are
-> > > the next steps towards getting these merged? Sorry, I'm not familiar
-> > > with the workflow for contributing patches to Linux.
+> On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
+> > From: Qiwu Huang <huangqiwu@xiaomi.com>
 > >
-> > Sorry, just have been busy and not paying as much attention to drm
-> > patches as usual.  Playing catch-up now.  Queued for drm-misc-next,
-> > unless something goes wrong in my testing the patches should land
-> > in linux-next soon and be merged upstream in the next merge window.
+> > Reports the kind of quick charge type based on
+> > different adapter power.
+> >
+> > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
+> >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> >  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
+> >  include/linux/power_supply.h                | 14 ++++++
+> >  4 files changed, 87 insertions(+)
 >
-> Oh, spoke too soon.  scripts/checkpatch.pl has a bunch of codestyle
-> warnings.  Can you fix them and resend?
+> You should also submit your driver that uses these new attributes at the
+> same time.  What happened to that request?  Otherwise no one really
+> knows how these are being used, or if they even are used by anyone.
+>
 
-Sent a new version to fix the line length warning. There's still a
-MAINTAINER warning, but I think the new virtio_dma_buf file can fall
-under virtio core (and the existing wildcards do match it), rather
-than get its own MAINTAINER entry. I can break it out into its own
-thing if that's better, though.
+I don't think I can submit the whole driver because our drivers are
+divided into three parts, the first part is in ADSP, the second part
+is in kernel and the third part is in Android Hal.This is the second
+part.
 
--David
+
+> thanks,
+>
+> greg k-h
+
+
+
+-- 
+Thanks
+
+Qiwu
