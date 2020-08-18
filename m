@@ -4,112 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D58C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5292075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E3F204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EsPj6jpa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jbMgxGY8"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TNhDrsR+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z4gCmEWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHYNmt (ORCPT
+        id S1726703AbgHYNmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:42:49 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41051 "EHLO
+        Tue, 25 Aug 2020 09:42:47 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:46361 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726611AbgHYNlk (ORCPT
+        by vger.kernel.org with ESMTP id S1726570AbgHYNlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 09:41:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 2CB90BDB;
-        Tue, 25 Aug 2020 09:35:28 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id D71A7C10;
+        Tue, 25 Aug 2020 09:35:29 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:28 -0400
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=OB6C5rBdrsWYefSK+JPJv5u1Nkg
-        G5sD9y7dak5b46mg=; b=EsPj6jpasoYSP0YKt7mLyaiMGUGgtLvGKfqEaGYBUmp
-        6F8sYCCBPYEDXPhGBwdqATRn6G/s74WQmRxDZlfC2AtCmoTzDMZlkadxLNQcel1h
-        hVn+ydQYlQ8DAhH4UgiZMGT+0dOXDOg++qArL7XGXUCIaufkYafOiKyJ/vYJYi5K
-        n8Fi2+QciSv+fYUVTXT8eALX9oC2HI1a2vKhfbpRr9erniSKhxgOGFpyrqnTelX3
-        L+toz7iBjRrFZarLGA/TfwttmrwYdNxAHqudpMGRxJqBZEZx+VjnpBU8vICMQtT6
-        ieM03Pts2nTOU7pvtaNpycP/N0pqkSiWsd23XsUugwg==
+        :content-type:in-reply-to; s=fm3; bh=/JRUPYnRLa2QMCNAdK0p5F/lGHS
+        w/13qa1e91vLfa2U=; b=TNhDrsR+oMzM71Tv212Uq2yPrdhDxXPmPEa9DF1Resm
+        IaJ8fT7PCS4hMLCMdJEHd/bxuhcSL4CERMLcv3U7NFiHov/LTrPtcuIGsF+fB0vF
+        v5JVu4L06X4RgnQ7pGPqcRtOvo6+qsHOgDx4Pagx/AGEUixWDq/c1BjK2OfgEXwS
+        5oUkvZLk6s7kODqqIInOi92S59KvlKG3tK5VMMZLzj2Q/FLU4Lb+Z4CYLBT4zjyY
+        pR4PfCfs83uTZAsg1lVONF4x39OY5MQyBKRIf+b9noQlgAG00HQm2BPK0TG7gq5F
+        pL/T5ebTRgi6k34tcIkxKg0z5D/SHilYRtWF8c7/XtA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OB6C5r
-        BdrsWYefSK+JPJv5u1NkgG5sD9y7dak5b46mg=; b=jbMgxGY8XZUU3NoJVcHFeq
-        3x9sPixGdxeuJBfUbpTiYbcG7z4m7sZOTNjI4RBi/fCHGzGUV5YUjQ7+nSBDThE+
-        61SsJZ3irmvDzt7bv69kz6baYEVwyOoQVyxlXnlSdLzkmHYivRCgVhIaAxql8EpM
-        B6mkmwYC7p8a6EFM4YwXe+Jx21cqPPyX8smGD7ifY+L258IwUIj8iPJiywQoFCXZ
-        TPhRrGalxT2y3PbWkPVpw1hUk7WeclJWIczmX5BxRuNKVrBLu4ZBwk5d9eBWjEPi
-        VBt3/ByFS8eTzO44AUFdJCKFEtHWnKO2uFUzNrFvKG95Ne87pvSOuDuLy+gZCCiQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/JRUPY
+        nRLa2QMCNAdK0p5F/lGHSw/13qa1e91vLfa2U=; b=Z4gCmEWJjkycjCAUl4N+2X
+        1tvAQ6vj/dYF8E1lfYX9B5jPl86vWnSncSgfjt5MIREOk+1yceNXK48ZKnvAW/oe
+        8yvXt1+qtFjWx6BaF81PPGOhOtqx+vLuCRj5+j9AgwwqYyCaaemBGI0/x9eCJufJ
+        0Rl6ypYst6WcAPkYl+52BWkGiPE8l4j+haLy1DIQlsvHUbaDb4237Es8Vj/xFkBJ
+        TH5kRFsIHCoOofjdUfl8x8dJLDHL1rb4eDL0xczg+MPDtWE5uKIMgqYfuOK9DzTC
+        XW4X/68mbtj3i7fOkyx22gSsX7YIoF4njGer7f2U071L8KIL2hCmK6KGN9nau4ig
         ==
-X-ME-Sender: <xms:nhNFX4NDcLveTBRdwVWoTEJZAxBQlCGZWOvkK46EMgAU_r2pnUyKNw>
+X-ME-Sender: <xms:oRNFX3S5XzeWSETb2tPW9tuRHuV2BovB4BCfDOitIt8o1B4vQe6DZQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:nhNFX--MLspTHky8cfdWSXoscLxGcU7RJlqIvHUsZjGMLCahO_oJww>
-    <xmx:nhNFX_QTJQ60vvWpQxCnSEURmFXFXtC7FkeZkzbd1gxzVdQmsl-6Dg>
-    <xmx:nhNFXwsjipdACMGmSyrbzjaiMN8-D1xpIHKfkaZFCMFbM7G-4vgpkw>
-    <xmx:nxNFX_6AsWog0CaOOUJVClBK0jcBKewTziwomVM9CpcA0radMDWdiw>
+X-ME-Proxy: <xmx:oRNFX4xKRmsDg59xI5K-OsajaUxdiKEtcRJYoImEf2b007dULH2z_w>
+    <xmx:oRNFX83dV-xpqfoxlWj0vehFofnQaWEy7D5VFCs3LRGplKCy4WC90w>
+    <xmx:oRNFX3AKjxbRmuAcAB_PQda4EEqN1YsVb8gof912D5I4qggXXIZY_A>
+    <xmx:oRNFX8bzcu31Ak_zIJokZuct-UUfFnH8WZ6IlaeE8GY3CeKz4cD2mg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EA9CF30600A3;
-        Tue, 25 Aug 2020 09:35:25 -0400 (EDT)
-Date:   Tue, 18 Aug 2020 10:49:06 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 113883060067;
+        Tue, 25 Aug 2020 09:35:28 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 11:10:38 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     wens@csie.org, jernej.skrabec@siol.net, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sun4i: Constify static structs
-Message-ID: <20200818084906.lhuzwqdoyqzapjsx@gilmour.lan>
-References: <20200804215337.54594-1-rikard.falkeborn@gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: Mark timer as stopped in suspend
+Message-ID: <20200818091038.uie3gxn7i74loho6@gilmour.lan>
+References: <20200809021822.5285-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7xomoy5wll6xmvne"
+        protocol="application/pgp-signature"; boundary="6lj3l6uq3mnmvdcg"
 Content-Disposition: inline
-In-Reply-To: <20200804215337.54594-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200809021822.5285-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---7xomoy5wll6xmvne
+--6lj3l6uq3mnmvdcg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi!
 
-On Tue, Aug 04, 2020 at 11:53:37PM +0200, Rikard Falkeborn wrote:
-> A number of static variables are not modified and can be made const to
-> allow the compiler to put them in read-only memory.
+On Sat, Aug 08, 2020 at 09:18:22PM -0500, Samuel Holland wrote:
+> When possible, system firmware on 64-bit Allwinner platforms disables
+> OSC24M during system suspend. Since this oscillator is the clock source
+> for the ARM architectural timer, this causes the timer to stop counting.
+> Therefore, the ARM architectural timer must not be marked as NONSTOP on
+> these platforms, or the time will be wrong after system resume.
 >=20
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> Adding the arm,no-tick-in-suspend property forces the kernel to ignore
+> the ARM architectural timer when calculating sleeptime; it falls back to
+> reading the RTC. Note that this only affects deep suspend, not s2idle.
+>=20
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
 Applied, thanks!
+
+I assume it affects all the SoCs with a Cortex-A7 as well?
+
 Maxime
 
---7xomoy5wll6xmvne
+--6lj3l6uq3mnmvdcg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXzuWAgAKCRDj7w1vZxhR
-xeMiAP9ZL9rjwDAjy7IbU3HboVfFI4FAP7eQZPgomHMvsL0ToAD/Z2CtUjH4lak/
-EVZ2tUz2sOcYWfa9U+uzNZ0Cj4EOIgg=
-=uQCW
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXzubDgAKCRDj7w1vZxhR
+xfaWAQDnZwRS7XpoHeidnQOOdUYkTt6m+Is8lK6qswz3CJ3H3AD/bkPTIL8YJmR/
+TYXu8yTTBp42sy7Dl2zcqs1H+JDybAQ=
+=GC+Q
 -----END PGP SIGNATURE-----
 
---7xomoy5wll6xmvne--
+--6lj3l6uq3mnmvdcg--
