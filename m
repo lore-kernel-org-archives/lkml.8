@@ -2,95 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90163C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584B32067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597767722;
-	bh=a/qc8sKGVzucI+tPjmonRoZfMZYekRZQVZiiJ6iHNgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PsvDcKME2yMVWm1k8bZQbAPJ/SPBFGCKNT93kvyeBovJHB5PebmohR7XaVSaBl8Ir
-	 +LTV3/EPNzHpjCOY2B97+PPvL9lBqz6YXmArTshwoSVWxlgzVN7IkLR+3mH7RGbQPM
-	 bSpuUj5+KZJUiz3syNvm4TXqQDkvxES8ltren0bI=
+	by mail.kernel.org (Postfix) with ESMTP id 724282067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHRQV7 (ORCPT
+        id S1727018AbgHRQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:24:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:34171 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgHRQVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:21:55 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF3452067C;
-        Tue, 18 Aug 2020 16:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597767715;
-        bh=a/qc8sKGVzucI+tPjmonRoZfMZYekRZQVZiiJ6iHNgU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nNTolVjCJLefNKkiemdj/TUfU71J75u84t+4A2LjtK3OgKVirGOk312pJ4ALtrcy1
-         IsUgFtTJwSFEMDPMl1erejrfmKciBBpF7V+/VplNJa89N7sYeWLUykY6U7XQARfAK+
-         FopFzjRMkaA8WJNBGcZpCbc9VpRx7qkigIUdRmWc=
-Date:   Tue, 18 Aug 2020 17:21:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wesley Cheng <wcheng@codeaurora.org>,
-        "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" 
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] regulator: set of_node for qcom vbus regulator
-Message-ID: <20200818162124.GD5337@sirena.org.uk>
-References: <20200818160649.19585-1-jonathan@marek.ca>
+        id S1726398AbgHRQYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:24:08 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id D0D1368AFE; Tue, 18 Aug 2020 18:24:04 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 18:24:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Jan Kara <jack@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Vlastimil Babka <vbabka@suse.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v7 1/6] net: introduce helper sendpage_ok() in
+ include/linux/net.h
+Message-ID: <20200818162404.GA27196@lst.de>
+References: <20200818131227.37020-1-colyli@suse.de> <20200818131227.37020-2-colyli@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oj4kGyHlBMXGt3Le"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818160649.19585-1-jonathan@marek.ca>
-X-Cookie: You're at Witt's End.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200818131227.37020-2-colyli@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I think we should go for something simple like this instead:
 
---oj4kGyHlBMXGt3Le
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+---
+From 4867e158ee86ebd801b4c267e8f8a4a762a71343 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 18 Aug 2020 18:19:23 +0200
+Subject: net: bypass ->sendpage for slab pages
 
-On Tue, Aug 18, 2020 at 12:06:49PM -0400, Jonathan Marek wrote:
-> This allows the regulator to be found by devm_regulator_get().
->=20
-> Fixes: 4fe66d5a62fb ("regulator: Add support for QCOM PMIC VBUS booster")
-> ---
+Sending Slab or tail pages into ->sendpage will cause really strange
+delayed oops.  Prevent it right in the networking code instead of
+requiring drivers to work around the fact.
 
-You've not provided a Signed-off-by for this so I can't do anything with
-it.  For details on what Signed-off-by means and why it's important
-please see Documentation/process/submitting-patches.rst.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ net/socket.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---oj4kGyHlBMXGt3Le
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/net/socket.c b/net/socket.c
+index dbbe8ea7d395da..fbc82eb96d18ce 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3638,7 +3638,12 @@ EXPORT_SYMBOL(kernel_getpeername);
+ int kernel_sendpage(struct socket *sock, struct page *page, int offset,
+ 		    size_t size, int flags)
+ {
+-	if (sock->ops->sendpage)
++	/*
++	 * sendpage does manipulates the refcount of the passed in page, which
++	 * does not work for Slab pages, or for tails of non-__GFP_COMP
++	 * high order pages.
++	 */
++	if (sock->ops->sendpage && !PageSlab(page) && page_count(page) > 0)
+ 		return sock->ops->sendpage(sock, page, offset, size, flags);
+ 
+ 	return sock_no_sendpage(sock, page, offset, size, flags);
+-- 
+2.28.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl88AAMACgkQJNaLcl1U
-h9DeAwf5Af/qE91SneBvgtQLR3dbKCh2LfmRCZAzfRGRxcrVkMBifBHYzepJkqdX
-/UxCndapJneUArnfJmIjJVJEsQIP3ac7syn6FuyLbA27h8pQTK+ApjA73+VmSzHa
-ynhdB90pxG1DZEhXOMdawk37/v5hBjJZCDze+L+Du4iUM/BS/fWpAWGT1+ycl3hu
-oJqBtgEpFVhhYmZ54fo9r7RoSLAWenJ0sSqw7p6xJGc3ItjMJMO+PQZMMjZBoCnt
-SqtvH+E9kKSZD/abOUmL+jR0NYJElaqkYnf8rylttrLGg+NMhObJEwEBrZp0I6Gw
-/dWjZkGW6l87owxa+Bbyl5maAj8Qmw==
-=sMrH
------END PGP SIGNATURE-----
-
---oj4kGyHlBMXGt3Le--
