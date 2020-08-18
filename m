@@ -2,86 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2871DC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD945C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1106D2076D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E4520716
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgHRDQ4 (ORCPT
+        id S1726596AbgHRDWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:16:56 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9756 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726365AbgHRDQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:16:49 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A5084C25237E60BCD27C;
-        Tue, 18 Aug 2020 11:16:45 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.174.177.253) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 18 Aug 2020 11:16:37 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 3/3] libnvdimm/bus: simplify walk_to_nvdimm_bus()
-Date:   Tue, 18 Aug 2020 11:15:56 +0800
-Message-ID: <20200818031556.2921-4-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200818031556.2921-1-thunder.leizhen@huawei.com>
-References: <20200818031556.2921-1-thunder.leizhen@huawei.com>
+        Mon, 17 Aug 2020 23:22:22 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:39478 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbgHRDWW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 23:22:22 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U668H2X_1597720937;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U668H2X_1597720937)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Aug 2020 11:22:17 +0800
+Date:   Tue, 18 Aug 2020 11:22:17 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_reporting: the "page" must not be the list head
+Message-ID: <20200818032217.GA31960@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200817084836.29216-1-richard.weiyang@linux.alibaba.com>
+ <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com>
+ <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I first want to move dev_WARN_ONCE() after "if (dev)" branch, but further
-I find the "if (dev)" can only be true when is_nvdimm_bus(dev) successed.
+On Mon, Aug 17, 2020 at 09:05:32AM -0700, Alexander Duyck wrote:
+>
+>
+>On 8/17/2020 2:35 AM, David Hildenbrand wrote:
+>> On 17.08.20 10:48, Wei Yang wrote:
+>> > If "page" is the list head, list_for_each_entry_safe() would stop
+>> > iteration.
+>> > 
+>> > Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>> > ---
+>> >   mm/page_reporting.c | 2 +-
+>> >   1 file changed, 1 insertion(+), 1 deletion(-)
+>> > 
+>> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+>> > index 3bbd471cfc81..aaaa3605123d 100644
+>> > --- a/mm/page_reporting.c
+>> > +++ b/mm/page_reporting.c
+>> > @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+>> >   		 * the new head of the free list before we release the
+>> >   		 * zone lock.
+>> >   		 */
+>> > -		if (&page->lru != list && !list_is_first(&page->lru, list))
+>> > +		if (!list_is_first(&page->lru, list))
+>> >   			list_rotate_to_front(&page->lru, list);
+>> >   		/* release lock before waiting on report processing */
+>> > 
+>> 
+>> Is this a fix or a cleanup? If it's a fix, can this be reproduced easily
+>> and what ere the effects?
+>> 
+>
+>This should be a clean-up. Since the &page->lru != list will always be true.
+>
+>If I recall at some point the that was a check for &next->lru != list but I
+>think I pulled out an additional conditional check somewhere so that we just
+>go through the start of the loop again and iterate over reported pages until
+>we are guaranteed to have a non-reported page to rotate to the top of the
+>list with the general idea being that we wanted the allocator to pull
+>non-reported pages before reported pages.
 
-No functional change. In fact, the compiler can optimize it correctly. I
-run "size drivers/nvdimm/bus.o" and find nothing has changed. So it's
-just source code level optimization, make us can read it faster.
+Hi, Alexander,
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/nvdimm/bus.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+I see you mentioned in the changelog, this change "mm/page_reporting: rotate
+reported pages to the tail of the list" brings some performance gain.
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 955265656b96c73..1d89114cb6ab93e 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -316,10 +316,9 @@ struct nvdimm_bus *walk_to_nvdimm_bus(struct device *nd_dev)
- 
- 	for (dev = nd_dev; dev; dev = dev->parent)
- 		if (is_nvdimm_bus(dev))
--			break;
--	dev_WARN_ONCE(nd_dev, !dev, "invalid dev, not on nd bus\n");
--	if (dev)
--		return to_nvdimm_bus(dev);
-+			return to_nvdimm_bus(dev);
-+
-+	dev_WARN_ONCE(nd_dev, 1, "invalid dev, not on nd bus\n");
- 	return NULL;
- }
- 
+Would you mind sharing more test detail? I would like to have a try at my
+side.
+
+Thanks :-)
+
 -- 
-1.8.3
-
-
+Wei Yang
+Help you, Help me
