@@ -2,98 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2502080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F9D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHROwK (ORCPT
+        id S1727828AbgHROwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:52:10 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:59024 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgHROwI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:52:08 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4BWDQX4nRPz1qrff;
-        Tue, 18 Aug 2020 16:51:58 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4BWDQQ06Pkz1qw74;
-        Tue, 18 Aug 2020 16:51:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id LWUO4G1BT4fj; Tue, 18 Aug 2020 16:51:56 +0200 (CEST)
-X-Auth-Info: DCEnwxByMyNTdxZ9MycUEdurVz87EDooFxhcWPD98Flztj4THCgDTBIV33A3KT1v
-Received: from igel.home (ppp-46-244-180-122.dynamic.mnet-online.de [46.244.180.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 18 Aug 2020 16:51:56 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 532362C28F0; Tue, 18 Aug 2020 16:51:56 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
-        <joabreu@synopsys.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <ajayg@nvidia.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: stmmac: Fix signedness bug in
- stmmac_probe_config_dt()
-References: <20200818143952.50752-1-yuehaibing@huawei.com>
-X-Yow:  I'm also against BODY-SURFING!!
-Date:   Tue, 18 Aug 2020 16:51:56 +0200
-In-Reply-To: <20200818143952.50752-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Tue, 18 Aug 2020 22:39:52 +0800")
-Message-ID: <87ft8katwz.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Tue, 18 Aug 2020 10:52:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12236 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgHROwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:52:42 -0400
+IronPort-SDR: +jKtLePMzRQoO2k/6dt7ZuwZ179pMSLcm1NNYOm2jkTdZPaFNzPlsjA2ohgN4nZWdkiIvLHZo7
+ ckVWUsnk7JsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142742972"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="142742972"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 07:52:41 -0700
+IronPort-SDR: d2buaeSk2jnkNjYsMBcotUV83mieA7rCG9w4EIOwKwdWB2GHnm5IFP348wPBzeCQJ6TG+wMbQU
+ v+IBc1Q2f80A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="497394912"
+Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Aug 2020 07:52:35 -0700
+Date:   Tue, 18 Aug 2020 17:52:34 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>, kai.huang@intel.com,
+        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
+        ludloff@google.com, luto@kernel.org,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200818145234.GC132200@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+ <20200810222317.GG14724@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810222317.GG14724@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Aug 18 2020, YueHaibing wrote:
+On Mon, Aug 10, 2020 at 03:23:17PM -0700, Sean Christopherson wrote:
+> > This can be done implicitly by wrapping the struct
+> > sgx_enclave_exception in another structure and then using techniques
+> > like container_of() to find another field. However, this is made more
+> > difficult by the fact that the sgx_enclave_exit_handler_t is not
+> > really using the x86_64 sysv calling convention. Therefore, the
+> > sgx_enclave_exit_handler_t MUST be written in assembly.
+> 
+> What bits of the x86-64 ABI require writing the handler in assembly?  There
+> are certainly restrictions on what the handler can do without needing an
+> assembly trampoline, but I was under the impression that vanilla C code is
+> compatible with the exit handler patch.  Is Rust more picky about calling
+> convention?
+> 
+> Side topic, the documentation for vdso_sgx_enter_enclave_t is wrong, it
+> states the EFLAGS.DF is not cleared before invoking the handler, but that's
+> a lie.
 
-> The "plat->phy_interface" variable is an enum and in this context GCC
-> will treat it as an unsigned int so the error handling is never
-> triggered.
->
-> Fixes: b9f0b2f634c0 ("net: stmmac: platform: fix probe for ACPI devices")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> index f32317fa75c8..b5b558b02e7d 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> @@ -413,7 +413,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
->  	}
->  
->  	plat->phy_interface = device_get_phy_mode(&pdev->dev);
-> -	if (plat->phy_interface < 0)
-> +	if ((int)plat->phy_interface < 0)
->  		return ERR_PTR(plat->phy_interface);
+If handler requires the use of setjmp/longjmp API for sudden exits, that
+is considered bad even with C++, as it is not compatible with stack
+unwinding. The handler has a lot of constraints for its environment, and
+is somewhat unappealing to use.
 
-I don't think the conversion to long when passed to ERR_PTR will produce
-a negative value either (if long is wider than unsigned int).
+That's why I started today thinking a possibility of using a bpf program
+as a middle-man. BPF programs can be used to execute code by the kernel
+in behalf of user in a domain defined sandbox. The execution context is
+just a buffer passed in R1 to the BPF interpreter. It can be defined by
+application.
 
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+/Jarkko
