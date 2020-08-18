@@ -2,164 +2,342 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDC9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B3DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F047E2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB492067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b0VdabeT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyvuWRHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgHRWDJ (ORCPT
+        id S1726868AbgHRWFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        Tue, 18 Aug 2020 18:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgHRWDH (ORCPT
+        with ESMTP id S1726617AbgHRWFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:03:07 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F39FC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:03:07 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id l204so19293062oib.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:03:07 -0700 (PDT)
+        Tue, 18 Aug 2020 18:05:30 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395C2C061389;
+        Tue, 18 Aug 2020 15:05:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l2so19619340wrc.7;
+        Tue, 18 Aug 2020 15:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
-        b=b0VdabeT3wDVIbsWC3+UUFu/XIeQMDjK+Xkxa9ATJN7g6hRVTbi7XDjpV5TPaXfGmT
-         wCslWgKlUXSyClpdNtyCqXZhL8SHL1wLFyVVbHWqLxWhH354vCXo69U7GQLCdiGKgJTk
-         qsn7lgRuF4gN2odTDj14Cj6eeH9USU6CdxJdFtpXQsbmo9fA7Bzxyr8zqr4Tho5Mlacg
-         NNBUaVOoobOAL4BO/aK64cIbDncboXoxOXNIwdZS7zVuFJy7fVFc5rfAYnrB5O8feCmD
-         xIq+FyJqN/khbmBqaIvmo3ds1WTecSqZPFQhBYfsn8tMHwNAklxW5j52iXCStxFayCQ8
-         JtwA==
+        d=gmail.com; s=20161025;
+        h=subject:date:from:to:cc:message-id:in-reply-to:references;
+        bh=A4eoWs6fryU4D/osu52OvAD2QfV/D24ej0IpCFqId9w=;
+        b=EyvuWRHoCZdeE+nkk13jI+3dFA9wn2BqGJdf7o9tNdePLLQTvb8yHToyPU3lPe/jy8
+         u93H39xgu0b8wrNOThRoCArI6Lch9ZIPUrBhWEMa7E3d1HkU0oh8A0N0U2cWY3Rj8GFV
+         H/ygEZV/rVRyEaE1FJe+4jsLt4KLbNpYum8lV1p6RlLaDk0eguFO5wteYZx+tv399zIf
+         yo5d/0z3NtHWRPIqzAaaGQxK1H8HfEn7cFA4JAhZHOG3R9/pvWtCSl38Y61N9Ul6u7a/
+         9aEQb7TkpxYseFJCYz1xoRZG2WdxR+N6UOAx4FT/fY/2+DG/HsxWmu1plzNFlUoizwkR
+         qrcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
-        b=nIA6gwnE3Yin4XWV44jnYzHQiRVRr9zDLmKLz00WdAz7IHD+7V1aRJIetleLA+4JkM
-         vqgvx/uvQph6xEq49KQo9DnsPLpflOx+8PdzB6dtHyhIE+ciFWm/qhObB8HaURQLZxks
-         lsvdnh7GlFtWJSaX7DSthDQWGGYTHRe5jHG3MHWdyEcWLuMVUDpt5DW5qLm9M8eNIzkE
-         +hREAUv5Sqz58vxmEScIHhaVOioM+XWHWC2WJLWffz7meJVsgR0uirI3PPT+h8qZixR9
-         zP0od+VtQm4jd+lOiOxpqW5Y+WbtY+HFtap7XV6A7TuQJzQpmqRHcyLLXKoKQybwfib8
-         v0TQ==
-X-Gm-Message-State: AOAM530g2HRIllkqroQyl6jzx8ctij5I9mTgO4P1h2oTDI1r7fTLgS1Q
-        t8qoDLWw1FxS4e0Zq6XCi8ocAoWAkaJLrKB1hC2IUA==
-X-Google-Smtp-Source: ABdhPJyGzE0nx7m/2KMeb3GHpmBH6vjSg1G7xFIBMVTmsTi1vQDYWMmdQoiFgnNFFNSMKmEyMesrHuoEyoSXZV5UF2Y=
-X-Received: by 2002:aca:dc85:: with SMTP id t127mr1404925oig.169.1597788185528;
- Tue, 18 Aug 2020 15:03:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
- <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com> <20200818172909.71f5243a@coco.lan>
- <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
-In-Reply-To: <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Aug 2020 15:02:54 -0700
-Message-ID: <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
+         :references;
+        bh=A4eoWs6fryU4D/osu52OvAD2QfV/D24ej0IpCFqId9w=;
+        b=Sox3dmAJCAEmEAb9xpmiapjICIj+Ea+rcV+mXAJZdBXAShrzgXPY+3JWtL6eR+3AoQ
+         W4/ljEM5KOyVpfXOL8fqfBgWrHzKNcB8YglEMVGrwuMxpJ45w2XRPK6J4SHQ3NNC9MuZ
+         WB5B2tI+T/FCUg3EbfeonVxNc8wIx/iaxQgg/xAzoL2j4xNvuO/eD8jvCB2DIDQKMJVL
+         aTIys0O0JtHpiJD+UaSsSnuBP7ay1OOHfvFCFTukWxaoaBIaEInc01kmcw5Y3OGMGxsE
+         XF7D0aFhsjQt1d0eumMzG65rbmUKxKXRA6OFiIr1B0sufzipiq8M3VTNNBxHquMKSrB/
+         sX+w==
+X-Gm-Message-State: AOAM532z8f4aX7DjCD/MfRsBqdPg/nV5KlHiF3/VclQxlt//73j6WuP/
+        HJuGw1/QC8Nk8gt1q+Tuo7q1nm/DKzc/tBdL
+X-Google-Smtp-Source: ABdhPJyduOkOreVEw22121PnzKV4KsowmcGoMpLdM6Lfok5PfTs5WY/osMsDHzasPvWjNIfS40/Cgw==
+X-Received: by 2002:adf:b353:: with SMTP id k19mr21622174wrd.159.1597788328187;
+        Tue, 18 Aug 2020 15:05:28 -0700 (PDT)
+Received: from gmail.com (tor-exit-5.zbau.f3netze.de. [185.220.100.244])
+        by smtp.gmail.com with ESMTPSA id i22sm41032810wrb.45.2020.08.18.15.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 15:05:27 -0700 (PDT)
+Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
+Date:   Tue, 18 Aug 2020 22:05:00 -0000
+From:   Michael Witten <mfwitten@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Levon <john.levon@joyent.com>,
+        John Levon <levon@movementarian.org>,
+        Pavel Machek <pavel@ucw.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Message-ID: <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
+In-Reply-To: <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
+References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
+  <20200816175303.GB1236603@ZenIV.linux.org.uk>
+  <20200817204223.GB12414@amd>
+  <87lfid6kpi.fsf@x220.int.ebiederm.org>
+  <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
+  <20200817220908.GA3701@amd>
+  <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
+  <20200818051717.GA3134537@gmail.com>
+  <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
+  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
+  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:
-> > Em Tue, 18 Aug 2020 15:47:55 +0100
-> > Basically, the DT binding has this, for IOMMU:
-> >
-> >
-> >       smmu_lpae {
-> >               compatible = "hisilicon,smmu-lpae";
-> >       };
-> >
-> > ...
-> >       dpe: dpe@e8600000 {
-> >               compatible = "hisilicon,kirin970-dpe";
-> >               memory-region = <&drm_dma_reserved>;
-> > ...
-> >               iommu_info {
-> >                       start-addr = <0x8000>;
-> >                       size = <0xbfff8000>;
-> >               };
-> >       }
-> >
-> > This is used by kirin9xx_drm_dss.c in order to enable and use
-> > the iommu:
-> >
-> >
-> >       static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
-> >       {
-> >               struct device *dev = NULL;
-> >
-> >               dev = &pdev->dev;
-> >
-> >               /* create iommu domain */
-> >               ctx->mmu_domain = iommu_domain_alloc(dev->bus);
-> >               if (!ctx->mmu_domain) {
-> >                       pr_err("iommu_domain_alloc failed!\n");
-> >                       return -EINVAL;
-> >               }
-> >
-> >               iommu_attach_device(ctx->mmu_domain, dev);
-> >
-> >               return 0;
-> >       }
-> >
-> > The only place where the IOMMU domain is used is on this part of the
-> > code(error part simplified here) [1]:
-> >
-> >       void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
-> >       {
-> >               uint64_t fama_phy_pgd_base;
-> >               uint32_t phy_pgd_base;
-> > ...
-> >               fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
-> >               phy_pgd_base = (uint32_t)fama_phy_pgd_base;
-> >               if (WARN_ON(!phy_pgd_base))
-> >                       return;
-> >
-> >               set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
-> >       }
-> >
-> > [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
-> >
-> > In other words, the driver needs to get the physical address of the frame
-> > buffer (mapped via iommu) in order to set some DRM-specific register.
-> >
-> > Yeah, the above code is somewhat hackish. I would love to replace
-> > this part by a more standard approach.
->
-> OK, so from a quick look at that, my impression is that your display
-> controller has its own MMU and you don't need to pretend to use the
-> IOMMU API at all. Just have the DRM driver use io-pgtable directly to
-> run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
-> example (but try to ignore the wacky "Mali LPAE" format).
+I think there's an important distinction to make between
+the following 2 kinds of code:
 
-Yea. For the HiKey960, there was originally a similar patch series but
-it was refactored out and the (still out of tree) DRM driver I'm
-carrying doesn't seem to need it (though looking we still have the
-iommu_info subnode in the dts that maybe needs to be cleaned up).
+  * The curated code people just want to build.
+  * The new patches that maintainers are reviewing.
 
-thanks
--john
+Certainly, maintainers should have a wide range of tools
+at their disposal to probe the quality of a patch; then,
+after bending rules of style to taste, the maintainers
+declare the merged code to be curated, after which that
+merged code need not be probed so invasively every time
+it is built.
+
+To this end, I propose the following new patch, which
+introduces some build-time switches that will help
+people make this distinction.
+
+  As you know, you can save this email to some path:
+
+    /path/to/email.eml
+
+  Then apply and review the patch as follows:
+
+    $ cd /path/to/linux/repo
+    $ git reset --hard HEAD
+    $ git checkout --detach origin/master
+    $ git am --scissors /path/to/email.eml
+    $ git log -1 -p
+
+At this point, the patch is intended as a[n] RFC;
+I haven't tested it, and just wanted to get the
+idea out there.
+
+Sincerely,
+Michael Witten
+
+---8<------8<------8<------8<------8<------8<------8<------8<---
+Subject: [PATCH] kbuild: Introduce "Warnings for maintainers"
+This commit introduces the following new Kconfig options:
+
+  CONFIG_MAINTAINERS_WARNINGS
+    |
+    +-> CONFIG_WARN_DECLARATION_AFTER_STATEMENT
+    |
+    +-> CONFIG_WARN_MAYBE_UNINITIALIZED
+
+These produce the following menu items:
+
+  -> Kernel hacking
+    -> Compile-time checks and compiler options
+      -> Warnings for maintainers                                [NEW]
+         * Warn about mixing variable definitions and statements [NEW]
+         * Warn about use of potentially uninitialized variables [NEW]
+
+In short:
+
+  * CONFIG_MAINTAINERS_WARNINGS
+      is the umbrella control.
+
+  * CONFIG_WARN_DECLARATION_AFTER_STATEMENT
+      determines whether "-Wdeclaration-after-statement" is used.
+
+  * CONFIG_WARN_MAYBE_UNINITIALIZED
+      determines whether "-Wmaybe-uninitialized" is used.
+
+Currently, the default is "y" for each, but it is expected that
+eventually the default will be "n" for CONFIG_MAINTAINERS_WARNINGS.
+
+Running "make" with "W=2" should turn both warnings on, unless
+they are thwarted by some other Kbuild logic.
+
+Signed-off-by: Michael Witten <mfwitten@gmail.com>
+---
+ arch/arm64/kernel/vdso32/Makefile |  7 +++-
+ lib/Kconfig.debug                 | 64 +++++++++++++++++++++++++++++++
+ scripts/Makefile.extrawarn        |  1 +
+ tools/power/acpi/Makefile.config  |  7 +++-
+ tools/power/cpupower/Makefile     |  7 +++-
+ tools/scripts/Makefile.include    |  9 ++++-
+ 6 files changed, 91 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 5139a5f19256..8cc997b9ccef 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -88,7 +88,12 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+                -std=gnu89
+ VDSO_CFLAGS  += -O2
+ # Some useful compiler-dependent flags from top-level Makefile
+-VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
++ifeq($(CONFIG_WARN_DECLARATION_AFTER_STATEMENT), y)
++	VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement)
++endif
++ifeq($(CONFIG_WARN_MAYBE_UNINITIALIZED), y)
++	VDSO_CFLAGS += $(call cc32-option,-Wmaybe-uninitialized)
++endif
+ VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
+ VDSO_CFLAGS += $(call cc32-option,-fno-strict-overflow)
+ VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index e068c3c7189a..4e3a87ce77c8 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -308,6 +308,70 @@ config FRAME_WARN
+ 	  Setting this too low will cause a lot of warnings.
+ 	  Setting it to 0 disables the warning.
+ 
++config MAINTAINERS_WARNINGS
++	bool "Warnings for maintainers"
++	default y
++	help
++	  These warnings may be useful to maintainers and contributors
++	  when patches are being prepared and reviewed; they may yield
++	  false positives, and are therefore intended to be turned off
++	  for a normal build.
++
++config WARN_DECLARATION_AFTER_STATEMENT
++	bool "Warn about mixing variable definitions and statements"
++	depends on MAINTAINERS_WARNINGS
++	default y
++	help
++	  Turn on the following gcc command-line option:
++
++	    -Wdeclaration-after-statement
++
++	  Traditionally, C code has been written such that variables
++	  are defined at the top of a block (e.g., at the top of a
++	  function body); C99 removed this requirement, allowing the
++	  mixing of variable definitions and statements, but the
++	  tradition has remained a convention of the kernel's coding
++	  style.
++
++	  When reviewing patches, a maintainer may wish to turn this
++	  warning on, in order to catch variable definitions that have
++	  been placed unnecessarily among the statements, and thereby
++	  enforce the dominant coding style.
++
++	  Of course, sometimes it is useful to define a variable among
++	  the statements, especially in the following cases:
++
++	    * Declaring a const variable.
++	    * Dealing with conditional compilation.
++
++	  Therefore, this warning is intended to be turned off for a
++	  normal build, where all of the code has already been merged
++	  succesfully into the repository.
++
++config WARN_MAYBE_UNINITIALIZED
++	bool "Warn about use of potentially uninitialized variables"
++	depends on MAINTAINERS_WARNINGS
++	default y
++	help
++	  Turn on the following gcc command-line option:
++
++	    -Wmaybe-uninitialized
++
++	  Serious bugs can result from using a variable whose value
++	  has never been explicitly initialized. When this warning
++	  is turned on, the compiler will use heuristic analyses of
++	  the code to determine whether a variable has been properly
++	  initialized before it is ever used.
++
++	  However, the heuristic nature of the analyses has often
++	  caused many false positive warnings that programmers find
++	  irritating; sometimes, bugs are introduced in the process
++	  of simply trying to silence the warning.
++
++	  Therefore, this warning is intended to be turned off for a
++	  normal build, where all of the code has already been merged
++	  succesfully into the repository.
++
+ config STRIP_ASM_SYMS
+ 	bool "Strip assembler-generated symbols during link"
+ 	default n
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 62c275685b75..afadbdcc7c53 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -68,6 +68,7 @@ KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
+ KBUILD_CFLAGS += -Wmissing-field-initializers
+ KBUILD_CFLAGS += -Wsign-compare
+ KBUILD_CFLAGS += -Wtype-limits
++KBUILD_CFLAGS += -Wdeclaration-after-statement
+ KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+ KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+ 
+diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile.config
+index 54a2857c2510..6fe0b34eddd7 100644
+--- a/tools/power/acpi/Makefile.config
++++ b/tools/power/acpi/Makefile.config
+@@ -64,7 +64,12 @@ OPTIMIZATION := $(call cc-supports,-Os,-O2)
+ 
+ WARNINGS := -Wall
+ WARNINGS += $(call cc-supports,-Wstrict-prototypes)
+-WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
++ifeq($(CONFIG_WARN_DECLARATION_AFTER_STATEMENT), y)
++	WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
++endif
++ifeq($(CONFIG_WARN_MAYBE_UNINITIALIZED), y)
++	WARNINGS += $(call cc-supports,-Wmaybe-uninitialized)
++endif
+ 
+ KERNEL_INCLUDE := $(OUTPUT)include
+ ACPICA_INCLUDE := $(srctree)/../../../drivers/acpi/acpica
+diff --git a/tools/power/cpupower/Makefile b/tools/power/cpupower/Makefile
+index c8622497ef23..8d26c2003d7d 100644
+--- a/tools/power/cpupower/Makefile
++++ b/tools/power/cpupower/Makefile
+@@ -118,7 +118,12 @@ OPTIMIZATION := $(call cc-supports,-Os,-O2)
+ 
+ WARNINGS := -Wall -Wchar-subscripts -Wpointer-arith -Wsign-compare
+ WARNINGS += $(call cc-supports,-Wno-pointer-sign)
+-WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
++ifeq($(CONFIG_WARN_DECLARATION_AFTER_STATEMENT), y)
++	WARNINGS += $(call cc-supports,-Wdeclaration-after-statement)
++endif
++ifeq($(CONFIG_WARN_MAYBE_UNINITIALIZED), y)
++	WARNINGS += $(call cc-supports,-Wmaybe-uninitialized)
++endif
+ WARNINGS += -Wshadow
+ 
+ override CFLAGS += -DVERSION=\"$(VERSION)\" -DPACKAGE=\"$(PACKAGE)\" \
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index a7974638561c..a9acd52b5e84 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -17,11 +17,18 @@ OUTDIR := $(shell cd $(OUTPUT) && pwd)
+ $(if $(OUTDIR),, $(error output directory "$(OUTPUT)" does not exist))
+ endif
+ 
++#
++# Maintainers' Warnings
++#
++MAINTAINERS_WARNINGS-y :=
++MAINTAINERS_WARNINGS-$(CONFIG_WARN_DECLARATION_AFTER_STATEMENT) += -Wdeclaration-after-statement
++MAINTAINERS_WARNINGS-$(CONFIG_WARN_MAYBE_UNINITIALIZED) += -Wmaybe-uninitialized
++
+ #
+ # Include saner warnings here, which can catch bugs:
+ #
+ EXTRA_WARNINGS := -Wbad-function-cast
+-EXTRA_WARNINGS += -Wdeclaration-after-statement
++EXTRA_WARNINGS += $(MAINTAINERS_WARNINGS-y)
+ EXTRA_WARNINGS += -Wformat-security
+ EXTRA_WARNINGS += -Wformat-y2k
+ EXTRA_WARNINGS += -Winit-self
+-- 
+2.22.0
+
