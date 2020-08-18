@@ -2,261 +2,165 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24325C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDDCD207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407C3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jOzfJefJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgHRHpH (ORCPT
+        id S1726662AbgHRHp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:45:07 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47638 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgHRHpG (ORCPT
+        Tue, 18 Aug 2020 03:45:56 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:17703 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbgHRHpy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:45:06 -0400
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id F043629A1F; Tue, 18 Aug 2020 03:45:03 -0400 (EDT)
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Joshua Thompson" <funaho@jurai.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Message-Id: <00ee44fe6ecdce1c783c3cc3b1b9a62b498dcdb2.1597736545.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH] ide/macide: Convert Mac IDE driver to platform driver
-Date:   Tue, 18 Aug 2020 17:42:25 +1000
+        Tue, 18 Aug 2020 03:45:54 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200818074552epoutp0312e4e575e62bc0c31e464e77307a2b1d~sTRxgN79Y0373603736epoutp03P
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:45:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200818074552epoutp0312e4e575e62bc0c31e464e77307a2b1d~sTRxgN79Y0373603736epoutp03P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597736752;
+        bh=dw5oXT9wypsLxfzjFB/LVZWr7Mx69JAVk4Tqy1Lmc7s=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=jOzfJefJboLRPUZkvthpwCZYPdn6vhl1ylQEz6YGDCqKxU6+dx5370+02X4yBUNxD
+         20ktGChjWLb1nwSGGYrtaajqgwXNXWWvFDWWgMdfO81jOmAreovY9qIzqDXyK9nFsP
+         HBkLXhwVANta5GksROanM4wqJNjbVDaeYEY6idN4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200818074551epcas2p3eafdb6409e1a2636717a4c2f73d76015~sTRwgIcRf2091420914epcas2p3b;
+        Tue, 18 Aug 2020 07:45:51 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.181]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BW2yj0RGSzMqYmC; Tue, 18 Aug
+        2020 07:45:49 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        63.BD.19322.C278B3F5; Tue, 18 Aug 2020 16:45:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6~sTRtSO3vb2672326723epcas2p2X;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200818074547epsmtrp163a93b57be1a23b472e1de5be6cc5044~sTRtRGzpp2704127041epsmtrp1l;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+X-AuditID: b6c32a45-7adff70000004b7a-d2-5f3b872c46b0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.78.08303.B278B3F5; Tue, 18 Aug 2020 16:45:47 +0900 (KST)
+Received: from Dabang.dsn.sec.samsung.com (unknown [12.36.155.59]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200818074547epsmtip239546245637fb5172bd79a2d66a02ce9~sTRtBSvcm2582525825epsmtip2n;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+From:   Hyesoo Yu <hyesoo.yu@samsung.com>
+To:     sumit.semwal@linaro.org
+Cc:     minchan@kernel.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, joaodias@google.com, linux-mm@kvack.org,
+        pullip.cho@samsung.com, surenb@google.com, vbabka@suse.cz,
+        afd@ti.com, benjamin.gaignard@linaro.org, lmark@codeaurora.org,
+        labbott@redhat.com, Brian.Starkey@arm.com, john.stultz@linaro.org,
+        christian.koenig@amd.com, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Hyesoo Yu <hyesoo.yu@samsung.com>
+Subject: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+Date:   Tue, 18 Aug 2020 17:04:12 +0900
+Message-Id: <20200818080415.7531-1-hyesoo.yu@samsung.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTZxjG8522p4Wk21lx46MkwEo2A5NLweKHEzVOt2MgjsCyIMtWKhwp
+        obRdD3hpXKYgFxGqgMPRKhRQVhgIloqAiIJkXEQDglgHCkPUyEAQVAgEXGkx47/nfd73l+e7
+        5OUweGlsPidOnkip5BKZALdn1t3yCPDakP6l2LdhiIemunLY6Fx1JY6SW7twNNrVA9Dk8DUW
+        Kmq7y0L9b6ZwtHSih4XKT6bgaE4/ykDdi16ovGkeQ6/7/8FQX+M5HGXVXGGhx5XvWEjbOYCh
+        sjdTbLSc3QJQ6vU2Nup6NMtGeff0ONId04DtjmTqvSWcrCysBGSfJhsj9cYk0lhxAieNM7ls
+        MnOyHyOHBppwsuP3RSY5fLIdIweXnzDIqeb7OKkxVQCyW9/GJtvNVzFy1ugSSkTKtkgpSQyl
+        cqPk0YqYOHlskCA4XPyVWBTgK/QSBqJNAje5JIEKEuwMCfX6Ok5meQuB2wGJLMlihUpoWuCz
+        dYtKkZRIuUkVdGKQgFLGyJRCodKbliTQSfJY72hFwmahr6+fyDIZJZNqiqTKLO6hlgYddhSc
+        t88EdhxIbITNczdZmcCewyPqAWzNr2HYihkAl8/kYrZiFsBLExPgPfJ4eQi3NRoBnDdcWOXn
+        AHw7PchYmcKJ9bDDVGYl1hHO8KzBYB1iEOVMOJBntjYcCH94YXDeCjCJz2Dm4hmr5hKBsFir
+        WY1zhTm6R8DmfwQ7C8aYK5ph8VOu6KyHhUSeHXx+PpNtA3bClo4qpk07wPF206rPhy9Opa3q
+        g/DO8VGWDT4OYG/+fdzW8IfaZ+mWNI4lwQNWN/qsSEi4w7a/V3M/gBm3ltg2mwsz0ng20B3e
+        KCtcTXWCo1XpLJsm4cU6jVXziB9hTW0K6zRw1a65jXbNbbT/5+oBowJ8QinphFiK9lMK1/6q
+        EVgXwnNXPcibnPZuBRgHtALIYQjWcfd1bBLzuDGSw2pKpRCrkmQU3QpElvfNYfA/jlZYNkqe
+        KBaK/AICfANFSBTghwSO3IRPe37iEbGSRCqeopSU6j2Hcez4R7GCufmwUsm2cJT67qBh0fkZ
+        P/XwUrj62sumyIcjyV1b+w3mhtEs6eZOV8c/f8mO92uujnCumD2S6fG5U99vKT43hbsf7AhR
+        /+UcmfGH5zZ1xPOSq/ELt/dyMvLFpgOnPqy6W7D3i6Gj++hLtbXq+tjSKKco1+2F9SPmEsPT
+        B+3BdTy5S8TppT3xDuYdv/aE5S4szH1fnHyIcr9hfklfbk4+Mp41ZjLxA3ffYZX6364t6z1L
+        Q5WLpHd/3sYNP4QY08Nan+h1/eOXj3VPBbz61in13/aGkTaddqZhoji36O13L5hVF18J1K+f
+        RsbkjvlUs4dLgqf2fzM0/vMe74eFWufr61Ox6V0CJi2VCD0ZKlryH4b59EiZBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA03RfUzMcRzA8b6/3+9+9+u2y69T+uZMdliWdUKbr9XIU75DmGbDcI5+qvV0
+        7sqz6PKwLi55CL9DV7PknIeuECpcR9cTLTk3JKp5GKmVm0jhNJv/Xvu8t8/njw9DSkqp0Ux8
+        ciqnTlYmymgRdbNaFhA8+VCYIqTquz/qrssVorPXzDTSWuto1F7XBFBX210Byrc9FqAWVzeN
+        BrOaBOhSdiaNvhnbSdQwEIwuVfQT6GvLWwI9vXOWRoev3xCg1+ZfAsTXOghU5OoWoqEjDwA6
+        UGkTorrWPiE63mykkSFDDyL88IHmQRqbz5sBfqo/QmCjJQ1bTFk0tvQeE2JdVwuBXzkqaGw/
+        PUDhtuwaAr8c6iBxd9UzGuvLTAA3GG1CXOO8ReA+y9jl7BpReAyXGL+VU0+ZtUEUp8+PUx0W
+        b39w20DsA+dEOuDJQDYUvh56ReuAiJGw5QB25emFw8Ef8n21xLBHwrb9NoHbEtYFYJ5jj9s0
+        GwjtZUXAbR9WCk8VFwvci0i2moLVV520O4xkp8MLL/tJtyl2ItQNnPhrMTsTFvB6MHwgAOYa
+        WsHw3BvWnumk3Cb/zDNvGMijwIv/L/H/JSMgTMCfU2mSYpM0U1XTkrltco0ySZOWHCvflJJk
+        AX//GhRUDipMPXIrIBhgBZAhZT7ijfYZCok4RrljJ6dOUajTEjmNFUgZSuYndvEF6yVsrDKV
+        S+A4Faf+VwnGc/Q+wlqvXdc4bgzd6FFp73FeWRbcsdmZnjk3RjuPSi9V34kMbJU6zCF+tjC2
+        BHyz3rus++DkewLT5ov6iyO2JZhyol0e4VHaSE47GDUrdAuc77jlVPikfPIu7GVUOeX3CwVz
+        Hofmh+5UfJZYD+ZGT2rwtO5IwEUrOuOjrzbtD3jHzxtFVr7x25XBGiKffLf/GL/Ie+GYD887
+        myetfCT1fRH+UyL1LUZVYWtLd//qW/D20O7bqVl5Hj22givhXgG5MHt9O1orz/CK1xjSHxWW
+        rzrpM7NkLy/fLFFOOF0vrmV9yYcj7PX5X3pnr4ZjP0aocpbkeHRkOBYHLi2d20Jd7HgfIqM0
+        ccqpQaRao/wNZwBpYkYDAAA=
+X-CMS-MailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add platform devices for the Mac IDE controller variants. Convert the
-macide module into a platform driver to support two of those variants.
-For the third, use a generic "pata_platform" driver instead.
-This enables automatic loading of the appropriate module and begins
-the process of replacing the driver with libata alternatives.
+These patch series to introduce a new dma heap, chunk heap.
+That heap is needed for special HW that requires bulk allocation of
+fixed high order pages. For example, 64MB dma-buf pages are made up
+to fixed order-4 pages * 1024.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Joshua Thompson <funaho@jurai.org>
-References: commit 5ed0794cde593 ("m68k/atari: Convert Falcon IDE drivers to platform drivers")
-References: commit 7ad19a99ad431 ("ide: officially deprecated the legacy IDE driver")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
-This patch was tested successfully on a Powerbook 190 (MAC_IDE_BABOON)
-using both pata_platform and ide_platform drivers.
-The next step will be to try using these generic drivers with the other
-IDE controller variants (MAC_IDE_QUADRA or MAC_IDE_PB) so that the macide
-driver can be entirely replaced with libata drivers.
----
- arch/m68k/mac/config.c | 65 +++++++++++++++++++++++++++++++++++++++
- drivers/ide/macide.c   | 70 ++++++++++++++++++++++++++++--------------
- 2 files changed, 112 insertions(+), 23 deletions(-)
+The chunk heap uses alloc_pages_bulk to allocate high order page.
+https://lore.kernel.org/linux-mm/20200814173131.2803002-1-minchan@kernel.org
 
-diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
-index 5c9f3a2d65388..9ad3a0d3481b1 100644
---- a/arch/m68k/mac/config.c
-+++ b/arch/m68k/mac/config.c
-@@ -24,6 +24,7 @@
- #include <linux/init.h>
- #include <linux/vt_kern.h>
- #include <linux/platform_device.h>
-+#include <linux/ata_platform.h>
- #include <linux/adb.h>
- #include <linux/cuda.h>
- #include <linux/pmu.h>
-@@ -940,6 +941,50 @@ static const struct resource mac_scsi_ccl_rsrc[] __initconst = {
- 	},
- };
- 
-+static const struct resource mac_ide_quadra_rsrc[] __initconst = {
-+	{
-+		.flags = IORESOURCE_MEM,
-+		.start = 0x50F1A000,
-+		.end   = 0x50F1A103,
-+	}, {
-+		.flags = IORESOURCE_IRQ,
-+		.start = IRQ_NUBUS_F,
-+		.end   = IRQ_NUBUS_F,
-+	},
-+};
-+
-+static const struct resource mac_ide_pb_rsrc[] __initconst = {
-+	{
-+		.flags = IORESOURCE_MEM,
-+		.start = 0x50F1A000,
-+		.end   = 0x50F1A103,
-+	}, {
-+		.flags = IORESOURCE_IRQ,
-+		.start = IRQ_NUBUS_C,
-+		.end   = IRQ_NUBUS_C,
-+	},
-+};
-+
-+static const struct resource mac_pata_baboon_rsrc[] __initconst = {
-+	{
-+		.flags = IORESOURCE_MEM,
-+		.start = 0x50F1A000,
-+		.end   = 0x50F1A037,
-+	}, {
-+		.flags = IORESOURCE_MEM,
-+		.start = 0x50F1A038,
-+		.end   = 0x50F1A03B,
-+	}, {
-+		.flags = IORESOURCE_IRQ | IORESOURCE_IRQ_SHAREABLE,
-+		.start = IRQ_BABOON_1,
-+		.end   = IRQ_BABOON_1,
-+	},
-+};
-+
-+static const struct pata_platform_info mac_pata_baboon_data __initconst = {
-+	.ioport_shift  = 2,
-+};
-+
- int __init mac_platform_init(void)
- {
- 	phys_addr_t swim_base = 0;
-@@ -1048,6 +1093,26 @@ int __init mac_platform_init(void)
- 		break;
- 	}
- 
-+	/*
-+	 * IDE device
-+	 */
-+
-+	switch (macintosh_config->ide_type) {
-+	case MAC_IDE_QUADRA:
-+		platform_device_register_simple("mac_ide", -1,
-+			mac_ide_quadra_rsrc, ARRAY_SIZE(mac_ide_quadra_rsrc));
-+		break;
-+	case MAC_IDE_PB:
-+		platform_device_register_simple("mac_ide", -1,
-+			mac_ide_pb_rsrc, ARRAY_SIZE(mac_ide_pb_rsrc));
-+		break;
-+	case MAC_IDE_BABOON:
-+		platform_device_register_resndata(NULL, "pata_platform", -1,
-+			mac_pata_baboon_rsrc, ARRAY_SIZE(mac_pata_baboon_rsrc),
-+			&mac_pata_baboon_data, sizeof(mac_pata_baboon_data));
-+		break;
-+	}
-+
- 	/*
- 	 * Ethernet device
- 	 */
-diff --git a/drivers/ide/macide.c b/drivers/ide/macide.c
-index 3c6bb8599303b..e16877ce719e9 100644
---- a/drivers/ide/macide.c
-+++ b/drivers/ide/macide.c
-@@ -18,10 +18,11 @@
- #include <linux/delay.h>
- #include <linux/ide.h>
- #include <linux/module.h>
-+#include <linux/platform_device.h>
- 
- #include <asm/macintosh.h>
--#include <asm/macints.h>
--#include <asm/mac_baboon.h>
-+
-+#define DRV_NAME "mac_ide"
- 
- #define IDE_BASE 0x50F1A000	/* Base address of IDE controller */
- 
-@@ -109,42 +110,65 @@ static const char *mac_ide_name[] =
-  * Probe for a Macintosh IDE interface
-  */
- 
--static int __init macide_init(void)
-+static int mac_ide_probe(struct platform_device *pdev)
- {
--	unsigned long base;
--	int irq;
-+	struct resource *mem, *irq;
- 	struct ide_hw hw, *hws[] = { &hw };
- 	struct ide_port_info d = macide_port_info;
-+	struct ide_host *host;
-+	int rc;
- 
- 	if (!MACH_IS_MAC)
- 		return -ENODEV;
- 
--	switch (macintosh_config->ide_type) {
--	case MAC_IDE_QUADRA:
--		base = IDE_BASE;
--		irq = IRQ_NUBUS_F;
--		break;
--	case MAC_IDE_PB:
--		base = IDE_BASE;
--		irq = IRQ_NUBUS_C;
--		break;
--	case MAC_IDE_BABOON:
--		base = BABOON_BASE;
--		d.port_ops = NULL;
--		irq = IRQ_BABOON_1;
--		break;
--	default:
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem)
-+		return -ENODEV;
-+
-+	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!irq)
- 		return -ENODEV;
-+
-+	if (!devm_request_mem_region(&pdev->dev, mem->start,
-+				     resource_size(mem), DRV_NAME)) {
-+		dev_err(&pdev->dev, "resources busy\n");
-+		return -EBUSY;
- 	}
- 
- 	printk(KERN_INFO "ide: Macintosh %s IDE controller\n",
- 			 mac_ide_name[macintosh_config->ide_type - 1]);
- 
--	macide_setup_ports(&hw, base, irq);
-+	macide_setup_ports(&hw, mem->start, irq->start);
-+
-+	rc = ide_host_add(&d, hws, 1, &host);
-+	if (rc)
-+		goto release_mem;
-+
-+	platform_set_drvdata(pdev, host);
-+	return 0;
-+
-+release_mem:
-+	release_mem_region(mem->start, resource_size(mem));
-+	return rc;
-+}
-+
-+static int mac_ide_remove(struct platform_device *pdev)
-+{
-+	struct ide_host *host = dev_get_drvdata(&pdev->dev);
- 
--	return ide_host_add(&d, hws, 1, NULL);
-+	ide_host_remove(host);
-+	return 0;
- }
- 
--module_init(macide_init);
-+static struct platform_driver mac_ide_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe  = mac_ide_probe,
-+	.remove = mac_ide_remove,
-+};
-+
-+module_platform_driver(mac_ide_driver);
- 
-+MODULE_ALIAS("platform:" DRV_NAME);
- MODULE_LICENSE("GPL");
+The chunk heap is registered by device tree with alignment and memory node
+of contiguous memory allocator(CMA). Alignment defines chunk page size.
+For example, alignment 0x1_0000 means chunk page size is 64KB.
+The phandle to memory node indicates contiguous memory allocator(CMA).
+If device node doesn't have cma, the registration of chunk heap fails.
+
+The patchset includes the following:
+ - export dma-heap API to register kernel module dma heap.
+ - add chunk heap implementation.
+ - document of device tree to register chunk heap
+
+Hyesoo Yu (3):
+  dma-buf: add missing EXPORT_SYMBOL_GPL() for dma heaps
+  dma-buf: heaps: add chunk heap to dmabuf heaps
+  dma-heap: Devicetree binding for chunk heap
+
+ .../devicetree/bindings/dma-buf/chunk_heap.yaml    |  46 +++++
+ drivers/dma-buf/dma-heap.c                         |   2 +
+ drivers/dma-buf/heaps/Kconfig                      |   9 +
+ drivers/dma-buf/heaps/Makefile                     |   1 +
+ drivers/dma-buf/heaps/chunk_heap.c                 | 222 +++++++++++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.c               |   2 +
+ 6 files changed, 282 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma-buf/chunk_heap.yaml
+ create mode 100644 drivers/dma-buf/heaps/chunk_heap.c
+
 -- 
-2.26.2
+2.7.4
 
