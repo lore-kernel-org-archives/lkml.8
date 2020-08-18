@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0717C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A972A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA282067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHRI5L (ORCPT
+        id S1726873AbgHRI54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:57:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37862 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 04:57:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37992 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgHRI5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:57:09 -0400
+        id S1726715AbgHRI5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:57:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E83F1B02C;
-        Tue, 18 Aug 2020 08:57:32 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id A48CFB036;
+        Tue, 18 Aug 2020 08:57:33 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 03/16] vc: propagate "viewed as bool" from screenpos up
-Date:   Tue, 18 Aug 2020 10:56:53 +0200
-Message-Id: <20200818085706.12163-3-jslaby@suse.cz>
+Subject: [PATCH 08/16] vc_screen: extract vcs_write_buf
+Date:   Tue, 18 Aug 2020 10:56:58 +0200
+Message-Id: <20200818085706.12163-8-jslaby@suse.cz>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200818085706.12163-1-jslaby@suse.cz>
 References: <20200818085706.12163-1-jslaby@suse.cz>
@@ -41,160 +41,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-viewed is used as a flag, i.e. bool. So treat is as such in most of the
-places. vcs_vc is handled in the next patch.
+This is the counterpart of the previous patch: here, we extract buffer
+writing with attributes from vcs_write.
 
-Note: the last parameter of invert_screen was misnamed in the
-declaration since 1.1.92.
+Now, there is no need for org to be initialized to NULL. The org0
+check before update_region() confuses compilers, so check org instead.
+It provides the same semantics. And it also eliminates the need for
+initialization of org0.
+
+We switch the branches of the attr 'if' too, as the inversion brings only
+confusion now.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/accessibility/speakup/main.c |  4 ++--
- drivers/tty/vt/selection.c           |  2 +-
- drivers/tty/vt/vt.c                  | 18 ++++++++++--------
- include/linux/selection.h            |  6 +++---
- 4 files changed, 16 insertions(+), 14 deletions(-)
+ drivers/tty/vt/vc_screen.c | 168 ++++++++++++++++++++-----------------
+ 1 file changed, 92 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/accessibility/speakup/main.c b/drivers/accessibility/speakup/main.c
-index ddfd12afe3b9..be79b2135fac 100644
---- a/drivers/accessibility/speakup/main.c
-+++ b/drivers/accessibility/speakup/main.c
-@@ -257,7 +257,7 @@ static struct notifier_block vt_notifier_block = {
- 
- static unsigned char get_attributes(struct vc_data *vc, u16 *pos)
- {
--	pos = screen_pos(vc, pos - (u16 *)vc->vc_origin, 1);
-+	pos = screen_pos(vc, pos - (u16 *)vc->vc_origin, true);
- 	return (scr_readw(pos) & ~vc->vc_hi_font_mask) >> 8;
+diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+index 62e6d240f0dd..10a26fd5f1b7 100644
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -481,14 +481,93 @@ static u16 *vcs_write_buf_noattr(struct vc_data *vc, const char *con_buf,
+ 	return org;
  }
  
-@@ -465,7 +465,7 @@ static u16 get_char(struct vc_data *vc, u16 *pos, u_char *attribs)
- 		u16 w;
- 		u16 c;
- 
--		pos = screen_pos(vc, pos - (u16 *)vc->vc_origin, 1);
-+		pos = screen_pos(vc, pos - (u16 *)vc->vc_origin, true);
- 		w = scr_readw(pos);
- 		c = w & 0xff;
- 
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 8e74654c1b27..f245a5acf7e9 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -54,7 +54,7 @@ static struct vc_selection {
- /* set reverse video on characters s-e of console with selection. */
- static inline void highlight(const int s, const int e)
++static u16 *vcs_write_buf(struct vc_data *vc, const char *con_buf,
++		unsigned int pos, unsigned int count, bool viewed, u16 **org0)
++{
++	u16 *org;
++	unsigned int col, maxcol = vc->vc_cols;
++	unsigned char c;
++
++	/* header */
++	if (pos < HEADER_SIZE) {
++		char header[HEADER_SIZE];
++
++		getconsxy(vc, header + 2);
++		while (pos < HEADER_SIZE && count > 0) {
++			count--;
++			header[pos++] = *con_buf++;
++		}
++		if (!viewed)
++			putconsxy(vc, header + 2);
++	}
++
++	if (!count)
++		return NULL;
++
++	pos -= HEADER_SIZE;
++	col = (pos/2) % maxcol;
++
++	*org0 = org = screen_pos(vc, pos/2, viewed);
++
++	/* odd pos -- the first single character */
++	if (pos & 1) {
++		count--;
++		c = *con_buf++;
++#ifdef __BIG_ENDIAN
++		vcs_scr_writew(vc, c |
++		     (vcs_scr_readw(vc, org) & 0xff00), org);
++#else
++		vcs_scr_writew(vc, (c << 8) |
++		     (vcs_scr_readw(vc, org) & 0xff), org);
++#endif
++		org++;
++		pos++;
++		if (++col == maxcol) {
++			org = screen_pos(vc, pos/2, viewed);
++			col = 0;
++		}
++	}
++
++	pos /= 2;
++	pos += maxcol - col;
++
++	/* even pos -- handle attr+character pairs */
++	while (count > 1) {
++		unsigned short w;
++
++		w = get_unaligned(((unsigned short *)con_buf));
++		vcs_scr_writew(vc, w, org++);
++		con_buf += 2;
++		count -= 2;
++		if (++col == maxcol) {
++			org = screen_pos(vc, pos, viewed);
++			col = 0;
++			pos += maxcol;
++		}
++	}
++
++	if (!count)
++		return org;
++
++	/* odd pos -- the remaining character */
++	c = *con_buf++;
++#ifdef __BIG_ENDIAN
++	vcs_scr_writew(vc, (vcs_scr_readw(vc, org) & 0xff) | (c << 8), org);
++#else
++	vcs_scr_writew(vc, (vcs_scr_readw(vc, org) & 0xff00) | c, org);
++#endif
++
++	return org;
++}
++
+ static ssize_t
+ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
  {
--	invert_screen(vc_sel.cons, s, e-s+2, 1);
-+	invert_screen(vc_sel.cons, s, e-s+2, true);
- }
+ 	struct inode *inode = file_inode(file);
+ 	struct vc_data *vc;
+-	char *con_buf0, *con_buf;
+-	u16 *org0 = NULL, *org = NULL;
+-	unsigned int written, col, maxcol;
++	char *con_buf;
++	u16 *org0, *org;
++	unsigned int written;
+ 	int size;
+ 	ssize_t ret;
+ 	loff_t pos;
+@@ -526,7 +605,7 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+ 		count = size - pos;
+ 	written = 0;
+ 	while (count) {
+-		unsigned int orig_count, p, this_round = count;
++		unsigned int this_round = count;
  
- /* use complementary color to show the pointer */
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index a0da7771c327..0f7064d41e92 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -284,7 +284,7 @@ static inline bool con_should_update(const struct vc_data *vc)
- }
+ 		if (this_round > CON_BUF_SIZE)
+ 			this_round = CON_BUF_SIZE;
+@@ -571,81 +650,18 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+ 		 * under the lock using the local kernel buffer.
+ 		 */
  
- static inline unsigned short *screenpos(const struct vc_data *vc, int offset,
--		int viewed)
-+		bool viewed)
- {
- 	unsigned short *p;
- 	
-@@ -544,7 +544,7 @@ int vc_uniscr_check(struct vc_data *vc)
-  * This must be preceded by a successful call to vc_uniscr_check() once
-  * the console lock has been taken.
-  */
--void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, int viewed,
-+void vc_uniscr_copy_line(const struct vc_data *vc, void *dest, bool viewed,
- 			 unsigned int row, unsigned int col, unsigned int nr)
- {
- 	struct uni_screen *uniscr = get_vc_uniscr(vc);
-@@ -753,7 +753,7 @@ static void update_attr(struct vc_data *vc)
- }
+-		if (!attr) {
++		if (attr)
++			org = vcs_write_buf(vc, con_buf, pos, this_round,
++					viewed, &org0);
++		else
+ 			org = vcs_write_buf_noattr(vc, con_buf, pos, this_round,
+ 					viewed, &org0);
+-		} else {
+-			con_buf0 = con_buf;
+-			orig_count = this_round;
+-			maxcol = vc->vc_cols;
+-			p = pos;
+-
+-			if (p < HEADER_SIZE) {
+-				char header[HEADER_SIZE];
+-
+-				getconsxy(vc, header + 2);
+-				while (p < HEADER_SIZE && this_round > 0) {
+-					this_round--;
+-					header[p++] = *con_buf0++;
+-				}
+-				if (!viewed)
+-					putconsxy(vc, header + 2);
+-			}
+-			p -= HEADER_SIZE;
+-			col = (p/2) % maxcol;
+-			if (this_round > 0) {
+-				org0 = org = screen_pos(vc, p/2, viewed);
+-				if ((p & 1) && this_round > 0) {
+-					char c;
+-
+-					this_round--;
+-					c = *con_buf0++;
+-#ifdef __BIG_ENDIAN
+-					vcs_scr_writew(vc, c |
+-					     (vcs_scr_readw(vc, org) & 0xff00), org);
+-#else
+-					vcs_scr_writew(vc, (c << 8) |
+-					     (vcs_scr_readw(vc, org) & 0xff), org);
+-#endif
+-					org++;
+-					p++;
+-					if (++col == maxcol) {
+-						org = screen_pos(vc, p/2, viewed);
+-						col = 0;
+-					}
+-				}
+-				p /= 2;
+-				p += maxcol - col;
+-			}
+-			while (this_round > 1) {
+-				unsigned short w;
  
- /* Note: inverting the screen twice should revert to the original state */
--void invert_screen(struct vc_data *vc, int offset, int count, int viewed)
-+void invert_screen(struct vc_data *vc, int offset, int count, bool viewed)
- {
- 	unsigned short *p;
- 
-@@ -812,7 +812,7 @@ void complement_pos(struct vc_data *vc, int offset)
- 
- 	if (old_offset != -1 && old_offset >= 0 &&
- 	    old_offset < vc->vc_screenbuf_size) {
--		scr_writew(old, screenpos(vc, old_offset, 1));
-+		scr_writew(old, screenpos(vc, old_offset, true));
- 		if (con_should_update(vc))
- 			vc->vc_sw->con_putc(vc, old, oldy, oldx);
- 		notify_update(vc);
-@@ -824,7 +824,7 @@ void complement_pos(struct vc_data *vc, int offset)
- 	    offset < vc->vc_screenbuf_size) {
- 		unsigned short new;
- 		unsigned short *p;
--		p = screenpos(vc, offset, 1);
-+		p = screenpos(vc, offset, true);
- 		old = scr_readw(p);
- 		new = old ^ vc->vc_complement_mask;
- 		scr_writew(new, p);
-@@ -1885,7 +1885,9 @@ static void set_mode(struct vc_data *vc, int on_off)
- 			case 5:			/* Inverted screen on/off */
- 				if (vc->vc_decscnm != on_off) {
- 					vc->vc_decscnm = on_off;
--					invert_screen(vc, 0, vc->vc_screenbuf_size, 0);
-+					invert_screen(vc, 0,
-+							vc->vc_screenbuf_size,
-+							false);
- 					update_attr(vc);
- 				}
- 				break;
-@@ -4743,7 +4745,7 @@ int con_font_op(struct vc_data *vc, struct console_font_op *op)
- /* used by selection */
- u16 screen_glyph(const struct vc_data *vc, int offset)
- {
--	u16 w = scr_readw(screenpos(vc, offset, 1));
-+	u16 w = scr_readw(screenpos(vc, offset, true));
- 	u16 c = w & 0xff;
- 
- 	if (w & vc->vc_hi_font_mask)
-@@ -4763,7 +4765,7 @@ u32 screen_glyph_unicode(const struct vc_data *vc, int n)
- EXPORT_SYMBOL_GPL(screen_glyph_unicode);
- 
- /* used by vcs - note the word offset */
--unsigned short *screen_pos(const struct vc_data *vc, int w_offset, int viewed)
-+unsigned short *screen_pos(const struct vc_data *vc, int w_offset, bool viewed)
- {
- 	return screenpos(vc, 2 * w_offset, viewed);
- }
-diff --git a/include/linux/selection.h b/include/linux/selection.h
-index 15e36e7ef869..170ef28ff26b 100644
---- a/include/linux/selection.h
-+++ b/include/linux/selection.h
-@@ -34,11 +34,11 @@ extern unsigned char default_grn[];
- extern unsigned char default_blu[];
- 
- extern unsigned short *screen_pos(const struct vc_data *vc, int w_offset,
--		int viewed);
-+		bool viewed);
- extern u16 screen_glyph(const struct vc_data *vc, int offset);
- extern u32 screen_glyph_unicode(const struct vc_data *vc, int offset);
- extern void complement_pos(struct vc_data *vc, int offset);
--extern void invert_screen(struct vc_data *vc, int offset, int count, int shift);
-+extern void invert_screen(struct vc_data *vc, int offset, int count, bool viewed);
- 
- extern void getconsxy(const struct vc_data *vc, unsigned char xy[static 2]);
- extern void putconsxy(struct vc_data *vc, unsigned char xy[static const 2]);
-@@ -49,7 +49,7 @@ extern void vcs_scr_updated(struct vc_data *vc);
- 
- extern int vc_uniscr_check(struct vc_data *vc);
- extern void vc_uniscr_copy_line(const struct vc_data *vc, void *dest,
--				int viewed,
-+				bool viewed,
- 				unsigned int row, unsigned int col,
- 				unsigned int nr);
- 
+-				w = get_unaligned(((unsigned short *)con_buf0));
+-				vcs_scr_writew(vc, w, org++);
+-				con_buf0 += 2;
+-				this_round -= 2;
+-				if (++col == maxcol) {
+-					org = screen_pos(vc, p, viewed);
+-					col = 0;
+-					p += maxcol;
+-				}
+-			}
+-			if (this_round > 0) {
+-				unsigned char c;
+-
+-				c = *con_buf0++;
+-#ifdef __BIG_ENDIAN
+-				vcs_scr_writew(vc, (vcs_scr_readw(vc, org) & 0xff) | (c << 8), org);
+-#else
+-				vcs_scr_writew(vc, (vcs_scr_readw(vc, org) & 0xff00) | c, org);
+-#endif
+-			}
+-		}
+-		count -= orig_count;
+-		written += orig_count;
+-		buf += orig_count;
+-		pos += orig_count;
+-		if (org0)
++		count -= this_round;
++		written += this_round;
++		buf += this_round;
++		pos += this_round;
++		if (org)
+ 			update_region(vc, (unsigned long)(org0), org - org0);
+ 	}
+ 	*ppos += written;
 -- 
 2.28.0
 
