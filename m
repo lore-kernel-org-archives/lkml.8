@@ -2,76 +2,64 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4DC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA93820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F6B2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uRdD8KLt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ctKeyoWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgHRDe3 (ORCPT
+        id S1726541AbgHRDhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgHRDeT (ORCPT
+        Mon, 17 Aug 2020 23:37:12 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:14033 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbgHRDhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:34:19 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10551C061344;
-        Mon, 17 Aug 2020 20:34:19 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y10so7002157plr.11;
-        Mon, 17 Aug 2020 20:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t5NIMSla2q4H4CYrgEoypiSInrv82zNsRbmwKfnLv98=;
-        b=uRdD8KLtueArRi5YgefMeJDNmk3262hrEcmU4d2F6wq++v7Ma9rUefUixF2COxCtLc
-         td5Rwz0puO391VwBccL0iLXviBugIL3u84rPg8rn+K+h4YofYGJhIsC8G6APa8gVgzX5
-         2APhZ1DyLJRboh/HWU4dTWnJYXK0nLTNC8tH9fSFizTp9Ip7QLOgDFv0zUDT46SeFoAc
-         yQStkqIILuLhbKNuf8KDIetfzrKboLdpW02QzOvqhM0RvSPIi0r7Wmlh/Nq4Q+AJ0A6q
-         Tfg69C3isdqL8HsOzA8eHcZZF6FPHrfmwUviJRUc1g0N2OtBxFLf7tCrbRwIxKg42dX/
-         ZzJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t5NIMSla2q4H4CYrgEoypiSInrv82zNsRbmwKfnLv98=;
-        b=JIZirNFWDNdYyY/srWP/jddhfF28drnY0IBBMa790y6U/Zdg8XAn3Wl8hiCh5KYU1w
-         5r+P8BNdpTCMmEbPcl1O0x2auLN7rrBMlcFX76dg52/nHF73PfM/MpUWLTWXiVxoUeKi
-         Y3cMS8aLktm6hezIB8YIAJXW/sfEs2DOTkIVvV58kiejmr9O8OSjvIwN8YP1W3G2KyU1
-         t3Jp4/CjQPLN+HHIQUNpL7VkWv9oATJ7m6uxaSIsT3OYUtybNXPXhxQ9G7CbaSxi9Ba1
-         X/Boezno7uIyoyy/Df1Bqq23M7lHqiECUye9+A6qwrdrE67YagZw2c1x+1i4KZ8056jM
-         FVkA==
-X-Gm-Message-State: AOAM533D9ebrMnbOMNTKbtdI2gMANWgFMkaTQ0ir62xbzEnH7KK8kJTA
-        +AdX6t64ndLLcjntHGDQL+M=
-X-Google-Smtp-Source: ABdhPJy6d0Cu933mn+84pD243uhmVtbLS27aP0ei6qwpVknrf2wE9OmynUNrAFXe9REc+s5VjsOUuA==
-X-Received: by 2002:a17:90a:4214:: with SMTP id o20mr4177105pjg.232.1597721658610;
-        Mon, 17 Aug 2020 20:34:18 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (193-116-193-175.tpgi.com.au. [193.116.193.175])
-        by smtp.gmail.com with ESMTPSA id b18sm19823352pgj.12.2020.08.17.20.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 20:34:18 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [RFC PATCH 2/2] powerpc/64s/radix: Fix mm_cpumask trimming race vs kthread_use_mm
-Date:   Tue, 18 Aug 2020 13:34:05 +1000
-Message-Id: <20200818033405.170457-2-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200818033405.170457-1-npiggin@gmail.com>
-References: <20200818033405.170457-1-npiggin@gmail.com>
+        Mon, 17 Aug 2020 23:37:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597721830; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=EnzsWb4qw8FVQC8bz9uigv+OYOJhbGA/vX0ADupBShI=; b=ctKeyoWS5wqAx96AVRXyFE58RIIeuLHhk5wsdE09IOwDuAh7jmilTNKsDy4dQqRRFRcBC+RY
+ erRcPhHsaFFX+6+HK+OqQD/1wb8GlqQUtWyH3OCvYlcXNZla7LLqulqqwMfm/GyC6pFySLvb
+ DTl7RywbSWGPah0O3fTuQ9uOETU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f3b4ce5c85a1092b01f97e9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 03:37:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 85675C433CA; Tue, 18 Aug 2020 03:37:09 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04587C433CA;
+        Tue, 18 Aug 2020 03:37:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04587C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     swboyd@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add DisplayPort HPD pin dt node
+Date:   Mon, 17 Aug 2020 20:36:57 -0700
+Message-Id: <20200818033657.16074-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,102 +67,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0cef77c7798a7 ("powerpc/64s/radix: flush remote CPUs out of
-single-threaded mm_cpumask") added a mechanism to trim the mm_cpumask of
-a process under certain conditions. One of the assumptions is that
-mm_users would not be incremented via a reference outside the process
-context with mmget_not_zero() then go on to kthread_use_mm() via that
-reference.
+This node defines alternate DP HPD functionality of GPIO.
 
-That invariant was broken by io_uring code (see previous sparc64 fix),
-but I'll point Fixes: to the original powerpc commit because we are
-changing that assumption going forward, so this will make backports
-match up.
-
-Fix this by no longer relying on that assumption, but by having each CPU
-check the mm is not being used, and clearing their own bit from the mask
-if it's okay. This relies on commit 38cf307c1f20 ("mm: fix
-kthread_use_mm() vs TLB invalidate") to disable irqs over the mm switch.
-
-Fixes: 0cef77c7798a7 ("powerpc/64s/radix: flush remote CPUs out of single-threaded mm_cpumask")
-not-yet-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
 ---
- arch/powerpc/include/asm/tlb.h       | 13 -------------
- arch/powerpc/mm/book3s64/radix_tlb.c | 23 ++++++++++++++++-------
- 2 files changed, 16 insertions(+), 20 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
-index fbc6f3002f23..d97f061fecac 100644
---- a/arch/powerpc/include/asm/tlb.h
-+++ b/arch/powerpc/include/asm/tlb.h
-@@ -66,19 +66,6 @@ static inline int mm_is_thread_local(struct mm_struct *mm)
- 		return false;
- 	return cpumask_test_cpu(smp_processor_id(), mm_cpumask(mm));
- }
--static inline void mm_reset_thread_local(struct mm_struct *mm)
--{
--	WARN_ON(atomic_read(&mm->context.copros) > 0);
--	/*
--	 * It's possible for mm_access to take a reference on mm_users to
--	 * access the remote mm from another thread, but it's not allowed
--	 * to set mm_cpumask, so mm_users may be > 1 here.
--	 */
--	WARN_ON(current->mm != mm);
--	atomic_set(&mm->context.active_cpus, 1);
--	cpumask_clear(mm_cpumask(mm));
--	cpumask_set_cpu(smp_processor_id(), mm_cpumask(mm));
--}
- #else /* CONFIG_PPC_BOOK3S_64 */
- static inline int mm_is_thread_local(struct mm_struct *mm)
- {
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index 0d233763441f..a421a0e3f930 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -645,19 +645,29 @@ static void do_exit_flush_lazy_tlb(void *arg)
- 	struct mm_struct *mm = arg;
- 	unsigned long pid = mm->context.id;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index bf2f2bb1aa79..2e2a0631ab65 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1082,6 +1082,19 @@ tlmm: pinctrl@3500000 {
+ 			gpio-ranges = <&tlmm 0 0 120>;
+ 			wakeup-parent = <&pdc>;
  
-+	/*
-+	 * A kthread could have done a mmget_not_zero() after the flushing CPU
-+	 * checked mm_users == 1, and be in the process of kthread_use_mm when
-+	 * interrupted here. In that case, current->mm will be set to mm,
-+	 * because kthread_use_mm() setting ->mm and switching to the mm is
-+	 * done with interrupts off.
-+	 */
- 	if (current->mm == mm)
--		return; /* Local CPU */
-+		goto out_flush;
- 
- 	if (current->active_mm == mm) {
--		/*
--		 * Must be a kernel thread because sender is single-threaded.
--		 */
--		BUG_ON(current->mm);
-+		WARN_ON_ONCE(current->mm != NULL);
-+		/* Is a kernel thread and is using mm as the lazy tlb */
- 		mmgrab(&init_mm);
--		switch_mm(mm, &init_mm, current);
- 		current->active_mm = &init_mm;
-+		switch_mm_irqs_off(mm, &init_mm, current);
- 		mmdrop(mm);
- 	}
++			dp_hot_plug_det: dp-hot-plug-det {
++				pinmux {
++					pins = "gpio117";
++					function = "dp_hot";
++				};
 +
-+	atomic_dec(&mm->context.active_cpus);
-+	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(mm));
++				pinconf {
++					pins = "gpio117";
++					bias-disable;
++					input-enable;
++				};
++			};
 +
-+out_flush:
- 	_tlbiel_pid(pid, RIC_FLUSH_ALL);
- }
- 
-@@ -672,7 +682,6 @@ static void exit_flush_lazy_tlbs(struct mm_struct *mm)
- 	 */
- 	smp_call_function_many(mm_cpumask(mm), do_exit_flush_lazy_tlb,
- 				(void *)mm, 1);
--	mm_reset_thread_local(mm);
- }
- 
- void radix__flush_tlb_mm(struct mm_struct *mm)
+ 			qspi_clk: qspi-clk {
+ 				pinmux {
+ 					pins = "gpio63";
+
+base-commit: 62975d27d647a40c58d3b96c29b911fc4f33c310
 -- 
-2.23.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
