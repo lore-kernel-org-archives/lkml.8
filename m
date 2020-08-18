@@ -2,83 +2,121 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F724C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D63C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763D52067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24162206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="brekEtiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgHRI7E (ORCPT
+        id S1726576AbgHRJBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:59:04 -0400
-Received: from smtp21.cstnet.cn ([159.226.251.21]:50616 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbgHRI7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:59:03 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-01 (Coremail) with SMTP id qwCowAD3lkRelztfI8eLAQ--.19298S2;
-        Tue, 18 Aug 2020 16:54:54 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH] rpl_iptunnel: simplify the return expression of rpl_do_srh()
-Date:   Tue, 18 Aug 2020 08:54:54 +0000
-Message-Id: <20200818085454.12224-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: qwCowAD3lkRelztfI8eLAQ--.19298S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruF47GF4DJrWfXFykAFWrXwb_yoW3JFg_CF
-        1vgFWxCrn3ur4FkanxCa1fAF9Fq3s2vF40g3s7KrW8t343KrZI9rnavFW5GrykWrWvkryU
-        Xa40kFyIyr1fWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbfxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z2
-        80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Cr1j6rxdMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8
-        Jr1lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-        x2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0ziAR65UUUUU=
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwUMA1z4jXyoSgAAs2
+        Tue, 18 Aug 2020 05:01:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32250 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726353AbgHRJBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:01:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597741261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LwYlioqpHS/gmxgOcffqAwVxuvHCLYruQxEepn5wr38=;
+        b=brekEtiubhn089zUnXdUhyElBn+swpGj+xb4HJIPMUZa9I33U2xhMMriwzAifF7n9Bv/zB
+        afT3VylL3J4nVI+7x+qLw4qKiBhjvV2m4xg9/KgdDqmp0rPZ6PZQWdQVDhYYhWBF0y38IL
+        I5CKNfXtF5WKK5wQ0r2wXsjat3G0ho4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-mlrecaKvN2iRk-aKQOmtPQ-1; Tue, 18 Aug 2020 05:00:57 -0400
+X-MC-Unique: mlrecaKvN2iRk-aKQOmtPQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5813A0BC2;
+        Tue, 18 Aug 2020 09:00:53 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFEDA5D9D2;
+        Tue, 18 Aug 2020 09:00:49 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 078151753B; Tue, 18 Aug 2020 11:00:49 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 11:00:49 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>, Sandy Huang <hjc@rock-chips.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
+        <etnaviv@lists.freedesktop.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>, Sean Paul <sean@poorly.run>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH 1/2] drm: allow limiting the scatter list size.
+Message-ID: <20200818090049.qomgyyw6hif4cmah@sirius.home.kraxel.org>
+References: <20200818074828.9509-1-kraxel@redhat.com>
+ <20200818074828.9509-2-kraxel@redhat.com>
+ <9c355d64-1a61-eb59-be80-d9fc863ddf22@amd.com>
+ <20200818082703.7z6fcvoymiqow5kw@sirius.home.kraxel.org>
+ <03c03129-db27-c6da-df8f-909141d2a3f7@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03c03129-db27-c6da-df8f-909141d2a3f7@amd.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the return expression.
+  Hi,
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- net/ipv6/rpl_iptunnel.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+> > > I'm missing an explanation why this should be useful (it certainly is).
+> > virtio-gpu needs this to work properly with SEV (see patch 2/2 of this
+> > series).
+> 
+> Yeah, that's the problem patch 2/2 never showed up here :)
 
-diff --git a/net/ipv6/rpl_iptunnel.c b/net/ipv6/rpl_iptunnel.c
-index 5fdf3ebb953f..e58ad9ac987c 100644
---- a/net/ipv6/rpl_iptunnel.c
-+++ b/net/ipv6/rpl_iptunnel.c
-@@ -197,11 +197,7 @@ static int rpl_do_srh(struct sk_buff *skb, const struct rpl_lwt *rlwt)
- 
- 	tinfo = rpl_encap_lwtunnel(dst->lwtstate);
- 
--	err = rpl_do_srh_inline(skb, rlwt, tinfo->srh);
--	if (err)
--		return err;
--
--	return 0;
-+	return rpl_do_srh_inline(skb, rlwt, tinfo->srh);
- }
- 
- static int rpl_output(struct net *net, struct sock *sk, struct sk_buff *skb)
--- 
-2.17.1
+The list should have everything.
+
+Your inbox probably has 1/2 only because 2/2 doesn't touch amd code and
+'git send-email' evaluates sendemail.cccmd (pointing to
+get_maintainer.pl) for each patch individually.
+
+I've found this behavior confusing at times before.  Is there some way
+to send the whole series to everybody?  Or at least the cover letter?
+The git-send-email manpage doesn't give a clue :(
+
+> > Placing it in drm_device instead would indeed work for virtio-gpu, so I
+> > guess you are suggesting that instead?
+> 
+> That is probably the best approach, yes.
+
+Ok, I'll go that route then.
+
+thanks,
+  Gerd
 
