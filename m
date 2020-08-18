@@ -2,187 +2,87 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B023D2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZykcEFHR"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7D720825
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgHRRAj (ORCPT
+        id S1728424AbgHRRAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:00:39 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:32996 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728481AbgHRQ4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:56:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuFU8108023;
-        Tue, 18 Aug 2020 11:56:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597769775;
-        bh=GsIk/233sXDbKwSAqxENWcQiMVlD1bZlmMIXu/P3m3s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZykcEFHRfrpX++PtZ3aG6D2q0R1u7Xw4LTbvwwQVJFoeh5VnQ80kXP+TxqXH7IN/c
-         2lWDQ4fvx8ldYI+z9PYHnX2kBF8TFBtQ8l9lpI/Ndj+89/BLuZMOVrPdi88rbOh0fi
-         wQwX/IIgvHgrHAKENX1fShgZkK/tP69oWxhMKqX0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuF40024785;
-        Tue, 18 Aug 2020 11:56:15 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
- Aug 2020 11:56:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 18 Aug 2020 11:56:10 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuA2I028209;
-        Tue, 18 Aug 2020 11:56:10 -0500
-Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
-To:     Rob Herring <robh@kernel.org>,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-CC:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200817191723.22416-1-r-rivera-matos@ti.com>
- <20200817191723.22416-2-r-rivera-matos@ti.com>
- <20200818164305.GB3586878@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3928a95f-1f60-5f0f-2cfa-ab9b40038003@ti.com>
-Date:   Tue, 18 Aug 2020 11:56:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 13:00:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44284 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbgHRRAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:00:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 89043AC83;
+        Tue, 18 Aug 2020 17:00:58 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Coly Li <colyli@suse.de>, Dan Williams <dan.j.williams@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v3] docs: trusted-encrypted.rst: update parameters for command examples
+Date:   Wed, 19 Aug 2020 01:00:02 +0800
+Message-Id: <20200818170002.38145-1-colyli@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200818164305.GB3586878@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+The parameters in command examples for tpm2_createprimary and
+tpm2_evictcontrol are outdated, people (like me) are not able to create
+trusted key by these command examples.
 
-On 8/18/20 11:43 AM, Rob Herring wrote:
-> On Mon, Aug 17, 2020 at 02:17:22PM -0500, Ricardo Rivera-Matos wrote:
->> Add the bindings for the bq256xx series of battery charging ICs.
->>
->> Datasheets:
->> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
->>
->> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
->> ---
->>   .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
->>   1 file changed, 99 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->> new file mode 100644
->> index 000000000000..67db4ba9fdb6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->> @@ -0,0 +1,99 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->> +# Copyright (C) 2020 Texas Instruments Incorporated
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI bq256xx Switch Mode Buck Charger
->> +
->> +maintainers:
->> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
->> +
->> +description: |
->> +  The bq256xx devices are a family of highly-integrated battery charge
->> +  management and system power management ICs for single cell Li-ion and Li-
->> +  polymer batteries.
->> +
->> +  Datasheets:
->> +    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,bq25600
->> +      - ti,bq25601
->> +      - ti,bq25600d
->> +      - ti,bq25601d
->> +      - ti,bq25611d
->> +      - ti,bq25618
->> +      - ti,bq25619
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  ti,watchdog-timer:
-> Poorly named since we have 'ti,watchdog-timers' already and is
-> completely different.
+This patch updates the parameters of command example tpm2_createprimary
+and tpm2_evictcontrol in trusted-encrypted.rst. With Linux kernel v5.8
+and tpm2-tools-4.1, people can create a trusted key by following the
+examples in this document.
 
-I think you made a comment on my DT to make this ti,watchdog-timeout-ms 
-and then we can remove the type.
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: James Bottomley <jejb@linux.ibm.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Stefan Berger <stefanb@linux.ibm.com>
+---
+Changelog:
+v3: update commit log with review comments from Jarkko Sakkinen. 
+v2: remove the change of trusted key related operation.
+v1: initial version.
 
+ Documentation/security/keys/trusted-encrypted.rst | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
->
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog
-> If you have units, then you should use standard unit suffix.
->
->> +    minimum: 0
->> +    maximum: 160000
->> +    enum: [ 0, 40000, 80000, 160000]
->> +
->> +  input-voltage-limit-microvolt:
->> +    description: |
->> +       Minimum input voltage limit in micro volts with a 100000 micro volt step
->> +    minimum: 3900000
->> +    maximum: 5400000
->> +
->> +  input-current-limit-microamp:
->> +    description: |
->> +       Maximum input current limit in micro amps with a 100000 micro amp step
->> +    minimum: 100000
->> +    maximum: 3200000
-> Aren't these properties of the battery, not the charger?
->
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> monitored-battery not required?
->
-> Add:
->
-> additionalProperties: false
-
-What about using
-
-unevaluatedProperties: false
-
-Dan
+diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
+index 9483a7425ad5..1da879a68640 100644
+--- a/Documentation/security/keys/trusted-encrypted.rst
++++ b/Documentation/security/keys/trusted-encrypted.rst
+@@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
+ 
+ Or with the Intel TSS 2 stack::
+ 
+-  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
++  #> tpm2_createprimary --hierarchy o -G rsa2048 -c key.ctxt
+   [...]
+-  handle: 0x800000FF
+-  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
++  #> tpm2_evictcontrol -c key.ctxt 0x81000001
+   persistentHandle: 0x81000001
+ 
+ Usage::
+-- 
+2.26.2
 
