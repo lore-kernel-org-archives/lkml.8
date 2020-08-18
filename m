@@ -2,111 +2,181 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A74FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0291C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 126A32075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD492063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bQZrn8st"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DV3V1dGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHRTaP (ORCPT
+        id S1726816AbgHRTa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:30:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23332 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726632AbgHRTaM (ORCPT
+        Tue, 18 Aug 2020 15:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgHRTaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:30:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597779011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TzOEgoxnjJc+44XQtv3kAPBEJXFL3VlSz++wwm59Khc=;
-        b=bQZrn8stH9h3pMfBCJVUXeTQnSdzdkfWOcXZo73QR9MsSPF5UZfMBOxXC6dGXZ/4wuPKx5
-        ipUUwtKSgh5JJ5u0aPZn85IohTCf9cOI2LNktbTLgO+fM97MsgDzDThMVczURFaQ8RYMHB
-        KnAPmWo9VUV1025q6meM9xnQ7kH5dbw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-Y-bE-SXNM8Om9V_jtabrsA-1; Tue, 18 Aug 2020 15:30:09 -0400
-X-MC-Unique: Y-bE-SXNM8Om9V_jtabrsA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DCDC18686D7;
-        Tue, 18 Aug 2020 19:30:07 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-51.rdu2.redhat.com [10.10.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 046407DFD4;
-        Tue, 18 Aug 2020 19:30:02 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-To:     Chris Down <chris@chrisdown.name>, peterz@infradead.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200818091453.GL2674@hirez.programming.kicks-ass.net>
- <20200818092737.GA148695@chrisdown.name>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <b11ce701-e824-793c-cc7f-4c3bbe08cf80@redhat.com>
-Date:   Tue, 18 Aug 2020 15:30:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Aug 2020 15:30:23 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A887C061389;
+        Tue, 18 Aug 2020 12:30:23 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f26so22719213ljc.8;
+        Tue, 18 Aug 2020 12:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rPPnDufFdYrGPA1nsHLUw/AvqpK5ENwF2dGNkDul8PU=;
+        b=DV3V1dGMGlTyDIPW77LGUHfsOuddUzK/QEK6Z1InNc20uLgwHC5W8Xz8V/6m3/KkC5
+         RnLmvxeD7QQvqQAQxwFP/I5LC+r412q7S9yyrsdM9zEqLw28Trd99Xvgv5RL97ukzhum
+         /CMoPvMCA/qxfXkZv2qjx/kLKLLMN4mCUr40AXZ7qRHv/79KCtX5cVVknm+23wMwiSSH
+         d1Wp+b6Urh0pEL+A6BR/rQGBq3fh4vlZ3m2STk7sFMNDz0OuCghtuRVoblO+WKJ8N8tq
+         KtJrW0bs104Ui3M7szGa+KXM4kO4p7TXbAzo0tFcYVkNJUzFFnwNpQqyqM0tD0mQbB51
+         FBQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rPPnDufFdYrGPA1nsHLUw/AvqpK5ENwF2dGNkDul8PU=;
+        b=b7Qx2Hc8j2avn9HAWkXTPrNyn7/0RrajjYT0sItuBz0VNO+Lv7BAtMhCpFEnG+X3Pu
+         NH69UVfNH5WBH6kX7eJ7Flo5yEX//p8pyG1dgI3mTyQ6/E6eZAs7FyikIptQMvpzradT
+         UiCrpZSnuAhz6JZc+MaAm/1nPVfXDa5DWS9g6OdWMTOSf8+cnkCTGpkQ/tYc5JHuBG3F
+         GfHt+NZY1sY4/QN3D1XxKO3AVuC1LYvM0u7s4yyM4aJ89NCHlAy1ZUPSOt+DNNHFKHmb
+         kRwXoyumAr1XX7NGAJH8+DubxomPGAhq8pnXAvX9Ix3dtN1BtoS8IgbX+9Mk0PgQbc9w
+         K4ZQ==
+X-Gm-Message-State: AOAM533ToDmhkjNRVY1E/jH5OFEL3PRvApBSjTmP2aRmvn+WpTJAtKNg
+        9YZVHWsUfBliq1baX1cnAqM=
+X-Google-Smtp-Source: ABdhPJyqvpAh0sZAgkzYo/NZ1B7oSlm4TG5zBof9Mty4QbMcBihJyDUj2gcqsp5/NGX8bm0ShVn+9w==
+X-Received: by 2002:a2e:9047:: with SMTP id n7mr11160392ljg.125.1597779021514;
+        Tue, 18 Aug 2020 12:30:21 -0700 (PDT)
+Received: from rikard (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
+        by smtp.gmail.com with ESMTPSA id 80sm6169362ljf.38.2020.08.18.12.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:30:20 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
+Date:   Tue, 18 Aug 2020 21:30:17 +0200
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "rikard.falkeborn@gmail.com" <rikard.falkeborn@gmail.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/6] iio: dac: ad5686: Constify static struct
+ iio_chan_spec
+Message-ID: <20200818193017.GA1610@rikard>
+References: <20200526210223.1672-1-rikard.falkeborn@gmail.com>
+ <20200526210223.1672-5-rikard.falkeborn@gmail.com>
+ <d822bd34435902f096cdeb27ae0dc029d29bfb2c.camel@analog.com>
+ <20200531144715.089886ce@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <20200818092737.GA148695@chrisdown.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200531144715.089886ce@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 5:27 AM, Chris Down wrote:
-> peterz@infradead.org writes:
->> On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
->>> Memory controller can be used to control and limit the amount of
->>> physical memory used by a task. When a limit is set in "memory.high" in
->>> a v2 non-root memory cgroup, the memory controller will try to reclaim
->>> memory if the limit has been exceeded. Normally, that will be enough
->>> to keep the physical memory consumption of tasks in the memory cgroup
->>> to be around or below the "memory.high" limit.
->>>
->>> Sometimes, memory reclaim may not be able to recover memory in a rate
->>> that can catch up to the physical memory allocation rate. In this case,
->>> the physical memory consumption will keep on increasing.
->>
->> Then slow down the allocator? That's what we do for dirty pages too, we
->> slow down the dirtier when we run against the limits.
->
-> We already do that since v5.4. I'm wondering whether Waiman's customer 
-> is just running with a too-old kernel without 0e4b01df865 ("mm, memcg: 
-> throttle allocators when failing reclaim over memory.high") backported.
->
-The fact is that we don't have that in RHEL8 yet and cgroup v2 is still 
-not the default at the moment.
+On Sun, May 31, 2020 at 02:47:15PM +0100, Jonathan Cameron wrote:
+> On Wed, 27 May 2020 04:50:46 +0000
+> "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> 
+> > On Tue, 2020-05-26 at 23:02 +0200, Rikard Falkeborn wrote:
+> > > [External]
+> > > 
+> > > These are never modified and can be made const to allow the compiler to
+> > > put it in read-only memory.
+> > > 
+> > > Before:
+> > >    text    data     bss     dec     hex filename
+> > >    6642   12608      64   19314    4b72 drivers/iio/dac/ad5686.o
+> > > 
+> > > After:
+> > >    text    data     bss     dec     hex filename
+> > >   16946    2304      64   19314    4b72 drivers/iio/dac/ad5686.o
+> > >   
+> > 
+> > Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > 
+> Applied.
+> 
+> thanks,
 
-I am planning to backport the throttling patches to RHEL and hopefully 
-can switch to use cgroup v2 soon.
+Was this one really applied? I can't see it anywhere? The rest of the
+patches in the series are in Linus' tree.
 
-Cheers,
-Longman
+Rikard
 
+> 
+> > > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > > ---
+> > >  drivers/iio/dac/ad5686.c | 8 ++++----
+> > >  drivers/iio/dac/ad5686.h | 2 +-
+> > >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/dac/ad5686.c b/drivers/iio/dac/ad5686.c
+> > > index 8dd67da0a7da..6de48f618c95 100644
+> > > --- a/drivers/iio/dac/ad5686.c
+> > > +++ b/drivers/iio/dac/ad5686.c
+> > > @@ -206,12 +206,12 @@ static const struct iio_chan_spec_ext_info
+> > > ad5686_ext_info[] = {
+> > >  }
+> > >  
+> > >  #define DECLARE_AD5693_CHANNELS(name, bits, _shift)		\
+> > > -static struct iio_chan_spec name[] = {				\
+> > > +static const struct iio_chan_spec name[] = {			\
+> > >  		AD5868_CHANNEL(0, 0, bits, _shift),		\
+> > >  }
+> > >  
+> > >  #define DECLARE_AD5686_CHANNELS(name, bits, _shift)		\
+> > > -static struct iio_chan_spec name[] = {				\
+> > > +static const struct iio_chan_spec name[] = {			\
+> > >  		AD5868_CHANNEL(0, 1, bits, _shift),		\
+> > >  		AD5868_CHANNEL(1, 2, bits, _shift),		\
+> > >  		AD5868_CHANNEL(2, 4, bits, _shift),		\
+> > > @@ -219,7 +219,7 @@ static struct iio_chan_spec name[] = {			
+> > > 	\
+> > >  }
+> > >  
+> > >  #define DECLARE_AD5676_CHANNELS(name, bits, _shift)		\
+> > > -static struct iio_chan_spec name[] = {				\
+> > > +static const struct iio_chan_spec name[] = {			\
+> > >  		AD5868_CHANNEL(0, 0, bits, _shift),		\
+> > >  		AD5868_CHANNEL(1, 1, bits, _shift),		\
+> > >  		AD5868_CHANNEL(2, 2, bits, _shift),		\
+> > > @@ -231,7 +231,7 @@ static struct iio_chan_spec name[] = {			
+> > > 	\
+> > >  }
+> > >  
+> > >  #define DECLARE_AD5679_CHANNELS(name, bits, _shift)		\
+> > > -static struct iio_chan_spec name[] = {				\
+> > > +static const struct iio_chan_spec name[] = {			\
+> > >  		AD5868_CHANNEL(0, 0, bits, _shift),		\
+> > >  		AD5868_CHANNEL(1, 1, bits, _shift),		\
+> > >  		AD5868_CHANNEL(2, 2, bits, _shift),		\
+> > > diff --git a/drivers/iio/dac/ad5686.h b/drivers/iio/dac/ad5686.h
+> > > index 52009b5eef88..a15f2970577e 100644
+> > > --- a/drivers/iio/dac/ad5686.h
+> > > +++ b/drivers/iio/dac/ad5686.h
+> > > @@ -104,7 +104,7 @@ typedef int (*ad5686_read_func)(struct ad5686_state
+> > > *st, u8 addr);
+> > >  struct ad5686_chip_info {
+> > >  	u16				int_vref_mv;
+> > >  	unsigned int			num_channels;
+> > > -	struct iio_chan_spec		*channels;
+> > > +	const struct iio_chan_spec	*channels;
+> > >  	enum ad5686_regmap_type		regmap_type;
+> > >  };
+> > >    
+> 
