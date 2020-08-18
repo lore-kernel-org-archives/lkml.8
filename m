@@ -2,1190 +2,2650 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E97C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C649AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7334B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D7E2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 21:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cWaVbnvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHRVG1 (ORCPT
+        id S1727047AbgHRVRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:06:27 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3922 "EHLO mga09.intel.com"
+        Tue, 18 Aug 2020 17:17:17 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:46337 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726176AbgHRVGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 17:06:25 -0400
-IronPort-SDR: BFCvmWf5VtOe8NjldR+BiBA0jiEubwSjnYQ1IIyjXLKIOlbzU07dwzSV2cCFz+fNi4Z4ucqE+h
- Cz9l4038p4SA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="156078230"
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="gz'50?scan'50,208,50";a="156078230"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 13:49:46 -0700
-IronPort-SDR: livgNTrpCSMKvk4wNDKK+qQAh3f0ISzdBp7MjGCXF9Emn8C6XlN/6s+DAURh67nd98XVJMmosM
- pEMNH3M2QfOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="gz'50?scan'50,208,50";a="496982613"
-Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2020 13:49:42 -0700
-Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k88Y9-0001N8-7e; Tue, 18 Aug 2020 20:49:41 +0000
-Date:   Wed, 19 Aug 2020 04:49:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Darren Schachter <dts86@cornell.edu>
-Cc:     kbuild-all@lists.01.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, mporter@konsulko.com,
-        robertcnelson@beagleboard.org, drew@beagleboard.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH] iio: pulse: Support PWM capture with TI AM3358 eCAP
- module
-Message-ID: <202008190450.G3jEV7AR%lkp@intel.com>
-References: <20200818153614.6438-1-dts86@cornell.edu>
+        id S1727033AbgHRVQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 17:16:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597785412; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=qJRVk6l3SQnsOddDC1vxjEkUzwcf4Qp5+UauytJlvpU=; b=cWaVbnvyGu3EesCxzm33GdHkqcPKC+AA+YnKRcQXPa06du0Qo38berKLY7KpX+RiFeLusldg
+ jmQJfqAH3tGQAKJgLlgHiReki15dnCVSSz5HZVFGJ4LDUQXLk8bDF45JyrQXRCrOCGcQuZuE
+ tquYIuvP5+c1K+jblkkqOOJv6aU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f3c4520440a07969a9e639c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 21:16:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 998C7C433C6; Tue, 18 Aug 2020 21:16:15 +0000 (UTC)
+Received: from khsieh-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: khsieh)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 041E7C433CA;
+        Tue, 18 Aug 2020 21:16:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 041E7C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=khsieh@codeaurora.org
+From:   Kuogee Hsieh <khsieh@codeaurora.org>
+To:     robdclark@gmail.com, sean@poorly.run, swboyd@chromium.org
+Cc:     tanmay@codeaurora.org, abhinavk@codeaurora.org,
+        aravindh@codeaurora.org, khsieh@codeaurora.org, airlied@linux.ie,
+        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH v3] drm/msm/dp: Add DP compliance tests on Snapdragon Chipsets
+Date:   Tue, 18 Aug 2020 14:15:46 -0700
+Message-Id: <20200818211546.559-1-khsieh@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0OAP2g/MAC+5xKAE"
-Content-Disposition: inline
-In-Reply-To: <20200818153614.6438-1-dts86@cornell.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+add event thread to execute events serially from event queue. Also
+timeout mode is supported  which allow an event be deferred to be
+executed at later time. Both link and phy compliant tests had been
+done successfully.
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes in v2:
+- Fix potential deadlock by removing redundant connect_mutex
+- Check and enable link clock during modeset
+- Drop unused code and fix function prototypes.
+- set sink power to normal operation state (D0) before DPCD read
 
-Hi Darren,
+Changes in v3:
+- push idle pattern at main link before timing generator off
+- add timeout handles for both connect and disconnect
 
-Thank you for the patch! Perhaps something to improve:
+This patch depends-on following series:
+https://lkml.kernel.org/lkml/20200812044223.19279-1-tanmay@codeaurora.org/t.atom
 
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on linux/master linus/master v5.9-rc1 next-20200818]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Darren-Schachter/iio-pulse-Support-PWM-capture-with-TI-AM3358-eCAP-module/20200818-233934
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-config: nios2-allyesconfig (attached as .config)
-compiler: nios2-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=nios2 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iio/pulse/pulse_tiecap.c: In function 'ecap_attr_prescalar_store':
->> drivers/iio/pulse/pulse_tiecap.c:193:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     193 |  int ret;
-         |      ^~~
-
-# https://github.com/0day-ci/linux/commit/b454a1487cd33fe1b8962f9e6b5b0ca35b373ece
-git remote add linux-review https://github.com/0day-ci/linux
-git fetch --no-tags linux-review Darren-Schachter/iio-pulse-Support-PWM-capture-with-TI-AM3358-eCAP-module/20200818-233934
-git checkout b454a1487cd33fe1b8962f9e6b5b0ca35b373ece
-vim +/ret +193 drivers/iio/pulse/pulse_tiecap.c
-
-   187	
-   188	static ssize_t ecap_attr_prescalar_store(struct device *dev,
-   189						struct device_attribute *attr,
-   190						const char *buf,
-   191						size_t len)
-   192	{
- > 193		int ret;
-   194		long val;
-   195		struct ecap_state *state = dev_to_ecap_state(dev);
-   196	
-   197		if (test_bit(ECAP_ENABLED, &state->flags))
-   198			return -EINVAL;
-   199	
-   200		ret = kstrtol(buf, 16, &val);
-   201		if (val > 0x05 && val != 0x1E && val != 0x1F)
-   202			return -EINVAL;
-   203	
-   204		mutex_lock(&state->lock);
-   205		state->flags &= ~(0x1F << ECAP_PRESCALAR_OFFSET); // clear bits
-   206		state->flags |= (val << ECAP_PRESCALAR_OFFSET);
-   207		mutex_unlock(&state->lock);
-   208	
-   209		return len;
-   210	}
-   211	
-
+Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
+Signed-off-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |   6 +
+ drivers/gpu/drm/msm/dp/dp_aux.c             |   3 +
+ drivers/gpu/drm/msm/dp/dp_aux.h             |   1 +
+ drivers/gpu/drm/msm/dp/dp_catalog.c         |  77 +-
+ drivers/gpu/drm/msm/dp/dp_ctrl.c            | 370 +++++++---
+ drivers/gpu/drm/msm/dp/dp_ctrl.h            |   3 +-
+ drivers/gpu/drm/msm/dp/dp_display.c         | 747 +++++++++++++-------
+ drivers/gpu/drm/msm/dp/dp_display.h         |   1 -
+ drivers/gpu/drm/msm/dp/dp_drm.c             |   4 -
+ drivers/gpu/drm/msm/dp/dp_hpd.c             |   2 +-
+ drivers/gpu/drm/msm/dp/dp_hpd.h             |   1 +
+ drivers/gpu/drm/msm/dp/dp_link.c            |  22 +-
+ drivers/gpu/drm/msm/dp/dp_panel.c           |  78 +-
+ drivers/gpu/drm/msm/dp/dp_panel.h           |   9 +-
+ drivers/gpu/drm/msm/dp/dp_parser.c          |  45 +-
+ drivers/gpu/drm/msm/dp/dp_parser.h          |   2 +
+ drivers/gpu/drm/msm/dp/dp_power.c           |  46 +-
+ drivers/gpu/drm/msm/dp/dp_power.h           |  13 +
+ drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
+ drivers/gpu/drm/msm/msm_drv.h               |   1 +
+ 20 files changed, 972 insertions(+), 460 deletions(-)
 
---0OAP2g/MAC+5xKAE
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 6a9e257d2fe6..81373bd38f0b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1221,6 +1221,11 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	/* wait for idle */
+ 	dpu_encoder_wait_for_event(drm_enc, MSM_ENC_TX_COMPLETE);
+ 
++	if (drm_enc->encoder_type == DRM_MODE_ENCODER_TMDS && priv->dp) {
++		if (msm_dp_display_pre_disable(priv->dp, drm_enc))
++			DPU_ERROR_ENC(dpu_enc, "dp display push idle failed\n");
++	}
++
+ 	dpu_encoder_resource_control(drm_enc, DPU_ENC_RC_EVENT_PRE_STOP);
+ 
+ 	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
+@@ -1230,6 +1235,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 			phys->ops.disable(phys);
+ 	}
+ 
++
+ 	/* after phys waits for frame-done, should be no more frames pending */
+ 	if (atomic_xchg(&dpu_enc->frame_done_timeout_ms, 0)) {
+ 		DPU_ERROR("enc%d timeout pending\n", drm_enc->base.id);
+diff --git a/drivers/gpu/drm/msm/dp/dp_aux.c b/drivers/gpu/drm/msm/dp/dp_aux.c
+index 582b551f8689..5aaa4b50c303 100644
+--- a/drivers/gpu/drm/msm/dp/dp_aux.c
++++ b/drivers/gpu/drm/msm/dp/dp_aux.c
+@@ -189,6 +189,8 @@ static void dp_aux_native_handler(struct dp_aux_private *aux)
+ 		aux->aux_error_num = DP_AUX_ERR_TOUT;
+ 	if (isr & DP_INTR_NACK_DEFER)
+ 		aux->aux_error_num = DP_AUX_ERR_NACK;
++	if (isr & DP_INTR_AUX_ERROR)
++		aux->aux_error_num = DP_AUX_ERR_DPPHY_AUX;
+ 
+ 	complete(&aux->comp);
+ }
+@@ -359,6 +361,7 @@ static ssize_t dp_aux_transfer(struct drm_dp_aux *dp_aux,
+ 					PHY_AUX_CFG1);
+ 			dp_catalog_aux_reset(aux->catalog);
+ 		}
++		usleep_range(400, 500); /* at least 400us to next try */
+ 		goto unlock_exit;
+ 	}
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_aux.h b/drivers/gpu/drm/msm/dp/dp_aux.h
+index 2de11021d84a..1fbdfc9aa62e 100644
+--- a/drivers/gpu/drm/msm/dp/dp_aux.h
++++ b/drivers/gpu/drm/msm/dp/dp_aux.h
+@@ -15,6 +15,7 @@
+ #define DP_AUX_ERR_NACK		-3
+ #define DP_AUX_ERR_DEFER	-4
+ #define DP_AUX_ERR_NACK_DEFER	-5
++#define DP_AUX_ERR_DPPHY_AUX	-6
+ 
+ int dp_aux_register(struct drm_dp_aux *dp_aux);
+ void dp_aux_unregister(struct drm_dp_aux *dp_aux);
+diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
+index d186424044b1..f92a8e37a312 100644
+--- a/drivers/gpu/drm/msm/dp/dp_catalog.c
++++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
+@@ -524,16 +524,21 @@ void dp_catalog_ctrl_mainlink_ctrl(struct dp_catalog *dp_catalog,
+ 		 * To make sure link reg writes happens before other operation,
+ 		 * dp_write_link() function uses writel()
+ 		 */
+-		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
+-				DP_MAINLINK_FB_BOUNDARY_SEL);
+-		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
+-					DP_MAINLINK_FB_BOUNDARY_SEL |
+-					DP_MAINLINK_CTRL_RESET);
+-		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
++		mainlink_ctrl = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
++
++		mainlink_ctrl &= ~(DP_MAINLINK_CTRL_RESET |
++						DP_MAINLINK_CTRL_ENABLE);
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
++
++		mainlink_ctrl |= DP_MAINLINK_CTRL_RESET;
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
++
++		mainlink_ctrl &= ~DP_MAINLINK_CTRL_RESET;
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
++
++		mainlink_ctrl |= (DP_MAINLINK_CTRL_ENABLE |
+ 					DP_MAINLINK_FB_BOUNDARY_SEL);
+-		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
+-					DP_MAINLINK_FB_BOUNDARY_SEL |
+-					DP_MAINLINK_CTRL_ENABLE);
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, mainlink_ctrl);
+ 	} else {
+ 		mainlink_ctrl = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
+ 		mainlink_ctrl &= ~DP_MAINLINK_CTRL_ENABLE;
+@@ -629,7 +634,7 @@ int dp_catalog_ctrl_set_pattern(struct dp_catalog *dp_catalog,
+ 
+ 	bit = BIT(pattern - 1);
+ 	DRM_DEBUG_DP("hw: bit=%d train=%d\n", bit, pattern);
+-	dp_write_link(catalog, REG_DP_STATE_CTRL, bit);
++	dp_catalog_ctrl_state_ctrl(dp_catalog, bit);
+ 
+ 	bit = BIT(pattern - 1) << DP_MAINLINK_READY_LINK_TRAINING_SHIFT;
+ 
+@@ -754,7 +759,7 @@ void dp_catalog_ctrl_hpd_config(struct dp_catalog *dp_catalog)
+ 	/* enable HPD interrupts */
+ 	dp_catalog_hpd_config_intr(dp_catalog,
+ 		DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK
+-		| DP_DP_HPD_UNPLUG_INT_MASK, true);
++		| DP_DP_HPD_UNPLUG_INT_MASK | DP_DP_HPD_REPLUG_INT_MASK, true);
+ 
+ 	/* Configure REFTIMER and enable it */
+ 	reftimer |= DP_DP_HPD_REFTIMER_ENABLE;
+@@ -866,15 +871,27 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
+ 	dp_write_link(catalog, REG_DP_STATE_CTRL, 0x0);
+ 
+ 	switch (pattern) {
+-	case DP_LINK_QUAL_PATTERN_D10_2:
++	case DP_PHY_TEST_PATTERN_D10_2:
+ 		dp_write_link(catalog, REG_DP_STATE_CTRL,
+ 				DP_STATE_CTRL_LINK_TRAINING_PATTERN1);
+-		return;
+-	case DP_LINK_QUAL_PATTERN_PRBS7:
++		break;
++	case DP_PHY_TEST_PATTERN_ERROR_COUNT:
++		value &= ~(1 << 16);
++		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
++					value);
++		value |= SCRAMBLER_RESET_COUNT_VALUE;
++		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
++					value);
++		dp_write_link(catalog, REG_DP_MAINLINK_LEVELS,
++					DP_MAINLINK_SAFE_TO_EXIT_LEVEL_2);
++		dp_write_link(catalog, REG_DP_STATE_CTRL,
++					DP_STATE_CTRL_LINK_SYMBOL_ERR_MEASURE);
++		break;
++	case DP_PHY_TEST_PATTERN_PRBS7:
+ 		dp_write_link(catalog, REG_DP_STATE_CTRL,
+ 				DP_STATE_CTRL_LINK_PRBS7);
+-		return;
+-	case DP_LINK_QUAL_PATTERN_80BIT_CUSTOM:
++		break;
++	case DP_PHY_TEST_PATTERN_80BIT_CUSTOM:
+ 		dp_write_link(catalog, REG_DP_STATE_CTRL,
+ 				DP_STATE_CTRL_LINK_TEST_CUSTOM_PATTERN);
+ 		/* 00111110000011111000001111100000 */
+@@ -886,14 +903,15 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
+ 		/* 1111100000111110 */
+ 		dp_write_link(catalog, REG_DP_TEST_80BIT_CUSTOM_PATTERN_REG2,
+ 				0x0000F83E);
+-		return;
+-	case DP_LINK_QUAL_PATTERN_HBR2_EYE:
+-	case DP_LINK_QUAL_PATTERN_ERROR_RATE:
+-		value &= ~DP_HBR2_ERM_PATTERN;
+-		if (pattern == DP_LINK_QUAL_PATTERN_HBR2_EYE)
+-			value = DP_HBR2_ERM_PATTERN;
++		break;
++	case DP_PHY_TEST_PATTERN_CP2520:
++		value = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
++		value &= ~DP_MAINLINK_CTRL_SW_BYPASS_SCRAMBLER;
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, value);
++
++		value = DP_HBR2_ERM_PATTERN;
+ 		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
+-					value);
++				value);
+ 		value |= SCRAMBLER_RESET_COUNT_VALUE;
+ 		dp_write_link(catalog, REG_DP_HBR2_COMPLIANCE_SCRAMBLER_RESET,
+ 					value);
+@@ -901,10 +919,19 @@ void dp_catalog_ctrl_send_phy_pattern(struct dp_catalog *dp_catalog,
+ 					DP_MAINLINK_SAFE_TO_EXIT_LEVEL_2);
+ 		dp_write_link(catalog, REG_DP_STATE_CTRL,
+ 					DP_STATE_CTRL_LINK_SYMBOL_ERR_MEASURE);
+-		return;
++		value = dp_read_link(catalog, REG_DP_MAINLINK_CTRL);
++		value |= DP_MAINLINK_CTRL_ENABLE;
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL, value);
++		break;
++	case DP_PHY_TEST_PATTERN_SEL_MASK:
++		dp_write_link(catalog, REG_DP_MAINLINK_CTRL,
++				DP_MAINLINK_CTRL_ENABLE);
++		dp_write_link(catalog, REG_DP_STATE_CTRL,
++				DP_STATE_CTRL_LINK_TRAINING_PATTERN4);
++		break;
+ 	default:
+ 		DRM_DEBUG_DP("No valid test pattern requested:0x%x\n", pattern);
+-		return;
++		break;
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+index ae07e43b541b..70b0e06953f6 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+@@ -26,6 +26,13 @@
+ #define MR_LINK_SYMBOL_ERM 0x80
+ #define MR_LINK_PRBS7 0x100
+ #define MR_LINK_CUSTOM80 0x200
++#define MR_LINK_TRAINING4  0x40
++
++enum {
++	DP_TRAINING_NONE,
++	DP_TRAINING_1,
++	DP_TRAINING_2,
++};
+ 
+ struct dp_tu_calc_input {
+ 	u64 lclk;        /* 162, 270, 540 and 810 */
+@@ -58,7 +65,6 @@ struct dp_vc_tu_mapping_table {
+ 
+ struct dp_ctrl_private {
+ 	struct dp_ctrl dp_ctrl;
+-
+ 	struct device *dev;
+ 	struct drm_dp_aux *aux;
+ 	struct dp_panel *panel;
+@@ -68,10 +74,16 @@ struct dp_ctrl_private {
+ 	struct dp_catalog *catalog;
+ 
+ 	struct completion idle_comp;
+-	struct mutex push_idle_mutex;
+ 	struct completion video_comp;
+ };
+ 
++struct dp_cr_status {
++	u8 lane_0_1;
++	u8 lane_2_3;
++};
++
++#define DP_LANE0_1_CR_DONE	0x11
++
+ static int dp_aux_link_configure(struct drm_dp_aux *aux,
+ 					struct dp_link_info *link)
+ {
+@@ -97,8 +109,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
+ 
+ 	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
+ 
+-	mutex_lock(&ctrl->push_idle_mutex);
+-
+ 	reinit_completion(&ctrl->idle_comp);
+ 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_PUSH_IDLE);
+ 
+@@ -106,7 +116,6 @@ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl)
+ 			IDLE_PATTERN_COMPLETION_TIMEOUT_JIFFIES))
+ 		pr_warn("PUSH_IDLE pattern timedout\n");
+ 
+-	mutex_unlock(&ctrl->push_idle_mutex);
+ 	pr_debug("mainlink off done\n");
+ }
+ 
+@@ -979,7 +988,7 @@ static int dp_ctrl_wait4video_ready(struct dp_ctrl_private *ctrl)
+ 
+ 	if (!wait_for_completion_timeout(&ctrl->video_comp,
+ 				WAIT_FOR_VIDEO_READY_TIMEOUT_JIFFIES)) {
+-		DRM_ERROR("Link Train timedout\n");
++		DRM_ERROR("wait4video timedout\n");
+ 		ret = -ETIMEDOUT;
+ 	}
+ 	return ret;
+@@ -1000,13 +1009,13 @@ static int dp_ctrl_update_vx_px(struct dp_ctrl_private *ctrl)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (voltage_swing_level > DP_TRAIN_VOLTAGE_SWING_MAX) {
++	if (voltage_swing_level >= DP_TRAIN_VOLTAGE_SWING_MAX) {
+ 		DRM_DEBUG_DP("max. voltage swing level reached %d\n",
+ 				voltage_swing_level);
+ 		max_level_reached |= DP_TRAIN_MAX_SWING_REACHED;
+ 	}
+ 
+-	if (pre_emphasis_level == DP_TRAIN_PRE_EMPHASIS_MAX) {
++	if (pre_emphasis_level >= DP_TRAIN_PRE_EMPHASIS_MAX) {
+ 		DRM_DEBUG_DP("max. pre-emphasis level reached %d\n",
+ 				pre_emphasis_level);
+ 		max_level_reached  |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
+@@ -1038,8 +1047,11 @@ static bool dp_ctrl_train_pattern_set(struct dp_ctrl_private *ctrl,
+ 	DRM_DEBUG_DP("sink: pattern=%x\n", pattern);
+ 
+ 	buf = pattern;
+-	ret = drm_dp_dpcd_writeb(ctrl->aux,
+-					DP_TRAINING_PATTERN_SET, buf);
++
++	if (pattern && pattern != DP_TRAINING_PATTERN_4)
++		buf |= DP_LINK_SCRAMBLING_DISABLE;
++
++	ret = drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, buf);
+ 	return ret == 1;
+ }
+ 
+@@ -1065,19 +1077,23 @@ static int dp_ctrl_read_link_status(struct dp_ctrl_private *ctrl,
+ 	return -ETIMEDOUT;
+ }
+ 
+-static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
++static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl,
++		struct dp_cr_status *cr, int *training_step)
+ {
+ 	int tries, old_v_level, ret = 0;
+ 	u8 link_status[DP_LINK_STATUS_SIZE];
+-	int const maximum_retries = 5;
++	int const maximum_retries = 4;
+ 
+ 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
+ 
++	*training_step = DP_TRAINING_1;
++
+ 	ret = dp_catalog_ctrl_set_pattern(ctrl->catalog, DP_TRAINING_PATTERN_1);
+ 	if (ret)
+ 		return ret;
+ 	dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
+ 		DP_LINK_SCRAMBLING_DISABLE);
++
+ 	ret = dp_ctrl_update_vx_px(ctrl);
+ 	if (ret)
+ 		return ret;
+@@ -1091,12 +1107,15 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
+ 		if (ret)
+ 			return ret;
+ 
++		cr->lane_0_1 = link_status[0];
++		cr->lane_2_3 = link_status[1];
++
+ 		if (drm_dp_clock_recovery_ok(link_status,
+ 			ctrl->link->link_params.num_lanes)) {
+-			return ret;
++			return 0;
+ 		}
+ 
+-		if (ctrl->link->phy_params.v_level >
++		if (ctrl->link->phy_params.v_level >=
+ 			DP_TRAIN_VOLTAGE_SWING_MAX) {
+ 			DRM_ERROR_RATELIMITED("max v_level reached\n");
+ 			return -EAGAIN;
+@@ -1119,8 +1138,10 @@ static int dp_ctrl_link_train_1(struct dp_ctrl_private *ctrl)
+ 	return -ETIMEDOUT;
+ }
+ 
+-static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
++static int dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
+ {
++	int ret = 0;
++
+ 	switch (ctrl->link->link_params.rate) {
+ 	case 810000:
+ 		ctrl->link->link_params.rate = 540000;
+@@ -1129,13 +1150,33 @@ static void dp_ctrl_link_rate_down_shift(struct dp_ctrl_private *ctrl)
+ 		ctrl->link->link_params.rate = 270000;
+ 		break;
+ 	case 270000:
++		ctrl->link->link_params.rate = 162000;
++		break;
+ 	case 162000:
+ 	default:
+-		ctrl->link->link_params.rate = 162000;
++		ret = -EINVAL;
+ 		break;
+ 	};
+ 
+-	DRM_DEBUG_DP("new rate=0x%x\n", ctrl->link->link_params.rate);
++	if (!ret)
++		DRM_DEBUG_DP("new rate=0x%x\n", ctrl->link->link_params.rate);
++
++	return ret;
++}
++
++static int dp_ctrl_link_lane_down_shift(struct dp_ctrl_private *ctrl)
++{
++
++	if (ctrl->link->link_params.num_lanes == 1)
++		return -1;
++
++	ctrl->link->link_params.num_lanes /= 2;
++	ctrl->link->link_params.rate = ctrl->panel->link_info.rate;
++
++	ctrl->link->phy_params.p_level = 0;
++	ctrl->link->phy_params.v_level = 0;
++
++	return 0;
+ }
+ 
+ static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private *ctrl)
+@@ -1144,7 +1185,8 @@ static void dp_ctrl_clear_training_pattern(struct dp_ctrl_private *ctrl)
+ 	drm_dp_link_train_channel_eq_delay(ctrl->panel->dpcd);
+ }
+ 
+-static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
++static int dp_ctrl_link_train_2(struct dp_ctrl_private *ctrl,
++		struct dp_cr_status *cr, int *training_step)
+ {
+ 	int tries = 0, ret = 0;
+ 	char pattern;
+@@ -1153,6 +1195,8 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
+ 
+ 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
+ 
++	*training_step = DP_TRAINING_2;
++
+ 	if (drm_dp_tps3_supported(ctrl->panel->dpcd))
+ 		pattern = DP_TRAINING_PATTERN_3;
+ 	else
+@@ -1174,10 +1218,13 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
+ 		ret = dp_ctrl_read_link_status(ctrl, link_status);
+ 		if (ret)
+ 			return ret;
++		cr->lane_0_1 = link_status[0];
++		cr->lane_2_3 = link_status[1];
+ 
+ 		if (drm_dp_channel_eq_ok(link_status,
+-			ctrl->link->link_params.num_lanes))
+-			return ret;
++			ctrl->link->link_params.num_lanes)) {
++			return 0;
++		}
+ 
+ 		dp_link_adjust_levels(ctrl->link, link_status);
+ 		ret = dp_ctrl_update_vx_px(ctrl);
+@@ -1189,15 +1236,15 @@ static int dp_ctrl_link_training_2(struct dp_ctrl_private *ctrl)
+ 	return -ETIMEDOUT;
+ }
+ 
+-static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
++static int dp_ctrl_reinitialize_mainlink(struct dp_ctrl_private *ctrl);
++
++static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl,
++		struct dp_cr_status *cr, int *training_step)
+ {
+ 	int ret = 0;
+ 	u8 encoding = DP_SET_ANSI_8B10B;
+ 	struct dp_link_info link_info = {0};
+ 
+-	ctrl->link->phy_params.p_level = 0;
+-	ctrl->link->phy_params.v_level = 0;
+-
+ 	dp_ctrl_config_ctrl(ctrl);
+ 
+ 	link_info.num_lanes = ctrl->link->link_params.num_lanes;
+@@ -1208,7 +1255,7 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
+ 	drm_dp_dpcd_write(ctrl->aux, DP_MAIN_LINK_CHANNEL_CODING_SET,
+ 				&encoding, 1);
+ 
+-	ret = dp_ctrl_link_train_1(ctrl);
++	ret = dp_ctrl_link_train_1(ctrl, cr, training_step);
+ 	if (ret) {
+ 		DRM_ERROR("link training #1 failed. ret=%d\n", ret);
+ 		goto end;
+@@ -1217,7 +1264,7 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
+ 	/* print success info as this is a result of user initiated action */
+ 	DRM_DEBUG_DP("link training #1 successful\n");
+ 
+-	ret = dp_ctrl_link_training_2(ctrl);
++	ret = dp_ctrl_link_train_2(ctrl, cr, training_step);
+ 	if (ret) {
+ 		DRM_ERROR("link training #2 failed. ret=%d\n", ret);
+ 		goto end;
+@@ -1229,58 +1276,36 @@ static int dp_ctrl_link_train(struct dp_ctrl_private *ctrl)
+ end:
+ 	dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
+ 
+-	dp_ctrl_clear_training_pattern(ctrl);
+ 	return ret;
+ }
+ 
+-static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl, bool train)
++static int dp_ctrl_setup_main_link(struct dp_ctrl_private *ctrl,
++		struct dp_cr_status *cr, int *training_step)
+ {
+-	bool mainlink_ready = false;
+ 	int ret = 0;
+ 
+ 	dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, true);
+ 
+-	ret = dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, false);
+-	if (ret)
+-		return ret;
+-
+ 	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
+ 		return ret;
+ 
+-	if (train) {
+-		/*
+-		 * As part of previous calls, DP controller state might have
+-		 * transitioned to PUSH_IDLE. In order to start transmitting
+-		 * a link training pattern, we have to first do soft reset.
+-		 */
+-		dp_catalog_ctrl_reset(ctrl->catalog);
+-
+-		ret = dp_ctrl_link_train(ctrl);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	/*
+-	 * Set up transfer unit values and set controller state to send
+-	 * video.
++	 * As part of previous calls, DP controller state might have
++	 * transitioned to PUSH_IDLE. In order to start transmitting
++	 * a link training pattern, we have to first do soft reset.
+ 	 */
+-	dp_ctrl_setup_tr_unit(ctrl);
+-	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
++	dp_catalog_ctrl_reset(ctrl->catalog);
+ 
+-	ret = dp_ctrl_wait4video_ready(ctrl);
+-	if (ret)
+-		return ret;
++	ret = dp_ctrl_link_train(ctrl, cr, training_step);
+ 
+-	mainlink_ready = dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
+-	DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT READY");
+ 	return ret;
+ }
+ 
+ static void dp_ctrl_set_clock_rate(struct dp_ctrl_private *ctrl,
+-				   char *name, u32 rate)
++			enum dp_pm_type module, char *name, u32 rate)
+ {
+-	u32 num = ctrl->parser->mp[DP_CTRL_PM].num_clk;
+-	struct dss_clk *cfg = ctrl->parser->mp[DP_CTRL_PM].clk_config;
++	u32 num = ctrl->parser->mp[module].num_clk;
++	struct dss_clk *cfg = ctrl->parser->mp[module].clk_config;
+ 
+ 	while (num && strcmp(cfg->clk_name, name)) {
+ 		num--;
+@@ -1302,16 +1327,33 @@ static int dp_ctrl_enable_mainlink_clocks(struct dp_ctrl_private *ctrl)
+ 
+ 	dp_power_set_link_clk_parent(ctrl->power);
+ 
+-	dp_ctrl_set_clock_rate(ctrl, "ctrl_link",
++	dp_ctrl_set_clock_rate(ctrl, DP_CTRL_PM, "ctrl_link",
+ 					ctrl->link->link_params.rate);
+ 
+-	dp_ctrl_set_clock_rate(ctrl, "stream_pixel",
+-					ctrl->dp_ctrl.pixel_rate);
+-
+ 	ret = dp_power_clk_enable(ctrl->power, DP_CTRL_PM, true);
+ 	if (ret)
+ 		DRM_ERROR("Unable to start link clocks. ret=%d\n", ret);
+ 
++	DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
++		ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel_rate);
++
++	return ret;
++}
++
++static int dp_ctrl_enable_stream_clocks(struct dp_ctrl_private *ctrl)
++{
++	int ret = 0;
++
++	dp_ctrl_set_clock_rate(ctrl, DP_STREAM_PM, "stream_pixel",
++					ctrl->dp_ctrl.pixel_rate);
++
++	ret = dp_power_clk_enable(ctrl->power, DP_STREAM_PM, true);
++	if (ret)
++		DRM_ERROR("Unabled to start pixel clocks. ret=%d\n", ret);
++
++	DRM_DEBUG_DP("link rate=%d pixel_clk=%d\n",
++			ctrl->link->link_params.rate, ctrl->dp_ctrl.pixel_rate);
++
+ 	return ret;
+ }
+ 
+@@ -1401,37 +1443,30 @@ static int dp_ctrl_reinitialize_mainlink(struct dp_ctrl_private *ctrl)
+ 		return ret;
+ 	}
+ 
+-	dp_ctrl_configure_source_params(ctrl);
+-	dp_catalog_ctrl_config_msa(ctrl->catalog,
+-		ctrl->link->link_params.rate,
+-		ctrl->dp_ctrl.pixel_rate, dp_ctrl_use_fixed_nvid(ctrl));
+-	reinit_completion(&ctrl->idle_comp);
+-
+ 	return ret;
+ }
+ 
+ static int dp_ctrl_link_maintenance(struct dp_ctrl_private *ctrl)
+ {
+ 	int ret = 0;
+-	int tries;
++	struct dp_cr_status cr;
++	int training_step = DP_TRAINING_NONE;
+ 
+ 	dp_ctrl_push_idle(&ctrl->dp_ctrl);
+ 	dp_catalog_ctrl_reset(ctrl->catalog);
+ 
+ 	ctrl->dp_ctrl.pixel_rate = ctrl->panel->dp_mode.drm_mode.clock;
+ 
+-	for (tries = 0; tries < 10; tries++) {
+-		ret = dp_ctrl_reinitialize_mainlink(ctrl);
+-		if (ret) {
+-			DRM_ERROR("Failed to reinitialize mainlink. ret=%d\n",
+-					ret);
+-			break;
+-		}
++	ret = dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
++	if (ret)
++		goto end;
+ 
+-		ret = dp_ctrl_setup_main_link(ctrl, true);
+-		if (ret == -EAGAIN) /* try with lower link rate */
+-			dp_ctrl_link_rate_down_shift(ctrl);
+-	}
++	dp_ctrl_clear_training_pattern(ctrl);
++
++	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
++
++	ret = dp_ctrl_wait4video_ready(ctrl);
++end:
+ 	return ret;
+ }
+ 
+@@ -1444,22 +1479,22 @@ static int dp_ctrl_process_phy_test_request(struct dp_ctrl_private *ctrl)
+ 		return ret;
+ 	}
+ 
+-	dp_ctrl_push_idle(&ctrl->dp_ctrl);
+ 	/*
+ 	 * The global reset will need DP link related clocks to be
+ 	 * running. Add the global reset just before disabling the
+ 	 * link clocks and core clocks.
+ 	 */
+-	dp_catalog_ctrl_reset(ctrl->catalog);
+ 	ret = dp_ctrl_off(&ctrl->dp_ctrl);
+ 	if (ret) {
+ 		DRM_ERROR("failed to disable DP controller\n");
+ 		return ret;
+ 	}
+ 
+-	ret = dp_ctrl_on(&ctrl->dp_ctrl);
+-	if (ret)
+-		DRM_ERROR("failed to enable DP controller\n");
++	ret = dp_ctrl_on_link(&ctrl->dp_ctrl);
++	if (!ret)
++		ret = dp_ctrl_on_stream(&ctrl->dp_ctrl);
++	else
++		DRM_ERROR("failed to enable DP link controller\n");
+ 
+ 	return ret;
+ }
+@@ -1479,27 +1514,33 @@ static bool dp_ctrl_send_phy_test_pattern(struct dp_ctrl_private *ctrl)
+ 		return false;
+ 	}
+ 	dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, pattern_requested);
++	dp_ctrl_update_vx_px(ctrl);
+ 	dp_link_send_test_response(ctrl->link);
+ 
+ 	pattern_sent = dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
+ 
+ 	switch (pattern_sent) {
+ 	case MR_LINK_TRAINING1:
+-		success = pattern_requested ==
+-				DP_LINK_QUAL_PATTERN_D10_2;
++		success = (pattern_requested ==
++				DP_PHY_TEST_PATTERN_D10_2);
+ 		break;
+ 	case MR_LINK_SYMBOL_ERM:
+-		success = (pattern_requested ==
+-				DP_LINK_QUAL_PATTERN_ERROR_RATE)
+-			|| (pattern_requested ==
+-				DP_LINK_QUAL_PATTERN_HBR2_EYE);
++		success = ((pattern_requested ==
++			DP_PHY_TEST_PATTERN_ERROR_COUNT) ||
++				(pattern_requested ==
++				DP_PHY_TEST_PATTERN_CP2520));
+ 		break;
+ 	case MR_LINK_PRBS7:
+-		success = pattern_requested == DP_LINK_QUAL_PATTERN_PRBS7;
++		success = (pattern_requested ==
++				DP_PHY_TEST_PATTERN_PRBS7);
+ 		break;
+ 	case MR_LINK_CUSTOM80:
+-		success = pattern_requested ==
+-				DP_LINK_QUAL_PATTERN_80BIT_CUSTOM;
++		success = (pattern_requested ==
++				DP_PHY_TEST_PATTERN_80BIT_CUSTOM);
++		break;
++	case MR_LINK_TRAINING4:
++		success = (pattern_requested ==
++				DP_PHY_TEST_PATTERN_SEL_MASK);
+ 		break;
+ 	default:
+ 		success = false;
+@@ -1531,12 +1572,12 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *dp_ctrl)
+ 		}
+ 	}
+ 
+-	if (sink_request & DP_LINK_STATUS_UPDATED)
++	if (sink_request & DP_LINK_STATUS_UPDATED) {
+ 		if (dp_ctrl_link_maintenance(ctrl)) {
+-			DRM_ERROR("LM failed: STATUS_UPDATED\n");
++			DRM_ERROR("LM failed: TEST_LINK_TRAINING\n");
+ 			return;
+ 		}
+-
++	}
+ 
+ 	if (sink_request & DP_TEST_LINK_TRAINING) {
+ 		dp_link_send_test_response(ctrl->link);
+@@ -1547,13 +1588,15 @@ void dp_ctrl_handle_sink_request(struct dp_ctrl *dp_ctrl)
+ 	}
+ }
+ 
+-int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
++int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl)
+ {
+ 	int rc = 0;
+ 	struct dp_ctrl_private *ctrl;
+ 	u32 rate = 0;
+-	u32 link_train_max_retries = 10;
++	int link_train_max_retries = 5;
+ 	u32 const phy_cts_pixel_clk_khz = 148500;
++	struct dp_cr_status cr;
++	unsigned int training_step;
+ 
+ 	if (!dp_ctrl)
+ 		return -EINVAL;
+@@ -1587,6 +1630,9 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
+ 	if (rc)
+ 		return rc;
+ 
++	ctrl->link->phy_params.p_level = 0;
++	ctrl->link->phy_params.v_level = 0;
++
+ 	while (--link_train_max_retries &&
+ 		!atomic_read(&ctrl->dp_ctrl.aborted)) {
+ 		rc = dp_ctrl_reinitialize_mainlink(ctrl);
+@@ -1595,19 +1641,125 @@ int dp_ctrl_on(struct dp_ctrl *dp_ctrl)
+ 					rc);
+ 			break;
+ 		}
+-		rc = dp_ctrl_setup_main_link(ctrl, true);
+-		if (!rc)
++
++		training_step = DP_TRAINING_NONE;
++		rc = dp_ctrl_setup_main_link(ctrl, &cr, &training_step);
++		if (rc == 0) {
++			/* training completed successfully */
+ 			break;
+-		/* try with lower link rate */
+-		dp_ctrl_link_rate_down_shift(ctrl);
++		} else if (training_step == DP_TRAINING_1) {
++			/* link train_1 failed */
++			rc = dp_ctrl_link_rate_down_shift(ctrl);
++			if (rc < 0) { /* already in RBR = 1.6G */
++				if (cr.lane_0_1 & DP_LANE0_1_CR_DONE) {
++					/*
++					 * some lanes are ready,
++					 * reduce lane number
++					 */
++					rc = dp_ctrl_link_lane_down_shift(ctrl);
++					if (rc < 0) { /* lane == 1 already */
++						/* end with failure */
++						break;
++					}
++				} else {
++					/* end with failure */
++					break; /* lane == 1 already */
++				}
++			}
++		} else if (training_step == DP_TRAINING_2) {
++			/* link train_2 failed, lower lane rate */
++			rc = dp_ctrl_link_lane_down_shift(ctrl);
++			if (rc < 0) {
++				/* end with failure */
++				break; /* lane == 1 already */
++			}
++		}
+ 	}
+ 
+ 	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN)
+-		dp_ctrl_send_phy_test_pattern(ctrl);
++		return rc;
++
++	/* stop txing train pattern */
++	dp_ctrl_clear_training_pattern(ctrl);
++
++	/*
++	 * keep transmitting idle pattern until video ready
++	 * to avoid main link from loss of sync
++	 */
++	if (rc == 0)  /* link train successfully */
++		dp_ctrl_push_idle(dp_ctrl);
+ 
+ 	return rc;
+ }
+ 
++int dp_ctrl_on_stream(struct dp_ctrl *dp_ctrl)
++{
++	u32 rate = 0;
++	int ret = 0;
++	bool mainlink_ready = false;
++	struct dp_ctrl_private *ctrl;
++
++	if (!dp_ctrl)
++		return -EINVAL;
++
++	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
++
++	rate = ctrl->panel->link_info.rate;
++
++	ctrl->link->link_params.rate = rate;
++	ctrl->link->link_params.num_lanes = ctrl->panel->link_info.num_lanes;
++	ctrl->dp_ctrl.pixel_rate = ctrl->panel->dp_mode.drm_mode.clock;
++
++	DRM_DEBUG_DP("rate=%d, num_lanes=%d, pixel_rate=%d\n",
++		ctrl->link->link_params.rate,
++		ctrl->link->link_params.num_lanes, ctrl->dp_ctrl.pixel_rate);
++
++	if (!dp_power_clk_status(ctrl->power, DP_CTRL_PM)) { /* link clk is off */
++		ret = dp_ctrl_enable_mainlink_clocks(ctrl);
++		if (ret) {
++			DRM_ERROR("Failed to start link clocks. ret=%d\n", ret);
++			goto end;
++		}
++	}
++
++	ret = dp_ctrl_enable_stream_clocks(ctrl);
++	if (ret) {
++		DRM_ERROR("Failed to start pixel clocks. ret=%d\n", ret);
++		goto end;
++	}
++
++	if (ctrl->link->sink_request & DP_TEST_LINK_PHY_TEST_PATTERN) {
++		dp_ctrl_send_phy_test_pattern(ctrl);
++		return 0;
++	}
++
++	/*
++	 * Set up transfer unit values and set controller state to send
++	 * video.
++	 */
++	dp_ctrl_configure_source_params(ctrl);
++
++	dp_catalog_ctrl_config_msa(ctrl->catalog,
++		ctrl->link->link_params.rate,
++		ctrl->dp_ctrl.pixel_rate, dp_ctrl_use_fixed_nvid(ctrl));
++
++	reinit_completion(&ctrl->video_comp);
++
++	dp_ctrl_setup_tr_unit(ctrl);
++
++	dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
++
++	ret = dp_ctrl_wait4video_ready(ctrl);
++	if (ret)
++		return ret;
++
++	mainlink_ready = dp_catalog_ctrl_mainlink_ready(ctrl->catalog);
++	DRM_DEBUG_DP("mainlink %s\n", mainlink_ready ? "READY" : "NOT READY");
++
++end:
++	return ret;
++}
++
+ int dp_ctrl_off(struct dp_ctrl *dp_ctrl)
+ {
+ 	struct dp_ctrl_private *ctrl;
+@@ -1619,11 +1771,16 @@ int dp_ctrl_off(struct dp_ctrl *dp_ctrl)
+ 	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
+ 
+ 	dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, false);
++
+ 	dp_catalog_ctrl_reset(ctrl->catalog);
++
++	ret = dp_power_clk_enable(ctrl->power, DP_STREAM_PM, false);
++	if (ret)
++		DRM_ERROR("Failed to disable pixel clocks. ret=%d\n", ret);
++
+ 	ret = dp_power_clk_enable(ctrl->power, DP_CTRL_PM, false);
+ 	if (ret) {
+-		DRM_ERROR("Failed to disable clocks. ret=%d\n", ret);
+-		return ret;
++		DRM_ERROR("Failed to disable link clocks. ret=%d\n", ret);
+ 	}
+ 
+ 	DRM_DEBUG_DP("DP off done\n");
+@@ -1674,7 +1831,6 @@ struct dp_ctrl *dp_ctrl_get(struct device *dev, struct dp_link *link,
+ 
+ 	init_completion(&ctrl->idle_comp);
+ 	init_completion(&ctrl->video_comp);
+-	mutex_init(&ctrl->push_idle_mutex);
+ 
+ 	/* in parameters */
+ 	ctrl->parser   = parser;
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.h b/drivers/gpu/drm/msm/dp/dp_ctrl.h
+index 94713a0daff0..f60ba93c8678 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.h
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.h
+@@ -21,7 +21,8 @@ struct dp_ctrl {
+ 
+ int dp_ctrl_host_init(struct dp_ctrl *dp_ctrl, bool flip);
+ void dp_ctrl_host_deinit(struct dp_ctrl *dp_ctrl);
+-int dp_ctrl_on(struct dp_ctrl *dp_ctrl);
++int dp_ctrl_on_link(struct dp_ctrl *dp_ctrl);
++int dp_ctrl_on_stream(struct dp_ctrl *dp_ctrl);
+ int dp_ctrl_off(struct dp_ctrl *dp_ctrl);
+ void dp_ctrl_push_idle(struct dp_ctrl *dp_ctrl);
+ void dp_ctrl_isr(struct dp_ctrl *dp_ctrl);
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+index 36b6ee4131bb..97f076324242 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -9,6 +9,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/component.h>
+ #include <linux/of_irq.h>
++#include <linux/delay.h>
+ 
+ #include "msm_drv.h"
+ #include "msm_kms.h"
+@@ -28,6 +29,45 @@
+ static struct msm_dp *g_dp_display;
+ #define HPD_STRING_SIZE 30
+ 
++enum {
++	ISR_DISCONNECTED,
++	ISR_CONNECT_PENDING,
++	ISR_CONNECTED,
++	ISR_HPD_REPLUG_COUNT,
++	ISR_IRQ_HPD_PULSE_COUNT,
++	ISR_HPD_LO_GLITH_COUNT,
++};
++
++/* event thread connection state */
++enum {
++	ST_DISCONNECTED,
++	ST_CONNECT_PENDING,
++	ST_CONNECTED,
++	ST_DISCONNECT_PENDING,
++};
++
++enum {
++	EV_NO_EVENT,
++	/* hpd events */
++	EV_HPD_INIT_SETUP,
++	EV_HPD_PLUG_INT,
++	EV_IRQ_HPD_INT,
++	EV_HPD_REPLUG_INT,
++	EV_HPD_UNPLUG_INT,
++	EV_USER_NOTIFICATION,
++	EV_CONNECT_PENDING_TIMEOUT,
++	EV_DISCONNECT_PENDING_TIMEOUT,
++};
++
++#define EVENT_TIMEOUT	(HZ/10)	/* 100ms */
++#define DP_EVENT_Q_MAX	8
++
++struct dp_event {
++	u32 event_id;
++	u32 data;
++	u32 delay;
++};
++
+ struct dp_display_private {
+ 	char *name;
+ 	int irq;
+@@ -37,11 +77,9 @@ struct dp_display_private {
+ 	bool power_on;
+ 	bool hpd_irq_on;
+ 	bool audio_supported;
+-	atomic_t hpd_isr_status;
+ 
+ 	struct platform_device *pdev;
+ 	struct dentry *root;
+-	struct completion notification_comp;
+ 
+ 	struct dp_usbpd   *usbpd;
+ 	struct dp_parser  *parser;
+@@ -52,12 +90,20 @@ struct dp_display_private {
+ 	struct dp_link    *link;
+ 	struct dp_panel   *panel;
+ 	struct dp_ctrl    *ctrl;
++	struct dp_debug   *debug;
+ 
+ 	struct dp_usbpd_cb usbpd_cb;
+ 	struct dp_display_mode dp_mode;
+ 	struct msm_dp dp_display;
+ 
+-	struct delayed_work config_hpd_work;
++	/* event related only access by event thread */
++	struct mutex event_mutex;
++	wait_queue_head_t event_q;
++	atomic_t hpd_state;
++	u32 event_pndx;
++	u32 event_gndx;
++	struct dp_event event_list[DP_EVENT_Q_MAX];
++	spinlock_t event_lock;
+ };
+ 
+ static const struct of_device_id dp_dt_match[] = {
+@@ -65,79 +111,58 @@ static const struct of_device_id dp_dt_match[] = {
+ 	{}
+ };
+ 
+-static irqreturn_t dp_display_irq(int irq, void *dev_id)
++static int dp_add_event(struct dp_display_private *dp_priv, u32 event,
++						u32 data, u32 delay)
+ {
+-	struct dp_display_private *dp = dev_id;
+-	irqreturn_t ret = IRQ_HANDLED;
+-	u32 hpd_isr_status;
+-
+-	if (!dp) {
+-		DRM_ERROR("invalid data\n");
+-		return IRQ_NONE;
++	unsigned long flag;
++	struct dp_event *todo;
++	int pndx;
++
++	spin_lock_irqsave(&dp_priv->event_lock, flag);
++	pndx = dp_priv->event_pndx + 1;
++	pndx %= DP_EVENT_Q_MAX;
++	if (pndx == dp_priv->event_gndx) {
++		pr_err("event_q is full: pndx=%d gndx=%d\n",
++			dp_priv->event_pndx, dp_priv->event_gndx);
++		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
++		return -EPERM;
+ 	}
++	todo = &dp_priv->event_list[dp_priv->event_pndx++];
++	dp_priv->event_pndx %= DP_EVENT_Q_MAX;
++	todo->event_id = event;
++	todo->data = data;
++	todo->delay = delay;
++	wake_up(&dp_priv->event_q);
++	spin_unlock_irqrestore(&dp_priv->event_lock, flag);
+ 
+-	hpd_isr_status = dp_catalog_hpd_get_intr_status(dp->catalog);
+-
+-	if (hpd_isr_status & DP_DP_HPD_INT_MASK) {
+-		atomic_set(&dp->hpd_isr_status, hpd_isr_status);
+-		ret = IRQ_WAKE_THREAD;
+-	}
+-
+-	/* DP controller isr */
+-	dp_ctrl_isr(dp->ctrl);
+-
+-	/* DP aux isr */
+-	dp_aux_isr(dp->aux);
+-
+-	return ret;
++	return 0;
+ }
+ 
+-static irqreturn_t dp_display_hpd_isr_work(int irq, void *data)
++static int dp_del_event(struct dp_display_private *dp_priv, u32 event)
+ {
+-	struct dp_display_private *dp;
+-	struct dp_usbpd *hpd;
+-	u32 isr = 0;
+-
+-	dp = (struct dp_display_private *)data;
+-	if (!dp)
+-		return IRQ_NONE;
+-
+-	isr = atomic_read(&dp->hpd_isr_status);
+-
+-	/* reset to default */
+-	atomic_set(&dp->hpd_isr_status, 0);
+-
+-	hpd = dp->usbpd;
+-	if (!hpd)
+-		return IRQ_NONE;
+-
+-	if (isr & DP_DP_HPD_PLUG_INT_MASK &&
+-		isr & DP_DP_HPD_STATE_STATUS_CONNECTED) {
+-		hpd->hpd_high = 1;
+-		dp->usbpd_cb.configure(&dp->pdev->dev);
+-	} else if (isr & DP_DP_HPD_UNPLUG_INT_MASK &&
+-		(isr & DP_DP_HPD_STATE_STATUS_MASK) ==
+-			 DP_DP_HPD_STATE_STATUS_DISCONNECTED) {
+-
+-		/* disable HPD plug interrupt until disconnect is done
+-		 */
+-		dp_catalog_hpd_config_intr(dp->catalog,
+-			DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK,
+-			false);
+-
+-		hpd->hpd_high = 0;
+-
+-		/* We don't need separate work for disconnect as
+-		 * connect/attention interrupts are disabled
+-		 */
+-		dp->usbpd_cb.disconnect(&dp->pdev->dev);
++	unsigned long flag;
++	struct dp_event *todo;
++	u32	gndx;
++
++	spin_lock_irqsave(&dp_priv->event_lock, flag);
++	if (dp_priv->event_pndx == dp_priv->event_gndx) {
++		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
++		return -ENOENT;
++	}
+ 
+-		dp_catalog_hpd_config_intr(dp->catalog,
+-			DP_DP_HPD_PLUG_INT_MASK | DP_DP_IRQ_HPD_INT_MASK,
+-			true);
++	gndx = dp_priv->event_gndx;
++	while (dp_priv->event_pndx != gndx) {
++		todo = &dp_priv->event_list[gndx];
++		if (todo->event_id == event) {
++			todo->event_id = EV_NO_EVENT;	/* deleted */
++			todo->delay = 0;
++		}
++		gndx++;
++		gndx %= DP_EVENT_Q_MAX;
+ 	}
++	spin_unlock_irqrestore(&dp_priv->event_lock, flag);
+ 
+-	return IRQ_HANDLED;
++	return 0;
+ }
+ 
+ static int dp_display_bind(struct device *dev, struct device *master,
+@@ -178,7 +203,6 @@ static int dp_display_bind(struct device *dev, struct device *master,
+ 		DRM_ERROR("Power client create failed\n");
+ 		goto end;
+ 	}
+-
+ end:
+ 	return rc;
+ }
+@@ -237,11 +261,9 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
+ 	struct msm_drm_private *priv = dp->dp_display.drm_dev->dev_private;
+ 	struct msm_kms *kms = priv->kms;
+ 
+-	mutex_lock(&dp->dp_display.connect_mutex);
+ 	if ((hpd && dp->dp_display.is_connected) ||
+ 			(!hpd && !dp->dp_display.is_connected)) {
+ 		DRM_DEBUG_DP("HPD already %s\n", (hpd ? "on" : "off"));
+-		mutex_unlock(&dp->dp_display.connect_mutex);
+ 		return 0;
+ 	}
+ 
+@@ -250,7 +272,6 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
+ 		dp->panel->video_test = false;
+ 
+ 	dp->dp_display.is_connected = hpd;
+-	reinit_completion(&dp->notification_comp);
+ 
+ 	if (dp->dp_display.is_connected && dp->dp_display.encoder
+ 				&& !encoder_mode_set
+@@ -263,13 +284,6 @@ static int dp_display_send_hpd_notification(struct dp_display_private *dp,
+ 
+ 	dp_display_send_hpd_event(&dp->dp_display);
+ 
+-	if (!wait_for_completion_timeout(&dp->notification_comp, HZ * 2)) {
+-		pr_warn("%s timeout\n", hpd ? "connect" : "disconnect");
+-		mutex_unlock(&dp->dp_display.connect_mutex);
+-		return -EINVAL;
+-	}
+-
+-	mutex_unlock(&dp->dp_display.connect_mutex);
+ 	return 0;
+ }
+ 
+@@ -278,23 +292,14 @@ static int dp_display_process_hpd_high(struct dp_display_private *dp)
+ 	int rc = 0;
+ 	struct edid *edid;
+ 
+-	if (dp->link->psm_enabled)
+-		goto notify;
+-
+ 	dp->panel->max_dp_lanes = dp->parser->max_dp_lanes;
+ 
+ 	rc = dp_panel_read_sink_caps(dp->panel, dp->dp_display.connector);
+ 	if (rc)
+-		goto notify;
++		goto end;
+ 
+ 	dp_link_process_request(dp->link);
+ 
+-	if (dp_display_is_sink_count_zero(dp)) {
+-		DRM_DEBUG_DP("no downstream devices connected\n");
+-		rc = -EINVAL;
+-		goto end;
+-	}
+-
+ 	edid = dp->panel->edid;
+ 
+ 	dp->audio_supported = drm_detect_monitor_audio(edid);
+@@ -302,8 +307,15 @@ static int dp_display_process_hpd_high(struct dp_display_private *dp)
+ 
+ 	dp->dp_display.max_pclk_khz = DP_MAX_PIXEL_CLK_KHZ;
+ 	dp->dp_display.max_dp_lanes = dp->parser->max_dp_lanes;
+-notify:
+-	dp_display_send_hpd_notification(dp, true);
++
++	rc = dp_ctrl_on_link(dp->ctrl);
++	if (rc) {
++		DRM_ERROR("failed to complete DP link training\n");
++		goto end;
++	}
++
++	dp_add_event(dp, EV_USER_NOTIFICATION, true, 0);
++
+ 
+ end:
+ 	return rc;
+@@ -327,23 +339,6 @@ static void dp_display_host_init(struct dp_display_private *dp)
+ 	dp->core_initialized = true;
+ }
+ 
+-static void dp_display_host_deinit(struct dp_display_private *dp)
+-{
+-	if (!dp->core_initialized) {
+-		DRM_DEBUG_DP("DP core already off\n");
+-		return;
+-	}
+-
+-	dp->core_initialized = false;
+-}
+-
+-static void dp_display_process_hpd_low(struct dp_display_private *dp)
+-{
+-	dp_display_send_hpd_notification(dp, false);
+-
+-	dp_aux_deinit(dp->aux);
+-}
+-
+ static int dp_display_usbpd_configure_cb(struct device *dev)
+ {
+ 	int rc = 0;
+@@ -364,18 +359,16 @@ static int dp_display_usbpd_configure_cb(struct device *dev)
+ 
+ 	dp_display_host_init(dp);
+ 
+-	if (dp->usbpd->hpd_high)
+-		dp_display_process_hpd_high(dp);
++	/*
++	 * set sink to normal operation mode -- D0
++	 * before dpcd read
++	 */
++	dp_link_psm_config(dp->link, &dp->panel->link_info, false);
++	rc = dp_display_process_hpd_high(dp);
+ end:
+ 	return rc;
+ }
+ 
+-static void dp_display_clean(struct dp_display_private *dp)
+-{
+-	dp_ctrl_push_idle(dp->ctrl);
+-	dp_ctrl_off(dp->ctrl);
+-}
+-
+ static int dp_display_usbpd_disconnect_cb(struct device *dev)
+ {
+ 	int rc = 0;
+@@ -383,16 +376,8 @@ static int dp_display_usbpd_disconnect_cb(struct device *dev)
+ 
+ 	dp = dev_get_drvdata(dev);
+ 
+-	rc = dp_display_send_hpd_notification(dp, false);
+-
+-	/* if cable is disconnected, reset psm_enabled flag */
+-	if (!dp->usbpd->alt_mode_cfg_done)
+-		dp->link->psm_enabled = false;
+-
+-	if ((rc < 0) && dp->power_on)
+-		dp_display_clean(dp);
++	dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
+ 
+-	dp_display_host_deinit(dp);
+ 	return rc;
+ }
+ 
+@@ -407,11 +392,14 @@ static void dp_display_handle_video_request(struct dp_display_private *dp)
+ 	}
+ }
+ 
+-static int dp_display_handle_hpd_irq(struct dp_display_private *dp)
++static int dp_display_handle_irq_hpd(struct dp_display_private *dp)
+ {
+-	if (dp->link->sink_request & DS_PORT_STATUS_CHANGED) {
+-		dp_display_send_hpd_notification(dp, false);
++	u32 sink_request;
+ 
++	sink_request = dp->link->sink_request;
++
++	if (sink_request & DS_PORT_STATUS_CHANGED) {
++		dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
+ 		if (dp_display_is_sink_count_zero(dp)) {
+ 			DRM_DEBUG_DP("sink count is zero, nothing to do\n");
+ 			return 0;
+@@ -422,7 +410,8 @@ static int dp_display_handle_hpd_irq(struct dp_display_private *dp)
+ 
+ 	dp_ctrl_handle_sink_request(dp->ctrl);
+ 
+-	dp_display_handle_video_request(dp);
++	if (dp->link->sink_request & DP_TEST_LINK_VIDEO_PATTERN)
++		dp_display_handle_video_request(dp);
+ 
+ 	return 0;
+ }
+@@ -443,27 +432,152 @@ static int dp_display_usbpd_attention_cb(struct device *dev)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (dp->usbpd->hpd_irq) {
+-		dp->hpd_irq_on = true;
++	/* check for any test request issued by sink */
++	rc = dp_link_process_request(dp->link);
++	if (!rc)
++		dp_display_handle_irq_hpd(dp);
+ 
+-		rc = dp_link_process_request(dp->link);
+-		/* check for any test request issued by sink */
+-		if (!rc)
+-			dp_display_handle_hpd_irq(dp);
++	return rc;
++}
+ 
+-		dp->hpd_irq_on = false;
+-		goto end;
++static int dp_hpd_plug_handle(struct dp_display_private *dp, u32 data)
++{
++	struct dp_usbpd *hpd = dp->usbpd;
++	u32 state;
++	int ret;
++
++	if (!hpd)
++		return 0;
++
++	mutex_lock(&dp->event_mutex);
++
++	state =  atomic_read(&dp->hpd_state);
++	if (state == ST_CONNECT_PENDING || state == ST_CONNECTED) {
++		mutex_unlock(&dp->event_mutex);
++		return 0;
+ 	}
+ 
+-	if (!dp->usbpd->hpd_high) {
+-		dp_display_process_hpd_low(dp);
+-		goto end;
++	if (state == ST_DISCONNECT_PENDING) {
++		/* wait until ST_DISCONNECTED */
++		dp_add_event(dp, EV_HPD_PLUG_INT, 0, 1); /* delay = 1 */
++		mutex_unlock(&dp->event_mutex);
++		return 0;
+ 	}
+ 
+-	if (dp->usbpd->alt_mode_cfg_done)
+-		dp_display_process_hpd_high(dp);
+-end:
+-	return rc;
++	atomic_set(&dp->hpd_state, ST_CONNECT_PENDING);
++
++	hpd->hpd_high = 1;
++
++	ret = dp_display_usbpd_configure_cb(&dp->pdev->dev);
++	if (ret) {	/* failed */
++		hpd->hpd_high = 0;
++		atomic_set(&dp->hpd_state, ST_DISCONNECTED);
++	}
++
++	/* start sanity checking */
++	dp_add_event(dp, EV_CONNECT_PENDING_TIMEOUT, 0, 50);
++
++	mutex_unlock(&dp->event_mutex);
++
++	/* uevent will complete connection part */
++	return 0;
++};
++
++static int dp_display_enable(struct dp_display_private *dp, u32 data);
++static int dp_display_disable(struct dp_display_private *dp, u32 data);
++
++static int dp_connect_pending_timeout(struct dp_display_private *dp, u32 data)
++{
++	u32 state;
++
++	mutex_lock(&dp->event_mutex);
++
++	state =  atomic_read(&dp->hpd_state);
++	if (state == ST_CONNECT_PENDING) {
++		dp_display_enable(dp, 0);
++		atomic_set(&dp->hpd_state, ST_CONNECTED);
++	}
++
++	mutex_unlock(&dp->event_mutex);
++
++	return 0;
++}
++
++static int dp_hpd_unplug_handle(struct dp_display_private *dp, u32 data)
++{
++	struct dp_usbpd *hpd = dp->usbpd;
++	u32 state;
++
++	if (!hpd)
++		return 0;
++
++	mutex_lock(&dp->event_mutex);
++
++	state = atomic_read(&dp->hpd_state);
++	if (state == ST_DISCONNECT_PENDING || state == ST_DISCONNECTED) {
++		mutex_unlock(&dp->event_mutex);
++		return 0;
++	}
++
++	if (state == ST_CONNECT_PENDING) {
++		/* wait until CONNECTED */
++		dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 1); /* delay = 1 */
++		mutex_unlock(&dp->event_mutex);
++		return 0;
++	}
++
++	atomic_set(&dp->hpd_state, ST_DISCONNECT_PENDING);
++
++	/* disable HPD plug interrupt until disconnect is done */
++	dp_catalog_hpd_config_intr(dp->catalog, DP_DP_HPD_PLUG_INT_MASK
++				| DP_DP_IRQ_HPD_INT_MASK, false);
++
++	hpd->hpd_high = 0;
++
++	/*
++	 * We don't need separate work for disconnect as
++	 * connect/attention interrupts are disabled
++	 */
++	dp_display_usbpd_disconnect_cb(&dp->pdev->dev);
++
++	/* start sanity checking */
++	dp_add_event(dp, EV_DISCONNECT_PENDING_TIMEOUT, 0, 50);
++
++	dp_catalog_hpd_config_intr(dp->catalog, DP_DP_HPD_PLUG_INT_MASK |
++					DP_DP_IRQ_HPD_INT_MASK, true);
++
++	/* uevent will complete disconnection part */
++	mutex_unlock(&dp->event_mutex);
++	return 0;
++}
++
++static int dp_disconnect_pending_timeout(struct dp_display_private *dp, u32 data)
++{
++	u32 state;
++
++	mutex_lock(&dp->event_mutex);
++
++	state =  atomic_read(&dp->hpd_state);
++	if (state == ST_DISCONNECT_PENDING) {
++		dp_display_disable(dp, 0);
++		atomic_set(&dp->hpd_state, ST_DISCONNECTED);
++	}
++
++	mutex_unlock(&dp->event_mutex);
++
++	return 0;
++}
++
++static int dp_irq_hpd_handle(struct dp_display_private *dp, u32 data)
++{
++	/* irq_hpd can happen at either connected or disconnected state */
++	mutex_lock(&dp->event_mutex);
++
++	dp_display_usbpd_attention_cb(&dp->pdev->dev);
++
++	mutex_unlock(&dp->event_mutex);
++
++	return 0;
+ }
+ 
+ static void dp_display_deinit_sub_modules(struct dp_display_private *dp)
+@@ -599,106 +713,37 @@ static int dp_display_prepare(struct msm_dp *dp)
+ 	return 0;
+ }
+ 
+-static void dp_display_dump(struct msm_dp *dp_display)
+-{
+-	struct dp_display_private *dp;
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+-
+-	dp_panel_dump_regs(dp->panel);
+-}
+-
+-static int dp_display_enable(struct msm_dp *dp_display)
++static int dp_display_enable(struct dp_display_private *dp, u32 data)
+ {
+ 	int rc = 0;
+-	struct dp_display_private *dp;
+-	bool dump_dp = false;
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+ 
+ 	if (dp->power_on) {
+ 		DRM_DEBUG_DP("Link already setup, return\n");
+ 		return 0;
+ 	}
+ 
+-	rc = dp_ctrl_on(dp->ctrl);
++	rc = dp_ctrl_on_stream(dp->ctrl);
+ 	if (!rc)
+ 		dp->power_on = true;
+ 
+-	if (dump_dp != false)
+-		dp_display_dump(dp_display);
+-
+ 	return rc;
+ }
+ 
+ static int dp_display_post_enable(struct msm_dp *dp_display)
+ {
+-	struct dp_display_private *dp;
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+-
+-	complete_all(&dp->notification_comp);
+-	return 0;
+-}
+-
+-static int dp_display_pre_disable(struct msm_dp *dp_display)
+-{
+-	struct dp_display_private *dp;
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+-
+-	if (dp->usbpd->alt_mode_cfg_done)
+-		dp_link_psm_config(dp->link, &dp->panel->link_info, true);
+-
+-	dp_ctrl_push_idle(dp->ctrl);
+ 	return 0;
+ }
+ 
+-static int dp_display_disable(struct msm_dp *dp_display)
++static int dp_display_disable(struct dp_display_private *dp, u32 data)
+ {
+-	struct dp_display_private *dp;
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+-
+-	if (!dp->power_on || !dp->core_initialized)
++	if (!dp->power_on)
+ 		return -EINVAL;
+ 
+ 	dp_ctrl_off(dp->ctrl);
+ 
+-	dp->power_on = false;
+-
+-	complete_all(&dp->notification_comp);
+-	return 0;
+-}
+-
+-int dp_display_request_irq(struct msm_dp *dp_display)
+-{
+-	int rc = 0;
+-	struct dp_display_private *dp;
+-
+-	if (!dp_display) {
+-		DRM_ERROR("invalid input\n");
+-		return -EINVAL;
+-	}
+-
+-	dp = container_of(dp_display, struct dp_display_private, dp_display);
+-
+-	dp->irq = irq_of_parse_and_map(dp->pdev->dev.of_node, 0);
+-	if (dp->irq < 0) {
+-		rc = dp->irq;
+-		DRM_ERROR("failed to get irq: %d\n", rc);
+-		return rc;
+-	}
++	dp->core_initialized = false;
+ 
+-	rc = devm_request_threaded_irq(&dp->pdev->dev, dp->irq,
+-		dp_display_irq, dp_display_hpd_isr_work,
+-		IRQF_TRIGGER_HIGH, "dp_display_isr", dp);
+-	if (rc < 0) {
+-		DRM_ERROR("failed to request IRQ%u: %d\n",
+-				dp->irq, rc);
+-		return rc;
+-	}
+-	disable_irq(dp->irq);
++	dp->power_on = false;
+ 
+ 	return 0;
+ }
+@@ -783,6 +828,189 @@ int dp_display_get_test_bpp(struct msm_dp *dp)
+ 		dp_display->link->test_video.test_bit_depth);
+ }
+ 
++static void dp_display_config_hpd(struct dp_display_private *dp)
++{
++
++	dp_display_host_init(dp);
++	dp_catalog_ctrl_hpd_config(dp->catalog);
++
++	/* Enable interrupt first time
++	 * we are leaving dp clocks on during disconnect
++	 * and never disable interrupt
++	 */
++	enable_irq(dp->irq);
++}
++
++static int hpd_event_thread(void *data)
++{
++	struct dp_display_private *dp_priv;
++	unsigned long flag;
++	struct dp_event *todo;
++	int timeout_mode = 0;
++
++	dp_priv = (struct dp_display_private *)data;
++
++	while (1) {
++		if (timeout_mode) {
++			wait_event_timeout(dp_priv->event_q,
++				(dp_priv->event_pndx == dp_priv->event_gndx),
++						EVENT_TIMEOUT);
++		} else {
++			wait_event_timeout(dp_priv->event_q,
++				(dp_priv->event_pndx != dp_priv->event_gndx),
++						EVENT_TIMEOUT);
++		}
++		spin_lock_irqsave(&dp_priv->event_lock, flag);
++		todo = &dp_priv->event_list[dp_priv->event_gndx];
++		if (todo->delay) {
++			struct dp_event *todo_next;
++
++			dp_priv->event_gndx++;
++			dp_priv->event_gndx %= DP_EVENT_Q_MAX;
++
++			/* re enter delay event into q */
++			todo_next = &dp_priv->event_list[dp_priv->event_pndx++];
++			dp_priv->event_pndx %= DP_EVENT_Q_MAX;
++			todo_next->event_id = todo->event_id;
++			todo_next->data = todo->data;
++			todo_next->delay = todo->delay - 1;
++
++			/* clean up older event */
++			todo->event_id = EV_NO_EVENT;
++			todo->delay = 0;
++
++			/* switch to timeout mode */
++			timeout_mode = 1;
++			spin_unlock_irqrestore(&dp_priv->event_lock, flag);
++			continue;
++		}
++
++		/* timeout with no events in q */
++		if (dp_priv->event_pndx == dp_priv->event_gndx) {
++			spin_unlock_irqrestore(&dp_priv->event_lock, flag);
++			continue;
++		}
++
++		dp_priv->event_gndx++;
++		dp_priv->event_gndx %= DP_EVENT_Q_MAX;
++		timeout_mode = 0;
++		spin_unlock_irqrestore(&dp_priv->event_lock, flag);
++
++		switch (todo->event_id) {
++		case EV_HPD_INIT_SETUP:
++			dp_display_config_hpd(dp_priv);
++			break;
++		case EV_HPD_PLUG_INT:
++			dp_hpd_plug_handle(dp_priv, todo->data);
++			break;
++		case EV_HPD_UNPLUG_INT:
++			dp_hpd_unplug_handle(dp_priv, todo->data);
++			break;
++		case EV_IRQ_HPD_INT:
++			dp_irq_hpd_handle(dp_priv, todo->data);
++			break;
++		case EV_HPD_REPLUG_INT:
++			/* do nothing */
++			break;
++		case EV_USER_NOTIFICATION:
++			dp_display_send_hpd_notification(dp_priv,
++						todo->data);
++			break;
++		case EV_CONNECT_PENDING_TIMEOUT:
++			dp_connect_pending_timeout(dp_priv,
++						todo->data);
++			break;
++		case EV_DISCONNECT_PENDING_TIMEOUT:
++			dp_disconnect_pending_timeout(dp_priv,
++						todo->data);
++			break;
++		default:
++			break;
++		}
++	}
++
++	return 0;
++}
++
++static void dp_hpd_event_setup(struct dp_display_private *dp_priv)
++{
++	init_waitqueue_head(&dp_priv->event_q);
++	spin_lock_init(&dp_priv->event_lock);
++
++	kthread_run(hpd_event_thread, dp_priv, "dp_hpd_handler");
++}
++
++static irqreturn_t dp_display_irq_handler(int irq, void *dev_id)
++{
++	struct dp_display_private *dp = dev_id;
++	irqreturn_t ret = IRQ_HANDLED;
++	u32 hpd_isr_status;
++
++	if (!dp) {
++		DRM_ERROR("invalid data\n");
++		return IRQ_NONE;
++	}
++
++	hpd_isr_status = dp_catalog_hpd_get_intr_status(dp->catalog);
++
++	if (hpd_isr_status & 0x0F) {
++		/* hpd related interrupts */
++		if (hpd_isr_status & DP_DP_HPD_PLUG_INT_MASK ||
++			hpd_isr_status & DP_DP_HPD_REPLUG_INT_MASK) {
++			dp_add_event(dp, EV_HPD_PLUG_INT, 0, 0);
++		}
++
++		if (hpd_isr_status & DP_DP_IRQ_HPD_INT_MASK)
++			dp_add_event(dp, EV_IRQ_HPD_INT, 0, 0);
++
++		if (hpd_isr_status & DP_DP_HPD_REPLUG_INT_MASK)
++			dp_add_event(dp, EV_HPD_REPLUG_INT, 0, 0);
++
++		if (hpd_isr_status & DP_DP_HPD_UNPLUG_INT_MASK)
++			dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 0);
++	}
++
++	/* DP controller isr */
++	dp_ctrl_isr(dp->ctrl);
++
++	/* DP aux isr */
++	dp_aux_isr(dp->aux);
++
++	return ret;
++}
++
++int dp_display_request_irq(struct msm_dp *dp_display)
++{
++	int rc = 0;
++	struct dp_display_private *dp;
++
++	if (!dp_display) {
++		DRM_ERROR("invalid input\n");
++		return -EINVAL;
++	}
++
++	dp = container_of(dp_display, struct dp_display_private, dp_display);
++
++	dp->irq = irq_of_parse_and_map(dp->pdev->dev.of_node, 0);
++	if (dp->irq < 0) {
++		rc = dp->irq;
++		DRM_ERROR("failed to get irq: %d\n", rc);
++		return rc;
++	}
++
++	rc = devm_request_irq(&dp->pdev->dev, dp->irq,
++			dp_display_irq_handler,
++			IRQF_TRIGGER_HIGH, "dp_display_isr", dp);
++	if (rc < 0) {
++		DRM_ERROR("failed to request IRQ%u: %d\n",
++				dp->irq, rc);
++		return rc;
++	}
++	disable_irq(dp->irq);
++
++	return 0;
++}
++
+ static int dp_display_probe(struct platform_device *pdev)
+ {
+ 	int rc = 0;
+@@ -797,8 +1025,6 @@ static int dp_display_probe(struct platform_device *pdev)
+ 	if (!dp)
+ 		return -ENOMEM;
+ 
+-	init_completion(&dp->notification_comp);
+-
+ 	dp->pdev = pdev;
+ 	dp->name = "drm_dp";
+ 
+@@ -810,7 +1036,7 @@ static int dp_display_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, dp);
+ 
+-	mutex_init(&dp->dp_display.connect_mutex);
++	mutex_init(&dp->event_mutex);
+ 	g_dp_display = &dp->dp_display;
+ 
+ 	rc = component_add(&pdev->dev, &dp_display_comp_ops);
+@@ -861,26 +1087,6 @@ void __exit msm_dp_unregister(void)
+ 	platform_driver_unregister(&dp_display_driver);
+ }
+ 
+-static void dp_display_config_hpd_work(struct work_struct *work)
+-{
+-	struct dp_display_private *dp;
+-	struct delayed_work *dw = to_delayed_work(work);
+-
+-	dp = container_of(dw, struct dp_display_private, config_hpd_work);
+-
+-	dp_display_host_init(dp);
+-	dp_catalog_ctrl_hpd_config(dp->catalog);
+-
+-	/* set default to 0 */
+-	atomic_set(&dp->hpd_isr_status, 0);
+-
+-	/* Enable interrupt first time
+-	 * we are leaving dp clocks on during disconnect
+-	 * and never disable interrupt
+-	 */
+-	enable_irq(dp->irq);
+-}
+-
+ void msm_dp_irq_postinstall(struct msm_dp *dp_display)
+ {
+ 	struct dp_display_private *dp;
+@@ -890,8 +1096,9 @@ void msm_dp_irq_postinstall(struct msm_dp *dp_display)
+ 
+ 	dp = container_of(dp_display, struct dp_display_private, dp_display);
+ 
+-	INIT_DELAYED_WORK(&dp->config_hpd_work, dp_display_config_hpd_work);
+-	queue_delayed_work(system_wq, &dp->config_hpd_work, HZ * 10);
++	dp_hpd_event_setup(dp);
++
++	dp_add_event(dp, EV_HPD_INIT_SETUP, 0, 100);
+ }
+ 
+ int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *dev,
+@@ -938,54 +1145,74 @@ int msm_dp_display_enable(struct msm_dp *dp, struct drm_encoder *encoder)
+ 		return -EINVAL;
+ 	}
+ 
++	mutex_lock(&dp_display->event_mutex);
++
+ 	rc = dp_display_set_mode(dp, &dp_display->dp_mode);
+ 	if (rc) {
+ 		DRM_ERROR("Failed to perform a mode set, rc=%d\n", rc);
++		mutex_unlock(&dp_display->event_mutex);
+ 		return rc;
+ 	}
+ 
+ 	rc = dp_display_prepare(dp);
+ 	if (rc) {
+ 		DRM_ERROR("DP display prepare failed, rc=%d\n", rc);
++		mutex_unlock(&dp_display->event_mutex);
+ 		return rc;
+ 	}
+ 
+-	rc = dp_display_enable(dp);
+-	if (rc) {
+-		DRM_ERROR("DP display enable failed, rc=%d\n", rc);
+-		dp_display_unprepare(dp);
+-		return rc;
+-	}
++	dp_display_enable(dp_display, 0);
+ 
+ 	rc = dp_display_post_enable(dp);
+ 	if (rc) {
+ 		DRM_ERROR("DP display post enable failed, rc=%d\n", rc);
+-		dp_display_disable(dp);
++		dp_display_disable(dp_display, 0);
+ 		dp_display_unprepare(dp);
+ 	}
++
++	dp_del_event(dp_display, EV_CONNECT_PENDING_TIMEOUT);
++
++	/* completed connection */
++	atomic_set(&dp_display->hpd_state, ST_CONNECTED);
++
++	mutex_unlock(&dp_display->event_mutex);
++
+ 	return rc;
+ }
+ 
++int msm_dp_display_pre_disable(struct msm_dp *dp, struct drm_encoder *encoder)
++{
++	struct dp_display_private *dp_display;
++
++	dp_display = container_of(dp, struct dp_display_private, dp_display);
++
++	dp_ctrl_push_idle(dp_display->ctrl);
++
++	return 0;
++}
++
+ int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder *encoder)
+ {
+ 	int rc = 0;
++	struct dp_display_private *dp_display;
+ 
+-	rc = dp_display_pre_disable(dp);
+-	if (rc) {
+-		DRM_ERROR("DP display pre disable failed, rc=%d\n", rc);
+-		return rc;
+-	}
++	dp_display = container_of(dp, struct dp_display_private, dp_display);
+ 
+-	rc = dp_display_disable(dp);
+-	if (rc) {
+-		DRM_ERROR("DP display disable failed, rc=%d\n", rc);
+-		return rc;
+-	}
++	mutex_lock(&dp_display->event_mutex);
++
++	dp_display_disable(dp_display, 0);
+ 
+ 	rc = dp_display_unprepare(dp);
+ 	if (rc)
+ 		DRM_ERROR("DP display unprepare failed, rc=%d\n", rc);
+ 
++
++	dp_del_event(dp_display, EV_DISCONNECT_PENDING_TIMEOUT);
++
++	/* completed disconnection */
++	atomic_set(&dp_display->hpd_state, ST_DISCONNECTED);
++
++	mutex_unlock(&dp_display->event_mutex);
+ 	return rc;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.h b/drivers/gpu/drm/msm/dp/dp_display.h
+index 4c53ed55d1cc..2f2d1279dfc6 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.h
++++ b/drivers/gpu/drm/msm/dp/dp_display.h
+@@ -13,7 +13,6 @@ struct msm_dp {
+ 	struct drm_connector *connector;
+ 	struct drm_encoder *encoder;
+ 	bool is_connected;
+-	struct mutex connect_mutex;
+ 	u32 max_pclk_khz;
+ 	u32 max_dp_lanes;
+ };
+diff --git a/drivers/gpu/drm/msm/dp/dp_drm.c b/drivers/gpu/drm/msm/dp/dp_drm.c
+index e58906f4ae1e..764f4b81017e 100644
+--- a/drivers/gpu/drm/msm/dp/dp_drm.c
++++ b/drivers/gpu/drm/msm/dp/dp_drm.c
+@@ -58,7 +58,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
+ 	if (!dp_mode)
+ 		return 0;
+ 
+-	mutex_lock(&dp->connect_mutex);
+ 	/* pluggable case assumes EDID is read when HPD */
+ 	if (dp->is_connected) {
+ 		/*
+@@ -71,7 +70,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
+ 		if (rc <= 0) {
+ 			DRM_ERROR("failed to get DP sink modes, rc=%d\n", rc);
+ 			kfree(dp_mode);
+-			mutex_unlock(&dp->connect_mutex);
+ 			return rc;
+ 		}
+ 		if (dp_mode->drm_mode.clock) { /* valid DP mode */
+@@ -83,7 +81,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
+ 				       drm_mode.hdisplay,
+ 				       drm_mode.vdisplay);
+ 				kfree(dp_mode);
+-				mutex_unlock(&dp->connect_mutex);
+ 				return 0;
+ 			}
+ 			drm_mode_probed_add(connector, m);
+@@ -91,7 +88,6 @@ static int dp_connector_get_modes(struct drm_connector *connector)
+ 	} else {
+ 		DRM_DEBUG_DP("No sink connected\n");
+ 	}
+-	mutex_unlock(&dp->connect_mutex);
+ 	kfree(dp_mode);
+ 	return rc;
+ }
+diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.c b/drivers/gpu/drm/msm/dp/dp_hpd.c
+index 5b08ce580702..5b8fe32022b5 100644
+--- a/drivers/gpu/drm/msm/dp/dp_hpd.c
++++ b/drivers/gpu/drm/msm/dp/dp_hpd.c
+@@ -24,7 +24,7 @@ struct dp_hpd_private {
+ 	struct dp_usbpd dp_usbpd;
+ };
+ 
+-static int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
++int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd)
+ {
+ 	int rc = 0;
+ 	struct dp_hpd_private *hpd_priv;
+diff --git a/drivers/gpu/drm/msm/dp/dp_hpd.h b/drivers/gpu/drm/msm/dp/dp_hpd.h
+index c0178524bec7..5bc5bb64680f 100644
+--- a/drivers/gpu/drm/msm/dp/dp_hpd.h
++++ b/drivers/gpu/drm/msm/dp/dp_hpd.h
+@@ -75,5 +75,6 @@ struct dp_usbpd *dp_hpd_get(struct device *dev, struct dp_usbpd_cb *cb);
+ 
+ int dp_hpd_register(struct dp_usbpd *dp_usbpd);
+ void dp_hpd_unregister(struct dp_usbpd *dp_usbpd);
++int dp_hpd_connect(struct dp_usbpd *dp_usbpd, bool hpd);
+ 
+ #endif /* _DP_HPD_H_ */
+diff --git a/drivers/gpu/drm/msm/dp/dp_link.c b/drivers/gpu/drm/msm/dp/dp_link.c
+index 7400a7ba45f8..5110fc8ccfae 100644
+--- a/drivers/gpu/drm/msm/dp/dp_link.c
++++ b/drivers/gpu/drm/msm/dp/dp_link.c
+@@ -38,7 +38,6 @@ struct dp_link_private {
+ 	struct dp_link dp_link;
+ 
+ 	struct dp_link_request request;
+-	struct mutex test_response_mutex;
+ 	struct mutex psm_mutex;
+ 	u8 link_status[DP_LINK_STATUS_SIZE];
+ };
+@@ -580,17 +579,18 @@ static int dp_link_parse_phy_test_params(struct dp_link_private *link)
+ 		return rlen;
+ 	}
+ 
+-	link->dp_link.phy_params.phy_test_pattern_sel = data;
++	link->dp_link.phy_params.phy_test_pattern_sel = data & 0x07;
+ 
+ 	DRM_DEBUG_DP("phy_test_pattern_sel = 0x%x\n", data);
+ 
+ 	switch (data) {
+-	case DP_LINK_QUAL_PATTERN_DISABLE:
+-	case DP_LINK_QUAL_PATTERN_D10_2:
+-	case DP_LINK_QUAL_PATTERN_ERROR_RATE:
+-	case DP_LINK_QUAL_PATTERN_PRBS7:
+-	case DP_LINK_QUAL_PATTERN_80BIT_CUSTOM:
+-	case DP_LINK_QUAL_PATTERN_HBR2_EYE:
++	case DP_PHY_TEST_PATTERN_SEL_MASK:
++	case DP_PHY_TEST_PATTERN_NONE:
++	case DP_PHY_TEST_PATTERN_D10_2:
++	case DP_PHY_TEST_PATTERN_ERROR_COUNT:
++	case DP_PHY_TEST_PATTERN_PRBS7:
++	case DP_PHY_TEST_PATTERN_80BIT_CUSTOM:
++	case DP_PHY_TEST_PATTERN_CP2520:
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+@@ -661,7 +661,6 @@ static int dp_link_parse_request(struct dp_link_private *link)
+ 
+ 	DRM_DEBUG_DP("Test:(0x%x) requested\n", data);
+ 	link->request.test_requested = data;
+-
+ 	if (link->request.test_requested == DP_TEST_LINK_PHY_TEST_PATTERN) {
+ 		ret = dp_link_parse_phy_test_params(link);
+ 		if (ret)
+@@ -789,10 +788,8 @@ bool dp_link_send_test_response(struct dp_link *dp_link)
+ 
+ 	link = container_of(dp_link, struct dp_link_private, dp_link);
+ 
+-	mutex_lock(&link->test_response_mutex);
+ 	ret = drm_dp_dpcd_writeb(link->aux, DP_TEST_RESPONSE,
+ 			dp_link->test_response);
+-	mutex_unlock(&link->test_response_mutex);
+ 
+ 	return ret == 1;
+ }
+@@ -1028,11 +1025,9 @@ int dp_link_process_request(struct dp_link *dp_link)
+ 
+ 	link = container_of(dp_link, struct dp_link_private, dp_link);
+ 
+-	mutex_lock(&link->test_response_mutex);
+ 	dp_link_reset_data(link);
+ 
+ 	dp_link_parse_sink_status_field(link);
+-	mutex_unlock(&link->test_response_mutex);
+ 
+ 	if (link->request.test_requested == DP_TEST_LINK_EDID_READ) {
+ 		dp_link->sink_request |= DP_TEST_LINK_EDID_READ;
+@@ -1206,7 +1201,6 @@ struct dp_link *dp_link_get(struct device *dev, struct drm_dp_aux *aux)
+ 	link->dev   = dev;
+ 	link->aux   = aux;
+ 
+-	mutex_init(&link->test_response_mutex);
+ 	mutex_init(&link->psm_mutex);
+ 	dp_link = &link->dp_link;
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+index 5ac4b017da8f..7cdf37c525d8 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.c
++++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+@@ -8,8 +8,6 @@
+ #include <drm/drm_connector.h>
+ #include <drm/drm_edid.h>
+ 
+-#define DP_MAX_DS_PORT_COUNT 1
+-
+ struct dp_panel_private {
+ 	struct device *dev;
+ 	struct dp_panel dp_panel;
+@@ -23,26 +21,32 @@ struct dp_panel_private {
+ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
+ {
+ 	int rc = 0;
+-	size_t rlen;
++	size_t len;
++	ssize_t rlen;
+ 	struct dp_panel_private *panel;
+ 	struct dp_link_info *link_info;
+ 	u8 *dpcd, major = 0, minor = 0, temp;
+-	u32 dfp_count = 0, offset = DP_DPCD_REV;
++	u32 offset = DP_DPCD_REV;
+ 
+ 	dpcd = dp_panel->dpcd;
+ 
+ 	panel = container_of(dp_panel, struct dp_panel_private, dp_panel);
+ 	link_info = &dp_panel->link_info;
+ 
+-	rlen = drm_dp_dpcd_read(panel->aux,
+-				DP_TRAINING_AUX_RD_INTERVAL, &temp, 1);
+-	if (rlen < 0) {
+-		DRM_ERROR("err reading DP_TRAINING_AUX_RD_INTERVAL,rlen=%zd\n",
+-				rlen);
+-		rc = -EINVAL;
++	rlen = drm_dp_dpcd_read(panel->aux, offset,
++			dpcd, (DP_RECEIVER_CAP_SIZE + 1));
++	if (rlen < (DP_RECEIVER_CAP_SIZE + 1)) {
++		DRM_ERROR("dpcd read failed, rlen=%zd\n", rlen);
++		if (rlen == -ETIMEDOUT)
++			rc = rlen;
++		else
++			rc = -EINVAL;
++
+ 		goto end;
+ 	}
+ 
++	temp = dpcd[DP_TRAINING_AUX_RD_INTERVAL];
++
+ 	/* check for EXTENDED_RECEIVER_CAPABILITY_FIELD_PRESENT */
+ 	if (temp & BIT(7)) {
+ 		DRM_DEBUG_DP("using EXTENDED_RECEIVER_CAPABILITY_FIELD\n");
+@@ -61,9 +65,6 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
+ 		goto end;
+ 	}
+ 
+-	print_hex_dump(KERN_DEBUG, "[drm-dp] SINK DPCD: ",
+-		DUMP_PREFIX_NONE, 8, 1, dp_panel->dpcd, rlen, false);
+-
+ 	link_info->revision = dpcd[DP_DPCD_REV];
+ 	major = (link_info->revision >> 4) & 0x0f;
+ 	minor = link_info->revision & 0x0f;
+@@ -85,14 +86,23 @@ static int dp_panel_read_dpcd(struct dp_panel *dp_panel)
+ 	if (drm_dp_enhanced_frame_cap(dpcd))
+ 		link_info->capabilities |= DP_LINK_CAP_ENHANCED_FRAMING;
+ 
+-	dfp_count = dpcd[DP_DOWN_STREAM_PORT_COUNT] &
+-						DP_DOWN_STREAM_PORT_COUNT;
++	dp_panel->dfp_present = dpcd[DP_DOWNSTREAMPORT_PRESENT];
++	dp_panel->dfp_present &= DP_DWN_STRM_PORT_PRESENT;
+ 
+-	if (dfp_count > DP_MAX_DS_PORT_COUNT) {
+-		DRM_ERROR("DS port count %d greater that max (%d) supported\n",
+-			dfp_count, DP_MAX_DS_PORT_COUNT);
+-		return -EINVAL;
++	if (dp_panel->dfp_present && (dpcd[DP_DPCD_REV] > 0x10)) {
++		dp_panel->ds_port_cnt = dpcd[DP_DOWN_STREAM_PORT_COUNT];
++		dp_panel->ds_port_cnt &= DP_PORT_COUNT_MASK;
++		len = DP_DOWNSTREAM_PORTS * DP_DOWNSTREAM_CAP_SIZE;
++
++		rlen = drm_dp_dpcd_read(panel->aux,
++			DP_DOWNSTREAM_PORT_0, dp_panel->ds_cap_info, len);
++		if (rlen < len) {
++			DRM_ERROR("ds port status failed, rlen=%zd\n", rlen);
++			rc = -EINVAL;
++			goto end;
++		}
+ 	}
++
+ end:
+ 	return rc;
+ }
+@@ -185,6 +195,7 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
+ 	struct drm_connector *connector)
+ {
+ 	int rc = 0, bw_code;
++	int rlen, count;
+ 	struct dp_panel_private *panel;
+ 
+ 	if (!dp_panel || !connector) {
+@@ -202,11 +213,19 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
+ 		DRM_ERROR("read dpcd failed %d\n", rc);
+ 		return rc;
+ 	}
+-	rc = drm_dp_read_desc(panel->aux, &dp_panel->desc,
+-			      drm_dp_is_branch(dp_panel->dpcd));
+-	if (rc) {
+-		DRM_ERROR("read sink/branch descriptor failed %d\n", rc);
+-		return rc;
++
++	if (dp_panel->dfp_present) {
++		rlen = drm_dp_dpcd_read(panel->aux, DP_SINK_COUNT,
++				&count, 1);
++		if (rlen == 1) {
++			count = DP_GET_SINK_COUNT(count);
++			if (!count) {
++				DRM_ERROR("no downstream ports connected\n");
++				panel->link->sink_count = 0;
++				rc = -ENOTCONN;
++				goto end;
++			}
++		}
+ 	}
+ 
+ 	kfree(dp_panel->edid);
+@@ -216,7 +235,12 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
+ 					      &panel->aux->ddc);
+ 	if (!dp_panel->edid) {
+ 		DRM_ERROR("panel edid read failed\n");
+-		return -EINVAL;
++
++		/* fail safe edid */
++		mutex_lock(&connector->dev->mode_config.mutex);
++		if (drm_add_modes_noedid(connector, 640, 480))
++			drm_set_preferred_mode(connector, 640, 480);
++		mutex_unlock(&connector->dev->mode_config.mutex);
+ 	}
+ 
+ 	if (panel->aux_cfg_update_done) {
+@@ -231,8 +255,8 @@ int dp_panel_read_sink_caps(struct dp_panel *dp_panel,
+ 		}
+ 		panel->aux_cfg_update_done = false;
+ 	}
+-
+-	return 0;
++end:
++	return rc;
+ }
+ 
+ u32 dp_panel_get_mode_bpp(struct dp_panel *dp_panel,
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
+index f6f417eef2e9..9023e5bb4b8b 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.h
++++ b/drivers/gpu/drm/msm/dp/dp_panel.h
+@@ -14,8 +14,10 @@
+ 
+ struct edid;
+ 
+-#define DP_MAX_DOWNSTREAM_PORTS 0x10
+-#define DPRX_EXTENDED_DPCD_FIELD 0x2200
++#define DPRX_EXTENDED_DPCD_FIELD	0x2200
++
++#define DP_DOWNSTREAM_PORTS		4
++#define DP_DOWNSTREAM_CAP_SIZE		4
+ 
+ struct dp_display_mode {
+ 	struct drm_display_mode drm_mode;
+@@ -35,6 +37,9 @@ struct dp_panel_in {
+ struct dp_panel {
+ 	/* dpcd raw data */
+ 	u8 dpcd[DP_RECEIVER_CAP_SIZE + 1];
++	u8 ds_cap_info[DP_DOWNSTREAM_PORTS * DP_DOWNSTREAM_CAP_SIZE];
++	u32 ds_port_cnt;
++	u32 dfp_present;
+ 
+ 	struct dp_link_info link_info;
+ 	struct drm_dp_desc desc;
+diff --git a/drivers/gpu/drm/msm/dp/dp_parser.c b/drivers/gpu/drm/msm/dp/dp_parser.c
+index 558eaf7ce656..641f2bccf3bf 100644
+--- a/drivers/gpu/drm/msm/dp/dp_parser.c
++++ b/drivers/gpu/drm/msm/dp/dp_parser.c
+@@ -103,11 +103,12 @@ static inline bool dp_parser_check_prefix(const char *clk_prefix,
+ static int dp_parser_init_clk_data(struct dp_parser *parser)
+ {
+ 	int num_clk, i, rc;
+-	int core_clk_count = 0, ctrl_clk_count = 0;
++	int core_clk_count = 0, ctrl_clk_count = 0, stream_clk_count = 0;
+ 	const char *clk_name;
+ 	struct device *dev = &parser->pdev->dev;
+ 	struct dss_module_power *core_power = &parser->mp[DP_CORE_PM];
+ 	struct dss_module_power *ctrl_power = &parser->mp[DP_CTRL_PM];
++	struct dss_module_power *stream_power = &parser->mp[DP_STREAM_PM];
+ 
+ 	num_clk = of_property_count_strings(dev->of_node, "clock-names");
+ 	if (num_clk <= 0) {
+@@ -128,7 +129,7 @@ static int dp_parser_init_clk_data(struct dp_parser *parser)
+ 			ctrl_clk_count++;
+ 
+ 		if (dp_parser_check_prefix("stream", clk_name))
+-			ctrl_clk_count++;
++			stream_clk_count++;
+ 	}
+ 
+ 	/* Initialize the CORE power module */
+@@ -159,6 +160,21 @@ static int dp_parser_init_clk_data(struct dp_parser *parser)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Initialize the STREAM power module */
++	if (stream_clk_count == 0) {
++		DRM_ERROR("no stream (pixel) clocks are defined\n");
++		return -EINVAL;
++	}
++
++	stream_power->num_clk = stream_clk_count;
++	stream_power->clk_config = devm_kzalloc(dev,
++			sizeof(struct dss_clk) * stream_power->num_clk,
++			GFP_KERNEL);
++	if (!stream_power->clk_config) {
++		stream_power->num_clk = 0;
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -166,15 +182,13 @@ static int dp_parser_clock(struct dp_parser *parser)
+ {
+ 	int rc = 0, i = 0;
+ 	int num_clk = 0;
+-	int core_clk_index = 0, ctrl_clk_index = 0;
+-	int core_clk_count = 0, ctrl_clk_count = 0;
++	int core_clk_index = 0, ctrl_clk_index = 0, stream_clk_index = 0;
++	int core_clk_count = 0, ctrl_clk_count = 0, stream_clk_count = 0;
+ 	const char *clk_name;
+ 	struct device *dev = &parser->pdev->dev;
+ 	struct dss_module_power *core_power = &parser->mp[DP_CORE_PM];
+ 	struct dss_module_power *ctrl_power = &parser->mp[DP_CTRL_PM];
+-
+-	core_power = &parser->mp[DP_CORE_PM];
+-	ctrl_power = &parser->mp[DP_CTRL_PM];
++	struct dss_module_power *stream_power = &parser->mp[DP_STREAM_PM];
+ 
+ 	rc =  dp_parser_init_clk_data(parser);
+ 	if (rc) {
+@@ -184,8 +198,9 @@ static int dp_parser_clock(struct dp_parser *parser)
+ 
+ 	core_clk_count = core_power->num_clk;
+ 	ctrl_clk_count = ctrl_power->num_clk;
++	stream_clk_count = stream_power->num_clk;
+ 
+-	num_clk = core_clk_count + ctrl_clk_count;
++	num_clk = core_clk_count + ctrl_clk_count + stream_clk_count;
+ 
+ 	for (i = 0; i < num_clk; i++) {
+ 		rc = of_property_read_string_index(dev->of_node, "clock-names",
+@@ -201,8 +216,14 @@ static int dp_parser_clock(struct dp_parser *parser)
+ 			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
+ 			clk->type = DSS_CLK_AHB;
+ 			core_clk_index++;
+-		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
+-			   dp_parser_check_prefix("stream", clk_name))  &&
++		} else if (dp_parser_check_prefix("stream", clk_name) &&
++				stream_clk_index < stream_clk_count) {
++			struct dss_clk *clk =
++				&stream_power->clk_config[stream_clk_index];
++			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
++			clk->type = DSS_CLK_PCLK;
++			stream_clk_index++;
++		} else if (dp_parser_check_prefix("ctrl", clk_name) &&
+ 			   ctrl_clk_index < ctrl_clk_count) {
+ 			struct dss_clk *clk =
+ 				&ctrl_power->clk_config[ctrl_clk_index];
+@@ -210,9 +231,7 @@ static int dp_parser_clock(struct dp_parser *parser)
+ 			ctrl_clk_index++;
+ 
+ 			if (!strncmp(clk_name, "ctrl_link",
+-					strlen("ctrl_link")) ||
+-					!strncmp(clk_name, "stream_pixel",
+-					strlen("ctrl_pixel")))
++					strlen("ctrl_link")))
+ 				clk->type = DSS_CLK_PCLK;
+ 			else
+ 				clk->type = DSS_CLK_AHB;
+diff --git a/drivers/gpu/drm/msm/dp/dp_parser.h b/drivers/gpu/drm/msm/dp/dp_parser.h
+index aa0380b6a280..841e776124c4 100644
+--- a/drivers/gpu/drm/msm/dp/dp_parser.h
++++ b/drivers/gpu/drm/msm/dp/dp_parser.h
+@@ -19,6 +19,7 @@
+ enum dp_pm_type {
+ 	DP_CORE_PM,
+ 	DP_CTRL_PM,
++	DP_STREAM_PM,
+ 	DP_PHY_PM,
+ 	DP_MAX_PM
+ };
+@@ -33,6 +34,7 @@ static inline const char *dp_parser_pm_name(enum dp_pm_type module)
+ 	switch (module) {
+ 	case DP_CORE_PM:	return "DP_CORE_PM";
+ 	case DP_CTRL_PM:	return "DP_CTRL_PM";
++	case DP_STREAM_PM:	return "DP_STREAM_PM";
+ 	case DP_PHY_PM:		return "DP_PHY_PM";
+ 	default:		return "???";
+ 	}
+diff --git a/drivers/gpu/drm/msm/dp/dp_power.c b/drivers/gpu/drm/msm/dp/dp_power.c
+index 8b0a276d34a4..34fdb2e5d644 100644
+--- a/drivers/gpu/drm/msm/dp/dp_power.c
++++ b/drivers/gpu/drm/msm/dp/dp_power.c
+@@ -95,11 +95,12 @@ static int dp_power_regulator_init(struct dp_power_private *power)
+ static int dp_power_clk_init(struct dp_power_private *power)
+ {
+ 	int rc = 0;
+-	struct dss_module_power *core, *ctrl;
++	struct dss_module_power *core, *ctrl, *stream;
+ 	struct device *dev = &power->pdev->dev;
+ 
+ 	core = &power->parser->mp[DP_CORE_PM];
+ 	ctrl = &power->parser->mp[DP_CTRL_PM];
++	stream = &power->parser->mp[DP_STREAM_PM];
+ 
+ 	if (power->parser->pll && power->parser->pll->get_provider) {
+ 		rc = power->parser->pll->get_provider(power->parser->pll,
+@@ -126,21 +127,33 @@ static int dp_power_clk_init(struct dp_power_private *power)
+ 		return -ENODEV;
+ 	}
+ 
++	rc = msm_dss_get_clk(dev, stream->clk_config, stream->num_clk);
++	if (rc) {
++		DRM_ERROR("failed to get %s clk. err=%d\n",
++			dp_parser_pm_name(DP_CTRL_PM), rc);
++		msm_dss_put_clk(core->clk_config, core->num_clk);
++		return -ENODEV;
++	}
++
+ 	return 0;
+ }
+ 
+ static int dp_power_clk_deinit(struct dp_power_private *power)
+ {
+-	struct dss_module_power *core, *ctrl;
++	struct dss_module_power *core, *ctrl, *stream;
+ 
+ 	core = &power->parser->mp[DP_CORE_PM];
+ 	ctrl = &power->parser->mp[DP_CTRL_PM];
++	stream = &power->parser->mp[DP_STREAM_PM];
+ 
+-	if (!core || !ctrl)
++	if (!core || !ctrl || !stream) {
++		DRM_ERROR("invalid power_data\n");
+ 		return -EINVAL;
++	}
+ 
+ 	msm_dss_put_clk(ctrl->clk_config, ctrl->num_clk);
+ 	msm_dss_put_clk(core->clk_config, core->num_clk);
++	msm_dss_put_clk(stream->clk_config, stream->num_clk);
+ 	return 0;
+ }
+ 
+@@ -167,6 +180,20 @@ static int dp_power_clk_set_rate(struct dp_power_private *power,
+ 	return 0;
+ }
+ 
++int dp_power_clk_status(struct dp_power *dp_power, enum dp_pm_type pm_type)
++{
++	if (pm_type == DP_CORE_PM)
++		return dp_power->core_clks_on;
++
++	if (pm_type == DP_CTRL_PM)
++		return dp_power->link_clks_on;
++
++	if (pm_type == DP_STREAM_PM)
++		return dp_power->stream_clks_on;
++
++	return 0;
++}
++
+ int dp_power_clk_enable(struct dp_power *dp_power,
+ 		enum dp_pm_type pm_type, bool enable)
+ {
+@@ -175,7 +202,8 @@ int dp_power_clk_enable(struct dp_power *dp_power,
+ 
+ 	power = container_of(dp_power, struct dp_power_private, dp_power);
+ 
+-	if (pm_type != DP_CORE_PM && pm_type != DP_CTRL_PM) {
++	if (pm_type != DP_CORE_PM && pm_type != DP_CTRL_PM &&
++			pm_type != DP_STREAM_PM) {
+ 		DRM_ERROR("unsupported power module: %s\n",
+ 				dp_parser_pm_name(pm_type));
+ 		return -EINVAL;
+@@ -192,6 +220,11 @@ int dp_power_clk_enable(struct dp_power *dp_power,
+ 			return 0;
+ 		}
+ 
++		if (pm_type == DP_STREAM_PM && dp_power->stream_clks_on) {
++			DRM_DEBUG_DP("pixel clks already enabled\n");
++			return 0;
++		}
++
+ 		if ((pm_type == DP_CTRL_PM) && (!dp_power->core_clks_on)) {
+ 			DRM_DEBUG_DP("Enable core clks before link clks\n");
+ 
+@@ -215,13 +248,16 @@ int dp_power_clk_enable(struct dp_power *dp_power,
+ 
+ 	if (pm_type == DP_CORE_PM)
+ 		dp_power->core_clks_on = enable;
++	else if (pm_type == DP_STREAM_PM)
++		dp_power->stream_clks_on = enable;
+ 	else
+ 		dp_power->link_clks_on = enable;
+ 
+ 	DRM_DEBUG_DP("%s clocks for %s\n",
+ 			enable ? "enable" : "disable",
+ 			dp_parser_pm_name(pm_type));
+-	DRM_DEBUG_DP("link_clks:%s core_clks:%s\n",
++	DRM_DEBUG_DP("strem_clks:%s link_clks:%s core_clks:%s\n",
++		dp_power->stream_clks_on ? "on" : "off",
+ 		dp_power->link_clks_on ? "on" : "off",
+ 		dp_power->core_clks_on ? "on" : "off");
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_power.h b/drivers/gpu/drm/msm/dp/dp_power.h
+index 756341e290ed..5333a97d5c35 100644
+--- a/drivers/gpu/drm/msm/dp/dp_power.h
++++ b/drivers/gpu/drm/msm/dp/dp_power.h
+@@ -19,6 +19,7 @@
+ struct dp_power {
+ 	bool core_clks_on;
+ 	bool link_clks_on;
++	bool stream_clks_on;
+ };
+ 
+ /**
+@@ -43,6 +44,18 @@ int dp_power_init(struct dp_power *power, bool flip);
+  */
+ int dp_power_deinit(struct dp_power *power);
+ 
++/**
++ * dp_power_clk_status() - display controller clocks status
++ *
++ * @power: instance of power module
++ * @pm_type: type of pm, core/ctrl/phy
++ * return: status of power clocks
++ *
++ * This API return status of DP clocks
++ */
++
++int dp_power_clk_status(struct dp_power *dp_power, enum dp_pm_type pm_type);
++
+ /**
+  * dp_power_clk_enable() - enable display controller clocks
+  *
+diff --git a/drivers/gpu/drm/msm/dp/dp_reg.h b/drivers/gpu/drm/msm/dp/dp_reg.h
+index 6b3e297e4e04..d8bc175246da 100644
+--- a/drivers/gpu/drm/msm/dp/dp_reg.h
++++ b/drivers/gpu/drm/msm/dp/dp_reg.h
+@@ -101,6 +101,7 @@
+ #define REG_DP_MAINLINK_CTRL			(0x00000000)
+ #define DP_MAINLINK_CTRL_ENABLE			(0x00000001)
+ #define DP_MAINLINK_CTRL_RESET			(0x00000002)
++#define DP_MAINLINK_CTRL_SW_BYPASS_SCRAMBLER	(0x00000010)
+ #define DP_MAINLINK_FB_BOUNDARY_SEL		(0x02000000)
+ 
+ #define REG_DP_STATE_CTRL			(0x00000004)
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index b4b213e57f99..a0e3c0b8bd4e 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -387,6 +387,7 @@ int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *dev,
+ 			 struct drm_encoder *encoder);
+ int msm_dp_display_enable(struct msm_dp *dp, struct drm_encoder *encoder);
+ int msm_dp_display_disable(struct msm_dp *dp, struct drm_encoder *encoder);
++int msm_dp_display_pre_disable(struct msm_dp *dp, struct drm_encoder *encoder);
+ void msm_dp_display_mode_set(struct msm_dp *dp, struct drm_encoder *encoder,
+ 				struct drm_display_mode *mode,
+ 				struct drm_display_mode *adjusted_mode);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-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
-
---0OAP2g/MAC+5xKAE--
