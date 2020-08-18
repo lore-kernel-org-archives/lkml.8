@@ -2,172 +2,140 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13367206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B6DPWqkr"
+	by mail.kernel.org (Postfix) with ESMTP id 3814B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597736027;
+	bh=+l8ZIHYYdE8RD9Qj/I64++AlJvGHPOqSiV3mJ2HpmNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iQG3eumx+7CCevlhyEJHwmrIgv/M2cplT3pX+NcPf9/sMqyOwhhXrSfDA0ov8wK4D
+	 liJ8JXKulwtG9SMS8BJBQHobqYOpgvO2TTciBMd0LrJ/fzKn7eFNcJawLsJKSNWxRE
+	 HVSdvv4OFvdCmK11TV/qvoZNWAERwPuGbgRp/XL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgHRHdM (ORCPT
+        id S1726593AbgHRHdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:33:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36036 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726043AbgHRHdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:33:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597735989;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ZORlRFQvfodi9/p3V10KEuwI7i1A2CfxfahSwDn92uE=;
-        b=B6DPWqkrZBuMPG5RLcHgvOYz+DjIyyp0AZvO69O63X0CWmTQ2M00GjqLd5NMlMrpQvNJ/u
-        H3CPMc2rDd3RkC098bXO6JHnfoBXkTgBfQug9+KFp7im9Kn6BrQnz4N+0zcqbRw43x/V89
-        YcthvbYTFY9t6JRdEoo2AswDP6KBzZE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-RBxa3S3jNeGlcbem92Vtsg-1; Tue, 18 Aug 2020 03:32:59 -0400
-X-MC-Unique: RBxa3S3jNeGlcbem92Vtsg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 18 Aug 2020 03:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgHRHdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:33:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50CE8100CF6A;
-        Tue, 18 Aug 2020 07:32:57 +0000 (UTC)
-Received: from [10.36.113.168] (ovpn-113-168.ams2.redhat.com [10.36.113.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66FDC702F1;
-        Tue, 18 Aug 2020 07:32:53 +0000 (UTC)
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Michal Such?nek <msuchanek@suse.de>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D2B206B5;
+        Tue, 18 Aug 2020 07:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597736024;
+        bh=+l8ZIHYYdE8RD9Qj/I64++AlJvGHPOqSiV3mJ2HpmNQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=adtLg8XGFdMJbAYwQ+USeWVHO6NJasnpN07UEjD5SyBJk/l55Cyn+jXV7Zsbuyfsf
+         9swaGL4dFOyfw4m8JELBW45/YfY66lEL1n7z1a8qWfDnRwyNp8SVu/X/LOUKv+5Qnw
+         kZSl+rMuFLYRfnbJywcZ11LdpXjqXbOoyo0hqsmA=
+Date:   Tue, 18 Aug 2020 09:34:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, X86 ML <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200703091001.GJ21462@kitsune.suse.cz>
- <20200703092414.GR18446@dhcp22.suse.cz>
- <20200703105944.GS18446@dhcp22.suse.cz>
- <20200703125823.GA26243@linux.vnet.ibm.com>
- <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
- <20200812060101.GB10992@linux.vnet.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <13a85e52-5caa-24a8-7169-3992b1ad262a@redhat.com>
-Date:   Tue, 18 Aug 2020 09:32:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
+Message-ID: <20200818073408.GA12514@kroah.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <20200817220212.338670-2-ndesaulniers@google.com>
+ <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
+ <20200818072531.GC9254@kroah.com>
+ <CAMj1kXF_RhV7D8D8J_fwTruiKWbHapeGe-omwyBoR8t4gRv7QA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200812060101.GB10992@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXF_RhV7D8D8J_fwTruiKWbHapeGe-omwyBoR8t4gRv7QA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.08.20 08:01, Srikar Dronamraju wrote:
-> Hi Andrew, Michal, David
+On Tue, Aug 18, 2020 at 09:29:39AM +0200, Ard Biesheuvel wrote:
+> On Tue, 18 Aug 2020 at 09:25, Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 09:10:01AM +0200, Ard Biesheuvel wrote:
+> > > On Tue, 18 Aug 2020 at 00:02, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > > >
+> > > > LLVM implemented a recent "libcall optimization" that lowers calls to
+> > > > `sprintf(dest, "%s", str)` where the return value is used to
+> > > > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> > > > in parsing format strings. This optimization was introduced into
+> > > > clang-12. Because the kernel does not provide an implementation of
+> > > > stpcpy, we observe linkage failures for almost all targets when building
+> > > > with ToT clang.
+> > > >
+> > > > The interface is unsafe as it does not perform any bounds checking.
+> > > > Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
+> > > >
+> > > > Unlike
+> > > > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> > > > which cited failures with `-fno-builtin-*` flags being retained in LLVM
+> > > > LTO, that bug seems to have been fixed by
+> > > > https://reviews.llvm.org/D71193, so the above sha can now be reverted in
+> > > > favor of `-fno-builtin-bcmp`.
+> > > >
+> > > > Cc: stable@vger.kernel.org # 4.4
+> > >
+> > > Why does a fix for Clang-12 have to be backported all the way to v4.4?
+> > > How does that meet the requirements for stable patches?
+> >
+> > Because people like to build older kernels with new compliler versions.
+> >
+> > And those "people" include me, who doesn't want to keep around old
+> > compilers just because my distro moved to the latest one...
+> >
+> > We've been doing this for the past 4+ years, for new versions of gcc,
+> > keeping 4.4.y building properly with the bleeding edge of that compiler,
+> > why is clang any different here?
+> >
 > 
-> * Andrew Morton <akpm@linux-foundation.org> [2020-08-06 21:32:11]:
-> 
->> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
->>
->>>> The memory hotplug changes that somehow because you can hotremove numa
->>>> nodes and therefore make the nodemask sparse but that is not a common
->>>> case. I am not sure what would happen if a completely new node was added
->>>> and its corresponding node was already used by the renumbered one
->>>> though. It would likely conflate the two I am afraid. But I am not sure
->>>> this is really possible with x86 and a lack of a bug report would
->>>> suggest that nobody is doing that at least.
->>>>
->>>
->>> JFYI,
->>> Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
->>> hotplug on memoryless node. 
->>>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=202187
->>
->> So...  do we merge this patch or not?  Seems that the overall view is
->> "risky but nobody is likely to do anything better any time soon"?
-> 
-> Can we decide on this one way or the other?
+> Fair enough. I am just struggling to match stable-kernel-rules.rst
+> with the actual practices - perhaps it is time to update that
+> document?
 
-Hmm, not sure who's the person to decide. I tend to prefer doing the
-node renaming, handling this in ppc code; looking at the review of v2
-there are still some concerns regarding numa distances.
+The rules are tiny and simple for 99% of the issues involved.  Stuff
+like "add patches to fix build failures and warnings for newer compiler
+versions" are so rare (they only happen every 2 years or so), it's not
+worth it.
 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200817103238.158133-1-aneesh.kumar@linux.ibm.com/
+thanks,
 
--- 
-Thanks,
-
-David / dhildenb
-
+greg k-h
