@@ -2,196 +2,105 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69182C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0943CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7B92067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1xmA8Q2"
+	by mail.kernel.org (Postfix) with ESMTP id D9E6F2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgHRI4J (ORCPT
+        id S1726598AbgHRI42 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:56:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26565 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726435AbgHRI4I (ORCPT
+        Tue, 18 Aug 2020 04:56:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:55847 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgHRI41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:56:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597740967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=K2YuxgPxHpEpjMdU7BY0/k4Pz04dXZEFD1AqDiVrRsM=;
-        b=Q1xmA8Q2w+E32NlOa0WWfbcSXs/sNc60VIo6Y24Pcw0fnFmYGVkhpZ8VIiAaJLFGfmFZuY
-        Utjy28bXR8ELo6WTVi1S++dleAGtotbh7BXZdUCbGUOCkj/OHSx2QXdftLQ/ObsAGsBnaw
-        xtl8LSYZkn4bb61M3S1e6SIiHpIH6Vk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-U4NZyiHkPS63Ax5Cy4wZLA-1; Tue, 18 Aug 2020 04:56:03 -0400
-X-MC-Unique: U4NZyiHkPS63Ax5Cy4wZLA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9C051005E66;
-        Tue, 18 Aug 2020 08:56:01 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0B7467CE7;
-        Tue, 18 Aug 2020 08:55:56 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 10:55:55 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     brouer@redhat.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
-        andriin@fb.com
-Subject: Kernel build error on BTFIDS vmlinux
-Message-ID: <20200818105555.51fc6d62@carbon>
+        Tue, 18 Aug 2020 04:56:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-54-fr6a1Gp7PCek2qBtx_YSwg-1; Tue, 18 Aug 2020 09:56:22 +0100
+X-MC-Unique: fr6a1Gp7PCek2qBtx_YSwg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 18 Aug 2020 09:56:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 18 Aug 2020 09:56:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Ingo Molnar' <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Pavel Machek <pavel@ucw.cz>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Witten <mfwitten@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        John Levon <john.levon@joyent.com>,
+        "John Levon" <levon@movementarian.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: RE: [PATCH] Makefile: Yes. Finally remove
+ '-Wdeclaration-after-statement'
+Thread-Topic: [PATCH] Makefile: Yes. Finally remove
+ '-Wdeclaration-after-statement'
+Thread-Index: AQHWdR7fdrR7Y2b6OUCIIALK0604z6k9jrEQ
+Date:   Tue, 18 Aug 2020 08:56:22 +0000
+Message-ID: <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
+References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
+ <20200816175303.GB1236603@ZenIV.linux.org.uk> <20200817204223.GB12414@amd>
+ <87lfid6kpi.fsf@x220.int.ebiederm.org>
+ <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
+ <20200817220908.GA3701@amd>
+ <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
+ <20200818051717.GA3134537@gmail.com>
+In-Reply-To: <20200818051717.GA3134537@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> I'm a big fan of -Wdeclaration-after-statement and I think C++ style
+> mixed variables/statements code has several disadvantages:
 
-On latest DaveM net-git tree (06a4ec1d9dc652), after linking (LD vmlinux) the
-"BTFIDS vmlinux" fails. Are anybody else experiencing this? Are there already a
-fix? (just returned from vacation so not fully up-to-date on ML yet)
+Agreed.
+Personally I think declarations should either be either right
+at the top of a function or in a very small code block.
 
-The tool which is called and error message:
-  ./tools/bpf/resolve_btfids/resolve_btfids vmlinux
-  FAILED elf_update(WRITE): invalid section alignment
+Otherwise they are annoying to find.
 
-Note, the tool is only called when CONFIG_DEBUG_INFO_BTF is enabled.
+You also get very hard to spot bugs unless -Wshadow
+is enabled (I can't remember if the linux kernel has
+it enabled).
 
-I saved a copy of vmlinux and ran the tool manually with verbose
-options, the output is provided below signature.
+C++ (sort of) has to allow definitions in the middle
+of code blocks because it doesn't allow uninitialised
+variables - so definitions are best delayed until the
+copy-constructor can be used.
 
-- - 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+	David
 
-$ ./tools/bpf/resolve_btfids/resolve_btfids -vv vmlinux.err.bak
-section(1) .text, size 12588824, link 0, flags 6, type=1
-section(2) .rodata, size 4424758, link 0, flags 3, type=1
-section(3) .pci_fixup, size 12736, link 0, flags 2, type=1
-section(4) __ksymtab, size 58620, link 0, flags 2, type=1
-section(5) __ksymtab_gpl, size 56592, link 0, flags 2, type=1
-section(6) __kcrctab, size 19540, link 0, flags 2, type=1
-section(7) __kcrctab_gpl, size 18864, link 0, flags 2, type=1
-section(8) __ksymtab_strings, size 180372, link 0, flags 32, type=1
-section(9) __param, size 14000, link 0, flags 2, type=1
-section(10) __modver, size 152, link 0, flags 2, type=1
-section(11) __ex_table, size 21864, link 0, flags 2, type=1
-section(12) .notes, size 60, link 0, flags 2, type=7
-section(13) .BTF, size 3345350, link 0, flags 2, type=1
-section(14) .BTF_ids, size 100, link 0, flags 2, type=1
-section(15) .data, size 2243456, link 0, flags 3, type=1
-section(16) __bug_table, size 87804, link 0, flags 3, type=1
-section(17) .orc_unwind_ip, size 1625580, link 0, flags 2, type=1
-section(18) .orc_unwind, size 2438370, link 0, flags 2, type=1
-section(19) .orc_lookup, size 196708, link 0, flags 3, type=8
-section(20) .vvar, size 4096, link 0, flags 3, type=1
-section(21) .data..percpu, size 178840, link 0, flags 3, type=1
-section(22) .init.text, size 349579, link 0, flags 6, type=1
-section(23) .altinstr_aux, size 3367, link 0, flags 6, type=1
-section(24) .init.data, size 1584032, link 0, flags 3, type=1
-section(25) .x86_cpu_dev.init, size 24, link 0, flags 2, type=1
-section(26) .parainstructions, size 316, link 0, flags 2, type=1
-section(27) .altinstructions, size 15015, link 0, flags 2, type=1
-section(28) .altinstr_replacement, size 3756, link 0, flags 6, type=1
-section(29) .iommu_table, size 160, link 0, flags 2, type=1
-section(30) .apicdrivers, size 32, link 0, flags 3, type=1
-section(31) .exit.text, size 5195, link 0, flags 6, type=1
-section(32) .smp_locks, size 32768, link 0, flags 2, type=1
-section(33) .data_nosave, size 0, link 0, flags 1, type=1
-section(34) .bss, size 3805184, link 0, flags 3, type=8
-section(35) .brk, size 155648, link 0, flags 3, type=8
-section(36) .comment, size 44, link 0, flags 30, type=1
-section(37) .debug_aranges, size 45684, link 0, flags 800, type=1
-section(38) .debug_info, size 129098181, link 0, flags 800, type=1
-section(39) .debug_abbrev, size 1152583, link 0, flags 800, type=1
-section(40) .debug_line, size 7374522, link 0, flags 800, type=1
-section(41) .debug_frame, size 702463, link 0, flags 800, type=1
-section(42) .debug_str, size 1017606, link 0, flags 830, type=1
-section(43) .debug_loc, size 3019453, link 0, flags 800, type=1
-section(44) .debug_ranges, size 1744583, link 0, flags 800, type=1
-section(45) .symtab, size 2955888, link 46, flags 0, type=2
-section(46) .strtab, size 2613072, link 0, flags 0, type=3
-section(47) .shstrtab, size 525, link 0, flags 0, type=3
-adding symbol seq_file
-adding symbol bpf_map
-adding symbol task_struct
-adding symbol file
-adding symbol bpf_prog
-adding symbol bpf_ctx_convert
-adding symbol sk_buff
-adding symbol xdp_buff
-adding symbol inet_sock
-adding symbol inet_connection_sock
-adding symbol inet_request_sock
-adding symbol inet_timewait_sock
-adding symbol request_sock
-adding symbol sock
-adding symbol sock_common
-adding symbol tcp_sock
-adding symbol tcp_request_sock
-adding symbol tcp_timewait_sock
-adding symbol tcp6_sock
-adding symbol udp_sock
-adding symbol udp6_sock
-adding symbol netlink_sock
-adding symbol fib6_info
-patching addr    36: ID   21502 [xdp_buff]
-patching addr    84: ID   63192 [udp_sock]
-patching addr    88: ID   63195 [udp6_sock]
-patching addr    76: ID   66968 [tcp_timewait_sock]
-patching addr    68: ID   61353 [tcp_sock]
-patching addr    72: ID   61567 [tcp_request_sock]
-patching addr    80: ID   63196 [tcp6_sock]
-patching addr    12: ID     169 [task_struct]
-patching addr    28: ID     169 [task_struct]
-patching addr    64: ID    4401 [sock_common]
-patching addr    60: ID    2894 [sock]
-patching addr    32: ID    3116 [sk_buff]
-patching addr     0: ID    1683 [seq_file]
-patching addr     4: ID    1683 [seq_file]
-patching addr    56: ID    4458 [request_sock]
-patching addr    92: ID   65748 [netlink_sock]
-patching addr    52: ID   66629 [inet_timewait_sock]
-patching addr    40: ID   37652 [inet_sock]
-patching addr    48: ID   61566 [inet_request_sock]
-patching addr    44: ID   61337 [inet_connection_sock]
-patching addr    16: ID     491 [file]
-patching addr    96: ID   56653 [fib6_info]
-patching addr    20: ID    3099 [bpf_prog]
-patching addr     8: ID    1926 [bpf_map]
-patching addr    24: ID   21629 [bpf_ctx_convert]
-FAILED elf_update(WRITE): invalid section alignment
-update failed for vmlinux.err.bak
-
-
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index e6e2d9e5ff48..718b2c0ee7ea 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -227,6 +227,7 @@ cleanup()
-        rm -f .tmp_System.map
-        rm -f .tmp_vmlinux*
-        rm -f System.map
-+       cp vmlinux vmlinux.err.bak
-        rm -f vmlinux
-        rm -f vmlinux.o
- }
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
