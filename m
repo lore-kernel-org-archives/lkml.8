@@ -2,131 +2,125 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBB8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95740C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAB52076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:24:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLEHCiCC"
+	by mail.kernel.org (Postfix) with ESMTP id 6639620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597735511;
+	bh=N2APiQQepxSYCzop4Qp1o77O54Y1HK1//Wr9CEjh4fI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aeTzT1Sr2P7Nzew9Qp4l3Iom46OMlYAkYi0x38ss5AkgZQ9EkZoQ/RfS+Z4jFhCVk
+	 AU1hGTQyd+eqh6hN2RdeunF0amjNruc3QL/rKCqqd2ic3hRf7Elt7QAHApPUB3M89h
+	 5G1rw/rn709atqdI85BSkeHuhYtkgo8MbQ2b3bL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgHRHYT (ORCPT
+        id S1726519AbgHRHZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgHRHYS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:24:18 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B959C061389;
-        Tue, 18 Aug 2020 00:24:18 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id x10so10824032ybj.13;
-        Tue, 18 Aug 2020 00:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HmoQCZpGaKbIsYS8+rvFpQeHNY5B2Hi6SrMeFT5bb98=;
-        b=GLEHCiCChrPivNJbmyGftlp3kKltoTTqQa0tA2ZPntqqIrTYG5p5BC7XOo+bkkvFXc
-         h07xzo32mFj+5EyR+HxvTynASwrNLzu29gqeCvFDgcfM6+fGXn7it8nyXfS1NOsSU2IE
-         R7cpDqr2jKz3WLdS3niS1oE0D8lpn+G5scmCp2T0Q6cqbPEtOcXaqpVnPsU6xopZCNQ1
-         /6LrtwfCBslzAlNMqz39FjY8c8anTv0oWKAWWyr4KofvMkZQOykKBDZqxu387ogYyZrC
-         s5NcAdArrPTA0lu0Cd8apu/RdsvKz2QATaeZWXh9NxGeoddjFvjSvUfqzes7r6MzRCzH
-         dV1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HmoQCZpGaKbIsYS8+rvFpQeHNY5B2Hi6SrMeFT5bb98=;
-        b=bXgkQFSbvNWNEdjOeK96IyvdRHA4LkaCY2TS9PKktkOOQf0lWqLTSp9tcN9vKr9Snk
-         ITDeH3IUsrLLMuNROiH9z6YN5tn3mUBQtJtqMsFa9OMhMPzi9bPqI3P6+lNQbuFkbaBd
-         zjCpb3eKU7+FTRTutUX1+2KV2om25IrFlNV+3aH8n7jicIB7Sd9P6NwS2+ybyJ2UUl8h
-         mIFLPBIdHsc+GTjk2Sjg14hJmwVl1/TQDJvrjxYKc+uGVDJtq/cIVaxa4+KTr71N4wz6
-         LClWYQwDblEH62sTJZU8fauL6gbzNeQynb+alaJQzp2VQHqz4gFXiqRwAZUdM1prk5RZ
-         MqRA==
-X-Gm-Message-State: AOAM531ToJMUXJD2TgBYZgjcVtw6BMAkw2hQk6sP261fWoa200Zpl/ye
-        g/pATTY7BbO18Qcjf2SotWWo9xS/AxlpbT3QdK0=
-X-Google-Smtp-Source: ABdhPJzCDvUjiPWK649tyEh566910nzut2TlASPlTv0REFfFarykk7m1GFizATC9HgE6RSovRKmc3BBmUiq3wT1GcQU=
-X-Received: by 2002:a25:5384:: with SMTP id h126mr6977055ybb.445.1597735456307;
- Tue, 18 Aug 2020 00:24:16 -0700 (PDT)
+        Tue, 18 Aug 2020 03:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbgHRHZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:25:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C541205CB;
+        Tue, 18 Aug 2020 07:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597735507;
+        bh=N2APiQQepxSYCzop4Qp1o77O54Y1HK1//Wr9CEjh4fI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ULGeP8jyfskRDwys6jK46JZVSeX56BII0NNgpCECczBC+KpvIXPogM4Q1HVJvnADo
+         5VJmaLBVinajow8/gOPXYUYoWqwOFTjugqSa6fvNspRq57ArW7izT0hMBa8h9/oTks
+         9tKe1cHeVM/V49yQNG2ZlweKwPAq5Xr04bK10aFs=
+Date:   Tue, 18 Aug 2020 09:25:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, X86 ML <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
+Message-ID: <20200818072531.GC9254@kroah.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <20200817220212.338670-2-ndesaulniers@google.com>
+ <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
-In-Reply-To: <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 18 Aug 2020 08:23:49 +0100
-Message-ID: <CA+V-a8v74fkzE8SYaaA5Wg=NT_mdgjNLTd0nha=UbHEC0pw0UA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXH0gRCaoF0NziC870=eSEy0ghi8b0b6A+LMu8PMd58C0Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
-
-Thank you for the review.
-
-On Sat, Aug 15, 2020 at 9:45 AM Sergei Shtylyov
-<sergei.shtylyov@gmail.com> wrote:
->
-> Hello!
->
-> On 14.08.2020 20:30, Lad Prabhakar wrote:
->
-> > Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
+On Tue, Aug 18, 2020 at 09:10:01AM +0200, Ard Biesheuvel wrote:
+> On Tue, 18 Aug 2020 at 00:02, Nick Desaulniers <ndesaulniers@google.com> wrote:
 > >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> >   arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
-> >   1 file changed, 38 insertions(+)
+> > LLVM implemented a recent "libcall optimization" that lowers calls to
+> > `sprintf(dest, "%s", str)` where the return value is used to
+> > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> > in parsing format strings. This optimization was introduced into
+> > clang-12. Because the kernel does not provide an implementation of
+> > stpcpy, we observe linkage failures for almost all targets when building
+> > with ToT clang.
 > >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > index a603d947970e..50e9ed16a36d 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> > @@ -2369,6 +2369,44 @@
-> >                       status = "disabled";
-> >               };
+> > The interface is unsafe as it does not perform any bounds checking.
+> > Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
 > >
-> > +             pciec0_ep: pcie_ep@fe000000 {
->
->     Hyphens are preferred over underscores in the node/prop names.
->
-> [...]> +                pciec1_ep: pcie_ep@ee800000 {
->
->     Ditto, should be "pci-ep@ee800000".
->
-My bad will fix that in v2.
+> > Unlike
+> > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> > which cited failures with `-fno-builtin-*` flags being retained in LLVM
+> > LTO, that bug seems to have been fixed by
+> > https://reviews.llvm.org/D71193, so the above sha can now be reverted in
+> > favor of `-fno-builtin-bcmp`.
+> >
+> > Cc: stable@vger.kernel.org # 4.4
+> 
+> Why does a fix for Clang-12 have to be backported all the way to v4.4?
+> How does that meet the requirements for stable patches?
 
-Cheers,
-Prabhakar
+Because people like to build older kernels with new compliler versions.
 
-> [...]
->
-> MBR, Sergei
+And those "people" include me, who doesn't want to keep around old
+compilers just because my distro moved to the latest one...
+
+We've been doing this for the past 4+ years, for new versions of gcc,
+keeping 4.4.y building properly with the bleeding edge of that compiler,
+why is clang any different here?
+
+thanks,
+
+greg k-h
