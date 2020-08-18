@@ -2,75 +2,100 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D77420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFB520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 13:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHRNN7 (ORCPT
+        id S1726967AbgHRNO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 09:13:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33698 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 09:14:29 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43760 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgHRNNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 09:13:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 811D9B178;
-        Tue, 18 Aug 2020 13:14:04 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v7 6/6] libceph: use sendpage_ok() in ceph_tcp_sendpage()
-Date:   Tue, 18 Aug 2020 21:12:27 +0800
-Message-Id: <20200818131227.37020-7-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200818131227.37020-1-colyli@suse.de>
-References: <20200818131227.37020-1-colyli@suse.de>
+        id S1726398AbgHRNOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 09:14:22 -0400
+IronPort-SDR: 6W+Z5Qg0U19Qf6mTezwEiV/l/nmIcsazURgZwtb4cvtTksYO58RnRT+QjURHYhqJ2blI5oAh7+
+ jrQr+HViX8RQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239721046"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="239721046"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 06:14:22 -0700
+IronPort-SDR: C11I1yanpgMrEx772U0BmhqlpbZtBtIyHJ4Ihp0okQu5vVkXPTDl80TrCZGMn/J5/tAJFEDRF5
+ tY2sNCfCLxPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="326724846"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 06:14:16 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k81RO-009eUD-Vf; Tue, 18 Aug 2020 16:14:14 +0300
+Date:   Tue, 18 Aug 2020 16:14:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] uart:8250: change lock order in serial8250_do_startup()
+Message-ID: <20200818131414.GQ1891694@smile.fi.intel.com>
+References: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
+ <20200814095928.GK1891694@smile.fi.intel.com>
+ <20200818125218.GC17612@alley>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818125218.GC17612@alley>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In libceph, ceph_tcp_sendpage() does the following checks before handle
-the page by network layer's zero copy sendpage method,
-	if (page_count(page) >= 1 && !PageSlab(page))
+On Tue, Aug 18, 2020 at 02:52:18PM +0200, Petr Mladek wrote:
+> On Fri 2020-08-14 12:59:28, Andy Shevchenko wrote:
+> > On Fri, Aug 14, 2020 at 10:38:02AM +0900, Sergey Senozhatsky wrote:
+> > > We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
+> > > lockdep reports coming from 8250 driver; this causes a bit of trouble
+> > > to people, so let's fix it.
+> > 
+> > I guess we may add some tags here
+> > 
+> > Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Reported-by: Raul Rangel <rrangel@google.com>
+> > BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
+> > Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
+> 
+> "Link:" tag should point to the mail that is applied using git am.
+> I am not sure if there is a tag for related discussion in another
+> mail threads.
 
-This check is exactly what sendpage_ok() does. This patch replace the
-open coded checks by sendpage_ok() as a code cleanup.
+It's fine to have several Link tags and in the past we have them for bug
+reports thru mailing lists or so.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Ilya Dryomov <idryomov@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>
----
- net/ceph/messenger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Andy proposed many changes. Sergey, could you please send v2?
 
-diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-index 27d6ab11f9ee..6a349da7f013 100644
---- a/net/ceph/messenger.c
-+++ b/net/ceph/messenger.c
-@@ -575,7 +575,7 @@ static int ceph_tcp_sendpage(struct socket *sock, struct page *page,
- 	 * coalescing neighboring slab objects into a single frag which
- 	 * triggers one of hardened usercopy checks.
- 	 */
--	if (page_count(page) >= 1 && !PageSlab(page))
-+	if (sendpage_ok(page))
- 		sendpage = sock->ops->sendpage;
- 	else
- 		sendpage = sock_no_sendpage;
+There is a v2.
+
+https://lore.kernel.org/linux-serial/20200817022646.1484638-1-sergey.senozhatsky@gmail.com/T/#u
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
