@@ -2,103 +2,222 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F976C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5762C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11C120786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAA22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHRLwJ (ORCPT
+        id S1726568AbgHRL6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:52:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40212 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726684AbgHRLwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:52:03 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CCB8D1464C8F88828435;
-        Tue, 18 Aug 2020 19:52:00 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
- 19:51:52 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: iop-adma: Fix pointer cast warnings
-Date:   Tue, 18 Aug 2020 19:51:01 +0800
-Message-ID: <20200818115101.55700-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 18 Aug 2020 07:58:22 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:14618 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgHRL6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:58:19 -0400
+IronPort-SDR: ugdH8JAyc2BH7itCWvKGUDcD3p9mMn+kNtLgxH9cGyc7/kczRQmNfAAySWZXOGr8//wEEOWquQ
+ jSea8J8pxOGyGiXackOa7lBoofGo5B3rVoioRAVuSMuz8+GvxPj5niZoxXuSF6CGvbTOouSwFP
+ 1TzVg34o0yga/mYu94ITbkw5J8Bd9VbCb9Yq99kj0wwh1gvFdZfuQ5JdztziO5C+xms7H1G4j9
+ MkpGGs6lN+r2NOHL8qYCKYKvYAg6C5GNc8ERKEcjDatPLmyZHCHZQuQpRLquaD/vY1IVtaX6cB
+ jJU=
+X-IronPort-AV: E=Sophos;i="5.76,327,1592899200"; 
+   d="scan'208";a="54194417"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 18 Aug 2020 03:58:18 -0800
+IronPort-SDR: UacQbdCiZh6aLafhHVEmRcUXoNib6UbiNdqpwhet+hEKxZkvk+OYUUR+f9yf6A+NJRyEd8YZHA
+ I4iIXGc6vZRUSEqQxRk3ein5Pt6wgk1kNTVMe+2Zj8nXV2Y/t5KNXwNAOSwQwRmfA5zl4DitRr
+ euRNdMn1Iar92Sab2H0DoOIt3xyxkzC5Q5DX8pJiPj2N8kc0a+x4xoDNvFk42n6TMgKQAF0xxx
+ LzGLV6f4KdWoTGPkXM3kl2/kW4ne5G/5LRLr3lfG7Io+G3AkfSRW8dhU3UPVR8g5yQMAitQsSp
+ PO4=
+To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+From:   Jim Baxter <jim_baxter@mentor.com>
+Subject: PROBLEM: Long Workqueue delays V2
+CC:     "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
+        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+Message-ID: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+Date:   Tue, 18 Aug 2020 12:58:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
+ SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/dma/iop-adma.c: In function ‘iop_adma_alloc_chan_resources’:
-drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-   hw_desc = (char *) iop_chan->device->dma_desc_pool;
-             ^
-drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-    (dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-    ^
-drivers/dma/iop-adma.c: In function ‘iop_adma_probe’:
-drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-   (void *) adev->dma_desc_pool);
+I am asking this question again to include the fs-devel list.
 
-Use dma_addr_t for dma_desc_pool, and %pad to print dma_addr_t.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/iop-adma.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+We have issues with the workqueue of the kernel overloading the CPU 0 
+when we we disconnect a USB stick.
 
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index 3350bffb2e93..48d56c9f3619 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -416,6 +416,7 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
- static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
- {
- 	char *hw_desc;
-+	dma_addr_t dma_desc;
- 	int idx;
- 	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
- 	struct iop_adma_desc_slot *slot = NULL;
-@@ -444,9 +445,8 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
- 		INIT_LIST_HEAD(&slot->tx_list);
- 		INIT_LIST_HEAD(&slot->chain_node);
- 		INIT_LIST_HEAD(&slot->slot_node);
--		hw_desc = (char *) iop_chan->device->dma_desc_pool;
--		slot->async_tx.phys =
--			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-+		dma_desc = iop_chan->device->dma_desc_pool;
-+		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
- 		slot->idx = idx;
- 
- 		spin_lock_bh(&iop_chan->lock);
-@@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
- 		goto err_free_adev;
- 	}
- 
--	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
--		__func__, adev->dma_desc_pool_virt,
--		(void *) adev->dma_desc_pool);
-+	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
-+		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
- 
- 	adev->id = plat_data->hw_id;
- 
--- 
-2.17.1
+This results in other items on the shared workqueue being delayed by
+around 6.5 seconds with a default kernel configuration and 2.3 seconds
+on a config tailored for our RCar embedded platform.
 
+
+
+We first noticed this issue on custom hardware and we have recreated it
+on an RCar Starter Kit using a test module [1] to replicate the
+behaviour, the test module outputs any delays of greater then 9ms.
+
+To run the test we have a 4GB random file on a USB stick and perform
+the following test.
+The stick is mounted as R/O and we are copying data from the stick:
+
+- Mount the stick.
+mount -o ro,remount /dev/sda1
+
+- Load the Module:
+# taskset -c 0 modprobe latency-mon
+
+- Copy large amount of data from the stick:
+# dd if=/run/media/sda1/sample.txt of=/dev/zero
+[ 1437.517603] DELAY: 10
+8388607+1 records in
+8388607+1 records out
+
+
+- Disconnect the USB stick:
+[ 1551.796792] usb 2-1: USB disconnect, device number 2
+[ 1558.625517] DELAY: 6782
+
+
+The Delay output 6782 is in milliseconds.
+
+
+
+Using umount stops the issue occurring but is unfortunately not guaranteed
+in our particular system.
+
+
+From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
+98% of the CPU.
+
+I have traced the workqueue:workqueue_queue_work function while unplugging the USB
+and there is no particular workqueue function being executed a lot more then the 
+others for the kworker/0:1+usb thread.
+
+
+Using perf I identified the hub_events workqueue was spending a lot of time in
+invalidate_partition(), I have included a cut down the captured data from perf in
+[2] which shows the additional functions where the kworker spends most of its time.
+
+
+I am aware there will be delays on the shared workqueue, are the delays
+we are seeing considered normal?
+
+
+Is there any way to mitigate or identify where the delay is?
+I am unsure if this is a memory or filesystem subsystem issue.
+
+
+Thank you for you help.
+
+Thanks,
+Jim Baxter
+
+[1] Test Module:
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Simple WQ latency monitoring
+ *
+ * Copyright (C) 2020 Advanced Driver Information Technology.
+ */
+
+#include <linux/init.h>
+#include <linux/ktime.h>
+#include <linux/module.h>
+
+#define PERIOD_MS 100
+
+static struct delayed_work wq;
+static u64 us_save;
+
+static void wq_cb(struct work_struct *work)
+{
+	u64 us = ktime_to_us(ktime_get());
+	u64 us_diff = us - us_save;
+	u64 us_print = 0;
+
+	if (!us_save)
+		goto skip_print;
+
+
+	us_print = us_diff / 1000 - PERIOD_MS;
+	if (us_print > 9)
+		pr_crit("DELAY: %lld\n", us_print);
+
+skip_print:
+	us_save = us;
+	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+}
+
+static int latency_mon_init(void)
+{
+	us_save = 0;
+	INIT_DELAYED_WORK(&wq, wq_cb);
+	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+
+	return 0;
+}
+
+static void latency_mon_exit(void)
+{
+	cancel_delayed_work_sync(&wq);
+	pr_info("%s\n", __func__);
+}
+
+module_init(latency_mon_init);
+module_exit(latency_mon_exit);
+MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
+MODULE_LICENSE("GPL");
+
+
+[2] perf trace:
+    95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
+    |
+    ---ret_from_fork
+       kthread
+       worker_thread
+       |          
+        --95.15%--process_one_work
+		  |          
+		   --94.99%--hub_event
+			 |          
+			  --94.99%--usb_disconnect
+			  <snip>
+				|  
+				--94.90%--invalidate_partition
+				   __invalidate_device
+				   |          
+				   |--64.55%--invalidate_bdev
+				   |  |          
+				   |   --64.13%--invalidate_mapping_pages
+				   |     |          
+				   |     |--24.09%--invalidate_inode_page
+				   |     |   |          
+				   |     |   --23.44%--remove_mapping
+				   |     |     |          
+				   |     |      --23.20%--__remove_mapping
+				   |     |        |          
+				   |     |         --21.90%--arch_local_irq_restore
+				   |     |          
+				   |     |--22.44%--arch_local_irq_enable
+				   |          
+					--30.35%--shrink_dcache_sb 
+					<snip>
+					  |      
+					  --30.17%--truncate_inode_pages_range
 
