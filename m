@@ -2,461 +2,107 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2CE3206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEE9206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="m8vA/J8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHRMeR (ORCPT
+        id S1726633AbgHRMlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:34:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9765 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726653AbgHRMdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:33:54 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3656429BE75B45B8758;
-        Tue, 18 Aug 2020 20:33:47 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.201.60) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 18 Aug 2020 20:33:39 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <akpm@linux-foundation.org>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-crypto@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        "Seth Jennings" <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        "Vitaly Wool" <vitaly.wool@konsulko.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        "Hao Fang" <fanghao11@huawei.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH v6] mm/zswap: move to use crypto_acomp API for hardware acceleration
-Date:   Wed, 19 Aug 2020 00:31:00 +1200
-Message-ID: <20200818123100.4140-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Tue, 18 Aug 2020 08:41:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44869 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbgHRMlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:41:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BW9X45kLCz9sTH;
+        Tue, 18 Aug 2020 22:41:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1597754500;
+        bh=92T+JTRUiBj8LogWLq7x8AB1yPnegUccBvHHOB6a+Gg=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=m8vA/J8PF5b7d408Wrip0PPk3RfDiYyHPG9Pa2XDrokyFOXkXb2KQGNdcxPQFZOGI
+         jwAXR4Zi80UYXDgSOOipyqeJll5J5d1IeNnAImrSB7vv1uSzMQY+YpkN9vFQsJuMkq
+         D6PMobFVTok+BYfyfMwRb6y56Bzo3FQzO8zw7if8elWEFOKa0yYMR7CjOQGsyM3rTn
+         av4xCmScDPRW9o+gDTQ8kQEYsh1ttLGx6lO9682xnUmrT1Ia4XnFiI0sufMe9bBSxC
+         nYNHzKSIPYGm34xNKKQklPCA4D5CJaXJNlpN3e2u7qgC9iXFnqHcigIrYVKL+Wg4TS
+         E8fL1yIeDE6DQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [powerpc] 5.9.0-rc1 boot failure on POWER9 PowerVM LPAR
+In-Reply-To: <2CD14C97-9145-4D98-8C7C-783B278663A2@linux.vnet.ibm.com>
+References: <2CD14C97-9145-4D98-8C7C-783B278663A2@linux.vnet.ibm.com>
+Date:   Tue, 18 Aug 2020 22:41:39 +1000
+Message-ID: <87a6ysi0sc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.201.60]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, all new ZIP drivers are adapted to crypto_acomp APIs rather
-than legacy crypto_comp APIs. Tradiontal ZIP drivers like lz4,lzo etc
-have been also wrapped into acomp via scomp backend. But zswap.c is still
-using the old APIs. That means zswap won't be able to work on any new
-ZIP drivers in kernel.
+Sachin Sant <sachinp@linux.vnet.ibm.com> writes:
+> 5.9.0-rc1 fails to boot on POWER9 PowerVM LPAR with following message
 
-This patch moves to use cryto_acomp APIs to fix the disconnected bridge
-between new ZIP drivers and zswap. It is probably the first real user
-to use acomp but perhaps not a good example to demonstrate how multiple
-acomp requests can be executed in parallel in one acomp instance.
-frontswap is doing page load and store page by page synchronously.
-swap_writepage() depends on the completion of frontswap_store() to
-decide if it should call __swap_writepage() to swap to disk.
+Looks like:
 
-However this patch creates multiple acomp instances, so multiple threads
-running on multiple different cpus can actually do (de)compression
-parallelly, leveraging the power of multiple ZIP hardware queues. This
-is also consistent with frontswap's page management model.
+https://lore.kernel.org/linuxppc-dev/20200814150509.225615-1-vaibhav@linux.ibm.com/
 
-The old zswap code uses atomic context and avoids the race conditions
-while shared resources like zswap_dstmem are accessed. Here since acomp
-can sleep, per-cpu mutex is used to replace preemption-disable.
+cheers
 
-While it is possible to make mm/page_io.c and mm/frontswap.c support
-async (de)compression in some way, the entire design requires careful
-thinking and performance evaluation. For the first step, the base with
-fixed connection between ZIP drivers and zswap should be built.
-
-Cc: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Seth Jennings <sjenning@redhat.com>
-Cc: Dan Streetman <ddstreet@ieee.org>
-Cc: Vitaly Wool <vitaly.wool@konsulko.com>
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Hao Fang <fanghao11@huawei.com>
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- -v6:
- * rebase on top of 5.9-rc1;
- * move to crypto_alloc_acomp_node() API to use local ZIP hardware
-
- mm/zswap.c | 183 ++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 138 insertions(+), 45 deletions(-)
-
-diff --git a/mm/zswap.c b/mm/zswap.c
-index fbb782924ccc..00b5f14a7332 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -24,8 +24,10 @@
- #include <linux/rbtree.h>
- #include <linux/swap.h>
- #include <linux/crypto.h>
-+#include <linux/scatterlist.h>
- #include <linux/mempool.h>
- #include <linux/zpool.h>
-+#include <crypto/acompress.h>
- 
- #include <linux/mm_types.h>
- #include <linux/page-flags.h>
-@@ -127,9 +129,17 @@ module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
- * data structures
- **********************************/
- 
-+struct crypto_acomp_ctx {
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+	struct crypto_wait wait;
-+	u8 *dstmem;
-+	struct mutex *mutex;
-+};
-+
- struct zswap_pool {
- 	struct zpool *zpool;
--	struct crypto_comp * __percpu *tfm;
-+	struct crypto_acomp_ctx __percpu *acomp_ctx;
- 	struct kref kref;
- 	struct list_head list;
- 	struct work_struct release_work;
-@@ -388,23 +398,43 @@ static struct zswap_entry *zswap_entry_find_get(struct rb_root *root,
- * per-cpu code
- **********************************/
- static DEFINE_PER_CPU(u8 *, zswap_dstmem);
-+/*
-+ * If users dynamically change the zpool type and compressor at runtime, i.e.
-+ * zswap is running, zswap can have more than one zpool on one cpu, but they
-+ * are sharing dtsmem. So we need this mutex to be per-cpu.
-+ */
-+static DEFINE_PER_CPU(struct mutex *, zswap_mutex);
- 
- static int zswap_dstmem_prepare(unsigned int cpu)
- {
-+	struct mutex *mutex;
- 	u8 *dst;
- 
- 	dst = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
- 	if (!dst)
- 		return -ENOMEM;
- 
-+	mutex = kmalloc_node(sizeof(*mutex), GFP_KERNEL, cpu_to_node(cpu));
-+	if (!mutex) {
-+		kfree(dst);
-+		return -ENOMEM;
-+	}
-+
-+	mutex_init(mutex);
- 	per_cpu(zswap_dstmem, cpu) = dst;
-+	per_cpu(zswap_mutex, cpu) = mutex;
- 	return 0;
- }
- 
- static int zswap_dstmem_dead(unsigned int cpu)
- {
-+	struct mutex *mutex;
- 	u8 *dst;
- 
-+	mutex = per_cpu(zswap_mutex, cpu);
-+	kfree(mutex);
-+	per_cpu(zswap_mutex, cpu) = NULL;
-+
- 	dst = per_cpu(zswap_dstmem, cpu);
- 	kfree(dst);
- 	per_cpu(zswap_dstmem, cpu) = NULL;
-@@ -415,30 +445,54 @@ static int zswap_dstmem_dead(unsigned int cpu)
- static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
--
--	if (WARN_ON(*per_cpu_ptr(pool->tfm, cpu)))
--		return 0;
-+	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
-+	struct crypto_acomp *acomp;
-+	struct acomp_req *req;
-+
-+	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
-+	if (IS_ERR(acomp)) {
-+		pr_err("could not alloc crypto acomp %s : %ld\n",
-+				pool->tfm_name, PTR_ERR(acomp));
-+		return PTR_ERR(acomp);
-+	}
-+	acomp_ctx->acomp = acomp;
- 
--	tfm = crypto_alloc_comp(pool->tfm_name, 0, 0);
--	if (IS_ERR_OR_NULL(tfm)) {
--		pr_err("could not alloc crypto comp %s : %ld\n",
--		       pool->tfm_name, PTR_ERR(tfm));
-+	req = acomp_request_alloc(acomp_ctx->acomp);
-+	if (!req) {
-+		pr_err("could not alloc crypto acomp_request %s\n",
-+		       pool->tfm_name);
-+		crypto_free_acomp(acomp_ctx->acomp);
- 		return -ENOMEM;
- 	}
--	*per_cpu_ptr(pool->tfm, cpu) = tfm;
-+	acomp_ctx->req = req;
-+
-+	crypto_init_wait(&acomp_ctx->wait);
-+	/*
-+	 * if the backend of acomp is async zip, crypto_req_done() will wakeup
-+	 * crypto_wait_req(); if the backend of acomp is scomp, the callback
-+	 * won't be called, crypto_wait_req() will return without blocking.
-+	 */
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				   crypto_req_done, &acomp_ctx->wait);
-+
-+	acomp_ctx->mutex = per_cpu(zswap_mutex, cpu);
-+	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
-+
- 	return 0;
- }
- 
- static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
--	struct crypto_comp *tfm;
-+	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
-+
-+	if (!IS_ERR_OR_NULL(acomp_ctx)) {
-+		if (!IS_ERR_OR_NULL(acomp_ctx->req))
-+			acomp_request_free(acomp_ctx->req);
-+		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
-+			crypto_free_acomp(acomp_ctx->acomp);
-+	}
- 
--	tfm = *per_cpu_ptr(pool->tfm, cpu);
--	if (!IS_ERR_OR_NULL(tfm))
--		crypto_free_comp(tfm);
--	*per_cpu_ptr(pool->tfm, cpu) = NULL;
- 	return 0;
- }
- 
-@@ -561,8 +615,9 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
- 
- 	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
--	pool->tfm = alloc_percpu(struct crypto_comp *);
--	if (!pool->tfm) {
-+
-+	pool->acomp_ctx = alloc_percpu(*pool->acomp_ctx);
-+	if (!pool->acomp_ctx) {
- 		pr_err("percpu alloc failed\n");
- 		goto error;
- 	}
-@@ -585,7 +640,8 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
- 	return pool;
- 
- error:
--	free_percpu(pool->tfm);
-+	if (pool->acomp_ctx)
-+		free_percpu(pool->acomp_ctx);
- 	if (pool->zpool)
- 		zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
-@@ -596,14 +652,14 @@ static __init struct zswap_pool *__zswap_pool_create_fallback(void)
- {
- 	bool has_comp, has_zpool;
- 
--	has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+	has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	if (!has_comp && strcmp(zswap_compressor,
- 				CONFIG_ZSWAP_COMPRESSOR_DEFAULT)) {
- 		pr_err("compressor %s not available, using default %s\n",
- 		       zswap_compressor, CONFIG_ZSWAP_COMPRESSOR_DEFAULT);
- 		param_free_charp(&zswap_compressor);
- 		zswap_compressor = CONFIG_ZSWAP_COMPRESSOR_DEFAULT;
--		has_comp = crypto_has_comp(zswap_compressor, 0, 0);
-+		has_comp = crypto_has_acomp(zswap_compressor, 0, 0);
- 	}
- 	if (!has_comp) {
- 		pr_err("default compressor %s not available\n",
-@@ -639,7 +695,7 @@ static void zswap_pool_destroy(struct zswap_pool *pool)
- 	zswap_pool_debug("destroying", pool);
- 
- 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
--	free_percpu(pool->tfm);
-+	free_percpu(pool->acomp_ctx);
- 	zpool_destroy_pool(pool->zpool);
- 	kfree(pool);
- }
-@@ -723,7 +779,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		}
- 		type = s;
- 	} else if (!compressor) {
--		if (!crypto_has_comp(s, 0, 0)) {
-+		if (!crypto_has_acomp(s, 0, 0)) {
- 			pr_err("compressor %s not available\n", s);
- 			return -ENOENT;
- 		}
-@@ -774,7 +830,7 @@ static int __zswap_param_set(const char *val, const struct kernel_param *kp,
- 		 * failed, maybe both compressor and zpool params were bad.
- 		 * Allow changing this param, so pool creation will succeed
- 		 * when the other param is changed. We already verified this
--		 * param is ok in the zpool_has_pool() or crypto_has_comp()
-+		 * param is ok in the zpool_has_pool() or crypto_has_acomp()
- 		 * checks above.
- 		 */
- 		ret = param_set_charp(s, kp);
-@@ -876,7 +932,9 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	pgoff_t offset;
- 	struct zswap_entry *entry;
- 	struct page *page;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
-+
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -916,14 +974,21 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 
- 	case ZSWAP_SWAPCACHE_NEW: /* page is locked */
- 		/* decompress */
-+		acomp_ctx = this_cpu_ptr(entry->pool->acomp_ctx);
-+
- 		dlen = PAGE_SIZE;
- 		src = (u8 *)zhdr + sizeof(struct zswap_header);
--		dst = kmap_atomic(page);
--		tfm = *get_cpu_ptr(entry->pool->tfm);
--		ret = crypto_comp_decompress(tfm, src, entry->length,
--					     dst, &dlen);
--		put_cpu_ptr(entry->pool->tfm);
--		kunmap_atomic(dst);
-+		dst = kmap(page);
-+
-+		mutex_lock(acomp_ctx->mutex);
-+		sg_init_one(&input, src, entry->length);
-+		sg_init_one(&output, dst, dlen);
-+		acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+		ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+		dlen = acomp_ctx->req->dlen;
-+		mutex_unlock(acomp_ctx->mutex);
-+
-+		kunmap(page);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
- 
-@@ -1004,7 +1069,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry, *dupentry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	int ret;
- 	unsigned int hlen, dlen = PAGE_SIZE;
- 	unsigned long handle, value;
-@@ -1074,12 +1140,32 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	}
- 
- 	/* compress */
--	dst = get_cpu_var(zswap_dstmem);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	src = kmap_atomic(page);
--	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
--	kunmap_atomic(src);
--	put_cpu_ptr(entry->pool->tfm);
-+	acomp_ctx = this_cpu_ptr(entry->pool->acomp_ctx);
-+
-+	mutex_lock(acomp_ctx->mutex);
-+
-+	src = kmap(page);
-+	dst = acomp_ctx->dstmem;
-+	sg_init_one(&input, src, PAGE_SIZE);
-+	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-+	sg_init_one(&output, dst, PAGE_SIZE * 2);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
-+	/*
-+	 * it maybe looks a little bit silly that we send an asynchronous request,
-+	 * then wait for its completion synchronously. This makes the process look
-+	 * synchronous in fact.
-+	 * Theoretically, acomp supports users send multiple acomp requests in one
-+	 * acomp instance, then get those requests done simultaneously. but in this
-+	 * case, frontswap actually does store and load page by page, there is no
-+	 * existing method to send the second page before the first page is done
-+	 * in one thread doing frontswap.
-+	 * but in different threads running on different cpu, we have different
-+	 * acomp instance, so multiple threads can do (de)compression in parallel.
-+	 */
-+	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-+	dlen = acomp_ctx->req->dlen;
-+	kunmap(page);
-+
- 	if (ret) {
- 		ret = -EINVAL;
- 		goto put_dstmem;
-@@ -1103,7 +1189,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	memcpy(buf, &zhdr, hlen);
- 	memcpy(buf + hlen, dst, dlen);
- 	zpool_unmap_handle(entry->pool->zpool, handle);
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(acomp_ctx->mutex);
- 
- 	/* populate entry */
- 	entry->offset = offset;
-@@ -1131,7 +1217,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	return 0;
- 
- put_dstmem:
--	put_cpu_var(zswap_dstmem);
-+	mutex_unlock(acomp_ctx->mutex);
- 	zswap_pool_put(entry->pool);
- freepage:
- 	zswap_entry_cache_free(entry);
-@@ -1148,7 +1234,8 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- {
- 	struct zswap_tree *tree = zswap_trees[type];
- 	struct zswap_entry *entry;
--	struct crypto_comp *tfm;
-+	struct scatterlist input, output;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	u8 *src, *dst;
- 	unsigned int dlen;
- 	int ret;
-@@ -1175,11 +1262,17 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- 	src = zpool_map_handle(entry->pool->zpool, entry->handle, ZPOOL_MM_RO);
- 	if (zpool_evictable(entry->pool->zpool))
- 		src += sizeof(struct zswap_header);
--	dst = kmap_atomic(page);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
--	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
--	put_cpu_ptr(entry->pool->tfm);
--	kunmap_atomic(dst);
-+	dst = kmap(page);
-+
-+	acomp_ctx = this_cpu_ptr(entry->pool->acomp_ctx);
-+	mutex_lock(acomp_ctx->mutex);
-+	sg_init_one(&input, src, entry->length);
-+	sg_init_one(&output, dst, dlen);
-+	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, dlen);
-+	ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
-+	mutex_unlock(acomp_ctx->mutex);
-+
-+	kunmap(page);
- 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 	BUG_ON(ret);
- 
--- 
-2.27.0
-
-
+>             Starting udev Kernel Device Manager...
+> [  OK  ] Started udev Kernel Device Manager.
+> BUG: Kernel NULL pointer dereference on read at 0x00000188
+> Faulting instruction address: 0xc0000000005417e0
+> Oops: Kernel access of bad area, sig: 11 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> Modules linked in: papr_scm(+) uio_pdrv_genirq uio sch_fq_codel ip_tables sd_mod t10_pi ibmvscsi scsi_transport_srp ibmveth
+> CPU: 14 PID: 7 Comm: kworker/u32:0 Not tainted 5.9.0-rc1-00085-g06a4ec1d9dc6 #1
+> Workqueue: events_unbound async_run_entry_fn
+> NIP:  c0000000005417e0 LR: c000000000541784 CTR: c000000000871e30
+> REGS: c00000067871b710 TRAP: 0300   Not tainted  (5.9.0-rc1-00085-g06a4ec1d9dc6)
+> MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24822484  XER: 00000000
+> CFAR: c00000000054178c DAR: 0000000000000188 DSISR: 40000000 IRQMASK: 0 
+> GPR00: c000000000541784 c00000067871b9a0 c00000000173cb00 0000000000000000 
+> GPR04: c000000000f9eb50 0000000000000002 0000000000000001 c000000678689000 
+> GPR08: c000000000d45e20 0000000000000180 0000000000000001 0000000000000220 
+> GPR12: c000000000871e30 c00000001ec5ba00 c00000000017ba18 c000000678220e00 
+> GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000 
+> GPR20: 0000000000000000 0000000000000000 fffffffffffffef7 ffffffffffffee4b 
+> GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000003 
+> GPR28: c0000000037eb018 c00000000166f9e8 c00000066992dd80 c000000000d45f00 
+> NIP [c0000000005417e0] internal_create_group+0x180/0x4e0
+> LR [c000000000541784] internal_create_group+0x124/0x4e0
+> Call Trace:
+> [c00000067871b9a0] [c000000000541784] internal_create_group+0x124/0x4e0 (unreliable)
+> [c00000067871ba60] [c000000000541d70] internal_create_groups.part.4+0x70/0x120
+> [c00000067871bab0] [c0000000008293d0] device_add+0x470/0x970
+> [c00000067871bb70] [c00000000086f028] nd_async_device_register+0x28/0xa0
+> [c00000067871bbe0] [c000000000180fec] async_run_entry_fn+0x7c/0x220
+> [c00000067871bc70] [c000000000170f20] process_one_work+0x260/0x510
+> [c00000067871bd10] [c000000000171258] worker_thread+0x88/0x5e0
+> [c00000067871bdb0] [c00000000017bbb4] kthread+0x1a4/0x1b0
+> [c00000067871be20] [c00000000000d3d0] ret_from_kernel_thread+0x5c/0x6c
+> Instruction dump:
+> 7f07c378 38a00000 7fc3f378 4bffe47d 60000000 7c7a1b79 40820218 e93d0009 
+> 3b7b0001 7f7b07b4 2fa90000 419e0024 <a3490008> 4192ff7c e8890000 38a00000 
+> ---[ end trace c238dab2fca3582d ]---
+>
+> Kernel panic - not syncing: Fatal exception
+>
+> Have attached config
+>
+> thanks
+> -Sachin
