@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A92C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8054C207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E14207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FQ6CVbjb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aosggz9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgHROMe (ORCPT
+        id S1726912AbgHROMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
+        Tue, 18 Aug 2020 10:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHROMZ (ORCPT
+        with ESMTP id S1726542AbgHROMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 10:12:25 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A869C061389
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024EAC061342
         for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=ZUO5Vp9OkQgSb6VnFGJoTj57+Y0nzg4Wq9DZKNwafHk=; b=FQ6CVbjb48m+SLKYl65HtFhaVb
-        zHyTF96LIHATyuJyAF0/td196q7gLEAK9F3ZQxZc9ldgoLLdpIMO3onYfFkE/2BqcaVe6XRw2mFZd
-        cSnuoSHD/SnJYKJ3slgvn5GaR/Q6HyM1DZ9RR52XSkdZWbbCGcQF8Ys57vcetG/gPNXbm6d3+/Ngy
-        oxHYosbntJURxFYaS0SWCDQJsZreXAK9az0vcK99jSgTO1Zdd7iVvzuPuXwTUrqmYH3amnKIEcCld
-        dbsqXFVcQDPAoFpCoDtaL3BXUPCPiDwyYXBgKgoWFV8FjBENJy3uo1+0kdtzDv/YMPzDr0mTztTZf
-        mWVvLC4w==;
+        bh=KFkNLGKnCZIPYfDCYZliBUs674rrJ6vlBRa3qnykRNg=; b=Aosggz9esB3InkGqcmjajFjQ2I
+        73nfCS039u+QRCbWClkhuya+aYko7DoLYsEyFA27nsVYdcDdLmbRS/nU2oZgc94i1iVSuY+LEw8FB
+        xiPDLRjWRdX4sddMThb0miQ1VMRIZ7N94P9+6rNa4rRdUeWiUYsmJQfYIzW29n41NMTx+Rs9UeHZx
+        t/oyjfTNFsUIqZYDN4qBVTudlLS7hV/Al0VghnZhCSxqkzHkJhL2Fsax9FK+TOJwa4QrjEc5uVuC6
+        LMEbHPfAGQHyji/5WDQOW6xx1JAUdfrd3JS6sKSdcaghfDE6fI0hB8w9m76enT+3t9guTtLm3rs15
+        G7MoZ36A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k82LK-0000oE-Tz; Tue, 18 Aug 2020 14:12:03 +0000
+        id 1k82LL-0000oK-7B; Tue, 18 Aug 2020 14:12:03 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A931A307943;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92DDF307691;
         Tue, 18 Aug 2020 16:12:00 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id C96A723D42C0C; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
-Message-ID: <20200818135804.982214828@infradead.org>
+        id A866123D42C03; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
+Message-ID: <20200818135804.564436253@infradead.org>
 User-Agent: quilt/0.66
-Date:   Tue, 18 Aug 2020 15:57:47 +0200
+Date:   Tue, 18 Aug 2020 15:57:40 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -58,7 +58,7 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
         jpoimboe@redhat.com, pbonzini@redhat.com,
         mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: [PATCH v7 12/18] x86/alternatives: Teach text_poke_bp() to emulate RET
+Subject: [PATCH v7 05/18] compiler.h: Make __ADDRESSABLE() symbol truly unique
 References: <20200818135735.948368560@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,83 +67,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Future patches will need to poke a RET instruction, provide the
-infrastructure required for this.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
+The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
+symbol which has a unique name.  However, if the macro is used multiple
+times from within another macro, the line number will always be the
+same, resulting in duplicate symbols.
+
+Make the temporary symbols truly unique by using __UNIQUE_ID instead of
+__LINE__.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- arch/x86/include/asm/text-patching.h |   19 +++++++++++++++++++
- arch/x86/kernel/alternative.c        |    5 +++++
- 2 files changed, 24 insertions(+)
+ include/linux/compiler.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -53,6 +53,9 @@ extern void text_poke_finish(void);
- #define INT3_INSN_SIZE		1
- #define INT3_INSN_OPCODE	0xCC
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -299,7 +299,7 @@ unsigned long read_word_at_a_time(const
+  */
+ #define __ADDRESSABLE(sym) \
+ 	static void * __section(.discard.addressable) __used \
+-		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
++		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
  
-+#define RET_INSN_SIZE		1
-+#define RET_INSN_OPCODE		0xC3
-+
- #define CALL_INSN_SIZE		5
- #define CALL_INSN_OPCODE	0xE8
- 
-@@ -73,6 +76,7 @@ static __always_inline int text_opcode_s
- 
- 	switch(opcode) {
- 	__CASE(INT3);
-+	__CASE(RET);
- 	__CASE(CALL);
- 	__CASE(JMP32);
- 	__CASE(JMP8);
-@@ -141,11 +145,26 @@ void int3_emulate_push(struct pt_regs *r
- }
- 
- static __always_inline
-+unsigned long int3_emulate_pop(struct pt_regs *regs)
-+{
-+	unsigned long val = *(unsigned long *)regs->sp;
-+	regs->sp += sizeof(unsigned long);
-+	return val;
-+}
-+
-+static __always_inline
- void int3_emulate_call(struct pt_regs *regs, unsigned long func)
- {
- 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
- 	int3_emulate_jmp(regs, func);
- }
-+
-+static __always_inline
-+void int3_emulate_ret(struct pt_regs *regs)
-+{
-+	unsigned long ip = int3_emulate_pop(regs);
-+	int3_emulate_jmp(regs, ip);
-+}
- #endif /* !CONFIG_UML_X86 */
- 
- #endif /* _ASM_X86_TEXT_PATCHING_H */
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1099,6 +1099,10 @@ int noinstr poke_int3_handler(struct pt_
- 		 */
- 		goto out_put;
- 
-+	case RET_INSN_OPCODE:
-+		int3_emulate_ret(regs);
-+		break;
-+
- 	case CALL_INSN_OPCODE:
- 		int3_emulate_call(regs, (long)ip + tp->rel32);
- 		break;
-@@ -1240,6 +1244,7 @@ static void text_poke_loc_init(struct te
- 
- 	switch (tp->opcode) {
- 	case INT3_INSN_OPCODE:
-+	case RET_INSN_OPCODE:
- 		break;
- 
- 	case CALL_INSN_OPCODE:
+ /**
+  * offset_to_ptr - convert a relative memory offset to an absolute pointer
 
 
