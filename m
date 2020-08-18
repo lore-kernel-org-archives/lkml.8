@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A150AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C80207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8662076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="kSCKLuVz"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ysnKismi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgHRQGn (ORCPT
+        id S1727048AbgHRQGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
+        Tue, 18 Aug 2020 12:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgHRQGW (ORCPT
+        with ESMTP id S1726750AbgHRQGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:06:22 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFFCC061347
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:06:21 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o22so15475468qtt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:06:21 -0700 (PDT)
+        Tue, 18 Aug 2020 12:06:21 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19279C061344
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:06:20 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j187so18699842qke.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Dfn9XeZmM4o8gTNJBJ38GDqi4Uncp7PQCAHP1+tddKA=;
-        b=kSCKLuVzVR+D06E9lB73szUHemddwXVMG4MoAb/6ide2+Wf6tLHmwY4DMkRWAfCHTb
-         jRlStFbygabD3fWSgpV/dsoMhJ9juDgT4UsPz4pD04B0H8ZnZbSOqwXjljrK5DrzWNG0
-         l5S6U8+KNt5MeyA4ZaRuFw7KwWLBV8RVyF1xvdljDnjbWJxal2Uzu0gEUnI5hmnqLGEr
-         cBHY6ZTIr/Tg8KQJ7iEOIIVIId8M5WFTKlLFuVxPDd5c7DyhHAoeU6XB6W1lyNfqFNZs
-         WLT8N+pDiKaaT153CdboD2/TrsW7RfIyVIfc5kRkLkFvMfic7LKuCCKriCTL4lskYow3
-         IfXQ==
+        bh=67bzRpoZHKJN4TvGSl4PLgugaZtDFxIwY3BiNLQUAXw=;
+        b=ysnKismirQG3Tn/AWM5af8ZsuO66oyYjlC/XxOVL660MqjUFVAcXSzK/8QG+8pmW5p
+         VvxFtplJo/hpwUz7BNvpln85+THAg+OSXp3do0b98244SkuJdR6JWAQ0D/fIQ3t1boq/
+         pS32ajeF8bnUiuuL5G4Czk80Lfw+/9RW1hxpyN9ZriTGIlzPuftRUh7lf5j+V02r8lTk
+         3QyTiDTdlzXG8hRUZnwvPmqHGsdQIfsAPOZ7bBQr8UjU60NQcaQ7dFw1jbTvoVLysE1k
+         kOjD84peUIoX90nR/xEkMuF41sqlrjtXmIFS9fszVPPBgzy+04NEn222ksRXSEBjyFKe
+         bL8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Dfn9XeZmM4o8gTNJBJ38GDqi4Uncp7PQCAHP1+tddKA=;
-        b=C78DNsGrhMsABLrNLs09upTMk3EUmwWbfJyO4bJw8+4UNEyihvCSZiC839k29ld7y6
-         VAbWd8BSXSafT/tN2E2pzyT0O7AV1WgGcv7O+PRTOnia7Z52j9VtCuJt7VS4tKFT830/
-         DJOCTEBkYJMqDgjzOJVWZpPbUwNfVW8AUR9MPugvJgfBinDGH49TZVsDcsTpgzrp3q0H
-         gY8hKiSpasvLzOaqrdxtwF37X/BxXEee9T1uhpCmqUXMHBGFOKFwwru3G42y4foCFidP
-         0ApbVpR4QchhEQy5xn2R5miBRRH8wZENKpu1eg9ZwJaISIk24cznaB6gyQDPLLnTxr4w
-         JaqQ==
-X-Gm-Message-State: AOAM533f35NHxSokhD8TA0NJPjsLHE/3sGxDUu7Um2ACDC/p2HgKGiic
-        nLIn5A12BDr2xhemTpak7AXgeQ==
-X-Google-Smtp-Source: ABdhPJwE8y60rTooAMYhCh7JKeLJCmjpZa3kARCDxoppqjc7CTVzkeUAgm7/Q4Pe3BcFjNlDc3ZOmA==
-X-Received: by 2002:ac8:5354:: with SMTP id d20mr19239770qto.120.1597766780682;
-        Tue, 18 Aug 2020 09:06:20 -0700 (PDT)
+        bh=67bzRpoZHKJN4TvGSl4PLgugaZtDFxIwY3BiNLQUAXw=;
+        b=H2sh+kQBkoSD2xX+8hN1Ao60ieeUcRcBCZlRe2yA9VHM68Pki+dbwsWIrH3FWkywLM
+         RYcDMPR0+rGZuQi08N8nUDwd8IQxVYybSSJ50DSndo0asMFqroFcKbUt1QZOcoKdKwAU
+         r5gobsiMFmS132wmOTVmQgK12n56/Wgxwo93aGiOB/g14ACHrlI1PTCFbzJT//wzXzGi
+         16UC28fo23RhLkx3pjY1i5uwLb+0sI+KMWF1sJrE7ZUjUcGSFYtntVwO9yoAftKLVWoc
+         cxRvhPDcFXlWq5BQU36PRW/Yrpn5ibnOa6GrLP5ZI80aeKdDLxsr0PwzwImxh7Ua4FGs
+         4hnw==
+X-Gm-Message-State: AOAM5313napHQGhpV1Huu9W4tInX1GcoHaH32wbSe7LgI0NKVAMBP/Oc
+        5qECxn6k6ltKZ10rSpndwoVoyA==
+X-Google-Smtp-Source: ABdhPJz6YaHblVdUsO+t038UhP2eYwsT5GekIzGt1V1IH1hyXGi171nMB5ywW0xqb0tN9HseqE1rrQ==
+X-Received: by 2002:a05:620a:22f3:: with SMTP id p19mr17419632qki.116.1597766779360;
+        Tue, 18 Aug 2020 09:06:19 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 128sm21198034qkk.101.2020.08.18.09.06.19
+        by smtp.gmail.com with ESMTPSA id 128sm21198034qkk.101.2020.08.18.09.06.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 09:06:20 -0700 (PDT)
+        Tue, 18 Aug 2020 09:06:18 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -66,9 +66,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] arm64: dts: qcom: use sm8250 gpucc dt-bindings
-Date:   Tue, 18 Aug 2020 12:04:45 -0400
-Message-Id: <20200818160445.14008-3-jonathan@marek.ca>
+Subject: [PATCH 2/3] arm64: dts: qcom: use sm8150 gpucc dt-bindings
+Date:   Tue, 18 Aug 2020 12:04:44 -0400
+Message-Id: <20200818160445.14008-2-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200818160445.14008-1-jonathan@marek.ca>
 References: <20200818160445.14008-1-jonathan@marek.ca>
@@ -84,22 +84,22 @@ switch to symbolic names now that dt-bindings have landed.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 15 ++++++++-------
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 15 ++++++++-------
  1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 377172e8967b..b82d8f40fa42 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-sm8250.h>
-+#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index ab8680c6672e..62d49e81483e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
  #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/mailbox/qcom-ipcc.h>
- #include <dt-bindings/power/qcom-aoss-qmp.h>
-@@ -1127,15 +1128,15 @@ gmu: gmu@3d6a000 {
+ #include <dt-bindings/clock/qcom,gcc-sm8150.h>
++#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+ #include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+@@ -621,15 +622,15 @@ gmu: gmu@2c6a000 {
  				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
  			interrupt-names = "hfi", "gmu";
  
@@ -120,10 +120,10 @@ index 377172e8967b..b82d8f40fa42 100644
  			power-domain-names = "cx", "gx";
  
  			iommus = <&adreno_smmu 5 0x400>;
-@@ -1181,12 +1182,12 @@ adreno_smmu: iommu@3da0000 {
- 				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
+@@ -674,12 +675,12 @@ adreno_smmu: iommu@2ca0000 {
+ 				<GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 688 IRQ_TYPE_LEVEL_HIGH>;
 -			clocks = <&gpucc 0>,
 +			clocks = <&gpucc GPU_CC_AHB_CLK>,
  				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
@@ -134,7 +134,7 @@ index 377172e8967b..b82d8f40fa42 100644
 +			power-domains = <&gpucc GPU_CX_GDSC>;
  		};
  
- 		slpi: remoteproc@5c00000 {
+ 		tlmm: pinctrl@3100000 {
 -- 
 2.26.1
 
