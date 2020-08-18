@@ -2,157 +2,175 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B72C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B13720658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E7E20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIRfnPlh"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YaTyjFJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgHRRWv (ORCPT
+        id S1728625AbgHRRXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:22:51 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42565 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728613AbgHRRWr (ORCPT
+        Tue, 18 Aug 2020 13:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbgHRRXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597771366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R08BwjXqzWFxBJwSN04NiBU/noVfIjB10z++NeMlyQE=;
-        b=gIRfnPlhvYkZL/mW/SQQ5CoNzCIAew6k+jLnTGdh/CljDTWEp2wnW9tihHbGnLnIcNJw61
-        lSrxQRzyNvDoNbtwA+Hs7bVqhQohorgz7TiiM74uG3eFf1/LZwvqIoJvBVq8j6n/I1Av8a
-        bANqlw7VYnTuqKZMmIsSKS4FE3j8VYo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-Njsv1FvbPQazsJW1j4QtZw-1; Tue, 18 Aug 2020 13:22:43 -0400
-X-MC-Unique: Njsv1FvbPQazsJW1j4QtZw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A709310066FF;
-        Tue, 18 Aug 2020 17:22:41 +0000 (UTC)
-Received: from gondolin (ovpn-112-221.ams2.redhat.com [10.36.112.221])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE2BF5D9DC;
-        Tue, 18 Aug 2020 17:22:35 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 19:22:33 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v8 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200818192233.6c80798e.cohuck@redhat.com>
-In-Reply-To: <1597762711-3550-3-git-send-email-pmorel@linux.ibm.com>
-References: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
-        <1597762711-3550-3-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 18 Aug 2020 13:23:47 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D598C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:23:47 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 62so18977012qkj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 10:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=C7S9XKWg7sMKPyrXwyvRzpUMpwwJ7QJXat4tA/AJCN4=;
+        b=YaTyjFJYOBktfqJZagumsAKN0ZNLlv997FVtdmAyU0FZ9kTypf/XvWIqI/cXWSLsz3
+         e7VM57ZmeB0P2jnQxxGC+87qUSWewDvkwOTdhM2sD3ebyZ0GdZZE5XXrvmCGZWFlBYPE
+         5FVLkyXA3+/Oi8jgg3vA4MSI/JY6D5oGLjUMQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=C7S9XKWg7sMKPyrXwyvRzpUMpwwJ7QJXat4tA/AJCN4=;
+        b=R8+i5dYgaf/3RysAhjyRh2lVKMSzPWKuKao1I84QR15zdHz4DhYy16a4l707H3ieVl
+         GtBuQTUgHyKY/8zXbhc/THfdJ1xas/ZecyZ/gcG+w/gVyNUFEKQe6a/igoEIGjeEZY9u
+         FrSqF7wmo2c8UoK4NPYl4RYAP3sZ8iWx9p0JN2j+qb8XJhD6n7VYWWULwUX6gyAp4OO8
+         E9OiSslB0ErdEd684ZjDAiEwNVvFqtWES36HHR8fAGpKeRU4ym8JbUb0r5jaTR26BIle
+         uq21hmoPNlyG0ZJVb7ngphHTMobo6R7U/CYDE09A5MI9bluPpnRbTwrm/63SCsAT1Fn/
+         mqMA==
+X-Gm-Message-State: AOAM530QNZtHowGQssLeHA2zOyauYGK/Oje7Qx/ag7rAkUpAglVieXt1
+        Lnxc6Q2FE3XFK5cKqpRT7FLiog==
+X-Google-Smtp-Source: ABdhPJyUFPj+TKuZ0+Q4HfdS6bKiOroOey+lx18FSdFQSMaVaWIMVfTIvsEZ/ZZiAHGGEoxNZH/W/A==
+X-Received: by 2002:a05:620a:4f6:: with SMTP id b22mr17768577qkh.67.1597771426406;
+        Tue, 18 Aug 2020 10:23:46 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id k134sm21465028qke.60.2020.08.18.10.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 10:23:45 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] bcm-vk: add bcm_vk UAPI
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200806004631.8102-1-scott.branden@broadcom.com>
+ <20200806004631.8102-2-scott.branden@broadcom.com>
+ <20200818135313.GB495837@kroah.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <8894c3c4-4d5c-cb94-bc90-a26833ebf268@broadcom.com>
+Date:   Tue, 18 Aug 2020 10:23:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200818135313.GB495837@kroah.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 16:58:31 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Hi Greg,
 
-> If protected virtualization is active on s390, the virtio queues are
-> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-> negotiated.
-> Define CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS and export
-> arch_has_restricted_memory_access to fail probe if that's
-> not the case, preventing a host error on access attempt.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  arch/s390/Kconfig   |  1 +
->  arch/s390/mm/init.c | 30 ++++++++++++++++++++++++++++++
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 9cfd8de907cb..d4a3ef4fa27b 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -820,6 +820,7 @@ menu "Virtualization"
->  config PROTECTED_VIRTUALIZATION_GUEST
->  	def_bool n
->  	prompt "Protected virtualization guest support"
-> +	select ARCH_HAS_RESTRICTED_MEMORY_ACCESS
->  	help
->  	  Select this option, if you want to be able to run this
->  	  kernel as a protected virtualization KVM guest.
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 6dc7c3b60ef6..aec04d7dd089 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -45,6 +45,7 @@
->  #include <asm/kasan.h>
->  #include <asm/dma-mapping.h>
->  #include <asm/uv.h>
-> +#include <linux/virtio_config.h>
->  
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->  
-> @@ -161,6 +162,35 @@ bool force_dma_unencrypted(struct device *dev)
->  	return is_prot_virt_guest();
->  }
->  
-> +#ifdef CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS
-> +/*
-> + * arch_has_restricted_memory_access
-> + * @dev: the VIRTIO device being added
-> + *
-> + * Return an error if required features are missing on a guest running
-> + * with protected virtualization.
-> + */
-> +int arch_has_restricted_memory_access(struct virtio_device *dev)
-> +{
-> +	if (!is_prot_virt_guest())
-> +		return 0;
+On 2020-08-18 6:53 a.m., Greg Kroah-Hartman wrote:
+> On Wed, Aug 05, 2020 at 05:46:29PM -0700, Scott Branden wrote:
+>> Add user space api for bcm-vk driver.
+>>
+>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>> ---
+>>  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
+>>  1 file changed, 99 insertions(+)
+>>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
+>>
+>> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
+>> new file mode 100644
+>> index 000000000000..783087b7c31f
+>> --- /dev/null
+>> +++ b/include/uapi/linux/misc/bcm_vk.h
+>> @@ -0,0 +1,99 @@
+>> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
+>> +/*
+>> + * Copyright 2018-2020 Broadcom.
+>> + */
+>> +
+>> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
+>> +#define __UAPI_LINUX_MISC_BCM_VK_H
+>> +
+>> +#include <linux/ioctl.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define BCM_VK_MAX_FILENAME 64
+>> +
+>> +struct vk_image {
+>> +	__u32 type; /* Type of image */
+>> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
+>> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
+>> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
+>> +};
+>> +
+>> +struct vk_reset {
+>> +	__u32 arg1;
+>> +	__u32 arg2;
+>> +};
+>> +
+>> +#define VK_MAGIC		0x5e
+>> +
+>> +/* Load image to Valkyrie */
+>> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
+>> +
+>> +/* Send Reset to Valkyrie */
+>> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
+>> +
+>> +/*
+>> + * message block - basic unit in the message where a message's size is always
+>> + *		   N x sizeof(basic_block)
+>> + */
+>> +struct vk_msg_blk {
+>> +	__u8 function_id;
+>> +#define VK_FID_TRANS_BUF	5
+>> +#define VK_FID_SHUTDOWN		8
+>> +	__u8 size;
+>> +	__u16 trans_id; /* transport id, queue & msg_id */
+>> +	__u32 context_id;
+>> +	__u32 args[2];
+>> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
+>> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
+>> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
+>> +#define VK_CMD_MASK		0x0f00 /* command mask */
+>> +};
+>> +
+>> +#define VK_BAR_FWSTS			0x41c
+>> +#define VK_BAR_COP_FWSTS		0x428
+>> +/* VK_FWSTS definitions */
+>> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
+> <snip>
+>
+> I thought BIT() was not allowed in uapi .h files, this really works
+> properly???
+I did some investigation and it looks like a few other header files in include/uapi also use the BIT() macro:
+include/uapi/misc/uacce/uacce.h
+include/uapi/linux/psci.h
+include/uapi/linux/v4l2-subdev.h
+tools/include/uapi/linux/pkt_sched.h
 
-If you just did a
+It does look like we end up defining the BIT() macro in our user space app that includes the header file.
 
-return is_prot_virt_guest();
+So, what is the proper thing to be done?
+1) Move the BIT() macro somewhere in include/uapi and include it in the necessary header files
+2) Use the _BITUL macro in include/uapi/linux/const.h instead?
+3) something else?
 
-and did the virtio feature stuff in the virtio core, this function
-would be short and sweet :)
-
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> +		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> +		dev_warn(&dev->dev,
-> +			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(arch_has_restricted_memory_access);
-> +#endif
-> +
->  /* protected virtualization */
->  static void pv_init(void)
->  {
-
+> thanks,
+>
+> greg k-h
+Regards,
+Scott
