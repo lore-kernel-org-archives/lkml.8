@@ -2,96 +2,106 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4207A2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE17207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597768621;
+	bh=7qVF9eqLdAJrYWydh3MzFJaDQjl7i7jwR5SZt7d6XHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Whl+WTuhRD4cjr3DW3hVfp5MP+DTPS/c+JalumpwsfRpqc5MUF1zcyqEn68WPqh6n
+	 vVKGmIj5T8jc7yKnu6WqoNH9ICqcqO7iN5YmKmp3ea05b9/MS+LCxvAMerzGXHGf7x
+	 Lf6NRqTNVIzGeJWvhFbzDfQLCfms3XzuiUeQF8l8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgHRQeS (ORCPT
+        id S1727046AbgHRQhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:34:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14053 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgHRQeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:34:00 -0400
-IronPort-SDR: weAyHH8irlpDKQVdo2JES8dNS8SpRBjz9TaA5Ap0VwC+byRZWmHCcJomwsF/AyR7p2fhbUbKsC
- m4A/TRIA37Jw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152359618"
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="152359618"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 09:34:00 -0700
-IronPort-SDR: 2271QJgWYxz0oDjodaP7J16j0OQkBWBtwICA1LKBZXLjQDqmefq91/HlylKXsBs9VVkxpPNQS4
- 2BnHx+GEOD/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="278090565"
-Received: from ribnhajh-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.113])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Aug 2020 09:33:57 -0700
-Date:   Tue, 18 Aug 2020 19:33:56 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kprobes: Use module_name() macro
-Message-ID: <20200818163356.GG137138@linux.intel.com>
-References: <20200818050857.117998-1-jarkko.sakkinen@linux.intel.com>
- <20200818234956.c616371d8766e74aef5e7bd2@kernel.org>
+        Tue, 18 Aug 2020 12:37:00 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45928 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgHRQg4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:36:56 -0400
+Received: by mail-il1-f195.google.com with SMTP id k4so18155592ilr.12;
+        Tue, 18 Aug 2020 09:36:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gl6XS4qfTxmDXNCXwNlbRvktsoiefhKSAFrgJZHSqYw=;
+        b=Q43fn4+uE/fNehYCY0UN5oK70Yal3P43gTjFCqgZBeRV2FfPWPArdbeXYQySGPS/dz
+         osMEGzobSEqSsZbudLOXkK5NPH3Zs+sdH1DYBKaK99BvfLX6BqcVZ4C+KqJBldfc2DvA
+         9CGK2rGIgYYxjjUy8JXtow46ce9mE/FQcG0zfNiGdoXOxTABiJ4V9pZY8etLgn3f7ZZz
+         5mXw3+zAXKHVT3O3nLj24yXnu6Y1z3QiTFa3syy18OwKrzSC+BoY81AtJk8cKJGkaTLN
+         g2H+XXtnVU8Fz/VUYI/2OFNtIG+sqKlEhkPJrkEJPj4IVRZNnjHKqQxVFIJyS/5ZUlZ5
+         XVCw==
+X-Gm-Message-State: AOAM533sB3nfHua0L61zbzqM1qtSXd2smy/pkNjimwszihv3pqHysdc/
+        JW9aKF2ruy7XnhEmySq08w==
+X-Google-Smtp-Source: ABdhPJzJ2p5fY3FMzkqhU6ooYSUD+BBzc6VBbwlA10dpndvE9pEmDfl71ZZPTxN6zqYd1aoufnDppA==
+X-Received: by 2002:a92:9996:: with SMTP id t22mr18129341ilk.216.1597768614776;
+        Tue, 18 Aug 2020 09:36:54 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c76sm12155039ill.63.2020.08.18.09.36.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 09:36:54 -0700 (PDT)
+Received: (nullmailer pid 3587582 invoked by uid 1000);
+        Tue, 18 Aug 2020 16:36:53 -0000
+Date:   Tue, 18 Aug 2020 10:36:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     linux-pm@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, sre@kernel.org,
+        devicetree@vger.kernel.org, dmurphy@ti.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
+Message-ID: <20200818163653.GA3586878@bogus>
+References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+ <20200817191723.22416-2-r-rivera-matos@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818234956.c616371d8766e74aef5e7bd2@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200817191723.22416-2-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:49:56PM +0900, Masami Hiramatsu wrote:
-> On Tue, 18 Aug 2020 08:08:57 +0300
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+On Mon, 17 Aug 2020 14:17:22 -0500, Ricardo Rivera-Matos wrote:
+> Add the bindings for the bq256xx series of battery charging ICs.
 > 
-> > It is advised to use module_name() macro instead of dereferencing mod->name
-> > directly. This makes sense for consistencys sake and also it prevents a
-> > hard dependency to CONFIG_MODULES.
-> > 
-> > Cc: linux-mm@kvack.org
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>,
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Mike Rapoport <rppt@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: Will Deacon <will@kernel.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Datasheets:
+> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
 > 
-> OK, this looks good to me.
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> ---
+>  .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
 > 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Great, thank you.
 
-When this might get included to a PR, or at minimum land to linux-next?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Just thinking what to use as the baseline for the next version of my
-main series.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq256xx.example.dt.yaml: battery: 'termination-current-microamp' does not match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+'
 
-BR,
-/Jarkko
+
+See https://patchwork.ozlabs.org/patch/1346479
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
