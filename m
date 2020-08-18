@@ -2,93 +2,131 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA86C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA038C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D4020888
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8815A22CA1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHRFtP (ORCPT
+        id S1726588AbgHRFtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 18 Aug 2020 01:49:15 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:8241 "EHLO h3cspam02-ex.h3c.com"
+Received: from mga18.intel.com ([134.134.136.126]:48150 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbgHRFtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726343AbgHRFtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 01:49:14 -0400
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam02-ex.h3c.com with ESMTPS id 07I5mrPN027012
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Aug 2020 13:48:53 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 18 Aug 2020 13:48:55 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <song@kernel.org>
-CC:     <linux-raid@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] md: only calculate blocksize once and use i_blocksize()
-Date:   Tue, 18 Aug 2020 13:42:06 +0800
-Message-ID: <20200818054206.6612-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+IronPort-SDR: FxB8RwrW19hl0WaOyfQm+iLHWe386o/1tHoEtsUtfn3wNztn2B1cMcZ+8pV7DrjJ3jqn+Wcc7w
+ e6c00cYrN/Wg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="142474100"
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="142474100"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 22:49:13 -0700
+IronPort-SDR: 7LFrpTXIbE7VBQNOg+PkBf4RrKVUPE5ldPSHtmlkHidlSm04A9JSkcjDnmZwMaF6qEolZ/c9AF
+ coAs1ei7IuLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
+   d="scan'208";a="319972150"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Aug 2020 22:49:10 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Tue, 18 Aug 2020 13:48:59 +0800
+Message-Id: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 07I5mrPN027012
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We alreday has the interface i_blocksize(), which can be used
-to get blocksize, so use it.
-Only calculate blocksize once and use it within read_page().
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- drivers/md/md-bitmap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 95a5f3757..0d5544868 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -357,11 +357,12 @@ static int read_page(struct file *file, unsigned long index,
- 	struct inode *inode = file_inode(file);
- 	struct buffer_head *bh;
- 	sector_t block, blk_cur;
-+	unsigned long blocksize = i_blocksize(inode);
- 
- 	pr_debug("read bitmap file (%dB @ %llu)\n", (int)PAGE_SIZE,
- 		 (unsigned long long)index << PAGE_SHIFT);
- 
--	bh = alloc_page_buffers(page, 1<<inode->i_blkbits, false);
-+	bh = alloc_page_buffers(page, blocksize, false);
- 	if (!bh) {
- 		ret = -ENOMEM;
- 		goto out;
-@@ -383,10 +384,10 @@ static int read_page(struct file *file, unsigned long index,
- 
- 			bh->b_blocknr = block;
- 			bh->b_bdev = inode->i_sb->s_bdev;
--			if (count < (1<<inode->i_blkbits))
-+			if (count < blocksize)
- 				count = 0;
- 			else
--				count -= (1<<inode->i_blkbits);
-+				count -= blocksize;
- 
- 			bh->b_end_io = end_bitmap_write;
- 			bh->b_private = bitmap;
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  54 +++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 267 +++++++++++++++++++++
+ 4 files changed, 333 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
 -- 
-2.17.1
+2.11.0
 
