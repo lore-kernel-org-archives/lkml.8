@@ -2,382 +2,338 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C525AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF163C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6BA52075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882FF20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 05:49:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RgGJqoli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgHRFt2 (ORCPT
+        id S1726852AbgHRFtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 01:49:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:23706 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbgHRFtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 01:49:25 -0400
-IronPort-SDR: JQ1k6jVtGJjnRZu7bQKo+QD+Dyy32DZxjmYSpSfGE1o6wMeQEitf3u5p5wVZDCXMs7/tD9ZzKr
- yukr/iGdL2Nw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216370357"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="216370357"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 22:49:23 -0700
-IronPort-SDR: j2XavEsGKAG9CA8YBjft7ZLliZAq6FeLTpuw3avKx60km1GI+73RjyLl0VJ6v24TmeOuEhudtP
- QyhrW9aBcTPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="277957905"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Aug 2020 22:49:20 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v7 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Tue, 18 Aug 2020 13:49:01 +0800
-Message-Id: <dbe1087131c9715cf79f99e82f60284de916a6e4.1597729246.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+        Tue, 18 Aug 2020 01:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgHRFti (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 01:49:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB6DC061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 22:49:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s15so9240545pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 22:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+21auOdpwnUc2aPwE+wPl596MzMA90Gi774uOtnnQag=;
+        b=RgGJqoliilpUw0IgKTiOZinlJ0+YvmzoOiRJidwzb6f3bd7VnDc4PO22ZuroqTPBs1
+         j8WM0WW12oLBt5NKEtEX9fORWh0C0V8tyuE+N2SoioBGCwRGZUYiJ0eS1R7zNfDaMsZr
+         fPCYpVLviD2u8bDJAWYYikas0SZKBCWlN5lbdcJlVX4tFJe/PWyRzG297xOQ46h46qRI
+         CMXaZ9/rkkNWMHgK4x1EcPN+OHfxpjkh63bvw5Gly8l+Q+UPMU575Ayl3kuF9wgzHpBd
+         Fg7gEKlaNvzEFCSZXJPtO2u09lR4WDRMDjBr1AcRcnfPTtFqtCubzHKBjemcfr0AZNhu
+         gZqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+21auOdpwnUc2aPwE+wPl596MzMA90Gi774uOtnnQag=;
+        b=ZH+7TT6c/b9I0Nzl1WVtRE/wZOISCloBsT3jURxlNR7+cNU7AlI21bWd7V/Ts4B+ZB
+         E0G0tSPyOhPx8EaaOuoXlduGdrCKxUaJMpC++CdDk41mr29I/UqjzCDzFOIfDKEv/8H5
+         rI4r4RgyVkYpbV85yWCSINEzATElbEuJ369Qt+KSHbPY90Y2lniJomZaGtiU6Ng0DqHq
+         cZbFFr4aY12c6IV2H8D1avRscihPJ8xL1T3NUMRCN4PgxKXIdJmoa3qNsRWuPKk5szGQ
+         XDvCLU8DaBztLXZegDmYhQIj9zyeYDbr2x7pyhPytlthdde9GTF6ZXvXYw9rkNK+b+7M
+         +kMg==
+X-Gm-Message-State: AOAM533Qwh5aGJSI/vRbcSDRPbqrLU3cP9aZaUzi6DGceot4z6RwB+DX
+        EdkiM8x5e07QtKaUTLH2VtOmAw==
+X-Google-Smtp-Source: ABdhPJypJXiSVBqc8UMOdg93apnK4urzloH5QimlvJmN+4txub1SN6eME8ZOenNWCh5O7C62qqh0DA==
+X-Received: by 2002:a63:7981:: with SMTP id u123mr11346871pgc.29.1597729776327;
+        Mon, 17 Aug 2020 22:49:36 -0700 (PDT)
+Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id q83sm22850718pfc.31.2020.08.17.22.49.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Aug 2020 22:49:35 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5] perf test: Introduce script for Arm CoreSight testing
+Date:   Tue, 18 Aug 2020 13:49:27 +0800
+Message-Id: <20200818054927.8253-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+We need a simple method to test Perf with Arm CoreSight drivers, this
+could be used for smoke testing when new patch is coming for perf or
+CoreSight drivers, and we also can use the test to confirm if the
+CoreSight has been enabled successfully on new platforms.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+This patch introduces the shell script test_arm_coresight.sh which is
+under the 'pert test' framework.  This script provides three testing
+scenarios:
+
+Test scenario 1: traverse all possible paths between source and sink
+
+For traversing possible paths, simply to say, the testing rationale
+is source oriented testing, it traverses every source (now only refers
+to ETM device) and test its all possible sinks.  To search the complete
+paths from one specific source to its sinks, this patch relies on the
+sysfs '/sys/bus/coresight/devices/devX/out:Y' for depth-first search
+(DFS) for iteration connected device nodes, if the output device is
+detected as a sink device (the script will exclude TPIU device which can
+not be supported for perf PMU), then it will test trace data recording
+and decoding for it.
+
+The script runs three output testings for every trace data:
+- Test branch samples dumping with 'perf script' command;
+- Test branch samples reporting with 'perf report' command;
+- Use option '--itrace=i1000i' to insert synthesized instructions events
+  and the script will check if perf can output the percentage value
+  successfully based on the instruction samples.
+
+Test scenario 2: system-wide test
+
+For system-wide testing, it passes option '-a' to perf tool to enable
+tracing on all CPUs, so it's hard to say which program will be traced.
+But perf tool itself contributes much overload in this case, so it will
+parse trace data and check if process 'perf' can be detected or not.
+
+Test scenario 3: snapshot mode test.
+
+For snapshot mode testing, it uses 'dd' command to launch a long running
+program, so this can give chance to send signal -USR2; it will check the
+captured trace data contains 'dd' related thread info or not.
+
+If any test fails, it will report failure and directly exit with error.
+This test will be only applied on a platform with PMU event 'cs_etm//',
+otherwise will skip the testing.
+
+Below is detailed usage for it:
+
+  # cd $linux/tools/perf  -> This is important so can use shell script
+  # perf test list
+    [...]
+    65: probe libc's inet_pton & backtrace it with ping
+    66: Check Arm CoreSight trace data recording and branch samples
+    67: Check open filename arg using perf trace + vfs_getname
+    68: Zstd perf.data compression/decompression
+    69: Add vfs_getname probe to get syscall args filenames
+    70: Use vfs_getname probe to get syscall args filenames
+
+  # perf test 66
+    66: Check Arm CoreSight trace data recording and branch samples: Ok
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 267 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 279 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 7dbcf6973d33..f7a832268c79 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on OF && HAS_IOMEM
-+	depends on X86 || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..e9431b151694 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..7f26a30c70f1
+Changes in v5:
+- Fixed testing name to system-wide testing (Suzuki);
+- Used 'enable_sink' existence to check if the device is a sink (Suzuki);
+- Excluded TPIU from sink devices;
+- Fixed Misleading output (Suzuki);
+- Removed '--per-thread' option from snapshot testing (Suzuki).
+
+ tools/perf/tests/shell/test_arm_coresight.sh | 175 +++++++++++++++++++
+ 1 file changed, 175 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_arm_coresight.sh
+
+diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+new file mode 100755
+index 000000000000..8696bb5df45a
 --- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,267 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
++++ b/tools/perf/tests/shell/test_arm_coresight.sh
+@@ -0,0 +1,175 @@
++#!/bin/sh
++# Check Arm CoreSight trace data recording and branch samples
 +
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_4WIRE		0x1
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
++# Uses the 'perf record' to record trace data with Arm CoreSight sinks;
++# then verify if there have any branch samples and instruction samples
++# are generated by CoreSight with 'perf script' and 'perf report'
++# commands.
 +
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
++# SPDX-License-Identifier: GPL-2.0
++# Leo Yan <leo.yan@linaro.org>, 2020
 +
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++file=$(mktemp /tmp/temporary_file.XXXXX)
 +
-+#define LGM_PWM_DC_BITS			8
++skip_if_no_cs_etm_event() {
++	perf list | grep -q 'cs_etm//' && return 0
 +
-+#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
-+#define LGM_PWM_PERIOD_4WIRE_NSECS	40000
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
++	# cs_etm event doesn't exist
++	return 2
 +}
 +
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
++skip_if_no_cs_etm_event || exit 2
 +
-+	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
++record_touch_file() {
++	echo "Recording trace (only user mode) with path: CPU$2 => $1"
++	rm -f $file
++	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
++		-- taskset -c $2 touch $file
 +}
 +
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	int ret;
++perf_script_branch_samples() {
++	echo "Looking at perf.data file for dumping branch samples:"
 +
-+	/*
-+	 * The hardware only supports
-+	 * normal polarity and fixed period.
-+	 */
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    state->period < pc->period)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		ret = lgm_pwm_enable(chip, 0);
-+		return ret;
-+	}
-+
-+	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-+
-+	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+	if (ret)
-+		return ret;
-+
-+	ret = lgm_pwm_enable(chip, 1);
-+
-+	return ret;
++	# Below is an example of the branch samples dumping:
++	#   touch  6512          1         branches:u:      ffffb220824c strcmp+0xc (/lib/aarch64-linux-gnu/ld-2.27.so)
++	#   touch  6512          1         branches:u:      ffffb22082e0 strcmp+0xa0 (/lib/aarch64-linux-gnu/ld-2.27.so)
++	#   touch  6512          1         branches:u:      ffffb2208320 strcmp+0xe0 (/lib/aarch64-linux-gnu/ld-2.27.so)
++	perf script -F,-time -i ${perfdata} | \
++		egrep " +$1 +[0-9]+ .* +branches:([u|k]:)? +"
 +}
 +
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
++perf_report_branch_samples() {
++	echo "Looking at perf.data file for reporting branch samples:"
 +
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
-+					 LGM_PWM_MAX_DUTY_CYCLE);
++	# Below is an example of the branch samples reporting:
++	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
++	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
++	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
++	perf report --stdio -i ${perfdata} | \
++		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 "
 +}
 +
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
++perf_report_instruction_samples() {
++	echo "Looking at perf.data file for instruction samples:"
 +
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "pwm-fanmode", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = LGM_PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
-+		pc->period = LGM_PWM_PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+		pc->period = LGM_PWM_PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "pwm-maxrpm", &max_rpm))
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
++	# Below is an example of the instruction samples reporting:
++	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
++	#    5.80%  touch    libc-2.27.so   [.] getenv
++	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
++	perf report --itrace=i1000i --stdio -i ${perfdata} | \
++		egrep " +[0-9]+\.[0-9]+% +$1"
 +}
 +
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
++arm_cs_iterate_devices() {
++	for dev in $1/connections/out\:*; do
 +
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
++		# Skip testing if it's not a directory
++		! [ -d $dev ] && continue;
 +
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
++		# Read out its symbol link file name
++		path=`readlink -f $dev`
 +
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
++		# Extract device name from path, e.g.
++		#   path = '/sys/devices/platform/20010000.etf/tmc_etf0'
++		#     `> device_name = 'tmc_etf0'
++		device_name=`echo $path | awk -F/ '{print $(NF)}'`
 +
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to init register map: %pe\n",
-+				pc->regmap);
-+		return ret;
-+	}
 +
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
++		# If the node of "enable_sink" is existed under the device path, this
++		# means the device is a sink device.  Need to exclude 'tpiu' since it
++		# cannot support perf PMU.
++		echo $device_name | egrep -q -v "tpiu"
++		if [ $? -eq 0 -a -e "$path/enable_sink" ]; then
 +
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset control: %pe\n",
-+				pc->rst);
-+		return ret;
-+	}
++			pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$device_name"
 +
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "cannot deassert reset control: %pe\n",
-+				ERR_PTR(ret));
-+		return ret;
-+	}
++			# Exit if the sink device is supported by PMU or not
++			if ! [ -f $pmu_dev ]; then
++				echo "PMU doesn't support $pmu_dev"
++				exit 1
++			fi
 +
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
++			record_touch_file $device_name $2 &&
++				perf_script_branch_samples touch &&
++				perf_report_branch_samples touch &&
++				perf_report_instruction_samples touch
 +
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
++			err=$?
 +
-+	lgm_pwm_init(pc);
++			# Exit when find failure
++			[ $err != 0 ] && exit $err
 +
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
++			rm -f ${perfdata}
++			rm -f ${file}
++		fi
 +
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
++		arm_cs_iterate_devices $dev $2
++	done
 +}
 +
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
++arm_cs_etm_traverse_path_test() {
++	# Iterate for every ETM device
++	for dev in /sys/bus/coresight/devices/etm*; do
 +
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
++		# Find the ETM device belonging to which CPU
++		cpu=`cat $dev/cpu`
 +
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
++		echo $dev
++		echo $cpu
 +
-+	return 0;
++		# Use depth-first search (DFS) to iterate outputs
++		arm_cs_iterate_devices $dev $cpu
++	done
 +}
 +
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
++arm_cs_etm_system_wide_test() {
++	echo "Recording trace with system wide mode"
++	perf record -o ${perfdata} -e cs_etm// -a -- ls
 +
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
++	perf_script_branch_samples perf &&
++	perf_report_branch_samples perf &&
++	perf_report_instruction_samples perf
++
++	err=$?
++
++	# Exit when find failure
++	[ $err != 0 ] && exit $err
++
++	rm -f ${perfdata}
++	rm -f ${file}
++}
++
++arm_cs_etm_snapshot_test() {
++	echo "Recording trace with snapshot mode"
++	perf record -o ${perfdata} -e cs_etm// -S \
++		-- dd if=/dev/zero of=/dev/null &
++	PERFPID=$!
++
++	# Wait for perf program
++	sleep 1
++
++	# Send signal to snapshot trace data
++	kill -USR2 $PERFPID
++
++	# Stop perf program
++	kill $PERFPID
++	wait $PERFPID
++
++	perf_script_branch_samples dd &&
++	perf_report_branch_samples dd &&
++	perf_report_instruction_samples dd
++
++	err=$?
++
++	# Exit when find failure
++	[ $err != 0 ] && exit $err
++
++	rm -f ${perfdata}
++	rm -f ${file}
++}
++
++arm_cs_etm_traverse_path_test
++arm_cs_etm_system_wide_test
++arm_cs_etm_snapshot_test
++exit 0
 -- 
-2.11.0
+2.17.1
 
