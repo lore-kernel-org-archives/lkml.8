@@ -2,100 +2,105 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEE9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8138AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0584F2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EB32067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXXy4d11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgHRIcY (ORCPT
+        id S1726535AbgHRIeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:32:24 -0400
-Received: from smtprelay0109.hostedemail.com ([216.40.44.109]:35686 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726043AbgHRIcT (ORCPT
+        Tue, 18 Aug 2020 04:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRIeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:32:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 92E4E18029129;
-        Tue, 18 Aug 2020 08:32:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brick48_020b1d72701d
-X-Filterd-Recvd-Size: 2975
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 18 Aug 2020 08:32:14 +0000 (UTC)
-Message-ID: <3ae89ad82dca2cf0adeba9d7d07f3c76ce577c39.camel@perches.com>
-Subject: Re: [PATCH v2] lib/string.c: implement stpcpy
-From:   Joe Perches <joe@perches.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Nick Desaulniers' <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?ISO-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>, Ingo Molnar <mingo@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Date:   Tue, 18 Aug 2020 01:32:12 -0700
-In-Reply-To: <77557c29286140dea726cc334b4f59fc@AcuMS.aculab.com>
-References: <20200815014006.GB99152@rani.riverdale.lan>
-         <20200815020946.1538085-1-ndesaulniers@google.com>
-         <202008150921.B70721A359@keescook>
-         <CAKwvOdnyHfx6ayqEoOr3pb_ibKBAG9vj31LuKE+f712W=7LFKA@mail.gmail.com>
-         <457a91183581509abfa00575d0392be543acbe07.camel@perches.com>
-         <CAKwvOdk4PRi45MXCtg4kmeN6c1AK5w9EJ1XFBJ5GyUjwEtRj1g@mail.gmail.com>
-         <ccacb2a860151fdd6ce95371f1e0cd7658a308d1.camel@perches.com>
-         <CAKwvOd=QkpmdWHAvWVFtogsDom2z_fA4XmDF6aLqz1czjSgZbQ@mail.gmail.com>
-         <20200816001917.4krsnrik7hxxfqfm@google.com>
-         <CA+icZUW=rQ-e=mmYWsgVns8jDoQ=FJ7kdem1fWnW_i5jx-6JzQ@mail.gmail.com>
-         <20200816150217.GA1306483@rani.riverdale.lan>
-         <CABCJKucsXufD6rmv7qQZ=9kLC7XrngCJkKA_WzGOAn-KfcObeA@mail.gmail.com>
-         <CAKwvOd=Ns4_+amT8P-7yQ56xUdDmL=1zDUThF-OmFKhexhJPdg@mail.gmail.com>
-         <77557c29286140dea726cc334b4f59fc@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Tue, 18 Aug 2020 04:34:02 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC6EC061389;
+        Tue, 18 Aug 2020 01:34:01 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id l60so9093507pjb.3;
+        Tue, 18 Aug 2020 01:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=szP+8DM2fo2Wg0FXKp5oArkPY3dRWu1AVOY6u2GDxKg=;
+        b=kXXy4d11xMBXcJj+fsuZKlC40XsOYUs9qFdqzuKei+P99PVGYB4cy5YvPiCQ9SE5gc
+         nwowHtPWMwFGXmPyaIHawdQfK5b06JAnIyDjOBe3YW++Q1BV0EX6kfoY8km/11uZY8hV
+         YprH1emQ2HNL0jUmKDhfxqGEcu+tHvd3Vtkby05p+VNjxGkQZQBEPYl+7IXbofAl6BG3
+         hhOroOHfCMUIFb1yeteG3XTgjOWMSn+dJWzkVa23ynA8tSGk1jcOWqU1t6F/2rg4cH0O
+         Xw3eM1EmBGSLh20rgcywQjdmExvL2tkXvXtQYrrhFcy/p1TGSvWno4qJpYUyybKlEz3c
+         pc1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=szP+8DM2fo2Wg0FXKp5oArkPY3dRWu1AVOY6u2GDxKg=;
+        b=GEUMHkv9et6kytyATo1Bjk5Dq3sclEtC9cwA8XFEEgoWrai68JVpkjmtMOSxliZ256
+         HnyzfqLr6ImkQNkFS0EVN3ZqC3HgbpLZda4OKq5/wpc58oIl6qKyU7GY+uSBHJY3dUPZ
+         FRtwQP/WOI5baBNrBUB20/zbrD7MJ9yL6PkJA54lnkEiCZQCE5jVK61pJf9SfauKXgya
+         REeSCba++qEpCnBmS6l82T4AHLd6vrR/gHGs7l/GVDCmfp6OmxCokmtGH+VsZyn1lvlu
+         +WXfCX9Oy0PqKr1h83i+CkC+DDMeDL15bWIIJ8nxrqoouMBGmPIAa4eyVRpyEZKuSLgU
+         XEFg==
+X-Gm-Message-State: AOAM532HqF4zYRm2aWzo6aDlXBuO6F+5uZ4NwkUzzlkQ0OmEUvcKTDp1
+        gwvheujqq17jGDVP0CIPzpxjKODRq1A=
+X-Google-Smtp-Source: ABdhPJx/UC+X2o5gXzjptm7LMgpeuMJeCeHbSRiXInZVSqmm1lN4kB/ZsnKF8m/DRi8+r0YbjnrTpw==
+X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr14299265pls.196.1597739641056;
+        Tue, 18 Aug 2020 01:34:01 -0700 (PDT)
+Received: from oppo (69-172-89-151.static.imsbiz.com. [69.172.89.151])
+        by smtp.gmail.com with ESMTPSA id l78sm23898616pfd.130.2020.08.18.01.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 01:34:00 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 16:33:57 +0800
+From:   Qingyu Li <ieatmuttonchuan@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, matthieu.baerts@tessares.net,
+        stefan@datenfreihafen.org, arnd@arndb.de, gustavoars@kernel.org,
+        bigeasy@linutronix.de
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net/bluetooth/rfcomm/sock.c: add CAP_NET_RAW check.
+Message-ID: <20200818083357.GA5442@oppo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 08:24 +0000, David Laight wrote:
-> From: Nick Desaulniers
-> > Sent: 17 August 2020 19:37
-> ..
-> > That said, this libcall optimization/transformation (sprintf->stpcpy)
-> > does look useful to me.
-> 
-> I'd rather get a cow if I ask for a cow...
-> 
-> Maybe checkpatch (etc) could report places where snprintf()
-> could be replaced by a simpler function.
+When creating a raw PF_BLUETOOTH socket,
+CAP_NET_RAW needs to be checked first.
 
-You mean sprintf no?
+Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
+---
+ net/bluetooth/rfcomm/sock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reminds me of seq_printf vs seq_puts...
+diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
+index ae6f80730561..d67d49e5aa00 100644
+--- a/net/bluetooth/rfcomm/sock.c
++++ b/net/bluetooth/rfcomm/sock.c
+@@ -321,6 +321,9 @@ static int rfcomm_sock_create(struct net *net, struct socket *sock,
+ 	if (sock->type != SOCK_STREAM && sock->type != SOCK_RAW)
+ 		return -ESOCKTNOSUPPORT;
 
-https://lkml.org/lkml/2013/3/16/79
++	if (sock->type == SOCK_RAW && !kern && !capable(CAP_NET_RAW))
++		return -EPERM;
++
+ 	sock->ops = &rfcomm_sock_ops;
 
+ 	sk = rfcomm_sock_alloc(net, sock, protocol, GFP_ATOMIC, kern);
+--
+2.17.1
 
