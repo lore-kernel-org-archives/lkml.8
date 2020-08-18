@@ -2,123 +2,135 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C38C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CCCC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830E02083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511DE2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dZvmfWDV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FUQHZGPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgHRBn7 (ORCPT
+        id S1726429AbgHRBqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 21:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
+        Mon, 17 Aug 2020 21:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgHRBn6 (ORCPT
+        with ESMTP id S1726302AbgHRBqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 21:43:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F78C061389;
-        Mon, 17 Aug 2020 18:43:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BVtx74Tbyz9sPB;
-        Tue, 18 Aug 2020 11:43:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597715035;
-        bh=BC50kTHL9CPxdNN21OfK0OBaUpj5koSVlJa5nkQ2Ung=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dZvmfWDVeR4+vtE7k8NxwqkhwdmNFcG4rmD3mVbsNrORech5oWymsWgNTLzR51OP7
-         xcPkRD8/vb8/U33RGvc7rVMskaGDj+SNWeMy9JlAIhFr7adbMpOCXTG882zVzydQ9y
-         ZncSwa0VvBDodiCFJbVaWShsA0te+90ESKvzotRAQqCfXogbpvTxQdeFU2DCO2eukq
-         Qqgb3t4SaqmRkuowIDSE8IIxFZMMa8M0LyRrCDe588qr8fC60ual4ednucz6nVp+Ya
-         cMmO9HgSPTUHjjsNukBZGRjNhVQ+IqnvG3aBr2wpuYg/KejKmaUynMqTbuC05abXuZ
-         Xl0WQkDL3krtg==
-Date:   Tue, 18 Aug 2020 11:43:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the rcu tree
-Message-ID: <20200818114354.6c7c2142@canb.auug.org.au>
+        Mon, 17 Aug 2020 21:46:40 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3371C061343
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:46:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id cq28so13958361edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y+lrgfwMqPomcWygbUK3e6COtGQC4/UPSB2RLkkHV+A=;
+        b=FUQHZGPmxY0dGVSuUc83kBkn4ATwkOdEQO+KwXiht76mke5IWG8/nQcLNFJ9/gCV7v
+         +idWk+VlJAxuwN3pu4g58HoUUP471EEiLamE5u3ddKgZjWYR8WcQs2JYN0E2nGf/Z6cV
+         jXCeK3EgxInYP1lw+sn5SoFOOu33YwmF15gpU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y+lrgfwMqPomcWygbUK3e6COtGQC4/UPSB2RLkkHV+A=;
+        b=D5q699oDuAOdkQHv+mEv8rjJqRwPx1aTw9iGLYqcVCo3XXSfO0ezYsla28NwAVxI6f
+         gZszVTxU+feeJt1vHU6HePBeFxJ8Qz3vFzIJPBfYZsSePBS1iegqqi6Gl+iTvusjLv4P
+         fesXRIx/Oon299dd0pnj/KliO5bRcpfT3uyzSZbj6Hcenl5zUpF6tN7L8RJ13HKvOnUa
+         IYc+83xLWY6dSSuYiVezq8HYyKcyX0XXGYeIa4Hh6tTzbqaQKcYpqAQOL/u/CFiGtYNG
+         3X0/bqdQVWTWqzaiDH7rVn7/HmKcRJKoDFAl3Gjnp50oIe4w7qUbJmj0t7bhgxxr7ou8
+         1NhA==
+X-Gm-Message-State: AOAM532cnTvLOTF8rHuHUr577L6NJaGLZtLaCusps5x/7At4TqKy1VT3
+        JLQ8l2k8Ch7TkMzOQz3wLHJ4Gof4pklDmg==
+X-Google-Smtp-Source: ABdhPJzA8U0ttZS8e7x89JE/N6Eb6ikNXZHp5qZOx0IqirGwrYx5B8dRvM3NBG8vmRd8AQtK6ygDgg==
+X-Received: by 2002:a05:6402:b67:: with SMTP id cb7mr17739274edb.216.1597715198180;
+        Mon, 17 Aug 2020 18:46:38 -0700 (PDT)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id g11sm14675516edv.95.2020.08.17.18.46.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 18:46:36 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id a15so16688909wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:46:35 -0700 (PDT)
+X-Received: by 2002:adf:ed85:: with SMTP id c5mr17886807wro.307.1597715195448;
+ Mon, 17 Aug 2020 18:46:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ZwXrR1NPUIJrQH+pmTf6CBW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200803235815.778997-1-campello@chromium.org> <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
+In-Reply-To: <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
+From:   Daniel Campello <campello@chromium.org>
+Date:   Mon, 17 Aug 2020 19:45:59 -0600
+X-Gmail-Original-Message-ID: <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+Message-ID: <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/15] iio: sx9310: Update copyright
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZwXrR1NPUIJrQH+pmTf6CBW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 3, 2020 at 5:58 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> Fixes wrong copyright year.
+>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
+>
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+>
+>  drivers/iio/proximity/sx9310.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index cd7de40a55c2f6..87b2de0d7b55a3 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -1,13 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright 2018 Google LLC.
+> + * Copyright 2020 Google LLC.
+>   *
+>   * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
+>   * Based on SX9500 driver and Semtech driver using the input framework
+>   * <https://my.syncplicity.com/share/teouwsim8niiaud/
+>   *          linux-driver-SX9310_NoSmartHSensing>.
+> - * Reworked April 2019 by Evan Green <evgreen@chromium.org>
+> - * and January 2020 by Daniel Campello <campello@chromium.org>
+> + * Reworked in April 2019 by Evan Green <evgreen@chromium.org>
+> + * and in January 2020 by Daniel Campello <campello@chromium.org>.
+>   */
+>
+>  #include <linux/acpi.h>
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
-Hi all,
+Hi Jonathan,
 
-After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+After discussing with Gwendal on crrev.com/c/2360467 it seems that the
+right year for the copyright is 2018 as it was before this change.
+Sorry about the inconvenience.
 
-In file included from include/linux/kernel.h:15,
-                 from kernel/rcu/rcuscale.c:13:
-kernel/rcu/rcuscale.c: In function 'rcu_scale_writer':
-kernel/rcu/rcuscale.c:430:6: error: 'perf_type' undeclared (first use in th=
-is function); did you mean 'kernfs_type'?
-  430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
-      |      ^~~~~~~~~
-include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
-  319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
-      |                                   ^~~~~~~~~~~
-kernel/rcu/rcuscale.c:430:6: note: each undeclared identifier is reported o=
-nly once for each function it appears in
-  430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
-      |      ^~~~~~~~~
-include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
-  319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
-      |                                   ^~~~~~~~~~~
-kernel/rcu/rcuscale.c:430:17: error: 'PERF_FLAG' undeclared (first use in t=
-his function)
-  430 |      perf_type, PERF_FLAG, me, MIN_MEAS);
-      |                 ^~~~~~~~~
-include/linux/printk.h:319:35: note: in definition of macro 'pr_alert'
-  319 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
-      |                                   ^~~~~~~~~~~
-kernel/rcu/rcuscale.c:431:27: error: 'n_rcu_perf_writer_finished' undeclare=
-d (first use in this function); did you mean 'n_rcu_scale_writer_finished'?
-  431 |    if (atomic_inc_return(&n_rcu_perf_writer_finished) >=3D
-      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                           n_rcu_scale_writer_finished
-
-Caused by commit
-
-  a20b5bd09813 ("rcuperf: Change rcuperf to rcuscale")
-
-I have used the rcu tree from next-20200817 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ZwXrR1NPUIJrQH+pmTf6CBW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl87MloACgkQAVBC80lX
-0Gz8tggAir8/K3MV+I8lCQkvFoiNE0Iv5TPu5+dcHdqClGWwbZMPQh3lqCIxwK2e
-mDVYmEF6+gPQYLFfoa76ZL9RQ6HMcZeDeD8QV8oBla2s/MT0aiqcpDSHdRvlIXuP
-VNdtoG1IKlpsNnBAxepsB1H1ZTexDzgaCnkeOkK/Vu+Zj+aFr+mvOXbQVbov/BJa
-v9cW3etVib8KJ1WVDzOLkX8GYpQ6C6qQq6qHvMRXyApe7wKtAabN3GocWYWv55//
-MPI/YnYriNTst+ArMVnqLynUx2fDeemjOvVpPfNKzZKWekgb6/QNXXQTsqPxnmOI
-6PY88sn9Ib6yop/4uFXXh6IrsmnJ+g==
-=7oRP
------END PGP SIGNATURE-----
-
---Sig_/ZwXrR1NPUIJrQH+pmTf6CBW--
+Regards,
+Daniel Campello
