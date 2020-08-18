@@ -2,102 +2,85 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F206FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C20C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C606420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19ADA20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="kwpEsN1R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HkBqTVC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgHRMu4 (ORCPT
+        id S1726838AbgHRMvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgHRMur (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:50:47 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14727C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 05:50:47 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id c10so15135722edk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 05:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fFLadAGytIbd6Cde9KqrXGMzmbxXEZAqgtRrBn6qG1k=;
-        b=kwpEsN1R8kGzBgmiohXGBZgKhiEohfySxA4S1MY16t8M7GjlXhS8WB6B+ckdr+Ugzu
-         NyGaVnYxne0bipWKHzdc7aHgrK7BCFA5GPEZ4KlzlIVwgbsHkZbCaCsbUfEym5+PO6MQ
-         8EEjkbG/zZtLFIzG+9In1Pyo0bXAM7GI10ja4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFLadAGytIbd6Cde9KqrXGMzmbxXEZAqgtRrBn6qG1k=;
-        b=G8XzOgBhpLcKSzA3STEvNCglN8eiLIemu/Ioh0vVTkLzK4cQ2nP+wRwODiYCpv4QrT
-         mAwYRMqCKmMERVJ7Z8rhGipzVQZ+9J7o2FIuOqB45F5gKeG88kWF8Xgx/Vd9NJWPyOQC
-         lK0+7JNJ9WLNzJin3rZDFENoJkzxGuwu5A9Dy57pMyzdFYZF2jP/kbGrxzmIbeRbadsT
-         pgDFSAIcB+TmsPjnoaEIm5o4uQ4bPTqZlHAivPoVvTXww6NY2/jdaGBTWki1nPdFBkO3
-         V0n2375nXDtChUnt38rJckkcNf2hKN3wRsR5Zri0TAJejvxCe0gFAYnV/ZY4KRvoBGiJ
-         FgvA==
-X-Gm-Message-State: AOAM531vxdv0wMQ2gEtZ+DjMdLcdel9Kk8J3HJP89OmlxK6YwKgeie10
-        O+t5X17Gw8XqW1cFpVFli93lYHc+QpumCkw8Yog6XQ==
-X-Google-Smtp-Source: ABdhPJxXjvpMrRuOGDAZZiMkm9L4E1Gzc1z9smi3A79LHbSHxaELKwrkyMmeNUkO/4bFpdYJUvYB0HAAUfI7kyaNEms=
-X-Received: by 2002:a05:6402:13d4:: with SMTP id a20mr20108726edx.161.1597755044073;
- Tue, 18 Aug 2020 05:50:44 -0700 (PDT)
+        Tue, 18 Aug 2020 08:51:17 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:61884 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbgHRMvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:51:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597755068; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=81nQzH5224zOeesqz/BjUV0s6JghMhAZ7vSntNIZmKo=;
+ b=HkBqTVC23Now+rpPmAhq1GKGrlUJlllUIeDL0UOzO7DXyscTqSrj3s3zVdOS7Mdr0DjxNwkg
+ zb1D8iW8LvAvinyHg9OOC4jxB6NIn2XfGtJlNZHffBM2JRksfk8jnBEgMyDGBG7Iv3eBq2hX
+ YM/ERjZORfTU/U/xxH/7ckBnE/g=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f3bcea7f2b697637a842a8d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 12:50:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E67E2C433CB; Tue, 18 Aug 2020 12:50:46 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDEB7C433CA;
+        Tue, 18 Aug 2020 12:50:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDEB7C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
- <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 18 Aug 2020 14:50:32 +0200
-Message-ID: <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wl1251, wlcore: fix spelling mistake "buld" -> "build"
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200806113326.53779-1-colin.king@canonical.com>
+References: <20200806113326.53779-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200818125046.E67E2C433CB@smtp.codeaurora.org>
+Date:   Tue, 18 Aug 2020 12:50:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:44 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+Colin King <colin.king@canonical.com> wrote:
 
-> So please. Can we just make a simple extended statfs() and be done
-> with it, instead of this hugely complex thing that does five different
-> things with the same interface and makes it really odd as a result?
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are spelling mistakes in warning messages. Fix these.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-How do you propose handling variable size attributes, like the list of
-fs options?
+Patch applied to wireless-drivers-next.git, thanks.
 
-Otherwise I'm fine with a statx-like interface for querying fs/mount attributes.
+db8655c6299c wl1251, wlcore: fix spelling mistake "buld" -> "build"
 
-Thanks,
-Miklos
+-- 
+https://patchwork.kernel.org/patch/11704077/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
