@@ -7,122 +7,211 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B09C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9316020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED64E20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgHRRVc (ORCPT
+        id S1728836AbgHRRVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:21:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52670 "EHLO pegase1.c-s.fr"
+        Tue, 18 Aug 2020 13:21:40 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22687 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728535AbgHRRTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:19:21 -0400
+        id S1726836AbgHRRTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:19:19 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BWHhN6tVJz9vCxv;
-        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BWHhL6MRTz9vCxq;
+        Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id I2Vn_tjqvJPA; Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
+        with ESMTP id ZN1PWKNUWFtk; Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhN66T6z9vCxg;
-        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhL5bhXz9vCxg;
+        Tue, 18 Aug 2020 19:19:14 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A4C5C8B7EE;
-        Tue, 18 Aug 2020 19:19:18 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 943BA8B7EC;
+        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id QgcoIcraXlLy; Tue, 18 Aug 2020 19:19:18 +0200 (CEST)
+        with ESMTP id wfILgMUBQyIW; Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 62BC08B7D7;
-        Tue, 18 Aug 2020 19:19:18 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 566798B7D7;
+        Tue, 18 Aug 2020 19:19:16 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 4492D65CF4; Tue, 18 Aug 2020 17:19:18 +0000 (UTC)
-Message-Id: <fcdc60d85baf80eaa0a7f3261d9d889282068216.1597770847.git.christophe.leroy@csgroup.eu>
+        id 3824665CF4; Tue, 18 Aug 2020 17:19:16 +0000 (UTC)
+Message-Id: <24a1baedea7f7ae7b6bf27be98bab6d01b5ca2c1.1597770847.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1597770847.git.christophe.leroy@csgroup.eu>
 References: <cover.1597770847.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 06/25] powerpc/32s: Allow deselecting CONFIG_PPC_FPU on
- mpc832x
+Subject: [PATCH v2 04/25] powerpc/ptrace: Create ptrace_get_fpr() and
+ ptrace_put_fpr()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 18 Aug 2020 17:19:18 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 17:19:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The e300c2 core which is embedded in mpc832x CPU doesn't have
-an FPU.
+On the same model as ptrace_get_reg() and ptrace_put_reg(),
+create ptrace_get_fpr() and ptrace_put_fpr() to get/set
+the floating points registers.
 
-Make it possible to not select CONFIG_PPC_FPU when building a
-kernel dedicated to that target.
+We move the boundary checkings in them.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/head_32.S          |  4 ++++
- arch/powerpc/platforms/Kconfig.cputype | 11 +++++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/ptrace/Makefile      |  1 +
+ arch/powerpc/kernel/ptrace/ptrace-decl.h |  4 +++
+ arch/powerpc/kernel/ptrace/ptrace-fpu.c  | 40 ++++++++++++++++++++++++
+ arch/powerpc/kernel/ptrace/ptrace.c      | 40 +++++++-----------------
+ 4 files changed, 56 insertions(+), 29 deletions(-)
+ create mode 100644 arch/powerpc/kernel/ptrace/ptrace-fpu.c
 
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index f3ab94d73936..588fe8644df6 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -413,6 +413,7 @@ Alignment:
- 	. = 0x800
- 	DO_KVM  0x800
- FPUnavailable:
-+#ifdef CONFIG_PPC_FPU
- BEGIN_FTR_SECTION
- /*
-  * Certain Freescale cores don't have a FPU and treat fp instructions
-@@ -426,6 +427,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_FPU_UNAVAILABLE)
- 	b	fast_exception_return
- 1:	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	EXC_XFER_LITE(0x800, kernel_fp_unavailable_exception)
-+#else
-+	b 	ProgramCheck
-+#endif
+diff --git a/arch/powerpc/kernel/ptrace/Makefile b/arch/powerpc/kernel/ptrace/Makefile
+index c2f2402ebc8c..77abd1a5a508 100644
+--- a/arch/powerpc/kernel/ptrace/Makefile
++++ b/arch/powerpc/kernel/ptrace/Makefile
+@@ -6,6 +6,7 @@
+ CFLAGS_ptrace-view.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
  
- /* Decrementer */
- 	EXCEPTION(0x900, Decrementer, timer_interrupt, EXC_XFER_LITE)
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 40ffcdba42b8..d4fd109f177e 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -32,7 +32,7 @@ choice
- config PPC_BOOK3S_6xx
- 	bool "512x/52xx/6xx/7xx/74xx/82xx/83xx/86xx except 601"
- 	select PPC_BOOK3S_32
--	select PPC_FPU
-+	imply PPC_FPU
- 	select PPC_HAVE_PMU_SUPPORT
- 	select PPC_HAVE_KUEP
- 	select PPC_HAVE_KUAP
-@@ -229,9 +229,16 @@ config PPC_FPU_REGS
- 	bool
+ obj-y				+= ptrace.o ptrace-view.o
++obj-y				+= ptrace-fpu.o
+ obj-$(CONFIG_COMPAT)		+= ptrace32.o
+ obj-$(CONFIG_VSX)		+= ptrace-vsx.o
+ ifneq ($(CONFIG_VSX),y)
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+index 2ddc68412fa8..eafe5f0f6289 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
++++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+@@ -164,6 +164,10 @@ int ptrace_put_reg(struct task_struct *task, int regno, unsigned long data);
  
- config PPC_FPU
--	bool
-+	bool "Support for Floating Point Unit (FPU)" if PPC_MPC832x
- 	default y if PPC64
- 	select PPC_FPU_REGS
-+	help
-+	  This must be enabled to support the Floating Point Unit
-+	  Most 6xx have an FPU but e300c2 core (mpc832x) don't have
-+	  an FPU, so when building an embedded kernel for that target
-+	  you can disable FPU support.
+ extern const struct user_regset_view user_ppc_native_view;
+ 
++/* ptrace-fpu */
++int ptrace_get_fpr(struct task_struct *child, int index, unsigned long *data);
++int ptrace_put_fpr(struct task_struct *child, int index, unsigned long data);
 +
-+	  If unsure say Y.
+ /* ptrace-(no)adv */
+ void ppc_gethwdinfo(struct ppc_debug_info *dbginfo);
+ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-fpu.c b/arch/powerpc/kernel/ptrace/ptrace-fpu.c
+new file mode 100644
+index 000000000000..8301cb52dd99
+--- /dev/null
++++ b/arch/powerpc/kernel/ptrace/ptrace-fpu.c
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/regset.h>
++
++#include <asm/switch_to.h>
++
++#include "ptrace-decl.h"
++
++int ptrace_get_fpr(struct task_struct *child, int index, unsigned long *data)
++{
++	unsigned int fpidx = index - PT_FPR0;
++
++	if (index > PT_FPSCR)
++		return -EIO;
++
++	flush_fp_to_thread(child);
++	if (fpidx < (PT_FPSCR - PT_FPR0))
++		memcpy(data, &child->thread.TS_FPR(fpidx), sizeof(long));
++	else
++		*data = child->thread.fp_state.fpscr;
++
++	return 0;
++}
++
++int ptrace_put_fpr(struct task_struct *child, int index, unsigned long data)
++{
++	unsigned int fpidx = index - PT_FPR0;
++
++	if (index > PT_FPSCR)
++		return -EIO;
++
++	flush_fp_to_thread(child);
++	if (fpidx < (PT_FPSCR - PT_FPR0))
++		memcpy(&child->thread.TS_FPR(fpidx), &data, sizeof(long));
++	else
++		child->thread.fp_state.fpscr = data;
++
++	return 0;
++}
++
+diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+index 51557a9c0765..3d44b73adb83 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace.c
++++ b/arch/powerpc/kernel/ptrace/ptrace.c
+@@ -56,25 +56,17 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		ret = -EIO;
+ 		/* convert to index and check */
+ 		index = addr / sizeof(long);
+-		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR)
+-		    || (child->thread.regs == NULL))
++		if ((addr & (sizeof(long) - 1)) || !child->thread.regs)
+ 			break;
  
- config FSL_EMB_PERFMON
- 	bool "Freescale Embedded Perfmon"
+ 		CHECK_FULL_REGS(child->thread.regs);
+-		if (index < PT_FPR0) {
++		if (index < PT_FPR0)
+ 			ret = ptrace_get_reg(child, (int) index, &tmp);
+-			if (ret)
+-				break;
+-		} else {
+-			unsigned int fpidx = index - PT_FPR0;
+-
+-			flush_fp_to_thread(child);
+-			if (fpidx < (PT_FPSCR - PT_FPR0))
+-				memcpy(&tmp, &child->thread.TS_FPR(fpidx),
+-				       sizeof(long));
+-			else
+-				tmp = child->thread.fp_state.fpscr;
+-		}
++		else
++			ret = ptrace_get_fpr(child, index, &tmp);
++
++		if (ret)
++			break;
+ 		ret = put_user(tmp, datalp);
+ 		break;
+ 	}
+@@ -86,24 +78,14 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		ret = -EIO;
+ 		/* convert to index and check */
+ 		index = addr / sizeof(long);
+-		if ((addr & (sizeof(long) - 1)) || (index > PT_FPSCR)
+-		    || (child->thread.regs == NULL))
++		if ((addr & (sizeof(long) - 1)) || !child->thread.regs)
+ 			break;
+ 
+ 		CHECK_FULL_REGS(child->thread.regs);
+-		if (index < PT_FPR0) {
++		if (index < PT_FPR0)
+ 			ret = ptrace_put_reg(child, index, data);
+-		} else {
+-			unsigned int fpidx = index - PT_FPR0;
+-
+-			flush_fp_to_thread(child);
+-			if (fpidx < (PT_FPSCR - PT_FPR0))
+-				memcpy(&child->thread.TS_FPR(fpidx), &data,
+-				       sizeof(long));
+-			else
+-				child->thread.fp_state.fpscr = data;
+-			ret = 0;
+-		}
++		else
++			ret = ptrace_put_fpr(child, index, data);
+ 		break;
+ 	}
+ 
 -- 
 2.25.0
 
