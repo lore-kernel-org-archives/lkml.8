@@ -2,81 +2,74 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E86DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5177220786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aQxoaYhP"
+	by mail.kernel.org (Postfix) with ESMTP id 6B10020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgHRQun (ORCPT
+        id S1728183AbgHRQwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgHRQuj (ORCPT
+        Tue, 18 Aug 2020 12:52:24 -0400
+Received: from smtprelay0107.hostedemail.com ([216.40.44.107]:51764 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726840AbgHRQwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:50:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DC9C061389;
-        Tue, 18 Aug 2020 09:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qCqqjOiLMHkOe7OKrabPC0fHPBkc8WYvYKWB05C5lb0=; b=aQxoaYhPMx3PeS+HZ1YaCcl/Mr
-        uoDnpgLIyEXgYPI8xJjvMIbt/DTq3PCSe5U6hEPoeNU/Dh4zcNqQZ3DfOFTZgNxKYdu6VEvFGEltU
-        STWrIxlX2ZTKhM1NPG0QGV+FUxkpz5JC/mxZVJeKJGPbxupCmb8xSWflhqxMHCqvBt4eFMM8AwFAT
-        KK0tkNbk0B2u7xlQqhYH32pSr9GM7QOAYBEa6/v9kN0ZIQd8MOViZxGoBkQeVqED3pEdAYSRBB9o/
-        6N25+AyN7o1KMGn9eBkVVEb4mGMs0nPogrAFbPiqzivTAjBs2ahGJ8KtAkVnhhqlAcTW3Y+Tb58/W
-        KE6fszGQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k84oV-0001GK-AE; Tue, 18 Aug 2020 16:50:19 +0000
-Date:   Tue, 18 Aug 2020 17:50:19 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Yu Kuai <yukuai3@huawei.com>, hch@infradead.org,
-        david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V2] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200818165019.GT17456@casper.infradead.org>
-References: <20200818134618.2345884-1-yukuai3@huawei.com>
- <20200818155305.GR17456@casper.infradead.org>
- <20200818161229.GK6107@magnolia>
+        Tue, 18 Aug 2020 12:52:23 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2A3AF18029210;
+        Tue, 18 Aug 2020 16:52:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: join51_5b0c31127020
+X-Filterd-Recvd-Size: 1694
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 18 Aug 2020 16:52:21 +0000 (UTC)
+Message-ID: <15980e07c369b2cbfc7b06f58f3a521a5495bdf6.camel@perches.com>
+Subject: Re: [PATCH] clang-format: Fix: Maximum line length is now 100
+From:   Joe Perches <joe@perches.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Date:   Tue, 18 Aug 2020 09:52:20 -0700
+In-Reply-To: <20200818162431.696423-1-alex.dewar90@gmail.com>
+References: <20200818162431.696423-1-alex.dewar90@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818161229.GK6107@magnolia>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:12:29AM -0700, Darrick J. Wong wrote:
-> On Tue, Aug 18, 2020 at 04:53:05PM +0100, Matthew Wilcox wrote:
-> > It would be better to use the same wording as below:
-> > 
-> > > +	bitmap_zero(iop->state, PAGE_SIZE * 2 / SECTOR_SIZE);
-> 
-> ISTR there was some reason why '512' was hardcoded in here instead of
-> SECTOR_SIZE.  I /think/ it was so that iomap.h did not then have a hard
-> dependency on blkdev.h and everything else that requires...
+On Tue, 2020-08-18 at 17:24 +0100, Alex Dewar wrote:
+> Since commit bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column
+> warning") the kernel style is now for lines to be a maximum of 100 rather
+> than 80 columns. Update .clang-format accordingly.
+[]
+> diff --git a/.clang-format b/.clang-format
+[]
+> @@ -52,7 +52,7 @@ BreakConstructorInitializersBeforeComma: false
+>  #BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
+>  BreakAfterJavaFieldAnnotations: false
+>  BreakStringLiterals: false
+> -ColumnLimit: 80
+> +ColumnLimit: 100
 
-That ship already sailed.  I over-trimmed this line:
+No thank you.
 
--       bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+100 is used for exceptional line length, not
+for reformatting all lines up to 100 chars.
 
-Looks like Christoph changed his mind sometime between that message
-and the first commit: 9dc55f1389f9569acf9659e58dd836a9c70df217
+See the previous discussion about the same patch
+submitted earlier in June:
 
-My THP patches convert the bit array to be per-block rather than
-per-sector, so this is all going to go away soon ;-)
+https://lore.kernel.org/lkml/20200610125147.2782142-1-christian.brauner@ubuntu.com/
 
-> https://lore.kernel.org/linux-xfs/20181215105155.GD1575@lst.de/
+
