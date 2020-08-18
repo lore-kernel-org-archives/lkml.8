@@ -2,106 +2,130 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B838C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6539CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A0B20825
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBCA20829
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5b/Tfm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgHRG3q (ORCPT
+        id S1726672AbgHRGaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:29:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46766 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726519AbgHRG3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:29:45 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9AA41F6886A1652A6D0B;
-        Tue, 18 Aug 2020 14:29:42 +0800 (CST)
-Received: from [10.174.185.226] (10.174.185.226) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 18 Aug 2020 14:29:36 +0800
-Subject: Re: [PATCH] ACPI/IORT: Drop the unused @ops of
- iort_add_device_replay()
-To:     Hanjun Guo <guohanjun@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>
-CC:     <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
-References: <20200817105946.1511-1-yuzenghui@huawei.com>
- <8b15f022-8fb9-aa5c-fcd8-f92d4878a0a3@huawei.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <ae3a3b0e-ba0f-7ccc-7ddf-d0f0cf69a818@huawei.com>
-Date:   Tue, 18 Aug 2020 14:29:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 18 Aug 2020 02:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbgHRGaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:30:15 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E7CC061389;
+        Mon, 17 Aug 2020 23:30:15 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m71so9474758pfd.1;
+        Mon, 17 Aug 2020 23:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4QHL6A8uyFKbDV2P19zFKn9zEQqqmFB/XApBSU9BFw=;
+        b=W5b/Tfm0+LD9Z7cvao+vMTNs9ijNvX7eXiw9ZsZ/7TGir/QSEaMH65fRi3PbZY7TUo
+         RYENSmFLiLWoLgg06zUoCHo3PhEYejSAhdyujGtoWZrYXfHmNjrycZ4kk/mu2KaSspaU
+         dNmEUQnnB83A3TdVIVXJMjCt0pajG+gbk67LVdM7qufEB6RXDBM4b+gtAGUXlhEY01x/
+         YR/2UMmLU5obRUsA+3hfRcgcbuCN8ChlBl1fNxsmFRnUjNyp98hqzB8btOhclU+gqjeX
+         kR5BllY6FvJckr5H19WeKKpZxaRN8EBdFf1wPdHEsN28QKT9wgI6UHnBsbynSNtdMauO
+         4v1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q4QHL6A8uyFKbDV2P19zFKn9zEQqqmFB/XApBSU9BFw=;
+        b=ejwOfQxJ59yYQ3SYqz+wRYnfmv6iIe8GyxQhO5iTvZ1eS/rXc1WWs58F6OaJT+kpW0
+         VIPxkEEIvVZERaIP6VIx3913SzFmUrNCMbReOKZIGH16yu2htG18j8LmLxOk+KvtEOad
+         Ke/LDYcpfIsSlXC0+mQibBCmW2pUh0VTIRi5RlTq4umOLxNULpqh+xDtil4oUJExnP3z
+         C3ObBjAKhIRg4PN88S1UqHoeMwap37qllOZchseLzer1xTgI1JuJNFm5Wz2pkXTE7g0g
+         MTC+muTQLSKtPvkTujKTY1C8+dQV8k7sOAFXH328EQzl3a61Xis2j94t+2R2gJTlmrZN
+         wccA==
+X-Gm-Message-State: AOAM531XyGrB0eSq3Zj5n2qS8TzJbYDJpihf7R5p3Ambwrt/s6lpa3gq
+        Yz7+rOGcqK4jYKaDJWdeVkM=
+X-Google-Smtp-Source: ABdhPJwbqB7FRtldYEWCEwLz0lnKf/pdK1wAl2llvb5R0ejJ/742o9gwl5IRmSTx+MNxi8KBz8Hirg==
+X-Received: by 2002:aa7:9a1c:: with SMTP id w28mr10809351pfj.116.1597732214919;
+        Mon, 17 Aug 2020 23:30:14 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([124.156.176.71])
+        by smtp.gmail.com with ESMTPSA id f6sm21532959pje.16.2020.08.17.23.30.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Aug 2020 23:30:14 -0700 (PDT)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, viresh.kumar@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com, zbestahu@163.com
+Subject: [PATCH] thermal: sysfs: fall back to vzalloc for cooling device's statistics
+Date:   Tue, 18 Aug 2020 14:30:04 +0800
+Message-Id: <20200818063005.13828-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.19.1.windows.1
 MIME-Version: 1.0
-In-Reply-To: <8b15f022-8fb9-aa5c-fcd8-f92d4878a0a3@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/18 11:49, Hanjun Guo wrote:
-> On 2020/8/17 18:59, Zenghui Yu wrote:
->> Since commit d2e1a003af56 ("ACPI/IORT: Don't call iommu_ops->add_device
->> directly"), we use the IOMMU core API to replace a direct invoke of the
->> specified callback. The parameter @ops has therefore became unused. Let's
->> drop it.
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   drivers/acpi/arm64/iort.c | 8 +++-----
->>   1 file changed, 3 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
->> index ec782e4a0fe4..a0ece0e201b2 100644
->> --- a/drivers/acpi/arm64/iort.c
->> +++ b/drivers/acpi/arm64/iort.c
->> @@ -811,8 +811,7 @@ static inline const struct iommu_ops 
->> *iort_fwspec_iommu_ops(struct device *dev)
->>       return (fwspec && fwspec->ops) ? fwspec->ops : NULL;
->>   }
->> -static inline int iort_add_device_replay(const struct iommu_ops *ops,
->> -                     struct device *dev)
->> +static inline int iort_add_device_replay(struct device *dev)
->>   {
->>       int err = 0;
->> @@ -1072,7 +1071,7 @@ const struct iommu_ops 
->> *iort_iommu_configure_id(struct device *dev,
->>        */
->>       if (!err) {
->>           ops = iort_fwspec_iommu_ops(dev);
->> -        err = iort_add_device_replay(ops, dev);
->> +        err = iort_add_device_replay(dev);
->>       }
->>       /* Ignore all other errors apart from EPROBE_DEFER */
->> @@ -1089,8 +1088,7 @@ const struct iommu_ops 
->> *iort_iommu_configure_id(struct device *dev,
->>   #else
->>   static inline const struct iommu_ops *iort_fwspec_iommu_ops(struct 
->> device *dev)
->>   { return NULL; }
->> -static inline int iort_add_device_replay(const struct iommu_ops *ops,
->> -                     struct device *dev)
->> +static inline int iort_add_device_replay(struct device *dev)
-> 
-> inline functions iort_fwspec_iommu_ops() and iort_add_device_replay()
-> are not needed anymore after commit 8212688600ed ("ACPI/IORT: Fix build
-> error when IOMMU_SUPPORT is disabled"), could you please add another
-> patch to remove them as well?
+From: Yue Hu <huyue2@yulong.com>
 
-Sure, I will remove them in v2. Thanks for the reminder.
+We observed warning about kzalloc() when register thermal cooling device
+in backlight_device_register(). backlight display can be a cooling device
+since reducing screen brightness will can help reduce temperature.
 
+However, ->get_max_state of backlight will assign max brightness of 1024
+to states. The memory size can be getting 1MB+ due to states * states.
+That is so large to trigger kmalloc() warning.
 
-Zenghui
+So, let's remove it and try vzalloc() if kzalloc() fails.
+
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ drivers/thermal/thermal_sysfs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+index aa99edb..9bae0b6 100644
+--- a/drivers/thermal/thermal_sysfs.c
++++ b/drivers/thermal/thermal_sysfs.c
+@@ -16,6 +16,8 @@
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/slab.h>
++#include <linux/vmalloc.h>
++#include <linux/mm.h>
+ #include <linux/string.h>
+ #include <linux/jiffies.h>
+ 
+@@ -919,7 +921,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+ 	var += sizeof(*stats->time_in_state) * states;
+ 	var += sizeof(*stats->trans_table) * states * states;
+ 
+-	stats = kzalloc(var, GFP_KERNEL);
++	stats = kzalloc(var, GFP_KERNEL | __GFP_NOWARN);
++	if (!stats)
++		stats = vzalloc(var);
+ 	if (!stats)
+ 		return;
+ 
+@@ -938,7 +942,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+ 
+ static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
+ {
+-	kfree(cdev->stats);
++	kvfree(cdev->stats);
+ 	cdev->stats = NULL;
+ }
+ 
+-- 
+1.9.1
+
