@@ -2,162 +2,189 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2890CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036A020789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597789110;
-	bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jSuXjm2sOQdbWqmttC2O5exq6MnEPPKjdTJMriPacXa1am6BbZuTc28sLL0XBjZDP
-	 0edO62cFekbEPX1C0MoxX/sdhFZQxn/7MWDo26c66MmZcpZcQ603TClSHZOLr7EvmG
-	 hePbN65DkbQBX1A3XTORawPjJizBLR5S47tRZqR0=
+	by mail.kernel.org (Postfix) with ESMTP id 439DC20789
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="EE8JgXr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHRWS2 (ORCPT
+        id S1726982AbgHRWZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgHRWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:18:27 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69AA320786;
-        Tue, 18 Aug 2020 22:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597789106;
-        bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=v8SmAx6Dcfc89wEfDqt1kmeDO4WnuQLkRXFolTVKDYa8EI7+hfFnddkn/T9/J3ciC
-         mD5HXDEjvbbh2RWPfz3lviIg/jsPYV6/O0/IJxHCyCL5+4AxUbtCxdIY7hvpMTQpnG
-         YWQCfK9FufDmA68sG1fNEnq/PqND+xOHu5ujf7a8=
-Date:   Wed, 19 Aug 2020 00:18:21 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200819001821.651a7dcd@coco.lan>
-In-Reply-To: <20200818170755.GA3603438@bogus>
-References: <cover.1597647359.git.mchehab+huawei@kernel.org>
-        <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
-        <20200817201211.GA1437827@bogus>
-        <20200818111351.7e3fc780@coco.lan>
-        <20200818170755.GA3603438@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 18 Aug 2020 18:25:13 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:61734 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgHRWZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 18:25:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=5sA1HBIbrK4jPVJcP+jI4izFpNEEHPxFg/NXWJXMC4g=;
+        b=EE8JgXr61Z3ufTYRqqa2+xQCNvdAVubtYA8pVgrJgxTVxG8EEIxd6MeQYaCdLjFar0MJ
+        9gwlxNGcp1eSa7aIxrdxWTEnHwH3NahaWyPZQ8Y0s2/2serz4I49TgmOId5GaTi2M5FsY1
+        izV4PoCNyveAD2h9wFc3WuJ7YGL+qoff8=
+Received: by filterdrecv-p3iad2-5c98798b7-8vpdr with SMTP id filterdrecv-p3iad2-5c98798b7-8vpdr-18-5F3C5546-43
+        2020-08-18 22:25:10.778364702 +0000 UTC m=+453341.494334549
+Received: from [192.168.1.14] (unknown)
+        by ismtpd0008p1lon1.sendgrid.net (SG) with ESMTP
+        id -eqZ85VSTrOUcbmstS8KlQ
+        Tue, 18 Aug 2020 22:25:10.310 +0000 (UTC)
+Subject: Re: [PATCH v3 16/19] media: rkvdec: Drop unneeded per_request
+ driver-specific control flag
+References: <20200814133634.95665-1-ezequiel@collabora.com>
+ <20200814133634.95665-17-ezequiel@collabora.com>
+ <7ce53e65-1a05-bef7-afe7-9a5113d5bd4f@kwiboo.se>
+ <57e324f9e3e7e56aa634bcfa0aeebf08c118776d.camel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <b97351fc-1238-e3ee-e7ec-6e74b19725fb@kwiboo.se>
+Date:   Tue, 18 Aug 2020 22:25:10 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <57e324f9e3e7e56aa634bcfa0aeebf08c118776d.camel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h5iAJJICWQucZEPgD?=
+ =?us-ascii?Q?lkqTvuNTWM3C5i3gOLtfyiv5E68eDvDkpYtAXPL?=
+ =?us-ascii?Q?t2qGRvwlMz4AEvoER=2FVvPngnMtPDj8DO7qAlze5?=
+ =?us-ascii?Q?Z5Id1jg+K391ZyuHfKZu0TL4fpwNmixPVU7Atec?=
+ =?us-ascii?Q?KB1yPzltKwC4t1XVo6jes0qQBZ3QUFnSOwb6+m3?=
+ =?us-ascii?Q?KRshQuTGvlh7YobEf4jMA=3D=3D?=
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 18 Aug 2020 11:07:55 -0600
-Rob Herring <robh@kernel.org> escreveu:
-
-> > > > +  spmi-channel:
-> > > > +    description: number of the SPMI channel where the PMIC is connected    
-> > > 
-> > > This looks like a common (to SPMI), but it's not something defined in 
-> > > spmi.txt   
-> > 
-> > This one is not part of the SPMI core. It is stored inside a private 
-> > structure inside at the HiSilicon spmi controller driver. It is stored 
-> > there as ctrl_dev->channel, and it is used to calculate the register offset
-> > for readl():
-> > 
-> > 	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
-> > 	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
-> > 	do {
-> > 		status = readl(base + offset);
-> > 	...
-> > 
-> > The SPMI bus is somewhat similar to I2C: it is a 2-wire serial bus
-> > with up to 16 devices connected to it.
-> > 
-> > Now, most modern I2C chipsets provide multiple independent I2C
-> > channels, on different pins. Also, on some chipsets, certain
-> > GPIO pins can be used either as GPIO or as I2C.
-> > 
-> > I strongly suspect that this is the case here: according with
-> > the Hikey 970 schematics:
-> > 
-> > 	https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/files/hikey970-schematics.pdf
-> > 
-> > The pins used by SPMI clock/data can also be used as GPIO.
-> > 
-> > While I don't have access to the datasheets for Kirin 970 (or any other
-> > chipsets on this board), for me, it sounds that different GPIO pins
-> > are allowed to use SPMI. The "spmi-channel" property specifies
-> > what pins will be used for SPMI, among the ones that are
-> > compatible with MIPI SPMI specs.  
+On 2020-08-18 23:38, Ezequiel Garcia wrote:
+> On Tue, 2020-08-18 at 20:17 +0000, Jonas Karlman wrote:
+>> Hi Ezequiel,
+>>
+>> On 2020-08-14 15:36, Ezequiel Garcia wrote:
+>>> Currently, the drivers makes no distinction between per_request
+>>> and mandatory, as both are used in the same request validate check.
+>>>
+>>> The driver only cares to know if a given control is
+>>> required to be part of a request, so only one flag is needed.
+>>
+>> This patch cause decoding issues with ffmpeg.
+>>
+>> The removal of per_request makes DECODE_MODE and START_CODE ctrls
+>> mandatory to be included in the request.
+>>
 > 
-> Based on this, I think it should be called 'hisilicon,spmi-channel' as 
-> it is vendor specific. 
-
-I'm fine with "hisilicon,spmi-channel".
-
-> > > > +
-> > > > +          vsel-reg:
-> > > > +            description: Voltage selector register.    
-> > > 
-> > > 'reg' can have multiple entries if you want.  
-> > 
-> > Yes, I know. I was in doubt if I should either place vsel-reg on
-> > a separate property or together with reg. I ended keeping it
-> > in separate on the submitted patch series.
-> > 
-> > What makes more sense?  
+> Ugh, I just failed boolean logic 101.
 > 
-> Really, not putting it in DT. Like other things, it's fixed for the 
-> chip.
+> Yeah, we those controls shouldn't be mandatory.
 
-I agree, but, as I said before, without the datasheet, we can only
-hardcode a small subset of the LDO settings.
+Yep, removing mandatory flag makes rkvdec decoding work again :-)
 
-Due to that, I prefer keeping it at DT - either grouped together at "reg" or 
-as two separated properties (reg and vsel-reg).
-
-> > > > +description: |
-> > > > +  The HiSilicon SPMI controller is found on some Kirin-based designs.
-> > > > +  It is a MIPI System Power Management (SPMI) controller.
-> > > > +
-> > > > +  The PMIC part is provided by
-> > > > +  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
-> > > > +
-> > > > +properties:
-> > > > +  $nodename:
-> > > > +    pattern: "spmi@[0-9a-f]"
-> > > > +
-> > > > +  compatible:
-> > > > +    const: hisilicon,spmi-controller    
-> > > 
-> > > Needs an SoC specific compatible.  
-> > 
-> > What about:
-> > 	hisilicon,kirin970-spmi-controller   
 > 
-> Is 'kirin970' really the SoC name? The older ones are all 'hi[0-9]+'.
+> I'll send a fix for that. Other than this, can I add your tested-by to the series?
 
-This SoC is named Kirin 970. Yet, you can see places where 3670 is
-used, like:
+Yes, with above fix this series is
 
-	https://en.wikichip.org/wiki/hisilicon/kirin/970
+Tested-by: Jonas Karlman <jonas@kwiboo.se>
 
-There, it says that Hi3670 is the part number.
+using ffmpeg [1] on rk3288 (hantro) and rk3399 (rkvdec).
 
-Thanks,
-Mauro
+
+I have also done limited testing of field decoding on H.264 conformance
+video samples and rkvdec manage to generate matching checksums.
+On hantro the output is slightly different for fld and picaff samples
+and match for frm and mbaff samples.
+
+Because field decoding works correctly with rkvdec I am confident that
+uapi contains everything needed to support field decoding.
+
+
+[1] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3.1
+
+Best regards,
+Jonas
+
+> 
+> Thanks,
+> Ezequiel
+> 
+>> Best regards,
+>> Jonas
+>>
+>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>>> ---
+>>>  drivers/staging/media/rkvdec/rkvdec.c | 6 +-----
+>>>  drivers/staging/media/rkvdec/rkvdec.h | 1 -
+>>>  2 files changed, 1 insertion(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+>>> index 7c5129593921..cd720d726d7f 100644
+>>> --- a/drivers/staging/media/rkvdec/rkvdec.c
+>>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+>>> @@ -55,23 +55,19 @@ static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+>>>  
+>>>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>>>  	{
+>>> -		.per_request = true,
+>>>  		.mandatory = true,
+>>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
+>>>  	},
+>>>  	{
+>>> -		.per_request = true,
+>>>  		.mandatory = true,
+>>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SPS,
+>>>  		.cfg.ops = &rkvdec_ctrl_ops,
+>>>  	},
+>>>  	{
+>>> -		.per_request = true,
+>>>  		.mandatory = true,
+>>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PPS,
+>>>  	},
+>>>  	{
+>>> -		.per_request = true,
+>>>  		.mandatory = true,
+>>>  		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX,
+>>>  	},
+>>> @@ -615,7 +611,7 @@ static int rkvdec_request_validate(struct media_request *req)
+>>>  		u32 id = ctrls->ctrls[i].cfg.id;
+>>>  		struct v4l2_ctrl *ctrl;
+>>>  
+>>> -		if (!ctrls->ctrls[i].per_request || !ctrls->ctrls[i].mandatory)
+>>> +		if (!ctrls->ctrls[i].mandatory)
+>>>  			continue;
+>>>  
+>>>  		ctrl = v4l2_ctrl_request_hdl_ctrl_find(hdl, id);
+>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+>>> index 2fc9f46b6910..77a137cca88e 100644
+>>> --- a/drivers/staging/media/rkvdec/rkvdec.h
+>>> +++ b/drivers/staging/media/rkvdec/rkvdec.h
+>>> @@ -25,7 +25,6 @@
+>>>  struct rkvdec_ctx;
+>>>  
+>>>  struct rkvdec_ctrl_desc {
+>>> -	u32 per_request : 1;
+>>>  	u32 mandatory : 1;
+>>>  	struct v4l2_ctrl_config cfg;
+>>>  };
+>>>
+> 
+> 
