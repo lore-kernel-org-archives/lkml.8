@@ -2,170 +2,158 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D362EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D71AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC16720706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:57:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgsVAVul"
+	by mail.kernel.org (Postfix) with ESMTP id 1EBD420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHRM5l (ORCPT
+        id S1726698AbgHRM6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgHRM5h (ORCPT
+        Tue, 18 Aug 2020 08:58:30 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:33854 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHRM60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:57:37 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC34C061389;
-        Tue, 18 Aug 2020 05:57:36 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id b16so21065741ioj.4;
-        Tue, 18 Aug 2020 05:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RB/3h7KN5cdaLp36Iw4y0LY9Nbz/euP4xAyUVQnD3nM=;
-        b=CgsVAVulFxrhRCO1I0jrHoJ7iDLXApX1PTer/TUfl9fyQHwXYWIT1qNSJAgTIapCyf
-         R5qN1yoq+nMOpOTmN2kLChAVyxpumejn3TZjtZktbw5TlRIhzDiqqYFNm+R8biDXR1tC
-         qzetEpdmjpHqLZreRrYa4PlddR91xJkavbUwbOEBWhZLnJ5Vk/UcLC35A8Jy7dt+CRQW
-         qEaEtOvuN2e0TvqC6AIQDxmEtnb4SF7UScg7VraWeUVePImdLk8F8W9KRHIlyfMWzjwH
-         7S4afyM2O7wzpk5Z3NWflhhNZPkAVN3CXsbmzBVBSeiTxrvMI2TFBgmlVlunSEtRnDHi
-         SwcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RB/3h7KN5cdaLp36Iw4y0LY9Nbz/euP4xAyUVQnD3nM=;
-        b=oUyvpbF0PvYldMZDKuZ2PuqaHmqUXsyPF6AGXqH/VpyL9yvrRetCMt4V0/djJxALci
-         DzR+5xqW6ydZeJREuHQroOgIJ3TCgh3i8LFzh8MS9XTqNl4yalKJwxiaZ3fkqOBRQ3sF
-         pHcPBVlRfPxJd0emttiKw2fRugezd9+YXpxizRYXfJIs29rMza2deV6JK3BdogBQBRBt
-         iJBskj3hR4W17BlqtfSze3XGUBuoj8H5jyINsn2gln50+/obLATwz7IUMtB+jilqT2Cf
-         AIBlZ47aQ9Q2Xpfg/I2ttLqUkT+HGJul3APV/+KOZokfhMcGkWMiobqaCpRT+bja+V/m
-         xG/Q==
-X-Gm-Message-State: AOAM531jrILqgEEITo7b8XGC51Y93+eX0aL+b4sAtwbTDVtU4xH9yXio
-        ys744kP/0KpjgDBmMdW1T4DI5Ev33+p43Q==
-X-Google-Smtp-Source: ABdhPJzi5l8EKyFs57dY5mvktaLcED8bT3fejXKQgEeocUnOFAlBKNLa9f1XDlX+9FVyPoFBrqlGLA==
-X-Received: by 2002:a02:b106:: with SMTP id r6mr19533952jah.9.1597755455663;
-        Tue, 18 Aug 2020 05:57:35 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id p7sm7441627ilj.56.2020.08.18.05.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 05:57:34 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3] ARM: dts: omap3: Add cpu trips and cooling map for omap34/36 families
-Date:   Tue, 18 Aug 2020 07:57:20 -0500
-Message-Id: <20200818125720.10424-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 08:58:26 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k81C3-002tmZ-LA; Tue, 18 Aug 2020 06:58:23 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k81C2-000283-Se; Tue, 18 Aug 2020 06:58:23 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     kernel test robot <lkp@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
+        linux-fsdevel@vger.kernel.org, criu@openvz.org,
+        bpf@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>
+References: <20200817220425.9389-11-ebiederm@xmission.com>
+        <202008181316.x96Qp7qo%lkp@intel.com>
+Date:   Tue, 18 Aug 2020 07:54:50 -0500
+In-Reply-To: <202008181316.x96Qp7qo%lkp@intel.com> (kernel test robot's
+        message of "Tue, 18 Aug 2020 13:39:44 +0800")
+Message-ID: <87364k3yhx.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1k81C2-000283-Se;;;mid=<87364k3yhx.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX199+9M7+Xk2NQhTl3vv/R8uMu696mUUptA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 11/17] bpf/task_iter: In task_file_seq_get_next use fnext_task
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, OMAP3_THERMAL is disabled by default, so the bandgap sensor
-is unavailable, and enabling it will somewhat increase power consumption.
-However for boards which operate near their thermal limit, OMAP3_THERMAL
-can be enabled and monitored to keep the processor from either running
-too fast, or shutdown when it's deemed to be operating at an unsafe
-thermal limit at the expense of increased power consumption.
+kernel test robot <lkp@intel.com> writes:
 
-The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
-depending on commercial or extended temperature ratings.
+> Hi "Eric,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on bpf/master]
+> [also build test WARNING on linus/master v5.9-rc1 next-20200817]
+> [cannot apply to bpf-next/master linux/master]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/Eric-W-Biederman/exec-Move-unshare_files-to-fix-posix-file-locking-during-exec/20200818-061552
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+> config: i386-randconfig-m021-20200818 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> smatch warnings:
+> kernel/bpf/task_iter.c:162 task_file_seq_get_next() warn: ignoring unreachable code.
 
-This patch expands the thermal information to include the limits of
-80C for alert and 90C critical based on commercial temperature rating.
-It sets the coolings-cells for the 34xx and 36xx CPU's which will start
-to throttle back their maximum frequency when the bangap sensor reads
-above the alert temerature of 80C.
+What is smatch warning about?
 
-For boards who which to increase the temperatures for extended
-temperature ratings, these can be changed on their respective
-device trees with something like:
+Perhaps I am blind but I don't see any unreachable code there.
 
-&cpu_alert0 {
-	temperature = <90000>; /* millicelsius */
-};
+Doh!  I see it.  That loop will never loop so curr_fd++ is unreachable.
+Yes that should get fixed just so the code is readable.
 
-&cpu_crit {
-	temperature = <105000>; /* millicelsius */
-};
+I will change that.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with dm3730cbp100
+Eric
 
----
-V3:  Make commercial temperature the default instead of extended temp
-     Add notes about power consumption and OMAP3_THERMAL and the
-     dependency of this patch to OMAP3_THERMAL.
 
-V2:  Rebase on Linux 5.9-rc1
-
-diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
-index aee46fa8c055..1ed837859374 100644
---- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
-+++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
-@@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
- 
- 			/* sensor       ID */
- 	thermal-sensors = <&bandgap     0>;
-+
-+	cpu_trips: trips {
-+		cpu_alert0: cpu_alert {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "passive";
-+		};
-+		cpu_crit: cpu_crit {
-+			temperature = <90000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "critical";
-+		};
-+	};
-+
-+	cpu_cooling_maps: cooling-maps {
-+		map0 {
-+			trip = <&cpu_alert0>;
-+			cooling-device =
-+				<&cpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index 9c3ee4ac8165..c0dcc75833a8 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -20,6 +20,7 @@
- 			operating-points-v2 = <&cpu0_opp_table>;
- 
- 			clock-latency = <300000>; /* From legacy driver */
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 9c3beefc0fe0..fadbf308feff 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -25,6 +25,7 @@
- 
- 			vbb-supply = <&abb_mpu_iva>;
- 			clock-latency = <300000>; /* From omap-cpufreq driver */
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
--- 
-2.17.1
-
+>    128	
+>    129	static struct file *
+>    130	task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
+>    131			       struct task_struct **task)
+>    132	{
+>    133		struct pid_namespace *ns = info->common.ns;
+>    134		u32 curr_tid = info->tid;
+>    135		struct task_struct *curr_task;
+>    136		unsigned int curr_fd = info->fd;
+>    137	
+>    138		/* If this function returns a non-NULL file object,
+>    139		 * it held a reference to the task/file.
+>    140		 * Otherwise, it does not hold any reference.
+>    141		 */
+>    142	again:
+>    143		if (*task) {
+>    144			curr_task = *task;
+>    145			curr_fd = info->fd;
+>    146		} else {
+>    147			curr_task = task_seq_get_next(ns, &curr_tid);
+>    148			if (!curr_task)
+>    149				return NULL;
+>    150	
+>    151			/* set *task and info->tid */
+>    152			*task = curr_task;
+>    153			if (curr_tid == info->tid) {
+>    154				curr_fd = info->fd;
+>    155			} else {
+>    156				info->tid = curr_tid;
+>    157				curr_fd = 0;
+>    158			}
+>    159		}
+>    160	
+>    161		rcu_read_lock();
+>  > 162		for (;; curr_fd++) {
+>    163			struct file *f;
+>    164	
+>    165			f = fnext_task(curr_task, &curr_fd);
+>    166			if (!f)
+>    167				break;
+>    168	
+>    169			/* set info->fd */
+>    170			info->fd = curr_fd;
+>    171			get_file(f);
+>    172			rcu_read_unlock();
+>    173			return f;
+>    174		}
+>    175	
+>    176		/* the current task is done, go to the next task */
+>    177		rcu_read_unlock();
+>    178		put_task_struct(curr_task);
+>    179		*task = NULL;
+>    180		info->fd = 0;
+>    181		curr_tid = ++(info->tid);
+>    182		goto again;
+>    183	}
+>    184	
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
