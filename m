@@ -2,66 +2,128 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3972AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEF32067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD612067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgHRRFu (ORCPT
+        id S1728464AbgHRRGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:05:50 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59498 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbgHRRFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:05:23 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k852W-009wPo-DE; Tue, 18 Aug 2020 19:04:48 +0200
-Date:   Tue, 18 Aug 2020 19:04:48 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net, kuba@kernel.org,
-        mcoquelin.stm32@gmail.com, ajayg@nvidia.com,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: stmmac: Fix signedness bug in
- stmmac_probe_config_dt()
-Message-ID: <20200818170448.GH2330298@lunn.ch>
-References: <20200818143952.50752-1-yuehaibing@huawei.com>
- <20200818151500.51548-1-yuehaibing@huawei.com>
+        Tue, 18 Aug 2020 13:06:05 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2656 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728417AbgHRRFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:05:38 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5B581144BE759295DF3A;
+        Tue, 18 Aug 2020 18:05:37 +0100 (IST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Tue, 18 Aug 2020 18:05:36 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v8 2/6] x86: Support Generic Initiator only proximity domains
+Date:   Wed, 19 Aug 2020 01:04:13 +0800
+Message-ID: <20200818170417.1515975-3-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200818170417.1515975-1-Jonathan.Cameron@huawei.com>
+References: <20200818170417.1515975-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818151500.51548-1-yuehaibing@huawei.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:15:00PM +0800, YueHaibing wrote:
-> The "plat->phy_interface" variable is an enum and in this context GCC
-> will treat it as an unsigned int so the error handling is never
-> triggered.
-> 
-> Fixes: b9f0b2f634c0 ("net: stmmac: platform: fix probe for ACPI devices")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+In common with memoryless domains we only register GI domains
+if the proximity node is not online. If a domain is already
+a memory containing domain, or a memoryless domain there is
+nothing to do just because it also contains a Generic Initiator.
 
-Hi YueHaibing
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ arch/x86/include/asm/numa.h |  2 ++
+ arch/x86/kernel/setup.c     |  1 +
+ arch/x86/mm/numa.c          | 14 ++++++++++++++
+ 3 files changed, 17 insertions(+)
 
-Please take a look at:
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index bbfde3d2662f..f631467272a3 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
+ extern void __init init_cpu_to_node(void);
+ extern void numa_add_cpu(int cpu);
+ extern void numa_remove_cpu(int cpu);
++extern void init_gi_nodes(void);
+ #else	/* CONFIG_NUMA */
+ static inline void numa_set_node(int cpu, int node)	{ }
+ static inline void numa_clear_node(int cpu)		{ }
+ static inline void init_cpu_to_node(void)		{ }
+ static inline void numa_add_cpu(int cpu)		{ }
+ static inline void numa_remove_cpu(int cpu)		{ }
++static inline void init_gi_nodes(void)			{ }
+ #endif	/* CONFIG_NUMA */
+ 
+ #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3511736fbc74..9062c146f03a 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1218,6 +1218,7 @@ void __init setup_arch(char **cmdline_p)
+ 	prefill_possible_map();
+ 
+ 	init_cpu_to_node();
++	init_gi_nodes();
+ 
+ 	io_apic_init_mappings();
+ 
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index aa76ec2d359b..fc630dc6764e 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
+ 	 */
+ }
+ 
++/*
++ * Generic Initiator Nodes may have neither CPU nor Memory.
++ * At this stage if either of the others were present we would
++ * already be online.
++ */
++void __init init_gi_nodes(void)
++{
++	int nid;
++
++	for_each_node_state(nid, N_GENERIC_INITIATOR)
++		if (!node_online(nid))
++			init_memory_less_node(nid);
++}
++
+ /*
+  * Setup early cpu_to_node.
+  *
+-- 
+2.19.1
 
-commit 0c65b2b90d13c1deaee6449304dd367c5d4eb8ae
-Author: Andrew Lunn <andrew@lunn.ch>
-Date:   Mon Nov 4 02:40:33 2019 +0100
-
-    net: of_get_phy_mode: Change API to solve int/unit warnings
-
-You probably want to follow this basic idea.
-
-    Andrew
