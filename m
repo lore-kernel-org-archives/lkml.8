@@ -2,201 +2,160 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948B2C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAAB20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8107320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="BoMPWGla";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="20VBGG5C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUppUxZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHRHIf (ORCPT
+        id S1726635AbgHRHIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:08:35 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:54844 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726043AbgHRHId (ORCPT
+        Tue, 18 Aug 2020 03:08:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56544 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726043AbgHRHIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:08:33 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07I7158a021659;
-        Tue, 18 Aug 2020 00:08:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
- b=BoMPWGlaKeXA3hMRCUUUxp13eYgVVL+o7z2q0+JqQ2zfescvVtnc6q9VZmwdPtV+4G6W
- mj/HVlKM0WIK8Oxb/Xty9YEufdYu5NW7ZxGxfQdCD0mD6bC0ukkAk1aBR9bF+Iy4ZWbH
- JIyz3Krw6Q/DCEo7K/kBBEBKQx/G4IuTttrgLYuaT4yJVYwjIzyVrOSQAcvWVHVfM2B8
- /iSKXUgL/f2Tpm411otZ2kTEZGkvY25tnaAZiJB+OnUWIZqXZ+ZWsiepLBuvL8qJqj7y
- 9JsmEz15T9vB41H+s0ep4AixJMefOUOtOA2b12tKA5FzD1l5FSiq8CiBut0bNrKSfDt4 XA== 
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 3306jngupw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 00:08:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jHVjpkj9KJ/ZGi/jG6PqVp/zAtiBK3JnxmMzZE/wZh4Owb4kQ4nWrZZbnvdX9CCriaQ3CIaPaXdx93QxuEE3NEx1PN6Fq/AteG6UeFCwzTBb9CruqkJLbEls7Tl9X7JUYJRW050SI+DYwTUwNt2sss/dW4lL6Ab425ju2Gv51vBgJYOLHRa7MzHtbe8HLrYjCInQyORm29meh0I3RT6brCBXxxW6I+exhYHPC5qv1VEwIzpCzelU+xf4fe+Vha8TLThZjgDR/tR/F48NJVpKdtscDRufo5SiPRl7XeziR5sB3Nx9Bebk7JfPQ74RE3y69HpKqoscE6JoYar0Fndwdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
- b=f8aUa6EX5gNEgqBqfwZzgjrME4wGgx8aw0Uqn6l0rPmV2NGQXzSEb4CDU0f3cR/GKWhTz0iICpjw5d/3BZlH707UFp00wXEPA5Et99RlLYE7PlamXasiaBkwgPp2KNa/LTVKRHOmSEiSMejlyRqfdkNB4oYiywVa3oW4Uu7D8TbT7rB+tFVYaZXL/mGb0fo1F8qcdlfLUwzatzn9Zp3tdGPswWQ9x9eYrT5xK2GTkOscxkppYldfEnF7ClF492WVHE8OBdAzHh/a7wn3Mr1lWVXgOldAa5DQWXYtmDHJeP8yUrxEFlEsl287EqdwD1MMntUOerlXQ+QNcI0uBuDBAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
- b=20VBGG5CmtglcF6Yo4g2ZtENawMmDEECzSbmRQIiqsuiI/8KoCorqos0AnX/QO9kREufqJWxijt2ENpxnjoyglo3GMweeo9xgax2NXSjj5yNpDrd3N8ct6RGTPgF18bdLWD0KaDapfhzgrtoeWParzGrPTR+WjlRRwVN9xrzOSw=
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com (2603:10b6:5:17e::20)
- by DM5PR07MB3161.namprd07.prod.outlook.com (2603:10b6:3:e4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Tue, 18 Aug
- 2020 07:08:27 +0000
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::c0af:c085:c7a8:4bb6]) by DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::c0af:c085:c7a8:4bb6%5]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
- 07:08:27 +0000
-From:   Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "kishon@ti.com" <kishon@ti.com>, "jsarha@ti.com" <jsarha@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        Yuti Suresh Amonkar <yamonkar@cadence.com>,
-        Milind Parab <mparab@cadence.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nsekhar@ti.com" <nsekhar@ti.com>
-Subject: RE: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
- PHY bindings for generic use
-Thread-Topic: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
- PHY bindings for generic use
-Thread-Index: AQHWbKNgb4eLlJb0pE6AuVCE/4rv2ak0sXOAgAjQckA=
-Date:   Tue, 18 Aug 2020 07:08:27 +0000
-Message-ID: <DM6PR07MB61546EAD17F3221DEF393780C55C0@DM6PR07MB6154.namprd07.prod.outlook.com>
-References: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
- <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
- <20200812162643.GA2320575@bogus>
-In-Reply-To: <20200812162643.GA2320575@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05OTJiMWI3Mi1lMTIxLTExZWEtODUyNi1jOGY3NTA0NDIyZDhcYW1lLXRlc3RcOTkyYjFiNzQtZTEyMS0xMWVhLTg1MjYtYzhmNzUwNDQyMmQ4Ym9keS50eHQiIHN6PSIyNTUyIiB0PSIxMzI0MjIwODEwMTgyODAxOTkiIGg9ImxBN0R2QzIyMk00Y3dOWGxOdGFjSzlTYU5URT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=cadence.com;
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f73b6ee-0dad-4f54-a131-08d843458156
-x-ms-traffictypediagnostic: DM5PR07MB3161:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR07MB31611EC5F910662965FCDD36C55C0@DM5PR07MB3161.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1YBWfo0egCF6lCqTDzu+S5GcM55g6J+zxcebKl9ZNTy1AswN6PwlDjzwG2lIZeBnq8cOl7FU/75MrsA4Bs/0WNaMsFX0KBU/hPBBpu2uRMrzzM6Q38HEmFg4spB7ivOSKhQqGXIruX4/xwLeylBFuTRzuclY4lmfdtF4etAEjmAEzDBvGTvCazuLd/4dVqiY/FasV8+Apki06HPQ8so9Xvua1GTYiiduSn8g8wFJz6WpLCP4jBF8ZY5SmS9+8Rj7JOVIy7g5e/n8CF52HGLrX1HasMMh7JbhtV4f4/XRSPK4LdvhkLXwQlGrfEoDem15Ee2O87K5tnIXWvNddZqJtRDEzXX68HjdfkIsfbV3Ezj7wD3eepk2bFifJEVC2fm+yjIJlGsGvKmQcgpVKKVVfhafL8bCNqm4k5HrwVzhb01cvuVFTQsgEP3GSzNHrMp/sanKUjzJP6iSOA4I0g71ctkE6ha+Nc8S/vncqgspfTI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB6154.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(36092001)(7696005)(52536014)(9686003)(6506007)(26005)(53546011)(55016002)(478600001)(86362001)(83380400001)(66556008)(66446008)(66946007)(2906002)(76116006)(64756008)(8936002)(71200400001)(5660300002)(316002)(33656002)(15650500001)(6916009)(8676002)(966005)(54906003)(66476007)(4326008)(186003)(41533002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: BuPA6Y26fG5q8a2MXY8GNpnbs0SzC56RMdP19DgOzyVjpJp6cLRZtWhN73Ro/MYhbmNW3GhqhtfBx+MeXhuWHg1p9okogMmTpvIW4NwIG0jmxBwJk1QMiXUOEdP9qvNP2QnGRpTAg9IfufdxzplhCBd2yLa0KyCDsLcDVVU+CYYEWoGMWhx6BOlFcjudyPxlnGgi7JV6CM8dvFX6RzVYQplgHqdslEXRW9KosXVgaBvyYbyjUtxoZgr3U8mnsEAsEQUIutf0neq2ynwpRM4KlGB4s/ymX8FxPbX7t0l5Ryh38QNmHs5YSMQUShv7DTMvlTKa4f8/K8bo7n1/0uhEYqJdNB36T6bpnPqO+xRk1GaWEp4aQpAsmJNQUOFeKQBwzxOITW37yhDp+K53gMaewtRDU2DUi49qpxVs24cWwanRSSyxUmTjwOfYMDhFb2m+vve2OklMcYBvTLVNms1zoHgVUKKWDLj6+VLObr8y0KHrktOaqPh+qn9awz1U3thA75VL864QSl4t0pWwB8Rw0KfFaWMDGeejEtdTagjR2cFdCnImjipDX9WwMSk4lD/gdLHyy9bgKQ/cb3BzZN14KPMrr2aIKlt+alCEhItMznMCaYyGuTgVtDXwzn/AunCm/psUG+Fel4eSg8/R1Fjv9A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 03:08:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597734531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=rPbA9LnlTpRaa3OnV8WZh+UmSJgEjfz9fog6ourPlrY=;
+        b=bUppUxZfP/XP3oQhIL/qmky8k06lyUFs6Dy4gZa4cdHgvGVHruYq97Ia6Us8fZj11jBgc8
+        vs37NVmK381U7DGz1kC8kf2INi0qQywEfnhgq980QgmG5flOjbKFR/SlIBj/DZOYK8zYx3
+        jGau4ZEAmwdY52xLSwcQwNxeLinCF8E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-zwH8_uPoOkWl4KZ3pGlYnQ-1; Tue, 18 Aug 2020 03:08:49 -0400
+X-MC-Unique: zwH8_uPoOkWl4KZ3pGlYnQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5BFF80732F;
+        Tue, 18 Aug 2020 07:08:47 +0000 (UTC)
+Received: from [10.36.113.168] (ovpn-113-168.ams2.redhat.com [10.36.113.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 463C054596;
+        Tue, 18 Aug 2020 07:08:46 +0000 (UTC)
+Subject: Re: [PATCH] mm/hotplug: Enumerate memory range offlining failure
+ reasons
+To:     Michal Hocko <mhocko@suse.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <1597724522-31545-1-git-send-email-anshuman.khandual@arm.com>
+ <20200818060547.GH28270@dhcp22.suse.cz>
+ <f178d1f0-af86-6a29-5646-a8f2dc9912f5@arm.com>
+ <20200818065817.GI28270@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <0005c6bb-da4c-f1f3-3c86-dc1712369281@redhat.com>
+Date:   Tue, 18 Aug 2020 09:08:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB6154.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f73b6ee-0dad-4f54-a131-08d843458156
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 07:08:27.4188
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y2tY94BSxcZfK3Zaz9Rl+lTgCdRW572OkB1qQgyt0gR2hDnGAcR8P5vo0jFrwVzFj/R/f6Dh0yarJCxuuv2UK34o7j7NutLZNlV5sE8iMQE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR07MB3161
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_04:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- mlxscore=0 priorityscore=1501 clxscore=1011 lowpriorityscore=0
- adultscore=0 impostorscore=0 malwarescore=0 spamscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=757 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008180049
+In-Reply-To: <20200818065817.GI28270@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 18.08.20 08:58, Michal Hocko wrote:
+> On Tue 18-08-20 11:58:49, Anshuman Khandual wrote:
+>>
+>>
+>> On 08/18/2020 11:35 AM, Michal Hocko wrote:
+>>> On Tue 18-08-20 09:52:02, Anshuman Khandual wrote:
+>>>> Currently a debug message is printed describing the reason for memory range
+>>>> offline failure. This just enumerates existing reason codes which improves
+>>>> overall readability and makes it cleaner. This does not add any functional
+>>>> change.
+>>>
+>>> Wasn't something like that posted already? To be honest I do not think
+>>
+>> There was a similar one regarding bad page reason.
+>>
+>> https://patchwork.kernel.org/patch/11464713/
+>>
+>>> this is worth the additional LOC. We are talking about few strings used
+>>> at a single place. I really do not see any simplification, constants are
+>>> sometimes even longer than the strings they are describing.
+>>
+>> I am still trying to understand why enumerating all potential offline
+>> failure reasons in a single place (i.e via enum) is not a better idea
+>> than strings scattered across the function. Besides being cleaner, it
+>> classifies, organizes and provide a structure to the set of reasons.
+>> It is not just about string replacement with constants.
+> 
+> This is a matter of taste. I would agree that using constants to
+> reference standardized messages is a good idea but all these reasons
+> are just an ad-hoc messages that we want to print more or less as a
+> debugging output. So all the additional LOC don't really seem worth it.
+> 
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Wednesday, August 12, 2020 9:57 PM
-> To: Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-> Cc: kishon@ti.com; jsarha@ti.com; vkoul@kernel.org;
-> tomi.valkeinen@ti.com; Yuti Suresh Amonkar <yamonkar@cadence.com>;
-> Milind Parab <mparab@cadence.com>; robh+dt@kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; nsekhar@ti.com
-> Subject: Re: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update
-> Torrent PHY bindings for generic use
->=20
-> EXTERNAL MAIL
->=20
->=20
-> On Fri, 07 Aug 2020 12:12:45 +0200, Swapnil Jakhade wrote:
-> > Torrent PHY can be used in different multi-link multi-protocol
-> > configurations including protocols other than DisplayPort also, such
-> > as PCIe, USB, SGMII, QSGMII etc. Update the bindings to have support
-> > for these configurations.
-> >
-> > Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> > ---
-> >  .../bindings/phy/phy-cadence-torrent.yaml     | 76 ++++++++++++++-----
-> >  1 file changed, 58 insertions(+), 18 deletions(-)
-> >
->=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> Error: Documentation/devicetree/bindings/phy/phy-cadence-
-> torrent.example.dts:93.38-39 syntax error FATAL ERROR: Unable to parse
-> input tree
-> make[1]: *** [scripts/Makefile.lib:330:
-> Documentation/devicetree/bindings/phy/phy-cadence-
-> torrent.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [Makefile:1334: dt_binding_check] Error 2
->=20
->=20
-> See
-> https://urldefense.com/v3/__https://patchwork.ozlabs.org/patch/1342193_
-> _;!!EHscmS1ygiU1lA!SVJ6n249DhrJY-
-> i_QSvywciTmAiJRcn9zUnmEeSR5UI4tt9jxEzzj9r5Rz1ZiOY$
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above error=
-(s),
-> then make sure dt-schema is up to date:
->=20
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master -=
--
-> upgrade
->=20
-> Please check and re-submit.
+Agreed, it's not like they are scattered over multiple functions. I
+don't see any real advantage here that justify 37 insertions(+), 9
+deletions(-).
 
-This patch and the series requires the macro definition for PHY_TYPE_SGMII =
-in
-file include/dt-bindings/phy/phy.h
-This error is because of missing this macro definition. It has been newly a=
-dded
-and present in kernel v5.9-rc1
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/diff/inc=
-lude/dt-bindings/phy/phy.h?id=3Dv5.9-rc1&id2=3Dv5.8
-So latest version should not get this error.
-
+-- 
 Thanks,
-Swapnil
+
+David / dhildenb
+
