@@ -2,162 +2,136 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B55C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0510C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98312075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF842075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJU0aucT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fdirQtS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHRTUW (ORCPT
+        id S1726698AbgHRTV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:20:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20305 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbgHRTUV (ORCPT
+        Tue, 18 Aug 2020 15:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHRTVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:20:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597778419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kTw7qpPswkkc4L0pFLjBtR+b0/Du3MlSdJNi0daaxfs=;
-        b=SJU0aucTQ9UWsHJV+Z3pN7RNSEn7YxVTHMe/K6GTNSQL38HHiyxgyuTOml+35PUgIL8Qmt
-        ovnp2EoXNmVZkIaYUfYz/LGt7T1yMrn3zv7kYChR1NjGx8xfaRFNpsWvlgVOH7SDT8CB5R
-        wOmjrycXwTgA1rQQTY3sjpeobFbyN84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-565-vKDGrSx_OtOy6P4Zsz6PCA-1; Tue, 18 Aug 2020 15:20:15 -0400
-X-MC-Unique: vKDGrSx_OtOy6P4Zsz6PCA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FAD7807333;
-        Tue, 18 Aug 2020 19:20:13 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-51.rdu2.redhat.com [10.10.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 290C1756B0;
-        Tue, 18 Aug 2020 19:20:10 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200817152655.GE28270@dhcp22.suse.cz>
- <e66d6b5f-6f02-8c8f-681e-1d6da7a72224@redhat.com>
- <20200817192625.GF28270@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <80456788-efd9-bc95-5ac6-5a828be23009@redhat.com>
-Date:   Tue, 18 Aug 2020 15:20:09 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Aug 2020 15:21:55 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8182C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:21:54 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id i10so4664376pgk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zqSUjfhetXa5IuRw9JeF+TW2/+QsT5+pQU8GGaPMx7M=;
+        b=fdirQtS35bnk6l7y3oW8Lw0Cg/XmLySVy6zO41Bo0Jky1Yq7FjctMNf30HUh477Q0+
+         k6bc/NwkvecrpTp319yOav2wSqUK7Y/7nyq8iWZrm1pDxIhDit1RZAWjuv/9EcNrcDYK
+         Z8IwnKbdRyVfphkNX5Weqbt3bjg5GNhOj2mdI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zqSUjfhetXa5IuRw9JeF+TW2/+QsT5+pQU8GGaPMx7M=;
+        b=B7Q7l9zi/SjyZmaVCidZ9bwNJm/nVxA4M4zwqbXc04WEzTplNDPouqWc4JG6vygPg8
+         KULqt9J+zdEO2JuKmsWyikcpaAr1GT9cl8K/Rk3aHtgTe2ehrv4yqVJQkzNfUtK0eEa6
+         QlckPe0IuTcyKOUCkLLkV/lAyfqyoAxOZci4rGbs0UM/cXcre1/WvfObE3xvmU/VBIq/
+         NrNJOOq/8OVj1C9ABQkZTTCYc4jTJYBo7dIsKpcul0PTP6eEZqiR/CwlezW+d6mdVO38
+         fu31v/IU/WPymW9md1THbgO3a7FMumAAJV5l5cYsUxXftsj5bhN5bA2Dayf0VTcXv4Ug
+         uW3g==
+X-Gm-Message-State: AOAM533XJOB6abIYqSllLl3bBETPi1kw2PWdkz+eXOEIIStxgbZC3yFd
+        EzGqqQg2FLIHISRh2yR+grHegA==
+X-Google-Smtp-Source: ABdhPJzQiR6xAc8WKkbKdUhnnyT4rO2YXcWUvPMo/Nnf80Lz9eP5MKsknobJ4DFtPnQJPH3UbCvtvQ==
+X-Received: by 2002:aa7:984e:: with SMTP id n14mr16437303pfq.272.1597778514020;
+        Tue, 18 Aug 2020 12:21:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n26sm24981410pff.30.2020.08.18.12.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:21:52 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:21:51 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
+Message-ID: <202008181214.5C736E7@keescook>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <20200817220212.338670-2-ndesaulniers@google.com>
+ <82bbeff7-acc3-410c-9bca-3644b141dc1a@zytor.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817192625.GF28270@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82bbeff7-acc3-410c-9bca-3644b141dc1a@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 3:26 PM, Michal Hocko wrote:
-> On Mon 17-08-20 11:55:37, Waiman Long wrote:
->> On 8/17/20 11:26 AM, Michal Hocko wrote:
->>> On Mon 17-08-20 10:08:23, Waiman Long wrote:
->>>> Memory controller can be used to control and limit the amount of
->>>> physical memory used by a task. When a limit is set in "memory.high" in
->>>> a v2 non-root memory cgroup, the memory controller will try to reclaim
->>>> memory if the limit has been exceeded. Normally, that will be enough
->>>> to keep the physical memory consumption of tasks in the memory cgroup
->>>> to be around or below the "memory.high" limit.
->>>>
->>>> Sometimes, memory reclaim may not be able to recover memory in a rate
->>>> that can catch up to the physical memory allocation rate. In this case,
->>>> the physical memory consumption will keep on increasing.  When it reaches
->>>> "memory.max" for memory cgroup v2 or when the system is running out of
->>>> free memory, the OOM killer will be invoked to kill some tasks to free
->>>> up additional memory. However, one has little control of which tasks
->>>> are going to be killed by an OOM killer. Killing tasks that hold some
->>>> important resources without freeing them first can create other system
->>>> problems down the road.
->>>>
->>>> Users who do not want the OOM killer to be invoked to kill random
->>>> tasks in an out-of-memory situation can use the memory control
->>>> facility provided by this new patchset via prctl(2) to better manage
->>>> the mitigation action that needs to be performed to various tasks when
->>>> the specified memory limit is exceeded with memory cgroup v2 being used.
->>>>
->>>> The currently supported mitigation actions include the followings:
->>>>
->>>>    1) Return ENOMEM for some syscalls that allocate or handle memory
->>>>    2) Slow down the process for memory reclaim to catch up
->>>>    3) Send a specific signal to the task
->>>>    4) Kill the task
->>>>
->>>> The users that want better memory control for their applicatons can
->>>> either modify their applications to call the prctl(2) syscall directly
->>>> with the new memory control command code or write the desired action to
->>>> the newly provided memctl procfs files of their applications provided
->>>> that those applications run in a non-root v2 memory cgroup.
->>> prctl is fundamentally about per-process control while cgroup (not only
->>> memcg) is about group of processes interface. How do those two interact
->>> together? In other words what is the semantic when different processes
->>> have a different views on the same underlying memcg event?
->> As said in a previous mail, this patchset is derived from a customer request
->> and per-process control is exactly what the customer wants. That is why
->> prctl() is used. This patchset is intended to supplement the existing memory
->> cgroup features. Processes in a memory cgroup that don't use this new API
->> will behave exactly like before. Only processes that opt to use this new API
->> will have additional mitigation actions applied on them in case the
->> additional limits are reached.
-> Please keep in mind that you are proposing a new user API that we will
-> have to maintain for ever. That requires that the interface is
-> consistent and well defined. As I've said the fundamental problem with
-> this interface is that you are trying to hammer a process centric
-> interface into a framework that is fundamentally process group oriented.
-> Maybe there is a sensible way to do that without all sorts of weird
-> corner cases but I haven't seen any of that explained here.
->
-> Really just try to describe a semantic when two different tasks in the
-> same memcg have a different opinion on the same event. One wants ENOMEM
-> and other a specific signal to be delivered. Right now the behavior will
-> be timing specific because who hits the oom path is non-deterministic
-> from the userspace POV. Let's say that you can somehow handle that, now
-> how are you going implement ENOMEM for any context other than current
-> task? I am pretty sure the more specific questions you will have the
-> more this will get awkward.
+On Mon, Aug 17, 2020 at 03:31:26PM -0700, H. Peter Anvin wrote:
+> On 2020-08-17 15:02, Nick Desaulniers wrote:
+> > LLVM implemented a recent "libcall optimization" that lowers calls to
+> > `sprintf(dest, "%s", str)` where the return value is used to
+> > `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> > in parsing format strings. This optimization was introduced into
+> > clang-12. Because the kernel does not provide an implementation of
+> > stpcpy, we observe linkage failures for almost all targets when building
+> > with ToT clang.
+> > 
+> > The interface is unsafe as it does not perform any bounds checking.
+> > Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
+> > 
+> > Unlike
+> > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> > which cited failures with `-fno-builtin-*` flags being retained in LLVM
+> > LTO, that bug seems to have been fixed by
+> > https://reviews.llvm.org/D71193, so the above sha can now be reverted in
+> > favor of `-fno-builtin-bcmp`.
+> > 
+> 
+> stpcpy() and (to a lesser degree) mempcpy() are fairly useful routines
+> in general. Perhaps we *should* provide them?
 
-The basic idea of triggering a user-specified memory-over-high 
-mitigation is when the actual memory usage exceed a threshold which is 
-supposed to be between "high" and "max". The additional limit that is 
-passed in is for setting this additional threshold. We want to avoid OOM 
-at all cost.
+As Nick mentioned, I really don't want to expand the already bad
+interfaces from libc. We have enough messes to clean up already, and I
+don't want to add more. The kernel already uses a subset of C, we have
+(several) separate non-libc memory allocators, we're using strscpy() and
+scnprintf() widely in favor of their buggy libc counterparts, etc. We
+don't need to match the libc string interfaces especially when they're
+arguably bug-prone foot-guns. :)
 
-The ENOMEM error may not be suitable for all applications as some of 
-them may not be able to handle ENOMEM gracefully. That is for 
-applications that are designed to handle that.
-
-Cheers,
-Longman
-
+-- 
+Kees Cook
