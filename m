@@ -2,174 +2,228 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C592C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20196C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFFB206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z3pcIsgM"
+	by mail.kernel.org (Postfix) with ESMTP id E0E4820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHRJOd (ORCPT
+        id S1726691AbgHRJOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:14:33 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8836 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRJOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:14:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3b9be90000>; Tue, 18 Aug 2020 02:14:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Aug 2020 02:14:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Aug 2020 02:14:31 -0700
-Received: from [10.21.180.203] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Aug
- 2020 09:14:19 +0000
-Subject: Re: [PATCH net-next RFC v2 13/13] devlink: Add
- Documentation/networking/devlink/devlink-reload.rst
-To:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
+        Tue, 18 Aug 2020 05:14:38 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2613 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbgHRJOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:14:36 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 93ACB97961580369653F;
+        Tue, 18 Aug 2020 10:14:32 +0100 (IST)
+Received: from localhost (10.52.121.15) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 18 Aug
+ 2020 10:14:32 +0100
+Date:   Tue, 18 Aug 2020 10:13:01 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "Suzuki Poulose" <suzuki.poulose@arm.com>,
         <linux-kernel@vger.kernel.org>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
- <1597657072-3130-14-git-send-email-moshe@mellanox.com>
- <20200817163933.GB2627@nanopsycho>
-From:   Moshe Shemesh <moshe@nvidia.com>
-Message-ID: <a786a68d-df60-cae3-5fb1-3648ca1c69d8@nvidia.com>
-Date:   Tue, 18 Aug 2020 12:14:16 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Subject: Re: [PATCH 1/2] arm64/mm: Change THP helpers to comply with generic
+ MM semantics
+Message-ID: <20200818101301.000027ef@Huawei.com>
+In-Reply-To: <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
+References: <1597655984-15428-1-git-send-email-anshuman.khandual@arm.com>
+        <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20200817163933.GB2627@nanopsycho>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597742057; bh=ftMP7LAH7UKvxd8RNXoLVtSTVK7oA55WF9geKbrBmcE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=Z3pcIsgMoVKMx05ZtLIRf5MOLvyn/eAfEmtyy0uakG5t7eBYY+mhqfg8BO8zC9RVp
-         c0bjMUbpJlEtpRGoMu2K0dJZZ6L7lty1KSlr/AIT2faX1EVCbfujzJP9jXlbbJEf5h
-         CTWd7c1mbRZKWilSmFd9rqoLNJXnU8mBYAg0jw6wHfjT1RIwF5xH8DGFEncqe0k89N
-         /y9KnzSu3OSCINS6CeFqrLrAp1Tv26btG3WtlooHXaZWwzflGzz8HA47D9xshsKiYl
-         zntfFMTdZxPbZOmXNzg5s83hTApM8JFRsjRZwnFpLaE+s95YSDtaPChu379ATH2Dhi
-         gzi/R61XVFG5g==
+X-Originating-IP: [10.52.121.15]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 17 Aug 2020 14:49:43 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-On 8/17/2020 7:39 PM, Jiri Pirko wrote:
-> Mon, Aug 17, 2020 at 11:37:52AM CEST, moshe@mellanox.com wrote:
->> Add devlink reload rst documentation file.
->> Update index file to include it.
->>
->> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
->> ---
->> - Instead of reload levels driver,fw_reset,fw_live_patch have reload
->>   actions driver_reinit,fw_activate,fw_live_patch
->> ---
->> .../networking/devlink/devlink-reload.rst     | 54 +++++++++++++++++++
->> Documentation/networking/devlink/index.rst    |  1 +
->> 2 files changed, 55 insertions(+)
->> create mode 100644 Documentation/networking/devlink/devlink-reload.rst
->>
->> diff --git a/Documentation/networking/devlink/devlink-reload.rst b/Documentation/networking/devlink/devlink-reload.rst
->> new file mode 100644
->> index 000000000000..9846ea727f3b
->> --- /dev/null
->> +++ b/Documentation/networking/devlink/devlink-reload.rst
->> @@ -0,0 +1,54 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +==============
->> +Devlink Reload
->> +==============
->> +
->> +``devlink-reload`` provides mechanism to either reload driver entities,
->> +applying ``devlink-params`` and ``devlink-resources`` new values or firmware
->> +activation depends on reload action selected.
->> +
->> +Reload actions
->> +=============
->> +
->> +User may select a reload action.
->> +By default ``driver_reinit`` action is done.
->> +
->> +.. list-table:: Possible reload actions
->> +   :widths: 5 90
->> +
->> +   * - Name
->> +     - Description
->> +   * - ``driver-reinit``
->> +     - Driver entities re-initialization, including applying
->> +       new values to devlink entities which are used during driver
->> +       load such as ``devlink-params`` in configuration mode
->> +       ``driverinit`` or ``devlink-resources``
->> +   * - ``fw_activate``
->> +     - Firmware activate. Can be used for firmware reload or firmware
->> +       upgrade if new firmware is stored and driver supports such
->> +       firmware upgrade.
-> Does this do the same as "driver-reinit" + fw activation? If yes, it
-> should be written here. If no, it should be written here as well.
->
+> pmd_present() and pmd_trans_huge() are expected to behave in the following
+> manner during various phases of a given PMD. It is derived from a previous
+> detailed discussion on this topic [1] and present THP documentation [2].
+> 
+> pmd_present(pmd):
+> 
+> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
+> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
+> 
+> pmd_trans_huge(pmd):
+> 
+> - Returns true if pmd refers to system RAM and is a trans huge mapping
+> 
+> -------------------------------------------------------------------------
+> |	PMD states	|	pmd_present	|	pmd_trans_huge	|
+> -------------------------------------------------------------------------
+> |	Mapped		|	Yes		|	Yes		|
+> -------------------------------------------------------------------------
+> |	Splitting	|	Yes		|	Yes		|
+> -------------------------------------------------------------------------
+> |	Migration/Swap	|	No		|	No		|
+> -------------------------------------------------------------------------
+> 
+> The problem:
+> 
+> PMD is first invalidated with pmdp_invalidate() before it's splitting. This
+> invalidation clears PMD_SECT_VALID as below.
+> 
+> PMD Split -> pmdp_invalidate() -> pmd_mkinvalid -> Clears PMD_SECT_VALID
+> 
+> Once PMD_SECT_VALID gets cleared, it results in pmd_present() return false
+> on the PMD entry. It will need another bit apart from PMD_SECT_VALID to re-
+> affirm pmd_present() as true during the THP split process. To comply with
+> above mentioned semantics, pmd_trans_huge() should also check pmd_present()
+> first before testing presence of an actual transparent huge mapping.
+> 
+> The solution:
+> 
+> Ideally PMD_TYPE_SECT should have been used here instead. But it shares the
+> bit position with PMD_SECT_VALID which is used for THP invalidation. Hence
+> it will not be there for pmd_present() check after pmdp_invalidate().
+> 
+> A new software defined PMD_PRESENT_INVALID (bit 59) can be set on the PMD
+> entry during invalidation which can help pmd_present() return true and in
+> recognizing the fact that it still points to memory.
+> 
+> This bit is transient. During the split process it will be overridden by a
+> page table page representing normal pages in place of erstwhile huge page.
+> Other pmdp_invalidate() callers always write a fresh PMD value on the entry
+> overriding this transient PMD_PRESENT_INVALID bit, which makes it safe.
+> 
+> [1]: https://lkml.org/lkml/2018/10/17/231
+> [2]: https://www.kernel.org/doc/Documentation/vm/transhuge.txt
 
-No, The only thing required here is the action of firmware activation. 
-If a driver needs to do reload to make that happen and do reinit that's 
-ok, but not required.
+Hi Anshuman,
 
->> +   * - ``fw_live_patch``
->> +     - Firmware live patch, applies firmware changes without reset.
->> +
->> +Change namespace
->> +================
->> +
->> +All devlink instances are created in init_net and stay there for a
->> +lifetime. Allow user to be able to move devlink instances into
->> +namespaces during devlink reload operation. That ensures proper
->> +re-instantiation of driver objects, including netdevices.
->> +
->> +example usage
->> +-------------
->> +
->> +.. code:: shell
->> +
->> +    $ devlink dev reload help
->> +    $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action { fw_live_patch | driver_reinit | fw_activate } ]
->> +
->> +    # Run reload command for devlink driver entities re-initialization:
->> +    $ devlink dev reload pci/0000:82:00.0 action driver_reinit
->> +
->> +    # Run reload command to activate firmware:
->> +    $ devlink dev reload pci/0000:82:00.0 action fw_activate
->> diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
->> index 7684ae5c4a4a..d82874760ae2 100644
->> --- a/Documentation/networking/devlink/index.rst
->> +++ b/Documentation/networking/devlink/index.rst
->> @@ -20,6 +20,7 @@ general.
->>     devlink-params
->>     devlink-region
->>     devlink-resource
->> +   devlink-reload
->>     devlink-trap
->>
->> Driver-specific documentation
->> -- 
->> 2.17.1
->>
+One query on this.  From my reading of the ARM ARM, bit 59 is not
+an ignored bit.  The exact requirements for hardware to be using
+it are a bit complex though.
+
+It 'might' be safe to use it for this, but if so can we have a comment
+explaining why.  Also more than possible I'm misunderstanding things! 
+
+Thanks,
+
+Jonathan
+
+
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/include/asm/pgtable-prot.h |  7 ++++++
+>  arch/arm64/include/asm/pgtable.h      | 34 ++++++++++++++++++++++++---
+>  2 files changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+> index 4d867c6446c4..28792fdd9627 100644
+> --- a/arch/arm64/include/asm/pgtable-prot.h
+> +++ b/arch/arm64/include/asm/pgtable-prot.h
+> @@ -19,6 +19,13 @@
+>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
+>  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
+>  
+> +/*
+> + * This help indicate that the entry is present i.e pmd_page()
+> + * still points to a valid huge page in memory even if the pmd
+> + * has been invalidated.
+> + */
+> +#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <asm/cpufeature.h>
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index d5d3fbe73953..7aa69cace784 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -145,6 +145,18 @@ static inline pte_t set_pte_bit(pte_t pte, pgprot_t prot)
+>  	return pte;
+>  }
+>  
+> +static inline pmd_t clr_pmd_bit(pmd_t pmd, pgprot_t prot)
+> +{
+> +	pmd_val(pmd) &= ~pgprot_val(prot);
+> +	return pmd;
+> +}
+> +
+> +static inline pmd_t set_pmd_bit(pmd_t pmd, pgprot_t prot)
+> +{
+> +	pmd_val(pmd) |= pgprot_val(prot);
+> +	return pmd;
+> +}
+> +
+>  static inline pte_t pte_wrprotect(pte_t pte)
+>  {
+>  	pte = clear_pte_bit(pte, __pgprot(PTE_WRITE));
+> @@ -363,15 +375,24 @@ static inline int pmd_protnone(pmd_t pmd)
+>  }
+>  #endif
+>  
+> +#define pmd_present_invalid(pmd)     (!!(pmd_val(pmd) & PMD_PRESENT_INVALID))
+> +
+> +static inline int pmd_present(pmd_t pmd)
+> +{
+> +	return pte_present(pmd_pte(pmd)) || pmd_present_invalid(pmd);
+> +}
+> +
+>  /*
+>   * THP definitions.
+>   */
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -#define pmd_trans_huge(pmd)	(pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT))
+> +static inline int pmd_trans_huge(pmd_t pmd)
+> +{
+> +	return pmd_val(pmd) && pmd_present(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
+> +}
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> -#define pmd_present(pmd)	pte_present(pmd_pte(pmd))
+>  #define pmd_dirty(pmd)		pte_dirty(pmd_pte(pmd))
+>  #define pmd_young(pmd)		pte_young(pmd_pte(pmd))
+>  #define pmd_valid(pmd)		pte_valid(pmd_pte(pmd))
+> @@ -381,7 +402,14 @@ static inline int pmd_protnone(pmd_t pmd)
+>  #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
+>  #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
+>  #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
+> -#define pmd_mkinvalid(pmd)	(__pmd(pmd_val(pmd) & ~PMD_SECT_VALID))
+> +
+> +static inline pmd_t pmd_mkinvalid(pmd_t pmd)
+> +{
+> +	pmd = set_pmd_bit(pmd, __pgprot(PMD_PRESENT_INVALID));
+> +	pmd = clr_pmd_bit(pmd, __pgprot(PMD_SECT_VALID));
+> +
+> +	return pmd;
+> +}
+>  
+>  #define pmd_thp_or_huge(pmd)	(pmd_huge(pmd) || pmd_trans_huge(pmd))
+>  
+
+
