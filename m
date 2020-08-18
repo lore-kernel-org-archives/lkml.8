@@ -2,174 +2,162 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0485C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114E92076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8574A2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gZe6HvY1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PWOYNWoo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgHRT6m (ORCPT
+        id S1726778AbgHRT7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgHRT6k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:58:40 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FDFC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:58:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so10235465pgm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rqU4BC6tUsjcEJr/U162KnXra6DrJvlD2KShIytlY2w=;
-        b=gZe6HvY1Wn42oNIPkZd4GNzugvaoW6QAFKJSoN2USbuUhs41Zmmkn//dVKTG2hBMKx
-         sqRaPKIoE6CHWVmyUXbOjRbQp7bxKJYri+lGyRLBCp9+FCMq3OSBhtJdR38FJvkNxY2G
-         fUUbwsksChQSG1szN7bcyXVdhRqqIAVmg1dI17DlFtBdfl7ACmXH3tCYGXPIMOy7oa1D
-         QNY+GXXaF2//a/9q4c/0+YsRQ8k5VOU8/+cheazCez+doO5RSykpudD0MY9/I0qq/D5K
-         UmFgyuH0c5Rm5NOHG1YTL7fC0FWlxFrt1p5hz9/SREiX5H8ix8uuAq5L8+ItRqCXyNB5
-         8JMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rqU4BC6tUsjcEJr/U162KnXra6DrJvlD2KShIytlY2w=;
-        b=L1VzH13LD7N0sLQICGyj/HMjxTz5YnX7dXU/3OoOilyHENzbrt4MIRhIG7sviuQHdC
-         rSF413kqgl3I5f+eD5JTK0db1amkdIG98dixmAzKB4G1owxznQcDsQVvWRUpdEK2NbUq
-         x7P1/Cv5gx26s9gkXHFf7XDhL0+/ivbgjyUICBriyX7EjThnRoE0VO5bqaah879PPZJP
-         Zu1TpOXPR9TbXJkCnQi5eG82eCTIh1r2K7Yfif9uVHV1OANSQFl/Rb+JgLNCt9XtN7BG
-         0DIqHwbAznInQ3TjKB46w+9wGNVCfqfO4Q913hmgTFd1+vlZGBR/r7oe30xoUoodMPVx
-         oE+g==
-X-Gm-Message-State: AOAM531K6Q+H613TQvqp1NA0n8/u5T/yWyrZpyzX1zohxMsvsFhFBe3v
-        4VsNXrw97WUaxa3ijSwktjoTp301eoprFkuSgHe1lA==
-X-Google-Smtp-Source: ABdhPJwO1H28Renw4sheYoT/T62OSLiGKOqyNNgG/FD33zAIxlVPXiFK7uQV/CTYYHmAfH5BnhE+eVFhR4uixQa8NYQ=
-X-Received: by 2002:aa7:96e5:: with SMTP id i5mr13553753pfq.108.1597780719010;
- Tue, 18 Aug 2020 12:58:39 -0700 (PDT)
+        Tue, 18 Aug 2020 15:59:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12337 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgHRT7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 15:59:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597780746; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=zZL+Wq+UWx6ZdXVL+KawbcxWSyrD/Dh71Ipog7tgjDM=; b=PWOYNWooqOBfDh2TcnwbiKJHUc9J7PwnoOxJ8T0EarQR8fy4emFSBmv+miFTxjaSM0A0EDT5
+ gVoBqPDqnngIQskYcXh6BI99s+Ov8CMLiloMRfuW6RK7YqGH2G2d+QSaklMxSGDqGi6SH8qG
+ 0obLFtMRBpHREl2SJ414axkSmlQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f3c32e8440a07969a72c008 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 19:58:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9AF1FC43391; Tue, 18 Aug 2020 19:58:31 +0000 (UTC)
+Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 450AAC433C6;
+        Tue, 18 Aug 2020 19:58:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 450AAC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
+ requirements
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <20200624022848.7765-1-wcheng@codeaurora.org>
+ <20200624022848.7765-2-wcheng@codeaurora.org> <87d03yptxi.fsf@kernel.org>
+ <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
+ <877du5pseu.fsf@kernel.org>
+ <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
+Message-ID: <35c02c96-01f1-a7f1-e5d7-c26df77ecccd@codeaurora.org>
+Date:   Tue, 18 Aug 2020 12:58:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <CAKwvOdkut+GTLxX9U=hxDC8SaugW487XD_98d9yFU2VzShyz0A@mail.gmail.com>
-In-Reply-To: <CAKwvOdkut+GTLxX9U=hxDC8SaugW487XD_98d9yFU2VzShyz0A@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Aug 2020 12:58:27 -0700
-Message-ID: <CAKwvOdkJxmSXg+v1pG4+DkhoJzEE47smce6pB=Zhy6viY_++xw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Clement Courbet <courbet@google.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:25 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Aug 18, 2020 at 12:19 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
-> > >
-> > > I'm not saying "change the semantics", nor am I saying that playing
-> > > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
-> > > to the compiler authors and get them to implement such a #pragma: "this
-> > > freestanding implementation *does* support *this specific library function*,
-> > > and you are free to call it."
-> >
-> > I'd much rather just see the library functions as builtins that always
-> > do the right thing (with the fallback being "just call the standard
-> > function").
-> >
-> > IOW, there's nothing wrong with -ffreestanding if you then also have
-> > __builtin_memcpy() etc, and they do the sane compiler optimizations
-> > for memcpy().
-> >
-> > What we want to avoid is the compiler making *assumptions* based on
-> > standard names, because we may implement some of those things
-> > differently.
 
-That's asking for trouble; please don't implement routines with
-identifiers from libc but with differing function signatures, and then
-proceed to *not* use -ffreestanding.  You can't have it both ways
-(optimizations from *not* using -ffreestanding, then breaking all
-kinds of assumptions based on conventions used across userspace), at
-least not with the tools you currently have.
 
-> >
-> > And honestly, a compiler that uses 'bcmp' is just broken. WTH? It's
-> > the year 2020, we don't use bcmp. It's that simple. Fix your damn
-> > broken compiler and use memcmp. The argument that memcmp is more
-> > expensive than bcmp is garbage legacy thinking from four decades ago.
-> >
-> > It's likely the other way around, where people have actually spent
-> > time on memcmp, but not on bcmp.
-> >
-> > If somebody really *wants* to use bcmp, give them the "Get off my
-> > lawn" flag,
+On 8/12/2020 11:34 AM, Wesley Cheng wrote:
+>>
+>> awesome, thanks a lot for this :-) It's a considerable increase in your
+>> setup. My only fear here is that we may end up creating a situation
+>> where we can't allocate enough FIFO for all endpoints. This is, of
+>> course, a consequence of the fact that we enable one endpoint at a
+>> time.
+>>
+>> Perhaps we could envision a way where function driver requests endpoints
+>> in bulk, i.e. combines all endpoint requirements into a single method
+>> call for gadget framework and, consequently, for UDC.
+>>
+> Hi Felipe,
+> 
+> I agree...Resizing the txfifo is not as straightforward as it sounds :).
+>  Would be interesting to see how this affects tput on other platforms as
+> well.  We had a few discussions within our team, and came up with the
+> logic implemented in this patch to reserve at least 1 txfifo per
+> endpoint. Then we allocate any additional fifo space requests based on
+> the remaining space left.  That way we could avoid over allocating, but
+> the trade off is that we may have unused EPs taking up fifo space.
+> 
+> I didn't consider branching out to changing the gadget framework, so let
+> me take a look at your suggestion to see how it turns out.
+> 
 
-I wrote a paper in college on the philosophy and symbolism in "Gran
-Torino."  Would recommend (the movie, not the paper).
+Hi Felipe,
 
-> > and leave them alone. But never ever should "use bcmp" be
-> > any kind of default behavior. That's some batshit crazy stuff.
-> >
-> >                Linus
->
-> You'll have to ask Clement about that.  I'm not sure I ever saw the
-> "faster bcmp than memcmp" implementation, but I was told "it exists"
-> when I asked for a revert when all of our kernel builds went red.
+Instead of catching the out of FIFO memory issue during the ep enable
+stage, I was thinking if we could do it somewhere during the bind.  Then
+this would allow for at least failing the bind instead of having an
+enumerated device which doesn't work. (will happen if we bail out during
+ep enable phase)  The idea I had was the following:
 
-Also, to Clement's credit, every patch I've ever seen from Clement is
-backed up by data; typically fleetwide profiles at Google.  "we spend
-a lot of time in memcmp, particularly comparing the result against
-zero and no other value; hmm...how do we spend less time in
-memcmp...oh, well there's another library function with slightly
-different semantics we can call instead."  I don't think anyone would
-consider the optimization batshit crazy given the number of cycles
-saved across the fleet.  That an embedded project didn't provide an
-implementation, is a footnote that can be fixed in the embedded
-project, either by using -ffreestanding or -fno-builtin-bcmp, which is
-what this series proposes to do.
+Introduce a new USB gadget function pointer, say
+usb_gadget_check_config(struct usb_gadget *gadget, unsigned long ep_map)
+
+The purpose for the ep_map is to carry information about the endpoints
+the configuration requires, since each function driver will define the
+endpoint descriptor(s) it will advertise to the host.  We have access to
+these ep desc after the bind() routine is executed for the function
+driver, so we can update this map after every bind.  The configfs driver
+will call the check config API every time a configuration is added.
+
+static int configfs_composite_bind(struct usb_gadget *gadget,
+		struct usb_gadget_driver *gdriver)
+{
+...
+  /* Go through all configs, attach all functions */
+  list_for_each_entry(c, &gi->cdev.configs, list) {
+  ...
+    list_for_each_entry_safe(f, tmp, &cfg->func_list, list) {
+    ...
+      	if (f->ss_descriptors) {
+	  struct usb_descriptor_header **descriptors;
+	  descriptors = f->ss_descriptors;
+	  for (; *descriptors; ++descriptors) {
+	    struct usb_endpoint_descriptor *ep;
+	    int addr;
+		
+	    if ((*descriptors)->bDescriptorType != USB_DT_ENDPOINT)
+		continue;
+		
+	    ep = (struct usb_endpoint_descriptor *)*descriptors;
+	    addr = ((ep->bEndpointAddress & 0x80) >> 3)
+	    |  (ep->bEndpointAddress & 0x0f);
+	    set_bit(addr, &ep_map);
+	  }
+	}
+    usb_gadget_check_config(cdev->gadget, ep_map);
+
+What it'll allow us to do is to decode the ep_map in the dwc3/udc driver
+to determine if we have enough fifo space. Also, if we wanted to utilize
+this ep map for the actual resizing stage, we could eliminate the issue
+of not knowing how many EPs will be enabled, and allocating potentially
+unused fifos due to unused eps.
+
+
+Thanks
+Wesley
+
 -- 
-Thanks,
-~Nick Desaulniers
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
