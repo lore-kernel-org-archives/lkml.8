@@ -2,276 +2,213 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E44C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 650B3207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223AC20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgHROsk (ORCPT
+        id S1727827AbgHROt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:48:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:28962 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHROsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:48:38 -0400
-IronPort-SDR: 7tBoIHbIJfPASeUy5ALqOQYLf3E2gS4pJ8Fj2AWFGjpGIBKG1SJbQO4R05VxAIk8brOBAd1Mhc
- VfcuYp8khU4w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152545745"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="152545745"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 07:48:37 -0700
-IronPort-SDR: j3lzUZxUs/HATozfdFB66r1N6Z+nQv6tj1Q0Dm6QaLVGDGp2gtIymda8Hc9mj0LD5Z51BBbt/E
- Z/y1JkdV0PuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="334390588"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Aug 2020 07:48:35 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ASoC: hdac_hdmi: support 'ELD' mixer
-Date:   Tue, 18 Aug 2020 22:36:32 +0800
-Message-Id: <20200818143632.16539-1-brent.lu@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200818004413.12852-1-brent.lu@intel.com>
-References: <20200818004413.12852-1-brent.lu@intel.com>
+        Tue, 18 Aug 2020 10:49:27 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:37490 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgHROtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:49:22 -0400
+Received: by mail-il1-f197.google.com with SMTP id u7so14527732ilj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:49:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XHgBkjzXNaJbC9aZkOW8kfREg5RuJLTicvWC13gR6lE=;
+        b=PI2wNnDTDvBGEe9hsBzCZeL+QbAO3tbG4pafRNCRD6/lAS0rDEV9uyJPYuK7WG/dJj
+         K2PqO3pcVAANx9GKiyg/ndXosq04BOCZetmU6Y0QhYSVVNz+SUTASNW0MpahZhjx7yrV
+         k3sGE8LKTfSih2r+8zm0v+nwz2gy6QYGLyFW2WoMo1WNqjF0iWdUxHtmrGyGFc7csl/C
+         Ipe76Hmy0+DtqF659H65YgrHn4iR0o5EXYQ2aVu0YERHAs2ErER0Ezz43NJyxqTa9QcO
+         wxs4FN6M5J/IwtEEVKTd3vG4lcbjtFPgxki1GXL/IaiGzcadNWNw3ElwOl2kzZbvbnxt
+         mIiw==
+X-Gm-Message-State: AOAM532EbPmRg9kARscB4LHUHbbi4ekxX2bCmOXZsqUQGqK9rFgKzgB9
+        y0PO00jZ6LUppjleaUoBN41rfIivp0NL6h7knx9HIlItLeBd
+X-Google-Smtp-Source: ABdhPJz8nkM9nFl38+T6GT2+Q2X7LiyxHFjjj8O7VSlPzKTH9mfL77o8DPQDj7f/i+qti579CjX8Yjf9d745psB5Gduu4vwBP+/S
+MIME-Version: 1.0
+X-Received: by 2002:a6b:e70d:: with SMTP id b13mr16595725ioh.141.1597762161437;
+ Tue, 18 Aug 2020 07:49:21 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 07:49:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000011710f05ad27fe8a@google.com>
+Subject: KASAN: use-after-free Write in page_counter_cancel
+From:   syzbot <syzbot+b5ea6fb6f139c8b9482b@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a binary mixer 'ELD' to each HDMI PCM device so user-space can
-read the ELD data of external HDMI display.
+Hello,
 
-If same PCM is connected to multiple receivers, the mixer returns the
-ELD data for the first one found in the port list and ignore the rest.
-Thie behavior seems iffy but is aligned with the user-space interface
-exposed by patch_hdmi.c. Also the pcm-to-many routing is nor really
-supported by the driver now.
+syzbot found the following issue on:
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
+HEAD commit:    4993e4fe Add linux-next specific files for 20200814
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d0d116900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
+dashboard link: https://syzkaller.appspot.com/bug?extid=b5ea6fb6f139c8b9482b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b5ea6fb6f139c8b9482b@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
+BUG: KASAN: use-after-free in atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
+BUG: KASAN: use-after-free in atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
+BUG: KASAN: use-after-free in page_counter_cancel+0x1c/0x70 mm/page_counter.c:54
+Write of size 8 at addr ffff88804ad14148 by task syz-executor.5/2783
+
+CPU: 1 PID: 2783 Comm: syz-executor.5 Not tainted 5.8.0-next-20200814-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
+ atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
+ page_counter_cancel+0x1c/0x70 mm/page_counter.c:54
+ page_counter_uncharge+0x2e/0x60 mm/page_counter.c:156
+ uncharge_batch+0x67/0x450 mm/memcontrol.c:6764
+ uncharge_page+0xfd/0x560 mm/memcontrol.c:6796
+ uncharge_list mm/memcontrol.c:6835 [inline]
+ mem_cgroup_uncharge_list+0xf6/0x180 mm/memcontrol.c:6877
+ release_pages+0x637/0x17a0 mm/swap.c:912
+ tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
+ tlb_flush_mmu_free mm/mmu_gather.c:242 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:249 [inline]
+ tlb_finish_mmu+0x165/0x8c0 mm/mmu_gather.c:328
+ exit_mmap+0x2d1/0x530 mm/mmap.c:3200
+ __mmput+0x122/0x470 kernel/fork.c:1075
+ mmput+0x53/0x60 kernel/fork.c:1096
+ exit_mm kernel/exit.c:483 [inline]
+ do_exit+0xa8b/0x29f0 kernel/exit.c:793
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ __do_sys_exit_group kernel/exit.c:914 [inline]
+ __se_sys_exit_group kernel/exit.c:912 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d239
+Code: Bad RIP value.
+RSP: 002b:00007ffdf9f90358 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 000000000000001e RCX: 000000000045d239
+RDX: 0000000000416b81 RSI: fffffffffffffff7 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 00000000c426f42b R09: 00007ffdf9f903b0
+R10: 00000000c426f427 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffdf9f903b0 R14: 0000000000000000 R15: 00007ffdf9f903c0
+
+Allocated by task 2685:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ __do_kmalloc mm/slab.c:3655 [inline]
+ __kmalloc+0x1a8/0x320 mm/slab.c:3664
+ kmalloc include/linux/slab.h:559 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ mem_cgroup_alloc mm/memcontrol.c:5210 [inline]
+ mem_cgroup_css_alloc+0xc1/0x1bd0 mm/memcontrol.c:5278
+ css_create kernel/cgroup/cgroup.c:5128 [inline]
+ cgroup_apply_control_enable+0x478/0xc00 kernel/cgroup/cgroup.c:3059
+ cgroup_apply_control kernel/cgroup/cgroup.c:3141 [inline]
+ cgroup_subtree_control_write+0x7fc/0xcc0 kernel/cgroup/cgroup.c:3299
+ cgroup_file_write+0x211/0x750 kernel/cgroup/cgroup.c:3697
+ kernfs_fop_write+0x268/0x490 fs/kernfs/file.c:315
+ vfs_write+0x2b0/0x730 fs/read_write.c:576
+ ksys_write+0x12d/0x250 fs/read_write.c:631
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 20465:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ css_free_rwork_fn+0xf2/0x10c0 kernel/cgroup/cgroup.c:4941
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Last call_rcu():
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
+ queue_rcu_work+0x82/0xa0 kernel/workqueue.c:1747
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Second to last call_rcu():
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
+ __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
+ __percpu_ref_switch_mode+0x365/0x700 lib/percpu-refcount.c:237
+ percpu_ref_kill_and_confirm+0x94/0x350 lib/percpu-refcount.c:350
+ kill_css+0x115/0x340 kernel/cgroup/cgroup.c:5451
+ cgroup_apply_control_disable+0x3d8/0x500 kernel/cgroup/cgroup.c:3108
+ cgroup_finalize_control kernel/cgroup/cgroup.c:3171 [inline]
+ cgroup_subtree_control_write+0x83e/0xcc0 kernel/cgroup/cgroup.c:3300
+ cgroup_file_write+0x211/0x750 kernel/cgroup/cgroup.c:3697
+ kernfs_fop_write+0x268/0x490 fs/kernfs/file.c:315
+ vfs_write+0x2b0/0x730 fs/read_write.c:576
+ ksys_write+0x12d/0x250 fs/read_write.c:631
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88804ad14000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 328 bytes inside of
+ 4096-byte region [ffff88804ad14000, ffff88804ad15000)
+The buggy address belongs to the page:
+page:000000002f31f80d refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x4ad14
+head:000000002f31f80d order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0001274388 ffffea00023b4188 ffff8880aa040900
+raw: 0000000000000000 ffff88804ad14000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88804ad14000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88804ad14080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88804ad14100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                              ^
+ ffff88804ad14180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88804ad14200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- sound/soc/codecs/hdac_hdmi.c | 138 +++++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index f26b77faed59..869d1547ae5d 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -9,6 +9,7 @@
-  *
-  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
-+
- #include <linux/init.h>
- #include <linux/delay.h>
- #include <linux/module.h>
-@@ -107,6 +108,7 @@ struct hdac_hdmi_pcm {
- 	unsigned char chmap[8]; /* ALSA API channel-map */
- 	struct mutex lock;
- 	int jack_event;
-+	struct snd_kcontrol *eld_ctl;
- };
- 
- struct hdac_hdmi_dai_port_map {
-@@ -1248,6 +1250,7 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 	struct hdac_hdmi_pcm *pcm;
- 	int size = 0;
- 	int port_id = -1;
-+	bool eld_valid, eld_changed;
- 
- 	if (!hdmi)
- 		return;
-@@ -1273,6 +1276,8 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 			size = -EINVAL;
- 	}
- 
-+	eld_valid = port->eld.eld_valid;
-+
- 	if (size > 0) {
- 		port->eld.eld_valid = true;
- 		port->eld.eld_size = size;
-@@ -1281,6 +1286,8 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 		port->eld.eld_size = 0;
- 	}
- 
-+	eld_changed = (eld_valid != port->eld.eld_valid);
-+
- 	pcm = hdac_hdmi_get_pcm(hdev, port);
- 
- 	if (!port->eld.monitor_present || !port->eld.eld_valid) {
-@@ -1313,6 +1320,12 @@ static void hdac_hdmi_present_sense(struct hdac_hdmi_pin *pin,
- 
- 	}
- 	mutex_unlock(&hdmi->pin_mutex);
-+
-+	if (eld_changed && pcm)
-+		snd_ctl_notify(hdmi->card,
-+			       SNDRV_CTL_EVENT_MASK_VALUE |
-+			       SNDRV_CTL_EVENT_MASK_INFO,
-+			       &pcm->eld_ctl->id);
- }
- 
- static int hdac_hdmi_add_ports(struct hdac_device *hdev,
-@@ -1411,6 +1424,122 @@ static void hdac_hdmi_skl_enable_dp12(struct hdac_device *hdev)
- 
- }
- 
-+static int hdac_hdmi_eld_ctl_info(struct snd_kcontrol *kcontrol,
-+			     struct snd_ctl_elem_info *uinfo)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
-+	struct hdac_hdmi_pcm *pcm;
-+	struct hdac_hdmi_port *port;
-+	struct hdac_hdmi_eld *eld;
-+
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_BYTES;
-+	uinfo->count = 0;
-+
-+	pcm = get_hdmi_pcm_from_id(hdmi, kcontrol->id.device);
-+	if (!pcm) {
-+		dev_dbg(component->dev, "%s: no pcm, device %d\n", __func__,
-+			kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	if (list_empty(&pcm->port_list)) {
-+		dev_dbg(component->dev, "%s: empty port list, device %d\n",
-+			__func__, kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	mutex_lock(&hdmi->pin_mutex);
-+
-+	list_for_each_entry(port, &pcm->port_list, head) {
-+		eld = &port->eld;
-+
-+		if (eld->eld_valid) {
-+			uinfo->count = eld->eld_size;
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&hdmi->pin_mutex);
-+
-+	return 0;
-+}
-+
-+static int hdac_hdmi_eld_ctl_get(struct snd_kcontrol *kcontrol,
-+			    struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
-+	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
-+	struct hdac_hdmi_pcm *pcm;
-+	struct hdac_hdmi_port *port;
-+	struct hdac_hdmi_eld *eld;
-+
-+	memset(ucontrol->value.bytes.data, 0, ARRAY_SIZE(ucontrol->value.bytes.data));
-+
-+	pcm = get_hdmi_pcm_from_id(hdmi, kcontrol->id.device);
-+	if (!pcm) {
-+		dev_dbg(component->dev, "%s: no pcm, device %d\n", __func__,
-+			kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	if (list_empty(&pcm->port_list)) {
-+		dev_dbg(component->dev, "%s: empty port list, device %d\n",
-+			__func__, kcontrol->id.device);
-+		return 0;
-+	}
-+
-+	mutex_lock(&hdmi->pin_mutex);
-+
-+	list_for_each_entry(port, &pcm->port_list, head) {
-+		eld = &port->eld;
-+
-+		if (!eld->eld_valid)
-+			continue;
-+
-+		if (eld->eld_size > ARRAY_SIZE(ucontrol->value.bytes.data) ||
-+		    eld->eld_size > ELD_MAX_SIZE) {
-+			mutex_unlock(&hdmi->pin_mutex);
-+
-+			dev_err(component->dev, "%s: buffer too small, device %d eld_size %d\n",
-+				__func__, kcontrol->id.device, eld->eld_size);
-+			snd_BUG();
-+			return -EINVAL;
-+		}
-+
-+		memcpy(ucontrol->value.bytes.data, eld->eld_buffer,
-+		       eld->eld_size);
-+		break;
-+	}
-+
-+	mutex_unlock(&hdmi->pin_mutex);
-+
-+	return 0;
-+}
-+
-+static int hdac_hdmi_create_eld_ctl(struct snd_soc_component *component, struct hdac_hdmi_pcm *pcm)
-+{
-+	struct snd_kcontrol *kctl;
-+	struct snd_kcontrol_new hdmi_eld_ctl = {
-+		.access	= SNDRV_CTL_ELEM_ACCESS_READ |
-+			  SNDRV_CTL_ELEM_ACCESS_VOLATILE,
-+		.iface	= SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name	= "ELD",
-+		.info	= hdac_hdmi_eld_ctl_info,
-+		.get	= hdac_hdmi_eld_ctl_get,
-+		.device	= pcm->pcm_id,
-+	};
-+
-+	/* add ELD ctl with the device number corresponding to the PCM stream */
-+	kctl = snd_ctl_new1(&hdmi_eld_ctl, component);
-+	if (!kctl)
-+		return -ENOMEM;
-+
-+	pcm->eld_ctl = kctl;
-+
-+	return snd_ctl_add(component->card->snd_card, kctl);
-+}
-+
- static const struct snd_soc_dai_ops hdmi_dai_ops = {
- 	.startup = hdac_hdmi_pcm_open,
- 	.shutdown = hdac_hdmi_pcm_close,
-@@ -1784,6 +1913,15 @@ int hdac_hdmi_jack_init(struct snd_soc_dai *dai, int device,
- 		}
- 	}
- 
-+	/* add control for ELD Bytes */
-+	err = hdac_hdmi_create_eld_ctl(component, pcm);
-+	if (err < 0) {
-+		dev_err(&hdev->dev,
-+			"eld control add failed with err: %d for pcm: %d\n",
-+			err, device);
-+		return err;
-+	}
-+
- 	list_add_tail(&pcm->head, &hdmi->pcm_list);
- 
- 	return 0;
--- 
-2.17.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
