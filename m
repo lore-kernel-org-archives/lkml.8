@@ -7,225 +7,111 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78409C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E0B20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6056F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgHRRUW (ORCPT
+        id S1728729AbgHRRUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:20:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53029 "EHLO pegase1.c-s.fr"
+        Tue, 18 Aug 2020 13:20:24 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:48596 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbgHRRTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:19:40 -0400
+        id S1728623AbgHRRTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:19:36 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BWHhl4m1Jz9vCxl;
-        Tue, 18 Aug 2020 19:19:35 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BWHhg3Tvnz9vCy0;
+        Tue, 18 Aug 2020 19:19:31 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id B7KVi2z0IOah; Tue, 18 Aug 2020 19:19:35 +0200 (CEST)
+        with ESMTP id 8pkMd_j9NkKu; Tue, 18 Aug 2020 19:19:31 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhl3sJ5z9vCxg;
-        Tue, 18 Aug 2020 19:19:35 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWHhg2lZJz9vCxg;
+        Tue, 18 Aug 2020 19:19:31 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 670DE8B7EC;
-        Tue, 18 Aug 2020 19:19:37 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A9098B7EC;
+        Tue, 18 Aug 2020 19:19:33 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ssRtOrtcwVS9; Tue, 18 Aug 2020 19:19:37 +0200 (CEST)
+        with ESMTP id Zzzz-Z2qN1Ye; Tue, 18 Aug 2020 19:19:33 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 21F198B7D7;
-        Tue, 18 Aug 2020 19:19:37 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E96978B7D7;
+        Tue, 18 Aug 2020 19:19:32 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id F363D65CF4; Tue, 18 Aug 2020 17:19:36 +0000 (UTC)
-Message-Id: <f6eac65781b4a57220477c8864bca2b57f29a5d5.1597770847.git.christophe.leroy@csgroup.eu>
+        id C8C0565CF4; Tue, 18 Aug 2020 17:19:32 +0000 (UTC)
+Message-Id: <537c7082ee309a0bb9c67a50c5d9dd929aedb82d.1597770847.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1597770847.git.christophe.leroy@csgroup.eu>
 References: <cover.1597770847.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 24/25] powerpc/signal32: Isolate non-copy actions in
- save_user_regs() and save_tm_user_regs()
+Subject: [PATCH v2 20/25] signal: Add unsafe_put_compat_sigset()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 18 Aug 2020 17:19:36 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 17:19:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder actions in save_user_regs() and save_tm_user_regs() to
-regroup copies together in order to switch to user_access_begin()
-logic in a later patch.
+Implement 'unsafe' version of put_compat_sigset()
 
-Move non-copy actions into new functions called
-prepare_save_user_regs() and prepare_save_tm_user_regs().
+For the bigendian, use unsafe_put_user() directly
+to avoid intermediate copy through the stack.
+
+For the littleendian, use a straight unsafe_copy_to_user().
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/signal_32.c | 54 +++++++++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 13 deletions(-)
+ include/linux/compat.h | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 5b8a4ede142c..86539a4e0514 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -229,14 +229,31 @@ struct rt_sigframe {
-  * We only save the altivec/spe registers if the process has used
-  * altivec/spe instructions at some point.
-  */
-+static void prepare_save_user_regs(int ctx_has_vsx_region)
-+{
-+	/* Make sure floating point registers are stored in regs */
-+	flush_fp_to_thread(current);
-+#ifdef CONFIG_ALTIVEC
-+	if (current->thread.used_vr)
-+		flush_altivec_to_thread(current);
-+	if (cpu_has_feature(CPU_FTR_ALTIVEC))
-+		current->thread.vrsave = mfspr(SPRN_VRSAVE);
-+#endif
-+#ifdef CONFIG_VSX
-+	if (current->thread.used_vsr && ctx_has_vsx_region)
-+		flush_vsx_to_thread(current);
-+#endif
-+#ifdef CONFIG_SPE
-+	if (current->thread.used_spe)
-+		flush_spe_to_thread(current);
-+#endif
-+}
-+
- static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- 			  struct mcontext __user *tm_frame, int ctx_has_vsx_region)
- {
- 	unsigned long msr = regs->msr;
- 
--	/* Make sure floating point registers are stored in regs */
--	flush_fp_to_thread(current);
--
- 	/* save general registers */
- 	if (save_general_regs(regs, frame))
- 		return 1;
-@@ -244,7 +261,6 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- #ifdef CONFIG_ALTIVEC
- 	/* save altivec registers */
- 	if (current->thread.used_vr) {
--		flush_altivec_to_thread(current);
- 		if (__copy_to_user(&frame->mc_vregs, &current->thread.vr_state,
- 				   ELF_NVRREG * sizeof(vector128)))
- 			return 1;
-@@ -260,8 +276,6 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- 	 * most significant bits of that same vector. --BenH
- 	 * Note that the current VRSAVE value is in the SPR at this point.
- 	 */
--	if (cpu_has_feature(CPU_FTR_ALTIVEC))
--		current->thread.vrsave = mfspr(SPRN_VRSAVE);
- 	if (__put_user(current->thread.vrsave, (u32 __user *)&frame->mc_vregs[32]))
- 		return 1;
- #endif /* CONFIG_ALTIVEC */
-@@ -281,7 +295,6 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- 	 * contains valid data
- 	 */
- 	if (current->thread.used_vsr && ctx_has_vsx_region) {
--		flush_vsx_to_thread(current);
- 		if (copy_vsx_to_user(&frame->mc_vsregs, current))
- 			return 1;
- 		msr |= MSR_VSX;
-@@ -290,7 +303,6 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- #ifdef CONFIG_SPE
- 	/* save spe registers */
- 	if (current->thread.used_spe) {
--		flush_spe_to_thread(current);
- 		if (__copy_to_user(&frame->mc_vregs, current->thread.evr,
- 				   ELF_NEVRREG * sizeof(u32)))
- 			return 1;
-@@ -326,11 +338,23 @@ static int save_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
-  *
-  * See save_user_regs() and signal_64.c:setup_tm_sigcontexts().
-  */
--static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
--			     struct mcontext __user *tm_frame, unsigned long msr)
-+static void prepare_save_tm_user_regs(void)
- {
- 	WARN_ON(tm_suspend_disabled);
- 
-+#ifdef CONFIG_ALTIVEC
-+	if (cpu_has_feature(CPU_FTR_ALTIVEC))
-+		current->thread.ckvrsave = mfspr(SPRN_VRSAVE);
-+#endif
-+#ifdef CONFIG_SPE
-+	if (current->thread.used_spe)
-+		flush_spe_to_thread(current);
-+#endif
-+}
-+
-+static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
-+			     struct mcontext __user *tm_frame, unsigned long msr)
-+{
- 	/* Save both sets of general registers */
- 	if (save_general_regs(&current->thread.ckpt_regs, frame)
- 	    || save_general_regs(regs, tm_frame))
-@@ -374,8 +398,6 @@ static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame
- 	 * significant bits of a vector, we "cheat" and stuff VRSAVE in the
- 	 * most significant bits of that same vector. --BenH
- 	 */
--	if (cpu_has_feature(CPU_FTR_ALTIVEC))
--		current->thread.ckvrsave = mfspr(SPRN_VRSAVE);
- 	if (__put_user(current->thread.ckvrsave,
- 		       (u32 __user *)&frame->mc_vregs[32]))
- 		return 1;
-@@ -427,7 +449,6 @@ static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame
- 	 * simply the same as in save_user_regs().
- 	 */
- 	if (current->thread.used_spe) {
--		flush_spe_to_thread(current);
- 		if (__copy_to_user(&frame->mc_vregs, current->thread.evr,
- 				   ELF_NEVRREG * sizeof(u32)))
- 			return 1;
-@@ -447,6 +468,8 @@ static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame
- 	return 0;
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index d38c4d7e83bd..7ec6e44b093b 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -442,6 +442,38 @@ put_compat_sigset(compat_sigset_t __user *compat, const sigset_t *set,
+ #endif
  }
- #else
-+static void prepare_save_tm_user_regs(void) { }
+ 
++#ifdef CONFIG_CPU_BIG_ENDIAN
++#define unsafe_put_compat_sigset(compat, set, label) do {		\
++	compat_sigset_t __user *__c = compat;				\
++	const sigset_t *__s = set;					\
++									\
++	switch (_NSIG_WORDS) {						\
++	case 4:								\
++		unsafe_put_user(__s->sig[3] >> 32, &__c->sig[7], label);	\
++		unsafe_put_user(__s->sig[3], &__c->sig[6], label);	\
++		fallthrough;						\
++	case 3:								\
++		unsafe_put_user(__s->sig[2] >> 32, &__c->sig[5], label);	\
++		unsafe_put_user(__s->sig[2], &__c->sig[4], label);	\
++		fallthrough;						\
++	case 2:								\
++		unsafe_put_user(__s->sig[1] >> 32, &__c->sig[3], label);	\
++		unsafe_put_user(__s->sig[1], &__c->sig[2], label);	\
++		fallthrough;						\
++	case 1:								\
++		unsafe_put_user(__s->sig[0] >> 32, &__c->sig[1], label);	\
++		unsafe_put_user(__s->sig[0], &__c->sig[0], label);	\
++	}								\
++} while (0)
++#else
++#define unsafe_put_compat_sigset(compat, set, label) do {		\
++	compat_sigset_t __user *__c = compat;				\
++	const sigset_t *__s = set;					\
++									\
++	unsafe_copy_to_user(__c, __s, sizeof(*__c), label);		\
++} while (0)
++#endif
 +
- static int save_tm_user_regs(struct pt_regs *regs, struct mcontext __user *frame,
- 			     struct mcontext __user *tm_frame, unsigned long msr)
- {
-@@ -790,9 +813,11 @@ int handle_rt_signal32(struct ksignal *ksig, sigset_t *oldset,
- 		flush_icache_range(tramp, tramp + 2 * sizeof(unsigned long));
- 
- 	if (MSR_TM_ACTIVE(msr)) {
-+		prepare_save_tm_user_regs();
- 		if (save_tm_user_regs(regs, mctx, tm_mctx, msr))
- 			goto badframe;
- 	} else {
-+		prepare_save_user_regs(1);
- 		if (save_user_regs(regs, mctx, tm_mctx, 1))
- 			goto badframe;
- 	}
-@@ -881,9 +906,11 @@ int handle_signal32(struct ksignal *ksig, sigset_t *oldset,
- 		flush_icache_range(tramp, tramp + 2 * sizeof(unsigned long));
- 
- 	if (MSR_TM_ACTIVE(msr)) {
-+		prepare_save_tm_user_regs();
- 		if (save_tm_user_regs(regs, mctx, tm_mctx, msr))
- 			goto badframe;
- 	} else {
-+		prepare_save_user_regs(1);
- 		if (save_user_regs(regs, mctx, tm_mctx, 1))
- 			goto badframe;
- 	}
-@@ -1038,6 +1065,7 @@ SYSCALL_DEFINE3(swapcontext, struct ucontext __user *, old_ctx,
- 		 */
- 		mctx = (struct mcontext __user *)
- 			((unsigned long) &old_ctx->uc_mcontext & ~0xfUL);
-+		prepare_save_user_regs(ctx_has_vsx_region);
- 		if (save_user_regs(regs, mctx, NULL, ctx_has_vsx_region))
- 			return -EFAULT;
- 		if (!user_write_access_begin(old_ctx, ctx_size))
+ extern int compat_ptrace_request(struct task_struct *child,
+ 				 compat_long_t request,
+ 				 compat_ulong_t addr, compat_ulong_t data);
 -- 
 2.25.0
 
