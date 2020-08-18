@@ -2,168 +2,142 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD06C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FE7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57DE20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5274020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597776709;
+	bh=5aj6WCl7jg0yhKZxBLruvn30JvT8Avfp6BW+nPoSpAI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FpS8h3g2B4aTaar9tgC64VmxU9reRneXOQ74YT3yR3RKqqOhCSgAj3F/iNdu/e7eE
+	 e/Sj+C15gDvcuAd+79l/JhF/9pD3Pd8IgO+EBrC8odKADX0RwmFAQKMETs6GsKaag+
+	 rMKT6MNPHSzGAk8eXrLLUhw2DCBXAOut922L7KYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHRSsu (ORCPT
+        id S1726681AbgHRSvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:48:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:57761 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgHRSsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:48:17 -0400
-IronPort-SDR: uDcTOeZIRJa421Z+CAwjLuhYA6eQvXCs5SBz7ZG244eIcE5Q9opagzpKA3x4vByJdn9PJOdLTK
- WDwpp1ghJO+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="156062851"
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="156062851"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 11:48:15 -0700
-IronPort-SDR: cWBVF1DfDv7ERzpS3Zg6X7K51sFh/SKk6VbTnQra1Pb9Bv3lvDG4v6KtVL5Ky32JBKc6XLW8Sh
- EmysAwh/ehDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,328,1592895600"; 
-   d="scan'208";a="320191197"
-Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Aug 2020 11:48:15 -0700
-Subject: [RFC][PATCH 8/9] mm/vmscan: never demote for memcg reclaim
-To:     linux-kernel@vger.kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        yang.shi@linux.alibaba.com, rientjes@google.com,
-        ying.huang@intel.com, dan.j.williams@intel.com
-From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Tue, 18 Aug 2020 11:41:36 -0700
-References: <20200818184122.29C415DF@viggo.jf.intel.com>
-In-Reply-To: <20200818184122.29C415DF@viggo.jf.intel.com>
-Message-Id: <20200818184136.7FD537AA@viggo.jf.intel.com>
+        Tue, 18 Aug 2020 14:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgHRSvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 14:51:45 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82610C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:51:44 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c15so10780807lfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U7uYPAcT0a2iCnawB895QmRQ5uyxHh+JN3tvANE4Kno=;
+        b=OfpfhktcB0EPTZRtZL54l/zyIACV/6gX4M1jGmcmJz+vzsbzEUHkXqlwyyhXnVEw/b
+         pb0mQNipDGcNuotJJcAm05QIjnugVLc3nSBHazWgWqbIC1R7nPjSnZAExUgdxpbrDVDF
+         qQ/ANj0NRdAF1Kakd5EKBxqxVxEd2U/8zf13I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U7uYPAcT0a2iCnawB895QmRQ5uyxHh+JN3tvANE4Kno=;
+        b=hOJaqNgjUaT2QVZTsmBJgddG6LAfgScam51jlBSiGBNtdNEKjiiwqJW3nF/lsrPn6v
+         Nk61dfGw50VJr9fZSm0AZUuj/Sk22gYLyY1z7/Vg1UnZ9gBYHlxb77UGdlpO+R/EFX03
+         b16SmkJlUk58LCSQKMbg9LSOAoqROpDgQyYA+KsCEZnoSIFlXwUHIHt8zmYPp2ZHEqbr
+         6PyTQ0IvLjjANwhqYjxbRZF9J1Zk6RdB9IsKw1oaYK+4FMt8HLbkx7OjDXDU55GHsBTB
+         vXa5RgZTN2aS4ij2cAd8R8bEbDa6rQfj+T40SYGL9RxFjbfKHqdIUd/BZurWAVUsc8Vm
+         GzDg==
+X-Gm-Message-State: AOAM533TymvyI7ZSY7BHdpQ4of6/vu7AJdmwAZQPjEaWLMerKjEIbxdD
+        YEbmlN0pQmW/NNM6SjIC2MVp2boZeYd7fA==
+X-Google-Smtp-Source: ABdhPJzN2+zAZTyr6dcdEHWQM2lNv2oXHDafc06ClspL7RD6xS81cwZ9V6iqu6ae4vFteiXzaYD9BA==
+X-Received: by 2002:a19:4094:: with SMTP id n142mr10371879lfa.166.1597776702601;
+        Tue, 18 Aug 2020 11:51:42 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id w19sm6096267ljd.112.2020.08.18.11.51.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 11:51:42 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id d2so10775315lfj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 11:51:42 -0700 (PDT)
+X-Received: by 2002:ac2:46d0:: with SMTP id p16mr10615970lfo.142.1597776701601;
+ Tue, 18 Aug 2020 11:51:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
+ <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
+ <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com> <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
+In-Reply-To: <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 Aug 2020 11:51:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
+Message-ID: <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
+Subject: Re: file metadata via fs API
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 5:50 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> How do you propose handling variable size attributes, like the list of
+> fs options?
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+I really REALLY think those things should just be ASCII data.
 
-Global reclaim aims to reduce the amount of memory used on
-a given node or set of nodes.  Migrating pages to another
-node serves this purpose.
+I think marshalling binary data is actively evil and wrong. It's great
+for well-specified wire protocols. It's great for internal
+communication in user space. It's *NOT* great for a kernel system call
+interface.
 
-memcg reclaim is different.  Its goal is to reduce the
-total memory consumption of the entire memcg, across all
-nodes.  Migration does not assist memcg reclaim because
-it just moves page contents between nodes rather than
-actually reducing memory consumption.
+One single simple binary structure? Sure. That's how system calls
+work. I'm not claiming that things like "stat()" are wrong because
+they take binary data.
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Suggested-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
----
+But marshalling random binary structures into some buffer? Let's avoid
+that. Particularly for these kinds of fairly free-form things like fs
+options.
 
- b/mm/vmscan.c |   33 +++++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 8 deletions(-)
+Those things *are* strings, most of them. Exactly because it needs a
+level of flexibility that binary data just doesn't have.
 
-diff -puN mm/vmscan.c~never-demote-for-memcg-reclaim mm/vmscan.c
---- a/mm/vmscan.c~never-demote-for-memcg-reclaim	2020-08-18 11:36:56.442583170 -0700
-+++ b/mm/vmscan.c	2020-08-18 11:36:56.447583170 -0700
-@@ -296,8 +296,11 @@ static bool writeback_throttling_sane(st
- #endif
- 
- static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
--					  int node_id)
-+					  int node_id,
-+					  struct scan_control *sc)
- {
-+	bool in_cgroup_reclaim = false;
-+
- 	/* Always age anon pages when we have swap */
- 	if (memcg == NULL) {
- 		if (get_nr_swap_pages() > 0)
-@@ -307,8 +310,18 @@ static inline bool can_reclaim_anon_page
- 			return true;
- 	}
- 
--	/* Also age anon pages if we can auto-migrate them */
--	if (next_demotion_node(node_id) >= 0)
-+	/* Can only be in memcg reclaim in paths with valid 'sc': */
-+	if (sc && cgroup_reclaim(sc))
-+		in_cgroup_reclaim = true;
-+
-+	/*
-+	 * Also age anon pages if we can auto-migrate them.
-+	 *
-+	 * Migrating a page does not reduce comsumption of a
-+	 * memcg so should not be performed when in memcg
-+	 * reclaim.
-+	 */
-+	if (!in_cgroup_reclaim && (next_demotion_node(node_id) >= 0))
- 		return true;
- 
- 	/* No way to reclaim anon pages */
-@@ -326,7 +339,7 @@ unsigned long zone_reclaimable_pages(str
- 
- 	nr = zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_FILE) +
- 		zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_FILE);
--	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone)))
-+	if (can_reclaim_anon_pages(NULL, zone_to_nid(zone), NULL))
- 		nr += zone_page_state_snapshot(zone, NR_ZONE_INACTIVE_ANON) +
- 			zone_page_state_snapshot(zone, NR_ZONE_ACTIVE_ANON);
- 
-@@ -1070,6 +1083,10 @@ bool migrate_demote_page_ok(struct page
- 	VM_BUG_ON_PAGE(PageHuge(page), page);
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 
-+	/* It is pointless to do demotion in memcg reclaim */
-+	if (cgroup_reclaim(sc))
-+		return false;
-+
- 	if (next_nid == NUMA_NO_NODE)
- 		return false;
- 	if (PageTransHuge(page) && !thp_migration_supported())
-@@ -2369,7 +2386,7 @@ static void get_scan_count(struct lruvec
- 	enum lru_list lru;
- 
- 	/* If we have no swap space, do not bother scanning anon pages. */
--	if (!sc->may_swap || !can_reclaim_anon_pages(memcg, pgdat->node_id)) {
-+	if (!sc->may_swap || !can_reclaim_anon_pages(memcg, pgdat->node_id, sc)) {
- 		scan_balance = SCAN_FILE;
- 		goto out;
- 	}
-@@ -2653,7 +2670,7 @@ static void shrink_lruvec(struct lruvec
- 	 * rebalance the anon lru active/inactive ratio.
- 	 */
- 	if (can_reclaim_anon_pages(lruvec_memcg(lruvec),
--			       lruvec_pgdat(lruvec)->node_id) &&
-+			       lruvec_pgdat(lruvec)->node_id, sc) &&
- 	    inactive_is_low(lruvec, LRU_INACTIVE_ANON))
- 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
- 				   sc, LRU_ACTIVE_ANON);
-@@ -2724,7 +2741,7 @@ static inline bool should_continue_recla
- 	 */
- 	pages_for_compaction = compact_gap(sc->order);
- 	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
--	if (can_reclaim_anon_pages(NULL, pgdat->node_id))
-+	if (can_reclaim_anon_pages(NULL, pgdat->node_id, sc))
- 		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
- 
- 	return inactive_lru_pages > pages_for_compaction;
-@@ -3485,7 +3502,7 @@ static void age_active_anon(struct pglis
- 	struct mem_cgroup *memcg;
- 	struct lruvec *lruvec;
- 
--	if (!can_reclaim_anon_pages(NULL, pgdat->node_id))
-+	if (!can_reclaim_anon_pages(NULL, pgdat->node_id, sc))
- 		return;
- 
- 	lruvec = mem_cgroup_lruvec(NULL, pgdat);
-_
+So I'd suggest something that is very much like "statfsat()", which
+gets a buffer and a length, and returns an extended "struct statfs"
+*AND* just a string description at the end.
+
+And if you don't pass a sufficiently big buffer, it will not do some
+random "continuations". No state between system calls. It gets
+truncated, and you need to pass a bigger buffer, kind of like
+"snprintf()".
+
+I think people who have problems parsing plain ASCII text are just
+wrong. It's not that expensive. The thing that makes /proc/mounts
+expensive is not the individual lines - it's that there are a lot of
+them.
+
+                     Linus
