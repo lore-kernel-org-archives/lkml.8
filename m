@@ -2,126 +2,109 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58805C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3714C2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3332076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="lbSYVl4i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bic/hW8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHRQ3N (ORCPT
+        id S1728266AbgHRQ31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:29:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
+        Tue, 18 Aug 2020 12:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgHRQ1Y (ORCPT
+        with ESMTP id S1728250AbgHRQ01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:27:24 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F574C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:27:24 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c6so18098633ilo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:27:24 -0700 (PDT)
+        Tue, 18 Aug 2020 12:26:27 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC37C061389;
+        Tue, 18 Aug 2020 09:26:26 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id y11so9825661qvl.4;
+        Tue, 18 Aug 2020 09:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oryb9Gw/XAffWSWQvfMiaYrjBvPkCAMTzbIDIXNJbnI=;
-        b=lbSYVl4iccAlsHjqO4TXn8l7W42NVRbWABhoe/TSlReejliAxJF6mSRBLxDZNPJNZh
-         VId4k9ffeWPZhk7cbu1TO7cS/PNEVLwghIPT6w6bL9qC/JdbsNwj29BHb6Di8pjDYd6t
-         Mb2Tj5uHQalzN89CEw8MTgpDGxSlc9Qr6rOFCyrfhM2cJuE07faFRcVHPHcuNjNsYD8h
-         gn37CS6aTkVi9vjW3F+tGK72J0Xcltvu5GUZOJml8o8u07l9AaJo4Zwu5kdMWo9WTeex
-         bxkuSzPNLlN7W1jffzHdrMP5MTNsNLgCT2Qq6iS6IKQpIJZweyCvjyX90YIefZjzDyp2
-         IE1w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iIX0sNpmnJ6kXFsh0zKxLpYcQTRQO7AV2JMPqyWSiic=;
+        b=Bic/hW8DHiQT6NI9ZYD2pLUalLPzv43IhrECzIzAy1blLkWVMCvnvwwfyDaiES+8+h
+         c+Y16gYMVadeuQ1AQqjt05lsi7m2uHzKuYFVoNIFTkHuKdkiByM6epBC11bVKxykIyja
+         g64CzhD91jNskkR/oUyM/MVLgWWxnqw488Y35xkz9qJfNcAirZtdgSm76DbUSaHxPhEs
+         QX9ZiyNtrIyncv6FIoIYpQ/o4o5Wy6rI2wm+Lr9PXFwKG1Hpx95jztSCYvXqwoXV9fq/
+         7qkR6GyaKIv3FBdHmaHGu84rVwj4YT2KH8jUwSEqJ07LShZTq4j9JnVKyQD21t5thlHb
+         My5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oryb9Gw/XAffWSWQvfMiaYrjBvPkCAMTzbIDIXNJbnI=;
-        b=RvlGillKtpUUhSHqCAmj6yaWyXhQURUnq/YymJRxXwP9D6gR5zA3IVvNyqTTt4jvHr
-         Hkw9/LuXxHE3Y5iq18z5LLUqIa6sQ+Sc8qYrcu31vUCig4NAmX5HuGN9DMLyxanIyW3k
-         knXxHhHsksGKLlkTTo+FhekjOqltIiKB/eKazpYiWZ35ViFDkAPrken3puu9WeQUBLtC
-         eMuKX7LcwE1GNKXlj94Fb4d6rI1nt13OUCKhEQdoDWVG7OPFfRTv69PMExFy/siVxXZg
-         boy5iiEhA4cADPw0p9P0gpJLwgheF48GqB4NRQ2SofS+wS0riNOphEjAHC6ys8bp2CwB
-         4AJg==
-X-Gm-Message-State: AOAM5337VkpnBcdqjD8VXE8zQUgsW5YZq957UX5HMUCpwZJeQERovM4y
-        I8tmzV9Vay5IOImqewCsUSbApM2g7L3WUQ3ob+u0WQ==
-X-Google-Smtp-Source: ABdhPJzG6Vqg4L5Wbx1ozdnU3GZmWNDJJUJs9j/zG7IUQgWN6QYwYtaA8cti9q2O+EPbmg1Ym7IzGb6KgGhztaQ6jQY=
-X-Received: by 2002:a92:d30a:: with SMTP id x10mr18640134ila.287.1597768043689;
- Tue, 18 Aug 2020 09:27:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iIX0sNpmnJ6kXFsh0zKxLpYcQTRQO7AV2JMPqyWSiic=;
+        b=HlWtDXySbjDIG53XuijPF+bp7KAUb8a46mbMH0fpCF9ySgfw330iNea5ax5+OEe83s
+         Brg3t+trfApIIPiuNjfGhKv7RSEQXhvHJ2zoOcJPBfn1r0Gv2ayB0I6CudR0Vbd2FgXo
+         mY+4uOU/Yk0IEvmM+dA38Tx1Kzm7CdsaQuulZ5zExsQCM9uLIxkajMzjtOajoVw1eFUP
+         Nq+Ki9Px9frU7qm6KBJsulqsbd3xfF4ehiHIspjuEEjdxrLGeODATb7fbk0HqGqCMcLy
+         D+OKMMSYJ8qfk9GEohl5BAHzdlVfZ/du7sjjOh+waHsGi/EiN/HWLrqsoiJK3re1nE4z
+         +Bhw==
+X-Gm-Message-State: AOAM532qINWlgboax2RAhFe/41PmO00J3Y3UcNggPSfWqd6QfMAI75Le
+        ceO+hmBmqImOqFoUWXywE18=
+X-Google-Smtp-Source: ABdhPJy8t33CnDNghotiO9kPZ14KObEgHCT8T7IzUxyWuvEpZJ6mUqWnxWZvLoD137JlGgSdlYORzg==
+X-Received: by 2002:a0c:f2c8:: with SMTP id c8mr19867270qvm.64.1597767986007;
+        Tue, 18 Aug 2020 09:26:26 -0700 (PDT)
+Received: from tong-desktop.local ([2601:5c0:c100:b9d:f9e2:64b4:fbc4:6485])
+        by smtp.googlemail.com with ESMTPSA id u8sm11928528qkj.9.2020.08.18.09.26.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 09:26:25 -0700 (PDT)
+From:   Tong Zhang <ztong0001@gmail.com>
+To:     gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     ztong0001@gmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] tty: serial: earlycon dependency
+Date:   Tue, 18 Aug 2020 12:25:57 -0400
+Message-Id: <20200818162556.6621-1-ztong0001@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200818111954.GA283417@kroah.com>
+References: <20200818111954.GA283417@kroah.com>
 MIME-Version: 1.0
-References: <20200817170535.17041-1-brgl@bgdev.pl> <20200817170535.17041-2-brgl@bgdev.pl>
- <20200817173908.GS1891694@smile.fi.intel.com> <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
- <20200818082500.GB1891694@smile.fi.intel.com>
-In-Reply-To: <20200818082500.GB1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 18 Aug 2020 18:27:12 +0200
-Message-ID: <CAMRc=Md5yrgxnPf=qwKYhwHACcq-XeKOKZ76OwYdMGO8SgYmzQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:40 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Aug 17, 2020 at 10:02:05PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> ...
->
-> > > > +static struct devres *to_devres(void *data)
-> > > > +{
-> > > > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct dev=
-res),
-> > > > +                                                 ARCH_KMALLOC_MINA=
-LIGN));
-> > >
-> > > Do you really need both explicit castings?
-> > >
-> >
-> > Yeah, we can probably drop the (struct devres *) here.
->
-> void * -> u8 * here is also not needed, it is considered byte access IIRC=
-.
->
+parse_options() in drivers/tty/serial/earlycon.c calls uart_parse_earlycon
+in drivers/tty/serial/serial_core.c therefore selecting SERIAL_EARLYCON
+should automatically select SERIAL_CORE, otherwise will result in symbol
+not found error during linking if SERIAL_CORE is not configured as builtin.
 
-Actually it turns out that while we don't need the (void *) -> (u8 *)
-casting, we must cast to (struct devres *) or the following error is
-produced:
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+---
 
-drivers/base/devres.c: In function =E2=80=98to_devres=E2=80=99:
-drivers/base/devres.c:41:21: error: returning =E2=80=98u8 *=E2=80=99 {aka =
-=E2=80=98unsigned
-char *=E2=80=99} from a function with incompatible return type =E2=80=98str=
-uct devres
-*=E2=80=99 [-Werror=3Dincompatible-pointer-types]
-  return ((u8 *)data - ALIGN(sizeof(struct devres),
-         ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        ARCH_KMALLOC_MINALIGN));
-        ~~~~~~~~~~~~~~~~~~~~~~~
+Fixes: 9aac5887595b ("tty/serial: add generic serial earlycon")
+v2: I made an attempt to fix the commit log
+v3: I made another attempt to fix the commit log and I also changed
+select to depends according to Jiri's comment
 
-Bart
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 8a0352eb337c..6aed721e9287 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -8,6 +8,7 @@ menu "Serial drivers"
+ 
+ config SERIAL_EARLYCON
+ 	bool
++	depends SERIAL_CORE
+ 	help
+ 	  Support for early consoles with the earlycon parameter. This enables
+ 	  the console before standard serial driver is probed. The console is
+-- 
+2.25.1
+
