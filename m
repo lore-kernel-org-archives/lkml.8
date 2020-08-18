@@ -2,161 +2,231 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D292C206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13D5206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AyuxvaH6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="qodT9E7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgHRPBv (ORCPT
+        id S1727969AbgHRPCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:01:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41672 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbgHRPB2 (ORCPT
+        Tue, 18 Aug 2020 11:02:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgHRPB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Aug 2020 11:01:28 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07IExsJD182519;
-        Tue, 18 Aug 2020 11:01:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=jAGAWAiA+qX2oUU185JNI/grfCFzmYtLys7ctYgoqNs=;
- b=AyuxvaH6OxcDtqlBtc6b1xCIbb+4/VwXoPWWxiaMqIzctdAg5Vairb2td0PJdUE617c/
- CuYIY+U9GzxjtrQd++H4wjO0kOxntwa9N9Lvzre9mnBt9DiKNcxFYWNflu8S2J/Zu7cJ
- CKLQ7qsaj4lcjdyfjSY8JiwxI6z+c7YnhZ7DxbL26hONo5yolI8zmrJLRCePBtQkaSlv
- 0eJHM35U3Hk50cgyJDLW+gJS3qMYn2ZPXPMgZyXuBKol2cb2PlN6ASkzJLgmnYemmcRb
- wMCxWxybLbqG2r8zQW4LvO0mkyKkurzCvQW1TjK6Y0SfCY1fkj5iH+dKcRtfQ+yaTQfK jg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304rtb0t6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 11:00:52 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07IF09k3183085;
-        Tue, 18 Aug 2020 11:00:39 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304rtayv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 11:00:37 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07IEqHR1004913;
-        Tue, 18 Aug 2020 14:58:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3304bt0sp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 14:58:36 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07IEwYxH22610236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 14:58:34 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 099CD4203F;
-        Tue, 18 Aug 2020 14:58:34 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AA5D42042;
-        Tue, 18 Aug 2020 14:58:33 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.28.154])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Aug 2020 14:58:33 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v8 1/2] virtio: let arch validate VIRTIO features
-Date:   Tue, 18 Aug 2020 16:58:30 +0200
-Message-Id: <1597762711-3550-2-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
-References: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_10:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=1 phishscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxscore=0 clxscore=1015 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008180102
+Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.secure-endpoints.com [IPv6:2001:470:1f07:f77:70f5:c082:a96a:5685])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30CCC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
+        d=auristor.com; s=MDaemon; r=y; t=1597762881; x=1598367681;
+        i=jaltman@auristor.com; q=dns/txt; h=Subject:To:Cc:References:
+        From:Organization:Message-ID:Date:User-Agent:MIME-Version:
+        In-Reply-To:Content-Type; bh=Tcrx0CBuzXKry9+g+roR0MsjkXc6IXhaTNW
+        VyukqMro=; b=qodT9E7OE+FneZ3X9IuxqOAwJPIg8Hau0zhvom5bw6obTBB8Cu1
+        1OS6KvbuMWk9TLaniQu68d9UEFu5vonrQnArVKaSyNIxEpZekwUvklPFVKf3SVdL
+        2s1HnBoA/laPTPF4yqs2b2nfLudaV/Uznd8h7YrydIQxEMTdfwUG8f1k=
+X-MDAV-Result: clean
+X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Tue, 18 Aug 2020 11:01:21 -0400
+Received: from [IPv6:2604:2000:1741:8407:31b2:27ea:a55f:abe6] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v20.0.1) 
+        with ESMTPSA id md5001002630221.msg; Tue, 18 Aug 2020 11:01:19 -0400
+X-MDRemoteIP: 2604:2000:1741:8407:31b2:27ea:a55f:abe6
+X-MDHelo: [IPv6:2604:2000:1741:8407:31b2:27ea:a55f:abe6]
+X-MDArrival-Date: Tue, 18 Aug 2020 11:01:19 -0400
+X-MDOrigin-Country: United States, North America
+X-Authenticated-Sender: jaltman@auristor.com
+X-Return-Path: prvs=1499b3761b=jaltman@auristor.com
+X-Envelope-From: jaltman@auristor.com
+X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
+Subject: Re: file metadata via fs API (was: [GIT PULL] Filesystem Information)
+To:     "Linus Torvalds (torvalds@linux-foundation.org)" 
+        <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+ <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com>
+ <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk>
+ <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <679456f1-5867-4017-b1d6-95197d2fa81b@auristor.com>
+ <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
+From:   Jeffrey E Altman <jaltman@auristor.com>
+Organization: AuriStor, Inc.
+Message-ID: <cc774343-1782-6479-306b-4b0d7146bb6e@auristor.com>
+Date:   Tue, 18 Aug 2020 11:01:10 -0400
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=whLhwum2E+qperD=TypGHXxoBtXOu-HHDd9L9_XFFyiaA@mail.gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070203090704080909030005"
+X-MDCFSigsAdded: auristor.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An architecture may need to validate the VIRTIO devices features
-based on architecture specifics.
+This is a cryptographically signed message in MIME format.
 
-Provide a new Kconfig entry, CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS,
-the architecture can select when it provides a callback named
-arch_has_restricted_memory_access to validate the virtio device
-features.
+--------------ms070203090704080909030005
+Content-Type: multipart/mixed;
+ boundary="------------15A85830EC70DC04AB47698C"
+Content-Language: en-US
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- drivers/virtio/Kconfig        | 6 ++++++
- drivers/virtio/virtio.c       | 4 ++++
- include/linux/virtio_config.h | 9 +++++++++
- 3 files changed, 19 insertions(+)
+This is a multi-part message in MIME format.
+--------------15A85830EC70DC04AB47698C
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 5809e5f5b157..eef09e3c92f9 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -6,6 +6,12 @@ config VIRTIO
- 	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
- 	  or CONFIG_S390_GUEST.
- 
-+config ARCH_HAS_RESTRICTED_MEMORY_ACCESS
-+	bool
-+	help
-+	  This option is selected by any architecture enforcing
-+	  VIRTIO_F_IOMMU_PLATFORM
-+
- menuconfig VIRTIO_MENU
- 	bool "Virtio drivers"
- 	default y
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index a977e32a88f2..1471db7d6510 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -176,6 +176,10 @@ int virtio_finalize_features(struct virtio_device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = arch_has_restricted_memory_access(dev);
-+	if (ret)
-+		return ret;
-+
- 	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
- 		return 0;
- 
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index bb4cc4910750..f6b82541c497 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -459,4 +459,13 @@ static inline void virtio_cwrite64(struct virtio_device *vdev,
- 		_r;							\
- 	})
- 
-+#ifdef CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS
-+int arch_has_restricted_memory_access(struct virtio_device *dev);
-+#else
-+static inline int arch_has_restricted_memory_access(struct virtio_device *dev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS */
-+
- #endif /* _LINUX_VIRTIO_CONFIG_H */
--- 
-2.25.1
+On 8/14/2020 1:05 PM, Linus Torvalds (torvalds@linux-foundation.org) wrot=
+e:
+> Honestly, I really think you may want an extended [f]statfs(), not
+> some mount tracking.
+>=20
+>                  Linus
+
+Linus,
+
+Thank you for the reply.  Perhaps some of the communication disconnect
+is due to which thread this discussion is taking place on.  My
+understanding is that there were two separate pull requests.  One for
+mount notifications and the other for filesystem information.  This
+thread is derived from the pull request entitled "Filesystem
+Information" and my response was a request for use cases.  The
+assumption being that the request was related to the subject.
+
+I apologize for creating unnecessary noise due to my misinterpretation
+of your intended question.  The use cases I described and the types of
+filesystem information required to satisfy them do not require mount
+tracking.
+
+Jeffrey Altman
+
+
+--------------15A85830EC70DC04AB47698C
+Content-Type: text/x-vcard; charset=utf-8;
+ name="jaltman.vcf"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="jaltman.vcf"
+
+begin:vcard
+fn:Jeffrey Altman
+n:Altman;Jeffrey
+org:AuriStor, Inc.
+adr:;;255 W 94TH ST STE 6B;New York;NY;10025-6985;United States
+email;internet:jaltman@auristor.com
+title:CEO
+tel;work:+1-212-769-9018
+url:https://www.linkedin.com/in/jeffreyaltman/
+version:2.1
+end:vcard
+
+
+--------------15A85830EC70DC04AB47698C--
+
+--------------ms070203090704080909030005
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+DGswggXSMIIEuqADAgECAhBAAW0B1qVVQ32wvx2EXYU6MA0GCSqGSIb3DQEBCwUAMDoxCzAJ
+BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEy
+MB4XDTE5MDkwNTE0MzE0N1oXDTIyMTEwMTE0MzE0N1owcDEvMC0GCgmSJomT8ixkAQETH0Ew
+MTQxMEMwMDAwMDE2RDAxRDZBNTQwMDAwMDQ0NDcxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
+YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCY1TC9QeWnUgEoJ81FcAVnhGn/AWuzvkYRUG5/ZyXDdaM212e8
+ybCklgSmZweqNdrfaaHXk9vwjpvpD4YWgb07nJ1QBwlvRV/VPAaDdneIygJJWBCzaMVLttKO
+0VimH/I/HUwFBQT2mrktucCEf2qogdi2P+p5nuhnhIUiyZ71Fo43gF6cuXIMV/1rBNIJDuwM
+Q3H8zi6GL0p4mZFZDDKtbYq2l8+MNxFvMrYcLaJqejQNQRBuZVfv0Fq9pOGwNLAk19baIw3U
+xdwx+bGpTtS63Py1/57MQ0W/ZXE/Ocnt1qoDLpJeZIuEBKgMcn5/iN9+Ro5zAuOBEKg34wBS
+8QCTAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
+BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
+BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
+Mi5wN2MwHwYDVR0jBBgwFoAUpHPa72k1inXMoBl7CDL4a4nkQuwwCQYDVR0TBAIwADCCASsG
+A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
+L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
+bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
+aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
+YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
+ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
+dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTIuY3JsMB8GA1UdEQQY
+MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBR7pHsvL4H5GdzNToI9e5BuzV19
+bzAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAFlm
+JYk4Ff1v/n0foZkv661W4LCRtroBaVykOXetrDDOQNK2N6JdTa146uIZVgBeU+S/0DLvJBKY
+tkUHQ9ovjXJTsuCBmhIIw3YlHoFxbku0wHEpXMdFUHV3tUodFJJKF3MbC8j7dOMkag59/Mdz
+Sjszdvit0av9nTxWs/tRKKtSQQlxtH34TouIke2UgP/Nn901QLOrJYJmtjzVz8DW3IYVxfci
+SBHhbhJTdley5cuEzphELo5NR4gFjBNlxH7G57Hno9+EWILpx302FJMwTgodIBJbXLbPMHou
+xQbOL2anOTUMKO8oH0QdQHCtC7hpgoQa7UJYJxDBI+PRaQ/HObkwggaRMIIEeaADAgECAhEA
++d5Wf8lNDHdw+WAbUtoVOzANBgkqhkiG9w0BAQsFADBKMQswCQYDVQQGEwJVUzESMBAGA1UE
+ChMJSWRlblRydXN0MScwJQYDVQQDEx5JZGVuVHJ1c3QgQ29tbWVyY2lhbCBSb290IENBIDEw
+HhcNMTUwMjE4MjIyNTE5WhcNMjMwMjE4MjIyNTE5WjA6MQswCQYDVQQGEwJVUzESMBAGA1UE
+ChMJSWRlblRydXN0MRcwFQYDVQQDEw5UcnVzdElEIENBIEExMjCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBANGRTTzPCic0kq5L6ZrUJWt5LE/n6tbPXPhGt2Egv7plJMoEpvVJ
+JDqGqDYymaAsd8Hn9ZMAuKUEFdlx5PgCkfu7jL5zgiMNnAFVD9PyrsuF+poqmlxhlQ06sFY2
+hbhQkVVQ00KCNgUzKcBUIvjv04w+fhNPkwGW5M7Ae5K5OGFGwOoRck9GG6MUVKvTNkBw2/vN
+MOd29VGVTtR0tjH5PS5yDXss48Yl1P4hDStO2L4wTsW2P37QGD27//XGN8K6amWB6F2XOgff
+/PmlQjQOORT95PmLkwwvma5nj0AS0CVp8kv0K2RHV7GonllKpFDMT0CkxMQKwoj+tWEWJTiD
+KSsCAwEAAaOCAoAwggJ8MIGJBggrBgEFBQcBAQR9MHswMAYIKwYBBQUHMAGGJGh0dHA6Ly9j
+b21tZXJjaWFsLm9jc3AuaWRlbnRydXN0LmNvbTBHBggrBgEFBQcwAoY7aHR0cDovL3ZhbGlk
+YXRpb24uaWRlbnRydXN0LmNvbS9yb290cy9jb21tZXJjaWFscm9vdGNhMS5wN2MwHwYDVR0j
+BBgwFoAU7UQZwNPwBovupHu+QucmVMiONnYwDwYDVR0TAQH/BAUwAwEB/zCCASAGA1UdIASC
+ARcwggETMIIBDwYEVR0gADCCAQUwggEBBggrBgEFBQcCAjCB9DBFFj5odHRwczovL3NlY3Vy
+ZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDADAgEB
+GoGqVGhpcyBUcnVzdElEIENlcnRpZmljYXRlIGhhcyBiZWVuIGlzc3VlZCBpbiBhY2NvcmRh
+bmNlIHdpdGggSWRlblRydXN0J3MgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBQb2xpY3kgZm91bmQg
+YXQgaHR0cHM6Ly9zZWN1cmUuaWRlbnRydXN0LmNvbS9jZXJ0aWZpY2F0ZXMvcG9saWN5L3Rz
+L2luZGV4Lmh0bWwwSgYDVR0fBEMwQTA/oD2gO4Y5aHR0cDovL3ZhbGlkYXRpb24uaWRlbnRy
+dXN0LmNvbS9jcmwvY29tbWVyY2lhbHJvb3RjYTEuY3JsMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+BggrBgEFBQcDBDAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0OBBYEFKRz2u9pNYp1zKAZewgy+GuJ
+5ELsMA0GCSqGSIb3DQEBCwUAA4ICAQAN4YKu0vv062MZfg+xMSNUXYKvHwvZIk+6H1pUmivy
+DI4I6A3wWzxlr83ZJm0oGIF6PBsbgKJ/fhyyIzb+vAYFJmyI8I/0mGlc+nIQNuV2XY8cypPo
+VJKgpnzp/7cECXkX8R4NyPtEn8KecbNdGBdEaG4a7AkZ3ujlJofZqYdHxN29tZPdDlZ8fR36
+/mAFeCEq0wOtOOc0Eyhs29+9MIZYjyxaPoTS+l8xLcuYX3RWlirRyH6RPfeAi5kySOEhG1qu
+NHe06QIwpigjyFT6v/vRqoIBr7WpDOSt1VzXPVbSj1PcWBgkwyGKHlQUOuSbHbHcjOD8w8wH
+SDbL+L2he8hNN54doy1e1wJHKmnfb0uBAeISoxRbJnMMWvgAlH5FVrQWlgajeH/6NbYbBSRx
+ALuEOqEQepmJM6qz4oD2sxdq4GMN5adAdYEswkY/o0bRKyFXTD3mdqeRXce0jYQbWm7oapqS
+ZBccFvUgYOrB78tB6c1bxIgaQKRShtWR1zMM0JfqUfD9u8Fg7G5SVO0IG/GcxkSvZeRjhYcb
+TfqF2eAgprpyzLWmdr0mou3bv1Sq4OuBhmTQCnqxAXr4yVTRYHkp5lCvRgeJAme1OTVpVPth
+/O7HJ7VuEP9GOr6kCXCXmjB4P3UJ2oU0NqfoQdcSSSt9hliALnExTEjii20B2nSDojGCAxQw
+ggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMO
+VHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowDQYJYIZIAWUDBAIBBQCgggGXMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIwMDgxODE1MDExMVow
+LwYJKoZIhvcNAQkEMSIEIAkuzvlXuwfdOk2ODynS1rS+6qt7k5rG3/SoaaFfX13zMF0GCSsG
+AQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UE
+AxMOVHJ1c3RJRCBDQSBBMTICEEABbQHWpVVDfbC/HYRdhTowXwYLKoZIhvcNAQkQAgsxUKBO
+MDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQg
+Q0EgQTEyAhBAAW0B1qVVQ32wvx2EXYU6MGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEq
+MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwIC
+AUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAeHm9ImgiHtKp
+4+Ufhz7bRRfS2kv1Awy379Cg5bDYVj77f/IbAiPHo4ZD3f8LItjccOmy0nHeoJ2qk2b43IBX
+M/iNhyD46kX8OGvlKuBLW/GCDHVkpMnbo7LyOXUaQ75PDjjZ4LnImtLhYNVJrvbdNsxIju82
+H0cGlcrFbb1XaQobR+2cfYzmC8Wm/jya/kmlIUVNB88GsO5HrkrTP4M+T6+PCtYeHNz3UWMt
+VuTMO38QmW9Ry8FA/TYEUBS+oe1WlTved69Z0oPoKaUpdcAa8n+LVrO5NQG354h4A3M3xuzk
+zF+LJEh+SWzFklndVQ5GCswASXeI46/47TBEQLuaZAAAAAAAAA==
+--------------ms070203090704080909030005--
 
