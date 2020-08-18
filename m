@@ -2,109 +2,133 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA460206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD39206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgHRLGG (ORCPT
+        id S1726357AbgHRLHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:06:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39898 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgHRLGD (ORCPT
+        Tue, 18 Aug 2020 07:07:41 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51341 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgHRLHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:06:03 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k7zRG-0005Sq-Q5; Tue, 18 Aug 2020 11:05:58 +0000
-Date:   Tue, 18 Aug 2020 13:05:56 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "<linux-fsdevel@vger.kernel.org>" <linux-fsdevel@vger.kernel.org>,
-        criu@openvz.org, bpf <bpf@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: Re: [PATCH 09/17] file: Implement fnext_task
-Message-ID: <20200818110556.q5i5quflrcljv4wa@wittgenstein>
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
- <20200817220425.9389-9-ebiederm@xmission.com>
- <CAHk-=whCU_psWXHod0-WqXXKB4gKzgW9q=d_ZEFPNATr3kG=QQ@mail.gmail.com>
- <875z9g7oln.fsf@x220.int.ebiederm.org>
- <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
+        Tue, 18 Aug 2020 07:07:36 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07IB7E6u053360;
+        Tue, 18 Aug 2020 20:07:14 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
+ Tue, 18 Aug 2020 20:07:14 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07IB7DMZ053348
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 18 Aug 2020 20:07:14 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] lockdep: Introduce CONFIG_LOCKDEP_LARGE
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CACT4Y+YXT9iLij-AbrUwj=yPq-YNFw=Au9g0LQJCKwYonaHCDQ@mail.gmail.com>
+ <46674d71-1e41-cb68-ed99-72c25a73dfef@i-love.sakura.ne.jp>
+ <37b60b14-4eb6-36b3-1195-97c2d27b7ed8@i-love.sakura.ne.jp>
+ <CACT4Y+Y0ptJDj1F89jKQEKB_L8U2yFCUUZ7pwxh+fcE-ZpsBkg@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <8fc12fea-bf70-874e-fc19-067d504fa5cc@i-love.sakura.ne.jp>
+Date:   Tue, 18 Aug 2020 20:07:09 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <CACT4Y+Y0ptJDj1F89jKQEKB_L8U2yFCUUZ7pwxh+fcE-ZpsBkg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 06:17:35PM -0700, Linus Torvalds wrote:
-> On Mon, Aug 17, 2020 at 6:06 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >
-> > I struggle with the fcheck name as I have not seen or at least not
-> > registed on the the user that just checks to see if the result is NULL.
-> > So the name fcheck never made a bit of sense to me.
+On 2020/08/18 18:57, Dmitry Vyukov wrote:
+> On Tue, Aug 4, 2020 at 4:36 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>>
+>> Hello, Peter, Ingo and Will.
+>>
+>> (Q1) Can we change the capacity using kernel config?
+>>
+>> (Q2) If we can change the capacity, is it OK to specify these constants
+>>      independently? (In other words, is there inter-dependency among
+>>      these constants?)
 > 
-> Yeah, that name is not great. I just don't want to make things even worse.
 > 
-> > I will see if I can come up with some good descriptive comments around
-> > these functions.  Along with describing what these things are doing I am
-> > thinking maybe I should put "_rcu" in their names and have a debug check
-> > that verifies "_rcu" is held.
+> I think we should do this.
+> syzbot uses a very beefy kernel config and very broad load.
+> We are hitting "BUG: MAX_LOCKDEP_ENTRIES too low!" for the part 428
+> days and already hit it 96K times. It's just harming overall kernel
+> testing:
+> https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
 > 
-> Yeah, something along the lines of "rcu_lookup_fd_task(tsk,fd)" would
-> be a *lot* more descriptive than fcheck_task().
-> 
-> And I think "fnext_task()" could be "rcu_lookup_next_fd_task(tsk,fd)".
-> 
-> Yes, those are much longer names, but it's not like you end up typing
-> them all that often, and I think being descriptive would be worth it.
-> 
-> And "fcheck()" and "fcheck_files()" would be good to rename too along
-> the same lines.
-> 
-> Something like "rcu_lookup_fd()" and "rcu_lookup_fd_files()" respectively?
-> 
-> I'm obviously trying to go for a "rcu_lookup_fd*()" kind of pattern,
-> and I'm not married to _that_ particular pattern but I think it would
-> be better than what we have now.
+> I think it's better if exact values are not hardcoded, but rather
+> specified in the config. Today we are switching from 4K to 8K, but as
+> we enable more configs and learn to reach more code, we may need 16K.
 
-In fs/inode.c and a few other places we have the *_rcu suffix pattern
-already so maybe:
+For short term, increasing the capacity would be fine. But for long term, I doubt.
 
-fcheck() -> fd_file_rcu() or lookup_fd_rcu()
-fcheck_files() -> fd_files_rcu() or lookup_fd_files_rcu()
-fnext_task() -> fd_file_from_task_rcu() or lookup_next_fd_from_task_rcu()
+Learning more locks being held within one boot by enabling more configs, I suspect
+that it becomes more and more timing dependent and difficult to hold all locks that
+can generate a lockdep warning.
 
-rather than as prefix or sm.
+> 
+> 
+>> (Q3) Do you think that we can extend lockdep to be used as a tool for auditing
+>>      locks held in kernel space and rebuilding lock dependency map in user space?
+> 
+> This looks like lots of work. Also unpleasant dependencies on
+> user-space. If there is a user-space component, it will need to be
+> deployed to _all_ of kernel testing systems and for all users of
+> syzkaller. And it will also be a dependency for reproducers. Currently
+> one can run a C reproducer and get the errors message from LOCKDEP. It
+> seems that a user-space component will make it significantly more
+> complicated.
 
-Christian
+My suggestion is to detach lockdep warning from realtime alarming.
+
+Since not all locks are always held (e.g. some locks are held only if exceeding
+some threshold), requiring all locks being held within one boot sounds difficult.
+Such requirement results in flaky bisection like "Fix bisection: failed" in
+https://syzkaller.appspot.com/bug?id=b23ec126241ad0d86628de6eb5c1cff57d282632 .
+
+Then, I'm wishing that we could build non-realtime alarming based on all locks held
+across all boots on each vmlinux file.
+
+> 
+> 
+>> On 2020/07/25 14:23, Tetsuo Handa wrote:
+>>>> Also somebody may use it to _reduce_ size of the table for a smaller kernel.
+>>>
+>>> Maybe. But my feeling is that it is very rare that the kernel actually deadlocks
+>>> as soon as lockdep warned the possibility of deadlock.
+>>>
+>>> Since syzbot runs many instances in parallel, a lot of CPU resource is spent for
+>>> checking the same dependency tree. However, the possibility of deadlock can be
+>>> warned for only locks held within each kernel boot, and it is impossible to hold
+>>> all locks with one kernel boot.
+>>>
+>>> Then, it might be nice if lockdep can audit only "which lock was held from which
+>>> context and what backtrace" and export that log like KCOV data (instead of evaluating
+>>> the possibility of deadlock), and rebuild the whole dependency (and evaluate the
+>>> possibility of deadlock) across multiple kernel boots in userspace.
+>>
+
