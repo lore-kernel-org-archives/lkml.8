@@ -2,105 +2,135 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A54C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13E32075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B042075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wNeGxpkX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wqndhtkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgHRTWQ (ORCPT
+        id S1726697AbgHRTXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
+        Tue, 18 Aug 2020 15:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgHRTWO (ORCPT
+        with ESMTP id S1726635AbgHRTXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:22:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA20BC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:22:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 189so9563907pgg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:22:13 -0700 (PDT)
+        Tue, 18 Aug 2020 15:23:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7D4C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:23:42 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t10so9666317plz.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RnXaBz5VuHX3H/YR5fkZQKNpdCOXQQKobMc+SiMfEG0=;
-        b=wNeGxpkXbRBcfZ7VIZMVQNTm25lswlYBS948OrkjdpKg1f8ooEBsCfwUX5wGiyJoOR
-         dnduS6Ej/5Ic5J8ZDxwRi4lbDfRjnL4rY/eDFArgUDkK4FtXVTJzK9aWVFFmTczwGVYl
-         EtqbOZxglsFQE8z3FZ95WCLLDfqwwZG9L1rUiFZvsMwuGB859v+rjrXEgpQ0vO5RRbOO
-         BjAklp+Ok6jf6yMyYf4OHEkQCHLKY+4n5VZgLaWj4IR8SUh0MekZAKCeHFpN2MO2UwYF
-         ONzJH3cZgMWNtcQ9/y3Kn6R87wjfX/ucKrACVUhO3iPd1aXLLmH2VR6JN+OE3EU5sNlf
-         ugVw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JbanDd8Mxq4lbXlNdeQohXIPU4n8ZqVRR0ESmcSwiL8=;
+        b=Wqndhtkrnd61rB/hMfZkaQ2A3n+gkOkwbcWohmFe2cNDZkMxP15AhTl8J7Vblkdp4H
+         Fm7HiyBatOXOZYbybVyPyJKNkf8uufkL6PzqDdT0s0AIjRBLIo/o7c3X8Vzk+d22sISi
+         3hinjWJe+PY2CMwGsrHeT1pzEq4r5EUdMK64I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RnXaBz5VuHX3H/YR5fkZQKNpdCOXQQKobMc+SiMfEG0=;
-        b=Wzm4Rg2Hvp2lHa0LW0px6tJIYb4uBTJUJrbsC8XTABboIeUgSkpiBZTIfVwqKKMmD3
-         4THKGbjEABmRMy3QUfMrRkwriohwP4+VSb7/7hcXGdco0uC4W0HhMuv7eBcI32yiCx2Q
-         2N85Y+YDmhApcS/FNnOdrDs9id0RfPBIDQ/GwZwpmixSbm79XonWyawKLKmj5Yz1icI8
-         Y2RfFEhZ458rzLRTr3C8qbTB9xN9PdCfveVfwrbgeh80HkUIdowDQBDUWxffXmXP+01u
-         ZLdbz7blw2KYkbuu6sPxQXjzhsJi0nJb54KoO/Oc5VFQBsw/7ZjWbccLDl5DLWqDwgVl
-         e3bw==
-X-Gm-Message-State: AOAM5335a4KAxLDtN8ik227NEJZXIxpqRjMQuRxcfW17JNCVutFowQv/
-        88x1W/6UwgTMNJUi7TozuNDqeYnwq+nHJZYu6hn3MA==
-X-Google-Smtp-Source: ABdhPJyWlfTWSAdjpdCvinEsKRXSCnWYwa1wJq4ltVBy4L396qWTBjgo9NEU58QeMpxt61o6Thfe6CywmhuwMW3yGD4=
-X-Received: by 2002:a63:7746:: with SMTP id s67mr14209143pgc.159.1597778533126;
- Tue, 18 Aug 2020 12:22:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JbanDd8Mxq4lbXlNdeQohXIPU4n8ZqVRR0ESmcSwiL8=;
+        b=KpCNV9jegbDIcnx1wQUdeMdg3NaEycNS/dQuLU4LipcSz2E9vkMiqVJbV3ulF7ZIzz
+         but8eI302/N3Y/6A8ztrhSFNvD79pK/2aWkx/D29mmVOOipIHw4q4vS+D7BL3TyVCMrx
+         8wqUuz7NThweZ5BkgMeiurBl/ydS8UjhJb0UOdMqXpCa1jdYePDVtDtWIZNCf1eh3J++
+         /C/2bS8def7nZIUFsOtwKCXIxXqAj2TxwUzXDBTgIux0IfP23VSbruoVAkgq6dPTLlDc
+         G5ATUl31O3BadIBWwCGcdLQ54WFFAeAbJKXAqE6Wz226SQuC2Cz6/bOctjsJW0INW0SX
+         jyNQ==
+X-Gm-Message-State: AOAM531HTwPPTcwjLPWZjKpWr46uBarbFTj2ZdbxGJ5efKphxG8xFXcD
+        ImUbgUJ0J1VEy9Hs19DEmH3fMg==
+X-Google-Smtp-Source: ABdhPJxA7O9Q2PgEpaK/Vztq5tD7+BGEffskIGsHzKeRf0yRsj8mixcHcpIroPuaxxM9Xx/SmHV/AA==
+X-Received: by 2002:a17:90a:fc86:: with SMTP id ci6mr1166370pjb.160.1597778621992;
+        Tue, 18 Aug 2020 12:23:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 30sm630465pjz.24.2020.08.18.12.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 12:23:40 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:23:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH 1/4] Makefile: add -fno-builtin-stpcpy
+Message-ID: <202008181223.4412CAA5@keescook>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <20200817220212.338670-2-ndesaulniers@google.com>
 MIME-Version: 1.0
-References: <20200818072501.30396-1-sjpark@amazon.com> <20200818072501.30396-4-sjpark@amazon.com>
-In-Reply-To: <20200818072501.30396-4-sjpark@amazon.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 18 Aug 2020 12:22:02 -0700
-Message-ID: <CAFd5g44BR8ETGQ4cqqq+eu8hwufAuDFSAMtpS-cpkkDp5nYYuw@mail.gmail.com>
-Subject: Re: [RFC v7 03/10] mm/damon-test: Add more unit tests for 'init_regions'
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        aarcange@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        brendan.d.gregg@gmail.com, cai@lca.pw,
-        Colin King <colin.king@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>, david@redhat.com,
-        dwmw@amazon.com, fan.du@intel.com, foersleo@amazon.de,
-        Greg Thelen <gthelen@google.com>,
-        Ian Rogers <irogers@google.com>, jolsa@redhat.com,
-        kirill@shutemov.name, Mark Rutland <mark.rutland@arm.com>,
-        mgorman@suse.de, minchan@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, namhyung@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>, riel@surriel.com,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, rppt@kernel.org,
-        sblbir@amazon.com, Shakeel Butt <shakeelb@google.com>,
-        shuah <shuah@kernel.org>, SeongJae Park <sj38.park@gmail.com>,
-        snu@amazon.de, vbabka@suse.cz, vdavydov.dev@gmail.com,
-        yang.shi@linux.alibaba.com, ying.huang@intel.com,
-        zgf574564920@gmail.com, linux-damon@amazon.com, linux-mm@kvack.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200817220212.338670-2-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:26 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> This commit adds more test cases for the new feature, 'init_regions'.
->
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On Mon, Aug 17, 2020 at 03:02:09PM -0700, Nick Desaulniers wrote:
+> LLVM implemented a recent "libcall optimization" that lowers calls to
+> `sprintf(dest, "%s", str)` where the return value is used to
+> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> in parsing format strings. This optimization was introduced into
+> clang-12. Because the kernel does not provide an implementation of
+> stpcpy, we observe linkage failures for almost all targets when building
+> with ToT clang.
+> 
+> The interface is unsafe as it does not perform any bounds checking.
+> Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
+> 
+> Unlike
+> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> which cited failures with `-fno-builtin-*` flags being retained in LLVM
+> LTO, that bug seems to have been fixed by
+> https://reviews.llvm.org/D71193, so the above sha can now be reverted in
+> favor of `-fno-builtin-bcmp`.
+> 
+> Cc: stable@vger.kernel.org # 4.4
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+> Link: https://reviews.llvm.org/D85963
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Suggested-by: Dávid Bolvanský <david.bolvansky@gmail.com>
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
