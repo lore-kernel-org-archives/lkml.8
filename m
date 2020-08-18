@@ -2,143 +2,109 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D38C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4D22067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA460206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHRLFG (ORCPT
+        id S1726652AbgHRLGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:05:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29176 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgHRLFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:05:05 -0400
-IronPort-SDR: tgzYrrdWAWtAjZcyDV4E5ODOkcNxRSTPxEb6ST94KNqHLcinJdO5IBIvNJIRbh6KMA8BGTMndu
- K8wSbfFJrnOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239705243"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="239705243"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 04:05:04 -0700
-IronPort-SDR: Zyl1zkY136CnxKdCbyCD89FjESR6rtWsviP14MKhKzpsA2396TvId8tkG83uuM+d+03U/0/ztr
- 7gO/W/YhD+Mw==
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="278020960"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 04:05:01 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 461CE2064F; Tue, 18 Aug 2020 14:04:59 +0300 (EEST)
-Date:   Tue, 18 Aug 2020 14:04:59 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Bingbu Cao <bingbu.cao@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Tue, 18 Aug 2020 07:06:06 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39898 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgHRLGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 07:06:03 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k7zRG-0005Sq-Q5; Tue, 18 Aug 2020 11:05:58 +0000
+Date:   Tue, 18 Aug 2020 13:05:56 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v5 0/6] Support running driver's probe for a device
- powered off
-Message-ID: <20200818110459.GR24582@paasikivi.fi.intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <5353041e-850f-05ad-3b20-35e91fc9501e@linux.intel.com>
- <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
+        "<linux-fsdevel@vger.kernel.org>" <linux-fsdevel@vger.kernel.org>,
+        criu@openvz.org, bpf <bpf@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
+        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Subject: Re: [PATCH 09/17] file: Implement fnext_task
+Message-ID: <20200818110556.q5i5quflrcljv4wa@wittgenstein>
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
+ <20200817220425.9389-9-ebiederm@xmission.com>
+ <CAHk-=whCU_psWXHod0-WqXXKB4gKzgW9q=d_ZEFPNATr3kG=QQ@mail.gmail.com>
+ <875z9g7oln.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAFQd5DbMMsxkJAkLm4kQ+cQ0ePG4ME492MxM3vwXws3H_bsTQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz, Bingbu,
-
-On Fri, Aug 14, 2020 at 03:17:58PM +0200, Tomasz Figa wrote:
-> On Fri, Aug 14, 2020 at 6:12 AM Bingbu Cao <bingbu.cao@linux.intel.com> wrote:
+On Mon, Aug 17, 2020 at 06:17:35PM -0700, Linus Torvalds wrote:
+> On Mon, Aug 17, 2020 at 6:06 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
 > >
-> >
-> >
-> > On 8/10/20 10:27 PM, Sakari Ailus wrote:
-> > > Hi all,
-> > >
-> > ...snip...
-> > >
-> > > The use case is such that there is a privacy LED next to an integrated
-> > > user-facing laptop camera, and this LED is there to signal the user that
-> > > the camera is recording a video or capturing images. That LED also happens
-> > > to be wired to one of the power supplies of the camera, so whenever you
-> > > power on the camera, the LED will be lit, whether images are captured from
-> > > the camera --- or not. There's no way to implement this differently
-> > > without additional software control (allowing of which is itself a
-> > > hardware design decision) on most CSI-2-connected camera sensors as they
-> > > simply have no pin to signal the camera streaming state.
-> > >
-> > > This is also what happens during driver probe: the camera will be powered
-> > > on by the I²C subsystem calling dev_pm_domain_attach() and the device is
-> > > already powered on when the driver's own probe function is called. To the
-> > > user this visible during the boot process as a blink of the privacy LED,
-> > > suggesting that the camera is recording without the user having used an
-> > > application to do that. From the end user's point of view the behaviour is
-> > > not expected and for someone unfamiliar with internal workings of a
-> > > computer surely seems quite suspicious --- even if images are not being
-> > > actually captured.
-> > >
-> > > I've tested these on linux-next master. They also apply to Wolfram's
-> > > i2c/for-next branch, there's a patch that affects the I²C core changes
-> > > here (see below). The patches apart from that apply to Bartosz's
-> > > at24/for-next as well as Mauro's linux-media master branch.
-> >
-> > Sakari, we meet one issue - once the vcm sub-device registered, the user space
-> > will try to open the VCM (I have not figure out who did that), it will also
-> > trigger the acpi pm resume/suspend, as the VCM always shares same power rail
-> > with camera sensor, so the privacy LED still has a blink.
+> > I struggle with the fcheck name as I have not seen or at least not
+> > registed on the the user that just checks to see if the result is NULL.
+> > So the name fcheck never made a bit of sense to me.
 > 
-> It's not always the case, as on some designs there are multiple power
-> rails to the sensor and one drives the LED, while the other drives the
-> VCM. That said, it would be still good to solve it in either case.
+> Yeah, that name is not great. I just don't want to make things even worse.
 > 
-> Perhaps we need some more general discussion on the side effects of
-> simply opening and querying a device. Most of V4L2 drivers these days
-> are designed to avoid powering up the hardware until it's absolutely
-> needed to do so. However, for non-streaming subdevs that are directly
-> controlled by the userspace, like VCM, it's a common practice to power
-> up on open and down on release. This is because they don't have a
-> "streaming" state, so the driver has no way to determine when the
-> power is needed. I wonder if there is a way to improve this.
+> > I will see if I can come up with some good descriptive comments around
+> > these functions.  Along with describing what these things are doing I am
+> > thinking maybe I should put "_rcu" in their names and have a debug check
+> > that verifies "_rcu" is held.
+> 
+> Yeah, something along the lines of "rcu_lookup_fd_task(tsk,fd)" would
+> be a *lot* more descriptive than fcheck_task().
+> 
+> And I think "fnext_task()" could be "rcu_lookup_next_fd_task(tsk,fd)".
+> 
+> Yes, those are much longer names, but it's not like you end up typing
+> them all that often, and I think being descriptive would be worth it.
+> 
+> And "fcheck()" and "fcheck_files()" would be good to rename too along
+> the same lines.
+> 
+> Something like "rcu_lookup_fd()" and "rcu_lookup_fd_files()" respectively?
+> 
+> I'm obviously trying to go for a "rcu_lookup_fd*()" kind of pattern,
+> and I'm not married to _that_ particular pattern but I think it would
+> be better than what we have now.
 
-Good question.
+In fs/inode.c and a few other places we have the *_rcu suffix pattern
+already so maybe:
 
-I think in this particular case the device could be powered on only when
-there's an open file handle and current is applied on the coil (i.e. the
-control's value is non-zero).
+fcheck() -> fd_file_rcu() or lookup_fd_rcu()
+fcheck_files() -> fd_files_rcu() or lookup_fd_files_rcu()
+fnext_task() -> fd_file_from_task_rcu() or lookup_next_fd_from_task_rcu()
 
-But in general case more IOCTLs would be needed. PM QoS framework could be
-used for the purpose based on wakeup latency. I guess no-one has needed it
-badly enough to implement the support? This would be actually a better
-approach. In any case in the case of the lens it requires that the current
-behaviour of powering on the device based on just open file handles would
-have to change.
+rather than as prefix or sm.
 
--- 
-Kind regards,
-
-Sakari Ailus
+Christian
