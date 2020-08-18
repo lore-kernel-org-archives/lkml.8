@@ -2,124 +2,191 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4791C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA06720639
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1C120639
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHRGuL (ORCPT
+        id S1726648AbgHRGve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:50:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726228AbgHRGuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:50:09 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 33B4020B6310118DD2DE;
-        Tue, 18 Aug 2020 14:50:06 +0800 (CST)
-Received: from [127.0.0.1] (10.108.235.113) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 18 Aug 2020
- 14:49:56 +0800
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <kexec@lists.infradead.org>, <ebiederm@xmission.com>,
-        <linux-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>,
-        <guohanjun@huawei.com>, <zhuling8@huawei.com>,
-        <luanjianhai@huawei.com>, <luchunhua@huawei.com>
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200817134224.GA8381@bug>
-From:   Sang Yan <sangyan@huawei.com>
-Message-ID: <97b12762-cee1-67fd-2c6f-b0bfe1cf14fc@huawei.com>
-Date:   Tue, 18 Aug 2020 14:49:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 18 Aug 2020 02:51:34 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59555 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726228AbgHRGvb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:51:31 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U67H.h6_1597733485;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U67H.h6_1597733485)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Aug 2020 14:51:26 +0800
+Subject: Re: [RFC PATCH 2/3] mm: Drop use of test_and_set_skip in favor of
+ just setting skip
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
+        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
+References: <20200813035100.13054.25671.stgit@localhost.localdomain>
+ <20200813040232.13054.82417.stgit@localhost.localdomain>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <176fae1b-b95b-51c3-d8cc-4380f0972666@linux.alibaba.com>
+Date:   Tue, 18 Aug 2020 14:50:25 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200817134224.GA8381@bug>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.108.235.113]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200813040232.13054.82417.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/17/2020 9:42 PM, Pavel Machek wrote:
-> Hi!
-> 
->> +config QUICK_KEXEC
->> +	bool "Support for quick kexec"
->> +	depends on KEXEC_CORE
->> +	help
->> +	  Say y here to enable this feature.
-> 
-> ?
-> 
->> +	  It use reserved memory to accelerate kexec, just like crash
-> 
-> uses
-> 
->> +	  kexec, load new kernel and initrd to reserved memory, and
->> +	  boot new kernel on that memory. It will save the time of
->> +	  relocating kernel.
-> 
-> loads a new.... boots new... 
-> 
->>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->>  	IORES_DESC_RESERVED			= 7,
->>  	IORES_DESC_SOFT_RESERVED		= 8,
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	IORES_DESC_QUICK_KEXEC			= 9,
->> +#endif
->>  };
-> 
-> Remove ifdef.
-> 
->>  /*
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 9e93bef52968..976bf9631070 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -269,9 +269,12 @@ struct kimage {
->>  	unsigned long control_page;
->>  
->>  	/* Flags to indicate special processing */
->> -	unsigned int type : 1;
->> +	unsigned int type : 2;
->>  #define KEXEC_TYPE_DEFAULT 0
->>  #define KEXEC_TYPE_CRASH   1
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_TYPE_QUICK   2
->> +#endif
->>  	unsigned int preserve_context : 1;
-> 
-> Here, too.
-> 
->> +++ b/include/uapi/linux/kexec.h
->> @@ -12,6 +12,9 @@
->>  /* kexec flags for different usage scenarios */
->>  #define KEXEC_ON_CRASH		0x00000001
->>  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_QUICK		0x00000004
->> +#endif
->>  #define KEXEC_ARCH_MASK		0xffff0000
-> 
-> And here.
-> 
-> 									Pavel
-> 
-> .
-> 
 
-Thanks a lot for your review.
+在 2020/8/13 下午12:02, Alexander Duyck 写道:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> The only user of test_and_set_skip was isolate_migratepages_block and it
+> was using it after a call that was testing and clearing the LRU flag. As
+> such it really didn't need to be behind the LRU lock anymore as it wasn't
+> really fulfilling its purpose.
+> 
+> With that being the case we can simply drop the bit and instead directly
+> just call the set_pageblock_skip function if the page we are working on is
+> the valid_page at the start of the pageblock. It shouldn't be possible for
+> us to encounter the bit being set since we obtained the LRU flag for the
+> first page in the pageblock which means we would have exclusive access to
+> setting the skip bit. As such we don't need to worry about the abort case
+> since no other thread will be able to call what used to be
+> test_and_set_skip.
+> 
+> Since we have dropped the late abort case we can drop the code that was
+> clearing the LRU flag and calling page_put since the abort case will now
+> not be holding a reference to a page.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Sang Yan.
+After my false sharing remove on pageblock_flags, this patch looks fine with
+a minor change
 
+> ---
+>  mm/compaction.c |   50 +++++++-------------------------------------------
+>  1 file changed, 7 insertions(+), 43 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 5021a18ef722..c1e9918f9dd4 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -399,29 +399,6 @@ void reset_isolation_suitable(pg_data_t *pgdat)
+>  	}
+>  }
+>  
+> -/*
+> - * Sets the pageblock skip bit if it was clear. Note that this is a hint as
+> - * locks are not required for read/writers. Returns true if it was already set.
+> - */
+> -static bool test_and_set_skip(struct compact_control *cc, struct page *page,
+> -							unsigned long pfn)
+> -{
+> -	bool skip;
+> -
+> -	/* Do no update if skip hint is being ignored */
+> -	if (cc->ignore_skip_hint)
+> -		return false;
+> -
+> -	if (!IS_ALIGNED(pfn, pageblock_nr_pages))
+> -		return false;
+> -
+> -	skip = get_pageblock_skip(page);
+> -	if (!skip && !cc->no_set_skip_hint)
+> -		skip = !set_pageblock_skip(page);
+> -
+> -	return skip;
+> -}
+> -
+>  static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
+>  {
+>  	struct zone *zone = cc->zone;
+> @@ -480,12 +457,6 @@ static inline void update_pageblock_skip(struct compact_control *cc,
+>  static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
+>  {
+>  }
+> -
+> -static bool test_and_set_skip(struct compact_control *cc, struct page *page,
+> -							unsigned long pfn)
+> -{
+> -	return false;
+> -}
+>  #endif /* CONFIG_COMPACTION */
+>  
+>  /*
+> @@ -895,7 +866,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>  		if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
+>  			if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
+>  				low_pfn = end_pfn;
+> -				page = NULL;
+>  				goto isolate_abort;
+>  			}
+>  			valid_page = page;
+> @@ -991,6 +961,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>  		if (!TestClearPageLRU(page))
+>  			goto isolate_fail_put;
+>  
+> +		/* Indicate that we want exclusive access to this pageblock */
+> +		if (page == valid_page) {
+> +			skip_updated = true;
+> +			if (!cc->ignore_skip_hint)
+
+                        if (!cc->ignore_skip_hint && !cc->no_set_skip_hint)
+no_set_skip_hint needs to add here.
+
+Thanks
+Alex
+
+> +				set_pageblock_skip(page);
+> +		}
+> +
+>  		/* If we already hold the lock, we can skip some rechecking */
+>  		if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec)) {
+>  			if (lruvec)
+> @@ -1002,13 +979,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>  
+>  			lruvec_memcg_debug(lruvec, page);
+>  
+> -			/* Try get exclusive access under lock */
+> -			if (!skip_updated) {
+> -				skip_updated = true;
+> -				if (test_and_set_skip(cc, page, low_pfn))
+> -					goto isolate_abort;
+> -			}
+> -
+>  			/*
+>  			 * Page become compound since the non-locked check,
+>  			 * and it's on LRU. It can only be a THP so the order
+> @@ -1094,15 +1064,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>  	if (unlikely(low_pfn > end_pfn))
+>  		low_pfn = end_pfn;
+>  
+> -	page = NULL;
+> -
+>  isolate_abort:
+>  	if (lruvec)
+>  		unlock_page_lruvec_irqrestore(lruvec, flags);
+> -	if (page) {
+> -		SetPageLRU(page);
+> -		put_page(page);
+> -	}
+>  
+>  	/*
+>  	 * Updated the cached scanner pfn once the pageblock has been scanned
+> 
