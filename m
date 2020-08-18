@@ -2,175 +2,188 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0C4207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nt35N2Ib"
+	by mail.kernel.org (Postfix) with ESMTP id C68C520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597760637;
+	bh=+GOujhHAY+gAEigj74Monf6Mzd+lgkl+g0F3Tv3WS8o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xba1Hd/c6fRGX9DWrlN3k5UME6ehcjuhly0nfF67OvibGSiKG5YWAKLgc1qPJtEiT
+	 LxNJBXYolfo4CgrncOJUSD3GSw6dWuWJackaR4+qkDPnfEE2uIUAsiaVPfTpOcccH3
+	 mCMYs99dmQbm2a9JGNIaD3jfikZza05Uq+lR7lt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgHROVe (ORCPT
+        id S1726964AbgHROXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:21:34 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48259 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726617AbgHROVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:21:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597760491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yz2aFioQzK66jmr3N2BmfzM3+e8xJ7f1GvUhfZfDu9o=;
-        b=Nt35N2IbVjiMliAqgrgwUriezlDO2LjyZN/gHH+XddfjxK4alN68x1ddHVJwahqQ/Rulgv
-        vr91cjNHCSmWiNNJchLKlprEN6NQutDFER06AWE4BHcbeTktEkA0gY8oYk8kbM2aOcF59B
-        65MWUMQ6EqYj3l6L2864EvPcw1eUb94=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-RE8_rU3HP6KXiO77QTdJDw-1; Tue, 18 Aug 2020 10:21:29 -0400
-X-MC-Unique: RE8_rU3HP6KXiO77QTdJDw-1
-Received: by mail-qk1-f200.google.com with SMTP id 195so13240777qke.14
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:21:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Yz2aFioQzK66jmr3N2BmfzM3+e8xJ7f1GvUhfZfDu9o=;
-        b=CPuZemdjXrhFlmWDmx5PoHTEr100IZcrP36SFKZCYcdGnkQGcrPjt79eEE05SeKoS7
-         6CE8KegBMNCPVzCgfkINsZoWPJ4tEUxF9NhsVKc4wbPvjh4CRA6FZ0HD36Pt+tL2cwHI
-         UwtXjjOBxX2fyAhDdXA67ayxWcEU0rzPDHX+kHDlslGr24Cfpb2ck+WsIc5e0PZ9t3XN
-         BcnqiWuG9N+AIs+YOtnOyzuuEe7VGAzbFtqjFll3VJ735d0bwoPPN2n7dwRiM/5ufOBN
-         5qTe4VZvSUuqixCXko5p75QzAk/gAufscor7uEM3TjV5EHwjTHRk2XD7OGxzlIAEXG5s
-         JNsw==
-X-Gm-Message-State: AOAM5310Ey3eMvNETh6OzKj0umFP/cTViM1UWNo5l4BnPPP8aGw+N7+m
-        EPFv9QICxj28/bJQF34BNwhvqLMgG82LrQdiVEIrwUjpIwUMWrL1PPjdn17QXrxPTAjKlXec5SH
-        97kOVNOBo8mQDNgD/cY0a3B84
-X-Received: by 2002:a0c:aece:: with SMTP id n14mr19686883qvd.68.1597760473503;
-        Tue, 18 Aug 2020 07:21:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwR7cqBHSHZWO71g7kDKxrm2e6bQpvtnq4BHkeoL4lVYkiYaEGKTNKdjAybReLDnZZ+QWqphQ==
-X-Received: by 2002:a0c:aece:: with SMTP id n14mr19686865qvd.68.1597760473260;
-        Tue, 18 Aug 2020 07:21:13 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id x5sm22753285qtp.76.2020.08.18.07.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:21:12 -0700 (PDT)
-Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
- on programming failure
-To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
-Cc:     Moritz Fischer <mdf@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200817165911.32589-1-luca@lucaceresoli.net>
- <20200817165911.32589-2-luca@lucaceresoli.net>
- <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
- <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <397b99e2-9b39-5a67-e1c6-8dcf3482f96b@redhat.com>
-Date:   Tue, 18 Aug 2020 07:21:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 18 Aug 2020 10:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbgHROXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:23:36 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0585220786;
+        Tue, 18 Aug 2020 14:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597760616;
+        bh=+GOujhHAY+gAEigj74Monf6Mzd+lgkl+g0F3Tv3WS8o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=URvpGZeB90KNMmrakNX0199Z+p6eJK53RHlpKE8iE+cnXzL6kGjr0FV70wFlRDu0b
+         +4iIc5cxrXz4PPqUbVLnwGreeJ9OPV2INoNFJYHssg+lFDduRK2D990Zji5oSQG8mm
+         r73S8S0ktI7fb8elJGj03MMRXYlceUxXz4PW8kQw=
+Received: by mail-oo1-f48.google.com with SMTP id z11so4182621oon.5;
+        Tue, 18 Aug 2020 07:23:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532MU8Uw9JQfb3/Z+jyhuluhrppxh35Y7A2apLxlVPNynDVSzc5b
+        aVfBw+t9S+d0grKESJiVEMRxgGFjBvknJl63jA==
+X-Google-Smtp-Source: ABdhPJx/OxIxzT0i2pOqWVTEd+J0VZRhMCUcmr0cGzPYOXpagNM4BQrXXTT1e4HT0/tDAhSgVCFIOUZ0yyBT/uxJqAc=
+X-Received: by 2002:a4a:a60a:: with SMTP id e10mr15069228oom.25.1597760615266;
+ Tue, 18 Aug 2020 07:23:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200815125112.462652-2-maz@kernel.org> <20200815232228.GA1325245@bjorn-Precision-5520>
+ <87pn7qnabq.wl-maz@kernel.org> <CAL_Jsq+fDNa60+6+s9MwVjUFUPAuc43+uMx4Fm2nZhUgrV7LEg@mail.gmail.com>
+ <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+In-Reply-To: <e2cde177e82fbdf158732ad73ccdc6c5@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 18 Aug 2020 08:23:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+Message-ID: <CAL_JsqL1_d2grS3Pz6NNeVAOMPbx_hAe+MrseQeQp=bHRQ7rfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: rockchip: Work around missing device_type
+ property in DT
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 1:35 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-08-17 17:12, Rob Herring wrote:
+> > On Sun, Aug 16, 2020 at 4:40 AM Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On Sun, 16 Aug 2020 00:22:28 +0100,
+> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >> >
+> >> > On Sat, Aug 15, 2020 at 01:51:11PM +0100, Marc Zyngier wrote:
+> >> > > Recent changes to the DT PCI bus parsing made it mandatory for
+> >> > > device tree nodes describing a PCI controller to have the
+> >> > > 'device_type = "pci"' property for the node to be matched.
+> >> > >
+> >> > > Although this follows the letter of the specification, it
+> >> > > breaks existing device-trees that have been working fine
+> >> > > for years.  Rockchip rk3399-based systems are a prime example
+> >> > > of such collateral damage, and have stopped discovering their
+> >> > > PCI bus.
+> >> > >
+> >> > > In order to paper over the blunder, let's add a workaround
+> >> > > to the pcie-rockchip driver, adding the missing property when
+> >> > > none is found at boot time. A warning will hopefully nudge the
+> >> > > user into updating their DT to a fixed version if they can, but
+> >> > > the insentive is obviously pretty small.
+> >> >
+> >> > s/insentive/incentive/ (Lorenzo or I can fix this up)
+> >> >
+> >> > > Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> >> > > Suggested-by: Roh Herring <robh+dt@kernel.org>
+> >> >
+> >> > s/Roh/Rob/ (similarly)
+> >>
+> >> Clearly not my day when it comes to proofreading commit messages.
+> >> Thanks for pointing this out, and in advance for fixing it up.
+> >>
+> >> >
+> >> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >> >
+> >> > This looks like a candidate for v5.9, since 2f96593ecc37 was merged
+> >> > during the v5.9 merge window, right?
+> >>
+> >> Absolutely.
+> >>
+> >> > I wonder how many other DTs are similarly broken?  Maybe Rob's DT
+> >> > checker has already looked?
+> >>
+> >> I've just managed to run the checker, which comes up with all kinds of
+> >> goodies. Apart from the above, it also spots the following:
+> >>
+> >> - arch/arm64/boot/dts/mediatek/mt7622.dtsi: Has a device_type property
+> >>   in its main PCIe node, but not in the child nodes. It isn't obvious
+> >>   to me whether that's a violation or not (the spec doesn't say
+> >>   whether the property should be set on a per-port basis). Rob?
+> >
+> > The rule is bridge nodes should have 'device_type = "pci"'. But what's
+> > needed to fix these cases is setting device_type where we are parsing
+> > ranges or dma-ranges which we're not doing on the child ndes.
+> > Otherwise, I don't think it matters in this case unless you have child
+> > (grandchild here) nodes for PCI devices. If you did have child nodes,
+> > the address translation was already broken before this change.
+>
+> Fair enough.
+>
+> >> - arch/arm64/boot/dts/qcom/msm8996.dtsi: Only one out of the three
+> >>   PCIe nodes has the device_type property, probably broken similarly
+> >>   to rk3399.
+> >
+> > The only upstream board is DB820c, so probably not as wide an impact...
+> >
+> > There are also 92 (lots of duplicates due to multiple boards) more
+> > cases in arch/arm/. A log is here[1].
+>
+> Mostly Broadcom stuff, apparently. I'll see if I can have a stab
+> at it (although someone will have to test it).
+>
+> >
+> >> I could move the workaround to drivers/pci/of.c, and have it called
+> >> from the individual drivers. I don't have the HW to test those though.
+> >>
+> >> Thoughts?
+> >
+> > I think we should go with my other suggestion of looking at the node
+> > name. Looks like just checking 'pcie' is enough. We can skip 'pci' as
+> > I don't see any cases.
+>
+> I really dislike it.
+>
+> Once we put this node name matching in, there is no incentive for
+> people to write their DT correctly at all. It also sound pretty
+> fragile (what if the PCIe node is named something else?).
 
-On 8/18/20 3:20 AM, Luca Ceresoli wrote:
-> [a question for GPIO maintainers below]
->
-> Hi Tom,
->
-> thanks for your review!
->
-> On 17/08/20 20:15, Tom Rix wrote:
->> The other two patches are fine.
->>
->> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
->>> When the DONE pin does not go high after programming to confirm programming
->>> success, the INIT_B pin provides some info on the reason. Use it if
->>> available to provide a more explanatory error message.
->>>
->>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>> ---
->>>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
->>>  1 file changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
->>> index 502fae0d1d85..2aa942bb1114 100644
->>> --- a/drivers/fpga/xilinx-spi.c
->>> +++ b/drivers/fpga/xilinx-spi.c
->>> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
->>>  			return xilinx_spi_apply_cclk_cycles(conf);
->>>  	}
->>>  
->>> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
->>> +	if (conf->init_b) {
->>> +		int init_b_asserted = gpiod_get_value(conf->init_b);
->> gpiod_get_value can fail. So maybe need split the first statement.
->>
->> init_b_asserted < 0 ? "invalid device"
->>
->> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
-> Thanks for the heads up. However I'm not sure which is the best thing to
-> do here.
->
-> First, I've been reading the libgpiod code after your email and yes, the
-> libgpiod code _could_ return runtime errors received from the gpiochip
-> driver, even though the docs state:
->
->> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
-> (https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
->
-> On the other hand there are plenty of calls to gpiod_get/set_value in
-> the kernel that don't check for error values. I guess this is because
-> failures getting/setting a GPIO are very uncommon (perhaps impossible
-> with platform GPIO).
->
-> When still a GPIO get/set operation fails I'm not sure adding thousands
-> of error-checking code lines in hundreds of drivers is the best way to
-> go. I feel like we should have a unique, noisy dev_err() in the error
-> path in libgpio but I was surprised in not finding any [1].
->
-> Linus, Bartosz, what's your opinion? Should all drivers check for errors
-> after every gpiod_[sg]et_value*() call?
+That would require 2 wrongs. Both missing device_type and wrong node
+name. You could still warn if we matched on node name.
 
-My opinion is that you know the driver / hw is in a bad state and you
+This is just one possible error out of thousands. It's not the
+kernel's job to validate DTs (if it is, we're doing a horrible job).
+We have a solution for this with schema. The question is how to get to
+the point the schema checks are part of the main build flow. The
+primary issue is just getting to some platforms being warning free,
+and then they could opt in. There's effort around some platforms
+(Rockchip is not one), but I think we have a ways to go. The other
+aspect is what's the coverage with the schema. There's 2900 remaining
+bindings to convert to schema. We're doing about 100-200 a cycle, so
+that's what the next ~5 years looks like for me. :(
 
-are trying to convey useful information.  So you should
+> My preference goes towards having point fixes in the affected drivers,
+> clearly showing that this is addressing a firmware bug.
 
-be as careful as possible and not assume gpio did not fail.
+I didn't filter down how many drivers all the failures equates to in
+terms of drivers. I guess all of Broadcom is just one. If you want to
+fixup all the drivers, then I'm fine with that.
 
->
->>> +		dev_err(&mgr->dev,
->>> +			init_b_asserted ? "CRC error or invalid device\n"
->>> +			: "Missing sync word or incomplete bitstream\n");
->>> +	} else {
->>> +		dev_err(&mgr->dev, "Timeout after config data transfer.\n");
->> patch 3 removes '.' s , and you just added one back in ?
-> Here I'm only changing indentation of this line. But OK, this is
-> misleading, so I'll swap patches 2 and 3 in the next patch iteration to
-> avoid confusion.
-Maybe just remove the '.' at the same time and/or collapse 2&3 into a single patch.
->
-> [1]
-> https://elixir.bootlin.com/linux/v5.8/source/drivers/gpio/gpiolib.c#L3646
->
-
+Rob
