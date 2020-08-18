@@ -2,136 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B953C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063C62067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF452067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 16:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7TB2s4n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqWclZAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgHRQ2f (ORCPT
+        id S1727823AbgHRQ25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:28:35 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30217 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728254AbgHRQ1h (ORCPT
+        Tue, 18 Aug 2020 12:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgHRQ2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597768047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=if9LpYICK0NhGXF5AA8XXB22L0fg+m6z8gcS1Q79zUU=;
-        b=c7TB2s4nJZZtfxADyn2lGRVDOg1erPbexqz5JyHkRdT+GVyKZIv8FYzpmAr1N2W1yhNfBo
-        WFTatipZ0ZxQuqde/DYFHWPh92se4d5i4khHQXSet1JybgZOjiQGC79wTJbqnebvWdl6oo
-        EAHIc2eh+REJPofVh8YIU9MWgLr50Bk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-496-Zoh9695HN-WCqpbPCsQrtA-1; Tue, 18 Aug 2020 12:27:25 -0400
-X-MC-Unique: Zoh9695HN-WCqpbPCsQrtA-1
-Received: by mail-wm1-f72.google.com with SMTP id p23so6300665wmc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 09:27:25 -0700 (PDT)
+        Tue, 18 Aug 2020 12:28:05 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF13C061389;
+        Tue, 18 Aug 2020 09:28:04 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id v6so21670171iow.11;
+        Tue, 18 Aug 2020 09:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uRFxHU+sCcIrDbdnNz1Ff4SJxMC8NnHQO31521UTxdw=;
+        b=JqWclZArGkhIB1X2Y6hG/JZZxOW+hCcbwCo4uxHSeYFhfX5XPNy99cXnVGWiA1WpX2
+         N1GZen2gUVAwSS3Sw1h1dzjJFPkNpxftzgpvAptrw6dkv4vH/VX+1SjfGy3113J28AsJ
+         dBGAX79jQK7Q/NB684rd42FUKtFZoC4Ob2jJ2XixWtMXZWQSIVVTCJJW+T9iCn7Wy7/0
+         pDrKisOhpeopnDdXpG2ajOOz9LqAor6MtvRC+ZDjB9pHh9euZNt47/gDCGYZIQ/K+Rhi
+         bqNy9I8QWT2iRBnnb9541NBM18JeYBUClfEh4I15b/1mDh9212yHAP7x1axWAIVsUIvQ
+         rC0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=if9LpYICK0NhGXF5AA8XXB22L0fg+m6z8gcS1Q79zUU=;
-        b=CBRkvoqnIfNEkSSrpZQnxLsqAjH+383SiLud0NfnffSV/LXVvG4FVu1x4yAjZNuwWj
-         Pa5JVOXg56Gz8aa8FxisMbmb+MG0ORKzrohiHsKD9jpbvji9uVgKa9Q20AgqZ+Pcc8Bk
-         naWCI5UwEK0HJq9bsCjzYUjkrCXVqvLplk0UPuP6pKwoC4yXQ8Ob+P/bV4I+RIlHVFEi
-         R1oNLvVZNHCsOTqo6IAkTWuVUOc7/U7KQkU2x8OTkIfBCM92V4P/4Ot6ibbDbffLmSy5
-         uuANZT3UYYJTfB0nsCNe6RXgr8LuGERnuBKA5fVWDtCxiD/9FEigXkNS7MUwMvEfH4f3
-         1mAg==
-X-Gm-Message-State: AOAM531uqP5RbTZRCeViDNDZDK7UN/q+o/h4nHXK82z63Oo/piSfY4SM
-        Z48mTneWBayeL/ulpC60fGNKR71IeqnlWzz6oEUfWsL6SdPJJpGNLVo9m7eW2xH2Qti4L8BkOuj
-        CgAdzbSxOvQEZVDpekPxSP1nH
-X-Received: by 2002:a7b:cf29:: with SMTP id m9mr692508wmg.88.1597768044065;
-        Tue, 18 Aug 2020 09:27:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJykPaZdW75tblNPwohfUTSZAywU3pLEZHF86kgfsgbeUM6YEol+VFwyiwZdqftvl2orXJtznA==
-X-Received: by 2002:a7b:cf29:: with SMTP id m9mr692461wmg.88.1597768043853;
-        Tue, 18 Aug 2020 09:27:23 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:38e0:ccf8:ca85:3d9b? ([2001:b07:6468:f312:38e0:ccf8:ca85:3d9b])
-        by smtp.gmail.com with ESMTPSA id e5sm37696385wrc.37.2020.08.18.09.27.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 09:27:23 -0700 (PDT)
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200814133522.GE1152540@nvidia.com>
- <MWHPR11MB16456D49F2F2E9646F0841488C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200818004343.GG1152540@nvidia.com>
- <MWHPR11MB164579D1BBBB0F7164B07A228C5C0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200818115003.GM1152540@nvidia.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0711a4ce-1e64-a0cb-3e6d-f6653284e2e3@redhat.com>
-Date:   Tue, 18 Aug 2020 18:27:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uRFxHU+sCcIrDbdnNz1Ff4SJxMC8NnHQO31521UTxdw=;
+        b=EmpH++ljaDMmrUoXOUC9bMCJAKMuwpscGD0ZyQ47Y6BkEaaA5y8LHRyJ/lFi8qkjQ1
+         IYRbaTYp9onbJup9KkqIlnCfktgia4TVnAF22cjXeu+vRaYqjXHIFoF1JQP3qhCyHG0i
+         51JlgtYjRFsJTXEkHJa8NyKhM/Q1Au78rR+PwBqChs4FGlwGkxJEg9kj9/YvhA3TsjBa
+         wOa+eDZhjUTGu52RhuMvUUe6WCpG/hNQWbvgomZUWprNfdg/0M9h0YvWtaIOtSVsZjYX
+         kr8w7KbJDOHGFufWsqVcmcb5OvyxEr0Y4KV65wK6UIw9IKqVnJETIdoY5Z+O6UrV+cey
+         RyEQ==
+X-Gm-Message-State: AOAM530Ofv2zPZUEomVKYeFOP10V0zX5yQgVFnl/iK+ylaov5NL4SHZs
+        b95bfbf4Xjv+1IFOu9zdX8otj9MMmm4guXeK4hY=
+X-Google-Smtp-Source: ABdhPJzgE7utaYe/bTL9/F7xJj4+WD6PvLhQORWJG0lo/Am3PJzrfgOU+i6LiGoeAvf2qE4fjXDmta//OBSKaE+rfUs=
+X-Received: by 2002:a6b:c88f:: with SMTP id y137mr17088532iof.55.1597768083556;
+ Tue, 18 Aug 2020 09:28:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200818115003.GM1152540@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200817170038.GA725471@kroah.com> <20200817185419.1133596-1-ztong0001@gmail.com>
+ <20200818111954.GA283417@kroah.com>
+In-Reply-To: <20200818111954.GA283417@kroah.com>
+From:   Tong Zhang <ztong0001@gmail.com>
+Date:   Tue, 18 Aug 2020 12:27:52 -0400
+Message-ID: <CAA5qM4CUzJszm_kYfRMAEhA6_t81j1wJ8yWi0Jtjgyt4zTojZA@mail.gmail.com>
+Subject: Re: [PATCH v2] Fixes: tty: serial: earlycon dependency
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/08/20 13:50, Jason Gunthorpe wrote:
-> For instance, what about suspend/resume of containers using idxd?
-> Wouldn't you want to have the same basic approach of controlling the
-> wq from userspace that virtualization uses?
+Thanks Greg and Jiri for your suggestion!
+I made another attempt to fix those problems. Hope it will work this time.
+Thank you!
 
-The difference is that VFIO more or less standardizes the approach you
-use for live migration.  With another interface you'd have to come up
-with something for every driver, and add support in CRIU for every
-driver as well.
-
-Paolo
-
+On Tue, Aug 18, 2020 at 7:19 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Aug 17, 2020 at 02:54:19PM -0400, Tong Zhang wrote:
+> > parse_options() in drivers/tty/serial/earlycon.c calls uart_parse_earlycon
+> > in drivers/tty/serial/serial_core.c therefore selecting SERIAL_EARLYCON
+> > should automatically select SERIAL_CORE, otherwise will result in symbol
+> > not found error during linking if SERIAL_CORE is not configured as builtin
+> >
+> > Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+>
+> As Jiri pointed out, the Fixes: line goes down here, not in your subject
+> line :)
+>
+> Please fix up, thanks.
+>
+> > ---
+> >  drivers/tty/serial/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> What changed from v1?  Also always list that below the --- line so we
+> know.
+>
+> thanks,
+>
+> greg k-h
