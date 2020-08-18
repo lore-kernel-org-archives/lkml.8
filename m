@@ -2,127 +2,187 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E806C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73095C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F33206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597754690;
-	bh=r7c1fjd16+AVQMuN7nXJ5UVWTq0jGTKJdJiFf7ffPWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BWNsPxSpQEzX4Fv14ARLBkA040rhGugDXJhesK+gJGvqFvEmPuCA9HA8cfmdTB75V
-	 LMdySmZInvcavl/wkVsalNpMeKk3vHrteXqGfXzKhLuMLnoygLvINzWovR99wwBQP0
-	 FVIbKKGyUE0vctUEDuWGFhKAwpV4e8oSwQNOvttA=
+	by mail.kernel.org (Postfix) with ESMTP id 4F50E20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="hnm9kW1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHRMot (ORCPT
+        id S1726636AbgHRMrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHRMor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:44:47 -0400
-Received: from quaco.ghostprotocols.net (179.176.9.68.dynamic.adsl.gvt.net.br [179.176.9.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1FBD206B5;
-        Tue, 18 Aug 2020 12:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597754687;
-        bh=r7c1fjd16+AVQMuN7nXJ5UVWTq0jGTKJdJiFf7ffPWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mbwH2LHVgagPDI+1DFHp6p510rDEm15bVLN5Uj6sG37cW5L1AOFcuJ3LOMDuFJLOT
-         X4ILCCCCdUPJzB1lCXPyj9AtUbJooz3Rq+hs31R33J0AQNhoc/YLtLS3XyT6JWdSdC
-         2qkv5nrleGpB85i+a/O3xX2BICSzlMiNuKdEtQUo=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F37CB40D3D; Tue, 18 Aug 2020 09:44:43 -0300 (-03)
-Date:   Tue, 18 Aug 2020 09:44:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] perf top: Skip side-band event setup if
- HAVE_LIBBPF_SUPPORT is not set
-Message-ID: <20200818124443.GB2667554@kernel.org>
-References: <1597753837-16222-1-git-send-email-yangtiezhu@loongson.cn>
+        Tue, 18 Aug 2020 08:47:22 -0400
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:54406 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHRMrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:47:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597754839;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=30nedNabKIl2ONo0gOi3dKQIA20CDBWllkqmCPSHJQE=;
+  b=hnm9kW1V67mBMTSZgLqLLVsAZ06W7h9dOHjKlCNsTf/A6OSkCkKBOHcr
+   Ns5OUiCD5BrGsVscXouiJ503MbfqxN5aqxoeqwyc27PEfM+gGT1yxOM7I
+   soA3Z0DOdvegB/uKIktXMemIzw63xj47PNes6INenRwMXK5mzw0USG/Jh
+   E=;
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: dSa65gImyo2iPr/x4jx1ac6nBLkXBjB+3bhzo7yCsGsutshy6SyHRC1/mvirRj8xwTSf8HyP28
+ RrcpF4aWlO5hBNwDOqVsxTTYwSAKprYd2wAksJgMSqhsWMx3PqigSW3AQZE6DyfLEkT30Tc7MS
+ FbaT5U2wEV32R2uVGjyUq9Afv2n63ehmFsFawimfJ08+6N14gHlT//+oDkhM4wS7tglHHTTlsr
+ ES+04Ng9m5JFNjSS09sCzsjRu7eNejVzZ5z20jceaWbqZBPmINdZh63qh8jv5o3dPdRuVgBzud
+ HdM=
+X-SBRS: 2.7
+X-MesageID: 24920909
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,327,1592884800"; 
+   d="scan'208";a="24920909"
+Date:   Tue, 18 Aug 2020 14:47:10 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+CC:     Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
+        <norbert.kaminski@3mdeb.com>, <xen-devel@lists.xenproject.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+Message-ID: <20200818124710.GK828@Air-de-Roger>
+References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+ <20200817090013.GN975@Air-de-Roger>
+ <20200818120135.GK1679@mail-itl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <1597753837-16222-1-git-send-email-yangtiezhu@loongson.cn>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200818120135.GK1679@mail-itl>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Aug 18, 2020 at 08:30:37PM +0800, Tiezhu Yang escreveu:
-> When I execute perf top without HAVE_LIBBPF_SUPPORT, there exists the
-> following segmentation fault, skip the side-band event setup to fix it,
-> this is similar with commit 1101c872c8c7 ("perf record: Skip side-band
-> event setup if HAVE_LIBBPF_SUPPORT is not set").
+On Tue, Aug 18, 2020 at 02:01:35PM +0200, Marek Marczykowski-Górecki wrote:
+> On Mon, Aug 17, 2020 at 11:00:13AM +0200, Roger Pau Monné wrote:
+> > On Sun, Aug 16, 2020 at 02:19:49AM +0200, Marek Marczykowski-Górecki wrote:
+> > > In case of Xen PV dom0, Xen passes along info about system tables (see
+> > > arch/x86/xen/efi.c), but not the memory map from EFI.
+> > 
+> > I think that's because the memory map returned by
+> > XENMEM_machine_memory_map is in e820 form, and doesn't contain the
+> > required information about the EFI regions due to the translation done
+> > by efi_arch_process_memory_map in Xen?
 > 
-> [yangtiezhu@linux perf]$ ./perf top
+> Yes, I think so.
 > 
-> <SNIP>
-> perf: Segmentation fault
-> Obtained 6 stack frames.
-> ./perf(sighandler_dump_stack+0x5c) [0x12011b604]
-> [0xffffffc010]
-> ./perf(perf_mmap__read_init+0x3e) [0x1201feeae]
-> ./perf() [0x1200d715c]
-> /lib64/libpthread.so.0(+0xab9c) [0xffee10ab9c]
-> /lib64/libc.so.6(+0x128f4c) [0xffedc08f4c]
-> Segmentation fault
+> > > This makes sense
+> > > as it is Xen responsible for managing physical memory address space.
+> > > In this case, it doesn't make sense to condition using ESRT table on
+> > > availability of EFI memory map, as it isn't Linux kernel responsible for
+> > > it.
+> > 
+> > PV dom0 is kind of special in that regard as it can create mappings to
+> > (almost) any MMIO regions, and hence can change it's memory map
+> > substantially.
 > 
-> I use git bisect to find commit b38d85ef49cf ("perf bpf: Decouple
-> creating the evlist from adding the SB event") is the first bad
-> commit, so also add the Fixes tag.
-> 
-> Fixes: b38d85ef49cf ("perf bpf: Decouple creating the evlist from adding the SB event")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Do you mean PV dom0 should receive full EFI memory map? Jan already
+> objected this as it would be a layering violation.
 
-Yeah, thanks, applying.
+dom0 is already capable of getting the native e820 memory map using
+XENMEM_machine_memory_map, I'm not sure why allowing to return the
+memory map in EFI form would be any different (or a layering
+violation in the PV dom0 case).
 
-- Arnaldo
+Do you have a reference to that thread? I certainly missed it.
 
-> ---
->  tools/perf/builtin-top.c | 2 ++
->  1 file changed, 2 insertions(+)
+For PVH dom0 we could consider something different, since in that case
+there's a guest memory map which could likely be returned in EFI
+format and with the EFI regions if required.
+
+> > > Skip this part on Xen PV (let Xen do the right thing if it deems
+> > > necessary) and use ESRT table normally.
+> > 
+> > Maybe it would be better to introduce a new hypercall (or add a
+> > parameter to XENMEM_machine_memory_map) in order to be able to fetch
+> > the EFI memory map?
+> >
+> > That should allow a PV dom0 to check the ESRT is correct and thus not
+> > diverge from bate metal.
 > 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 994c230..7c64134 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1746,6 +1746,7 @@ int cmd_top(int argc, const char **argv)
->  		goto out_delete_evlist;
->  	}
->  
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  	if (!top.record_opts.no_bpf_event) {
->  		top.sb_evlist = evlist__new();
->  
-> @@ -1759,6 +1760,7 @@ int cmd_top(int argc, const char **argv)
->  			goto out_delete_evlist;
->  		}
->  	}
-> +#endif
->  
->  	if (perf_evlist__start_sb_thread(top.sb_evlist, target)) {
->  		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-> -- 
-> 2.1.0
+> Note the EFI memory map there is used not just to check things, but to
+> actually modify it to reserve the region. I think that's rather Xen
+> responsibility, not dom0. See the comment from Ard.
+
+But that would modify Linux copy of the memory map, which is fine? My
+understanding of EFI is limited, but I don't think such changes are
+feed back into EFI, so Linux is completely free to do whatever it
+wants with it's copy of the EFI memory map.
+
+> > > 
+> > > This is a requirement for using fwupd in PV dom0 to update UEFI using
+> > > capsules.
+> > > 
+> > > Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> > > ---
+> > >  drivers/firmware/efi/esrt.c | 47 ++++++++++++++++++++-----------------
+> > >  1 file changed, 25 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+> > > index d5915272141f..5c49f2aaa4b1 100644
+> > > --- a/drivers/firmware/efi/esrt.c
+> > > +++ b/drivers/firmware/efi/esrt.c
+> > > @@ -245,36 +245,38 @@ void __init efi_esrt_init(void)
+> > >  	int rc;
+> > >  	phys_addr_t end;
+> > >  
+> > > -	if (!efi_enabled(EFI_MEMMAP))
+> > > +	if (!efi_enabled(EFI_MEMMAP) && !efi_enabled(EFI_PARAVIRT))
+> > >  		return;
+> > >  
+> > >  	pr_debug("esrt-init: loading.\n");
+> > >  	if (!esrt_table_exists())
+> > >  		return;
+> > >  
+> > > -	rc = efi_mem_desc_lookup(efi.esrt, &md);
+> > > -	if (rc < 0 ||
+> > > -	    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+> > > -	     md.type != EFI_BOOT_SERVICES_DATA &&
+> > > -	     md.type != EFI_RUNTIME_SERVICES_DATA)) {
+> > > -		pr_warn("ESRT header is not in the memory map.\n");
+> > > -		return;
+> > > -	}
+> > > +	if (efi_enabled(EFI_MEMMAP)) {
+> > > +		rc = efi_mem_desc_lookup(efi.esrt, &md);
+> > > +		if (rc < 0 ||
+> > > +		    (!(md.attribute & EFI_MEMORY_RUNTIME) &&
+> > > +		     md.type != EFI_BOOT_SERVICES_DATA &&
+> > > +		     md.type != EFI_RUNTIME_SERVICES_DATA)) {
+> > > +			pr_warn("ESRT header is not in the memory map.\n");
+> > > +			return;
+> > > +		}
+> > 
+> > Here you blindly trust the data in the ESRT in the PV case, without
+> > checking it matches the regions on the memory map, which could lead to
+> > errors if ESRT turns to be wrong.
 > 
+> I don't think checking merely if ESRT lives somewhere in
+> EFI_{BOOT,RUNTIME}_SERVICES_DATA area guarantees its correctness.
+> 
+> On the other hand, this seems to be done to prevent overwriting that
+> memory with something else (see that in case of EFI_BOOT_SERVICES_DATA
+> it is later marked as reserved. I think it should be rather done by Xen,
+> not dom0.
 
--- 
+Forcing Xen to do all those checks seems quite a tedious work, and in
+fact the memory map that dom0 has might be more complete than the one
+Xen is able to construct, as Xen doesn't have an AML parser so it's
+not able to get all the possible info from ACPI.
 
-- Arnaldo
+Thanks, Roger.
