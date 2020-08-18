@@ -2,102 +2,172 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E69C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5001C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817232076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717482076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 20:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TEZ9FT5U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mY9/qM2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHRT7Q (ORCPT
+        id S1726810AbgHRUAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        Tue, 18 Aug 2020 16:00:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHRT7H (ORCPT
+        with ESMTP id S1726739AbgHRUAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:59:07 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8892DC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f5so9704490plr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
+        Tue, 18 Aug 2020 16:00:02 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CEFC061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:00:02 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g26so19510753qka.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UtvEIM7NJb9DV7eM9Gem48qF3l7pVpCdEzxyrXC+k2g=;
-        b=TEZ9FT5UQ0c4hTw4uTo0tXnl21MyitKB/Hm0BA/xD94N+19fOdggAxLE1SHPhZXHqD
-         Rly/Wc9mUw8GyMUu9e4rUX+5GtFA6peIE4GDgziPYwtFtihtofk84dfTXvuz5Z+I5Lt0
-         XAw8PgnIzVDU+KymMURjkfxZx0R0EvGunb2/w=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=mY9/qM2MC8h80QmH/L2o3ebU+oUQNUCW63wm7YBmbeK4YBE5Xe3Rjqtwof4g90Gl5j
+         Nashil2BSJxW/GC+DcTms+MTs3zm8+LkClOf/U2jUP/YJlxAmvLXG+Y1SxzjQuQdOmRe
+         FaeRrNHm7nBp0Ire6IgS6r1s0gdLxjr1afa0E+smJ3xN4nEInrIvlWBT7CW0TEmor1mO
+         FIgviwqTSYceSMveg047w1orQVPvufjnGz94qi/TKhCr8AbTj6GPs3BxF/aFHmnO4n+M
+         XlWMZtYVdzdVxOkWy4H/ual/TZMNFFmE2xwQGOV4ybgkF4mcBltQ5wgUueSnWH61nlUt
+         zm4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UtvEIM7NJb9DV7eM9Gem48qF3l7pVpCdEzxyrXC+k2g=;
-        b=bT8UnwfIm/fw/KYkCUmfbp9gVMio0BHE2lpzWIxjiRRrVokwefpvD6vrede3yfzZjQ
-         pPubz7+itHdNZncLYZ36Sy6TwKEypgoU3M9FXhE/gWQjSU+RjnMlsBLWoH/zL5H8HgGG
-         OmtlYKqgweOj7splRkflggv1Ae2B21M+t6GbFhCgCnfIX51vqw/3Th1znv19Tncd4IYP
-         sjS3o49ltHPGs2Qq/ULzMHw6pazfC/TBhYBJ4DeM5BFD9spuZxBFsrm0CsPR+uJYCXNP
-         PcgTZ/JI+a6Tk1igo97fmIeuYwf+q5VW9fZA656wwLoDb4CBcyNgr5lSCJhcgupyykml
-         cabg==
-X-Gm-Message-State: AOAM533pNTo1nmCDKUJi9titdDnHlEoL2w0JV6utvc8ccXgHQBIOovgh
-        Z86LB9fjktcH9gE/1CCqA5Xw1imRe5jz3w==
-X-Google-Smtp-Source: ABdhPJz5S+aFMIAllTf6EeyEL2d4ft+e+kahg8U05QAv6xwSUo7qPqGWeSmxI0LB5EZTcNSgAu3TAg==
-X-Received: by 2002:a17:902:b20e:: with SMTP id t14mr16722140plr.58.1597780747129;
-        Tue, 18 Aug 2020 12:59:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f17sm26147059pfq.67.2020.08.18.12.59.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:59:06 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:59:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 08/11] x86: make TASK_SIZE_MAX usable from assembly code
-Message-ID: <202008181258.CEC4B8B3@keescook>
-References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-9-hch@lst.de>
- <202008181244.BBDA7DAB@keescook>
- <20200818195539.GB32691@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/ZDCPDwW9euB1yf1r32n/nOxApA5CLlHLcrrfHIoPe0=;
+        b=lV8vTQDxxhZueq9pTKIyU0rmcusokq1No6F/2k1l8aL4h2friqp/CjstSZx5I8OCpK
+         NXfGXTwSS9Ftfb4oPXRXg+BBtXS7OOX4Povuxagn+VgnnymEqp1+G4luuUB7/nlSFStU
+         DFzbxcY0ngLBJCCUFeawFVeJiLrDaEUOpygefc2pXr0X1AHkTK42wOFVZD+OvBi39uQ+
+         1QGOzfjlZzbY9XFHMRM5XnxgLdeTKL5muwwWR3tVxDyLc17/8tuErfk2uJLIN35ebd/S
+         TyJxrJg3tsgt4KRAhhe5ns9wAyMkDn2bmQVWTs3UamHWxOGZHA2gQEmvmm7XRrHFGvPW
+         6YsQ==
+X-Gm-Message-State: AOAM530WUymeh9v+dZE39oh4F6ZFrMgUjGUPKzQqnFdk6AD0orSwRmCU
+        SKhmZ9gAMJLN0qCDLJR5OCu9AoIUeN4GL2oByttYHA==
+X-Google-Smtp-Source: ABdhPJzURAYX1VluYbg81khU/4BFMEQ5XggeNrYg7amfOd007KJmuQPkzQNHuZnA3kRR7pjm2ZwfV6zrZkG75TYorqc=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr19146148qke.330.1597780801253;
+ Tue, 18 Aug 2020 13:00:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818195539.GB32691@lst.de>
+References: <20200801112446.149549-1-refactormyself@gmail.com> <20200801112446.149549-9-refactormyself@gmail.com>
+In-Reply-To: <20200801112446.149549-9-refactormyself@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 18 Aug 2020 21:59:50 +0200
+Message-ID: <CAMpxmJX8SV6RTgy4vKNRPzKvnVaJZpZKQmOf1pX1wGd+H2zaeA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/17] gpio: Drop uses of pci_read_config_*() return value
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        bjorn@helgaas.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:55:39PM +0200, Christoph Hellwig wrote:
-> On Tue, Aug 18, 2020 at 12:44:49PM -0700, Kees Cook wrote:
-> > On Mon, Aug 17, 2020 at 09:32:09AM +0200, Christoph Hellwig wrote:
-> > > For 64-bit the only hing missing was a strategic _AC, and for 32-bit we
-> > 
-> > typo: thing
-> > 
-> > > need to use __PAGE_OFFSET instead of PAGE_OFFSET in the TASK_SIZE
-> > > definition to escape the explicit unsigned long cast.  This just works
-> > > because __PAGE_OFFSET is defined using _AC itself and thus never needs
-> > > the cast anyway.
-> > 
-> > Shouldn't this be folded into the prior patch so there's no bisection
-> > problem?
-> 
-> I didn't see a problem bisecting, do you have something particular in
-> mind?
+On Sat, Aug 1, 2020 at 2:24 PM Saheed O. Bolarinwa
+<refactormyself@gmail.com> wrote:
+>
+> The return value of pci_read_config_*() may not indicate a device error.
+> However, the value read by these functions is more likely to indicate
+> this kind of error. This presents two overlapping ways of reporting
+> errors and complicates error checking.
+>
+> It is possible to move to one single way of checking for error if the
+> dependency on the return value of these functions is removed, then it
+> can later be made to return void.
+>
+> Remove all uses of the return value of pci_read_config_*().
+> Check the actual value read for ~0. In this case, ~0 is an invalid
+> value thus it indicates some kind of error.
+>
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
+> ---
+>  drivers/gpio/gpio-amd8111.c |  7 +++++--
+>  drivers/gpio/gpio-rdc321x.c | 21 ++++++++++++---------
+>  2 files changed, 17 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
+> index fdcebe59510d..7b9882380cbc 100644
+> --- a/drivers/gpio/gpio-amd8111.c
+> +++ b/drivers/gpio/gpio-amd8111.c
+> @@ -198,9 +198,12 @@ static int __init amd_gpio_init(void)
+>         goto out;
+>
+>  found:
+> -       err = pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> -       if (err)
+> +       pci_read_config_dword(pdev, 0x58, &gp.pmbase);
+> +       if (gp.pmbase == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto out;
+> +       }
+> +
+>         err = -EIO;
+>         gp.pmbase &= 0x0000FF00;
+>         if (gp.pmbase == 0)
+> diff --git a/drivers/gpio/gpio-rdc321x.c b/drivers/gpio/gpio-rdc321x.c
+> index 01ed2517e9fd..03f1ff07b844 100644
+> --- a/drivers/gpio/gpio-rdc321x.c
+> +++ b/drivers/gpio/gpio-rdc321x.c
+> @@ -85,10 +85,13 @@ static int rdc_gpio_config(struct gpio_chip *chip,
+>         gpch = gpiochip_get_data(chip);
+>
+>         spin_lock(&gpch->lock);
+> -       err = pci_read_config_dword(gpch->sb_pdev, gpio < 32 ?
+> -                       gpch->reg1_ctrl_base : gpch->reg2_ctrl_base, &reg);
+> -       if (err)
+> +       pci_read_config_dword(gpch->sb_pdev,
+> +                               (gpio < 32) ? gpch->reg1_ctrl_base
+> +                                       : gpch->reg2_ctrl_base, &reg);
+> +       if (reg == (u32)~0) {
+> +               err = -ENODEV;
+>                 goto unlock;
+> +       }
+>
+>         reg |= 1 << (gpio & 0x1f);
+>
+> @@ -166,17 +169,17 @@ static int rdc321x_gpio_probe(struct platform_device *pdev)
+>         /* This might not be, what others (BIOS, bootloader, etc.)
+>            wrote to these registers before, but it's a good guess. Still
+>            better than just using 0xffffffff. */
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg1_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[0]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[0] == (u32)~0)
+> +               return -ENODEV;
+>
+> -       err = pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+> +       pci_read_config_dword(rdc321x_gpio_dev->sb_pdev,
+>                                         rdc321x_gpio_dev->reg2_data_base,
+>                                         &rdc321x_gpio_dev->data_reg[1]);
+> -       if (err)
+> -               return err;
+> +       if (rdc321x_gpio_dev->data_reg[1] == (u32)~0)
+> +               return -ENODEV;
+>
+>         dev_info(&pdev->dev, "registering %d GPIOs\n",
+>                                         rdc321x_gpio_dev->chip.ngpio);
+> --
+> 2.18.4
+>
 
-Oh, I misunderstood this patch to be a fix for compilation. Is this just
-a correctness fix?
+Bjorn,
 
--- 
-Kees Cook
+I don't know the pci sub-system at all. Does this look good to you?
+
+Bartosz
