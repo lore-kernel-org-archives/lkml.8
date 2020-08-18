@@ -2,110 +2,192 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C69DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13552C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63448206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6898205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TuQrlx9l"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXlGAiGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgHRPJG (ORCPT
+        id S1726788AbgHRPKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58366 "EHLO
+        Tue, 18 Aug 2020 11:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgHRPI6 (ORCPT
+        with ESMTP id S1726570AbgHRPKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:08:58 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D0CC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:08:58 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v4so21862477ljd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:08:58 -0700 (PDT)
+        Tue, 18 Aug 2020 11:10:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E756C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:10:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f7so18630287wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rETSh+8yuTihjWF+BUTSPFBgl5bA8M3eQDalGhxFfpw=;
-        b=TuQrlx9ltdfzy2BXM/J2LYEePbtt5B3+P7MjccLQ3uQ6Uy33ZMoL59hwUM94EYTIOP
-         ePiPIpJnm9DIZTn2Ko1ylH4l/Q933ORzG7SG9jp22hAoaFi/MjiX1rsLQiS8SriNW/JL
-         mXe2msw/QgUbYSRWgfPXE3QkhDFArRTP+3SoLFc2PfnVLXKt/mWT7SD/hoWl5ngIHhiI
-         va+68H73TKONrFj3zf3N5eUj8uAHeSnwWoNDgMnJCZ09sW1w+sctB4PPQc6iSPBLgeYf
-         InlH9BhM1cZXcll8D7ixfZ/ShMjuzbSZX3SdtYNKtHCh/Fh0NqeniOdJEWiCqGTZFn3E
-         /VeA==
+        d=chromium.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zxe+HJmIWMfQ1RElqmaY0GiV1Gl7b0KgtI/GKiLoLwc=;
+        b=UXlGAiGLTmMimNPojD1cHSTRsErRHNBbtrZT5pI3TeFxNQmf20CwFIdDFAcb0a7n4+
+         vmKVl8ds6JZwjQwoEtNGzQL7v/yP6SqgzMeGFesFIPLs4fKR2BNPUoR/6xUfk19656yl
+         JRTAGLhb+3nGmbMEI88v/pCOE7murI68EWPJQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rETSh+8yuTihjWF+BUTSPFBgl5bA8M3eQDalGhxFfpw=;
-        b=WZDcED2u/bzTtzvt+lCHNMPFTm2dsbREvntg35NTu+967Gd3djIf31eRwv9TDfzLC1
-         q0ZVr6u0yYdet53DAN0MEn6AYogRTPmiBMf0khT4H5Ssksy9M8RFVml0iehX/vIGirhg
-         0fgVZNgJMnFB+J+hg+FPp+A6aMBfNJr0z03V6Uaz5XHY/52+dNLwyhLIDeMr1sp38ts3
-         gw77Y4kkrjCE/7KVvj8M3EaCGOreGCdlN2/c55EMZc7fgY7LPzk52l1pyFjY1aOiptp3
-         ww3+T1pUt2KDgBZklTRxZggn9sDvrGQelQggVyLsWRdb4B+FLPKDC+XaM3IhPqttwD5+
-         l0pQ==
-X-Gm-Message-State: AOAM533bwOUgwPVbmlY20VzceSisQkRdArhhOdzECPwk4+D6G1arAMFq
-        n8wF9SC0zROG2SIVeMOslSHlxVVTWMzaKp3RN27lLsTA8UuTjA==
-X-Google-Smtp-Source: ABdhPJzFP/jL9HqM7+C+ZGX+JQAYbGvU8bb1EZGwmWqFhRvtDxyHbFA1E3GAJH4c/IDsC/tHOeWlK4THJj08BWmGM1c=
-X-Received: by 2002:a2e:9f4c:: with SMTP id v12mr9176669ljk.139.1597763336196;
- Tue, 18 Aug 2020 08:08:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zxe+HJmIWMfQ1RElqmaY0GiV1Gl7b0KgtI/GKiLoLwc=;
+        b=LgnWp2bPiipfZOIsU62kgVhYiAPwtCC33q17idO8ndwaiWWKR/Vs9Z6816WQthGl6e
+         q5q3icbdhth3ETePXqMnUeDi0RhhGfcbsPxeR8fKaazdJUoaJjluo1/SRCPDFqUL3fQr
+         PFpC0U68+ZsCerJhc4DOGIaVacL84gyFmU/6XfeJkWUdoy4joUJ3CvwLUS2Rhx0njMz0
+         /IOA/IH6at9kPvP8f4lXXT9XggX8ftHHlBp7GrkNWc1TyBjWP6BKSXBb8MgLXW7+hptX
+         DX7MUCh5OOhqfDaSr1laBB+ak12wXaRdeicErsU4ylR00NfJFRAMS3uMITj23r/XDb3I
+         Xv2w==
+X-Gm-Message-State: AOAM530hmOEQWQhQcbmhQuvkyGbupaoPY6c5N55hXGLhUd9LEF04CsMt
+        5I7T5n7GTwt23tVYgqbm1AkUEw==
+X-Google-Smtp-Source: ABdhPJwMZXOzExdHgzzwPRNZtVauhbOakNrr5oH3e0Yl8Lg/4VVrGTLwLZqELVDHQ2B0C62wz/T+gw==
+X-Received: by 2002:adf:e504:: with SMTP id j4mr21174389wrm.205.1597763435276;
+        Tue, 18 Aug 2020 08:10:35 -0700 (PDT)
+Received: from [192.168.2.66] ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id z6sm279421wml.41.2020.08.18.08.10.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 08:10:34 -0700 (PDT)
+Subject: Re: [PATCH bpf-next v8 5/7] bpf: Implement bpf_local_storage for
+ inodes
+To:     Martin KaFai Lau <kafai@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200803164655.1924498-1-kpsingh@chromium.org>
+ <20200803164655.1924498-6-kpsingh@chromium.org>
+ <20200818012758.4666zlknkr4x6cbl@kafai-mbp.dhcp.thefacebook.com>
+From:   KP Singh <kpsingh@chromium.org>
+Message-ID: <60344fad-f761-0fee-a6ef-4880c45c3e52@chromium.org>
+Date:   Tue, 18 Aug 2020 17:10:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200818061239.29091-1-jannh@google.com> <20200818061239.29091-3-jannh@google.com>
- <20200818134027.GF29865@redhat.com>
-In-Reply-To: <20200818134027.GF29865@redhat.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 18 Aug 2020 17:08:30 +0200
-Message-ID: <CAG48ez01ZTUzZ+mEqyiz+mUQXq4SPiZfZtP1GmpEY1T2wLtnJQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] coredump: Let dump_emit() bail out on short writes
-To:     Oleg Nesterov <oleg@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200818012758.4666zlknkr4x6cbl@kafai-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 3:40 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> On 08/18, Jann Horn wrote:
-> >
-> > +     if (dump_interrupted())
-> > +             return 0;
-> > +     n = __kernel_write(file, addr, nr, &pos);
-> > +     if (n != nr)
-> > +             return 0;
-> > +     file->f_pos = pos;
->
-> Just curious, can't we simply do
->
->         __kernel_write(file, addr, nr, &file->f_pos);
->
-> and avoid "loff_t pos" ?
 
-Hm... e.g. ksys_write() has the same pattern of copying the value into
-a local variable and back, but I guess maybe there it's done so that
-->f_pos can't change when vfs_write() returns a negative value, or
-something like that? Or maybe to make the update look more atomic?
-None of that is a concern for the core-dumping code, so I guess we
-could change it... but then again, maybe we shouldn't diverge from how
-it's done in fs/read_write.c (e.g. in ksys_write()) too much.
-Coredumping is already a bit too special, no need to make it worse...
 
-It looks like Al Viro introduced this as part of commit 2507a4fbd48a
-("make dump_emit() use vfs_write() instead of banging at ->f_op->write
-directly"). Before that commit, &file->f_pos was actually passed as a
-parameter, just like you're proposing. I don't really want to try
-reverting parts of Al's commits without understanding what exactly is
-going on...
+On 8/18/20 3:27 AM, Martin KaFai Lau wrote:
+> On Mon, Aug 03, 2020 at 06:46:53PM +0200, KP Singh wrote:
+>> From: KP Singh <kpsingh@google.com>
+>>
+>> Similar to bpf_local_storage for sockets, add local storage for inodes.
+>> The life-cycle of storage is managed with the life-cycle of the inode.
+>> i.e. the storage is destroyed along with the owning inode.
+>>
+>> The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
+>> security blob which are now stackable and can co-exist with other LSMs.
+>>
+>> Signed-off-by: KP Singh <kpsingh@google.com>
+>> ---
+>>  include/linux/bpf_local_storage.h             |  10 +
+>>  include/linux/bpf_lsm.h                       |  21 ++
+>>  include/linux/bpf_types.h                     |   3 +
+>>  include/uapi/linux/bpf.h                      |  38 +++
+>>  kernel/bpf/Makefile                           |   1 +
+
+[...]
+
+ata *inode_storage_lookup(struct inode *inode,
+>> +							   struct bpf_map *map,
+>> +							   bool cacheit_lockit)
+>> +{
+>> +	struct bpf_local_storage *inode_storage;
+>> +	struct bpf_local_storage_map *smap;
+>> +	struct bpf_storage_blob *bsb;
+>> +
+>> +	bsb = bpf_inode(inode);
+>> +	if (!bsb)
+>> +		return ERR_PTR(-ENOENT);
+> ERR_PTR is returned here...
+> 
+>> +
+>> +	inode_storage = rcu_dereference(bsb->storage);
+>> +	if (!inode_storage)
+>> +		return NULL;
+>> +
+
+[...]
+
+>> +		kfree_rcu(local_storage, rcu);
+>> +}
+>> +
+>> +
+>> +static void *bpf_fd_inode_storage_lookup_elem(struct bpf_map *map, void *key)
+>> +{
+>> +	struct bpf_local_storage_data *sdata;
+>> +	struct file *f;
+>> +	int fd;
+>> +
+>> +	fd = *(int *)key;
+>> +	f = fcheck(fd);
+>> +	if (!f)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	get_file(f);
+>> +	sdata = inode_storage_lookup(f->f_inode, map, true);
+>> +	fput(f);
+>> +	return sdata ? sdata->data : NULL;
+> sdata can be ERR_PTR here and a few other cases below.
+> 
+> May be inode_storage_lookup() should just return NULL.
+
+I think returning NULL is a better option. Thanks!
+
+> 
+>> +}
+>> +
+>> +static int bpf_fd_inode_storage_update_elem(struct bpf_map *map, void *key,
+>> +					 void *value, u64 map_flags)
+>> +{
+>> +	struct bpf_local_storage_data *sdata;
+>> +	struct file *f;
+>> +	int fd;
+>> +
+>> +	fd = *(int *)key;
+>> +	f = fcheck(fd);
+>> +	if (!f)
+>> +		return -EINVAL;
+>> +
+>> +	get_file(f);> get_file() does atomic_long_inc() instead of atomic_long_inc_not_zero().
+> I don't see how that helps here.  Am I missing something?
+
+You are right, this should not not be an fcheck followed by a get_file
+rather fcheck followed by get_file_rcu:
+
+#define get_file_rcu_many(x, cnt)	\
+	atomic_long_add_unless(&(x)->f_count, (cnt), 0)
+#define get_file_rcu(x) get_file_rcu_many((x), 1)
+#define file_count(x)	atomic_long_read(&(x)->f_count)
+
+But there is an easier way than all of this and this is to use 
+fget_raw which also calls get_file_rcu_many 
+and ensures a non-zero count before getting a reference.
+
+- KP
+
+> 
+>> +	sdata = bpf_local_storage_update(f->f_inode, map, value, map_flags);
+>> +	fput(f);
+>> +	return PTR_ERR_OR_ZERO(sdata);
+>> +}
+>> +
