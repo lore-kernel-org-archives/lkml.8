@@ -2,98 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E23206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvwfVyfh"
+	by mail.kernel.org (Postfix) with ESMTP id 41DEA206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597744379;
+	bh=xdS+b75ghYmvRyp5w9RPdxKoug0EJ/G+RiOriB8x2Hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WJKZU69V8nZC2m7loxWrv4tZyFjPUQigSrBp3+HJx84SiSeLxWlpi+U84oUWuNn+C
+	 6q0c+ML0wmtjfsgo3/ntIKGZJu/Km+PXt5Sw/u9DzVVM9h45SoQ+XtrjNTZMEXFf+F
+	 Mlv10rVgZo64vYgNvOgfq/gR/5lnpRsiv+jA/g3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgHRJwr (ORCPT
+        id S1726696AbgHRJw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgHRJwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:52:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163D7C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:52:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l2so17631626wrc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ipDKz5g1D0S+2ZDMowsxv3Wi3vQOCFMnWF8JkRRYICk=;
-        b=jvwfVyfhN8w0TONtswrK+GiKQsmHt/iWEMCMOsUaFciLd9R2O69kCnn4TvpKendjen
-         Motfa/oPNNXmJjVtbbGXmFdmnUy0TGznc7NiNnz2KRzH43UDkXWqYxb04YqYm7kqah9p
-         k5DF0erG3ZmlwRBdCtpVUCR57/ifOBiAwdr2gQNJzAyE6zgfvpYAfPgy1NvQDNl3RDzC
-         ZgkTqr/N/AGE0E28mFhteMTqzXEJNQ478wB4xFoZeTjw0SsnhkAQGw8kCJfY28A7vfcg
-         Gyk/k6b1CA81mBcj8v1wZ6G+Tgxn77frmfiPs5nRxPG3gXUlsG/3aIFkhoJ5auz/nXqu
-         klyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ipDKz5g1D0S+2ZDMowsxv3Wi3vQOCFMnWF8JkRRYICk=;
-        b=k52uj4SWq5sRTTbQbwI4NO4lpvcc1+AcMADNI9i7sPghQh1hMFCIfuBkJiW33hZ04n
-         u4Q8HmjMDv8uqlw3lRiE1KvXlZhN/hSmm8/S4H9l1aEe7wXIjYew3JCZ6fTWksTX6YmV
-         6zPVhoV3gQYOddJSM8wTHgxGgnmSKygxz85m1FDsShVM8zjMIKYYQdNZXFjh9+SNRRjg
-         HcfiJUD62cP5+xdLQPgHVr3IEOFfTmzoP576rxW+fzDVsfF70FjRa/E+hIw8Ob77iFFT
-         OqthV4l9BiVfba5DXF14jodqhxdvSFySReT2LcSL4YPUZIiJcpswVVYB8jNJtUgJyUvl
-         RT9Q==
-X-Gm-Message-State: AOAM531KUSCbdD3oEmmIkQDmLrfE2K3Wlg0pKlfuS6eLFF+c5XFSU5vE
-        DQD3X3ZDwDVlDV0eyRAbkLw=
-X-Google-Smtp-Source: ABdhPJxo82TEyMKUpw1MRRmNpYVm5KU0966dG/z9nADSZn2Aph3kAPhN4BhoFSrPfEp3Qg0paUYCeg==
-X-Received: by 2002:adf:9e8d:: with SMTP id a13mr18529022wrf.94.1597744362803;
-        Tue, 18 Aug 2020 02:52:42 -0700 (PDT)
-Received: from tsnow ([94.159.146.190])
-        by smtp.gmail.com with ESMTPSA id v16sm32302023wmj.14.2020.08.18.02.52.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:52:42 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:52:35 +0300
-From:   Tomer Samara <tomersamara98@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linaro-mm-sig@lists.linaro.org,
-        Todd Kjos <tkjos@android.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH 0/4] *** SUBJECT HERE ***
-Message-ID: <20200818095235.GA354542@tsnow>
-References: <cover.1597742228.git.tomersamara98@gmail.com>
- <20200818095035.GA56916@kroah.com>
+        Tue, 18 Aug 2020 05:52:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbgHRJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 05:52:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5ED420738;
+        Tue, 18 Aug 2020 09:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597744375;
+        bh=xdS+b75ghYmvRyp5w9RPdxKoug0EJ/G+RiOriB8x2Hk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G2nzMHixlR6257icH9egqpc70o0BhDsW4O8+t+2Ivyzzp7ScpRlqfPKrVthkuEJst
+         1tngXqow2SmSDX0R9ZAAOq47rOq0J8lZ5kghwqVli8sXOW8WcX7Ee/KzcO9XXmaoY3
+         48Q+5RkPW2HFSN5b0NaKLDTTLHUjoTIVMufaB0oU=
+Date:   Tue, 18 Aug 2020 11:53:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
+        Lihong Kou <koulihong@huawei.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 027/168] Bluetooth: add a mutex lock to avoid UAF in
+ do_enale_set
+Message-ID: <20200818095318.GA57268@kroah.com>
+References: <20200817143733.692105228@linuxfoundation.org>
+ <20200817143735.099152549@linuxfoundation.org>
+ <20200818094024.GB10974@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818095035.GA56916@kroah.com>
+In-Reply-To: <20200818094024.GB10974@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:50:35AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Aug 18, 2020 at 12:17:08PM +0300, Tomer Samara wrote:
-> > *** BLURB HERE ***
+On Tue, Aug 18, 2020 at 11:40:25AM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Really?
+> > From: Lihong Kou <koulihong@huawei.com>
+> > 
+> > [ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
+> > 
+> > In the case we set or free the global value listen_chan in
+> > different threads, we can encounter the UAF problems because
+> > the method is not protected by any lock, add one to avoid
+> > this bug.
 > 
-> And your subject line could use some work too :(
->
+> For this to be safe, bt_6lowpan_exit() needs same handling, no?
+> 
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> 
+> diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+> index 9a75f9b00b51..2402ef5ac072 100644
+> --- a/net/bluetooth/6lowpan.c
+> +++ b/net/bluetooth/6lowpan.c
+> @@ -1304,10 +1304,12 @@ static void __exit bt_6lowpan_exit(void)
+>  	debugfs_remove(lowpan_enable_debugfs);
+>  	debugfs_remove(lowpan_control_debugfs);
+>  
+> +	mutex_lock(&set_lock);
+>  	if (listen_chan) {
+>  		l2cap_chan_close(listen_chan, 0);
+>  		l2cap_chan_put(listen_chan);
+>  	}
+> +	mutex_unlock(&set_lock);
+>  
+>  	disconnect_devices();
+>  
+> 
+> 
 
-sorry for that, i've made a script for sending patchset and accidently 
-it sents mails without contorl.
-Fixed that
+Why you are sending this in this format seems very odd to me, you know
+better...
