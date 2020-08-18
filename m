@@ -4,154 +4,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AE7C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A5320882
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0E62224D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgHRP57 (ORCPT
+        id S1726673AbgHRP6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:57:59 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2647 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727931AbgHRPq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:46:57 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 4CFA21D71B243D763320;
-        Tue, 18 Aug 2020 16:46:56 +0100 (IST)
-Received: from kstruczy-linux-box (10.204.65.138) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 16:46:54 +0100
-Received: by kstruczy-linux-box (sSMTP sendmail emulation); Tue, 18 Aug 2020 17:46:57 +0200
-From:   <krzysztof.struczynski@huawei.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <containers@lists.linux-foundation.org>,
-        <linux-security-module@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <stefanb@linux.vnet.ibm.com>,
-        <sunyuqiong1988@gmail.com>, <mkayaalp@cs.binghamton.edu>,
-        <dmitry.kasatkin@gmail.com>, <serge@hallyn.com>,
-        <jmorris@namei.org>, <christian@brauner.io>,
-        <silviu.vlasceanu@huawei.com>, <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Subject: [RFC PATCH 24/30] keys: Include key domain tag in the iterative search
-Date:   Tue, 18 Aug 2020 17:42:24 +0200
-Message-ID: <20200818154230.14016-15-krzysztof.struczynski@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-References: <20200818154230.14016-1-krzysztof.struczynski@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.138]
-X-ClientProxiedBy: fraeml707-chm.china.huawei.com (10.206.15.35) To
- lhreml722-chm.china.huawei.com (10.201.108.73)
-X-CFilter-Loop: Reflected
+        Tue, 18 Aug 2020 11:58:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18981 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728095AbgHRPqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:46:53 -0400
+IronPort-SDR: A4sR7TVJ2xfvtamT0mdAqY2FpaqpuA5RO50jHZOen6OPrEyuVkI1A8//e/0ZQOKGl9Tl7bod8s
+ eFnsE+ZsOR2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216462274"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="216462274"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:46:50 -0700
+IronPort-SDR: 50FV8DT7Peb1MIJh8FWOPhZ0N2ZO8CKZ1Wa2q6d1vabfdfTCCwi1ZzkE0y8m+yWGozvmNp6835
+ KvxMYWN4zrtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="400530198"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:46:44 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+Subject: [PATCH v6 01/10] net: eth: altera: tse_start_xmit ignores tx_buffer call response
+Date:   Tue, 18 Aug 2020 23:46:04 +0800
+Message-Id: <20200818154613.148921-2-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
+References: <20200818154613.148921-1-joyce.ooi@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Add domain tag to the key_match_data. If set, check domain tag in the
-default match function and asymmetric keys match functions.
+The return from tx_buffer call in tse_start_xmit is
+inapropriately ignored.  tse_buffer calls should return
+0 for success or NETDEV_TX_BUSY.  tse_start_xmit should
+return not report a successful transmit when the tse_buffer
+call returns an error condition.
 
-This will allow to use the key domain tag in the search criteria for
-the iterative search, not only for the direct lookup that is based on
-the index key.
+In addition to the above, the msgdma and sgdma do not return
+the same value on success or failure.  The sgdma_tx_buffer
+returned 0 on failure and a positive number of transmitted
+packets on success.  Given that it only ever sends 1 packet,
+this made no sense.  The msgdma implementation msgdma_tx_buffer
+returns 0 on success.
 
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+  -> Don't ignore the return from tse_buffer calls
+  -> Fix sgdma tse_buffer call to return 0 on success
+     and NETDEV_TX_BUSY on failure.
+
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- crypto/asymmetric_keys/asymmetric_type.c | 20 ++++++++++++++++----
- include/linux/key-type.h                 |  1 +
- security/keys/keyring.c                  | 10 +++++++++-
- 3 files changed, 26 insertions(+), 5 deletions(-)
+v2: no change
+v3: queue is stopped before returning NETDEV_TX_BUSY
+v4: no change
+v5: no change
+v6: no change
+---
+ drivers/net/ethernet/altera/altera_sgdma.c    | 19 ++++++++++++-------
+ drivers/net/ethernet/altera/altera_tse_main.c |  4 +++-
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
-index 33e77d846caa..177429bc5c7b 100644
---- a/crypto/asymmetric_keys/asymmetric_type.c
-+++ b/crypto/asymmetric_keys/asymmetric_type.c
-@@ -249,9 +249,15 @@ static bool asymmetric_key_cmp(const struct key *key,
- {
- 	const struct asymmetric_key_ids *kids = asymmetric_key_ids(key);
- 	const struct asymmetric_key_id *match_id = match_data->preparsed;
-+	bool match;
+diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
+index db97170da8c7..fe6276c7e4a3 100644
+--- a/drivers/net/ethernet/altera/altera_sgdma.c
++++ b/drivers/net/ethernet/altera/altera_sgdma.c
+@@ -4,6 +4,7 @@
+  */
  
--	return asymmetric_match_key_ids(kids, match_id,
--					asymmetric_key_id_same);
-+	match = asymmetric_match_key_ids(kids, match_id,
-+					 asymmetric_key_id_same);
-+
-+	if (match_data->domain_tag)
-+		match &= key->index_key.domain_tag == match_data->domain_tag;
-+
-+	return match;
+ #include <linux/list.h>
++#include <linux/netdevice.h>
+ #include "altera_utils.h"
+ #include "altera_tse.h"
+ #include "altera_sgdmahw.h"
+@@ -159,10 +160,11 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
+ 		    SGDMA_CTRLREG_CLRINT);
  }
  
- /*
-@@ -262,9 +268,15 @@ static bool asymmetric_key_cmp_partial(const struct key *key,
+-/* transmits buffer through SGDMA. Returns number of buffers
+- * transmitted, 0 if not possible.
+- *
+- * tx_lock is held by the caller
++/* transmits buffer through SGDMA.
++ *   original behavior returned the number of transmitted packets (always 1) &
++ *   returned 0 on error.  This differs from the msgdma.  the calling function
++ *   will now actually look at the code, so from now, 0 is good and return
++ *   NETDEV_TX_BUSY when busy.
+  */
+ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
  {
- 	const struct asymmetric_key_ids *kids = asymmetric_key_ids(key);
- 	const struct asymmetric_key_id *match_id = match_data->preparsed;
-+	bool match;
-+
-+	match = asymmetric_match_key_ids(kids, match_id,
-+					 asymmetric_key_id_partial);
-+
-+	if (match_data->domain_tag)
-+		match &= key->index_key.domain_tag == match_data->domain_tag;
+@@ -173,8 +175,11 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+ 	struct sgdma_descrip __iomem *ndesc = &descbase[1];
  
--	return asymmetric_match_key_ids(kids, match_id,
--					asymmetric_key_id_partial);
-+	return match;
+ 	/* wait 'til the tx sgdma is ready for the next transmit request */
+-	if (sgdma_txbusy(priv))
+-		return 0;
++	if (sgdma_txbusy(priv)) {
++		if (!netif_queue_stopped(priv->dev))
++			netif_stop_queue(priv->dev);
++		return NETDEV_TX_BUSY;
++	}
+ 
+ 	sgdma_setup_descrip(cdesc,			/* current descriptor */
+ 			    ndesc,			/* next descriptor */
+@@ -191,7 +196,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+ 	/* enqueue the request to the pending transmit queue */
+ 	queue_tx(priv, buffer);
+ 
+-	return 1;
++	return 0;
  }
  
- /*
-diff --git a/include/linux/key-type.h b/include/linux/key-type.h
-index 2ab2d6d6aeab..c8ea26ab242c 100644
---- a/include/linux/key-type.h
-+++ b/include/linux/key-type.h
-@@ -55,6 +55,7 @@ struct key_match_data {
- 	unsigned	lookup_type;	/* Type of lookup for this search. */
- #define KEYRING_SEARCH_LOOKUP_DIRECT	0x0000	/* Direct lookup by description. */
- #define KEYRING_SEARCH_LOOKUP_ITERATE	0x0001	/* Iterative search. */
-+	struct key_tag  *domain_tag;    /* Key domain tag */
- };
  
- /*
-diff --git a/security/keys/keyring.c b/security/keys/keyring.c
-index 12583241ff63..7e45e534035f 100644
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -565,7 +565,13 @@ int restrict_link_reject(struct key *keyring,
- bool key_default_cmp(const struct key *key,
- 		     const struct key_match_data *match_data)
- {
--	return strcmp(key->description, match_data->raw_data) == 0;
-+	bool match;
-+
-+	match = strcmp(key->description, match_data->raw_data) == 0;
-+	if (match_data->domain_tag)
-+		match &= key->index_key.domain_tag == match_data->domain_tag;
-+
-+	return match;
- }
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index 907125abef2c..ec2b36e05c3f 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -595,7 +595,9 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	buffer->dma_addr = dma_addr;
+ 	buffer->len = nopaged_len;
  
- /*
-@@ -957,6 +963,8 @@ key_ref_t keyring_search_tag(key_ref_t keyring,
+-	priv->dmaops->tx_buffer(priv, buffer);
++	ret = priv->dmaops->tx_buffer(priv, buffer);
++	if (ret)
++		goto out;
  
- 	if (recurse)
- 		ctx.flags |= KEYRING_SEARCH_RECURSE;
-+	if (domain_tag)
-+		ctx.match_data.domain_tag = domain_tag;
- 	if (type->match_preparse) {
- 		ret = type->match_preparse(&ctx.match_data);
- 		if (ret < 0)
+ 	skb_tx_timestamp(skb);
+ 
 -- 
-2.20.1
+2.13.0
 
