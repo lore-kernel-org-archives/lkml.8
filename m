@@ -2,98 +2,72 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84F5C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74770207DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lFQofNhW"
+	by mail.kernel.org (Postfix) with ESMTP id E5E40207DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 03:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHRD3L (ORCPT
+        id S1726786AbgHRD3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgHRD3G (ORCPT
+        Mon, 17 Aug 2020 23:29:41 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:35293 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726429AbgHRD3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 23:29:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2169CC061389;
-        Mon, 17 Aug 2020 20:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=JwPtiBa3LyrRoZXU2BzwO65MTUabm9VloNUTo8w7+cU=; b=lFQofNhW3zTGOX4C14H/dZBHyV
-        mryjPsMNSrR1J6vP3czQ/Cje9uzH1iFOvnV7eoSIOfTDw+V9bEyE7IqwiB/aJobNkskHFmjVeV2i4
-        NroO/q470AnTPvqW735KeCYrXNoYL4Qu+gHQ7Vgw1pJeCBqQyPJuQBMFeZhcriBFEavu2AO5xqT4D
-        Nqg4vSeVNp38uD7dJeasKy2Nb8xJojQrJDCNd+OUayIfKq4fbsncVF/InkbZZpHCxSIOeJq9e3VSN
-        BGsZwEweMUH2xdBVWQyHGXJuaPeSpMAo9VzBOC+52lwhg7x5tP32MBSg+SC3jzkul8r2yqXU8QUQR
-        93Z4LJng==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7sJ5-0001gU-TS; Tue, 18 Aug 2020 03:29:04 +0000
-Subject: Re: [PATCH] HID: google: add google vivaldi HID driver
-To:     Sean O'Brien <seobrien@chromium.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20200817194937.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b1fcca69-8563-0a85-80e0-a955fe8bca6f@infradead.org>
-Date:   Mon, 17 Aug 2020 20:28:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 17 Aug 2020 23:29:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U66bqht_1597721377;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U66bqht_1597721377)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Aug 2020 11:29:37 +0800
+Date:   Tue, 18 Aug 2020 11:29:37 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, baolin.wang7@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 5/5] block: Remove __blk_mq_sched_bio_merge()
+ helper
+Message-ID: <20200818032937.GA46480@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <cover.1597637287.git.baolin.wang@linux.alibaba.com>
+ <4ad0888df567a8bd75676b618ad87147c634d7b0.1597637287.git.baolin.wang@linux.alibaba.com>
+ <20200817063241.GE12248@lst.de>
+ <20200817121408.GD79836@VM20190228-100.tbsite.net>
+ <20200817122608.GB2213@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200817194937.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817122608.GB2213@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/17/20 7:49 PM, Sean O'Brien wrote:
-> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-> index 05315b434276..5676d4f521c9 100644
-> --- a/drivers/hid/Kconfig
-> +++ b/drivers/hid/Kconfig
-> @@ -397,6 +397,15 @@ config HID_GOOGLE_HAMMER
->  	help
->  	Say Y here if you have a Google Hammer device.
->  
-> +config HID_GOOGLE_VIVALDI
-> +	tristate "Google Vivaldi Keyboard"
-> +	depends on HID
-> +	help
-> +	Say Y here if you want to enable support for Google vivaldi keyboards.
+On Mon, Aug 17, 2020 at 02:26:08PM +0200, Christoph Hellwig wrote:
+> On Mon, Aug 17, 2020 at 08:14:08PM +0800, Baolin Wang wrote:
+> > On Mon, Aug 17, 2020 at 08:32:41AM +0200, Christoph Hellwig wrote:
+> > > On Mon, Aug 17, 2020 at 12:09:19PM +0800, Baolin Wang wrote:
+> > > > The blk_mq_sched_bio_merge() just wrap the __blk_mq_sched_bio_merge(), and
+> > > > no other places will use __blk_mq_sched_bio_merge(). Thus we can combine
+> > > > these 2 similar functions into one function.
+> > > 
+> > > I think the idea was to avoid the function call for the nomerges fast
+> > > path.  Not sure if that is really worth it.
+> > 
+> > Um, no places will use __blk_mq_sched_bio_merge(), not sure if it is a
+> > good choice we still keep an unused and similar function?
+> 
+> Well, blk_mq_sched_bio_merge calls __blk_mq_sched_bio_merge, after
+> performing two fast path checks.
 
-	                                                    Vivaldi
-please.
-
-> +
-> +	These are keyboards which report physical the order of consumer/action
-
-That's an awkward sentence.  -EPARSE
-
-> +	keys in the top row.
-> +
-
-help text lines (those under help) should be indented with one tab + 2 spaces
-according to Documentation/process/coding-style.rst.
-
->  config HID_GT683R
->  	tristate "MSI GT68xR LED support"
->  	depends on LEDS_CLASS && USB_HID
-
-
--- 
-~Randy
+What I mean is blk_mq_sched_bio_merge() just wrap the
+__blk_mq_sched_bio_merge(), and no other users will call
+__blk_mq_sched_bio_merge(). Anyway, I will drop this patch
+as you suggested.
 
