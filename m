@@ -2,113 +2,116 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A24C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676C7207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597714185;
-	bh=zLKUn7ABDz9nyJFymvZUwUrOdxY+aVEubAV556WYCkE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CaGqKua7lxnIKC0KRWqXp8H7rJlVPjy13ZsMkeT7zPeLj89pEGdi6Nndq5uAC2WOj
-	 OH9Rmn2qSg4ZXthBCjRrHxeyvNfHPq8bW1DC92dlHAi4z5eufIQRKeyFUOW3hE1Mc+
-	 qYHTmLcMOR4HKjXlQ6vQ3iuIWVtePHlva2gYe6pY=
+	by mail.kernel.org (Postfix) with ESMTP id 0481D2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:34:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YVqLVrvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgHRB3o (ORCPT
+        id S1726370AbgHRBeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 21:29:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34845 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgHRB3m (ORCPT
+        Mon, 17 Aug 2020 21:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgHRBeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 21:29:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f1so16707960wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:29:41 -0700 (PDT)
+        Mon, 17 Aug 2020 21:34:36 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AA4C061389
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:34:35 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id m13so13294545qth.16
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Aug 2020 18:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ss4gQmNtASnD0qcw1Pmz+ZNnWye3v+ksEFLJ5TwdRrI=;
+        b=YVqLVrvJz32CNYN0SavVT01fuNmXLnBixkX/3WKpjuXu8B3agog0DgkMQn7aAPaxej
+         4sUSHnuBDI7IkD3MSPhbg1xSBO0eRBFjH97QHYmDSaMUvagzXaTtWXRLB1EkW9bNoYZH
+         0Jh2nfWzTAIyYd1Z9iobO4II5nj/3bk9BMbpbp740YIyptzuOtPM4Cx7DXMOlTh+F3oE
+         NkggkPVAznSsMubg7Az00UBOw+mxj9TnugEKPHRnkE3JBUoTKwfE4HrGlT4lEcxGfzlo
+         FNu3rOjsHQZiY7VWBrwj024lN79j9Va+++go8SB0SdPS3KDaRSZOjhIMTvA/QY7UtG5W
+         C7eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=53qE5jIbW6gkAH4EEEhNHGrju++qf+gtzDfgUxgJJs4=;
-        b=rHD2uGiaNjeT1ysJFA5u4uvM95/Xjvi6Z2T7VBYhMNIXXSk8+PKbROv87ppsw6vr/v
-         OpiNR4EAFQmsYP81N4QpdBRc78j+1kUyxCj1STTT/cWyXfcJ+Ti1vebedcMZ+Yrm3fnI
-         CwpbapmYJB9zUAR/1m6bW+WYZef7fqwwfiOZuJL3NsOsaFisvhTtNr8YuViF6JjeeeIt
-         IIWGXC4DCgtQeCpai7gzF22J5jmD3fnRclAJP1Ns2ReQpIbGnHtp4rgmVVu4FzJwjnP/
-         ZdUARN3gJbLatsYIt10tOUcNi7vlqyVlVmbcOe83iXQKz5e9Qrk7pw7h3fLzu8HITSSZ
-         6OwQ==
-X-Gm-Message-State: AOAM531bWN6+qjKP4gX127C17JGrdsHGuMgtbeYz5HxYQK1VIHVy6MU/
-        Fr9bw0kRE91/eKx665nKXXr9ZCjGCb95j6IqgTVVAU5OosU=
-X-Google-Smtp-Source: ABdhPJxIfmd1ZgApgM5BQRvhxgDX4PI+ryX1CWfJvAEaW4llkXFWNRbYbyQoj06lUGNtJcDsQAbYV+87l3m1wlGSoBw=
-X-Received: by 2002:adf:dfc7:: with SMTP id q7mr17783555wrn.80.1597714180509;
- Mon, 17 Aug 2020 18:29:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817170943.1486-1-dsahern@kernel.org>
-In-Reply-To: <20200817170943.1486-1-dsahern@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 18 Aug 2020 10:29:29 +0900
-Message-ID: <CAM9d7chxJ9hkCsL+PnJSFfKHwbjg6=D+RVDT6E7GWKwedwzGiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf sched timehist: Fix use of CPU list with summary option
-To:     David Ahern <dsahern@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ss4gQmNtASnD0qcw1Pmz+ZNnWye3v+ksEFLJ5TwdRrI=;
+        b=cpJjPcf6eFgW+UytThsaZ0g2btdqj+CAYId7myR4hk8uHUZac0/BVpdUL9HRnycSud
+         tZPD+WSft6QV/gsYSeeoglSPsND9Aw9BKrb36x576QT1yPmaHdfcUpClrx7ZKcbVi2KA
+         JWR/nfwa9vWKwpRgnZcyVkicpMkn1DpQoAiPo1/j96kIuBcxDyi0JW6CmDyTZxeEe3fv
+         3G8EtiXsDKCHgCAC5jWDLwEO4nzFU3StpYhcar7z99I94bhBzDRXLd9UO7++T4qJKt35
+         CLldhiIB2e+4nlZ/gKEfOtAL2wFcs+7UaI8bV1LO40YPkAzuAAx+wozuK4YM/AzHCSb4
+         sdDA==
+X-Gm-Message-State: AOAM532yPKgzrSscqX6dHT0D2O2Cog8O4fn2l2M4F/WtHTHEQiVvg0dT
+        gfmmUNfsevIyhkkfyi196J5nOvGPbw==
+X-Google-Smtp-Source: ABdhPJynUKx2HlC9oJurYUYQuIls1blQtJeGLLyLCJERo9pctXPpATWySbks8CFq4G13MuOdA3uCL6ibCA==
+X-Received: by 2002:ad4:52e3:: with SMTP id p3mr17194355qvu.70.1597714474854;
+ Mon, 17 Aug 2020 18:34:34 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 03:32:02 +0200
+Message-Id: <20200818013202.2246365-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH] romfs: Fix uninitialized memory leak in romfs_dev_read()
+From:   Jann Horn <jannh@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+romfs has a superblock field that limits the size of the filesystem;
+data beyond that limit is never accessed.
 
-On Tue, Aug 18, 2020 at 2:09 AM David Ahern <dsahern@kernel.org> wrote:
->
-> Do not update thread stats or show idle summary unless CPU is in
-> the list of interest.
->
-> Fixes: c30d630d1bcf ("perf sched timehist: Add support for filtering on CPU")
-> Signed-off-by: David Ahern <dsahern@kernel.org>
+romfs_dev_read() fetches a caller-supplied number of bytes from the
+backing device. It returns 0 on success or an error code on failure;
+therefore, its API can't represent short reads, it's all-or-nothing.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+However, when romfs_dev_read() detects that the requested operation
+would cross the filesystem size limit, it currently silently truncates
+the requested number of bytes. This e.g. means that when the content
+of a file with size 0x1000 starts one byte before the filesystem size
+limit, ->readpage() will only fill a single byte of the supplied page
+while leaving the rest uninitialized, leaking that uninitialized memory
+to userspace.
 
-Thanks
-Namhyung
+Fix it by returning an error code instead of truncating the read when
+the requested read operation would go beyond the end of the filesystem.
 
-> ---
-> v2
-> - check that cpu_list is set before checking cpu_bitmap in timehist_print_summary
->
->  tools/perf/builtin-sched.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 0c7d599fa555..e6fc297cee91 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2584,7 +2584,8 @@ static int timehist_sched_change_event(struct perf_tool *tool,
->         }
->
->         if (!sched->idle_hist || thread->tid == 0) {
-> -               timehist_update_runtime_stats(tr, t, tprev);
-> +               if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
-> +                       timehist_update_runtime_stats(tr, t, tprev);
->
->                 if (sched->idle_hist) {
->                         struct idle_thread_runtime *itr = (void *)tr;
-> @@ -2857,6 +2858,9 @@ static void timehist_print_summary(struct perf_sched *sched,
->
->         printf("\nIdle stats:\n");
->         for (i = 0; i < idle_max_cpu; ++i) {
-> +               if (cpu_list && !test_bit(i, cpu_bitmap))
-> +                       continue;
-> +
->                 t = idle_threads[i];
->                 if (!t)
->                         continue;
-> --
-> 2.17.1
->
+Cc: stable@vger.kernel.org
+Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ fs/romfs/storage.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/fs/romfs/storage.c b/fs/romfs/storage.c
+index 6b2b4362089e..b57b3ffcbc32 100644
+--- a/fs/romfs/storage.c
++++ b/fs/romfs/storage.c
+@@ -217,10 +217,8 @@ int romfs_dev_read(struct super_block *sb, unsigned long pos,
+ 	size_t limit;
+ 
+ 	limit = romfs_maxsize(sb);
+-	if (pos >= limit)
++	if (pos >= limit || buflen > limit - pos)
+ 		return -EIO;
+-	if (buflen > limit - pos)
+-		buflen = limit - pos;
+ 
+ #ifdef CONFIG_ROMFS_ON_MTD
+ 	if (sb->s_mtd)
+
+base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+-- 
+2.28.0.220.ged08abb693-goog
+
