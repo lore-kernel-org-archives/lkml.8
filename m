@@ -2,201 +2,66 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212A32067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEF32067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 17:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgHRRFo (ORCPT
+        id S1728458AbgHRRFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:05:44 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2655 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727106AbgHRRFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:05:08 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id AE21EAED85E53B89686C;
-        Tue, 18 Aug 2020 18:05:06 +0100 (IST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Tue, 18 Aug 2020 18:05:06 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v8 1/6] ACPI: Support Generic Initiator only domains
-Date:   Wed, 19 Aug 2020 01:04:12 +0800
-Message-ID: <20200818170417.1515975-2-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200818170417.1515975-1-Jonathan.Cameron@huawei.com>
-References: <20200818170417.1515975-1-Jonathan.Cameron@huawei.com>
+        Tue, 18 Aug 2020 13:05:50 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59498 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728367AbgHRRFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:05:23 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k852W-009wPo-DE; Tue, 18 Aug 2020 19:04:48 +0200
+Date:   Tue, 18 Aug 2020 19:04:48 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net, kuba@kernel.org,
+        mcoquelin.stm32@gmail.com, ajayg@nvidia.com,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: stmmac: Fix signedness bug in
+ stmmac_probe_config_dt()
+Message-ID: <20200818170448.GH2330298@lunn.ch>
+References: <20200818143952.50752-1-yuehaibing@huawei.com>
+ <20200818151500.51548-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818151500.51548-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generic Initiators are a new ACPI concept that allows for the
-description of proximity domains that contain a device which
-performs memory access (such as a network card) but neither
-host CPU nor Memory.
+On Tue, Aug 18, 2020 at 11:15:00PM +0800, YueHaibing wrote:
+> The "plat->phy_interface" variable is an enum and in this context GCC
+> will treat it as an unsigned int so the error handling is never
+> triggered.
+> 
+> Fixes: b9f0b2f634c0 ("net: stmmac: platform: fix probe for ACPI devices")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-This patch has the parsing code and provides the infrastructure
-for an architecture to associate these new domains with their
-nearest memory processing node.
+Hi YueHaibing
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/numa/srat.c | 60 +++++++++++++++++++++++++++++++++++++++-
- drivers/base/node.c      |  3 ++
- include/linux/nodemask.h |  1 +
- 3 files changed, 63 insertions(+), 1 deletion(-)
+Please take a look at:
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 15bbaab8500b..d44bcda41202 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -130,6 +130,36 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 		}
- 		break;
- 
-+	case ACPI_SRAT_TYPE_GENERIC_AFFINITY:
-+	{
-+		struct acpi_srat_generic_affinity *p =
-+			(struct acpi_srat_generic_affinity *)header;
-+
-+		if (p->device_handle_type == 0) {
-+			/*
-+			 * For pci devices this may be the only place they
-+			 * are assigned a proximity domain
-+			 */
-+			pr_debug("SRAT Generic Initiator(Seg:%u BDF:%u) in proximity domain %d %s\n",
-+				 *(u16 *)(&p->device_handle[0]),
-+				 *(u16 *)(&p->device_handle[2]),
-+				 p->proximity_domain,
-+				 (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-+				"enabled" : "disabled");
-+		} else {
-+			/*
-+			 * In this case we can rely on the device having a
-+			 * proximity domain reference
-+			 */
-+			pr_debug("SRAT Generic Initiator(HID=%.8s UID=%.4s) in proximity domain %d %s\n",
-+				(char *)(&p->device_handle[0]),
-+				(char *)(&p->device_handle[8]),
-+				p->proximity_domain,
-+				(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
-+				"enabled" : "disabled");
-+		}
-+	}
-+	break;
- 	default:
- 		pr_warn("Found unsupported SRAT entry (type = 0x%x)\n",
- 			header->type);
-@@ -332,6 +362,32 @@ acpi_parse_gicc_affinity(union acpi_subtable_headers *header,
- 	return 0;
- }
- 
-+static int __init
-+acpi_parse_gi_affinity(union acpi_subtable_headers *header,
-+		       const unsigned long end)
-+{
-+	struct acpi_srat_generic_affinity *gi_affinity;
-+	int node;
-+
-+	gi_affinity = (struct acpi_srat_generic_affinity *)header;
-+	if (!gi_affinity)
-+		return -EINVAL;
-+	acpi_table_print_srat_entry(&header->common);
-+
-+	if (!(gi_affinity->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
-+		return -EINVAL;
-+
-+	node = acpi_map_pxm_to_node(gi_affinity->proximity_domain);
-+	if (node == NUMA_NO_NODE || node >= MAX_NUMNODES) {
-+		pr_err("SRAT: Too many proximity domains.\n");
-+		return -EINVAL;
-+	}
-+	node_set(node, numa_nodes_parsed);
-+	node_set_state(node, N_GENERIC_INITIATOR);
-+
-+	return 0;
-+}
-+
- static int __initdata parsed_numa_memblks;
- 
- static int __init
-@@ -385,7 +441,7 @@ int __init acpi_numa_init(void)
- 
- 	/* SRAT: System Resource Affinity Table */
- 	if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
--		struct acpi_subtable_proc srat_proc[3];
-+		struct acpi_subtable_proc srat_proc[4];
- 
- 		memset(srat_proc, 0, sizeof(srat_proc));
- 		srat_proc[0].id = ACPI_SRAT_TYPE_CPU_AFFINITY;
-@@ -394,6 +450,8 @@ int __init acpi_numa_init(void)
- 		srat_proc[1].handler = acpi_parse_x2apic_affinity;
- 		srat_proc[2].id = ACPI_SRAT_TYPE_GICC_AFFINITY;
- 		srat_proc[2].handler = acpi_parse_gicc_affinity;
-+		srat_proc[3].id = ACPI_SRAT_TYPE_GENERIC_AFFINITY;
-+		srat_proc[3].handler = acpi_parse_gi_affinity;
- 
- 		acpi_table_parse_entries_array(ACPI_SIG_SRAT,
- 					sizeof(struct acpi_table_srat),
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 508b80f6329b..53383f1f683c 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -980,6 +980,8 @@ static struct node_attr node_state_attr[] = {
- #endif
- 	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
- 	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
-+	[N_GENERIC_INITIATOR] = _NODE_ATTR(has_generic_initiator,
-+					   N_GENERIC_INITIATOR),
- };
- 
- static struct attribute *node_state_attrs[] = {
-@@ -991,6 +993,7 @@ static struct attribute *node_state_attrs[] = {
- #endif
- 	&node_state_attr[N_MEMORY].attr.attr,
- 	&node_state_attr[N_CPU].attr.attr,
-+	&node_state_attr[N_GENERIC_INITIATOR].attr.attr,
- 	NULL
- };
- 
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 27e7fa36f707..3334ce056335 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -399,6 +399,7 @@ enum node_states {
- #endif
- 	N_MEMORY,		/* The node has memory(regular, high, movable) */
- 	N_CPU,		/* The node has one or more cpus */
-+	N_GENERIC_INITIATOR,	/* The node has one or more Generic Initiators */
- 	NR_NODE_STATES
- };
- 
--- 
-2.19.1
+commit 0c65b2b90d13c1deaee6449304dd367c5d4eb8ae
+Author: Andrew Lunn <andrew@lunn.ch>
+Date:   Mon Nov 4 02:40:33 2019 +0100
 
+    net: of_get_phy_mode: Change API to solve int/unit warnings
+
+You probably want to follow this basic idea.
+
+    Andrew
