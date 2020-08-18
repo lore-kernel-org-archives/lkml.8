@@ -2,180 +2,298 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3298AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65411C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1EA2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364F020825
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 06:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Cjg5zhaY"
+	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="aD4v5buc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgHRGVC (ORCPT
+        id S1726568AbgHRGXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:21:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27853 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726228AbgHRGVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:21:01 -0400
-X-UUID: 1d39c27ff5f1478b8fe03fff3ed0eb4e-20200818
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=26U75Xf8g/WhSUg+fpLBfSWdLyg0Hh99bzHnWDgzNQI=;
-        b=Cjg5zhaYwf9cfA3c8Cybl9hjbo25D2Uy/6xcPO6b4PMcFDHuLUhOXdpm+h9WrE78kOnEH392sGqV8Y/MpTAIESKmKlBVr809R3vmkJq9VhxQN9n9s+gTKrmlsAqy5YcyR78KxpFYVpzS4y6YnClora+2pT5c1TC6bTZUArtww3A=;
-X-UUID: 1d39c27ff5f1478b8fe03fff3ed0eb4e-20200818
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 131772513; Tue, 18 Aug 2020 14:20:52 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 18 Aug 2020 14:20:43 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 18 Aug 2020 14:20:43 +0800
-Message-ID: <1597731644.12680.2.camel@mtkswgap22>
-Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 18 Aug 2020 14:20:44 +0800
-In-Reply-To: <1597718679.5704.3.camel@mtkswgap22>
-References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com>
-         <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
-         <1597636953.3394.7.camel@mtkswgap22>
-         <CAAOTY__7gmvp+U+xD12KJkxuya=CkD8xV67S3pfC60gyfajQiA@mail.gmail.com>
-         <1597718679.5704.3.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 18 Aug 2020 02:23:13 -0400
+Received: from mail-eopbgr50073.outbound.protection.outlook.com ([40.107.5.73]:29071
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbgHRGXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:23:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JrnfNT1TrKngAn67qb4/zpjuB6GOcZ0/6+6PABJmsg2SiPxJqxCW9R+etLZNb5qpOzhn7R+WhPBV509UF73tl+xVpTvJGvzKWCdHdJHtloxJcxJhDNwnNjrqWRHZ+w7Qyf2wJC+GGBeCGCw7/jl/2dXP1pB9DLN9XpftQmZI00gHkQ4Wg7WxwaESSN21Q06KFgfltilj3Z2QxCzHqByOzl0fhW3i22D1d4PiZMH8PHbwvRD2vJPV6mwQEoZkoEtlDubgZiDOG/OeFTE5ULsB3ldDp0mwAJKy+qdcAxeuXeqbseKk1XvcUhoJmg5xayMtUlhgrDw9ykzgvnyOZBzmmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hW7OlGYbquDA4dCFpQ8Dfd24jGf0YQM3WQTRenFnLTI=;
+ b=cV6r5y1RyOS2/w1sNQSFK8hNQHGkNRU6mNKBmvj59YYmAJvBbRqMLgxJKKJeAZKulh0P3jFXkcg2pdaXc8S2ZlJRrMtTTmprdxGajj5DoWcAhynq12osgQOVKYg6ZS8NdtdKFVcS9Cj+lIG2ezQnmVVAVN+c8Ws3hbkllrEq8KW3+7YI9UQ1UBCirFU7WyEO2PVO4Q7U7DSiReDizxTOxTXl1dCkmgdxsqoSig4gXAPnVh8tKeql8LQGp3m6clue1EB8VzeRWFP/aWF5Dp5Q6Qa8ImStR+s0MIW9QDoQFUnHVXe13CWnw/VbvVlGuiLDxF8SBi1VW9lBJ5VKI8pw5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kococonnector.com; dmarc=pass action=none
+ header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hW7OlGYbquDA4dCFpQ8Dfd24jGf0YQM3WQTRenFnLTI=;
+ b=aD4v5buc9mC/CmUCwVJPawmcTUKDLWbgSmPyVzSiQTKtwJGZsDnKjc/S9GR6n/Pzp4T8Dy0eSsyKmZ/MIoJKvuGyBKcMQ9u5+Q9SANoRXbv2kTXZ7Od8c7QPsEeI5hTLsiw1KXWgLkzZJVdvCRhYgI2oA2PuKd5yUUJxFoM421s=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=kococonnector.com;
+Received: from AM0PR09MB4067.eurprd09.prod.outlook.com (2603:10a6:208:194::14)
+ by AM0PR09MB2627.eurprd09.prod.outlook.com (2603:10a6:208:e3::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.22; Tue, 18 Aug
+ 2020 06:23:04 +0000
+Received: from AM0PR09MB4067.eurprd09.prod.outlook.com
+ ([fe80::f9a5:ed5f:e58e:d4db]) by AM0PR09MB4067.eurprd09.prod.outlook.com
+ ([fe80::f9a5:ed5f:e58e:d4db%9]) with mapi id 15.20.3283.026; Tue, 18 Aug 2020
+ 06:23:04 +0000
+From:   Oliver Graute <oliver.graute@kococonnector.com>
+To:     aisheng.dong@nxp.com
+Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Sebastien Fagard <sebastien.fagard@nxp.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: imx8qm: added lvds pwm
+Date:   Tue, 18 Aug 2020 08:20:47 +0200
+Message-Id: <20200818062051.16817-1-oliver.graute@kococonnector.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200813084547.20875-1-oliver.graute@kococonnector.com>
+References: <20200813084547.20875-1-oliver.graute@kococonnector.com>
+X-Patchwork-Bot: notify
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR01CA0121.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::26) To AM0PR09MB4067.eurprd09.prod.outlook.com
+ (2603:10a6:208:194::14)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3245D93C313EC4131B92236A87711428C0F20780901D818E97FCD5D4F858A47D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2.207.138.2) by AM0PR01CA0121.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Tue, 18 Aug 2020 06:23:03 +0000
+X-Mailer: git-send-email 2.17.1
+X-Patchwork-Bot: notify
+X-Originating-IP: [2.207.138.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 73980d17-846a-4585-767c-08d8433f29e4
+X-MS-TrafficTypeDiagnostic: AM0PR09MB2627:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR09MB26271F554A928BBD87E14ADCEB5C0@AM0PR09MB2627.eurprd09.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M0reuO6HaZiRBDb+O5ZgQMkpAQdBYdFLZk89ghcIirAKZ/G7qbXigfijYYZ9NCqKhuFnMpzTr+dENe97SyUcdWbpfwjY9qaQBlwFTrtsWrS025HLRBQ315LGbsL7o9ixlDq+UahrMy3Y7M3ltF+zu93EJt3nNunYTfdOONXPUSKoUnFN7uCwB2CuiG/O1NF5I8CW/+Lbw4gtYGbrtrhseWnz5pGX1dTv6Ihdl4icrH+vgj0Hacx2K1h3iZY0y1zzHRz3+UTIWqW8+8g69FBji1GjD+eLerBSUfJF1utuo+nyu7Q5LtqzpztiJ5HxyZCLlI1jecAAxIB3t6SKr5T/93VLmDuD+aPilBdkQS/wH9LQ8NwUmP73Blp+A6Qj28PD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR09MB4067.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(376002)(396003)(346002)(39830400003)(26005)(52116002)(86362001)(36756003)(44832011)(6496006)(186003)(54906003)(6486002)(6916009)(4326008)(16526019)(7416002)(8936002)(316002)(8676002)(478600001)(66476007)(6666004)(66946007)(1076003)(5660300002)(83380400001)(2616005)(2906002)(956004)(66556008)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: RKT8Cwp5cjmFpoQc/NhL9TDVspki2wynZMJSXNZkn5hkrmc9UQsmsxR+Rmx7GCpwb5e4JkgZwbC2macTL2n1MDfMKdmAK0BAZXioUq9riZO0OTrKIaHuq4FshBEAXD0lFzrb3C4Bvjt6NwEoY/ajUU/eHUD6g2N+4Hl+LSTHsyZvtN3J0Uy6f6PooaB2DVRKeVImnXwgBA7uIeI+TaP3FbApcbmzy7VwneBBPzXZeyrBt2tg1ciiuNl+BtxOoUS2LgZ/lT19R2HylNXAGlymDUlqKOqYMD+cCy++4DvVWngm9wdXSFOj4TTcX7p1FwUzoXNc9BPFs02IYIOohuLw1bDbzEZBeh6nUEwRcRkPfq0cKixoFPeHjWnK9Fvo0AuANm1rv7rxe5EkpywCwiVSCTMDkN5If4VWgSbAQEjbNs+mgEL/dt2iPcLJuGZrxRgu380QLCyjk3QkuvwBZ4n0AR5X1YjWgdzoOO8VC52g/veLXcySnE/1pQUJ6t3f0tyt3I/delerAvlIW0pTtF2XgXwnLWB9SPwcEqGsXY9yEddVlI4Q52bT+VEZ+Yzv78EYEFAMhugTHSNVSINlDlgArQeD/mm/9sM7Qt20qqkX5r2NbxupJU6AR9kcSTBLkrwFa2doBHzTk6CtWWbv8rnE2g==
+X-OriginatorOrg: kococonnector.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73980d17-846a-4585-767c-08d8433f29e4
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR09MB4067.eurprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 06:23:04.0362
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 59845429-0644-4099-bd7e-17fba65a2f2b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UfAgH47Cu5CYrbAEekCY8fuXqdWCFWqnT2Mb8GIEdlYdk042cZ/cwBkYpYglAH/t+0hLb9/nKrYf9C9XTo1VtSBFpSL0D1Z0RfYTKZRMPT4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR09MB2627
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gVHVlLCAyMDIwLTA4LTE4IGF0IDEwOjQ0ICswODAwLCBOZWFs
-IExpdSB3cm90ZToNCj4gSGkgQ2h1bi1LdWFuZywNCj4gDQo+IE9uIE1vbiwgMjAyMC0wOC0xNyBh
-dCAyMzoxMyArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4gPiBIaSwgTmVhbDoNCj4gPiAN
-Cj4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwgMjAyMOW5tDjmnIgxN+aX
-pSDpgLHkuIAg5LiL5Y2IMTI6MDLlr6vpgZPvvJoNCj4gPiA+DQo+ID4gPiBIaSBDaHVuLUt1YW5n
-LA0KPiA+ID4NCj4gPiA+IE9uIFNhdCwgMjAyMC0wOC0xNSBhdCAxMTowMyArMDgwMCwgQ2h1bi1L
-dWFuZyBIdSB3cm90ZToNCj4gPiA+ID4gSGksIE5lYWw6DQo+ID4gPiA+DQo+ID4gPiA+IE5lYWwg
-TGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0OOaciDEz5pelIOmAseWbmyDk
-uIrljYgxMTozM+Wvq+mBk++8mg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gTWVkaWFUZWsgYnVzIGZh
-YnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+ID4g
-PiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1
-bmV4cGVjdGVkDQo+ID4gPiA+ID4gbWFzdGVycy4NCj4gPiA+ID4gPiBUaGUgc2VjdXJpdHkgdmlv
-bGF0aW9uIGlzIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KPiA+ID4gPiA+
-IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gQW55IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFuIGlu
-dGVycnVwdCwgYW5kDQo+ID4gPiA+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZhcGMg
-ZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQo+ID4gPiA+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBp
-biBvcmRlciB0byBmaW5kIHRoZSBtdXJkZXJlci4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gPiA+ID4gLS0t
-DQo+ID4gPiA+DQo+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPg0KPiA+ID4gPiA+ICsvKg0KPiA+ID4g
-PiA+ICsgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAtIHRoZSBkZXZhcGMgSW50ZXJydXB0IFNlcnZp
-Y2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCj4gPiA+ID4gPiArICogICAgICAgICAgICAgICAg
-ICAgICAgICB2aW9sYXRpb24gaW5mb3JtYXRpb24gaW5jbHVkaW5nIHdoaWNoIG1hc3RlciB2aW9s
-YXRlcw0KPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIGFjY2VzcyBzbGF2ZS4N
-Cj4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBkZXZhcGNfdmlv
-bGF0aW9uX2lycShpbnQgaXJxX251bWJlciwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+
-ID4gPiA+ICt7DQo+ID4gPiA+ID4gKyAgICAgICAvKg0KPiA+ID4gPiA+ICsgICAgICAgICogTWFz
-ayBzbGF2ZSdzIGlycSBiZWZvcmUgY2xlYXJpbmcgdmlvIHN0YXR1cy4NCj4gPiA+ID4gPiArICAg
-ICAgICAqIE11c3QgZG8gaXQgdG8gYXZvaWQgbmVzdGVkIGludGVycnVwdCBhbmQgcHJldmVudA0K
-PiA+ID4gPiA+ICsgICAgICAgICogdW5leHBlY3RlZCBiZWhhdmlvci4NCj4gPiA+ID4gPiArICAg
-ICAgICAqLw0KPiA+ID4gPiA+ICsgICAgICAgbWFza19tb2R1bGVfaXJxKGN0eCwgdHJ1ZSk7DQo+
-ID4gPiA+DQo+ID4gPiA+IEkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgbmVzdGVkIGludGVy
-cnVwdCBoYXBwZW4uIElmIHR3byBDUFUNCj4gPiA+ID4gcHJvY2VzcyBkaWZmZXJlbnQgZGV2YXBj
-IGludGVycnVwdCBhdCB0aGUgc2FtZSB0aW1lLCBtYXNrIGludGVycnVwdA0KPiA+ID4gPiBjb3Vs
-ZCBub3QgcHJldmVudCB0aGVzZSB0d28gQ1BVIHRvIHN5bmMgdmlvIGRiZyBhdCB0aGUgc2FtZSB0
-aW1lLiBBcyBJDQo+ID4gPiA+IGtub3csIGluIEFSTSBDUFUsIG9ubHkgQ1BVMCBwcm9jZXNzIGly
-cSBoYW5kbGVyLCBhbmQgYWxsIGRldmFwYw0KPiA+ID4gPiBpbnRlcnJ1cHQgaGFzIHRoZSBzYW1l
-IHByaW9yaXR5LCBzbyB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4/IENvdWxkDQo+ID4gPiA+
-IHlvdSBleHBsYWluIG1vcmUgZGV0YWlsIGFib3V0IGhvdyBuZXN0ZWQgaW50ZXJydXB0IGhhcHBl
-bj8NCj4gPiA+DQo+ID4gPiBJZiB0aGVyZSBpcyBhbm90aGVyIHZpb2xhdGlvbiBoYXBwZW5lZCBi
-ZWZvcmUgcHJldmlvdXMgdmlvbGF0aW9uIGlzDQo+ID4gPiBmdWxseSBoYW5kbGVkLCBuZXN0ZWQg
-aW50ZXJydXB0IHdvdWxkIGhhcHBlbi4NCj4gPiA+DQo+ID4gPiBMZXQncyBtZSB0YWtlIGFuIGV4
-YW1wbGU6DQo+ID4gPiB2aW8gQSBoYXBwZW4NCj4gPiA+IGVudGVyIEEgSVNSDQo+ID4gPiAuLi4g
-ICAgICAgICAgICAgdmlvIEIgaGFwcGVuDQo+ID4gPiBmaW5pc2ggQSBJU1IgICAgZW50ZXIgQiBJ
-U1INCj4gPiA+ICAgICAgICAgICAgICAgICAuLi4NCj4gPiA+ICAgICAgICAgICAgICAgICBmaW5p
-c2ggQiBJU1INCj4gPiA+DQo+ID4gPiBXZSBtYXNrIGFsbCBtb2R1bGUncyBpcnEgdG8gYXZvaWQg
-bmVzdGVkIGludGVycnVwdC4NCj4gPiANCj4gPiBUaGlzIGlzIG5vdCAnbmVzdGVkJyBpbnRlcnJ1
-cHQuIEFmdGVyIEEgSVNSIGlzIGZpbmlzaGVkLCBCIElTUiBoYXBwZW4uDQo+ID4gU28gQSBJU1Ig
-YW5kIEIgSVNSIGFyZSBjb25zZWN1dGl2ZSBpbnRlcnJ1cHQsIG5vdCBuZXN0ZWQgaW50ZXJydXB0
-Lg0KPiA+IFRvIGNvbXBhcmUgbWFzayBpcnEgYW5kIG5vIG1hc2sgaXJxLCBMZXQncyBjb25zaWRl
-ciB0aGlzIHNpdHVhdGlvbjoNCj4gPiANCj4gPiAxLiAxMDAwIGNvbnNlY3V0aXZlIHZpb2xhdGlv
-biBoYXBwZW4sIHRoZSB0aW1lIHBlcmlvZCBiZXR3ZWVuIHR3bw0KPiA+IHZpb2xhdGlvbiBpcyAw
-LjAxIG1zLCBzbyB0aGUgdG90YWwgdGltZSBpcyAxMG1zLiAoSW4gMTBtcywgMTAwMA0KPiA+IHZp
-b2xhdGlvbiBoYXBwZW4pDQo+ID4gMi4gT25lIElTUiBoYW5kbGUgdGltZSBpcyAxIG1zLCBzbyBp
-biBvbmUgSVNSIGhhbmRsZXIsIDEwMCB2aW9sYXRpb24gaGFwcGVuLg0KPiA+IA0KPiA+IEZvciBt
-YXNrIGlycSBzb2x1dGlvbiwgMTAgSVNSIGhhbmRsZXIgaXMgdHJpZ2dlci4gRm9yIG5vIG1hc2sg
-aXJxDQo+ID4gc29sdXRpb24sIDExIElTUiBoYW5kbGVyIGlzIHRyaWdnZXIuDQo+ID4gSSB0aGlu
-ayB0aGVzZSB0d28gc29sdXRpb24gaGF2ZSBzaW1pbGFyIHJlc3VsdCwgYW5kIG5vIG1hc2sgaXJx
-DQo+ID4gc29sdXRpb24gcHJpbnQgbW9yZSBpbmZvcm1hdGlvbiAoSWYgdGhlc2UgMTAwMCB2aW9s
-YXRpb24gaXMgdHJpZ2dlciBieQ0KPiA+IDIwIGRpZmZlcmVudCBkcml2ZXIsIG5vIG1hc2sgc29s
-dXRpb24gbWF5IHNob3cgb25lIG1vcmUgZHJpdmVyIHRoYW4NCj4gPiBtYXNrIHNvbHV0aW9uKQ0K
-PiA+IFNvIEkgdGhpbmsgaXQncyBub3QgbmVjZXNzYXJ5IHRvIG1hc2sgaXJxIGluIGlycSBoYW5k
-bGVyLg0KPiA+IA0KPiANCj4gTm8sIG15IGV4YW1wbGUgaXMgQiBJU1IgaXMgZW50ZXJlZCBiZWZv
-cmUgQSBJU1IgZmluaXNoZWQuDQo+IFdoeSB0aGlzIGlzIG5vdCBuZXN0ZWQ/DQo+IHZpbyBBIGhh
-cHBlbg0KPiBlbnRlciBBIElTUg0KPiAuLi4gICAgICAgICAgICAgdmlvIEIgaGFwcGVuDQo+IC4u
-LgkJZW50ZXIgQiBJU1INCj4gZmluaXNoIEEgSVNSDQo+ICAgICAgICAgICAgICAgICAuLi4NCj4g
-CQkuLi4NCj4gICAgICAgICAgICAgICAgIGZpbmlzaCBCIElTUg0KPiANCg0KSSBoYXZlIHNvbWUg
-bWlzdW5kZXJzdGFuZGluZyBhYm91dCBob3cgQVJNIENQVSAmIEdJQyB3b3Jrcy4gSSdsbCBjb25m
-aXJtDQppdCBhbmQgZ2V0IGJhY2sgdG8geW91LiBQbGVhc2UgaWdub3JlIHByZXZpb3VzIG1haWwg
-dGhyZWFkLg0KVGhhbmtzICENCg0KPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gPiArDQo+ID4gPiA+
-ID4gKyAgICAgICB3aGlsZSAoZGV2YXBjX3N5bmNfdmlvX2RiZyhjdHgpKQ0KPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKGN0eCk7DQo+ID4gPiA+ID4gKw0K
-PiA+ID4gPiA+ICsgICAgICAgLyoNCj4gPiA+ID4gPiArICAgICAgICAqIEVuc3VyZSB0aGF0IHZp
-b2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuDQo+ID4gPiA+ID4gKyAgICAgICAgKiBiZWZvcmUgZnVy
-dGhlciBvcGVyYXRpb25zDQo+ID4gPiA+ID4gKyAgICAgICAgKi8NCj4gPiA+ID4gPiArICAgICAg
-IHNtcF9tYigpOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArICAgICAgIGNsZWFyX3Zpb19zdGF0
-dXMoY3R4KTsNCj4gPiA+ID4gPiArICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIGZhbHNlKTsN
-Cj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4g
-PiA+ID4gK30NCj4gPiA+ID4gPiArDQo+ID4gPiA+DQo+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPg0K
-PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIGludCBtdGtfZGV2YXBjX3JlbW92ZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gKyAgICAg
-ICBzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHggPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShw
-ZGV2KTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAgICBzdG9wX2RldmFwYyhjdHgpOw0K
-PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArICAgICAgIGlmIChjdHgtPmluZnJhX2NsaykNCj4gPiA+
-ID4NCj4gPiA+ID4gVGhpcyBhbHdheXMgdHJ1ZS4NCj4gPiA+DQo+ID4gPiBEb2VzIGl0IG1lYW4g
-dGhhdCByZW1vdmUgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVkIG9ubHkgaWYgcHJvYmUgZnVuY3Rp
-b24NCj4gPiA+IGlzIHJldHVybmVkIHN1Y2Nlc3NmdWxseT8NCj4gPiANCj4gPiBZZXMuDQo+ID4g
-DQo+ID4gPiBJcyB0aGVyZSBhbnkgY2hhbmNlIHRoaXMgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVk
-IGRpcmVjdGx5Pw0KPiA+IA0KPiA+IE5vLg0KPiA+IA0KPiA+IFJlZ2FyZHMsDQo+ID4gQ2h1bi1L
-dWFuZy4NCj4gPiANCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IFJlZ2FyZHMsDQo+ID4gPiA+IENo
-dW4tS3VhbmcuDQo+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGNsa19kaXNhYmxl
-X3VucHJlcGFyZShjdHgtPmluZnJhX2Nsayk7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgICAg
-ICAgcmV0dXJuIDA7DQo+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gK3N0YXRp
-YyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIG10a19kZXZhcGNfZHJpdmVyID0gew0KPiA+ID4gPiA+
-ICsgICAgICAgLnByb2JlID0gbXRrX2RldmFwY19wcm9iZSwNCj4gPiA+ID4gPiArICAgICAgIC5y
-ZW1vdmUgPSBtdGtfZGV2YXBjX3JlbW92ZSwNCj4gPiA+ID4gPiArICAgICAgIC5kcml2ZXIgPSB7
-DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIC5uYW1lID0gS0JVSUxEX01PRE5BTUUsDQo+ID4g
-PiA+ID4gKyAgICAgICAgICAgICAgIC5vZl9tYXRjaF90YWJsZSA9IG10a19kZXZhcGNfZHRfbWF0
-Y2gsDQo+ID4gPiA+ID4gKyAgICAgICB9LA0KPiA+ID4gPiA+ICt9Ow0KPiA+ID4gPiA+ICsNCj4g
-PiA+ID4gPiArbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihtdGtfZGV2YXBjX2RyaXZlcik7DQo+ID4g
-PiA+ID4gKw0KPiA+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lZGlhdGVrIERldmljZSBB
-UEMgRHJpdmVyIik7DQo+ID4gPiA+ID4gK01PRFVMRV9BVVRIT1IoIk5lYWwgTGl1IDxuZWFsLmxp
-dUBtZWRpYXRlay5jb20+Iik7DQo+ID4gPiA+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4g
-PiA+ID4gPiAtLQ0KPiA+ID4gPiA+IDEuNy45LjUNCj4gPiA+ID4gPiBfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+ID4gPiA+IExpbnV4LW1lZGlhdGVr
-IG1haWxpbmcgbGlzdA0KPiA+ID4gPiA+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5v
-cmcNCj4gPiA+ID4gPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LW1lZGlhdGVrDQo+ID4gPg0KPiANCj4gDQoNCg==
+Add nodes for lvds pwms
+
+Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+---
+ .../boot/dts/freescale/imx8-ss-lsio.dtsi      | 84 +++++++++++++++++++
+ drivers/clk/imx/clk-imx8qxp.c                 | 14 +++-
+ drivers/firmware/imx/scu-pd.c                 |  6 +-
+ include/dt-bindings/clock/imx8-clock.h        | 12 +++
+ 4 files changed, 112 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+index c21e0818887b..be241813fbea 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+@@ -7,6 +7,90 @@
+ #include <dt-bindings/clock/imx8-lpcg.h>
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ 
++lvds0_subsys: bus@56240000
++{
++	compatible = "simple-bus";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0x56240000 0x0 0x56240000 0x10000>;
++
++	lvds0_ipg_clk: clock-lvds-ipg {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <24000000>;
++			clock-output-names = "lvds0_ipg_clk";
++	};
++
++	lvds0_lpcg: clock-controller@5624300c {
++		compatible = "fsl,imx8qxp-lpcg";
++		reg = <0x5624300c 0x4>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_SC_R_LVDS_0_PWM_0 IMX_SC_PM_CLK_PER>,
++			 <&lvds0_ipg_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
++		clock-output-names = "lvds0_pwm_lpcg_clk",
++					     "lvds0_pwm_lpcg_ipg_clk";
++		power-domains = <&pd IMX_SC_R_LVDS_0_PWM_0>;
++	};
++
++	lvds0_pwm: pwm@56244000 {
++		compatible = "fsl,imx8qm-pwm", "fsl,imx27-pwm";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x56244000 0x1000>;
++		clocks = <&lvds0_lpcg IMX_LPCG_CLK_0>,
++		 <&lvds0_lpcg IMX_LPCG_CLK_4>;
++		clock-names = "per", "ipg";
++		assigned-clocks = <&clk IMX_SC_R_LVDS_0_PWM_0 IMX_SC_PM_CLK_PER>;
++		assigned-clock-rates = <24000000>;
++		#pwm-cells = <2>;
++		power-domains = <&pd IMX_SC_R_LVDS_0_PWM_0>;
++		status = "disabled";
++	};
++};
++
++lvds1_subsys: bus@57240000
++{
++	compatible = "simple-bus";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0x57240000 0x0 0x57240000 0x10000>;
++
++	lvds1_ipg_clk: clock-lvds-ipg {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <24000000>;
++			clock-output-names = "lvds1_ipg_clk";
++		};
++
++	lvds1_lpcg: clock-controller@5724300c {
++		compatible = "fsl,imx8qxp-lpcg";
++		reg = <0x5724300c 0x4>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_SC_R_LVDS_1_PWM_0 IMX_SC_PM_CLK_PER>,
++				 <&lvds1_ipg_clk>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
++		clock-output-names = "lvds1_pwm_lpcg_clk",
++				     "lvds1_pwm_lpcg_ipg_clk";
++		power-domains = <&pd IMX_SC_R_LVDS_1_PWM_0>;
++	};
++
++	lvds1_pwm: pwm@57244000 {
++		compatible = "fsl,imx8qm-pwm", "fsl,imx27-pwm";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0x57244000 0x1000>;
++		clocks = <&lvds1_lpcg IMX_LPCG_CLK_0>,
++			 <&lvds1_lpcg IMX_LPCG_CLK_4>;
++		clock-names = "per", "ipg";
++		assigned-clocks = <&clk IMX_SC_R_LVDS_1_PWM_0 IMX_SC_PM_CLK_PER>;
++		assigned-clock-rates = <24000000>;
++		#pwm-cells = <2>;
++		power-domains = <&pd IMX_SC_R_LVDS_1_PWM_0>;
++		status = "disabled";
++	};
++};
++
+ lsio_subsys: bus@5d000000 {
+ 	compatible = "simple-bus";
+ 	#address-cells = <1>;
+diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
+index a6b690d94025..45b63ed06619 100644
+--- a/drivers/clk/imx/clk-imx8qxp.c
++++ b/drivers/clk/imx/clk-imx8qxp.c
+@@ -97,8 +97,6 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
+ 	clks[IMX_ADMA_FTM0_CLK]		= imx_clk_scu("ftm0_clk",  IMX_SC_R_FTM_0, IMX_SC_PM_CLK_PER, clk_cells);
+ 	clks[IMX_ADMA_FTM1_CLK]		= imx_clk_scu("ftm1_clk",  IMX_SC_R_FTM_1, IMX_SC_PM_CLK_PER, clk_cells);
+ 	clks[IMX_ADMA_ADC0_CLK]		= imx_clk_scu("adc0_clk",  IMX_SC_R_ADC_0, IMX_SC_PM_CLK_PER, clk_cells);
+-	clks[IMX_ADMA_PWM_CLK]		= imx_clk_scu("pwm_clk",   IMX_SC_R_LCD_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
+-	clks[IMX_ADMA_LCD_CLK]		= imx_clk_scu("lcd_clk",   IMX_SC_R_LCD_0, IMX_SC_PM_CLK_PER, clk_cells);
+ 
+ 	/* Connectivity */
+ 	clks[IMX_CONN_SDHC0_CLK]	= imx_clk_scu("sdhc0_clk", IMX_SC_R_SDHC_0, IMX_SC_PM_CLK_PER, clk_cells);
+@@ -130,6 +128,18 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
+ 	clks[IMX_CSI0_I2C0_CLK]		= imx_clk_scu("mipi_csi0_i2c0_clk", IMX_SC_R_CSI_0_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
+ 	clks[IMX_CSI0_PWM0_CLK]		= imx_clk_scu("mipi_csi0_pwm0_clk", IMX_SC_R_CSI_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
+ 
++/*LVDS*/
++	clks[IMX_LVDS0_PIXEL_CLK]       = imx_clk_scu("lvds0_pixel_clk", IMX_SC_R_LVDS_0, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS0_I2C0_CLK]        = imx_clk_scu("lvds0_i2c0_clk", IMX_SC_R_LVDS_0_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS0_I2C1_CLK]        = imx_clk_scu("lvds0_i2c1_clk", IMX_SC_R_LVDS_0_I2C_1, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS0_PWM0_CLK]        = imx_clk_scu("lvds0_pwm0_clk", IMX_SC_R_LVDS_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS0_PHY_CLK]         = imx_clk_scu("lvds0_phy_clk", IMX_SC_R_LVDS_0, IMX_SC_PM_CLK_PHY, clk_cells);
++	clks[IMX_LVDS1_PIXEL_CLK]       = imx_clk_scu("lvds1_pixel_clk", IMX_SC_R_LVDS_1, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS1_I2C0_CLK]        = imx_clk_scu("lvds1_i2c0_clk", IMX_SC_R_LVDS_1_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS1_I2C1_CLK]        = imx_clk_scu("lvds1_i2c1_clk", IMX_SC_R_LVDS_1_I2C_1, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS1_PWM0_CLK]        = imx_clk_scu("lvds1_pwm0_clk", IMX_SC_R_LVDS_1_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
++	clks[IMX_LVDS1_PHY_CLK]         = imx_clk_scu("lvds1_phy_clk", IMX_SC_R_LVDS_1, IMX_SC_PM_CLK_PHY, clk_cells);
++
+ 	/* GPU SS */
+ 	clks[IMX_GPU0_CORE_CLK]		= imx_clk_scu("gpu_core0_clk",	 IMX_SC_R_GPU_0_PID0, IMX_SC_PM_CLK_PER, clk_cells);
+ 	clks[IMX_GPU0_SHADER_CLK]	= imx_clk_scu("gpu_shader0_clk", IMX_SC_R_GPU_0_PID0, IMX_SC_PM_CLK_MISC, clk_cells);
+diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
+index e6ed965c2134..1c51a22bb72c 100644
+--- a/drivers/firmware/imx/scu-pd.c
++++ b/drivers/firmware/imx/scu-pd.c
+@@ -136,8 +136,6 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
+ 	{ "ftm", IMX_SC_R_FTM_0, 2, true, 0 },
+ 	{ "lpi2c", IMX_SC_R_I2C_0, 4, true, 0 },
+ 	{ "adc", IMX_SC_R_ADC_0, 1, true, 0 },
+-	{ "lcd", IMX_SC_R_LCD_0, 1, true, 0 },
+-	{ "lcd0-pwm", IMX_SC_R_LCD_0_PWM_0, 1, true, 0 },
+ 	{ "lpuart", IMX_SC_R_UART_0, 4, true, 0 },
+ 	{ "lpspi", IMX_SC_R_SPI_0, 4, true, 0 },
+ 	{ "irqstr_dsp", IMX_SC_R_IRQSTR_DSP, 1, false, 0 },
+@@ -163,6 +161,10 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
+ 
+ 	/* LVDS SS */
+ 	{ "lvds0", IMX_SC_R_LVDS_0, 1, false, 0 },
++	{ "lvds0-pwm0", IMX_SC_R_LVDS_0_PWM_0, 1, false, 0 },
++	{ "lvds1", IMX_SC_R_LVDS_1, 1, false, 0 },
++	{ "lvds1-i2c", IMX_SC_R_LVDS_1_I2C_0, 2, true, 0 },
++	{ "lvds1-pwm0", IMX_SC_R_LVDS_1_PWM_0, 1, false, 0 },
+ 
+ 	/* DC SS */
+ 	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
+diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
+index 003b0293c9b5..d8d07833fbc2 100644
+--- a/include/dt-bindings/clock/imx8-clock.h
++++ b/include/dt-bindings/clock/imx8-clock.h
+@@ -135,6 +135,18 @@
+ #define IMX_A72_CLK					191
+ #define IMX_SCU_CLK_END					192
+ 
++/*LVDS*/
++#define IMX_LVDS0_PIXEL_CLK				200
++#define IMX_LVDS0_I2C0_CLK				201
++#define IMX_LVDS0_I2C1_CLK				202
++#define IMX_LVDS0_PWM0_CLK				203
++#define IMX_LVDS0_PHY_CLK				204
++#define IMX_LVDS1_PIXEL_CLK				205
++#define IMX_LVDS1_I2C0_CLK				206
++#define IMX_LVDS1_I2C1_CLK				207
++#define IMX_LVDS1_PWM0_CLK				208
++#define IMX_LVDS1_PHY_CLK				209
++
+ /* LPCG clocks */
+ 
+ /* LSIO SS LPCG */
+-- 
+2.26.0
 
