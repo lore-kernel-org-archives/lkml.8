@@ -2,81 +2,73 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86ADC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F208FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8670E207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C365C207DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hbGVRH3B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sObKysrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHRO5z (ORCPT
+        id S1727858AbgHRO6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56610 "EHLO
+        Tue, 18 Aug 2020 10:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHRO5x (ORCPT
+        with ESMTP id S1726698AbgHRO61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:57:53 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7A4C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:57:53 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id j188so10269175vsd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:57:53 -0700 (PDT)
+        Tue, 18 Aug 2020 10:58:27 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B71C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:58:26 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id s1so8339548iot.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TV7ie8YQzzCwxQWHVrIBTQKXy/oaWTjxbImglzQ6zZQ=;
-        b=hbGVRH3BGMrwNufK6iwkScF4wgv806ZBXZDcJCRIPddAOmGq1Fm5FWiW+VdokAM2/+
-         +w/sFtvsijDh0eHR69yXym0B1iwEHzEHK8Az8EdNtFj0/mTzzi9Iw0FtnpbQ2F7eIIX8
-         voFTbtK4Bux+4SL0ScZh+F4IRH5ehPrmv6wyE=
+        bh=vOEA2rP9/JD6Cf76I2R3GGke75F7JOtu4CdmYgf8vDY=;
+        b=sObKysrY/m6k71IrKg0OKwNuztPj+2ApCNCaDg5eevrRQ+xH5K4vrlPCXTOjWYnhBx
+         N5gWOfpWzu45gDBj3AmUDpXLCo02KiGLddVIxkvkmFEEZQSccy8ViWZdSDpQackugrQx
+         P3XeZwcPxMEvZbMTP/OxJSz4mFyrpJId3fjzupe5RHJOJHi4I+BfU/SI9hqVu16kKS32
+         qRK1/HmLKkgXJ3XXvAI3KoE+G3QWCKE8Qx5xgseT51v+FyyboOuunaNv/IW5WS9z2tYT
+         G6WLGh4XR+YcYhsWkb53O/Vz+gKZ9lbhawwb8MuLAvkMJ3ilWr+rUcom2roj3loVLhSS
+         27aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TV7ie8YQzzCwxQWHVrIBTQKXy/oaWTjxbImglzQ6zZQ=;
-        b=P7JAEaGeuDVh8TY5sMa+us0Ll9aDwdbuc6IgL8rHkI6A1JwnKwJlBwd4uEJ5NTItsQ
-         PQ0nkZcwDnxwCu4Acz7rYmbTdnuorfJ5m202SdH3UOdJNa5kmP2sFuzO76ERxOIvisgd
-         rlqMc1HvLb4lWG7lZj9xCQKEa3bhOnX+nEjfPKaAIyGaEPjLeGS6hWGCs6IvhHJVAx9W
-         2NomS+tVLeznXtFoGE/wrLVpe6Ec58P6agW+rT87da2ogv02j9Fw3zuIoHvI84pvqVAC
-         mOc1mpktjqCbrDSORzSem3TNdDhunjPCtc2RffXkN0iAwV68xpwPBvF1Z0TJAVvoLyD2
-         2ceg==
-X-Gm-Message-State: AOAM533cNqDM/vP91P6ojqvNONmAuuNWFlH2B23Vu9Z+RzCqo+UsrJpd
-        U/VshBvW93xAlNuycBuFbzmpcm8A9zhlaw==
-X-Google-Smtp-Source: ABdhPJzHU7KqVY3aZkE/wPmc/5bRciwXta1A2+UM1XRHdKOCiWyoDbCeFSzEw6nL4KyvSmTbV9PrbQ==
-X-Received: by 2002:a67:66c1:: with SMTP id a184mr12150102vsc.23.1597762671221;
-        Tue, 18 Aug 2020 07:57:51 -0700 (PDT)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id e124sm1777600vsc.2.2020.08.18.07.57.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:57:50 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id q200so4379077vke.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:57:50 -0700 (PDT)
-X-Received: by 2002:a1f:a302:: with SMTP id m2mr12131702vke.28.1597762669752;
- Tue, 18 Aug 2020 07:57:49 -0700 (PDT)
+        bh=vOEA2rP9/JD6Cf76I2R3GGke75F7JOtu4CdmYgf8vDY=;
+        b=d4ovtHQeIjW7GB9zcBjCjCPtluDoO/pWHqkLFRbdWqV/8hgI+MGtKT9UJhhMFqjS3B
+         VdgTvfQXbn//MzuuiOFpMPP+0OvpjukAn+57HIFbAkvrvFgBvCUhAgk5AGadEz9E7TmW
+         iXELPxwB0VuXTb63bWVRFBoEaynoYvkzEASSXL6OTCjNb1I3q6ik9Ki19PdnGxI05fMC
+         jHwS2rMszTYmwFiLYbBF8oOhvWlCEJpTzXslLF8xXFaF83qlZCd0WgioDSuwUcV69aX9
+         JT0ldPYlBAkIDzD8PPy82ln/kfKqg8+ukm/BPsE2xdN5QnLTm10RBw17FmX4q9SxP8qy
+         TlBQ==
+X-Gm-Message-State: AOAM531Y60nGZaaaWqzTsJiKoMGAJ6AeALo/Aj9zM5XzSaNDwcDICFJP
+        cUw39HbsOmwDbX4KXYOp6JVUFe5BIlX72QLxH4o=
+X-Google-Smtp-Source: ABdhPJy11n6vtEdpb4Yt79Cgo6EA4IQ4lhtjTCOOWRi3rSkmsGOG4Jca6HSsIzdteiY+8sKovq1y/uZMuLnb/A9ujV8=
+X-Received: by 2002:a5d:8f09:: with SMTP id f9mr16787030iof.187.1597762705945;
+ Tue, 18 Aug 2020 07:58:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200818145514.16262-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200818145514.16262-1-saiprakash.ranjan@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 18 Aug 2020 07:57:38 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vzk=qkemLRU3gaZ1K4P-9=tMqB+HUoGCQL4Zxv6q8XFQ@mail.gmail.com>
-Message-ID: <CAD=FV=Vzk=qkemLRU3gaZ1K4P-9=tMqB+HUoGCQL4Zxv6q8XFQ@mail.gmail.com>
-Subject: Re: [PATCHv2] arm64: dts: qcom: sc7180: Fix the LLCC base register size
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <20200817084836.29216-1-richard.weiyang@linux.alibaba.com>
+ <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com> <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
+ <20200818032217.GA31960@L-31X9LVDL-1304.local>
+In-Reply-To: <20200818032217.GA31960@L-31X9LVDL-1304.local>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 18 Aug 2020 07:58:14 -0700
+Message-ID: <CAKgT0UdiRw4WMe8RxOZ3A6fcQJ9Tp7BAWBbuYkje7YWiT0cVOA@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_reporting: the "page" must not be the list head
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,29 +76,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-
-On Tue, Aug 18, 2020 at 7:55 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
+On Mon, Aug 17, 2020 at 8:22 PM Wei Yang
+<richard.weiyang@linux.alibaba.com> wrote:
 >
-> There is one LLCC logical bank(LLCC0) on SC7180 SoC and the
-> size of the LLCC0 base is 0x50000(320KB) not 2MB, so correct
-> the size and fix copy paste mistake carried over from SDM845.
+> On Mon, Aug 17, 2020 at 09:05:32AM -0700, Alexander Duyck wrote:
+> >
+> >
+> >On 8/17/2020 2:35 AM, David Hildenbrand wrote:
+> >> On 17.08.20 10:48, Wei Yang wrote:
+> >> > If "page" is the list head, list_for_each_entry_safe() would stop
+> >> > iteration.
+> >> >
+> >> > Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> >> > ---
+> >> >   mm/page_reporting.c | 2 +-
+> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> >> > index 3bbd471cfc81..aaaa3605123d 100644
+> >> > --- a/mm/page_reporting.c
+> >> > +++ b/mm/page_reporting.c
+> >> > @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+> >> >             * the new head of the free list before we release the
+> >> >             * zone lock.
+> >> >             */
+> >> > -          if (&page->lru != list && !list_is_first(&page->lru, list))
+> >> > +          if (!list_is_first(&page->lru, list))
+> >> >                    list_rotate_to_front(&page->lru, list);
+> >> >            /* release lock before waiting on report processing */
+> >> >
+> >>
+> >> Is this a fix or a cleanup? If it's a fix, can this be reproduced easily
+> >> and what ere the effects?
+> >>
+> >
+> >This should be a clean-up. Since the &page->lru != list will always be true.
+> >
+> >If I recall at some point the that was a check for &next->lru != list but I
+> >think I pulled out an additional conditional check somewhere so that we just
+> >go through the start of the loop again and iterate over reported pages until
+> >we are guaranteed to have a non-reported page to rotate to the top of the
+> >list with the general idea being that we wanted the allocator to pull
+> >non-reported pages before reported pages.
 >
-> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
-> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache controller node")
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
+> Hi, Alexander,
 >
-> Changes in v2:
->  * Edit commit msg to remove confusing references (Doug).
+> I see you mentioned in the changelog, this change "mm/page_reporting: rotate
+> reported pages to the tail of the list" brings some performance gain.
 >
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Would you mind sharing more test detail? I would like to have a try at my
+> side.
+>
+> Thanks :-)
 
-I can't validate against any datasheets, but it does what it says and
-seems sane.
+I seem to recall my default test for most of this was the page_fault1
+test from the will-it-scale suite of tests. Basically I was running
+that while leaving page reporting enabled. However I don't know how
+much visibility you would have into the performance impact as I seem
+to recall I had to modify the frequency of scheduling for the
+reporting polling task in order to see much of an impact.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Thanks.
+
+- Alex
