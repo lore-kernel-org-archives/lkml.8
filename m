@@ -4,100 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CC5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1FAB206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745E6206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 01:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHRBm7 (ORCPT
+        id S1726672AbgHRBnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Aug 2020 21:42:59 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:58142 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgHRBm5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Aug 2020 21:42:57 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee35f3b320ed58-a7502; Tue, 18 Aug 2020 09:42:38 +0800 (CST)
-X-RM-TRANSID: 2ee35f3b320ed58-a7502
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.21.77] (unknown[10.42.68.12])
-        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55f3b320d8b7-328ee;
-        Tue, 18 Aug 2020 09:42:38 +0800 (CST)
-X-RM-TRANSID: 2ee55f3b320d8b7-328ee
-Subject: Re: [PATCH] ath10k: fix the status check and wrong return
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath10k@lists.infradead.org
-References: <20200814144844.1920-1-tangbin@cmss.chinamobile.com>
- <87y2mdjqkx.fsf@codeaurora.org>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <e53ee8ca-9c2b-2313-6fd7-8f73ae33e1a2@cmss.chinamobile.com>
-Date:   Tue, 18 Aug 2020 09:42:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 17 Aug 2020 21:43:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52674 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726314AbgHRBnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Aug 2020 21:43:00 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CD00468AFF19047C289E;
+        Tue, 18 Aug 2020 09:42:54 +0800 (CST)
+Received: from [10.174.187.22] (10.174.187.22) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 18 Aug 2020 09:42:47 +0800
+Subject: Re: [PATCH 2/2] clocksource: arm_arch_timer: Correct fault
+ programming of CNTKCTL_EL1.EVNTI
+To:     Marc Zyngier <maz@kernel.org>
+References: <20200817122415.6568-1-zhukeqian1@huawei.com>
+ <20200817122415.6568-3-zhukeqian1@huawei.com>
+ <b37f6cf6a660f51690f0689509650eed@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <519050e9-7a51-5621-6709-0c82d33456f6@huawei.com>
+Date:   Tue, 18 Aug 2020 09:42:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <87y2mdjqkx.fsf@codeaurora.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b37f6cf6a660f51690f0689509650eed@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.187.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kalle£º
+Hi Marc,
 
-ÔÚ 2020/8/17 22:26, Kalle Valo Ð´µÀ:
->> In the function ath10k_ahb_clock_init(), devm_clk_get() doesn't
->> return NULL. Thus use IS_ERR() and PTR_ERR() to validate
->> the returned value instead of IS_ERR_OR_NULL().
-> Why? What's the benefit of this patch? Or what harm does
-> IS_ERR_OR_NULL() create?
-
-Thanks for you reply, the benefit of this patch is simplify the code, 
-because in
-
-this function, I don't think the situation of 'devm_clk_get() return 
-NULL' exists.
-
-So please think about it, thanks.
-
-
-Tang Bin
-
->
->> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->> ---
->>   drivers/net/wireless/ath/ath10k/ahb.c | 12 ++++++------
->>   1 file changed, 6 insertions(+), 6 deletions(-)
+On 2020/8/17 20:56, Marc Zyngier wrote:
+> On 2020-08-17 13:24, Keqian Zhu wrote:
+>> ARM virtual counter supports event stream, it can only trigger an event
+>> when the trigger bit (the value of CNTKCTL_EL1.EVNTI) of CNTVCT_EL0 changes,
+>> so the actual period of event stream is 2^(cntkctl_evnti + 1). For example,
+>> when the trigger bit is 0, then virtual counter trigger an event for every
+>> two cycles.
 >>
->> diff --git a/drivers/net/wireless/ath/ath10k/ahb.c b/drivers/net/wireless/ath/ath10k/ahb.c
->> index ed87bc00f..ea669af6a 100644
->> --- a/drivers/net/wireless/ath/ath10k/ahb.c
->> +++ b/drivers/net/wireless/ath/ath10k/ahb.c
->> @@ -87,24 +87,24 @@ static int ath10k_ahb_clock_init(struct ath10k *ar)
->>   	dev = &ar_ahb->pdev->dev;
->>   
->>   	ar_ahb->cmd_clk = devm_clk_get(dev, "wifi_wcss_cmd");
->> -	if (IS_ERR_OR_NULL(ar_ahb->cmd_clk)) {
->> +	if (IS_ERR(ar_ahb->cmd_clk)) {
->>   		ath10k_err(ar, "failed to get cmd clk: %ld\n",
->>   			   PTR_ERR(ar_ahb->cmd_clk));
->> -		return ar_ahb->cmd_clk ? PTR_ERR(ar_ahb->cmd_clk) : -ENODEV;
->> +		return PTR_ERR(ar_ahb->cmd_clk);
->>   	}
-> devm_clk_get() can return NULL if CONFIG_HAVE_CLK is disabled:
->
-> static inline struct clk *devm_clk_get(struct device *dev, const char *id)
-> {
-> 	return NULL;
-> }
->
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> 
+> I have never given you this tag, you are making it up. Please read
+> Documentation/process/submitting-patches.rst to understand what
+> tag you can put by yourself.
+Sorry about my mistake.
+> 
+> At best, put "Suggested-by" tag, as this is different from what
+> I posted anyway.
+OK, I will use this tag.
 
-
+Thanks,
+Keqian
+> 
+> Thanks,
+> 
+>         M.
+> 
+>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+>> ---
+>>  drivers/clocksource/arm_arch_timer.c | 10 +++++++---
+>>  1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/arm_arch_timer.c
+>> b/drivers/clocksource/arm_arch_timer.c
+>> index 6e11c60..4140a37 100644
+>> --- a/drivers/clocksource/arm_arch_timer.c
+>> +++ b/drivers/clocksource/arm_arch_timer.c
+>> @@ -794,10 +794,14 @@ static void arch_timer_configure_evtstream(void)
+>>  {
+>>      int evt_stream_div, pos;
+>>
+>> -    /* Find the closest power of two to the divisor */
+>> -    evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
+>> +    /*
+>> +     * Find the closest power of two to the divisor. As the event
+>> +     * stream can at most be generated at half the frequency of the
+>> +     * counter, use half the frequency when computing the divider.
+>> +     */
+>> +    evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ / 2;
+>>      pos = fls(evt_stream_div);
+>> -    if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
+>> +    if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
+>>          pos--;
+>>      /* enable event stream */
+>>      arch_timer_evtstrm_enable(min(pos, 15));
+> 
