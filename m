@@ -2,93 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8650EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7E720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E7420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGoDITci"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YbqYH54d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHRJPF (ORCPT
+        id S1726718AbgHRJPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        Tue, 18 Aug 2020 05:15:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRJPE (ORCPT
+        with ESMTP id S1726165AbgHRJPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:15:04 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8856EC061389;
-        Tue, 18 Aug 2020 02:15:04 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id a65so15695030otc.8;
-        Tue, 18 Aug 2020 02:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W2hKsTS1LvaI0SOO9W3/5fRfJY5aEh/BZWVO9XitBWs=;
-        b=eGoDITciADrWQe3gs29cyT8xT1NKm5rz9rVcVLDn/bbuYp8fgY1hSDfcgcO2Y8A/FE
-         zDJ9bm6G+z2N4IP6u1ELlhwB/iZ+1A+IwLuPDXV50yqTfWBpi2yoklrT0psD6GdMzRGm
-         mKZXpjNtcSxOPcLuAlO8t6rlea5KpMBIJZl+zd87Fs8FGCP4YglR+Cy8uqT+GzI0stq3
-         viuaxAQxm/6lWfM0J1ue15DTH6MQ6CtMtlUoD1oYGIxuyF9v8tv3Vn0TjcM5dSCK8JbS
-         fjcwz39yKbHCwapnbDs3GWnek7Qbumu+oEcYnimX4XO6Q66JRWEkGZLHrLAcc8kim4hs
-         +0yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W2hKsTS1LvaI0SOO9W3/5fRfJY5aEh/BZWVO9XitBWs=;
-        b=Gg+gEN8DUXLNvd3H4jM2RyIIxCbIyZqazH6jdWzal0lIUTvhZ8zjq2ws+ZwsblG3W6
-         SV0/LrC8a1jWrvZTG9CFDk9sutJWvHr34r2B3y4IJxgBYWiiIHVEoRZ5oHl9IqIi3hvb
-         xlPRm6rnxr2580QuVR9DR0FD2lyJnYs5sccc7wju/2wIrB4Bo2ePAQuZtzOG+zgOpOQ4
-         /4mH59nkYKC6lQOFzR12ec8rDUxHGJyTxs12CofLm8HqqKDgAMf4bdrCHEpMaajMBrEc
-         SY6ejebc95bw4Y0T6hesUgDpDDuHzYooxTVjRaoX5xQ/0qIeT+sVqGPJo1GLaDVE80HC
-         EuVw==
-X-Gm-Message-State: AOAM533C+t6/sLu1xMpNWQjk+UxQaSLw48k9x28hav1/9fyNDFL5fNEA
-        8iMh0vebwTV7a8tzAOoC8aMuuxe+d7dMosLcwPs=
-X-Google-Smtp-Source: ABdhPJzzm5zuxz1BYxytortJNZi40aPY4mo/p0dwJ/cgscBmXy1XrUh5q88EuMzxIjKgJBVv2+jBuBgNQfstKNEw2u4=
-X-Received: by 2002:a9d:774d:: with SMTP id t13mr13781704otl.108.1597742104000;
- Tue, 18 Aug 2020 02:15:04 -0700 (PDT)
+        Tue, 18 Aug 2020 05:15:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD81BC061389;
+        Tue, 18 Aug 2020 02:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UBwdQabxborBnUE/RMGD20d7Ru/Oheb0wmXWjUiC0/E=; b=YbqYH54dJpbZukfJbcHBX5gIe6
+        4fGR1JnoO2J5ou9rqay98pZf09b2sJvtXYzco+ShIGTbQCUJanYELbMUIKzdUJp8m6gqGDh2Vy5dz
+        Z85kRmbOcs2R9yO6b+qiXnRvxaiEOIVu1SfG+AZ1aEeGjWd8zXPOHQnLG0G/xaBKWZcnjPHK5THwY
+        NUFDfGvip/hUyZNwCTe8rH2KlZoyzIbkjSr4WisborRSryZSeC0mSG/mHjMtr6YgsnrQ7qlP834T9
+        2AXdgEs4etYbr2acZv2wBRyLfyez9vj90z97qq/VvNlLitUCukARb3errqkqzDH0jEAYtn4LMlLjg
+        uY4c2NiA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k7xhs-000568-8H; Tue, 18 Aug 2020 09:15:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C4093060F2;
+        Tue, 18 Aug 2020 11:14:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 293DB2BDBFE38; Tue, 18 Aug 2020 11:14:53 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 11:14:53 +0200
+From:   peterz@infradead.org
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+References: <20200817140831.30260-1-longman@redhat.com>
 MIME-Version: 1.0
-References: <20200817082434.21176-1-allen.lkml@gmail.com> <20200817082434.21176-8-allen.lkml@gmail.com>
- <20200817083216.5367f56a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200817083216.5367f56a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Tue, 18 Aug 2020 14:44:52 +0530
-Message-ID: <CAOMdWSL0e8iakwc2FUnF8epMme5eofrUMzrG0MjcBvEz4cimKA@mail.gmail.com>
-Subject: Re: [PATCH 06/20] ethernet: chelsio: convert tasklets to use new
- tasklet_setup() API
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     jes@trained-monkey.org, David Miller <davem@davemloft.net>,
-        kda@linux-powerpc.org, dougmill@linux.ibm.com,
-        cooldavid@cooldavid.org, mlindner@marvell.com, borisp@mellanox.com,
-        Kees Cook <keescook@chromium.org>, linux-acenic@sunsite.dk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-        oss-drivers@netronome.com, Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817140831.30260-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> You need to adjust kdoc when you change functions:
->
-> drivers/net/ethernet/chelsio/cxgb4/sge.c:2664: warning: Function parameter or member 't' not described in 'restart_ctrlq'
-> drivers/net/ethernet/chelsio/cxgb4/sge.c:2664: warning: Excess function parameter 'data' description in 'restart_ctrlq'
-> drivers/net/ethernet/chelsio/cxgb4/sge.c:2965: warning: Function parameter or member 't' not described in 'restart_ofldq'
-> drivers/net/ethernet/chelsio/cxgb4/sge.c:2965: warning: Excess function parameter 'data' description in 'restart_ofldq'
+On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
+> Memory controller can be used to control and limit the amount of
+> physical memory used by a task. When a limit is set in "memory.high" in
+> a v2 non-root memory cgroup, the memory controller will try to reclaim
+> memory if the limit has been exceeded. Normally, that will be enough
+> to keep the physical memory consumption of tasks in the memory cgroup
+> to be around or below the "memory.high" limit.
+> 
+> Sometimes, memory reclaim may not be able to recover memory in a rate
+> that can catch up to the physical memory allocation rate. In this case,
+> the physical memory consumption will keep on increasing. 
 
+Then slow down the allocator? That's what we do for dirty pages too, we
+slow down the dirtier when we run against the limits.
 
-Thanks, will fix it and spin V2.
-
--- 
-       - Allen
