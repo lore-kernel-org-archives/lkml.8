@@ -2,102 +2,125 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE8C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D338B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E022075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9OgGTTc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwZdr1dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHRJRP (ORCPT
+        id S1726466AbgHRJTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
+        Tue, 18 Aug 2020 05:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgHRJRO (ORCPT
+        with ESMTP id S1726145AbgHRJTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:17:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D3DC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:17:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 9so15570378wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 02:17:14 -0700 (PDT)
+        Tue, 18 Aug 2020 05:19:34 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00EEC061389;
+        Tue, 18 Aug 2020 02:19:34 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id l204so17346333oib.3;
+        Tue, 18 Aug 2020 02:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:cc:subject:message-id:mime-version:content-disposition;
-        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
-        b=g9OgGTTcV/DXM6qez+st7dlpEcxogyEG4ViV8vAbxiou4UWZUTVZlGvQQnEsaXmK7C
-         9BtAUXQ0ufpOR8INAF8VnE9R6Yv/DN5qU4VeK7gTcRiiZxRKtRRy+GrskhhnlZEiTVy4
-         quFw1+DtoCBmh0yzghiBwfP2KyexcnOFlBSR6OcLmAqf8Wfao55RPRi3Pn2X+SrpyQd1
-         wA29DespuXyhBfIao7fGBCKqTvF4/RovqRxC2yUsaF/MYUZpDUUTtecWE+t9R2dFSanU
-         T4/918oP1D9wI7RNgfAWtXMQxj/k5xEjDPu3IfTJERJhkD2h3C7far8lDFqOIMIiwkF2
-         wVUw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OPrtzmbRGNWaNnH3sS85IwKsEQNBiDa2S7qZVgUqdV0=;
+        b=uwZdr1drv1Ffv9Xzzpo9foaY/76wFKIYjODaXwbDePsqoYcvqDhJmGI4HUx8kWwHLa
+         6xk72QeNWiJ8ZyoVNETOQnKBdig0310Kgo7+32xRcAqF6xvhUHchqRhqiDCawSbIk6Us
+         ab65eZMrC1YpfEPvCsKwxhstK20yEyb4TG4Aj07i2I+hshwHuZDqfsxJ3POjGClB8r2j
+         CqCjAY9xz4mYpElYZ1N2H8h+4NGoCpVjz42b69/LpB/AGZhOFTXK866IOQnk4hQuRG5t
+         4cZLyZtDEfHm7knoy6f0gd3Z5ZMrPeDaUWZMAUN2PRPpDOnGdL6jQY/ERAhYEUxXYk69
+         2Fqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
-        b=msj3RSdB/qcPyBeQ89H49kHwM/aBn5Wothu7z2J62DZlKSSd3EtY+nI47CU9xCvN4v
-         q5mSVAS2WVy1wL4ZDyHK/DXHidXZzcKK+SdVDN+jBAR13mvsGOMGg+a8QcaJ/YHYoEZI
-         I4Y8Iv7aVVz5dgFi5M474ZsEBT7STF+PSRu//lFT36H2FPw6hRM35vckU45XFua00lhI
-         Wzw9b92zIz8NWswdQGPt47p+wTFjr+F2/dVtKdMWR190kFrGvXsWSMMdtCFv9WwciMwH
-         qL1W39npD80GQlr3/Wfkr7IiaK1HFh5FxKgDUMHBJnF3LMlwLx4wY+/2fcgJoy6+30oY
-         pWKQ==
-X-Gm-Message-State: AOAM531lZPN2INlFEGPEs3LZleu5dFYp4/0ZYB5c7/vVEewcszNJwZ9r
-        ET6hj+ckUaStVtndfsK70VU=
-X-Google-Smtp-Source: ABdhPJyYEBjemYYY66shh3k24o9Ej5PDwHQXqhemqLsfFbOHmDuOyo1Kt5S9D7qQU1rAMIolcBmj7g==
-X-Received: by 2002:a1c:540c:: with SMTP id i12mr17315460wmb.96.1597742233220;
-        Tue, 18 Aug 2020 02:17:13 -0700 (PDT)
-Received: from tsnow ([94.159.146.190])
-        by smtp.gmail.com with ESMTPSA id g25sm30855540wmh.35.2020.08.18.02.17.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:17:12 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:17:08 +0300
-From:   Tomer Samara <tomersamara98@gmail.com>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] *** SUBJECT HERE ***
-Message-ID: <cover.1597742228.git.tomersamara98@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OPrtzmbRGNWaNnH3sS85IwKsEQNBiDa2S7qZVgUqdV0=;
+        b=LRHjTBLcbHsM63U0BpVYA4SlyTxbS5KKephOSXm433u23Tb2HRF7Nboi5orydVmIYc
+         oKCsiWw5VdEu2wUHmexPr9FJcozuFXjD2qE5SjzW+WO4LTPMfQTE5GHSzXBy361o49Cx
+         gcz1QnDWqeUTHYTwIf+MpcAjJrfgc+4ZJECwvMELc1eaHtMQRXj9nHmkk0Qw7sqEPb49
+         G3SnBGs9s89zjHIgcpRe3JH2LUMAbWPfY+sMq/FfQn54KEI5BDH8u3zJmBtsLEUAkJfQ
+         NdLEpIjjz3u4YMOc8YgT9PkLQpwdnleBFDLun9//tb6EvoN/F0byry32ryU/Om2pri8K
+         4+vg==
+X-Gm-Message-State: AOAM5315jizFMZ4HLNT/ILs4Rid0gXGy1jkb2EX3iULyAaf0DCQd4Ym0
+        Jf0W0DTxbXm94PvpNUVRlu7cVJ6Vs34ZMiv2/9A=
+X-Google-Smtp-Source: ABdhPJwaWzGptyRfJAitJy797Axdef9a5WOyIDLI2WzlDJ19r7bFoze/coeM8H5xGegNsEzzrGuNJ9zDhm5pItH4Obc=
+X-Received: by 2002:a05:6808:4c5:: with SMTP id a5mr12626963oie.175.1597742373280;
+ Tue, 18 Aug 2020 02:19:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200817082844.21700-1-allen.lkml@gmail.com> <20200817082844.21700-2-allen.lkml@gmail.com>
+ <20200817175318.GW24045@ziepe.ca>
+In-Reply-To: <20200817175318.GW24045@ziepe.ca>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Tue, 18 Aug 2020 14:49:21 +0530
+Message-ID: <CAOMdWS+YQAWY=L5KqTKhZsg3faK8Z6mUzZ_U6rZ+Y3ybrHF1qQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] infiniband: bnxt_re: convert tasklets to use new
+ tasklet_setup() API
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        nareshkumar.pbs@broadcom.com, Kees Cook <keescook@chromium.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*** BLURB HERE ***
+> > diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
+> > index 4e211162acee..7261be29fb09 100644
+> > +++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
+> > @@ -50,7 +50,7 @@
+> >  #include "qplib_sp.h"
+> >  #include "qplib_fp.h"
+> >
+> > -static void bnxt_qplib_service_creq(unsigned long data);
+> > +static void bnxt_qplib_service_creq(struct tasklet_struct *t);
+> >
+> >  /* Hardware communication channel */
+> >  static int __wait_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
+> > @@ -79,7 +79,7 @@ static int __block_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
+> >               goto done;
+> >       do {
+> >               mdelay(1); /* 1m sec */
+> > -             bnxt_qplib_service_creq((unsigned long)rcfw);
+> > +             bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
+> >       } while (test_bit(cbit, cmdq->cmdq_bitmap) && --count);
+> >  done:
+> >       return count ? 0 : -ETIMEDOUT;
+> > @@ -369,10 +369,10 @@ static int bnxt_qplib_process_qp_event(struct bnxt_qplib_rcfw *rcfw,
+> >  }
+> >
+> >  /* SP - CREQ Completion handlers */
+> > -static void bnxt_qplib_service_creq(unsigned long data)
+> > +static void bnxt_qplib_service_creq(struct tasklet_struct *t)
+> >  {
+> > -     struct bnxt_qplib_rcfw *rcfw = (struct bnxt_qplib_rcfw *)data;
+> > -     struct bnxt_qplib_creq_ctx *creq = &rcfw->creq;
+> > +     struct bnxt_qplib_creq_ctx *creq = from_tasklet(creq, t, creq_tasklet);
+>
+> This is just:
+>
+>   struct bnxt_qplib_rcfw *rcfw = from_tasklet(rcfw, t, crew.creq_tasklet);
+>
+> No need for the extra container_of
 
-Tomer Samara (4):
-  staging: android: Replace BUG_ON with WARN_ON
-  staging: android: Add error handling to ion_page_pool_shrink
-  staging: android: Convert BUG to WARN
-  staging: android: Add error handling to order_to_index callers
+Sure, will fix it and spin V2.
 
- drivers/staging/android/ion/ion_page_pool.c   | 14 ++++++++++----
- drivers/staging/android/ion/ion_system_heap.c | 16 +++++++++++++---
- 2 files changed, 23 insertions(+), 7 deletions(-)
+Thanks.
+>
+> Jason
+
+
 
 -- 
-2.25.1
-
-/tmp/0001-staging-android-Replace-BUG_ON-with-WARN_ON.patch
-/tmp/0002-staging-android-Add-error-handling-to-ion_page_pool_.patch
-/tmp/0003-staging-android-Convert-BUG-to-WARN.patch
-/tmp/0004-staging-android-Add-error-handling-to-order_to_index.patch
+       - Allen
