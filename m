@@ -2,125 +2,89 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE8C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0603C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E022075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98542054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwZdr1dr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DRMoRvwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHRJTf (ORCPT
+        id S1726474AbgHRJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgHRJTe (ORCPT
+        Tue, 18 Aug 2020 05:20:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38252 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbgHRJU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:19:34 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00EEC061389;
-        Tue, 18 Aug 2020 02:19:34 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id l204so17346333oib.3;
-        Tue, 18 Aug 2020 02:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OPrtzmbRGNWaNnH3sS85IwKsEQNBiDa2S7qZVgUqdV0=;
-        b=uwZdr1drv1Ffv9Xzzpo9foaY/76wFKIYjODaXwbDePsqoYcvqDhJmGI4HUx8kWwHLa
-         6xk72QeNWiJ8ZyoVNETOQnKBdig0310Kgo7+32xRcAqF6xvhUHchqRhqiDCawSbIk6Us
-         ab65eZMrC1YpfEPvCsKwxhstK20yEyb4TG4Aj07i2I+hshwHuZDqfsxJ3POjGClB8r2j
-         CqCjAY9xz4mYpElYZ1N2H8h+4NGoCpVjz42b69/LpB/AGZhOFTXK866IOQnk4hQuRG5t
-         4cZLyZtDEfHm7knoy6f0gd3Z5ZMrPeDaUWZMAUN2PRPpDOnGdL6jQY/ERAhYEUxXYk69
-         2Fqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OPrtzmbRGNWaNnH3sS85IwKsEQNBiDa2S7qZVgUqdV0=;
-        b=LRHjTBLcbHsM63U0BpVYA4SlyTxbS5KKephOSXm433u23Tb2HRF7Nboi5orydVmIYc
-         oKCsiWw5VdEu2wUHmexPr9FJcozuFXjD2qE5SjzW+WO4LTPMfQTE5GHSzXBy361o49Cx
-         gcz1QnDWqeUTHYTwIf+MpcAjJrfgc+4ZJECwvMELc1eaHtMQRXj9nHmkk0Qw7sqEPb49
-         G3SnBGs9s89zjHIgcpRe3JH2LUMAbWPfY+sMq/FfQn54KEI5BDH8u3zJmBtsLEUAkJfQ
-         NdLEpIjjz3u4YMOc8YgT9PkLQpwdnleBFDLun9//tb6EvoN/F0byry32ryU/Om2pri8K
-         4+vg==
-X-Gm-Message-State: AOAM5315jizFMZ4HLNT/ILs4Rid0gXGy1jkb2EX3iULyAaf0DCQd4Ym0
-        Jf0W0DTxbXm94PvpNUVRlu7cVJ6Vs34ZMiv2/9A=
-X-Google-Smtp-Source: ABdhPJwaWzGptyRfJAitJy797Axdef9a5WOyIDLI2WzlDJ19r7bFoze/coeM8H5xGegNsEzzrGuNJ9zDhm5pItH4Obc=
-X-Received: by 2002:a05:6808:4c5:: with SMTP id a5mr12626963oie.175.1597742373280;
- Tue, 18 Aug 2020 02:19:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817082844.21700-1-allen.lkml@gmail.com> <20200817082844.21700-2-allen.lkml@gmail.com>
- <20200817175318.GW24045@ziepe.ca>
-In-Reply-To: <20200817175318.GW24045@ziepe.ca>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Tue, 18 Aug 2020 14:49:21 +0530
-Message-ID: <CAOMdWS+YQAWY=L5KqTKhZsg3faK8Z6mUzZ_U6rZ+Y3ybrHF1qQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] infiniband: bnxt_re: convert tasklets to use new
- tasklet_setup() API
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
-        nareshkumar.pbs@broadcom.com, Kees Cook <keescook@chromium.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Aug 2020 05:20:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597742425;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=pw595Aj/46zo0ERIuwv1IEbY3YqPvqwxwOPHQJVu1hs=;
+        b=DRMoRvwBOcGztbVwu+eEgBW+nXmWahSH4wAchDFCQZ5RyARCuu3PKoYsO9baowsfZWQqB7
+        kU+CXU8txbE4zAWtir1RfkCNVzTH7Iz0Z167lOD80W/993tO32WSG+hptGNkL1FOM9ViLJ
+        jDFPWll2P140x4WC4zBppHlXfU3DV+U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-6GGjtExdPOycVoy0rIiN8w-1; Tue, 18 Aug 2020 05:20:24 -0400
+X-MC-Unique: 6GGjtExdPOycVoy0rIiN8w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE0451007465;
+        Tue, 18 Aug 2020 09:20:22 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 203131001901;
+        Tue, 18 Aug 2020 09:20:19 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 4BEEB9AE3; Tue, 18 Aug 2020 11:20:18 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     christian.koenig@amd.com, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 2/2] drm/virtio: set max_segment
+Date:   Tue, 18 Aug 2020 11:20:17 +0200
+Message-Id: <20200818092017.26290-3-kraxel@redhat.com>
+In-Reply-To: <20200818092017.26290-1-kraxel@redhat.com>
+References: <20200818092017.26290-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-> > index 4e211162acee..7261be29fb09 100644
-> > +++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-> > @@ -50,7 +50,7 @@
-> >  #include "qplib_sp.h"
-> >  #include "qplib_fp.h"
-> >
-> > -static void bnxt_qplib_service_creq(unsigned long data);
-> > +static void bnxt_qplib_service_creq(struct tasklet_struct *t);
-> >
-> >  /* Hardware communication channel */
-> >  static int __wait_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
-> > @@ -79,7 +79,7 @@ static int __block_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
-> >               goto done;
-> >       do {
-> >               mdelay(1); /* 1m sec */
-> > -             bnxt_qplib_service_creq((unsigned long)rcfw);
-> > +             bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
-> >       } while (test_bit(cbit, cmdq->cmdq_bitmap) && --count);
-> >  done:
-> >       return count ? 0 : -ETIMEDOUT;
-> > @@ -369,10 +369,10 @@ static int bnxt_qplib_process_qp_event(struct bnxt_qplib_rcfw *rcfw,
-> >  }
-> >
-> >  /* SP - CREQ Completion handlers */
-> > -static void bnxt_qplib_service_creq(unsigned long data)
-> > +static void bnxt_qplib_service_creq(struct tasklet_struct *t)
-> >  {
-> > -     struct bnxt_qplib_rcfw *rcfw = (struct bnxt_qplib_rcfw *)data;
-> > -     struct bnxt_qplib_creq_ctx *creq = &rcfw->creq;
-> > +     struct bnxt_qplib_creq_ctx *creq = from_tasklet(creq, t, creq_tasklet);
->
-> This is just:
->
->   struct bnxt_qplib_rcfw *rcfw = from_tasklet(rcfw, t, crew.creq_tasklet);
->
-> No need for the extra container_of
+When initializing call virtio_max_dma_size() to figure the scatter list
+limit.  Needed to make virtio-gpu work properly with SEV.
 
-Sure, will fix it and spin V2.
+v2: place max_segment in drm driver not gem object.
 
-Thanks.
->
-> Jason
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index bf060c69850f..5a4364c00fae 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -114,6 +114,7 @@ int virtio_gpu_init(struct drm_device *dev)
+ 
+ 	vgdev->ddev = dev;
+ 	dev->dev_private = vgdev;
++	dev->max_segment = virtio_max_dma_size(vgdev->vdev);
+ 	vgdev->vdev = dev_to_virtio(dev->dev);
+ 	vgdev->dev = dev->dev;
+ 
 -- 
-       - Allen
+2.18.4
+
