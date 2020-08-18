@@ -2,202 +2,105 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D82C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C355C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97E920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF7C207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 22:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="giWvcgye"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YybmRaTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHRWbk (ORCPT
+        id S1726963AbgHRWeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        Tue, 18 Aug 2020 18:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgHRWbi (ORCPT
+        with ESMTP id S1726617AbgHRWeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 18:31:38 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04A7C061343
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:31:37 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id 77so19030576ilc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 15:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dz3uf1yC/A/8WBCAVxMwJetOye10yRZFzxJ+Wooo6VE=;
-        b=giWvcgye2JvTk78PPPTD5A5YH4VHE8ymOoGggVilMCoDrSpnXWHXtMmJ7K9/+RFMsJ
-         6TAxEJWzp+OGpzG/bXk/TrGPvpIZiBCe9goF6Kj9uBe42qbQQmgQn6GW+u7uP4XAylk0
-         f3OsqZH2TXxNHn6iOlfrFvmQ74lsXLer9QKBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dz3uf1yC/A/8WBCAVxMwJetOye10yRZFzxJ+Wooo6VE=;
-        b=pVPESXW+Vn14+uGJtrbd86LoYWprPC8+MG9ckXzRSd1ze2/m90i5Qg60nr0h2RFHQm
-         OQrHMwEXfqOIUGSORk2hqJy/1TrNlH/ccbI7KjqnkouvNZTFd917wdwPOcI/t5igotjk
-         Ey1jcDNI2CV8aj/g0q1ymyJ9IN/mlctWFhvsHmodBr9cei63/aWKnuTxrk6l7UEqEXZQ
-         dPUcNiXg7Nx+r3cDzhD57961tVVSp7YWfQjb1f7WX9Wws0qIge0og/NE26vKGw2C7IEg
-         hqtyMXwiJj86Ke0xMd5WADQI4vL3fN3i1/0mB4flqSdBnEUfCwyEjDQmQ6fog8wmGt09
-         rQzw==
-X-Gm-Message-State: AOAM5305OQGumEljcOVuNzXyzfHjxqoSc4gU/2E/PEKjkccHtlpMES0x
-        iQ59rFeNrRA/1WNY+SAOr0NtEA==
-X-Google-Smtp-Source: ABdhPJwoDOsXO8wzaK/7mf+oPoAhBu5HDPdOZMTGAYIjgRUeet0nLzGAONcx1bgMrQj1YZikQvlv0Q==
-X-Received: by 2002:a92:5f19:: with SMTP id t25mr19434394ilb.119.1597789896616;
-        Tue, 18 Aug 2020 15:31:36 -0700 (PDT)
-Received: from rrangel920.bld.corp.google.com (h184-60-195-141.arvdco.broadband.dynamic.tds.net. [184.60.195.141])
-        by smtp.gmail.com with ESMTPSA id l19sm11329783ioj.37.2020.08.18.15.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 15:31:36 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     adrian.hunter@intel.com
-Cc:     Nehal-bakulchandra.Shah@amd.com, chris.wang@amd.com,
-        Akshu.Agrawal@amd.com, Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
-Date:   Tue, 18 Aug 2020 16:31:33 -0600
-Message-Id: <20200818162900.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        Tue, 18 Aug 2020 18:34:07 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E6EC061389;
+        Tue, 18 Aug 2020 15:34:07 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWQgW6XF5z9sPf;
+        Wed, 19 Aug 2020 08:33:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597790040;
+        bh=k3pxQt90eE1hv4CqHI80gnmB8e6EPfCXSkwk+ZlMmI4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YybmRaTtsIR4PdObYNnpET3BTRyXgVIAepEKXD6b1M3tIbTFD6o0+EkvcH6PRGZVX
+         cNeRSyaMhJd/9IqdIKajTXdKKhrAkKs5hrUx9PIZWEpqCR8gkBFwE4MwTWgwHpV5Ad
+         6uXBPzlmbxwj8tRUnUygbjlqOxW3z4OJzqeT5Pdg53ALi7VkLpxAvij2dvWAmvacpD
+         X1D1peglLZ2r3J5ebVu9VNQrqXvk5sCnxHrD/KrDDdrgohQfftaWCJ+oQyyiJugnf0
+         mFHqNDrALDXqe6ZIKhFaTlp8wXTh4BdRx7sRD7USjZKxtxvcbLJtGbr6pWzC3Bo8uk
+         PATLoCN/JU3Cw==
+Date:   Wed, 19 Aug 2020 08:33:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: linux-next: Fixes tag needs some work in the wireless-drivers-next
+ tree
+Message-ID: <20200819083359.67f45112@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/oHp_qW2ROkDZtlx9g_HdhiR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AMD eMMC Controller can only use the tuned clock while in HS200 and
-HS400 mode. If we switch to a different mode, we need to disable the
-tuned clock. If we have previously performed tuning and switch back to
-HS200 or HS400, we can re-enable the tuned clock.
+--Sig_/oHp_qW2ROkDZtlx9g_HdhiR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Previously the tuned clock was not getting disabled when switching to
-DDR52 which is part of the HS400 tuning sequence.
+Hi all,
 
-Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+In commit
 
- drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
- 1 file changed, 58 insertions(+), 10 deletions(-)
+  3b9fb6791e71 ("wcn36xx: Fix reported 802.11n rx_highest rate wcn3660/wcn3=
+680")
 
-diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-index 48ecbd0b180d8..5a30920ef595f 100644
---- a/drivers/mmc/host/sdhci-acpi.c
-+++ b/drivers/mmc/host/sdhci-acpi.c
-@@ -535,6 +535,11 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_qcom_sd = {
- 	.caps    = MMC_CAP_NONREMOVABLE,
- };
- 
-+struct amd_sdhci_host {
-+	bool	tuned_clock;
-+	bool	dll_enabled;
-+};
-+
- /* AMD sdhci reset dll register. */
- #define SDHCI_AMD_RESET_DLL_REGISTER    0x908
- 
-@@ -555,26 +560,67 @@ static void sdhci_acpi_amd_hs400_dll(struct sdhci_host *host)
- }
- 
- /*
-- * For AMD Platform it is required to disable the tuning
-- * bit first controller to bring to HS Mode from HS200
-- * mode, later enable to tune to HS400 mode.
-+ * The initialization sequence for HS400 is:
-+ *     HS->HS200->Perform Tuning->HS->HS400
-+ *
-+ * The re-tuning sequence is:
-+ *     HS400->DDR52->HS->HS200->Perform Tuning->HS->HS400
-+ *
-+ * The AMD eMMC Controller can only use the tuned clock while in HS200 and HS400
-+ * mode. If we switch to a different mode, we need to disable the tuned clock.
-+ * If we have previously performed tuning and switch back to HS200 or
-+ * HS400, we can re-enable the tuned clock.
-+ *
-  */
- static void amd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
- 	unsigned int old_timing = host->timing;
-+	u16 val;
- 
- 	sdhci_set_ios(mmc, ios);
--	if (old_timing == MMC_TIMING_MMC_HS200 &&
--	    ios->timing == MMC_TIMING_MMC_HS)
--		sdhci_writew(host, 0x9, SDHCI_HOST_CONTROL2);
--	if (old_timing != MMC_TIMING_MMC_HS400 &&
--	    ios->timing == MMC_TIMING_MMC_HS400) {
--		sdhci_writew(host, 0x80, SDHCI_HOST_CONTROL2);
--		sdhci_acpi_amd_hs400_dll(host);
-+
-+	if (old_timing != host->timing && amd_host->tuned_clock) {
-+		if (host->timing == MMC_TIMING_MMC_HS400 ||
-+		    host->timing == MMC_TIMING_MMC_HS200) {
-+			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			val |= SDHCI_CTRL_TUNED_CLK;
-+			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
-+		} else {
-+			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			val &= ~SDHCI_CTRL_TUNED_CLK;
-+			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
-+		}
-+
-+		/* DLL is only required for HS400 */
-+		if (host->timing == MMC_TIMING_MMC_HS400 &&
-+		    !amd_host->dll_enabled) {
-+			trace_printk("%s: Enabling DLL\n", __func__);
-+			sdhci_acpi_amd_hs400_dll(host);
-+			amd_host->dll_enabled = true;
-+		}
- 	}
- }
- 
-+int amd_sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	int err;
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
-+
-+	amd_host->tuned_clock = false;
-+
-+	err = sdhci_execute_tuning(mmc, opcode);
-+
-+	if (!err && !host->tuning_err)
-+		amd_host->tuned_clock = true;
-+
-+	return err;
-+}
-+
- static const struct sdhci_ops sdhci_acpi_ops_amd = {
- 	.set_clock	= sdhci_set_clock,
- 	.set_bus_width	= sdhci_set_bus_width,
-@@ -602,6 +648,7 @@ static int sdhci_acpi_emmc_amd_probe_slot(struct platform_device *pdev,
- 
- 	host->mmc_host_ops.select_drive_strength = amd_select_drive_strength;
- 	host->mmc_host_ops.set_ios = amd_set_ios;
-+	host->mmc_host_ops.execute_tuning = amd_sdhci_execute_tuning;
- 	return 0;
- }
- 
-@@ -613,6 +660,7 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_amd_emmc = {
- 			  SDHCI_QUIRK_32BIT_ADMA_SIZE,
- 	.quirks2	= SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
- 	.probe_slot     = sdhci_acpi_emmc_amd_probe_slot,
-+	.priv_size	= sizeof(struct amd_sdhci_host),
- };
- 
- struct sdhci_acpi_uid_slot {
--- 
-2.28.0.220.ged08abb693-goog
+Fixes tag
 
+  Fixes: 8e84c2582169 ("wcn36xx: mac80211 driver for Qualcomm WCN3660/WCN36=
+80
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more that one line.  Also, keep all
+the commit message tags together at the end of the message.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oHp_qW2ROkDZtlx9g_HdhiR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88V1cACgkQAVBC80lX
+0Gx7xgf/d1v4bs1bxMPJDa8T426PtGjqkDAj1nMUYX9oAXdyMaKgmHKHOds+sjOP
+BzZPw7TuY8n4Vcni7XOlq+D8IjNPOQVuYKNVPbpu2mApn1qo5u7WZ7MgxvWNjyti
++2jrmxZ3QwkQBVdj1c37XnCn/Pn/mU/caJnI0kYoRIcp1w+z+1yc7YhwP8OU6pAh
+2d6G+5mP+Uy3Y6zY0jt7dW5Wt3vAWJE3OtYCbLtVQl0pjHnCuCLKRvmyxmwQM3Y9
+RQ0B0b1g0WwSnCZBP8OjwQe6nFyX401KoxFc2YXMn108M+5eDDLQhw3P0tDjTW/q
+euYoO2XsDU3WHHhveKV2vP0oQyBSvA==
+=jnXl
+-----END PGP SIGNATURE-----
+
+--Sig_/oHp_qW2ROkDZtlx9g_HdhiR--
