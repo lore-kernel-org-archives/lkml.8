@@ -2,75 +2,102 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B70AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61983C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E912C2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597740622;
-	bh=WSh7IdELd/eQklKofxE22VupoTK1Na3EH317UJ2UhaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DiBrtBKR+lmztjshCxZJGtZAm5g4ckGi6XTU7q/ULL7fquLbTP9Kc0sc80BAc3sXY
-	 L2hKQX/KLMrak+H2hJA7oe2IIjOvbU/SyWp1MLDnEGFt/47BCwrMLPAmGSouqRbjHo
-	 fynMEqVkNO5SLi7nBpSnjmt0m+X3mq4IxCj1ryR4=
+	by mail.kernel.org (Postfix) with ESMTP id 3A9712067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 08:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmAj8K/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgHRIuU (ORCPT
+        id S1726424AbgHRIwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRIuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:50:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000052067C;
-        Tue, 18 Aug 2020 08:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597740619;
-        bh=WSh7IdELd/eQklKofxE22VupoTK1Na3EH317UJ2UhaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aN8ABA5vgyGU+pPMYlsmmmjA7OopSjLw8NuxM64sEyVxXzACO6AQH0qIB6jevECU/
-         QZD0x2kUW3otR3TE3ThEZtIgV9hN8LNfZrChdgb/5C2nkQbOrzCgB6bL+JupKTGqVH
-         cRc4hSL64NTOpX/qFzIlvbWB67iPjzHQJOVOX9+o=
-Date:   Tue, 18 Aug 2020 10:50:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     china_shenglong <china_shenglong@163.com>
-Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jan.kiszka@siemens.com,
-        Wang Sheng Long <shenglong.wang.ext@siemens.com>
-Subject: Re: Re: [PATCH] usb-serial:cp210x: add support to software flow
- control
-Message-ID: <20200818085043.GA28036@kroah.com>
-References: <20200730075922.28041-1-china_shenglong@163.com>
- <20200730080639.GA216353@kroah.com>
- <386a30c0.ac88.1739eda0ee5.Coremail.china_shenglong@163.com>
+        Tue, 18 Aug 2020 04:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgHRIwN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:52:13 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9284AC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:52:12 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d190so15505883wmd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 01:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:cc:subject:message-id:mime-version:content-disposition;
+        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
+        b=KmAj8K/cYU+TcoE/PQdjWenUy4DPWY+a4IxIpXihWl0Go9S0wLueKJm66vzG9xZFaU
+         hV2NdvkdxPSzs2VfMV0meYreAH0ywZTniyq50amKdRzhJt6WTumlc6/5nGQwiFWX8hQn
+         3fbAdb3qPwZKWQKq2rXx6kuMcuKAcU6QQMQSn3XH1xqKOaae688ZoGFFtOENbKQbSgxa
+         RWBXwpPPbu1GxeQBK1yEc+XKvi/vvf//JLwv76mfU9VMgSDRb6xxj1Tkfpkl6XvfZlr9
+         TV7sFWCJXS9isSuwWuMOHsxntrJSE42Zzef4MnEqcBJX+bnmTaLWyA3YNDBHYmggLAk1
+         eIcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=NRXSlg5+U42+r5yz1HaufmNO5p1AhYU7aGg04+6KXs8=;
+        b=O1TVUuymbMUHv/YjaKv9sRlVGIwauFHj0aQwgavKUueoTxDPWGs0A4TFCPAKFKZjRZ
+         RRRb6tBVf4OMEZPprXacrLKcVFk+4i7shgO1AiI20kwm7Q8VzIrhv1onGX9tSjft0xBn
+         VJcB+GU2isz2JDRELNIiqZtUKTj/p/lSyv/Fh1KRIBx3ii77lVlfskjXhNxXhI7UtW+J
+         H8z54NRiXq84/nSwnt7xljw+MtVttD13+cobJBbq5si8UwO/v8GLSMn7z7rI8dJkuI7C
+         zRKZk8HGeUYVEBtqSRdM97LF7hcSlzBfpkGJwv3EGmLUrmYLMQovAiLIGY6Rz2kTM89O
+         0XUQ==
+X-Gm-Message-State: AOAM532G8PvL5v3iGItI5T2oXM5rYtBmi9FBqeEwxTAfwSdzVjBLJfNp
+        UcgGm4WpAsnvyrpHlN7Ki3U=
+X-Google-Smtp-Source: ABdhPJxnlP0vZjXNWran/cULmdsS5AmAYwn4ztkVU7HYOyiC3uxCdjIT8N2W+JNr5NvyqtJsfSq2DQ==
+X-Received: by 2002:a1c:e907:: with SMTP id q7mr19248587wmc.155.1597740727946;
+        Tue, 18 Aug 2020 01:52:07 -0700 (PDT)
+Received: from tsnow ([94.159.146.190])
+        by smtp.gmail.com with ESMTPSA id i7sm35425407wrs.25.2020.08.18.01.52.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 01:52:07 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 11:52:02 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] *** SUBJECT HERE ***
+Message-ID: <cover.1597740722.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <386a30c0.ac88.1739eda0ee5.Coremail.china_shenglong@163.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 04:32:37PM +0800, china_shenglong wrote:
-> Hi, Greg
-> 
-> 
-> Yeah, It mainly adjusts the code style according to the kernel specification,
-> and then modifies it according to your previous review comments.
+*** BLURB HERE ***
 
-Always include that below the --- line, and version your patches so we
-have a chance to know what is going on.
+Tomer Samara (4):
+  staging: android: Replace BUG_ON with WARN_ON
+  staging: android: Add error handling to ion_page_pool_shrink
+  staging: android: Convert BUG to WARN
+  staging: android: Add error handling to order_to_index callers
 
-please fix up and resend.
+ drivers/staging/android/ion/ion_page_pool.c   | 14 ++++++++++----
+ drivers/staging/android/ion/ion_system_heap.c | 16 +++++++++++++---
+ 2 files changed, 23 insertions(+), 7 deletions(-)
 
-thanks,
+-- 
+2.25.1
 
-greg k-h-
+/tmp/0001-staging-android-Replace-BUG_ON-with-WARN_ON.patch
+/tmp/0002-staging-android-Add-error-handling-to-ion_page_pool_.patch
+/tmp/0003-staging-android-Convert-BUG-to-WARN.patch
+/tmp/0004-staging-android-Add-error-handling-to-order_to_index.patch
