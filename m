@@ -2,97 +2,148 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A0EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD52C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA85207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B132076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eRd8YUFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgHRHhP (ORCPT
+        id S1726483AbgHRHi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:37:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48304 "EHLO mx2.suse.de"
+        Tue, 18 Aug 2020 03:38:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:45925 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgHRHhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:37:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 50B33ABCC;
-        Tue, 18 Aug 2020 07:37:38 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 09:37:12 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Such?nek <msuchanek@suse.de>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200818073712.GK28270@dhcp22.suse.cz>
-References: <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200703091001.GJ21462@kitsune.suse.cz>
- <20200703092414.GR18446@dhcp22.suse.cz>
- <20200703105944.GS18446@dhcp22.suse.cz>
- <20200703125823.GA26243@linux.vnet.ibm.com>
- <20200806213211.6a6a56037fe771836e5abbe9@linux-foundation.org>
- <20200812060101.GB10992@linux.vnet.ibm.com>
- <13a85e52-5caa-24a8-7169-3992b1ad262a@redhat.com>
+        id S1726043AbgHRHi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:38:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597736308; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=oBlBFLNCfpm1tApUYPpLjT+H0f58c4Dojdn1tDV42qA=;
+ b=eRd8YUFXBXF/4ff48m3/MzzAUz0nNrluMUFfG88XRipNISo29qsTFw4GzyfZDZ7lL1GJHdN+
+ nzJjvMHxbGM2+yk0TlPM2eENIOVQ7dGxI+BOk3g6WUIQCUBXLh8H3RP0mugf2xHk4n5y+gte
+ Wzz0loGQqODb4QlOU1snjLr4qP0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f3b8573ba4c2cd36742c78f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:38:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7369C433CB; Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E2EBC433CB;
+        Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13a85e52-5caa-24a8-7169-3992b1ad262a@redhat.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 13:08:26 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+In-Reply-To: <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
+References: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
+Message-ID: <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18-08-20 09:32:52, David Hildenbrand wrote:
-> On 12.08.20 08:01, Srikar Dronamraju wrote:
-> > Hi Andrew, Michal, David
-> > 
-> > * Andrew Morton <akpm@linux-foundation.org> [2020-08-06 21:32:11]:
-> > 
-> >> On Fri, 3 Jul 2020 18:28:23 +0530 Srikar Dronamraju <srikar@linux.vnet.ibm.com> wrote:
-> >>
-> >>>> The memory hotplug changes that somehow because you can hotremove numa
-> >>>> nodes and therefore make the nodemask sparse but that is not a common
-> >>>> case. I am not sure what would happen if a completely new node was added
-> >>>> and its corresponding node was already used by the renumbered one
-> >>>> though. It would likely conflate the two I am afraid. But I am not sure
-> >>>> this is really possible with x86 and a lack of a bug report would
-> >>>> suggest that nobody is doing that at least.
-> >>>>
-> >>>
-> >>> JFYI,
-> >>> Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
-> >>> hotplug on memoryless node. 
-> >>>
-> >>> https://bugzilla.kernel.org/show_bug.cgi?id=202187
-> >>
-> >> So...  do we merge this patch or not?  Seems that the overall view is
-> >> "risky but nobody is likely to do anything better any time soon"?
-> > 
-> > Can we decide on this one way or the other?
-> 
-> Hmm, not sure who's the person to decide. I tend to prefer doing the
-> node renaming, handling this in ppc code;
+Hi,
 
-Agreed. That would be a safer option.
+On 2020-08-18 02:42, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Aug 16, 2020 at 9:04 PM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> There is only one LLCC logical bank on SC7180 SoC of size
+>> 0x50000(320KB) not 2MB, so correct the size and fix copy
+>> paste mistake from SDM845 which had 4 logical banks.
+> 
+> I guess SDM845 not only has 4 banks but each bank is bigger?  At first
+> I thought "yeah, 4 banks and 4 * 0x5 = 0x20" except that's not true in
+> hex.  ;-)
+> 
+
+Hehe, no I didn't mean 0x5 * 4 = 0x20 because I mentioned 320KB and 2MB 
+specifically
+for the same reason in case people think that ;) I just meant that we 
+are correcting
+the copied size from SDM845, but I agree I need to make it clear in the 
+commit msg
+which warrants a V2.
+
+> 
+>> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
+>> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache 
+>> controller node")
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Without having any documentation ,this seems sane to me.  I guess it
+> doesn't do a whole lot because the driver just reads one register from
+> this whole space (at 0x0003000c bytes off).  So it's just a cleanup,
+> or is it needed to actually fix something?
+> 
+
+No, it is not required to fix any functional problems but is correcting 
+the
+wrong size which I think qualifies for a fixes tag? I don't have a 
+strong opinion
+though, so I can remove the tag if you feel strongly about it.
+
+> ...the fact that there's a status register in the middle of this seems
+> strange, though.  Your commit message makes it sound as if this range
+> is describing the size of the cache itself and then I would think that
+> this was the address range where you could read from the cache memory
+> directly, but that doesn't seem to mesh in my mind with there being a
+> status register.  Hrm.  Am I just confused as usual?
+> 
+
+It's not describing the cache size, it is the LLCC(LLC Controller) 
+register space.
+But I believe that the confusion is because of my commit msg, so I will 
+post a v2
+clearing this with something like below (I have removed the confusing 4 
+banks info
+of SDM845).
+
+"
+There is one LLCC logical bank(LLCC0) on SC7180 SoC and the size of the 
+LLCC0 base
+is 0x50000(320KB) not 2MB, so correct the size and fix copy paste 
+mistake
+carried over from SDM845.
+"
+
+Thanks,
+Sai
+
 -- 
-Michal Hocko
-SUSE Labs
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
