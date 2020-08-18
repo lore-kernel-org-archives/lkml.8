@@ -2,136 +2,109 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD880204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AC6204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 10:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="s4u3GuRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgHRKR1 (ORCPT
+        id S1726736AbgHRKSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:17:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39352 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgHRKR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 06:17:26 -0400
-IronPort-SDR: 3qVvRh29vkvtaGcoDcHJ+XWVRZCOxod4unzOSEiLPBGDX6eJehM/0Mf+SXoQG+nRWG5HHebA6+
- A9lV/P2ahuDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152284286"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="152284286"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 03:17:26 -0700
-IronPort-SDR: +RQdUwcKd0WpF1MV50K77ipSbXSpGk4l5pWDUHQoibQeSGg/cDyEdDflEAxvBYD4/wd4LIkt6S
- d0ZiwUUXD3Xg==
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="279363998"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 03:17:22 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: [PATCH] soundwire: cadence: fix race condition between suspend and Slave device alerts
-Date:   Tue, 18 Aug 2020 06:23:40 +0800
-Message-Id: <20200817222340.18042-1-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 06:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgHRKSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:18:01 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD49C061344
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 03:17:59 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c12so14704350qtn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 03:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m1d0Rse+qIi8qOmerhrf+MBXKELTuAtcs3p/xFrqf9w=;
+        b=s4u3GuRFjGb61CKAXSbV1lMqnOMke9WVYpJMh0BBQqdPfrVKbnnOMGI9JvyBbgPm6e
+         x6rVvOlI1ANNxy8+m3bcc1IECDj2KsJGcWVy2WR+CvANx/bwNtWdEoEKDgNVzfp3pHop
+         hA9rOJBnJ6hFK8QUbuzjs02965lEQZmkx0qyA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m1d0Rse+qIi8qOmerhrf+MBXKELTuAtcs3p/xFrqf9w=;
+        b=KTGFy6D82uX+g2fTylFViiVSyJg//aryWtOh8MfgfgcZrttG67K7PGNJiGKO4x5of+
+         NDgtcdxJjupN5+Y9iBIVQM7fno5Sf0URUSIr69lz+faSe7l50CMQrWAT3ViKobRsua0m
+         ykdjvJGlIBq+bea42Gt/Miq+MoQMqsmaJgzh1we5vboVHNv8w9eHlS8s9oXGyOceQXrh
+         i/KG7YwG9zjrN+CGCBMjXehwoSnE1fRyiZlNqEj2vPst0ulWBA12VX8dqqTYYOFG6vra
+         JEwt1wkfCuhfNiFZWpb3X3JiHdK8SXoPoAEXqE97twKZR2d95Q/s+tYTDyNiiVTKBe4u
+         GXdw==
+X-Gm-Message-State: AOAM533xTwbF8OC/22otVNtUlblqXIB0NAnSyzoGbYZydWemw8q2hmzo
+        rc8ooOIBGHRgNCNjsC5pLsi0yA==
+X-Google-Smtp-Source: ABdhPJwu2U26qaTDnNyVaIc78vhIlLEidrEGudHY3cyjqUjwF2jv5oW0015yCO0u1NOmZFEU8PeD0g==
+X-Received: by 2002:ac8:65c2:: with SMTP id t2mr16990912qto.370.1597745878056;
+        Tue, 18 Aug 2020 03:17:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:179c])
+        by smtp.gmail.com with ESMTPSA id w1sm20614419qkj.90.2020.08.18.03.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 03:17:57 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 11:17:56 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     peterz@infradead.org
+Cc:     Michal Hocko <mhocko@suse.com>, Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200818101756.GA155582@chrisdown.name>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+ <20200818092617.GN28270@dhcp22.suse.cz>
+ <20200818095910.GM2674@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200818095910.GM2674@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+peterz@infradead.org writes:
+>But then how can it run-away like Waiman suggested?
 
-In system suspend stress cases, the SOF CI reports timeouts. The root
-cause is that an alert is generated while the system suspends. The
-interrupt handling generates transactions on the bus that will never
-be handled because the interrupts are disabled in parallel.
+Probably because he's not running with that commit at all. We and others use 
+this to prevent runaway allocation on a huge range of production and desktop 
+use cases and it works just fine.
 
-As a result, the transaction never completes and times out on resume.
-This error doesn't seem too problematic since it happens in a work
-queue, and the system recovers without issues.
+>/me goes look... and finds MEMCG_MAX_HIGH_DELAY_JIFFIES.
+>
+>That's a fail... :-(
 
-Nevertheless, this race condition should not happen. When doing a
-system suspend, or when disabling interrupts, we should make sure the
-current transaction can complete, and prevent new work from being
-queued.
+I'd ask that you understand a bit more about the tradeoffs and intentions of 
+the patch before rushing in to declare its failure, considering it works just 
+fine :-)
 
-BugLink: https://github.com/thesofproject/linux/issues/2344
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- drivers/soundwire/cadence_master.c | 24 +++++++++++++++++++++++-
- drivers/soundwire/cadence_master.h |  1 +
- 2 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index 24eafe0aa1c3..1330ffc47596 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -791,7 +791,16 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
- 			     CDNS_MCP_INT_SLAVE_MASK, 0);
- 
- 		int_status &= ~CDNS_MCP_INT_SLAVE_MASK;
--		schedule_work(&cdns->work);
-+
-+		/*
-+		 * Deal with possible race condition between interrupt
-+		 * handling and disabling interrupts on suspend.
-+		 *
-+		 * If the master is in the process of disabling
-+		 * interrupts, don't schedule a workqueue
-+		 */
-+		if (cdns->interrupt_enabled)
-+			schedule_work(&cdns->work);
- 	}
- 
- 	cdns_writel(cdns, CDNS_MCP_INTSTAT, int_status);
-@@ -924,6 +933,19 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
- 		slave_state = cdns_readl(cdns, CDNS_MCP_SLAVE_INTSTAT1);
- 		cdns_writel(cdns, CDNS_MCP_SLAVE_INTSTAT1, slave_state);
- 	}
-+	cdns->interrupt_enabled = state;
-+
-+	/*
-+	 * Complete any on-going status updates before updating masks,
-+	 * and cancel queued status updates.
-+	 *
-+	 * There could be a race with a new interrupt thrown before
-+	 * the 3 mask updates below are complete, so in the interrupt
-+	 * we use the 'interrupt_enabled' status to prevent new work
-+	 * from being queued.
-+	 */
-+	if (!state)
-+		cancel_work_sync(&cdns->work);
- 
- 	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0, slave_intmask0);
- 	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1, slave_intmask1);
-diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
-index fdec62b912d3..4d1aab5b5ec2 100644
---- a/drivers/soundwire/cadence_master.h
-+++ b/drivers/soundwire/cadence_master.h
-@@ -133,6 +133,7 @@ struct sdw_cdns {
- 
- 	bool link_up;
- 	unsigned int msg_count;
-+	bool interrupt_enabled;
- 
- 	struct work_struct work;
- 
--- 
-2.17.1
-
+Clamping the maximal time allows the application to take some action to 
+remediate the situation, while still being slowed down significantly. 2 seconds 
+per allocation batch is still absolutely plenty for any use case I've come 
+across. If you have evidence it isn't, then present that instead of vague 
+notions of "wrongness".
