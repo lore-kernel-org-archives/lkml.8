@@ -4,120 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A13C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A39205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC292063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 07:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IItI9WWA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1MqwaV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgHRHZW (ORCPT
+        id S1726634AbgHRHZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:25:22 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgHRHZV (ORCPT
+        Tue, 18 Aug 2020 03:25:26 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50367 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726357AbgHRHZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:25:21 -0400
+        Tue, 18 Aug 2020 03:25:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597735519;
+        s=mimecast20190719; t=1597735521;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=0vv+u3cMyAAlZzp0oz83EPljxFFgUqvzBIrtYyl8jSU=;
-        b=IItI9WWA/QZlE6kxDzgUjFa9zYiNtK20Pm+4gNoW+wk8RFiJwJSbhy2oTN8/Ht7E2C+dqy
-        IWJaOnwQ9gu4hf7rAD8OMdQ9lwc6UeJxdYHaT0+OTBWc2f+ja2DqjDuiMPS/jceQYogH9U
-        xJOexB60XKdIG3RAN/AXr0tedP2gxxU=
+        bh=92Ca05uy8jh6nULr3MA2yPy/bEf6QwrjQ+ISqlFQbww=;
+        b=X1MqwaV5TaAaqgoiDeJ4/TP7L9upwtUinKmxc5gA4P0FfHwzOMaPqVmWK+CTK4Yn369vh+
+        bzo1jzp6fmm7vE4EXHkgqeH0rCBf1+rHNCQ9a07pHkD3/A+6kG8Pb/LUTHayXWcGmH4JCQ
+        zsnJjHH4A55Tlp7IOg2j/F+3cNHwPzk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-U_VBu19XPyyANcL089bpwA-1; Tue, 18 Aug 2020 03:25:17 -0400
-X-MC-Unique: U_VBu19XPyyANcL089bpwA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-377-Ga7orqJ2PjuSAubauhmWMQ-1; Tue, 18 Aug 2020 03:25:17 -0400
+X-MC-Unique: Ga7orqJ2PjuSAubauhmWMQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51CAF100CF74;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B0BD1DDFD;
         Tue, 18 Aug 2020 07:25:16 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 222A8BA63;
-        Tue, 18 Aug 2020 07:25:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BC8E10098A7;
+        Tue, 18 Aug 2020 07:25:12 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 5B5819D74; Tue, 18 Aug 2020 09:25:12 +0200 (CEST)
+        id 2FAAB9D59; Tue, 18 Aug 2020 09:25:12 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Daniel Vetter <daniel@ffwll.ch>, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
+        1882851@bugs.launchpad.net, David Airlie <airlied@linux.ie>,
+        Chia-I Wu <olvaffe@gmail.com>,
         virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/virtio: drop virtio_gpu_output->enabled
-Date:   Tue, 18 Aug 2020 09:25:11 +0200
-Message-Id: <20200818072511.6745-3-kraxel@redhat.com>
+Subject: [PATCH 1/2] drm/virtio: fix unblank
+Date:   Tue, 18 Aug 2020 09:25:10 +0200
+Message-Id: <20200818072511.6745-2-kraxel@redhat.com>
 In-Reply-To: <20200818072511.6745-1-kraxel@redhat.com>
 References: <20200818072511.6745-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not needed, already tracked by drm_crtc_state->active.
+When going through a disable/enable cycle without changing the
+framebuffer the optimization added by commit 3954ff10e06e ("drm/virtio:
+skip set_scanout if framebuffer didn't change") causes the screen stay
+blank.  Add a bool to force an update to fix that.
 
+v2: use drm_atomic_crtc_needs_modeset() (Daniel).
+
+Cc: 1882851@bugs.launchpad.net
+Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 -
- drivers/gpu/drm/virtio/virtgpu_display.c | 4 ----
- drivers/gpu/drm/virtio/virtgpu_plane.c   | 2 +-
- 3 files changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_drv.h     |  1 +
+ drivers/gpu/drm/virtio/virtgpu_display.c | 11 +++++++++++
+ drivers/gpu/drm/virtio/virtgpu_plane.c   |  4 +++-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 4ab1b0ba2925..fbc04272db4f 100644
+index 9ff9f4ac0522..4ab1b0ba2925 100644
 --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
 +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -137,7 +137,6 @@ struct virtio_gpu_output {
- 	struct edid *edid;
+@@ -138,6 +138,7 @@ struct virtio_gpu_output {
  	int cur_x;
  	int cur_y;
--	bool enabled;
- 	bool needs_modeset;
+ 	bool enabled;
++	bool needs_modeset;
  };
  #define drm_crtc_to_virtio_gpu_output(x) \
+ 	container_of(x, struct virtio_gpu_output, crtc)
 diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
-index 6c26b41f4e0d..86a3a800d12e 100644
+index 2c2742b8d657..6c26b41f4e0d 100644
 --- a/drivers/gpu/drm/virtio/virtgpu_display.c
 +++ b/drivers/gpu/drm/virtio/virtgpu_display.c
-@@ -97,9 +97,6 @@ static void virtio_gpu_crtc_mode_set_nofb(struct drm_crtc *crtc)
- static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
- 					  struct drm_crtc_state *old_state)
+@@ -123,6 +123,17 @@ static int virtio_gpu_crtc_atomic_check(struct drm_crtc *crtc,
+ static void virtio_gpu_crtc_atomic_flush(struct drm_crtc *crtc,
+ 					 struct drm_crtc_state *old_state)
  {
--	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
--
--	output->enabled = true;
++	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
++
++	/*
++	 * virtio-gpu can't do modeset and plane update operations
++	 * independant from each other.  So the actual modeset happens
++	 * in the plane update callback, and here we just check
++	 * whenever we must force the modeset.
++	 */
++	if (drm_atomic_crtc_needs_modeset(crtc->state)) {
++		output->needs_modeset = true;
++	}
  }
  
- static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
-@@ -111,7 +108,6 @@ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
- 
- 	virtio_gpu_cmd_set_scanout(vgdev, output->index, 0, 0, 0, 0, 0);
- 	virtio_gpu_notify(vgdev);
--	output->enabled = false;
- }
- 
- static int virtio_gpu_crtc_atomic_check(struct drm_crtc *crtc,
+ static const struct drm_crtc_helper_funcs virtio_gpu_crtc_helper_funcs = {
 diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-index 65757409d9ed..6a311cd93440 100644
+index 52d24179bcec..65757409d9ed 100644
 --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
 +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -142,7 +142,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
- 	if (WARN_ON(!output))
- 		return;
- 
--	if (!plane->state->fb || !output->enabled) {
-+	if (!plane->state->fb || !output->crtc.state->active) {
- 		DRM_DEBUG("nofb\n");
- 		virtio_gpu_cmd_set_scanout(vgdev, output->index, 0,
- 					   plane->state->src_w >> 16,
+@@ -163,7 +163,9 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 	    plane->state->src_w != old_state->src_w ||
+ 	    plane->state->src_h != old_state->src_h ||
+ 	    plane->state->src_x != old_state->src_x ||
+-	    plane->state->src_y != old_state->src_y) {
++	    plane->state->src_y != old_state->src_y ||
++	    output->needs_modeset) {
++		output->needs_modeset = false;
+ 		DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+ 			  bo->hw_res_handle,
+ 			  plane->state->crtc_w, plane->state->crtc_h,
 -- 
 2.18.4
 
