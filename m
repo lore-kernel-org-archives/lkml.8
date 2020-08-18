@@ -2,313 +2,168 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2280DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2E92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6D22080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KwOZWN5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgHRPzh (ORCPT
+        id S1728160AbgHRPzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:55:37 -0400
-Received: from mga05.intel.com ([192.55.52.43]:61123 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbgHRPr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:47:27 -0400
-IronPort-SDR: r7dQqn7+QUSZGBoheLV4Z63jyrzdzBCtFHsYfV5lRwVAwdvYV0UXxKqaKOf2vLBObKXvhjj20v
- +evYVfM3Bqmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="239764742"
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="239764742"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:47:24 -0700
-IronPort-SDR: 121Iuk/kNpNnVihru7qa277AOpOByWXGWcz0aX5+kSdpHE1zEwaVpvY85XmcU5zrpdOmcDKv5C
- 7tu3IVRQwEgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
-   d="scan'208";a="400530278"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:47:21 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-Subject: [PATCH v6 05/10] net: eth: altera: Move common functions to altera_utils
-Date:   Tue, 18 Aug 2020 23:46:08 +0800
-Message-Id: <20200818154613.148921-6-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
-References: <20200818154613.148921-1-joyce.ooi@intel.com>
+        Tue, 18 Aug 2020 11:55:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40658 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbgHRPr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:47:28 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IFSPYJ006850;
+        Tue, 18 Aug 2020 15:47:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=woaSbfOB/Qmr2EOwVWJ2i+ae6OF0n03FE+3J5rEFxO8=;
+ b=KwOZWN5m1hLeNUmJrg23h116swkfloDRdX6TZ1Cj4B9jZyZuSmzD1OsUFLDexBhzdunJ
+ 6puD5NT7gcbmk/q9kvis4bdqV/4F9IAAngDiN+9FMdJLhKIjsZpLlYb+gepR8e6pIZah
+ g4bvW8nUn0Grpu30ML6oB9qdAyn0fXnepWWFCxKtZ5qzRm7X1Dp6mOcEe1pcITz2ojOR
+ 7MxzH+Wnh6ujwu2UNcDKtrgYRuvKHnANm/YEiPWCxrCz1Zi8t8piTNji4U3O0Y8cgsSr
+ IzWDW0jERU8bIhOymlW1USNHP/BwHiI8ljQ1lWl5JKp0s0tWX1vS3cYs7y4tV2Wk4V9D 7A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32x74r5q62-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Aug 2020 15:47:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IFYuP7129633;
+        Tue, 18 Aug 2020 15:47:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32xsmxd0b1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Aug 2020 15:47:24 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07IFlNaM011736;
+        Tue, 18 Aug 2020 15:47:23 GMT
+Received: from revolver.jebus.ca (/23.233.25.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Aug 2020 08:47:23 -0700
+From:   "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Liam.Howlett@Oracle.com
+Subject: [PATCH 2/2] mm/mmap: Add inline munmap_vma_range() for code readability
+Date:   Tue, 18 Aug 2020 11:47:07 -0400
+Message-Id: <20200818154707.2515169-2-Liam.Howlett@Oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200818154707.2515169-1-Liam.Howlett@Oracle.com>
+References: <20200818154707.2515169-1-Liam.Howlett@Oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008180112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008180112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+There are two locations that have a block of code for munmapping a vma
+range.  Change those two locations to use a function and add meaningful
+comments about what happens to the arguments, which was unclear in the
+previous code.
 
-Move request_and_map and other shared functions to altera_utils. This
-is the first step to moving common code out of tse specific code so
-that it can be shared with future altera ethernet ip.
-
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
 ---
-v2: no change
-v3: no change
-v4: no change
-v5: no change
-v6: no change
----
- drivers/net/ethernet/altera/altera_tse.h         | 45 ---------------------
- drivers/net/ethernet/altera/altera_tse_ethtool.c |  1 +
- drivers/net/ethernet/altera/altera_tse_main.c    | 32 +--------------
- drivers/net/ethernet/altera/altera_utils.c       | 29 ++++++++++++++
- drivers/net/ethernet/altera/altera_utils.h       | 51 ++++++++++++++++++++++++
- 5 files changed, 82 insertions(+), 76 deletions(-)
+ mm/mmap.c | 48 +++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index 26c5541fda27..fa24ab3c7d6a 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -489,49 +489,4 @@ struct altera_tse_private {
-  */
- void altera_tse_set_ethtool_ops(struct net_device *);
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 6026353035966..b59b4e5889b5c 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -577,6 +577,33 @@ static inline struct vm_area_struct *vma_next(struct mm_struct *mm,
  
--static inline
--u32 csrrd32(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readl(paddr);
--}
--
--static inline
--u16 csrrd16(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readw(paddr);
--}
--
--static inline
--u8 csrrd8(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readb(paddr);
--}
--
--static inline
--void csrwr32(u32 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writel(val, paddr);
--}
--
--static inline
--void csrwr16(u16 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writew(val, paddr);
--}
--
--static inline
--void csrwr8(u8 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writeb(val, paddr);
--}
--
- #endif /* __ALTERA_TSE_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-index 4299f1301149..420d77f00eab 100644
---- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
-+++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-@@ -22,6 +22,7 @@
- #include <linux/phy.h>
- 
- #include "altera_tse.h"
-+#include "altera_utils.h"
- 
- #define TSE_STATS_LEN	31
- #define TSE_NUM_REGS	128
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index 0a724e4d2c8c..c9100ce24b0a 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -23,7 +23,6 @@
- #include <linux/if_vlan.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
--#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mii.h>
-@@ -33,7 +32,7 @@
- #include <linux/of_net.h>
- #include <linux/of_platform.h>
- #include <linux/phy.h>
--#include <linux/platform_device.h>
-+#include <linux/ptp_classify.h>
- #include <linux/skbuff.h>
- #include <asm/cacheflush.h>
- 
-@@ -1320,35 +1319,6 @@ static struct net_device_ops altera_tse_netdev_ops = {
- 	.ndo_validate_addr	= eth_validate_addr,
- };
- 
--static int request_and_map(struct platform_device *pdev, const char *name,
--			   struct resource **res, void __iomem **ptr)
--{
--	struct resource *region;
--	struct device *device = &pdev->dev;
--
--	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
--	if (*res == NULL) {
--		dev_err(device, "resource %s not defined\n", name);
--		return -ENODEV;
--	}
--
--	region = devm_request_mem_region(device, (*res)->start,
--					 resource_size(*res), dev_name(device));
--	if (region == NULL) {
--		dev_err(device, "unable to request %s\n", name);
--		return -EBUSY;
--	}
--
--	*ptr = devm_ioremap(device, region->start,
--				    resource_size(region));
--	if (*ptr == NULL) {
--		dev_err(device, "ioremap of %s failed!", name);
--		return -ENOMEM;
--	}
--
--	return 0;
--}
--
- /* Probe Altera TSE MAC device
-  */
- static int altera_tse_probe(struct platform_device *pdev)
-diff --git a/drivers/net/ethernet/altera/altera_utils.c b/drivers/net/ethernet/altera/altera_utils.c
-index e6a7fc9d8fb1..c9bc7d0ea02a 100644
---- a/drivers/net/ethernet/altera/altera_utils.c
-+++ b/drivers/net/ethernet/altera/altera_utils.c
-@@ -31,3 +31,32 @@ int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask)
- 	u32 value = csrrd32(ioaddr, offs);
- 	return (value & bit_mask) ? 0 : 1;
+ 	return vma->vm_next;
  }
 +
-+int request_and_map(struct platform_device *pdev, const char *name,
-+		    struct resource **res, void __iomem **ptr)
++/*
++ * munmap_vma_range() - munmap VMAs that overlap a range.
++ * @mm: The mm struct
++ * @start: The start of the range.
++ * @len: The length of the range.
++ * @pprev: pointer to the pointer that will be set to previous vm_area_struct
++ * @rb_link: the rb_node
++ * @rb_parent: the parent rb_node
++ *
++ * Find all the vm_area_struct that overlap from @start to
++ * @end and munmap them.  Set @pprev to the previous vm_area_struct.
++ *
++ * Returns: -ENOMEM on munmap failure or 0 on success.
++ */
++static inline int
++munmap_vma_range(struct mm_struct *mm, unsigned long start, unsigned long len,
++		 struct vm_area_struct **pprev, struct rb_node ***link,
++		 struct rb_node **parent, struct list_head *uf)
 +{
-+	struct resource *region;
-+	struct device *device = &pdev->dev;
 +
-+	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-+	if (!*res) {
-+		dev_err(device, "resource %s not defined\n", name);
-+		return -ENODEV;
-+	}
-+
-+	region = devm_request_mem_region(device, (*res)->start,
-+					 resource_size(*res), dev_name(device));
-+	if (!region) {
-+		dev_err(device, "unable to request %s\n", name);
-+		return -EBUSY;
-+	}
-+
-+	*ptr = devm_ioremap(device, region->start,
-+			    resource_size(region));
-+	if (!*ptr) {
-+		dev_err(device, "ioremap of %s failed!", name);
-+		return -ENOMEM;
-+	}
++	while (find_vma_links(mm, start, start + len, pprev, link, parent))
++		if (do_munmap(mm, start, len, uf))
++			return -ENOMEM;
 +
 +	return 0;
 +}
-diff --git a/drivers/net/ethernet/altera/altera_utils.h b/drivers/net/ethernet/altera/altera_utils.h
-index b7d772f2dcbb..fbe985099a44 100644
---- a/drivers/net/ethernet/altera/altera_utils.h
-+++ b/drivers/net/ethernet/altera/altera_utils.h
-@@ -3,7 +3,9 @@
-  * Copyright (C) 2014 Altera Corporation. All rights reserved
-  */
+ static unsigned long count_vma_pages_range(struct mm_struct *mm,
+ 		unsigned long addr, unsigned long end)
+ {
+@@ -1724,13 +1751,9 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 			return -ENOMEM;
+ 	}
  
-+#include <linux/platform_device.h>
- #include <linux/kernel.h>
-+#include <linux/io.h>
+-	/* Clear old maps */
+-	while (find_vma_links(mm, addr, addr + len, &prev, &rb_link,
+-			      &rb_parent)) {
+-		if (do_munmap(mm, addr, len, uf))
+-			return -ENOMEM;
+-	}
+-
++	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
++	if (munmap_vma_range(mm, addr, len, &prev, &rb_link, &rb_parent, uf))
++		return -ENOMEM;
+ 	/*
+ 	 * Private writable mapping: check memory availability
+ 	 */
+@@ -3056,14 +3079,9 @@ static int do_brk_flags(unsigned long addr, unsigned long len, unsigned long fla
+ 	if (error)
+ 		return error;
  
- #ifndef __ALTERA_UTILS_H__
- #define __ALTERA_UTILS_H__
-@@ -12,5 +14,54 @@ void tse_set_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- void tse_clear_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- int tse_bit_is_set(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask);
-+int request_and_map(struct platform_device *pdev, const char *name,
-+		    struct resource **res, void __iomem **ptr);
+-	/*
+-	 * Clear old maps.  this also does some error checking for us
+-	 */
+-	while (find_vma_links(mm, addr, addr + len, &prev, &rb_link,
+-			      &rb_parent)) {
+-		if (do_munmap(mm, addr, len, uf))
+-			return -ENOMEM;
+-	}
++	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
++	if (munmap_vma_range(mm, addr, len, &prev, &rb_link, &rb_parent, uf))
++		return -ENOMEM;
  
-+static inline
-+u32 csrrd32(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readl(paddr);
-+}
-+
-+static inline
-+u16 csrrd16(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readw(paddr);
-+}
-+
-+static inline
-+u8 csrrd8(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readb(paddr);
-+}
-+
-+static inline
-+void csrwr32(u32 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writel(val, paddr);
-+}
-+
-+static inline
-+void csrwr16(u16 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writew(val, paddr);
-+}
-+
-+static inline
-+void csrwr8(u8 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writeb(val, paddr);
-+}
- #endif /* __ALTERA_UTILS_H__*/
+ 	/* Check against address space limits *after* clearing old maps... */
+ 	if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
 -- 
-2.13.0
+2.28.0
 
