@@ -2,65 +2,165 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFCDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20730C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97BBD20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBDD206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 09:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgHRJvV (ORCPT
+        id S1726684AbgHRJv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 05:51:21 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:34007 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgHRJvT (ORCPT
+        Tue, 18 Aug 2020 05:51:29 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48908 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgHRJv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:51:19 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 07I9pCep007193
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 11:51:12 +0200
-Received: from [139.22.40.250] ([139.22.40.250])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07I9pBnZ027883;
-        Tue, 18 Aug 2020 11:51:12 +0200
-Subject: Re: [PATCHv2 0/2] scripts:gdb: Add few structs info in gdb scripts
-To:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1597742951.git.riteshh@linux.ibm.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <21dbdcfe-7579-4eca-506c-cd5b77c5b34d@siemens.com>
-Date:   Tue, 18 Aug 2020 11:51:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 05:51:28 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0EEFE1C0BB7; Tue, 18 Aug 2020 11:51:25 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 11:51:24 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        jbaron@akamai.com, Jim Cromie <jim.cromie@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 051/168] dyndbg: fix a BUG_ON in
+ ddebug_describe_flags
+Message-ID: <20200818095124.GD10974@amd>
+References: <20200817143733.692105228@linuxfoundation.org>
+ <20200817143736.291298404@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1597742951.git.riteshh@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
+Content-Disposition: inline
+In-Reply-To: <20200817143736.291298404@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.08.20 11:34, Ritesh Harjani wrote:
-> I was using these structs info internally in my gdb scripts.
-> So sending it out for merge to upstream.
-> Patch-2 is just adding some headers and improves spacing.
-> 
 
-Both patches
+--UfEAyuTBtIjiZzX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+On Mon 2020-08-17 17:16:22, Greg Kroah-Hartman wrote:
+> From: Jim Cromie <jim.cromie@gmail.com>
+>=20
+> [ Upstream commit f678ce8cc3cb2ad29df75d8824c74f36398ba871 ]
+>=20
+> ddebug_describe_flags() currently fills a caller provided string buffer,
+> after testing its size (also passed) in a BUG_ON.  Fix this by
+> replacing them with a known-big-enough string buffer wrapped in a
+> struct, and passing that instead.
+>=20
+> Also simplify ddebug_describe_flags() flags parameter from a struct to
+> a member in that struct, and hoist the member deref up to the caller.
+> This makes the function reusable (soon) where flags are unpacked.
 
-Jan
+Original code was correct, passing explicit size, this passes strange
+structure. BUG_ON can never trigger in the origianl code, so this is
+not a bugfix.
 
---
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Best regards,
+								Pavel
+
+> +++ b/lib/dynamic_debug.c
+> @@ -85,22 +85,22 @@ static struct { unsigned flag:8; char opt_char; } opt=
+_array[] =3D {
+>  	{ _DPRINTK_FLAGS_NONE, '_' },
+>  };
+> =20
+> +struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
+> +
+>  /* format a string into buf[] which describes the _ddebug's flags */
+> -static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+> -				    size_t maxlen)
+> +static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *=
+fb)
+>  {
+> -	char *p =3D buf;
+> +	char *p =3D fb->buf;
+>  	int i;
+> =20
+> -	BUG_ON(maxlen < 6);
+>  	for (i =3D 0; i < ARRAY_SIZE(opt_array); ++i)
+> -		if (dp->flags & opt_array[i].flag)
+> +		if (flags & opt_array[i].flag)
+>  			*p++ =3D opt_array[i].opt_char;
+> -	if (p =3D=3D buf)
+> +	if (p =3D=3D fb->buf)
+>  		*p++ =3D '_';
+>  	*p =3D '\0';
+> =20
+> -	return buf;
+> +	return fb->buf;
+>  }
+> =20
+>  #define vpr_info(fmt, ...)					\
+> @@ -142,7 +142,7 @@ static int ddebug_change(const struct ddebug_query *q=
+uery,
+>  	struct ddebug_table *dt;
+>  	unsigned int newflags;
+>  	unsigned int nfound =3D 0;
+> -	char flagbuf[10];
+> +	struct flagsbuf fbuf;
+> =20
+>  	/* search for matching ddebugs */
+>  	mutex_lock(&ddebug_lock);
+> @@ -199,8 +199,7 @@ static int ddebug_change(const struct ddebug_query *q=
+uery,
+>  			vpr_info("changed %s:%d [%s]%s =3D%s\n",
+>  				 trim_prefix(dp->filename), dp->lineno,
+>  				 dt->mod_name, dp->function,
+> -				 ddebug_describe_flags(dp, flagbuf,
+> -						       sizeof(flagbuf)));
+> +				 ddebug_describe_flags(dp->flags, &fbuf));
+>  		}
+>  	}
+>  	mutex_unlock(&ddebug_lock);
+> @@ -779,7 +778,7 @@ static int ddebug_proc_show(struct seq_file *m, void =
+*p)
+>  {
+>  	struct ddebug_iter *iter =3D m->private;
+>  	struct _ddebug *dp =3D p;
+> -	char flagsbuf[10];
+> +	struct flagsbuf flags;
+> =20
+>  	vpr_info("called m=3D%p p=3D%p\n", m, p);
+> =20
+> @@ -792,7 +791,7 @@ static int ddebug_proc_show(struct seq_file *m, void =
+*p)
+>  	seq_printf(m, "%s:%u [%s]%s =3D%s \"",
+>  		   trim_prefix(dp->filename), dp->lineno,
+>  		   iter->table->mod_name, dp->function,
+> -		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
+> +		   ddebug_describe_flags(dp->flags, &flags));
+>  	seq_escape(m, dp->format, "\t\r\n\"");
+>  	seq_puts(m, "\"\n");
+> =20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UfEAyuTBtIjiZzX6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl87pJwACgkQMOfwapXb+vK8egCeOuLFXFZ8DrogqMjVa0su9IUM
+VC8AoJu7I0GDnLFTdQOaAoQVu+f6tfKS
+=XkW2
+-----END PGP SIGNATURE-----
+
+--UfEAyuTBtIjiZzX6--
