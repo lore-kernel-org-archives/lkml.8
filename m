@@ -7,93 +7,83 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD556C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0330820789
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B284B206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DGsd0rtA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DYnvUd31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHRTjl (ORCPT
+        id S1726705AbgHRTke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44552 "EHLO
+        Tue, 18 Aug 2020 15:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgHRTjh (ORCPT
+        with ESMTP id S1726682AbgHRTka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:39:37 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCABC061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s15so10221244pgc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
+        Tue, 18 Aug 2020 15:40:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E000BC061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:40:29 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o5so10238338pgb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+piZ95CVdXuEkGHEl46eIFq4d8k/PB4mXonDrPOqmKY=;
-        b=DGsd0rtAn+EKPFELhI752sDGcE5zFP+lMM8VmIoSeKoi6jMm45lvXfr9ws3MF5gc9l
-         ve83Lz6XbS7dssqMUq/Lj8oMpn26ngBCwqg5X60YndlWLYNUsBegqrWnarq5zy/QGoxV
-         hEAeArB2aRBW8ao8Fs7gzHlcJiD2QfQeaGNvc=
+        bh=ch3OV58IkPdZykabiTW5C4mVF3OzlaCKDtp5K191NwI=;
+        b=DYnvUd31Yol0xDsMTII443AXD5SBZUHRBPBVSKFnIfKxZq5cSp3Bc8ihWc7X9kOoer
+         7YDPAJt6p40V7jNKuO+C2ZaQryG9rD13tlWTVI20PKG6f1fpvlxWiKoBvHQpXsv8E/02
+         XACxvcZsnlIs6M370bs+/dJJCxnJ/K0R1dBCc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+piZ95CVdXuEkGHEl46eIFq4d8k/PB4mXonDrPOqmKY=;
-        b=d0GiniIHgX3TaZ8oHca9Zet9xfTJiRgsasX2TBYkLUzSNLPixqdlTsfRARLD4s6Unl
-         iQus5wuAPaObBmvTLXOkOrZA2OfCnTkJFHvhrMFfXH57usHHkDbOmil8gpeuzCWOIRxp
-         GDhi08/y/Z6MwfVXntPXYxxUyQ6aShViLtI8gNUXwHaznnTwSbk2Ax1zmoEZqVi6bucj
-         lKePx126pMTm+ZZoZuea2/I+m7kFrwDnpmZXxuZK/FHb9Bj7beknvNu0aczfIumG4pNO
-         PuSOXopOodFTNn5TZDMP7Oc+O/bIllEd8WJVC1EObctH2knW5uMtjh1b6c/wQ3NU7QO4
-         /dmA==
-X-Gm-Message-State: AOAM531iUHi1UnJfCOaPtX9dX87ASpWfN9fFdlDFJXUrbKbOQ4KmJYyV
-        KqdIzWbWrMwfnNAgwNzUcp2yNQF7qQBj4g==
-X-Google-Smtp-Source: ABdhPJxnDPhmwuColVON9fsNG6lMLA9e0FK5CJwZp+zherGpkgz5W95vJkHLhp5Y28PAYw30OH1SVQ==
-X-Received: by 2002:a63:d1f:: with SMTP id c31mr13717358pgl.27.1597779576171;
-        Tue, 18 Aug 2020 12:39:36 -0700 (PDT)
+        bh=ch3OV58IkPdZykabiTW5C4mVF3OzlaCKDtp5K191NwI=;
+        b=rYnWD/HEJ0WOSlvpYZ5BG3BJale781sBYltVBE7GgHw/EA2XH95w+KDNawUNG/6eQU
+         Ed1U905oCkcGpqICzQ2NL301YQDd2jqL2X1U0a+A6cZbL+hnAkrNvKU8lhMAp+0/o38f
+         lNdKY0NIoxGNLSSx8Eta0ptTjvibrGljYYssx84QEEd9eBoTswCxztW4NyafLOn9J4Xy
+         pAG2JYMp10pusX8bMJghOdB4+pQu8dVgiZqySDVRt+YQnvFXb1kUnTg2+zQr8Y/HEkyL
+         jsuOAIlJAKnZmR2MqjbYBpIJijfw6CsTq3wwVWplP0tbH/Bn3UrK7MB82IGZV6ERCqWz
+         rx5Q==
+X-Gm-Message-State: AOAM530mWMmz1SrArTba1ocgX9pdZ8IPeFGoO6+I6k63ri0pN1mkHisS
+        KBZbGwajifdjZIYX37yvwxhSiG8n2WIaGw==
+X-Google-Smtp-Source: ABdhPJzFD2QepABnrJdmhmbyKfy6j0eIjoXbjXujD4lPLNrelLvSz1BFbjW5ovNHdN12KmA5WLvucQ==
+X-Received: by 2002:aa7:9d85:: with SMTP id f5mr16545592pfq.218.1597779629499;
+        Tue, 18 Aug 2020 12:40:29 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c27sm22083011pgn.86.2020.08.18.12.39.35
+        by smtp.gmail.com with ESMTPSA id mr21sm620205pjb.57.2020.08.18.12.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 12:39:35 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 12:39:34 -0700
+        Tue, 18 Aug 2020 12:40:28 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 12:40:27 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 03/11] fs: don't allow splice read/write without explicit
- ops
-Message-ID: <202008181239.E51B80265@keescook>
+Subject: Re: [PATCH 04/11] uaccess: add infrastructure for kernel builds with
+ set_fs()
+Message-ID: <202008181240.0B31CD9@keescook>
 References: <20200817073212.830069-1-hch@lst.de>
- <20200817073212.830069-4-hch@lst.de>
+ <20200817073212.830069-5-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817073212.830069-4-hch@lst.de>
+In-Reply-To: <20200817073212.830069-5-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 09:32:04AM +0200, Christoph Hellwig wrote:
-> default_file_splice_write is the last piece of generic code that uses
-> set_fs to make the uaccess routines operate on kernel pointers.  It
-> implements a "fallback loop" for splicing from files that do not actually
-> provide a proper splice_read method.  The usual file systems and other
-> high bandwith instances all provide a ->splice_read, so this just removes
-> support for various device drivers and procfs/debugfs files.  If splice
-> support for any of those turns out to be important it can be added back
-> by switching them to the iter ops and using generic_file_splice_read.
+On Mon, Aug 17, 2020 at 09:32:05AM +0200, Christoph Hellwig wrote:
+> Add a CONFIG_SET_FS option that is selected by architecturess that
+> implement set_fs, which is all of them initially.  If the option is not
+> set stubs for routines related to overriding the address space are
+> provided so that architectures can start to opt out of providing set_fs.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-This seems a bit disruptive? I feel like this is going to make fuzzers
-really noisy (e.g. trinity likes to splice random stuff out of /sys and
-/proc).
-
-Conceptually, though:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
