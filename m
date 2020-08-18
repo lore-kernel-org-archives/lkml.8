@@ -2,48 +2,49 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06890C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DEBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3F020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2998221E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 18:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K2fdtPeY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mJsT7qNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHRSyp (ORCPT
+        id S1726766AbgHRSyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:54:45 -0400
+        Tue, 18 Aug 2020 14:54:54 -0400
 Received: from m43-7.mailgun.net ([69.72.43.7]:25544 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbgHRSyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:54:43 -0400
+        id S1726746AbgHRSyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 14:54:46 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597776882; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=vfiuCTct4hAHdpafOBx0+18YNtmCRa6E9a+yCwaEzcU=; b=K2fdtPeY5aUcHYYWM6Aqpal9potpcvt5WHf3frBQplJ5V1JaiyHs77UJhyCauKL8svrZGu3u
- G4tkXTstBrwwJsOTYcy7wvB9BPqVa7lI0RD4bCibMwwBvRGPkt7R+WFaCPQlsda9Mhot/m0O
- rzeUPb2cGNKK9SWjLo02Fo9EQ7E=
+ s=smtp; t=1597776886; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=pURV5QFpmLy38X5gYC0uGHz0Zw0P/0cot7hAuBA4Ty0=; b=mJsT7qNCtulV1l7oDsEXq2T6ErrTtxkU4o/2j3yrUS6R+P2fBsSaMiznWVadGduquTiR7gIF
+ MKFMfAyf77Q+QEUO3VEDweNgUiU6kg7gRCm+gtMg5d3YZzmHlJT0bZ+72OhGmPX7Exz8ScKQ
+ fNqOLMpa8C1xl5Qm05V9ZdmMB9A=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f3c23e0f2b697637a94b24c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 18:54:24
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5f3c23e2cbcd42bdeed5335e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 18:54:26
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8DA6C43395; Tue, 18 Aug 2020 18:54:23 +0000 (UTC)
+        id 4D16FC4339C; Tue, 18 Aug 2020 18:54:25 +0000 (UTC)
 Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F28BCC433CA;
-        Tue, 18 Aug 2020 18:54:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F28BCC433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51BA7C433C6;
+        Tue, 18 Aug 2020 18:54:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51BA7C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -56,41 +57,70 @@ Cc:     Elliot Berman <eberman@codeaurora.org>, linux-pm@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
         Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: [RESEND PATCH v1 0/4] Support spaces in reboot mode framework
-Date:   Tue, 18 Aug 2020 11:54:12 -0700
-Message-Id: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+Subject: [RESEND PATCH v1 2/4] dt-bindings: power: reset: Add alternate reboot mode format
+Date:   Tue, 18 Aug 2020 11:54:14 -0700
+Message-Id: <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resending with updated recepients and cover subject.
+Current reboot-mode device tree schema does not support reboot commands
+with spaces in them [1]. Add an optional new node "reboot-mode-names"
+and "reboot-mode-magic" which add an array of strings and u32s,
+respectively which would permit any string in this framework.
 
-PM8150 uses reboot-mode framework to set magic values for bootloader to read
-during next boot. dm-verity wants to use "dm-verity device corrupted" [1] as
-the restart command, however the reboot-mode framework does not support spaces
-in the command line as devicetree property names cannot have spaces. In order
-to support the PM8150 comamnds, this patch series adds two new optional array
-properties to reboot-mode framework: reboot-mode-names and reboot-mode-magic.
-The arrays supply the commands and magic values, respectively.
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-target.c?h=v5.5#n255
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-target.c?h=v5.5#n255
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ .../devicetree/bindings/power/reset/reboot-mode.yaml    | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Elliot Berman (4):
-  dt-bindings: power: reset: Convert reboot-mode to YAML
-  dt-bindings: power: reset: Add alternate reboot mode format
-  power: reset: Add support for reboot mode alternate properties
-  arm64: dts: qcom: pm8150: Add reboot magic
-
- .../bindings/power/reset/reboot-mode.txt           | 25 ---------
- .../bindings/power/reset/reboot-mode.yaml          | 64 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/pm8150.dtsi               |  5 ++
- drivers/power/reset/reboot-mode.c                  | 42 +++++++++++++-
- 4 files changed, 110 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-
+diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+index a6c9102..4ea6b33 100644
+--- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
++++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+@@ -19,6 +19,9 @@ description: |
+   the bootloader what to do when the system reboots, and should be named
+   as mode-xxx = <magic> (xxx is mode name, magic should be a non-zero value).
+ 
++  reboot-mode-magic and reboot-mode-names may be used in addition/instead of
++  mode-xxx style.
++
+   For example, modes common Android platform are:
+     - normal: Normal reboot mode, system reboot with command "reboot".
+     - recovery: Android Recovery mode, it is a mode to format the device or update a new image.
+@@ -32,6 +35,14 @@ properties:
+       description: |
+         Default value to set on a reboot if no command was provided.
+ 
++  reboot-mode-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: List of reboot commands, paired with reboot-mode-magic by index
++
++  reboot-mode-magic:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: List of reboot magic, paired with reboot-mode-names by index
++
+ patternProperties:
+   "^mode-.*$":
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -44,4 +55,10 @@ examples:
+       mode-bootloader = <2>;
+       mode-loader = <3>;
+     };
++
++  - |
++    reboot-mode {
++      reboot-mode-names = "normal", "bootloader", "dm-verity device corrupted";
++      reboot-mode-magic = <0x0>, <0x1>, <0xf>;
++    };
+ ...
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
