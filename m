@@ -2,84 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE218C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9651FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7A62075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE8C205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 11:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHRLb2 (ORCPT
+        id S1726730AbgHRLbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHRLaT (ORCPT
+        Tue, 18 Aug 2020 07:31:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57382 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHRLaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:30:19 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD70DC061344
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 04:29:04 -0700 (PDT)
+        Tue, 18 Aug 2020 07:30:18 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: andrzej.p)
-        with ESMTPSA id 4021C299026
-Subject: Re: [PATCH v2 2/2] tty/sysrq: Add configurable handler to execute a
- compound action
-To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        with ESMTPSA id 85A4A298D0A
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <20200817132727.14564-3-andrzej.p@collabora.com>
- <202008180432.QeU9MPWz%lkp@intel.com>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <0c82da66-910d-cd1f-2181-8d184e84f77a@collabora.com>
-Date:   Tue, 18 Aug 2020 13:29:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <202008180432.QeU9MPWz%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kernel@collabora.com
+Subject: [PATCH v3 0/2] Add configurable handler to execute a compound action
+Date:   Tue, 18 Aug 2020 13:28:23 +0200
+Message-Id: <20200818112825.6445-1-andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W dniu 17.08.2020 o 22:09, kernel test robot pisze:
-> Hi Andrzej,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Andrzej-Pietrasiewicz/Add-configurable-handler-to-execute-a-compound-action/20200817-212944
-> base:    9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
-> config: powerpc-tqm8xx_defconfig (attached as .config)
-> compiler: powerpc-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->>> drivers/tty/sysrq.c:1158:1: error: expected identifier or '(' before '{' token
+This is a follow-up of this thread:
 
-Corrected in v3.
+https://www.spinics.net/lists/linux-input/msg68446.html
 
-Andrzej
+It only touches DRM (dri-devel) in such a way that it changes the help
+message of sysrq_drm_fb_helper_restore_op, otherwise it is unrelated to DRM.
+
+Patch 2/2 adds a configurable handler to execute a compound action.
+
+Userland might want to execute e.g. 'w' (show blocked tasks), followed
+by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
+upon a single magic SysRq. Or one might want to execute the famous "Raising
+Elephants Is So Utterly Boring" action. This patch adds a configurable
+handler, triggered with 'C', for this exact purpose. The user specifies the
+composition of the compound action using syntax similar to getopt, where
+each letter corresponds to an individual action and a colon followed by a
+number corresponds to a delay of that many milliseconds, e.g.:
+
+ws:1000c
+
+or
+
+r:100eis:1000ub
+
+An example of userspace that wants to perform a compound action is
+Chrome OS, where SysRq-X (pressed for the second time within a certain
+time period from the first time) causes showing the locked tasks, syncing,
+waiting a 1000 ms delay and crashing the system.
+
+Since all the slots in the sysrq_key_table[] are already taken or reserved,
+patch 1/2 extends it to cover also capital letter versions.
+
+v2..v3:
+- eliminated compile error in !CONFIG_INPUT case (kernel test robot)
+
+v1..v2:
+- used toupper() instead of opencoding it (Jiri Slaby)
+- updated help message of sysrq_drm_fb_helper_restore_op (Jiri Slaby)
+- used unsigned int for specifying delays (Jiri Slaby)
+- improved printed messages formatting (Jiri Slaby)
+
+Andrzej Pietrasiewicz (2):
+  tty/sysrq: Extend the sysrq_key_table to cover capital letters
+  tty/sysrq: Add configurable handler to execute a compound action
+
+ Documentation/admin-guide/sysrq.rst |  11 +++
+ drivers/gpu/drm/drm_fb_helper.c     |   2 +-
+ drivers/tty/sysrq.c                 | 129 +++++++++++++++++++++++++++-
+ include/linux/sysrq.h               |   1 +
+ 4 files changed, 140 insertions(+), 3 deletions(-)
+
+
+base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+-- 
+2.17.1
+
