@@ -2,159 +2,255 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A89DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1142075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E77520772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXlr3vZC"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="TnIpN1bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgHRXWY (ORCPT
+        id S1727103AbgHRXZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50808 "EHLO
+        Tue, 18 Aug 2020 19:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgHRXWV (ORCPT
+        with ESMTP id S1726685AbgHRXZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:22:21 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB0EC061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:22:21 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id s14so3958256plp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:22:21 -0700 (PDT)
+        Tue, 18 Aug 2020 19:25:56 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2C4C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:25:56 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h21so16487683qtp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Unuqp3MGw5DwpQFycwpHM5ISIgKNxiJLUmRKr6fcjrU=;
-        b=qXlr3vZC9+Qh50P3/0qUoZoQ9MWvxcp4bPmCotB8cVo/A44amT///Fkpr+w+1KF6eA
-         Gp8jqeTVDW47Kh1uh7URCwPvFaERouBJJImcQ4sLgiAyZdxh46Vei5Z5CDs6QOViwxYd
-         w5Z4Z64AsWPq+ZPyJslrJCfbntSFDHiJYf3t3E3e+q3c6Ut7A8cRyi6Wx/k0XcWTgmjE
-         AhzsMmvyksDD5MaFOgzfHarnmbB6yuz9dFFg4IjYAJEydOICbO9YaKgsIdWgtRvorNW8
-         a/+7Qzh98gVLGNDJRKIqIYAhWsV40VNSDTzemhVUOaznMBBOQ6FLoWdmQ2ewDH8E+yxv
-         Bz+w==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cBg9mi2UQh4TtluEe91dZKWnRgC9OEpeXNhSZdpu+Ew=;
+        b=TnIpN1bcBTX0J/2DTuL5XFSifIOkz7CxM6D5SGYHsrce+haqRHEisFuAV2YYXGTIb9
+         wFEqv5KV6AWWxJOBUleQgfIzPg4o9+PoXhbVRR662QnNkD7/fGMVvawdagDF2A9mbRfG
+         AZXIk1g4GW4ksCJM5JVZZksmVv/a+VygXxj8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Unuqp3MGw5DwpQFycwpHM5ISIgKNxiJLUmRKr6fcjrU=;
-        b=INVfBt3G+ATJLRo+ASZx5/Xy9m0DOscX2G9syMTfjArGm+GL2cz6p5UO5uu5IjZYq6
-         PTmJV81PG20ovUa/CfMRPC1W84ZCnPayDKdCTi/3udI5HqpwG6VDppE3LbpeWNNkqzAt
-         a8g65rQWRiL8TCMNBX91MFDqFK3oLNVVZ3JwsBSl2Lz4qnvC7EGm1fSsKEw74hwkc837
-         ALqdau/UpiJG17010GwEQ/S56RoJ/j94Cozz8AJJWGJ5lkgJC+x53Z8cy6thTSPlWyzk
-         QbyIJpVKF7f11nARsAG9IvF5gYHMG8zNE4liWgUP0/MiNRZn7VJT5Mr+7fHbmsc5QTz3
-         Fq8g==
-X-Gm-Message-State: AOAM532ByLQohYexTP/OfJ3qrIG237bvHfT3ecyG0n+PKPDFt/oAfuvz
-        hqo3lU8COf6Yht8seeVrA1CED+0i50ibyHaYRImi6A==
-X-Google-Smtp-Source: ABdhPJyyI6tmInC4U9JAh/QQICeSlHcUjFxQTZdBW8PsBj4Y+AvoY4xK+5xzVtKqeAoR2aLOU8GmbsddP1xudxxbnRg=
-X-Received: by 2002:a17:90a:3ad1:: with SMTP id b75mr1701568pjc.25.1597792940705;
- Tue, 18 Aug 2020 16:22:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cBg9mi2UQh4TtluEe91dZKWnRgC9OEpeXNhSZdpu+Ew=;
+        b=JpBGA+tPmZAzKo8euqp8TgWjrNDJXqTcX5SvMqnbFW+vqY15wNSCKsodrZTgqym+uA
+         nhGirPXlDLSBvYlBxpIY8KipFIgEmRHhGHQsNV9ILa1ujrr7CWlBP5fYEV7pClxNrih4
+         G8Ptut9YqzNI/3g7HY7jqcyPuY1j+5Tf0mFBCPqa5fuEBbP+sr10qbM+VM28+4O0OOiJ
+         xl2Bv7Xk36BTnHx4EmeuQKomUwMZ1HmNY2uLnoJ74CM9CsoPuoojFjrxQjQcP8G5GeLm
+         BkLXIAZfvlMxqX7ZWaqc6MUrMzKJ3ZbXQHc0mugrWIDyLyR+HBE5TW36LvTb+NdV4m8U
+         yEHw==
+X-Gm-Message-State: AOAM533SZ8HDJY2VJJtDNub8z9ncpWMO6PV8WDO+GJ06GymlGPi6k6X4
+        0Ett7+FCsSMuqGJcHcz/BVXH/ud50z7qHA==
+X-Google-Smtp-Source: ABdhPJxbQnp4gZT2pntan3aGDyvxjijLq9LHKEwfJ+zv8BQ2Dfg5TwuA+u9y+wUwsP9WVOm8Ts8rUQ==
+X-Received: by 2002:ac8:7205:: with SMTP id a5mr20339399qtp.235.1597793155779;
+        Tue, 18 Aug 2020 16:25:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id j15sm21679007qkl.63.2020.08.18.16.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 16:25:55 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 19:25:54 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, qiang.zhang@windriver.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
+Message-ID: <20200818232554.GA2850477@google.com>
+References: <20200814064557.17365-1-qiang.zhang@windriver.com>
+ <20200814185124.GA2113@pc636>
+ <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+ <20200818171807.GI27891@paulmck-ThinkPad-P72>
+ <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+ <20200818210355.GM27891@paulmck-ThinkPad-P72>
+ <20200818215511.GA2538@pc636>
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan> <CAKwvOdnW8zjcxmHwu5PhHa1hMFu=S=qPh5gfC6tN7FrSE+3kKg@mail.gmail.com>
- <CAOrgDVO=NBaqGP2Fs6X4FHeLfbaAA7Km8i2ttcGf0kwfojmVSA@mail.gmail.com>
-In-Reply-To: <CAOrgDVO=NBaqGP2Fs6X4FHeLfbaAA7Km8i2ttcGf0kwfojmVSA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Aug 2020 16:22:09 -0700
-Message-ID: <CAKwvOdnk6PrHGB-zam-aAxKG119x2o21COxjV9DnhU=WH3wjjg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Eli Friedman <efriedma@quicinc.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818215511.GA2538@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 3:05 PM D=C3=A1vid Bolvansk=C3=BD
-<david.bolvansky@gmail.com> wrote:
->
-> st 19. 8. 2020 o 0:00 Nick Desaulniers <ndesaulniers@google.com> nap=C3=
-=ADsal(a):
+On Tue, Aug 18, 2020 at 11:55:11PM +0200, Uladzislau Rezki wrote:
+> > On Tue, Aug 18, 2020 at 03:00:35PM -0400, Joel Fernandes wrote:
+> > > On Tue, Aug 18, 2020 at 1:18 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >
+> > > > On Mon, Aug 17, 2020 at 06:03:54PM -0400, Joel Fernandes wrote:
+> > > > > On Fri, Aug 14, 2020 at 2:51 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+> > > > > >
+> > > > > > > From: Zqiang <qiang.zhang@windriver.com>
+> > > > > > >
+> > > > > > > Due to cpu hotplug. some cpu may be offline after call "kfree_call_rcu"
+> > > > > > > func, if the shrinker is triggered at this time, we should drain each
+> > > > > > > possible cpu "krcp".
+> > > > > > >
+> > > > > > > Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+> > > > > > > ---
+> > > > > > >  kernel/rcu/tree.c | 6 +++---
+> > > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > > > index 8ce77d9ac716..619ccbb3fe4b 100644
+> > > > > > > --- a/kernel/rcu/tree.c
+> > > > > > > +++ b/kernel/rcu/tree.c
+> > > > > > > @@ -3443,7 +3443,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+> > > > > > >       unsigned long count = 0;
+> > > > > > >
+> > > > > > >       /* Snapshot count of all CPUs */
+> > > > > > > -     for_each_online_cpu(cpu) {
+> > > > > > > +     for_each_possible_cpu(cpu) {
+> > > > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > > > >
+> > > > > > >               count += READ_ONCE(krcp->count);
+> > > > > > > @@ -3458,7 +3458,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > > > > > >       int cpu, freed = 0;
+> > > > > > >       unsigned long flags;
+> > > > > > >
+> > > > > > > -     for_each_online_cpu(cpu) {
+> > > > > > > +     for_each_possible_cpu(cpu) {
+> > > > > > >               int count;
+> > > > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > > > >
+> > > > > > > @@ -3491,7 +3491,7 @@ void __init kfree_rcu_scheduler_running(void)
+> > > > > > >       int cpu;
+> > > > > > >       unsigned long flags;
+> > > > > > >
+> > > > > > > -     for_each_online_cpu(cpu) {
+> > > > > > > +     for_each_possible_cpu(cpu) {
+> > > > > > >               struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> > > > > > >
+> > > > > > >               raw_spin_lock_irqsave(&krcp->lock, flags);
+> > > > > > >
+> > > > > > I agree that it can happen.
+> > > > > >
+> > > > > > Joel, what is your view?
+> > > > >
+> > > > > Yes I also think it is possible. The patch LGTM. Another fix could be
+> > > > > to drain the caches in the CPU offline path and save the memory. But
+> > > > > then it will take hit during __get_free_page(). If CPU
+> > > > > offlining/online is not frequent, then it will save the lost memory.
+> > > > >
+> > > > > I wonder how other per-cpu caches in the kernel work in such scenarios.
+> > > > >
+> > > > > Thoughts?
+> > > >
+> > > > Do I count this as an ack or a review?  If not, what precisely would
+> > > > you like the submitter to do differently?
+> > > 
+> > > Hi Paul,
+> > > The patch is correct and is definitely an improvement. I was thinking
+> > > about whether we should always do what the patch is doing when
+> > > offlining CPUs to save memory but now I feel that may not be that much
+> > > of a win to justify more complexity.
+> > > 
+> > > You can take it with my ack:
+> > > 
+> > > Acked-by: Joel Fernandes <joel@joelfernandes.org>
+> > 
+> > Thank you all!  I wordsmithed a bit as shown below, so please let
+> > me know if I messed anything up.
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit fe5d89cc025b3efe682cac122bc4d39f4722821e
+> > Author: Zqiang <qiang.zhang@windriver.com>
+> > Date:   Fri Aug 14 14:45:57 2020 +0800
+> > 
+> >     rcu: Shrink each possible cpu krcp
+> >     
+> >     CPUs can go offline shortly after kfree_call_rcu() has been invoked,
+> >     which can leave memory stranded until those CPUs come back online.
+> >     This commit therefore drains the kcrp of each CPU, not just the
+> >     ones that happen to be online.
+> >     
+> >     Acked-by: Joel Fernandes <joel@joelfernandes.org>
+> >     Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 02ca8e5..d9f90f6 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3500,7 +3500,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+> >  	unsigned long count = 0;
+> >  
+> >  	/* Snapshot count of all CPUs */
+> > -	for_each_online_cpu(cpu) {
+> > +	for_each_possible_cpu(cpu) {
+> >  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> >  
+> >  		count += READ_ONCE(krcp->count);
+> > @@ -3515,7 +3515,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> >  	int cpu, freed = 0;
+> >  	unsigned long flags;
+> >  
+> > -	for_each_online_cpu(cpu) {
+> > +	for_each_possible_cpu(cpu) {
+> >  		int count;
+> >  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> >  
+> > @@ -3548,7 +3548,7 @@ void __init kfree_rcu_scheduler_running(void)
+> >  	int cpu;
+> >  	unsigned long flags;
+> >  
+> > -	for_each_online_cpu(cpu) {
+> > +	for_each_possible_cpu(cpu) {
+> >  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+> >  
+> >  		raw_spin_lock_irqsave(&krcp->lock, flags);
 > >
-> > On Tue, Aug 18, 2020 at 2:41 PM Arvind Sankar <nivedita@alum.mit.edu> w=
-rote:
-> > >
-> > > Note that -fno-builtin-foo seems to mean slightly different things in
-> > > clang and gcc. From experimentation, clang will neither optimize a ca=
-ll
-> > > to foo, nor perform an optimization that introduces a call to foo. gc=
-c
-> > > will avoid optimizing calls to foo, but it can still generate new cal=
-ls
-> > > to foo while optimizing something else. Which means that
-> > > -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It'=
-s
-> > > just that gcc doesn't seem to have implemented those optimizations.
-> >
-> > Can you please share some godbolt links that demonstrate these observat=
-ions?
-> Here:
-> https://godbolt.org/z/qjo5P6
+> 
+> Should we just clean a krc of a CPU when it goes offline?
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index b8ccd7b5af82..6decb9ad2421 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
+>  {
+>         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+>         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+> +       struct kfree_rcu_cpu *krcp;
+>  
+>         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+>                 return 0;
+>  
+> +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
+> +       krcp = this_cpu_ptr(&krc)
+> +       schedule_delayed_work(&krcp->monitor_work, 0);
+> +
+> 
+> A cpu can be offlined and its krp will be stuck until a shrinker is involved.
+> Maybe be never.
+> 
 
-Ok, when I implemented this version that used -fno-builtin-stpcpy, I
-initially+locally had it added to CLANG_FLAGS rather than
-KBUILD_CFLAGS, but changed it to KBUILD_CFLAGS because I believed that
-BOTH compilers would not lower calls to foo given -fno-builtin-foo.
-Since we have evidence that's not the case, maybe that's the final
-solution and my final proposal (v3). A summary:
+Yes that is a bug as we discussed on IRC, thanks for following up as well.
 
-1. v1 "implement stpcpy"
-https://lore.kernel.org/lkml/20200815002417.1512973-1-ndesaulniers@google.c=
-om/T/#u
-"Please don't provide more unsafe string functions to the kernel"
-2. v2 "KBUILD_CFLAGS +=3D -fno-builtin-stpcpy"
-https://lore.kernel.org/lkml/20200817220212.338670-1-ndesaulniers@google.co=
-m/T/#t
-"-fno-builtin-* doesn't work like that on GCC"
-3. v3 "CLANG_FLAGS +=3D -fno-builtin-stpcpy" TODO
+We need to acquire the krcp->lock too if no monitor is scheduled then nothing
+to do so it does not race with the kfree_rcu_work. So same as what shrinker
+does:
 
-I'll argue that providing an implementation of stpcpy while hiding the
-declaration from include/lib/string.h "for the possibility that GCC
-may one day perform the same libcall optimization" as YAGNI, that we
-may cross that bridge by resurrecting v1 (with the removal of the hunk
-against include/lib/string.h).  This also defers adding more unsafe
-string functions in the kernel.
+		raw_spin_lock_irqsave(&krcp->lock, flags);
+		if (krcp->monitor_todo)
+			kfree_rcu_drain_unlock(krcp, flags);
+		else
+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
 
-Thoughts before I send the patch and write that up?
---=20
-Thanks,
-~Nick Desaulniers
+thanks!
+
+ - Joel
+
