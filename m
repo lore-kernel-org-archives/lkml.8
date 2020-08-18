@@ -2,78 +2,110 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A01C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C69DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83DA206B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63448206B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 15:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TuQrlx9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgHRPHx (ORCPT
+        id S1727772AbgHRPJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:07:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:36174 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgHRPHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:07:50 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 298A32A4; Tue, 18 Aug 2020 17:07:48 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 17:07:46 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Mike Stunes <mstunes@vmware.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v5 00/75] x86: SEV-ES Guest Support
-Message-ID: <20200818150746.GA3319@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
- <B65392F4-FD42-4AA3-8AA8-6C0C0D1FF007@vmware.com>
- <20200730122645.GA3257@8bytes.org>
- <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
+        Tue, 18 Aug 2020 11:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgHRPI6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:08:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D0CC061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:08:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v4so21862477ljd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 08:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rETSh+8yuTihjWF+BUTSPFBgl5bA8M3eQDalGhxFfpw=;
+        b=TuQrlx9ltdfzy2BXM/J2LYEePbtt5B3+P7MjccLQ3uQ6Uy33ZMoL59hwUM94EYTIOP
+         ePiPIpJnm9DIZTn2Ko1ylH4l/Q933ORzG7SG9jp22hAoaFi/MjiX1rsLQiS8SriNW/JL
+         mXe2msw/QgUbYSRWgfPXE3QkhDFArRTP+3SoLFc2PfnVLXKt/mWT7SD/hoWl5ngIHhiI
+         va+68H73TKONrFj3zf3N5eUj8uAHeSnwWoNDgMnJCZ09sW1w+sctB4PPQc6iSPBLgeYf
+         InlH9BhM1cZXcll8D7ixfZ/ShMjuzbSZX3SdtYNKtHCh/Fh0NqeniOdJEWiCqGTZFn3E
+         /VeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rETSh+8yuTihjWF+BUTSPFBgl5bA8M3eQDalGhxFfpw=;
+        b=WZDcED2u/bzTtzvt+lCHNMPFTm2dsbREvntg35NTu+967Gd3djIf31eRwv9TDfzLC1
+         q0ZVr6u0yYdet53DAN0MEn6AYogRTPmiBMf0khT4H5Ssksy9M8RFVml0iehX/vIGirhg
+         0fgVZNgJMnFB+J+hg+FPp+A6aMBfNJr0z03V6Uaz5XHY/52+dNLwyhLIDeMr1sp38ts3
+         gw77Y4kkrjCE/7KVvj8M3EaCGOreGCdlN2/c55EMZc7fgY7LPzk52l1pyFjY1aOiptp3
+         ww3+T1pUt2KDgBZklTRxZggn9sDvrGQelQggVyLsWRdb4B+FLPKDC+XaM3IhPqttwD5+
+         l0pQ==
+X-Gm-Message-State: AOAM533bwOUgwPVbmlY20VzceSisQkRdArhhOdzECPwk4+D6G1arAMFq
+        n8wF9SC0zROG2SIVeMOslSHlxVVTWMzaKp3RN27lLsTA8UuTjA==
+X-Google-Smtp-Source: ABdhPJzFP/jL9HqM7+C+ZGX+JQAYbGvU8bb1EZGwmWqFhRvtDxyHbFA1E3GAJH4c/IDsC/tHOeWlK4THJj08BWmGM1c=
+X-Received: by 2002:a2e:9f4c:: with SMTP id v12mr9176669ljk.139.1597763336196;
+ Tue, 18 Aug 2020 08:08:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200818061239.29091-1-jannh@google.com> <20200818061239.29091-3-jannh@google.com>
+ <20200818134027.GF29865@redhat.com>
+In-Reply-To: <20200818134027.GF29865@redhat.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 18 Aug 2020 17:08:30 +0200
+Message-ID: <CAG48ez01ZTUzZ+mEqyiz+mUQXq4SPiZfZtP1GmpEY1T2wLtnJQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] coredump: Let dump_emit() bail out on short writes
+To:     Oleg Nesterov <oleg@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+On Tue, Aug 18, 2020 at 3:40 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> On 08/18, Jann Horn wrote:
+> >
+> > +     if (dump_interrupted())
+> > +             return 0;
+> > +     n = __kernel_write(file, addr, nr, &pos);
+> > +     if (n != nr)
+> > +             return 0;
+> > +     file->f_pos = pos;
+>
+> Just curious, can't we simply do
+>
+>         __kernel_write(file, addr, nr, &file->f_pos);
+>
+> and avoid "loff_t pos" ?
 
-On Thu, Jul 30, 2020 at 11:23:50PM +0000, Mike Stunes wrote:
-> Yes, FSGSBASE was enabled. If I disable it*, this kernel boots fine, with
-> both CPUs online.
-> 
-> *That is, by forcing guest-CPUID[7].EBX bit 0 to 0.
+Hm... e.g. ksys_write() has the same pattern of copying the value into
+a local variable and back, but I guess maybe there it's done so that
+->f_pos can't change when vfs_write() returns a negative value, or
+something like that? Or maybe to make the update look more atomic?
+None of that is a concern for the core-dumping code, so I guess we
+could change it... but then again, maybe we shouldn't diverge from how
+it's done in fs/read_write.c (e.g. in ksys_write()) too much.
+Coredumping is already a bit too special, no need to make it worse...
 
-Can you please test whether
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=sev-es-client-tip-5.9
-
-still triggers this issue on your side?
-
-Thanks,
-
-	Joerg
+It looks like Al Viro introduced this as part of commit 2507a4fbd48a
+("make dump_emit() use vfs_write() instead of banging at ->f_op->write
+directly"). Before that commit, &file->f_pos was actually passed as a
+parameter, just like you're proposing. I don't really want to try
+reverting parts of Al's commits without understanding what exactly is
+going on...
