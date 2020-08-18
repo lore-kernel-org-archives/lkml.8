@@ -2,208 +2,103 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5849520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pcm1SQw9"
+	by mail.kernel.org (Postfix) with ESMTP id EACC420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 12:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgHRMwi (ORCPT
+        id S1726920AbgHRMwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:52:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32079 "EHLO m43-7.mailgun.net"
+        Tue, 18 Aug 2020 08:52:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51638 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbgHRMwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 08:52:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597755135; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=bpJUxt35gN/bDSYR/Rvq379War3qt/Y3F95Ol2n3ltE=;
- b=Pcm1SQw9GwooE0KxLzmUbqyAqCoun/fq6smjLTT1vB74hmc5KqNSrRJMFD7Gdtt7ZrKrDuQJ
- Uod2c1ygd9Pw6v86XILyxmNIbBHCWhQMW22598jtE5mjEoF2nKVYNz3DV2lySla35eqDmjmA
- z5KWrj6ju39cPhxsGMsjO3rU/NQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f3bceec46ed9966745885a9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 12:51:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9A1A3C43387; Tue, 18 Aug 2020 12:51:56 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C13F7C433CA;
-        Tue, 18 Aug 2020 12:51:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C13F7C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        id S1726779AbgHRMwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:52:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E3F9BAE25;
+        Tue, 18 Aug 2020 12:52:44 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 14:52:18 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] uart:8250: change lock order in serial8250_do_startup()
+Message-ID: <20200818125218.GC17612@alley>
+References: <20200814013802.357412-1-sergey.senozhatsky@gmail.com>
+ <20200814095928.GK1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] adm8211: switch from 'pci_' to 'dma_' API
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200806210431.736050-1-christophe.jaillet@wanadoo.fr>
-References: <20200806210431.736050-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, kuba@kernel.org, yuehaibing@huawei.com,
-        vaibhavgupta40@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200818125156.9A1A3C43387@smtp.codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:51:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814095928.GK1891694@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Fri 2020-08-14 12:59:28, Andy Shevchenko wrote:
+> On Fri, Aug 14, 2020 at 10:38:02AM +0900, Sergey Senozhatsky wrote:
+> > We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
+> > lockdep reports coming from 8250 driver; this causes a bit of trouble
+> > to people, so let's fix it.
+> > 
+> 
+> I guess we may add some tags here
+> 
+> Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Reported-by: Raul Rangel <rrangel@google.com>
+> BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
+> Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
 
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
-> 
-> When memory is allocated in 'adm8211_alloc_rings()', GFP_KERNEL can be used
-> because it is called only from the probe function and no lock is acquired.
-> Moreover, GFP_KERNEL is already used just a few lines above in a kmalloc.
-> 
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
-> 
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+"Link:" tag should point to the mail that is applied using git am.
+I am not sure if there is a tag for related discussion in another
+mail threads.
 
-Patch applied to wireless-drivers-next.git, thanks.
+A solution might be to add a comment like:
 
-2c762ee51008 adm8211: switch from 'pci_' to 'dma_' API
+This solution has been discussed in several threads:
+https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
+https://lore.kernel.org/lkml/20200812154813.GA46894@roeck-us.net/#t
 
--- 
-https://patchwork.kernel.org/patch/11704505/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> > --- a/drivers/tty/serial/8250/8250_port.c
+> > +++ b/drivers/tty/serial/8250/8250_port.c
+> > @@ -2275,6 +2275,11 @@ int serial8250_do_startup(struct uart_port *port)
+> >  
+> >  	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+> >  		unsigned char iir1;
+> 
+> > +		bool irq_shared = up->port.irqflags & IRQF_SHARED;
+> 
+> I'm wondering why we need a temporary variable? This flag is not supposed to be
+> changed in between, can we leave original conditionals?
+> 
+> Nevertheless I noticed an inconsistency of the dereference of the flags which
+> seems to be brough by dfe42443ea1d ("serial: reduce number of indirections in
+> 8250 code").
+> 
+> I think we can stick with newer:
+> 
+> 		if (port->irqflags & IRQF_SHARED)
 
+Sounds reasonable to me.
+
+Andy proposed many changes. Sergey, could you please send v2?
+
+Best Regards,
+Petr
