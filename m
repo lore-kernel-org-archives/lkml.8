@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED03C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19E08207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A292120825
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zShE9s4u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NbZZvuVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHROMv (ORCPT
+        id S1726617AbgHRONE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        Tue, 18 Aug 2020 10:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgHROMb (ORCPT
+        with ESMTP id S1726685AbgHROM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:12:31 -0400
+        Tue, 18 Aug 2020 10:12:26 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B835C061346
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:12:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F07C061345
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=2Qsfk0HOB3x9nc2pqsOJnCHVpv340CkHcue6gSdP15s=; b=zShE9s4uzk4b4nJ/Aonj22H5Nf
-        hPXa+wt19F2zCMUqu1RkJeWvuA0/X07ozrg7lg4YIlTcissnlRcCeU7UGokgsZJwbmoEl+NqdFKrv
-        UNLTPna1JbdW3ozzCv2+7D945FXTvkse0yLmvQR6+cDs63rfozuICzOL81dMODdLQa5JTxOjU/4IP
-        sssAqgVMufxtM3hOiwIXBImu+AckrYRQpj8tx3pmF9PNzpfrfFPqNDcIQHUMj5VuSzS38X8+/WOEm
-        q6vaI2cDTBZs0x7ni0THxUOmU+cG2oh3d8GvUFFm8XPUW2coHB8gqxwV0M6u8kQuDbPo49yvXpk90
-        m/NuO6ew==;
+        bh=qyuZ4Fe2lEi9VRctd1Q1XO35Z3fFopV9KxbHulfliIk=; b=NbZZvuVEKTwVaaLkTnpr/gWHbv
+        Ffggjxv1E9gM3pVizQo3QNLL0DamkGTrnWu0PTY6DA/1wKeTbrHheynYPZ+jysiAE+oD/Y4uiJ95w
+        rydwdDaltdIMookN1hl5BN+qVu4CgtGCEXop+nAhlgyACSEN6MpvgDK0uHZtdYIlC/EU9c40c4vqR
+        ML7HwWV2/A8ZY18fDQWEiu/yDTJRmLf3LxMPGRWZlLx2hhtHmqYgqBdN0QgOyDCOfNloUSJmyjMTd
+        yOuYcjg8od1Ik4Q7zQ8o77Mt59GKNXEbmQsi5PiTD3EDV1grotlydpscEbkO0VP93tJZUEWWv3c24
+        kAqOq1vw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k82LJ-0000oB-OY; Tue, 18 Aug 2020 14:12:01 +0000
+        id 1k82LK-0000oD-Px; Tue, 18 Aug 2020 14:12:02 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC677305B23;
-        Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A71B9307890;
+        Tue, 18 Aug 2020 16:12:00 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A649323D42C04; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
-Message-ID: <20200818135804.504501338@infradead.org>
+        id C485923D42C0B; Tue, 18 Aug 2020 16:11:59 +0200 (CEST)
+Message-ID: <20200818135804.922581202@infradead.org>
 User-Agent: quilt/0.66
-Date:   Tue, 18 Aug 2020 15:57:39 +0200
+Date:   Tue, 18 Aug 2020 15:57:46 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -58,7 +58,7 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
         jpoimboe@redhat.com, pbonzini@redhat.com,
         mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
-Subject: [PATCH v7 04/18] jump_label,module: Fix module lifetime for __jump_label_mod_text_reserved
+Subject: [PATCH v7 11/18] static_call: Simple self-test
 References: <20200818135735.948368560@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,45 +67,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing ensures the module exists while we're iterating
-mod->jump_entries in __jump_label_mod_text_reserved(), take a module
-reference to ensure the module sticks around.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/jump_label.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/Kconfig         |    6 ++++++
+ kernel/static_call.c |   43 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -539,19 +539,25 @@ static void static_key_set_mod(struct st
- static int __jump_label_mod_text_reserved(void *start, void *end)
- {
- 	struct module *mod;
-+	int ret;
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -103,6 +103,12 @@ config STATIC_KEYS_SELFTEST
+ 	help
+ 	  Boot time self-test of the branch patching code.
  
- 	preempt_disable();
- 	mod = __module_text_address((unsigned long)start);
- 	WARN_ON_ONCE(__module_text_address((unsigned long)end) != mod);
-+	if (!try_module_get(mod))
-+		mod = NULL;
- 	preempt_enable();
- 
- 	if (!mod)
- 		return 0;
- 
--
--	return __jump_label_text_reserved(mod->jump_entries,
-+	ret = __jump_label_text_reserved(mod->jump_entries,
- 				mod->jump_entries + mod->num_jump_entries,
- 				start, end);
++config STATIC_CALL_SELFTEST
++	bool "Static call selftest"
++	depends on HAVE_STATIC_CALL
++	help
++	  Boot time self-test of the call patching code.
 +
-+	module_put(mod);
-+
-+	return ret;
+ config OPTPROBES
+ 	def_bool y
+ 	depends on KPROBES && HAVE_OPTPROBES
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -365,3 +365,46 @@ static void __init static_call_init(void
+ #endif
  }
- 
- static void __jump_label_mod_update(struct static_key *key)
+ early_initcall(static_call_init);
++
++#ifdef CONFIG_STATIC_CALL_SELFTEST
++
++static int func_a(int x)
++{
++	return x+1;
++}
++
++static int func_b(int x)
++{
++	return x+2;
++}
++
++DEFINE_STATIC_CALL(sc_selftest, func_a);
++
++static struct static_call_data {
++      int (*func)(int);
++      int val;
++      int expect;
++} static_call_data [] __initdata = {
++      { NULL,   2, 3 },
++      { func_b, 2, 4 },
++      { func_a, 2, 3 }
++};
++
++static int __init test_static_call_init(void)
++{
++      int i;
++
++      for (i = 0; i < ARRAY_SIZE(static_call_data); i++ ) {
++	      struct static_call_data *scd = &static_call_data[i];
++
++              if (scd->func)
++                      static_call_update(sc_selftest, scd->func);
++
++              WARN_ON(static_call(sc_selftest)(scd->val) != scd->expect);
++      }
++
++      return 0;
++}
++early_initcall(test_static_call_init);
++
++#endif /* CONFIG_STATIC_CALL_SELFTEST */
 
 
