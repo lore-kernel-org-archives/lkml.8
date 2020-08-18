@@ -2,128 +2,133 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6F7C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD35B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F6320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4hnDKA8g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6uNUzzxE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VH/aoSyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgHRX0F (ORCPT
+        id S1727106AbgHRXeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:26:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34348 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgHRX0F (ORCPT
+        Tue, 18 Aug 2020 19:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgHRXea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:26:05 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597793162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jsT/0OAQ5/ZDSq/ihICMFWx4yum70SDMT61SJDGYMcQ=;
-        b=4hnDKA8g4FYwEMnNg0BpZdAzJdyfcZz5JDZMaXDOX5zC6L/fT7PoJODo7o17ysaJT1GYQL
-        9CTob4RdKVbziw3UtPsl7MD/LeUdjeNACI72ThT2pluudrpaK8TZsOkIFilsWeww09tPa6
-        3MfDpGv1LD5HLt46hfir3sv1KN8HsZBY/6peJGJE/AfGcQOTGP2Pa0jZaPPB0st71d/ZKw
-        m9qzT2jaQoLX8xHnOTWE34jJ7Z9fXx7Twd1dEtRNKVfg23mJysAkZRlnl4tGBVF07sPxMs
-        PkslYHPWrxavRNPmZR2X4xWI9TkSamv89NVZXs7dExo42oRGsGezK+hz2Dg3mg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597793162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jsT/0OAQ5/ZDSq/ihICMFWx4yum70SDMT61SJDGYMcQ=;
-        b=6uNUzzxEc+H2c2LGBTOGz6gqzlIqZYy3ucuvixXsNHtJV1BHf6sqUqY/z+ppZupN/lSh2B
-        KLJlxjS89TXkY0Ag==
-To:     paulmck@kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [RFC-PATCH 1/2] mm: Add __GFP_NO_LOCKS flag
-In-Reply-To: <20200818171330.GH27891@paulmck-ThinkPad-P72>
-References: <20200814204140.GT4295@paulmck-ThinkPad-P72> <20200814215206.GL3982@worktop.programming.kicks-ass.net> <20200816225655.GA17869@pc636> <20200817082849.GA28270@dhcp22.suse.cz> <20200817222803.GE23602@paulmck-ThinkPad-P72> <20200818074344.GL28270@dhcp22.suse.cz> <20200818135327.GF23602@paulmck-ThinkPad-P72> <87o8n8hv5p.fsf@nanos.tec.linutronix.de> <20200818161355.GE27891@paulmck-ThinkPad-P72> <87lfibj3m8.fsf@nanos.tec.linutronix.de> <20200818171330.GH27891@paulmck-ThinkPad-P72>
-Date:   Wed, 19 Aug 2020 01:26:02 +0200
-Message-ID: <87h7szilit.fsf@nanos.tec.linutronix.de>
+        Tue, 18 Aug 2020 19:34:30 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9E1C061343
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:34:29 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id r7so11050651vsq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 16:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cB70dETR/NyGQeHCHTARFj9L+SQvd7OlAWQERQoCVII=;
+        b=VH/aoSyZVjORXv3NGcpvObwwphjJTPh8Teb99rTAe6HRr/0164LWsOX0ahj5q7dRDH
+         5XIXK3BbjyjgmjpUwj+nAZSn4w6cRWSM6sGsH3NJe0BMbCbtUqKkHOyOIsqpouIwIB9O
+         4HAUlPnDMdu4VX491vMC+FOMEBW2rpYRT6IV0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cB70dETR/NyGQeHCHTARFj9L+SQvd7OlAWQERQoCVII=;
+        b=fS+1LFpHsoI5rwlcN10t3SyNfmYnuXc+t1osV75iriwJYlYofVWoRyVKZjbwmG/kyw
+         8KsiwWascxQgXxuWgnVAHv0p4Zh13Fw/5qyXwgUN4LiRCJgc1JED3LeiXG0jGJLqI0GU
+         EHl6FBwAGZlMtxhLSjz9NdEISOF8fPBzzJbmA26V3svIv4QSJdSvhA3bS+dtPpEMaEjP
+         Jsmd0ToPDKO7AZCslb7eQ66pZmHrRBAPIruZ1sbgzfPvOhdeq908wPqm22IiKRQk0U4C
+         aCzkV1EYJMqox/aCeRkJ6l4igFxq/4Jgb00gnhW/S+tLf/507SFgodh8LA+6uvEwDhb/
+         iexQ==
+X-Gm-Message-State: AOAM5312H1RXv33Zcvha2uHbiW7CxSCqyFQ8ek1hyMWeaVSuRwTTx2Ny
+        E8CYltIzlzkm4HtD3Lp+Njot2n62spiGu396FaAdng==
+X-Google-Smtp-Source: ABdhPJzHyqzCkUdY55haN8OFBGZb0CYfaDh2JhndlSCGSs7EgCkjOFsKH6Ao88fQ+4pSMDiQMP+cyYhtv/6vgWxYkag=
+X-Received: by 2002:a05:6102:311a:: with SMTP id e26mr13531599vsh.86.1597793668644;
+ Tue, 18 Aug 2020 16:34:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200729014225.1842177-1-abhishekpandit@chromium.org> <CANFp7mV0TP-WbBWGSpduERaf9-KBXevhG7xKvjkMrqrtWWkZ5w@mail.gmail.com>
+In-Reply-To: <CANFp7mV0TP-WbBWGSpduERaf9-KBXevhG7xKvjkMrqrtWWkZ5w@mail.gmail.com>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 18 Aug 2020 16:34:17 -0700
+Message-ID: <CANFp7mW3jXf1Djp=j3nYRzzoJAptJ8Z2JJCP+N6pMHGWXx=9cg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Bluetooth: Emit events for suspend/resume
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc:     ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul,
+Hi Marcel,
 
-On Tue, Aug 18 2020 at 10:13, Paul E. McKenney wrote:
-> On Tue, Aug 18, 2020 at 06:55:11PM +0200, Thomas Gleixner wrote:
->> On Tue, Aug 18 2020 at 09:13, Paul E. McKenney wrote:
->> > On Tue, Aug 18, 2020 at 04:43:14PM +0200, Thomas Gleixner wrote:
->> >> Throttling the flooder is incresing robustness far more than reducing
->> >> cache misses.
->> >
->> > True, but it takes time to identify a flooding event that needs to be
->> > throttled (as in milliseconds).  This time cannot be made up.
->> 
->> Not really. A flooding event will deplete your preallocated pages very
->> fast, so you have to go into the allocator and get new ones which
->> naturally throttles the offender.
+Please review this patch. A newer series for how the controller resume
+event will be used is available at
+https://patchwork.kernel.org/project/bluetooth/list/?series=334811
+
+Besides usage in bluez, these events will also make debugging and
+testing suspend/resume for Bluez easier (i.e. finding spurious wakes
+due to BT in suspend stress tests, asserting that wakeup from peers
+occurred as expected in tests)
+
+Abhishek
+
+On Tue, Aug 4, 2020 at 10:11 AM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
 >
-> Should it turn out that we can in fact go into the allocator, completely
-> agreed.
-
-You better can for any user space controllable flooding source.
-
->> So if your open/close thing uses the new single argument free which has
->> to be called from sleepable context then the allocation either gives you
->> a page or that thing has to wait. No fancy extras.
+> Hi,
 >
-> In the single-argument kvfree_rcu() case, completely agreed.
+> Gentle reminder that this is waiting for feedback. Related userspace
+> changes are here to see how we plan on using it:
+> https://patchwork.kernel.org/project/bluetooth/list/?series=325777
 >
->> You still can have a page reserved for your other regular things and
->> once that it gone, you have to fall back to the linked list for
->> those. But when that happens the extra cache misses are not your main
->> problem anymore.
+> Thanks
+> Abhishek
 >
-> The extra cache misses are a problem in that case because they throttle
-> the reclamation, which anti-throttles the producer, especially in the
-> case where callback invocation is offloaded.
-
-You still did not explain which contexts can create flooding. I gave you
-a complete list a few mails ago, but you still did not tell which of the
-contexts can cause flooding.
-
-If it's any context which is not sleepable or controllable in any way,
-then any attempt to mitigate it is a lost battle:
-
-  A dependency on allocating memory to free memory is a dead end by
-  definition.
-
-Any flooder which is uncontrollable is a bug and no matter what kind of
-hacks you provide, it will be able to bring the whole thing down.
-
-So far this looks like you're trying to cure the symptoms, which is
-wrong to begin with.
-
-If the flooder is controllable then there is no problem with cache
-misses at all unless the RCU free callbacks are not able to catch up
-which is yet another problem which you can't cure by allocating more
-memory.
-
-Thanks,
-
-        tglx
+> On Tue, Jul 28, 2020 at 6:42 PM Abhishek Pandit-Subedi
+> <abhishekpandit@chromium.org> wrote:
+> >
+> >
+> > Hi Marcel,
+> >
+> > This series adds the suspend/resume events suggested in
+> > https://patchwork.kernel.org/patch/11663455/.
+> >
+> > I have tested it with some userspace changes that monitors the
+> > controller resumed event to trigger audio device reconnection and
+> > verified that the events are correctly emitted.
+> >
+> > Please take a look.
+> > Abhishek
+> >
+> >
+> > Abhishek Pandit-Subedi (3):
+> >   Bluetooth: Add mgmt suspend and resume events
+> >   Bluetooth: Add suspend reason for device disconnect
+> >   Bluetooth: Emit controller suspend and resume events
+> >
+> >  include/net/bluetooth/hci_core.h |  6 +++
+> >  include/net/bluetooth/mgmt.h     | 16 +++++++
+> >  net/bluetooth/hci_core.c         | 26 +++++++++++-
+> >  net/bluetooth/hci_event.c        | 73 ++++++++++++++++++++++++++++++++
+> >  net/bluetooth/mgmt.c             | 28 ++++++++++++
+> >  5 files changed, 148 insertions(+), 1 deletion(-)
+> >
+> > --
+> > 2.28.0.rc0.142.g3c755180ce-goog
+> >
