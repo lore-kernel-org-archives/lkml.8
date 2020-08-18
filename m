@@ -2,145 +2,101 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE78C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6871020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43A92075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 19:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NuXj/bvi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AhuqMZwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHRTZp (ORCPT
+        id S1726705AbgHRT1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgHRTZn (ORCPT
+        Tue, 18 Aug 2020 15:27:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726585AbgHRT1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:25:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE27C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:25:42 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s14so3709392plp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 12:25:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/VmA06WjlqS7hJumtglP3Mb+v0u9+PDAlYaWZ4/eDGk=;
-        b=NuXj/bviyolsRmu1RDbGz62VrMp2i+ohDBzBrMXgR+/HnFYFj/0i0LEFqlai3FiY2c
-         kuQgJP40nkVZmAvEHb01vxOtwtfup5F8I4t3mmfPA+JMwR2OdWbevHG/++mRPaoSZ+h6
-         Z/neGTcxbz6ZHKdi4jqvnpQ4DQ8Cy5OdPvx3EMxID0/JEPk+WBINjqEkq3YcIbZmoS2r
-         1B7rxYFTF2g1fMnX1C70UCaAcNU/xYAcR/TZpQqoOOKgNip49d0iNQhJGyD+AV/QVjCh
-         TRn/YZCIZQDPIXv4IxI3aAoQ+nmd0FFaUsj7vVZz7F5wClGHzyNTrcwNLtaaVTN+eYKe
-         U/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/VmA06WjlqS7hJumtglP3Mb+v0u9+PDAlYaWZ4/eDGk=;
-        b=Lgc9smvdTJwl9iRC9TDnN9oWaD68WACF9B4doEXnoSIMeSQvcaPAPysQfb5B2Rgo1Y
-         3dt+4C687rERGVwhbOOugh8+dz6VjT0U4iubjsXW7Uc8+ooXytNDDBYjQUtv4R/sBAZb
-         DHoGkGZ8DvJcBewGlaf10kkt3tUzsC/ldD2cwqadRp/47fhF1/gdtuePe0GuMzvxNgkG
-         XrQf/bDn8jAadud8nHVZgP7jhUViz0Tc+V1xeZ8ahn2aPVC4fg1eXhXrHH/0n2Xbzko9
-         jSHvutgFlOk3w/jFTq6B6mYQQGELhnreoWcdqrKmyEXDCp/0mbi1eG7NJV4Lt7g8YmES
-         t9cg==
-X-Gm-Message-State: AOAM533P9j44N64j64tFQ0ewPLzHnBvw2Qd9eHMP+rCgl2aq/DwK6Kyh
-        R+fVTjwgZAyMTzU/HdufCzaXOJ3gKrPwZ8zsNpUp2A==
-X-Google-Smtp-Source: ABdhPJwxx1f0NE1gsAd0REazhAGW9P8NHb/mLCL8RGa65Vokt+VBDaggXlEgOnSEpKnk0JZgk7WbE+XpHf3q4L/Ml+g=
-X-Received: by 2002:a17:90a:a10c:: with SMTP id s12mr1162103pjp.32.1597778741520;
- Tue, 18 Aug 2020 12:25:41 -0700 (PDT)
+        Tue, 18 Aug 2020 15:27:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597778850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EYREHDLi/OwVaks7d7Yd3+mLedE3CgJg65cYrNwwqcA=;
+        b=AhuqMZwjHMXxwIJLh2/xk46SPDY0TnodDuFG3LkQhEeE8xa4mG1jtLxCFpOQdaJ6sCUNwR
+        Vh7sebKCp+3mf99lrHZc9RSJItQB+jLbfofWTEOVq00TAss4hKcxbNcn02P4klILVMQ4go
+        +Y/TWvpLffwQrg8UUTw/b4bdVLjJfsg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-hQS0I0WjOQSRP7dtma0PCA-1; Tue, 18 Aug 2020 15:27:28 -0400
+X-MC-Unique: hQS0I0WjOQSRP7dtma0PCA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F6421DDF1;
+        Tue, 18 Aug 2020 19:27:25 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-51.rdu2.redhat.com [10.10.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 870857D91B;
+        Tue, 18 Aug 2020 19:27:23 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+To:     peterz@infradead.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <3a4d858c-0605-c5fc-4a9e-f05cf221d6ac@redhat.com>
+Date:   Tue, 18 Aug 2020 15:27:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Aug 2020 12:25:30 -0700
-Message-ID: <CAKwvOdkut+GTLxX9U=hxDC8SaugW487XD_98d9yFU2VzShyz0A@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Clement Courbet <courbet@google.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:19 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On 8/18/20 5:14 AM, peterz@infradead.org wrote:
+> On Mon, Aug 17, 2020 at 10:08:23AM -0400, Waiman Long wrote:
+>> Memory controller can be used to control and limit the amount of
+>> physical memory used by a task. When a limit is set in "memory.high" in
+>> a v2 non-root memory cgroup, the memory controller will try to reclaim
+>> memory if the limit has been exceeded. Normally, that will be enough
+>> to keep the physical memory consumption of tasks in the memory cgroup
+>> to be around or below the "memory.high" limit.
+>>
+>> Sometimes, memory reclaim may not be able to recover memory in a rate
+>> that can catch up to the physical memory allocation rate. In this case,
+>> the physical memory consumption will keep on increasing.
+> Then slow down the allocator? That's what we do for dirty pages too, we
+> slow down the dirtier when we run against the limits.
 >
-> On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
-> >
-> > I'm not saying "change the semantics", nor am I saying that playing
-> > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
-> > to the compiler authors and get them to implement such a #pragma: "this
-> > freestanding implementation *does* support *this specific library function*,
-> > and you are free to call it."
->
-> I'd much rather just see the library functions as builtins that always
-> do the right thing (with the fallback being "just call the standard
-> function").
->
-> IOW, there's nothing wrong with -ffreestanding if you then also have
-> __builtin_memcpy() etc, and they do the sane compiler optimizations
-> for memcpy().
->
-> What we want to avoid is the compiler making *assumptions* based on
-> standard names, because we may implement some of those things
-> differently.
->
-> And honestly, a compiler that uses 'bcmp' is just broken. WTH? It's
-> the year 2020, we don't use bcmp. It's that simple. Fix your damn
-> broken compiler and use memcmp. The argument that memcmp is more
-> expensive than bcmp is garbage legacy thinking from four decades ago.
->
-> It's likely the other way around, where people have actually spent
-> time on memcmp, but not on bcmp.
->
-> If somebody really *wants* to use bcmp, give them the "Get off my
-> lawn" flag, and leave them alone. But never ever should "use bcmp" be
-> any kind of default behavior. That's some batshit crazy stuff.
->
->                Linus
+I missed that there are already allocator throttling done in upstream 
+code. So I will need to reexamine if this patch is necessary or not.
 
-You'll have to ask Clement about that.  I'm not sure I ever saw the
-"faster bcmp than memcmp" implementation, but I was told "it exists"
-when I asked for a revert when all of our kernel builds went red.
--- 
 Thanks,
-~Nick Desaulniers
+Longman
+
