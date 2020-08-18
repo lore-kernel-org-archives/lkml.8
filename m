@@ -2,140 +2,169 @@ Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F208FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D21C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C365C207DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A3D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 14:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sObKysrY"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sV2AZAHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgHRO6f (ORCPT
+        id S1727889AbgHRO65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgHRO61 (ORCPT
+        Tue, 18 Aug 2020 10:58:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726698AbgHRO6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:58:27 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B71C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:58:26 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s1so8339548iot.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 07:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vOEA2rP9/JD6Cf76I2R3GGke75F7JOtu4CdmYgf8vDY=;
-        b=sObKysrY/m6k71IrKg0OKwNuztPj+2ApCNCaDg5eevrRQ+xH5K4vrlPCXTOjWYnhBx
-         N5gWOfpWzu45gDBj3AmUDpXLCo02KiGLddVIxkvkmFEEZQSccy8ViWZdSDpQackugrQx
-         P3XeZwcPxMEvZbMTP/OxJSz4mFyrpJId3fjzupe5RHJOJHi4I+BfU/SI9hqVu16kKS32
-         qRK1/HmLKkgXJ3XXvAI3KoE+G3QWCKE8Qx5xgseT51v+FyyboOuunaNv/IW5WS9z2tYT
-         G6WLGh4XR+YcYhsWkb53O/Vz+gKZ9lbhawwb8MuLAvkMJ3ilWr+rUcom2roj3loVLhSS
-         27aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vOEA2rP9/JD6Cf76I2R3GGke75F7JOtu4CdmYgf8vDY=;
-        b=d4ovtHQeIjW7GB9zcBjCjCPtluDoO/pWHqkLFRbdWqV/8hgI+MGtKT9UJhhMFqjS3B
-         VdgTvfQXbn//MzuuiOFpMPP+0OvpjukAn+57HIFbAkvrvFgBvCUhAgk5AGadEz9E7TmW
-         iXELPxwB0VuXTb63bWVRFBoEaynoYvkzEASSXL6OTCjNb1I3q6ik9Ki19PdnGxI05fMC
-         jHwS2rMszTYmwFiLYbBF8oOhvWlCEJpTzXslLF8xXFaF83qlZCd0WgioDSuwUcV69aX9
-         JT0ldPYlBAkIDzD8PPy82ln/kfKqg8+ukm/BPsE2xdN5QnLTm10RBw17FmX4q9SxP8qy
-         TlBQ==
-X-Gm-Message-State: AOAM531Y60nGZaaaWqzTsJiKoMGAJ6AeALo/Aj9zM5XzSaNDwcDICFJP
-        cUw39HbsOmwDbX4KXYOp6JVUFe5BIlX72QLxH4o=
-X-Google-Smtp-Source: ABdhPJy11n6vtEdpb4Yt79Cgo6EA4IQ4lhtjTCOOWRi3rSkmsGOG4Jca6HSsIzdteiY+8sKovq1y/uZMuLnb/A9ujV8=
-X-Received: by 2002:a5d:8f09:: with SMTP id f9mr16787030iof.187.1597762705945;
- Tue, 18 Aug 2020 07:58:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817084836.29216-1-richard.weiyang@linux.alibaba.com>
- <fa97519b-a860-5fea-9511-2237f195caeb@redhat.com> <aaa56d83-2444-d74e-025a-508a2be6b772@linux.intel.com>
- <20200818032217.GA31960@L-31X9LVDL-1304.local>
-In-Reply-To: <20200818032217.GA31960@L-31X9LVDL-1304.local>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 18 Aug 2020 07:58:14 -0700
-Message-ID: <CAKgT0UdiRw4WMe8RxOZ3A6fcQJ9Tp7BAWBbuYkje7YWiT0cVOA@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_reporting: the "page" must not be the list head
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Aug 2020 10:58:53 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07IEwP4C074678;
+        Tue, 18 Aug 2020 10:58:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pp1;
+ bh=XJwDIKzxpiYskYO19NLcua++csukB3hKsmpYA6iZgV4=;
+ b=sV2AZAHOvRB5uDiT56KjswSDw34LDEw4A8xFDRqz5tFbO+3bmjY3zRkYWH7YUePN+7F1
+ 0fhp5ly6JO9Td/yv0d/gzQACs/yjrBUIXy4rxETx/2NZE2CJOViJJm7pWzEH1bXB3pZZ
+ OI+FE2i5V7RTpvagISqsgO9Xv16sEkPq9mme7Dv93Kfj7hT0kseeJLWhDyUPmYLyLxvH
+ XELYk9cZ6ry+Y7TCD2wKF0OZJ5NNsS0v0c++IjchgP4NTT5O4iwpoLxv3ZnY9wgS/jXT
+ 6MS1tJbLFtpE517OPge8FtJCqpulgX78qk03YuiS9eV6DXfTjA7Q5vlDziZIk2PF7JXL vA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304te4y1a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Aug 2020 10:58:42 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07IEwXVx075654;
+        Tue, 18 Aug 2020 10:58:42 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304te4xxe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Aug 2020 10:58:42 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07IEkNSP027724;
+        Tue, 18 Aug 2020 14:58:37 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 3304c90fqs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Aug 2020 14:58:37 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07IEwYI722610244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Aug 2020 14:58:34 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC9FD4203F;
+        Tue, 18 Aug 2020 14:58:34 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A1D142049;
+        Tue, 18 Aug 2020 14:58:34 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.28.154])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Aug 2020 14:58:34 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v8 2/2] s390: virtio: PV needs VIRTIO I/O device protection
+Date:   Tue, 18 Aug 2020 16:58:31 +0200
+Message-Id: <1597762711-3550-3-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
+References: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-18_10:2020-08-18,2020-08-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 suspectscore=1
+ mlxscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008180102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 8:22 PM Wei Yang
-<richard.weiyang@linux.alibaba.com> wrote:
->
-> On Mon, Aug 17, 2020 at 09:05:32AM -0700, Alexander Duyck wrote:
-> >
-> >
-> >On 8/17/2020 2:35 AM, David Hildenbrand wrote:
-> >> On 17.08.20 10:48, Wei Yang wrote:
-> >> > If "page" is the list head, list_for_each_entry_safe() would stop
-> >> > iteration.
-> >> >
-> >> > Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >> > ---
-> >> >   mm/page_reporting.c | 2 +-
-> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-> >> > index 3bbd471cfc81..aaaa3605123d 100644
-> >> > --- a/mm/page_reporting.c
-> >> > +++ b/mm/page_reporting.c
-> >> > @@ -178,7 +178,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
-> >> >             * the new head of the free list before we release the
-> >> >             * zone lock.
-> >> >             */
-> >> > -          if (&page->lru != list && !list_is_first(&page->lru, list))
-> >> > +          if (!list_is_first(&page->lru, list))
-> >> >                    list_rotate_to_front(&page->lru, list);
-> >> >            /* release lock before waiting on report processing */
-> >> >
-> >>
-> >> Is this a fix or a cleanup? If it's a fix, can this be reproduced easily
-> >> and what ere the effects?
-> >>
-> >
-> >This should be a clean-up. Since the &page->lru != list will always be true.
-> >
-> >If I recall at some point the that was a check for &next->lru != list but I
-> >think I pulled out an additional conditional check somewhere so that we just
-> >go through the start of the loop again and iterate over reported pages until
-> >we are guaranteed to have a non-reported page to rotate to the top of the
-> >list with the general idea being that we wanted the allocator to pull
-> >non-reported pages before reported pages.
->
-> Hi, Alexander,
->
-> I see you mentioned in the changelog, this change "mm/page_reporting: rotate
-> reported pages to the tail of the list" brings some performance gain.
->
-> Would you mind sharing more test detail? I would like to have a try at my
-> side.
->
-> Thanks :-)
+If protected virtualization is active on s390, the virtio queues are
+not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
+negotiated.
+Define CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS and export
+arch_has_restricted_memory_access to fail probe if that's
+not the case, preventing a host error on access attempt.
 
-I seem to recall my default test for most of this was the page_fault1
-test from the will-it-scale suite of tests. Basically I was running
-that while leaving page reporting enabled. However I don't know how
-much visibility you would have into the performance impact as I seem
-to recall I had to modify the frequency of scheduling for the
-reporting polling task in order to see much of an impact.
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+---
+ arch/s390/Kconfig   |  1 +
+ arch/s390/mm/init.c | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-Thanks.
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 9cfd8de907cb..d4a3ef4fa27b 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -820,6 +820,7 @@ menu "Virtualization"
+ config PROTECTED_VIRTUALIZATION_GUEST
+ 	def_bool n
+ 	prompt "Protected virtualization guest support"
++	select ARCH_HAS_RESTRICTED_MEMORY_ACCESS
+ 	help
+ 	  Select this option, if you want to be able to run this
+ 	  kernel as a protected virtualization KVM guest.
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index 6dc7c3b60ef6..aec04d7dd089 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -45,6 +45,7 @@
+ #include <asm/kasan.h>
+ #include <asm/dma-mapping.h>
+ #include <asm/uv.h>
++#include <linux/virtio_config.h>
+ 
+ pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+ 
+@@ -161,6 +162,35 @@ bool force_dma_unencrypted(struct device *dev)
+ 	return is_prot_virt_guest();
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_RESTRICTED_MEMORY_ACCESS
++/*
++ * arch_has_restricted_memory_access
++ * @dev: the VIRTIO device being added
++ *
++ * Return an error if required features are missing on a guest running
++ * with protected virtualization.
++ */
++int arch_has_restricted_memory_access(struct virtio_device *dev)
++{
++	if (!is_prot_virt_guest())
++		return 0;
++
++	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
++		dev_warn(&dev->dev, "device must provide VIRTIO_F_VERSION_1\n");
++		return -ENODEV;
++	}
++
++	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
++		dev_warn(&dev->dev,
++			 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(arch_has_restricted_memory_access);
++#endif
++
+ /* protected virtualization */
+ static void pv_init(void)
+ {
+-- 
+2.25.1
 
-- Alex
