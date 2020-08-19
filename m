@@ -2,46 +2,136 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30027C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1450D20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625AA20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQMDxP40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHSHWp (ORCPT
+        id S1726600AbgHSHYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:22:45 -0400
-Received: from muru.com ([72.249.23.125]:41000 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgHSHWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:22:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E80458107;
-        Wed, 19 Aug 2020 07:22:43 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 10:23:12 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH] arm: mach-omap1: mux.h: delete duplicate word
-Message-ID: <20200819072312.GC2994@atomide.com>
-References: <20200726002212.19896-1-rdunlap@infradead.org>
+        Wed, 19 Aug 2020 03:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgHSHYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:24:08 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D854EC061345
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:07 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z18so20435851wrm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4oTMRepDWAwvEG4gP7KM4XWzXr1eKKBuCn5XU6f/p3c=;
+        b=xQMDxP40oi3eBNc7Z3Xh8ZZ0nMN8DIhN4T8xH85Xsm9iNdWmnZXm/ZacjDGeA5/lZp
+         8J9KeASsvVw6L9nuo/M08nb8BL6pxwOzjKxpv3VR1E2sgB9PQE5PVpiBgR0WNSMBzLwe
+         C2+pRvFC194BLywESVmUchHD+cAbjWSp0xJkjNQE0D/EHQg3dCa6eMy8eSmSMtKxQHH3
+         eVYlDOWMnc3D4GluUOh+YHHuNhJ6N/1ECcenz13QCZ3y1E4jZJ/1hhMUuFtxbBS1dw9h
+         Nd88JhHg5VbirFMOeN4O8YWOuaD+5rLX5+RVZykRnjnNpD7+/RRyIQ8xuJyJvcAEjI0d
+         B6Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4oTMRepDWAwvEG4gP7KM4XWzXr1eKKBuCn5XU6f/p3c=;
+        b=gaAjGhE0YkQtmEBbkmEF45XUQzgcHxRB3udZbA22sSrx3AH5YoLyVPCbiVDMRyro9C
+         6JUbYHqjWxKIGpaXgrm33ov0WjyEh+MPxNdGxBcoeCEViopIb1/MW0TmJg5A7dtFVz+T
+         O+olWCPnXD3VK4pH7eMfdKDVw0iNAUP03L+6YknDhKa5OUNnNNiBfwCVl2wnqppbDxxF
+         5xammWK8zgZwj4TnlHdJJeli/nbX0ib08bUkvxdaiqNF95oUC4RH2QiuJHCl1qJrIFiJ
+         pGF0ydV6nxJfRjzDITnQtnAMZrXrwvmyHfnzn7lT9h7caPR4WjsQYl/cRQVXXn7OhPk7
+         KfqA==
+X-Gm-Message-State: AOAM532PnQFYPIvPDaopt6yXX/elEnNba2VGJJUq4QkeoMWsMTC+0vUN
+        sFVDl7HBgJXszAppsHUGQU9GCg==
+X-Google-Smtp-Source: ABdhPJz4i/nOOv5dyCQ2pLbOgF5zC3v94kASka1DzykL10DVWGIgCT/Y9WW0yTSg2OuK7xwmQmfTJQ==
+X-Received: by 2002:a5d:6992:: with SMTP id g18mr23221572wru.15.1597821846494;
+        Wed, 19 Aug 2020 00:24:06 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 00:24:05 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jouni Malinen <j@w1.fi>
+Subject: [PATCH 01/28] wireless: intersil: hostap: Mark 'freq_list' as __maybe_unused
+Date:   Wed, 19 Aug 2020 08:23:35 +0100
+Message-Id: <20200819072402.3085022-2-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
+References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726002212.19896-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Randy Dunlap <rdunlap@infradead.org> [200726 03:22]:
-> Drop the repeated word "is".
+'freq_list' is used in some source files which include hostap.h, but
+not all.  The compiler complains about the times it's not used.  Mark
+it as __maybe_used to tell the compiler that this is not only okay,
+it's expected.
 
-Thanks applying into omap-for-v5.9/omap1.
+Fixes the following W=1 kernel build warning(s):
 
-Tony
+ In file included from drivers/net/wireless/intersil/hostap/hostap_80211_tx.c:9:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ In file included from drivers/net/wireless/intersil/hostap/hostap_main.c:31:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ In file included from drivers/net/wireless/intersil/hostap/hostap_proc.c:10:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+ from drivers/net/wireless/intersil/hostap/hostap_cs.c:196:
+ At top level:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+ from drivers/net/wireless/intersil/hostap/hostap_pci.c:221:
+ At top level:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+ from drivers/net/wireless/intersil/hostap/hostap_plx.c:264:
+ At top level:
+ drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+
+Cc: Jouni Malinen <j@w1.fi>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/intersil/hostap/hostap.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/intersil/hostap/hostap.h b/drivers/net/wireless/intersil/hostap/hostap.h
+index 8130d29c7989c..c4b81ff7d7e47 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap.h
++++ b/drivers/net/wireless/intersil/hostap/hostap.h
+@@ -8,8 +8,10 @@
+ #include "hostap_wlan.h"
+ #include "hostap_ap.h"
+ 
+-static const long freq_list[] = { 2412, 2417, 2422, 2427, 2432, 2437, 2442,
+-				  2447, 2452, 2457, 2462, 2467, 2472, 2484 };
++static const long __maybe_unused freq_list[] = {
++	2412, 2417, 2422, 2427, 2432, 2437, 2442,
++	2447, 2452, 2457, 2462, 2467, 2472, 2484
++};
+ #define FREQ_COUNT ARRAY_SIZE(freq_list)
+ 
+ /* hostap.c */
+-- 
+2.25.1
+
