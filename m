@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D88C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7E920658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5BF20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="lQk7Q038"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="pTORjCFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgHSSFi (ORCPT
+        id S1727031AbgHSSFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55552 "EHLO
+        Wed, 19 Aug 2020 14:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgHSSFH (ORCPT
+        with ESMTP id S1726967AbgHSSFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:05:07 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FC5C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:07 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so12085980pff.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:07 -0700 (PDT)
+        Wed, 19 Aug 2020 14:05:23 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85155C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:23 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ds1so1136589pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+Hr38lItu4eVpChslvtYRcigjDMNh3B0lnEZweg9dnU=;
-        b=lQk7Q038l0jssNstKbz+77SuBmA+tpST+f6F8/Np9AW1MszdzTbQ2lDiJYHBRL6JYH
-         vDa790mumNZnckVLgI7yC+WS4M+Kzu4j3w2zfX5qD8xIOUTc80OcIlgrghkve+MT/7ox
-         Z2HrbU8nAHBqUzmKThYHT1K5UrQV2oZla8kc+AKkS1tEFFZdL9GKTX+A173uOPD69EF2
-         nGn9m7GrLqlLBZFi0NCqLYDFRwwBTprHg/fe4Ey6vIqdFi4+r8ovpaBUyeHb1AniVYCK
-         cocQE3z1Abw88Y8+dMS4r6YCdTGRN+3u5JadplNlr+oyv7Qts0FPLguPdaily1IvM8GP
-         sWtA==
+        bh=SodYVYOpelxlR/PUUgvyS/pSUCifZhOvHlkRHcqoLvU=;
+        b=pTORjCFYTNHr6FJHpZFyhc7uKJQ9kxOEGXZ9jwLzM6DfpMu/Nf5UVQtBxfGdk5O/7P
+         D3cnLRy9pXc/1iw3r9eApD81U6HkfzHu5s9StgxSriZvVgZ35VHOm910PlxGAP9puNUK
+         wekAy52kocggf8/HsOO9LR6BOQYFGKZ34v1oZ7LSnRXlg9zaJTy8EISZ4Ws6w8SheO/Q
+         t6ORKGcICcfWfGqNKZPnHqAu1BWwC5vXqNqU26yOVkOSbN84MS3Db78ISCqLM6KV79RA
+         wMX+IjZWJ8nYjFQiyyT10lUkc5EVfCRH5unRULSawT7xk+uKDdm9MHMHjOJzOQJO7e5s
+         FokQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+Hr38lItu4eVpChslvtYRcigjDMNh3B0lnEZweg9dnU=;
-        b=RGiT5zXx/pbLFXItW+XKB42mK8aQ1i6yt6wwB4EeGBht52U684dGFoDAwJKzluiDH9
-         bT7DtpGRH1zLbLsdkOLpA8O9ngD7Whv7lPcB64TNn9EVRQD+P2w5Os6vDY5RsVtrU2Iz
-         Cr/oqN/f6LtFqrNFEAX1T6G6vctPn+y76Xuf9fbXs3l5UFVzNFWzfKtWiKp059ZVslie
-         xqohEfwsQ34nNINPikMLYjULzydUPCiLZnsjZ8m5ZWuALrF1+67sej9Q8y7ypUmx0GLv
-         0+ukKoAPjCO84TRLpBtlkvFHU7yomlKGj1PqffhwXesMlwufQ0O/DXqgMIi60gMf3Clo
-         XqSA==
-X-Gm-Message-State: AOAM532BxFjQr7bBUA22mVthLiRrTVLkbnLiv7L79LZ1besxosgq7vhD
-        VYOB4r9XyArerW1YzVfJ8r5tjw==
-X-Google-Smtp-Source: ABdhPJzrNXPBOT6f36UuHk1yHy/wZKcrDFdhp9P+sNWEBR0eqWdGATwfEX1e0Njxvc0BxFym+f/HJQ==
-X-Received: by 2002:a62:ee06:: with SMTP id e6mr19575083pfi.313.1597860306768;
-        Wed, 19 Aug 2020 11:05:06 -0700 (PDT)
+        bh=SodYVYOpelxlR/PUUgvyS/pSUCifZhOvHlkRHcqoLvU=;
+        b=Y/IjGMrBv69He1oHwqGOrbY2of1kZl50rNfTqEypRfLJesTiZCJs/r5m1SG2Yh3j39
+         BcAGWbeP0gc8VqaaEyauERmF19mVjq8kQdPktPg5JjK4EwNwCdHihsh9ZySVdiivrnJz
+         5UA+cU47sMNMWtQSpWycfKJ09Kw+Vtm+Lm8egyROhvFZ447agAFjnxCsPYnk3iBEm2yq
+         yiRbc9rMqJqhGpCoKvCj6F+xMJlUzp70QPZnTE4kxt/QwJ9xCEHQ1XdG5n4gNktn3+Hm
+         ZDttd8JhegLVa4wu9q/bCRg57HSs7v15plBwv+DTadYz4mrxNJLM9Cjeko4g4DyJ7MCX
+         aCWA==
+X-Gm-Message-State: AOAM531dQZEXd+xjhU9LOSbiFgeQc1BAMrS6nzu8SNrH0DcwZ2nTabve
+        aM+uwWgVLpqrAtbldShoJapf1Q==
+X-Google-Smtp-Source: ABdhPJy/usO0485ydU9ioIdrovWFV6oMfoabDkun3OhLArWczw0Ai9DvYBq+a94XaEYasHoJoHq2SA==
+X-Received: by 2002:a17:902:db83:: with SMTP id m3mr202906pld.68.1597860322843;
+        Wed, 19 Aug 2020 11:05:22 -0700 (PDT)
 Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.179])
-        by smtp.gmail.com with ESMTPSA id u65sm29095245pfb.102.2020.08.19.11.05.05
+        by smtp.gmail.com with ESMTPSA id f18sm29264531pfj.35.2020.08.19.11.05.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:05:06 -0700 (PDT)
+        Wed, 19 Aug 2020 11:05:22 -0700 (PDT)
 From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
 To:     Helen Koike <helen.koike@collabora.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
@@ -65,9 +65,9 @@ To:     Helen Koike <helen.koike@collabora.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v3 2/9] media: vimc: Add get_frame callback
-Date:   Wed, 19 Aug 2020 23:34:35 +0530
-Message-Id: <20200819180442.11630-3-kgupta@es.iitr.ac.in>
+Subject: [PATCH v3 5/9] media: vimc: Separate closing of stream and thread
+Date:   Wed, 19 Aug 2020 23:34:38 +0530
+Message-Id: <20200819180442.11630-6-kgupta@es.iitr.ac.in>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
 References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
@@ -76,272 +76,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the process of making vimc compatible for multiple streams, we need
-to create a frame passing process such that two different entities can
-get the frame from a common entity. This isn't possible currently without
-calling process_frame twice for the common entity, as process_frames
-returns the frame which gets passed on.
-
-So, to take care of this, add a get_frame callback to vimc device and
-use it to get the frames for an entity from previous entity instead of
-returning and passing the frames as an argument in process_frame.
+Make separate functions for stopping streaming of entities in path of a
+particular stream and stopping thread. This is needed to ensure that
+thread doesn't stop when one device stops streaming in case of multiple
+streams.
 
 Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 ---
- .../media/test-drivers/vimc/vimc-capture.c    | 18 +++++++++++++++---
- drivers/media/test-drivers/vimc/vimc-common.h |  7 ++++---
- .../media/test-drivers/vimc/vimc-debayer.c    | 19 ++++++++++++++++---
- drivers/media/test-drivers/vimc/vimc-scaler.c | 18 +++++++++++++++---
- drivers/media/test-drivers/vimc/vimc-sensor.c | 11 +++++++++--
- .../media/test-drivers/vimc/vimc-streamer.c   | 10 ++++++----
- 6 files changed, 65 insertions(+), 18 deletions(-)
+ .../media/test-drivers/vimc/vimc-streamer.c   | 82 ++++++++++++-------
+ 1 file changed, 52 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-index c63496b17b9a..a8cbb8e4d5ba 100644
---- a/drivers/media/test-drivers/vimc/vimc-capture.c
-+++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-@@ -355,12 +355,13 @@ static void vimc_cap_unregister(struct vimc_ent_device *ved)
- 	video_unregister_device(&vcap->vdev);
- }
- 
--static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
--				    const void *frame)
-+static int vimc_cap_process_frame(struct vimc_ent_device *ved)
- {
- 	struct vimc_cap_device *vcap = container_of(ved, struct vimc_cap_device,
- 						    ved);
- 	struct vimc_cap_buffer *vimc_buf;
-+	struct v4l2_subdev *sd;
-+	const void *frame;
- 	void *vbuf;
- 
- 	spin_lock(&vcap->qlock);
-@@ -370,7 +371,7 @@ static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
- 					    typeof(*vimc_buf), list);
- 	if (!vimc_buf) {
- 		spin_unlock(&vcap->qlock);
--		return ERR_PTR(-EAGAIN);
-+		return -EAGAIN;
- 	}
- 
- 	/* Remove this entry from the list */
-@@ -385,12 +386,22 @@ static void *vimc_cap_process_frame(struct vimc_ent_device *ved,
- 
- 	vbuf = vb2_plane_vaddr(&vimc_buf->vb2.vb2_buf, 0);
- 
-+	sd = media_entity_to_v4l2_subdev(vimc_get_source_entity(ved->ent));
-+	ved = v4l2_get_subdevdata(sd);
-+	frame = ved->get_frame(ved);
-+
- 	memcpy(vbuf, frame, vcap->format.sizeimage);
- 
- 	/* Set it as ready */
- 	vb2_set_plane_payload(&vimc_buf->vb2.vb2_buf, 0,
- 			      vcap->format.sizeimage);
- 	vb2_buffer_done(&vimc_buf->vb2.vb2_buf, VB2_BUF_STATE_DONE);
-+
-+	return 0;
-+}
-+
-+static void *vimc_cap_get_frame(struct vimc_ent_device *ved)
-+{
- 	return NULL;
- }
- 
-@@ -455,6 +466,7 @@ static struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
- 	vcap->ved.ent = &vcap->vdev.entity;
- 	vcap->ved.process_frame = vimc_cap_process_frame;
- 	vcap->ved.vdev_get_format = vimc_cap_get_format;
-+	vcap->ved.get_frame = vimc_cap_get_frame;
- 	vcap->ved.dev = vimc->mdev.dev;
- 
- 	/* Initialize the video_device struct */
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index 4c580d854007..287d66edff49 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -85,7 +85,8 @@ struct vimc_pix_map {
-  *
-  * @dev:		a pointer of the device struct of the driver
-  * @ent:		the pointer to struct media_entity for the node
-- * @process_frame:	callback send a frame to that node
-+ * @get_frame:		callback that sends a frame processed by the entity
-+ * @process_frame:	callback that processes a frame
-  * @vdev_get_format:	callback that returns the current format a pad, used
-  *			only when is_media_entity_v4l2_video_device(ent) returns
-  *			true
-@@ -101,8 +102,8 @@ struct vimc_pix_map {
- struct vimc_ent_device {
- 	struct device *dev;
- 	struct media_entity *ent;
--	void * (*process_frame)(struct vimc_ent_device *ved,
--				const void *frame);
-+	void * (*get_frame)(struct vimc_ent_device *ved);
-+	int (*process_frame)(struct vimc_ent_device *ved);
- 	void (*vdev_get_format)(struct vimc_ent_device *ved,
- 			      struct v4l2_pix_format *fmt);
- };
-diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
-index c3f6fef34f68..f61e6e8899ac 100644
---- a/drivers/media/test-drivers/vimc/vimc-debayer.c
-+++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
-@@ -491,17 +491,22 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
- 	}
- }
- 
--static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
--				    const void *sink_frame)
-+static int vimc_deb_process_frame(struct vimc_ent_device *ved)
- {
- 	struct vimc_deb_device *vdeb = container_of(ved, struct vimc_deb_device,
- 						    ved);
- 	unsigned int rgb[3];
- 	unsigned int i, j;
-+	struct v4l2_subdev *sd;
-+	const void *sink_frame;
- 
- 	/* If the stream in this node is not active, just return */
- 	if (!vdeb->src_frame)
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
-+
-+	sd = media_entity_to_v4l2_subdev(vimc_get_source_entity(ved->ent));
-+	ved = v4l2_get_subdevdata(sd);
-+	sink_frame = ved->get_frame(ved);
- 
- 	for (i = 0; i < vdeb->sink_fmt.height; i++)
- 		for (j = 0; j < vdeb->sink_fmt.width; j++) {
-@@ -509,6 +514,13 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
- 			vdeb->set_rgb_src(vdeb, i, j, rgb);
- 		}
- 
-+	return 0;
-+}
-+
-+static void *vimc_deb_get_frame(struct vimc_ent_device *ved)
-+{
-+	struct vimc_deb_device *vdeb = container_of(ved, struct vimc_deb_device,
-+						    ved);
- 	return vdeb->src_frame;
- }
- 
-@@ -593,6 +605,7 @@ static struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
- 		goto err_free_hdl;
- 
- 	vdeb->ved.process_frame = vimc_deb_process_frame;
-+	vdeb->ved.get_frame = vimc_deb_get_frame;
- 	vdeb->ved.dev = vimc->mdev.dev;
- 	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
- 
-diff --git a/drivers/media/test-drivers/vimc/vimc-scaler.c b/drivers/media/test-drivers/vimc/vimc-scaler.c
-index 121fa7d62a2e..347f9cd4a168 100644
---- a/drivers/media/test-drivers/vimc/vimc-scaler.c
-+++ b/drivers/media/test-drivers/vimc/vimc-scaler.c
-@@ -455,18 +455,29 @@ static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
- 			vimc_sca_scale_pix(vsca, i, j, sink_frame);
- }
- 
--static void *vimc_sca_process_frame(struct vimc_ent_device *ved,
--				    const void *sink_frame)
-+static int vimc_sca_process_frame(struct vimc_ent_device *ved)
- {
- 	struct vimc_sca_device *vsca = container_of(ved, struct vimc_sca_device,
- 						    ved);
-+	const void *sink_frame;
-+	struct v4l2_subdev *sd;
- 
- 	/* If the stream in this node is not active, just return */
- 	if (!vsca->src_frame)
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 
-+	sd = media_entity_to_v4l2_subdev(vimc_get_source_entity(ved->ent));
-+	ved = v4l2_get_subdevdata(sd);
-+	sink_frame = ved->get_frame(ved);
- 	vimc_sca_fill_src_frame(vsca, sink_frame);
- 
-+	return 0;
-+};
-+
-+static void *vimc_sca_get_frame(struct vimc_ent_device *ved)
-+{
-+	struct vimc_sca_device *vsca = container_of(ved, struct vimc_sca_device,
-+						    ved);
- 	return vsca->src_frame;
- };
- 
-@@ -505,6 +516,7 @@ static struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
- 	}
- 
- 	vsca->ved.process_frame = vimc_sca_process_frame;
-+	vsca->ved.get_frame = vimc_sca_get_frame;
- 	vsca->ved.dev = vimc->mdev.dev;
- 
- 	/* Initialize the frame format */
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index ba5db5a150b4..32a2c39de2cd 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -190,8 +190,7 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
- 	.set_fmt		= vimc_sen_set_fmt,
- };
- 
--static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
--				    const void *sink_frame)
-+static int vimc_sen_process_frame(struct vimc_ent_device *ved)
- {
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
-@@ -238,6 +237,13 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- 		break;
- 	}
- 
-+	return 0;
-+}
-+
-+static void *vimc_sen_get_frame(struct vimc_ent_device *ved)
-+{
-+	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
-+						    ved);
- 	return vsen->frame;
- }
- 
-@@ -429,6 +435,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 		goto err_free_tpg;
- 
- 	vsen->ved.process_frame = vimc_sen_process_frame;
-+	vsen->ved.get_frame = vimc_sen_get_frame;
- 	vsen->ved.dev = vimc->mdev.dev;
- 
- 	/* Initialize the frame format */
 diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
-index 4f8384246042..c1644d69686d 100644
+index cc40ecabe95a..6b5ea1537952 100644
 --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
 +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
-@@ -125,7 +125,8 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
- static int vimc_streamer_thread(void *data)
+@@ -13,29 +13,59 @@
+ #include "vimc-streamer.h"
+ 
+ /**
+- * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
++ * vimc_streamer_pipeline_terminate - Terminate the thread
+  *
+- * @stream: the pointer to the stream structure with the pipeline to be
+- *	    disabled.
++ * @stream: the pointer to the stream structure
+  *
+- * Calls s_stream to disable the stream in each entity of the pipeline
++ * Erases values of stream struct and terminates the thread
+  *
+  */
+ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
  {
- 	struct vimc_stream *stream = data;
--	u8 *frame = NULL;
-+	struct vimc_ent_device *ved;
-+	int ret;
- 	int i;
+ 	struct vimc_ent_device *ved;
+-	struct v4l2_subdev *sd;
  
- 	set_freezable();
-@@ -136,9 +137,10 @@ static int vimc_streamer_thread(void *data)
- 			break;
+ 	while (stream->pipe_size) {
+ 		stream->pipe_size--;
+ 		ved = stream->ved_pipeline[stream->pipe_size];
+ 		stream->ved_pipeline[stream->pipe_size] = NULL;
++	}
  
- 		for (i = stream->pipe_size - 1; i >= 0; i--) {
--			frame = stream->ved_pipeline[i]->process_frame(
--					stream->ved_pipeline[i], frame);
--			if (!frame || IS_ERR(frame))
-+			ved = stream->ved_pipeline[i];
-+			ret = ved->process_frame(ved);
+-		if (!is_media_entity_v4l2_subdev(ved->ent))
+-			continue;
++	kthread_stop(stream->kthread);
++	stream->kthread = NULL;
++}
+ 
+-		sd = media_entity_to_v4l2_subdev(ved->ent);
+-		v4l2_subdev_call(sd, video, s_stream, 0);
++/**
++ * vimc_streamer_stream_terminate - Disable stream in all ved in stream
++ *
++ * @ved: pointer to the ved for which stream needs to be disabled
++ *
++ * Calls s_stream to disable the stream in each entity of the stream
++ *
++ */
++static void vimc_streamer_stream_terminate(struct vimc_ent_device *ved)
++{
++	struct media_entity *entity = ved->ent;
++	struct video_device *vdev;
++	struct v4l2_subdev *sd;
 +
-+			if (ret)
- 				break;
++	while (entity) {
++		if (is_media_entity_v4l2_subdev(ved->ent)) {
++			sd = media_entity_to_v4l2_subdev(ved->ent);
++			v4l2_subdev_call(sd, video, s_stream, 0);
++		}
++		entity = vimc_get_source_entity(ved->ent);
++		if (!entity)
++			break;
++
++		if (is_media_entity_v4l2_subdev(entity)) {
++			sd = media_entity_to_v4l2_subdev(entity);
++			ved = v4l2_get_subdevdata(sd);
++		} else {
++			vdev = container_of(entity,
++					    struct video_device,
++					    entity);
++			ved = video_get_drvdata(vdev);
++		}
+ 	}
+ }
+ 
+@@ -43,25 +73,25 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+  * vimc_streamer_stream_start - Starts streaming for all entities
+  * in a stream
+  *
+- * @ved:    the pointer to the vimc entity initializing the stream
++ * @cved:    the pointer to the vimc entity initializing the stream
+  *
+  * Walks through the entity graph to call vimc_streamer_s_stream()
+  * to enable stream in all entities in path of a stream.
+  *
+  * Return: 0 if success, error code otherwise.
+  */
+-static int vimc_streamer_stream_start(struct vimc_stream *stream,
+-				      struct vimc_ent_device *ved)
++static int vimc_streamer_stream_start(struct vimc_ent_device *cved)
+ {
+ 	struct media_entity *entity;
+ 	struct video_device *vdev;
+ 	struct v4l2_subdev *sd;
++	struct vimc_ent_device *ved = cved;
+ 	int stream_size = 0;
+ 	int ret = 0;
+ 
+ 	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+ 		if (!ved) {
+-			vimc_streamer_pipeline_terminate(stream);
++			vimc_streamer_stream_terminate(cved);
+ 			return -EINVAL;
  		}
- 		//wait for 60hz
+ 
+@@ -71,7 +101,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+ 			if (ret && ret != -ENOIOCTLCMD) {
+ 				dev_err(ved->dev, "subdev_call error %s\n",
+ 					ved->ent->name);
+-				vimc_streamer_pipeline_terminate(stream);
++				vimc_streamer_stream_terminate(cved);
+ 				return ret;
+ 			}
+ 		}
+@@ -84,7 +114,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+ 				dev_err(ved->dev,
+ 					"first entity in the pipe '%s' is not a source\n",
+ 					ved->ent->name);
+-				vimc_streamer_pipeline_terminate(stream);
++				vimc_streamer_stream_terminate(cved);
+ 				pr_info ("first entry not source");
+ 				return -EPIPE;
+ 			}
+@@ -104,7 +134,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+ 		stream_size++;
+ 	}
+ 
+-	vimc_streamer_pipeline_terminate(stream);
++	vimc_streamer_stream_terminate(cved);
+ 	return -EINVAL;
+ }
+ 
+@@ -120,13 +150,14 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+  * Return: 0 if success, error code otherwise.
+  */
+ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+-				       struct vimc_ent_device *ved)
++				       struct vimc_ent_device *cved)
+ {
+ 	struct media_entity *entity;
+ 	struct media_device *mdev;
+ 	struct media_graph graph;
+ 	struct video_device *vdev;
+ 	struct v4l2_subdev *sd;
++	struct vimc_ent_device *ved = cved;
+ 	int ret;
+ 
+ 	entity = ved->ent;
+@@ -170,6 +201,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+ 		}
+ 	}
+ 
++	vimc_streamer_stream_terminate(cved);
+ 	vimc_streamer_pipeline_terminate(stream);
+ 	return -EINVAL;
+ }
+@@ -246,7 +278,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 		if (stream->kthread)
+ 			return 0;
+ 
+-		ret = vimc_streamer_stream_start(stream, ved);
++		ret = vimc_streamer_stream_start(ved);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -260,6 +292,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 		if (IS_ERR(stream->kthread)) {
+ 			ret = PTR_ERR(stream->kthread);
+ 			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
++			vimc_streamer_stream_terminate(ved);
+ 			vimc_streamer_pipeline_terminate(stream);
+ 			stream->kthread = NULL;
+ 			return ret;
+@@ -269,18 +302,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 		if (!stream->kthread)
+ 			return 0;
+ 
+-		ret = kthread_stop(stream->kthread);
+-		/*
+-		 * kthread_stop returns -EINTR in cases when streamon was
+-		 * immediately followed by streamoff, and the thread didn't had
+-		 * a chance to run. Ignore errors to stop the stream in the
+-		 * pipeline.
+-		 */
+-		if (ret)
+-			dev_dbg(ved->dev, "kthread_stop returned '%d'\n", ret);
+-
+-		stream->kthread = NULL;
+-
++		vimc_streamer_stream_terminate(ved);
+ 		vimc_streamer_pipeline_terminate(stream);
+ 	}
+ 
 -- 
 2.17.1
 
