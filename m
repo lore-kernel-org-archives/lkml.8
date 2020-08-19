@@ -2,191 +2,92 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C739C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4CF220738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="TbBP/80e"
+	by mail.kernel.org (Postfix) with ESMTP id 0AD8020738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHSIWF (ORCPT
+        id S1726675AbgHSIXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:22:05 -0400
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:64593 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSIWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:22:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1597825322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NbDCPX8l8+q2q+LowO/6gJERcsTsVOGR5x7RxsNOXjw=;
-  b=TbBP/80eWsGL77Y3SDvU6lSJIlguTaes3rcx2U/Y+Olm3BDCgO5c0Apo
-   kY4es8cu0cjMumHeiKLNj8JShxQ7dn91zbOsjzjec3pRJyfQNY4mx1X/I
-   qORDHZPNnUjtF2k5l6etkn5gBYjLafW9XmFMppsm0wlF5IIEVQvuIEyS+
-   E=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: agsEOeT7Ii+Yn9+iBSJaj/IiN2LpsOmiJvAi8kTZ3+K62CFAxviiXkivGAcvk/4MyW6nmaI54S
- pQnpkmC9pPbMH6FXDLnGuZ/1tiurvlw4c96QBDdcxVqwuEz31FG1w0RZLK243f9luYYflE7Aus
- 8mI2mSNGUgrQbV0irh3aMXEHKvoX8yJ3F9MVJqggUP4DNjK1kAJ9jjgSHHaykWTjtf9uotpQLI
- 3SEQISu8Rf/8EPakDKys5vBwBXOfSOcVMcvNhBiFVxh6KshnUbX80FS4oEO7nfTy0R4AO6ylVJ
- JhM=
-X-SBRS: 2.7
-X-MesageID: 24991947
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,330,1592884800"; 
-   d="scan'208";a="24991947"
-Date:   Wed, 19 Aug 2020 10:19:30 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-CC:     Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-        <norbert.kaminski@3mdeb.com>, <xen-devel@lists.xenproject.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
-Message-ID: <20200819081930.GQ828@Air-de-Roger>
-References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
- <20200817090013.GN975@Air-de-Roger>
- <20200818120135.GK1679@mail-itl>
- <20200818124710.GK828@Air-de-Roger>
- <20200818150020.GL1679@mail-itl>
- <20200818172114.GO828@Air-de-Roger>
- <20200818184018.GN1679@mail-itl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200818184018.GN1679@mail-itl>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+        Wed, 19 Aug 2020 04:23:10 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:23364 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725997AbgHSIXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:23:09 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app2 (Coremail) with SMTP id by_KCgA3OZxE4TxfMwMBAg--.43217S4;
+        Wed, 19 Aug 2020 16:22:32 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Mahesh Kumar <mahesh1.kumar@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/crc-debugfs: Fix memleak in crc_control_write
+Date:   Wed, 19 Aug 2020 16:22:28 +0800
+Message-Id: <20200819082228.26847-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgA3OZxE4TxfMwMBAg--.43217S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr4xJr13Gry5Kr1fury7trb_yoWfWFb_Ka
+        1fXrZrXrZFk34qv347Ca13ZFWS9an8XF4rXr1SkaySka17tr17WrW2gry5Xw13XF4UGryD
+        CasrXasxZrn7CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r43MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhdbbUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowAesT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 08:40:18PM +0200, Marek Marczykowski-Górecki wrote:
-> On Tue, Aug 18, 2020 at 07:21:14PM +0200, Roger Pau Monné wrote:
-> > > Let me draw the picture from the beginning.
-> > 
-> > Thanks, greatly appreciated.
-> > 
-> > > EFI memory map contains various memory regions. Some of them are marked
-> > > as not needed after ExitBootServices() call (done in Xen before
-> > > launching dom0). This includes EFI_BOOT_SERVICES_DATA and
-> > > EFI_BOOT_SERVICES_CODE.
-> > > 
-> > > EFI SystemTable contains pointers to various ConfigurationTables -
-> > > physical addresses (at least in this case). Xen does interpret some of
-> > > them, but not ESRT. Xen pass the whole (address of) SystemTable to Linux
-> > > dom0 (at least in PV case). Xen doesn't do anything about tables it
-> > > doesn't understand.
-> > > 
-> > > Now, the code in Linux takes the (ESRT) table address early and checks
-> > > the memory map for it. We have 3 cases:
-> > >  - it points at area marked as neither EFI_*_SERVICES_DATA, nor with
-> > >    EFI_MEMORY_RUNTIME attribute -> Linux refuse to use it
-> > >  - it points to EFI_RUNTIME_SERVICES_DATA or with EFI_MEMORY_RUNTIME
-> > >    attribute - Linux uses the table; memory map already says the area
-> > >    belongs to EFI and the OS should not use it for something else
-> > >  - it points to EFI_BOOT_SERVICES_DATA - Linux mark the area as reserved
-> > >    to not release it after calling ExitBootServices()
-> > > 
-> > > The problematic is the third case - at the time when Linux dom0 is run,
-> > > ExitBootServices() was already called and EFI_BOOT_SERVICES_* memory was
-> > > already released. It could be already used for something else (for
-> > > example Xen could overwrite it while loading dom0).
-> > > 
-> > > Note the problematic case should be the most common - UEFI specification
-> > > says "The ESRT shall be stored in memory of type EfiBootServicesData"
-> > > (chapter 22.3 of UEFI Spec v2.6).
-> > > 
-> > > For this reason, to use ESRT in dom0, Xen should do something about it
-> > > before ExitBootServices() call. While analyzing all the EFI tables is
-> > > probably not a viable option, it can do some simple action:
-> > >  - retains all the EFI_BOOT_SERVICES_* areas - there is already code
-> > >    for that, controlled with /mapbs boot switch (to xen.efi, would need
-> > >    another option for multiboot2+efi)
-> > >  - have a list of tables to retain - since Xen already do analyze some
-> > >    of the ConfigurationTables, it can also have a list of those to
-> > >    preserve even if they live in EFI_BOOT_SERVICES_DATA. In this case,
-> > >    while Xen doesn't need to parse the whole table, it need to parse it's
-> > >    header to get the table size - to reserve that memory and not reuse
-> > >    it after ExitBootServices().
-> > 
-> > Xen seems to already contain skeleton
-> > XEN_EFI_query_capsule_capabilities and XEN_EFI_update_capsule
-> > hypercalls which is what should be used in order to perform the
-> > updates?
-> 
-> I think those covers only runtime service calls similarly named. But you
-> need also ESRT table to collect info about devices that you can even
-> attempt to update.
+When verify_crc_source() fails, source needs to be freed.
+However, current code is returning directly and ends up
+leaking memory.
 
-Right, the ESRT must be available so that dom0 can discover the
-resources.
+Fixes: c0811a7d5befe ("drm/crc: Cleanup crtc_crc_open function")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/gpu/drm/drm_debugfs_crc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> TBH, I'm not sure if those runtime services are really needed. I think
-> Norbert succeeded UEFI update from within Xen PV dom0 with just access
-> to the ESRT table, but without those services.
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 5d67a41f7c3a..3dd70d813f69 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -144,8 +144,10 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
+ 		source[len - 1] = '\0';
+ 
+ 	ret = crtc->funcs->verify_crc_source(crtc, source, &values_cnt);
+-	if (ret)
++	if (ret) {
++		kfree(source);
+ 		return ret;
++	}
+ 
+ 	spin_lock_irq(&crc->lock);
+ 
+-- 
+2.17.1
 
-OK, by reading the UEFI spec I assumed that you needed access to
-QueryCapsuleCapabilities and UpdateCapsule in order to perform the
-updates, and those should be proxied using hyopercalls. Maybe this is
-not mandatory and there's a side-band mechanism of doing this?
-
-I think we need more info here.
-
-> > So yes, I agree Xen should make sure the region of the table is not
-> > freed when exiting boot services, and that dom0 can access it. I
-> > guess we should move the checks done by Linux to Xen, and then only
-> > provide the ESRT table to dom0 if the checks (now done by Xen) pass.
-> 
-> Yes, something like this. But note currently in the (PV) dom0 case, Xen
-> provides dom0 with a pointer to the whole SystemTable, not individual
-> ConfigurationTables. Making it filter what dom0 gets would require Xen
-> to re-construct the whole thing with just those elements that are
-> desired. Not exactly sure if worth the effort given the privilege dom0
-> has.
-
-We already do this for ACPI in PVH dom0, where Xen rebuilds the RSDT
-in order to filter out tables that shouldn't be exposed to dom0. If
-possible using something similar for UEFI would be my preference, but
-I certainly haven't investigated at all whether this is feasible.
-
-> BTW How does it look in PVH dom0 case? Does it also get unmodified host
-> EFI SystemTable? In that case, it would be more tricky, because (IIUC)
-> physical addresses (like the one for ESRT table) are not meaningful to
-> PVH dom0.
-
-For PVH dom0 we should make sure the ESRT is identity mapped into the
-physmap, so that dom0 has access to it. PVH dom0 gets a physical
-memory map that's basically the native one with the RAM regions
-adjusted to match the assigned memory.
-
-We already identity map a bunch of stuff there, so identity mapping
-the ESRT would be likely fine.
-
-> > It might be helpful to see the whole picture here with the hooks to
-> > perform the updates also implemented, as those are missing in Xen (and
-> > Linux?). That would give a clearer view of what you are trying to
-> > achieve IMO.
-> 
-> Norbert, can you shed some light on this process?
-> 
-> While those two runtime services seems relevant, I see also an update
-> process involving simply dropping some file into ESP (/boot/efi). I'm
-> not sure if some runtime services were involved.
-
-So then the update is done when rebooting? If we expose the ESRT we
-should also make sure the run-time services related to it are
-available.
-
-Thanks, Roger.
