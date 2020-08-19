@@ -2,147 +2,143 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E54206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vou7XzxK"
+	by mail.kernel.org (Postfix) with ESMTP id 3469020FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597858443;
+	bh=1Kuiv8iGgm6SalVVkZfBiL4OHWxQAxShozxNk+zBolU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YbIqLDQqw/VqAZUYTyQzVmIZPPoZ+urLU8H2+2HGV4+FHXTM0GSB+0dMNxxrZHkBX
+	 a8hFbCuWBQlp7hqC078LAHipk99xbkam9PTtTWNIhf0wWgc1kFkoD7HUjkpT61ksQH
+	 o1fBAXUqu5XEJGRLrVTr/oBzqmsNyLiTJnD1q7jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHSRcw (ORCPT
+        id S1726772AbgHSReB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgHSRcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:32:47 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837A2C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:32:47 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id x24so19706506otp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=qjauqKV3XM87srHEaNbTG1q73II8EoPOgmO5VtaQq8M=;
-        b=Vou7XzxKHYK3tUipZdhe2Jtr8SaovEUcI2Jwgt9VWYMrAz/x4CP3grIELZXtAAe/J3
-         7YzB8Yo89cKhFcn6I7PUW9ytF4nNRdp4LdZeHVnJ/ff/CH6Oys6H+Aq/SOFdS7S+TCIb
-         h2joY2AmhtNj8oF7oMHP8rviCRP2PweBCVezW/dyr0RKWAMd5SzD4d1OMr6bX8fMasnf
-         QOtNCNmMt3h8ZnTimgwSK8hGj5v7PLDGPR7fT+JG3wlzCVqkCjYpOJcbTrdKmw2+S5+a
-         bMQpzlfpYEc50XbKRCYrnyRYbK83yhUct7aPNq2TzWcf1yJfLWy6uvXnZT0ien/U+BJ5
-         DERQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qjauqKV3XM87srHEaNbTG1q73II8EoPOgmO5VtaQq8M=;
-        b=GbaodmeWVdlpsvdU6xskNlLJnXZ4YB6kBacvhnimgsJDsnbGuXvmN3NcSFNPFzK0EN
-         QXLrqQikdFdNv24BT+IYM+jCgDn64dgL6i89Wolzla0gkfXi0TGdsii6+ExC+c65kv7K
-         dXGKvCRokPNydimWBokTL9v5+8c+XkhZTv6mBTzO/AoOuOseatf0VniGVvTXCCp8Jw3Q
-         +Wx9PY26YjuAOF5dsEBZKDd7edaMYDGpiJ4t5VOUNe4KVaMbn0To65VF4DG6FVuB1vv+
-         EKAIyvuxVkgnC3/TSHOEJwA1OajaV51zH9uWfeftnTk7iX2ZH5paLkiAT9dPO0OmlZYr
-         Yj5Q==
-X-Gm-Message-State: AOAM533PJq7lqzpnFMwW8N6EShL4L9+3W7qTlNnKi9h/Bntagf6yt5fF
-        2KuS9gyqroTL+A9638VsBE0YwQ==
-X-Google-Smtp-Source: ABdhPJymPZkNouyQs/pvkm9XMAX5loryQTi22kiAaNmODpZHXmaRiWwy/q6sJfXACAqkJBHpr1YCFw==
-X-Received: by 2002:a9d:7656:: with SMTP id o22mr18116903otl.109.1597858366862;
-        Wed, 19 Aug 2020 10:32:46 -0700 (PDT)
-Received: from alago.cortijodelrio.net (CableLink-189-219-73-83.Hosts.InterCable.net. [189.219.73.83])
-        by smtp.googlemail.com with ESMTPSA id n25sm4643929otf.64.2020.08.19.10.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 10:32:46 -0700 (PDT)
-From:   =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT))
-Subject: [PATCH v2] x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
-Date:   Wed, 19 Aug 2020 12:32:24 -0500
-Message-Id: <20200819173225.3821449-1-daniel.diaz@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810155943.2583275-1-daniel.diaz@linaro.org>
-References: <20200810155943.2583275-1-daniel.diaz@linaro.org>
+        Wed, 19 Aug 2020 13:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgHSReA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:34:00 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E536206FA;
+        Wed, 19 Aug 2020 17:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597858440;
+        bh=1Kuiv8iGgm6SalVVkZfBiL4OHWxQAxShozxNk+zBolU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PfCq2RYoBnpI+rRZ0w6qSWuewp0KRf89Aalz44HYo9TFEhrDUQICW5QIJCrh8Ca0K
+         uLAW8PYxM/i8eVvlbksIuqNR9MKaOckhfOZhXePVk3EU37CkhLrBof1KFmHs22XZC0
+         sszvftR/cJX4BhW1GWf6wauiWhaZ3R/1Xv2rD11Y=
+Date:   Wed, 19 Aug 2020 20:33:47 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
+ boot
+Message-ID: <20200819173347.GW752365@kernel.org>
+References: <20200818141554.13945-1-rppt@kernel.org>
+ <20200818141554.13945-7-rppt@kernel.org>
+ <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+ <20200819115335.GU752365@kernel.org>
+ <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent refresh of the defconfigs got rid of the following
-(unset) config:
+On Wed, Aug 19, 2020 at 02:10:43PM +0200, David Hildenbrand wrote:
+> On 19.08.20 13:53, Mike Rapoport wrote:
+> > On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
+> >> On 18.08.20 16:15, Mike Rapoport wrote:
+> >>> From: Mike Rapoport <rppt@linux.ibm.com>
+> >>>
+> >>> Taking pages out from the direct map and bringing them back may create
+> >>> undesired fragmentation and usage of the smaller pages in the direct
+> >>> mapping of the physical memory.
+> >>>
+> >>> This can be avoided if a significantly large area of the physical memory
+> >>> would be reserved for secretmem purposes at boot time.
+> >>>
+> >>> Add ability to reserve physical memory for secretmem at boot time using
+> >>> "secretmem" kernel parameter and then use that reserved memory as a global
+> >>> pool for secret memory needs.
+> >>
+> >> Wouldn't something like CMA be the better fit? Just wondering. Then, the
+> >> memory can actually be reused for something else while not needed.
+> > 
+> > The memory allocated as secret is removed from the direct map and the
+> > boot time reservation is intended to reduce direct map fragmentatioan
+> > and to avoid splitting 1G pages there. So with CMA I'd still need to
+> > allocate 1G chunks for this and once 1G page is dropped from the direct
+> > map it still cannot be reused for anything else until it is freed.
+> > 
+> > I could use CMA to do the boot time reservation, but doing the
+> > reservesion directly seemed simpler and more explicit to me.
+> 
+> Well, using CMA would give you the possibility to let the memory be used
+> for other purposes until you decide it's the right time to take it +
+> remove the direct mapping etc.
 
-  # CONFIG_64BIT is not set
+I still can't say I follow you here. If I reseve a CMA area as a pool
+for secret memory 1G pages, it is still reserved and it still cannot be
+used for other purposes, right?
 
-Innocuous as it seems, when the config file is saved again the
-behavior is changed so that CONFIG_64BIT=y.
+> I wonder if a sane approach would be to require to allocate a pool
+> during boot and only take pages ever from that pool. That would avoid
+> spilling many unmovable pages all over the place, locally limiting them
+> to your area here.
 
-Currently,
+That's what I tried to implement. The pool reserved at boot time is in a
+way similar to booting with mem=X and then splitting the remaining
+memory between the VMs.
+In this case, the memory reserved at boot is never in the direct map and
+allocations from such pool will not cause fragmentation.
 
-  $ make i386_defconfig
-  $ grep CONFIG_64BIT .config
-  CONFIG_64BIT=y
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+> 
 
-whereas previously (and with this patch):
-
-  $ make i386_defconfig
-  $ grep CONFIG_64BIT .config
-  # CONFIG_64BIT is not set
-
-This was found with weird compiler errors on OpenEmbedded
-builds, as the compiler was unable to cope with 64-bits data
-types:
-
-  NOTE: make -j1 bzImage CC=i686-linaro-linux-gcc  -fuse-ld=bfd -fdebug-prefix-map=/oe/build/tmp/work/intel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0=/usr/src/debug/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0 -fdebug-prefix-map=/oe/build/tmp/work/intel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0/recipe-sysroot= -fdebug-prefix-map=/oe/build/tmp/work/intel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0/recipe-sysroot-native=  -fdebug-prefix-map=/oe/build/tmp/work-shared/intel-core2-32/kernel-source=/usr/src/kernel -ffile-prefix-map=/oe/build/tmp/work/intel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0/git=/kernel-source/  LD=i686-linaro-linux-ld.bfd
-    GEN     Makefile
-    CC      scripts/mod/empty.o
-  cc1: error: code model 'kernel' not supported in the 32 bit mode
-  cc1: sorry, unimplemented: 64-bit mode not compiled in
-  /oe/build/tmp/work-shared/intel-core2-32/kernel-source/scripts/Makefile.build:280: recipe for target 'scripts/mod/empty.o' failed
-  make[2]: *** [scripts/mod/empty.o] Error 1
-  /oe/build/tmp/work-shared/intel-core2-32/kernel-source/Makefile:1174: recipe for target 'prepare0' failed
-  make[1]: *** [prepare0] Error 2
-  /oe/build/tmp/work-shared/intel-core2-32/kernel-source/Makefile:185: recipe for target '__sub-make' failed
-  make: *** [__sub-make] Error 2
-
-Fixes: 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
-
-Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
----
-v1 -> v2: Clarify subject
-
- arch/x86/configs/i386_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index d7577fece9eb..4cfdf5755ab5 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -19,6 +19,7 @@ CONFIG_CGROUP_CPUACCT=y
- CONFIG_BLK_DEV_INITRD=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_PROFILING=y
-+# CONFIG_64BIT is not set
- CONFIG_SMP=y
- CONFIG_X86_GENERIC=y
- CONFIG_HPET_TIMER=y
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
