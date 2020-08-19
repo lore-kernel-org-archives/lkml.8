@@ -2,224 +2,233 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD87C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C576AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264B020885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="f86P3QVk"
+	by mail.kernel.org (Postfix) with ESMTP id A212020888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597850422;
+	bh=+CZjqAP9BwS+oTcWjIBCOd8FUJx3ft6iDVH+DtcWMB4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=VrUtufauP5bWzRxFmY1a8TZy+8nmfG4ys2L+RdA0moMo02pFhUv2nuciHdNpQrO2b
+	 aEoKLO53tjULBmMG1i2kVdZxaU3QIoxosWIsO353F5ocnh9tUtSM3RQ9Nn3A/TcdVV
+	 Pj49CTe7yyMthgtGLexQTmWWXGxHvMKmv4AeM8uQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHSPUL (ORCPT
+        id S1728703AbgHSPUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgHSPUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:20:07 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7667C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:20:06 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id dd12so11441839qvb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OgiZ6Y/0hox6pi+4Ied7l3tVoiuHB+LCS8FAr/Xzuk8=;
-        b=f86P3QVkHyAU4Q9c3x85TaRlwDBm9WyryIioz3ZPnyhB5uJVkxOTFpoSxiOI7mrYTh
-         N2xyUoRwFcBj/PozeyH+tZP8DnKfc6/FpuoO6esPL88k1+nIbOZQAQlmj0ORgZZXBrYi
-         Ro+kpT/9Ls7ezHWaq6ko3UIsRjY4j2diiFsAvySpNEre3Fws5M6+nhThmlsSlM7OFLVt
-         MWC/eB4JCPqZC4TxyT+SwJpwecjybWVi3NPFAYD6v29dl2V2UKZ0kwrF+FX4rxQBoPIM
-         aSQaiMvanpvRT8PoShzX+xzqebdpRkPG6vMe6LO3EC1gi/or//TeWYrn6h9Nh3gAX7gO
-         fDEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OgiZ6Y/0hox6pi+4Ied7l3tVoiuHB+LCS8FAr/Xzuk8=;
-        b=Hn0QehfIeIfEgvsmahjlM0ElJMuf067m7jqfGrijOubtvIa5oibvvr3+uPhcRLhtaY
-         fQXrbpI0YnvcpZhIaGLkvhf2v201e12Qqn3tBKF3yF4ehdOZKkza4AhLU/P+2OBjQCcL
-         /fXuuyjXStnz0vBgCpSflj5nEST9wc1Ks/aWnwYc5QTfNEUep0+UUWv6UZKvRw3qPjWq
-         jlqx+1zwQ9j/nozjq6qiplEuC9SMdwkofGyWY2DHxzHBSNSsiNRsVe2APob/Ng1qtWNX
-         gWXKl6SVUU3mu6wVhO9+nPLNgFPC8zpcM1rsJuu8QAZzSx73yC0fqokOJZGLvHd5XUPu
-         zMcQ==
-X-Gm-Message-State: AOAM533xxkXaa9t2UfJdvTB3i0ywoDPToXzffuyDGgT4wBMVWnksBf5i
-        aKId3Tiy5uaB4bGLNHr3R344VA==
-X-Google-Smtp-Source: ABdhPJwnbHYuA+KtIZBO6Nnlpq6WTXsQBKkbodAKIsUcXZ+BNv2ajyWZIFO5Rvrb7AJUx0osiT+LVg==
-X-Received: by 2002:ad4:510c:: with SMTP id g12mr23880400qvp.106.1597850404626;
-        Wed, 19 Aug 2020 08:20:04 -0700 (PDT)
-Received: from localhost (mobile-166-177-185-175.mycingular.net. [166.177.185.175])
-        by smtp.gmail.com with ESMTPSA id q16sm24874583qkn.115.2020.08.19.08.20.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 08:20:04 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:20:02 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Wambui Karuga <wambui.karugax@gmail.com>
-Subject: Re: [RFC 15/20] drm/i915/dp: Extract drm_dp_has_sink_count()
-Message-ID: <20200819152002.GC46474@art_vandelay>
-References: <20200811200457.134743-1-lyude@redhat.com>
- <20200811200457.134743-16-lyude@redhat.com>
+        Wed, 19 Aug 2020 11:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728481AbgHSPUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:20:10 -0400
+Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D544E207FF;
+        Wed, 19 Aug 2020 15:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597850410;
+        bh=+CZjqAP9BwS+oTcWjIBCOd8FUJx3ft6iDVH+DtcWMB4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=djUeEd0jYaP/1UoT2NFZF8s/WQ4NPOTacoHKkkpD4kZ9FgvDB9EjDoeG7NyVfe2mZ
+         /ZGkTWx/FIMDIMYavM8CTiyzJ3C23ott1fbGAo50wvQGwsBhIAwct8aM5bVYK6edEZ
+         kIjkD2z8dZ3LpLvDpMdHtSDhsaFQbc6O+JP5nGt4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k8Psl-00F4N9-H5; Wed, 19 Aug 2020 17:20:07 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Josh Cartwright <joshc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
+Date:   Wed, 19 Aug 2020 17:20:06 +0200
+Message-Id: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811200457.134743-16-lyude@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:04:52PM -0400, Lyude Paul wrote:
-> Since other drivers are also going to need to be aware of the sink count
-> in order to do proper dongle detection, we might as well steal i915's
-> DP_SINK_COUNT helpers and move them into DRM helpers so that other
-> dirvers can use them as well.
-> 
-> Note that this also starts using intel_dp_has_sink_count() in
-> intel_dp_detect_dpcd(), which is a functional change.
-> 
+Convert the SPMI bus documentation to JSON/yaml.
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_helper.c         | 22 ++++++++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_dp.c | 21 ++++++++++++---------
->  include/drm/drm_dp_helper.h             |  8 +++++++-
->  3 files changed, 41 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> index 9703b33599c3b..05bb47e589731 100644
-> --- a/drivers/gpu/drm/drm_dp_helper.c
-> +++ b/drivers/gpu/drm/drm_dp_helper.c
-> @@ -700,6 +700,28 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
->  }
->  EXPORT_SYMBOL(drm_dp_set_subconnector_property);
->  
-> +/**
-> + * drm_dp_has_sink_count() - Check whether a given connector has a valid sink
-> + * count
-> + * @connector: The DRM connector to check
-> + * @dpcd: A cached copy of the connector's DPCD RX capabilities
-> + * @desc: A cached copy of the connector's DP descriptor
-> + *
-> + * Returns: %True if the (e)DP connector has a valid sink count that should
-> + * be probed, %false otherwise.
-> + */
-> +bool drm_dp_has_sink_count(struct drm_connector *connector,
-> +			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> +			   const struct drm_dp_desc *desc)
-> +{
-> +	/* Some eDP panels don't set a valid value for the sink count */
-> +	return connector->connector_type != DRM_MODE_CONNECTOR_eDP &&
-> +		dpcd[DP_DPCD_REV] >= DP_DPCD_REV_11 &&
-> +		dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT &&
-> +		!drm_dp_has_quirk(desc, 0, DP_DPCD_QUIRK_NO_SINK_COUNT);
-> +}
-> +EXPORT_SYMBOL(drm_dp_has_sink_count);
-> +
->  /*
->   * I2C-over-AUX implementation
->   */
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 984e49194ca31..35a4779a442e2 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4634,6 +4634,16 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
->  	return true;
->  }
->  
-> +static bool
-> +intel_dp_has_sink_count(struct intel_dp *intel_dp)
-> +{
-> +	if (!intel_dp->attached_connector)
-> +		return false;
-> +
-> +	return drm_dp_has_sink_count(&intel_dp->attached_connector->base,
-> +				     intel_dp->dpcd,
-> +				     &intel_dp->desc);
-> +}
->  
->  static bool
->  intel_dp_get_dpcd(struct intel_dp *intel_dp)
-> @@ -4653,13 +4663,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  		intel_dp_set_common_rates(intel_dp);
->  	}
->  
-> -	/*
-> -	 * Some eDP panels do not set a valid value for sink count, that is why
-> -	 * it don't care about read it here and in intel_edp_init_dpcd().
-> -	 */
-> -	if (!intel_dp_is_edp(intel_dp) &&
-> -	    !drm_dp_has_quirk(&intel_dp->desc, 0,
-> -			      DP_DPCD_QUIRK_NO_SINK_COUNT)) {
-> +	if (intel_dp_has_sink_count(intel_dp)) {
->  		u8 count;
->  		ssize_t r;
->  
-> @@ -5939,9 +5943,8 @@ intel_dp_detect_dpcd(struct intel_dp *intel_dp)
->  		return connector_status_connected;
->  
->  	/* If we're HPD-aware, SINK_COUNT changes dynamically */
-> -	if (intel_dp->dpcd[DP_DPCD_REV] >= 0x11 &&
-> +	if (intel_dp_has_sink_count(intel_dp) &&
->  	    intel_dp->downstream_ports[0] & DP_DS_PORT_HPD) {
-> -
->  		return intel_dp->sink_count ?
->  		connector_status_connected : connector_status_disconnected;
->  	}
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index 1349f16564ace..a1413a531eaf4 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1631,6 +1631,11 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
->  				      const u8 *dpcd,
->  				      const u8 port_cap[4]);
->  
-> +struct drm_dp_desc;
-> +bool drm_dp_has_sink_count(struct drm_connector *connector,
-> +			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> +			   const struct drm_dp_desc *desc);
-> +
->  void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
->  void drm_dp_aux_init(struct drm_dp_aux *aux);
->  int drm_dp_aux_register(struct drm_dp_aux *aux);
-> @@ -1689,7 +1694,8 @@ enum drm_dp_quirk {
->  	 * @DP_DPCD_QUIRK_NO_SINK_COUNT:
->  	 *
->  	 * The device does not set SINK_COUNT to a non-zero value.
-> -	 * The driver should ignore SINK_COUNT during detection.
-> +	 * The driver should ignore SINK_COUNT during detection. Note that
-> +	 * drm_dp_has_sink_count() automatically checks for this quirk.
->  	 */
->  	DP_DPCD_QUIRK_NO_SINK_COUNT,
->  	/**
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Rob,
 
+As promissed, this patch converts the spmi.txt generic bus bindings to
+html.
+
+ .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
+ .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
+ .../devicetree/bindings/spmi/spmi.txt         | 41 ------------
+ .../devicetree/bindings/spmi/spmi.yaml        | 62 +++++++++++++++++++
+ 4 files changed, 65 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
+ create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index fffc8fde3302..79367a43b27d 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -37,7 +37,7 @@ Required properties:
+                    or generalized "qcom,spmi-pmic".
+ - reg:             Specifies the SPMI USID slave address for this device.
+                    For more information see:
+-                   Documentation/devicetree/bindings/spmi/spmi.txt
++                   Documentation/devicetree/bindings/spmi/spmi.yaml
+ 
+ Required properties for peripheral child nodes:
+ - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+index e16b9b5afc70..ca645e21fe47 100644
+--- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -7,8 +7,8 @@ devices to control a single SPMI master.
+ The PMIC Arbiter can also act as an interrupt controller, providing interrupts
+ to slave devices.
+ 
+-See spmi.txt for the generic SPMI controller binding requirements for child
+-nodes.
++See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
++controller binding requirements for child nodes.
+ 
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+ generic interrupt controller binding documentation.
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
+deleted file mode 100644
+index 4bb10d161a27..000000000000
+--- a/Documentation/devicetree/bindings/spmi/spmi.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-System Power Management Interface (SPMI) Controller
+-
+-This document defines a generic set of bindings for use by SPMI controllers.  A
+-controller is modelled in device tree as a node with zero or more child nodes,
+-each representing a unique slave on the bus.
+-
+-Required properties:
+-- #address-cells : must be set to 2
+-- #size-cells : must be set to 0
+-
+-Child nodes:
+-
+-An SPMI controller node can contain zero or more child nodes representing slave
+-devices on the bus.  Child 'reg' properties are specified as an address, type
+-pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
+-SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
+-These are the identifiers "statically assigned by the system integrator", as
+-per the SPMI spec.
+-
+-Each child node must have one and only one 'reg' entry of type SPMI_USID.
+-
+-#include <dt-bindings/spmi/spmi.h>
+-
+-	spmi@.. {
+-		compatible = "...";
+-		reg = <...>;
+-
+-		#address-cells = <2>;
+-		#size-cells = <0>;
+-
+-		child@0 {
+-			compatible = "...";
+-			reg = <0 SPMI_USID>;
+-		};
+-
+-		child@7 {
+-			compatible = "...";
+-			reg = <7 SPMI_USID
+-			       3 SPMI_GSID>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
+new file mode 100644
+index 000000000000..8d72796b9bec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spmi/spmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Power Management Interface (SPMI) Controller
++
++maintainers:
++  - Josh Cartwright <joshc@codeaurora.org>
++
++description: |
++  The System Power Management (SPMI) controller is a 2-wire bus defined
++  by the MIPI Alliance for power management control to be used on SoC designs.
++
++  SPMI controllers are modelled in device tree using a generic set of
++  bindings defined here, plus any bus controller specific properties, if
++  needed.
++
++  Each SPMI controller has zero or more child nodes (up to 16 ones), each
++  one representing an unique slave at the bus.
++
++properties:
++  $nodename:
++    pattern: "spmi@[0-9a-f]+"
++
++  compatible:
++    description: filled by the SPMI bus controller
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "@([0-9]|1[0-5])$":
++    description: up to 16 child PMIC nodes
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/spmi/spmi.h>
++
++    spmi@.. {
++      compatible = "...";
++      reg = <...>;
++
++      #address-cells = <2>;
++      #size-cells = <0>;
++
++      child@0 {
++        compatible = "...";
++        reg = <0 SPMI_USID>;
++      };
++
++      child@7 {
++        compatible = "...";
++        reg = <7 SPMI_USID
++               3 SPMI_GSID>;
++      };
++    };
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.26.2
+
+
