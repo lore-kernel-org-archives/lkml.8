@@ -2,512 +2,80 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C13C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8564C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA46C2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AfS8QqTB"
+	by mail.kernel.org (Postfix) with ESMTP id 67E572083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHSOum (ORCPT
+        id S1728476AbgHSOvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:50:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49729 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726578AbgHSOug (ORCPT
+        Wed, 19 Aug 2020 10:51:14 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:55735 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbgHSOvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:50:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597848633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=l9Uc05thh0JM0q0sNr1SLzkaRnUDoUEHeUtn5M4QGhc=;
-        b=AfS8QqTBxlSaRTlcAcgm64z19iEw8ICO4rAveQtKHDpyOFLilMNgXTFKE2vpYUpMXqt+pE
-        6YjEJAX7qCu0uRn4F01GnT3pl+xxNV2RveDGb0mL94oEO/VtZ9xnmjbbFBK0vPPH4BMGUQ
-        HnnV9sopLUoALssz6YJ7Hol+gApYtq8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-575-vOrjhTeKND6MsqfPjWK5Qw-1; Wed, 19 Aug 2020 10:50:29 -0400
-X-MC-Unique: vOrjhTeKND6MsqfPjWK5Qw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0316A89CD16;
-        Wed, 19 Aug 2020 14:50:22 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 577BE5D9D5;
-        Wed, 19 Aug 2020 14:50:20 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] x86/uaccess: Use pointer masking to limit uaccess speculation
-Date:   Wed, 19 Aug 2020 09:50:06 -0500
-Message-Id: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
+        Wed, 19 Aug 2020 10:51:06 -0400
+Received: by mail-il1-f199.google.com with SMTP id q17so16883305ile.22
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:51:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=L7T0UptgHYmri7SaCGXWygzaLJh2phRnY0wB5fixdgI=;
+        b=G/hWzhQFS7T/ffbUrXJKY/U9u7U2PGkKfEj+6BEsxrTnbQMr0i/8kseaD4Ymw73cBA
+         wBAG+q9qSDdqF42Zrb6Zs09lMYn3DytogXSuakvfigfYvQVXSSOfGUbTpgE9HbAlQcQC
+         WukXnMkt3ePZU2BtlWhr5PN462jpeQ6Mav1+RlzfBzI8f9wJ3FRrCmii63hc6D2rTkZB
+         DMSqvhFqju+x3nV3mBRoXCH+7JH2WhGMFWFkfnVn3gI9FRdnGUYGZXXzb+jCTfpL5nS0
+         2juLjTpzZpCN6Y0sTtZgXIRTlatPp7nJIE21avDEPXT4bZ2eijPzqopg1/CzVsUdcoJY
+         nLNA==
+X-Gm-Message-State: AOAM5315sEWoV+0ETZvjTMqYYcrL4VB6MgFI4nDN+p0P1qmQB1M5STRq
+        lLSEFQhZJLzENrVEPc4gGu0Q179l34Ro3cNXaCsLqxL68g/P
+X-Google-Smtp-Source: ABdhPJw8Eul5BA7PMHLOe+q9UZT4RyJM5c/bIGJstDY4zpBDZ19RM9Uzxo9blXQp3uPwrJTIFVk3E4JNQ3rznpSbNdvNHR3LHUnk
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Received: by 2002:a05:6602:2417:: with SMTP id s23mr19902065ioa.94.1597848665416;
+ Wed, 19 Aug 2020 07:51:05 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 07:51:05 -0700
+In-Reply-To: <000000000000568fc005ad3b57c3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001b6bb205ad3c222b@google.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free (4)
+From:   syzbot <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, davem@davemloft.net,
+        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mcgrof@kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The x86 uaccess code uses barrier_nospec() in various places to prevent
-speculative dereferencing of user-controlled pointers (which might be
-combined with further gadgets or CPU bugs to leak data).
+syzbot has bisected this issue to:
 
-There are some issues with the current implementation:
+commit 449325b52b7a6208f65ed67d3484fd7b7184477b
+Author: Alexei Starovoitov <ast@kernel.org>
+Date:   Tue May 22 02:22:29 2018 +0000
 
-- The barrier_nospec() in copy_from_user() was inadvertently removed
-  with: 4b842e4e25b1 ("x86: get rid of small constant size cases in
-  raw_copy_{to,from}_user()")
+    umh: introduce fork_usermode_blob() helper
 
-- copy_to_user() and friends should also have a speculation barrier,
-  because a speculative write to a user-controlled address can still
-  populate the cache line with the original data.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11f86186900000
+start commit:   18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13f86186900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f86186900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
+dashboard link: https://syzkaller.appspot.com/bug?extid=df400f2f24a1677cd7e0
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15859986900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1228fea1900000
 
-- The LFENCE in barrier_nospec() is overkill, when more lightweight user
-  pointer masking can be used instead.
+Reported-by: syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com
+Fixes: 449325b52b7a ("umh: introduce fork_usermode_blob() helper")
 
-Remove all existing barrier_nospec() usage, and instead do user pointer
-masking, throughout the x86 uaccess code.  This is similar to what arm64
-is already doing.
-
-barrier_nospec() is now unused, and can be removed.
-
-Fixes: 4b842e4e25b1 ("x86: get rid of small constant size cases in raw_copy_{to,from}_user()")
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-
-Andy just pointed out Christoph's series to me, I think those patches
-will have a minor conflict since uaccess_mask_ptr() relies on
-user_addr_max().
-
- Documentation/admin-guide/hw-vuln/spectre.rst |  6 ++--
- arch/x86/include/asm/barrier.h                |  3 --
- arch/x86/include/asm/checksum_32.h            |  6 ++--
- arch/x86/include/asm/futex.h                  |  5 +++
- arch/x86/include/asm/uaccess.h                | 31 ++++++++++++-------
- arch/x86/include/asm/uaccess_64.h             | 16 +++++-----
- arch/x86/lib/csum-wrappers_64.c               |  6 ++--
- arch/x86/lib/getuser.S                        | 10 +++---
- arch/x86/lib/putuser.S                        |  8 +++++
- arch/x86/lib/usercopy_32.c                    |  2 +-
- arch/x86/lib/usercopy_64.c                    |  4 +--
- lib/iov_iter.c                                |  2 +-
- 12 files changed, 58 insertions(+), 41 deletions(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
-index e05e581af5cf..849c613afb35 100644
---- a/Documentation/admin-guide/hw-vuln/spectre.rst
-+++ b/Documentation/admin-guide/hw-vuln/spectre.rst
-@@ -426,9 +426,9 @@ Spectre variant 1
-    <spec_ref2>` to avoid any usable disclosure gadgets. However, it may
-    not cover all attack vectors for Spectre variant 1.
- 
--   Copy-from-user code has an LFENCE barrier to prevent the access_ok()
--   check from being mis-speculated.  The barrier is done by the
--   barrier_nospec() macro.
-+   Usercopy code uses user pointer masking to prevent the access_ok()
-+   check from being mis-speculated in the success path with a kernel
-+   address.  The masking is done by the uaccess_mask_ptr() macro.
- 
-    For the swapgs variant of Spectre variant 1, LFENCE barriers are
-    added to interrupt, exception and NMI entry where needed.  These
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 7f828fe49797..d158ea1fa250 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -48,9 +48,6 @@ static inline unsigned long array_index_mask_nospec(unsigned long index,
- /* Override the default implementation from linux/nospec.h. */
- #define array_index_mask_nospec array_index_mask_nospec
- 
--/* Prevent speculative execution past this barrier. */
--#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
--
- #define dma_rmb()	barrier()
- #define dma_wmb()	barrier()
- 
-diff --git a/arch/x86/include/asm/checksum_32.h b/arch/x86/include/asm/checksum_32.h
-index 11624c8a9d8d..d2bbea5b0334 100644
---- a/arch/x86/include/asm/checksum_32.h
-+++ b/arch/x86/include/asm/checksum_32.h
-@@ -56,8 +56,8 @@ static inline __wsum csum_and_copy_from_user(const void __user *src,
- 			*err_ptr = -EFAULT;
- 		return sum;
- 	}
--	ret = csum_partial_copy_generic((__force void *)src, dst,
--					len, sum, err_ptr, NULL);
-+	ret = csum_partial_copy_generic((__force void *)uaccess_mask_ptr(src),
-+					dst, len, sum, err_ptr, NULL);
- 	user_access_end();
- 
- 	return ret;
-@@ -185,7 +185,7 @@ static inline __wsum csum_and_copy_to_user(const void *src,
- 
- 	might_sleep();
- 	if (user_access_begin(dst, len)) {
--		ret = csum_partial_copy_generic(src, (__force void *)dst,
-+		ret = csum_partial_copy_generic(src, (__force void *)uaccess_mask_ptr(dst),
- 						len, sum, NULL, err_ptr);
- 		user_access_end();
- 		return ret;
-diff --git a/arch/x86/include/asm/futex.h b/arch/x86/include/asm/futex.h
-index f9c00110a69a..89e7e37c2b25 100644
---- a/arch/x86/include/asm/futex.h
-+++ b/arch/x86/include/asm/futex.h
-@@ -59,6 +59,8 @@ static __always_inline int arch_futex_atomic_op_inuser(int op, int oparg, int *o
- 	if (!user_access_begin(uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
-+	uaddr = uaccess_mask_ptr(uaddr);
-+
- 	switch (op) {
- 	case FUTEX_OP_SET:
- 		unsafe_atomic_op1("xchgl %0, %2", oval, uaddr, oparg, Efault);
-@@ -94,6 +96,9 @@ static inline int futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 
- 	if (!user_access_begin(uaddr, sizeof(u32)))
- 		return -EFAULT;
-+
-+	uaddr = uaccess_mask_ptr(uaddr);
-+
- 	asm volatile("\n"
- 		"1:\t" LOCK_PREFIX "cmpxchgl %4, %2\n"
- 		"2:\n"
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index ecefaffd15d4..e697b42d0533 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -6,6 +6,7 @@
-  */
- #include <linux/compiler.h>
- #include <linux/kasan-checks.h>
-+#include <linux/nospec.h>
- #include <linux/string.h>
- #include <asm/asm.h>
- #include <asm/page.h>
-@@ -96,6 +97,15 @@ static inline bool pagefault_disabled(void);
- 	likely(!__range_not_ok(addr, size, user_addr_max()));		\
- })
- 
-+/*
-+ * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
-+ * user pointer.  This blocks speculative dereferences of user-controlled
-+ * pointers.
-+ */
-+#define uaccess_mask_ptr(ptr) \
-+	(__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
-+
-+
- /*
-  * These are the main single-value transfer routines.  They automatically
-  * use the right size if we just have the right pointer type.
-@@ -119,11 +129,6 @@ extern int __get_user_bad(void);
- 
- #define __uaccess_begin() stac()
- #define __uaccess_end()   clac()
--#define __uaccess_begin_nospec()	\
--({					\
--	stac();				\
--	barrier_nospec();		\
--})
- 
- /*
-  * This is the smallest unsigned integer type that can fit a value
-@@ -357,7 +362,7 @@ do {									\
- 	__label__ __pu_label;					\
- 	int __pu_err = -EFAULT;					\
- 	__typeof__(*(ptr)) __pu_val = (x);			\
--	__typeof__(ptr) __pu_ptr = (ptr);			\
-+	__typeof__(ptr) __pu_ptr = uaccess_mask_ptr(ptr);	\
- 	__typeof__(size) __pu_size = (size);			\
- 	__uaccess_begin();					\
- 	__put_user_size(__pu_val, __pu_ptr, __pu_size, __pu_label);	\
-@@ -371,9 +376,9 @@ __pu_label:							\
- ({									\
- 	int __gu_err;							\
- 	__inttype(*(ptr)) __gu_val;					\
--	__typeof__(ptr) __gu_ptr = (ptr);				\
-+	__typeof__(ptr) __gu_ptr = uaccess_mask_ptr(ptr);		\
- 	__typeof__(size) __gu_size = (size);				\
--	__uaccess_begin_nospec();					\
-+	__uaccess_begin();						\
- 	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err);	\
- 	__uaccess_end();						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-@@ -482,7 +487,7 @@ static __must_check __always_inline bool user_access_begin(const void __user *pt
- {
- 	if (unlikely(!access_ok(ptr,len)))
- 		return 0;
--	__uaccess_begin_nospec();
-+	__uaccess_begin();
- 	return 1;
- }
- #define user_access_begin(a,b)	user_access_begin(a,b)
-@@ -491,14 +496,16 @@ static __must_check __always_inline bool user_access_begin(const void __user *pt
- #define user_access_save()	smap_save()
- #define user_access_restore(x)	smap_restore(x)
- 
--#define unsafe_put_user(x, ptr, label)	\
--	__put_user_size((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
-+#define unsafe_put_user(x, ptr, label)						\
-+	__put_user_size((__typeof__(*(ptr)))(x), uaccess_mask_ptr(ptr),		\
-+			sizeof(*(ptr)), label)
- 
- #define unsafe_get_user(x, ptr, err_label)					\
- do {										\
- 	int __gu_err;								\
- 	__inttype(*(ptr)) __gu_val;						\
--	__get_user_size(__gu_val, (ptr), sizeof(*(ptr)), __gu_err);		\
-+	__get_user_size(__gu_val, uaccess_mask_ptr(ptr), sizeof(*(ptr)),	\
-+			__gu_err);						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
- 	if (unlikely(__gu_err)) goto err_label;					\
- } while (0)
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index bc10e3dc64fe..ef859e1ae956 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -47,7 +47,7 @@ copy_user_generic(void *to, const void *from, unsigned len)
- }
- 
- static __always_inline __must_check unsigned long
--copy_to_user_mcsafe(void *to, const void *from, unsigned len)
-+copy_to_user_mcsafe(void __user *to, const void *from, size_t len)
- {
- 	unsigned long ret;
- 
-@@ -57,7 +57,7 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
- 	 * handle exceptions / faults.  memcpy_mcsafe() may fall back to
- 	 * memcpy() which lacks this handling.
- 	 */
--	ret = __memcpy_mcsafe(to, from, len);
-+	ret = __memcpy_mcsafe((__force void *)uaccess_mask_ptr(to), from, len);
- 	__uaccess_end();
- 	return ret;
- }
-@@ -65,20 +65,20 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
- static __always_inline __must_check unsigned long
- raw_copy_from_user(void *dst, const void __user *src, unsigned long size)
- {
--	return copy_user_generic(dst, (__force void *)src, size);
-+	return copy_user_generic(dst, (__force void *)uaccess_mask_ptr(src), size);
- }
- 
- static __always_inline __must_check unsigned long
- raw_copy_to_user(void __user *dst, const void *src, unsigned long size)
- {
--	return copy_user_generic((__force void *)dst, src, size);
-+	return copy_user_generic((__force void *)uaccess_mask_ptr(dst), src, size);
- }
- 
- static __always_inline __must_check
- unsigned long raw_copy_in_user(void __user *dst, const void __user *src, unsigned long size)
- {
--	return copy_user_generic((__force void *)dst,
--				 (__force void *)src, size);
-+	return copy_user_generic((__force void *)uaccess_mask_ptr(dst),
-+				 (__force void *)uaccess_mask_ptr(src), size);
- }
- 
- extern long __copy_user_nocache(void *dst, const void __user *src,
-@@ -93,14 +93,14 @@ __copy_from_user_inatomic_nocache(void *dst, const void __user *src,
- 				  unsigned size)
- {
- 	kasan_check_write(dst, size);
--	return __copy_user_nocache(dst, src, size, 0);
-+	return __copy_user_nocache(dst, uaccess_mask_ptr(src), size, 0);
- }
- 
- static inline int
- __copy_from_user_flushcache(void *dst, const void __user *src, unsigned size)
- {
- 	kasan_check_write(dst, size);
--	return __copy_user_flushcache(dst, src, size);
-+	return __copy_user_flushcache(dst, uaccess_mask_ptr(src), size);
- }
- 
- unsigned long
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index ee63d7576fd2..d677b91a7e84 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -52,8 +52,8 @@ csum_and_copy_from_user(const void __user *src, void *dst,
- 			len -= 2;
- 		}
- 	}
--	isum = csum_partial_copy_generic((__force const void *)src,
--				dst, len, isum, errp, NULL);
-+	isum = csum_partial_copy_generic((__force const void *)uaccess_mask_ptr(src),
-+					 dst, len, isum, errp, NULL);
- 	user_access_end();
- 	if (unlikely(*errp))
- 		goto out_err;
-@@ -108,7 +108,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 	}
- 
- 	*errp = 0;
--	ret = csum_partial_copy_generic(src, (void __force *)dst,
-+	ret = csum_partial_copy_generic(src, (void __force *)uaccess_mask_ptr(dst),
- 					len, isum, NULL, errp);
- 	user_access_end();
- 	return ret;
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index c8a85b512796..90ae5be8af23 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -40,7 +40,7 @@ SYM_FUNC_START(__get_user_1)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 1:	movzbl (%_ASM_AX),%edx
-@@ -56,7 +56,7 @@ SYM_FUNC_START(__get_user_2)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 2:	movzwl -1(%_ASM_AX),%edx
-@@ -72,7 +72,7 @@ SYM_FUNC_START(__get_user_4)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 3:	movl -3(%_ASM_AX),%edx
-@@ -89,7 +89,7 @@ SYM_FUNC_START(__get_user_8)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 4:	movq -7(%_ASM_AX),%rdx
-@@ -102,7 +102,7 @@ SYM_FUNC_START(__get_user_8)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user_8
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 4:	movl -7(%_ASM_AX),%edx
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 7c7c92db8497..a4384b0ce013 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -38,6 +38,8 @@ SYM_FUNC_START(__put_user_1)
- 	ENTER
- 	cmp TASK_addr_limit(%_ASM_BX),%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 1:	movb %al,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -52,6 +54,8 @@ SYM_FUNC_START(__put_user_2)
- 	sub $1,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 2:	movw %ax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -66,6 +70,8 @@ SYM_FUNC_START(__put_user_4)
- 	sub $3,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 3:	movl %eax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -80,6 +86,8 @@ SYM_FUNC_START(__put_user_8)
- 	sub $7,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 4:	mov %_ASM_AX,(%_ASM_CX)
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
-index 7d290777246d..ea0eae7a68fa 100644
---- a/arch/x86/lib/usercopy_32.c
-+++ b/arch/x86/lib/usercopy_32.c
-@@ -68,7 +68,7 @@ clear_user(void __user *to, unsigned long n)
- {
- 	might_fault();
- 	if (access_ok(to, n))
--		__do_clear_user(to, n);
-+		__do_clear_user(uaccess_mask_ptr(to), n);
- 	return n;
- }
- EXPORT_SYMBOL(clear_user);
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index b0dfac3d3df7..abe5d2d1c49a 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -51,7 +51,7 @@ EXPORT_SYMBOL(__clear_user);
- unsigned long clear_user(void __user *to, unsigned long n)
- {
- 	if (access_ok(to, n))
--		return __clear_user(to, n);
-+		return __clear_user(uaccess_mask_ptr(to), n);
- 	return n;
- }
- EXPORT_SYMBOL(clear_user);
-@@ -108,7 +108,7 @@ EXPORT_SYMBOL_GPL(arch_wb_cache_pmem);
- long __copy_user_flushcache(void *dst, const void __user *src, unsigned size)
- {
- 	unsigned long flushed, dest = (unsigned long) dst;
--	long rc = __copy_user_nocache(dst, src, size, 0);
-+	long rc = __copy_user_nocache(dst, uaccess_mask_ptr(src), size, 0);
- 
- 	/*
- 	 * __copy_user_nocache() uses non-temporal stores for the bulk
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 5e40786c8f12..175cc8320220 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -642,7 +642,7 @@ static int copyout_mcsafe(void __user *to, const void *from, size_t n)
- {
- 	if (access_ok(to, n)) {
- 		instrument_copy_to_user(to, from, n);
--		n = copy_to_user_mcsafe((__force void *) to, from, n);
-+		n = copy_to_user_mcsafe(to, from, n);
- 	}
- 	return n;
- }
--- 
-2.25.4
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
