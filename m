@@ -2,250 +2,249 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C06C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBED2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3935320882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3820786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597878599;
-	bh=Zs37+NFgfTAwU8+6P/Z6Z9yG76/9zkHQDwSQ51MWWZo=;
-	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
-	b=qtDCiyHcKAN5UljBIWwVxP0o0HaKkcbrXVfSwSk3qTEQc0pCSdjNl+kTFf3fkEhWO
-	 ze2e3DdGqMsCLGPoqM5GJwb/0qg3NrhKTzBOVA7gtRb+t/mRS/+2fXf4KSiUQhJp7v
-	 hFG3PFHeNgofFbkm4PwtsxX80P7opKR7/Ss3FXVk=
+	s=default; t=1597878712;
+	bh=HSrbY+CwG0o4kd/iplMaWaPq8ahQhPaEf0XUQCHWYaM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ooI3zmdzfhwyfNyea7Iwf4/BYoMVFrLpnHhJ4msvFkfVUdb7Qj32B17uYPqkNjPAU
+	 gxoeKLYskBudGOJ7G+6aeudNiNT3eON965Lzd/r/v239uCOIb9ivxPmqkzy5nFQ984
+	 O24uniRIJGwmWiHt0M+lgakJEKLbL+ZrIC7lOUZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgHSXJ6 (ORCPT
+        id S1727879AbgHSXLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 19:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 19:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgHSXJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 19:09:57 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726209AbgHSXLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 19:11:51 -0400
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5800920758;
-        Wed, 19 Aug 2020 23:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E582920882;
+        Wed, 19 Aug 2020 23:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597878596;
-        bh=Zs37+NFgfTAwU8+6P/Z6Z9yG76/9zkHQDwSQ51MWWZo=;
-        h=Date:From:To:Subject:In-Reply-To:From;
-        b=FSw4YzJnruXeW8Rpm3WXHryxMmQ66xTldgsuL10QywIO1PmEqYlgTBw/jHbIQtBWq
-         mHoEMdNjfUMlliqm2YDlZ7HxBUp+Yf4TExzNbYc4OFCgDVbX6lQ22OtTM4ypsiu84O
-         A9G2SEmhx4sWjgk3K0e38OyWtchdfHshG56GskPk=
-Date:   Wed, 19 Aug 2020 16:09:55 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject:  mmotm 2020-08-19-16-09 uploaded
-Message-ID: <20200819230955._jX0yGRcN%akpm@linux-foundation.org>
-In-Reply-To: <20200814172939.55d6d80b6e21e4241f1ee1f3@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        s=default; t=1597878710;
+        bh=HSrbY+CwG0o4kd/iplMaWaPq8ahQhPaEf0XUQCHWYaM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=msr7ExZThidS+96kINTJqR4YknRvaeVHO5jJ1KSUefdmKuLrbcBNBH0K8+hAwMxL2
+         T4ijatTXL6TM1zu729++oTuLZ+U2WOBdGjY+h7zKvrdwnh+JqV3A4J4iTuXUBY54NR
+         iF9KjejifDWBPNrSpvMpzWrbqLhc2p2KYygjyAmo=
+Received: by mail-il1-f179.google.com with SMTP id z3so213987ilh.3;
+        Wed, 19 Aug 2020 16:11:49 -0700 (PDT)
+X-Gm-Message-State: AOAM5338QLgGH4AJBZXUhUq+m+BsQBVUN4jQPk8kUWgU7KsKrrolml9w
+        6sxjrWfUrb1FGHBtHcDGO/9Vgz9eKB++O9Jjs1w=
+X-Google-Smtp-Source: ABdhPJxFWTX1ujNyvxatyeyEWG8Qo5p3LPsyFmE3L/4R9pvY1L5UJaeUyca2FF9CpWOJiicuARMLZ6YV/t5Mc47vD2w=
+X-Received: by 2002:a92:d488:: with SMTP id p8mr299429ilg.43.1597878709284;
+ Wed, 19 Aug 2020 16:11:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Wed, 19 Aug 2020 16:11:38 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com>
+Message-ID: <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: mediatek: support access registers
+ without race-condition
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2020-08-19-16-09 has been uploaded to
+Hi Light,
 
-   https://www.ozlabs.org/~akpm/mmotm/
+On Tue, Aug 18, 2020 at 1:36 AM <light.hsieh@mediatek.com> wrote:
+>
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> Some MediaTek SOC provide more control registers other than value register.
 
-mmotm-readme.txt says
+s/MT6765/Some MediaTek SoC/
 
-README for mm-of-the-moment:
+> Generanll, a value register need read-modify-write is at offset 0xXXXXXXXX0.
 
-https://www.ozlabs.org/~akpm/mmotm/
+s/Generally/Generanll/
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
+> A corresponding SET register is at offset 0xXXXXXXX4. Write 1s' to some bits
+>   of SET register will set same bits in value register.
+> A corresponding CLR register is at offset 0xXXXXXXX8. Write 1s' to some bits
+>   of CLR register will clear same bits in value register.
+> For GPIO mode selection, MWR register is provided at offset 0xXXXXXXXC.
+>   With MWR, the MSBit of GPIO mode selection field is for modification-enable,
+>   not for GPIO mode selection, and the remaining LSBits are for mode
+>   selection.
+>   Take mode selection field with 4-bits as example, to select mode 0~7 via
+>   MWR register, 8~15 (instead of 0~7) shall be written to corresponding mode
+>   selection field.
+> When using SET/CLR/MWR registers, read-modify-write of value register is not
+>   necessary. This can prevent from race condition when multiple bus masters
+>   concurrently read-modify-write the same value register for setting different
+>   fields of the same value register.
+>
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 69 ++++++++++++++++++++++--
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  2 +
+>  2 files changed, 67 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index b77b18f..51f0b53 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -18,6 +18,29 @@
+>  #include "mtk-eint.h"
+>  #include "pinctrl-mtk-common-v2.h"
+>
+> +/* Some MediaTek SOC provide more control registers other than value register.
 
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-https://ozlabs.org/~akpm/mmotm/series
+s/MT6765/Some MediaTek SoC/
 
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
+> + * Generanll, a value register need read-modify-write is at offset 0xXXXXXXXX0.
 
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
+s/Generally/Generanll/
 
+> + * A corresponding SET register is at offset 0xXXXXXXX4. Write 1s' to some bits
+> + *  of SET register will set same bits in value register.
+> + * A corresponding CLR register is at offset 0xXXXXXXX8. Write 1s' to some bits
+> + *  of CLR register will clear same bits in value register.
+> + * For GPIO mode selection, MWR register is provided at offset 0xXXXXXXXC.
+> + *  With MWR, the MSBit of GPIO mode selection field is for modification-enable,
+> + *  not for GPIO mode selection, and the remaining LSBits are for mode
+> + *  selection.
+> + *  Take mode selection field with 4-bits as example, to select mode 0~7 via
+> + *  MWR register, 8~15 (instead of 0~7) shall be written to corresponding mode
+> + *  selection field.
+> + * When using SET/CLR/MWR registers, read-modify-write of value register is not
+> + *  necessary. This can prevent from race condition when multiple bus masters
+> + *  concurrently read-modify-write the same value register for setting different
+> + *  fields of the same value register.
+> + */
+> +
+> +#define SET_OFFSET 0x4
+> +#define CLR_OFFSET 0x8
 
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
+can set/clr offset work for mode register?
 
-	https://github.com/hnaz/linux-mm
+> +#define MWR_OFFSET 0xC
+> +
+>  /**
+>   * struct mtk_drive_desc - the structure that holds the information
+>   *                         of the driving current
+> @@ -64,6 +87,38 @@ void mtk_rmw(struct mtk_pinctrl *pctl, u8 i, u32 reg, u32 mask, u32 set)
+>         mtk_w32(pctl, i, reg, val);
+>  }
+>
+> +
+> +static void mtk_hw_set_value_race_free(struct mtk_pinctrl *pctl,
+> +               struct mtk_pin_field *pf, u32 value)
 
-The directory https://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
+s/mtk_hw_set_value_race_free/mtk_hw_w1sc/ to explictly indicate
+write-one ethier set or clear operation supported by hw
 
-A git copy of this tree is also available at
+> +{
+> +       unsigned int set, clr;
+> +
+> +       set = value & pf->mask;
+> +       clr = (~set) & pf->mask;
+> +
+> +       if (set)
+> +               mtk_w32(pctl, pf->index, pf->offset + SET_OFFSET,
+> +                       set << pf->bitpos);
+> +       if (clr)
+> +               mtk_w32(pctl, pf->index, pf->offset + CLR_OFFSET,
+> +                       clr << pf->bitpos);
+> +}
+> +
+> +static void mtk_hw_set_mode_race_free(struct mtk_pinctrl *pctl,
+> +               struct mtk_pin_field *pf, u32 value)
 
-	https://github.com/hnaz/linux-mm
+s/mtk_hw_set_mode_race_free/mtk_hw_mwr/
 
+> +{
+> +       unsigned int value_new;
+> +
+> +       /* MSB of mask is modification-enable bit, set this bit */
+> +       value_new = (1 << (pctl->soc->mwr_field_width - 1)) | value;
 
+it seems to be we can use fls(pf->mask) to replace ctl->soc->mwr_field_width
 
-This mmotm tree contains the following patches against 5.9-rc1:
-(patches marked "*" will be included in linux-next)
+> +       if (value_new == value)
+> +               dev_notice(pctl->dev,
+> +                       "invalid mode 0x%x, use it by ignoring MSBit!\n",
+> +                       value);
+> +       mtk_w32(pctl, pf->index, pf->offset + MWR_OFFSET,
+> +               value_new << pf->bitpos);
+> +}
+> +
+>  static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+>                                    const struct mtk_pin_desc *desc,
+>                                    int field, struct mtk_pin_field *pfd)
+> @@ -197,10 +252,16 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>         if (value < 0 || value > pf.mask)
+>                 return -EINVAL;
+>
+> -       if (!pf.next)
+> -               mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+> -                       (value & pf.mask) << pf.bitpos);
+> -       else
+> +       if (!pf.next) {
+> +               if (hw->soc->race_free_access) {
 
-  origin.patch
-* mailmap-add-andi-kleen.patch
-* hugetlb_cgroup-convert-comma-to-semicolon.patch
-* khugepaged-adjust-vm_bug_on_mm-in-__khugepaged_enter.patch
-* mm-vunmap-add-cond_resched-in-vunmap_pmd_range.patch
-* mm-slub-fix-conversion-of-freelist_corrupted.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mm-fix-missing-function-declaration.patch
-* fork-silence-a-false-postive-warning-in-__mmdrop.patch
-* romfs-fix-uninitialized-memory-leak-in-romfs_dev_read.patch
-* kernel-relayc-fix-memleak-on-destroy-relay-channel.patch
-* uprobes-__replace_page-avoid-bug-in-munlock_vma_page.patch
-* squashfs-avoid-bio_alloc-failure-with-1mbyte-blocks.patch
-* mm-include-cma-pages-in-lowmem_reserve-at-boot.patch
-* mm-page_alloc-fix-core-hung-in-free_pcppages_bulk.patch
-* mm-slub-re-initialize-randomized-freelist-sequence-in-calculate_sizes.patch
-* mm-slub-re-initialize-randomized-freelist-sequence-in-calculate_sizes-fix.patch
-* mm-thp-swap-fix-allocating-cluster-for-swapfile-by-mistake.patch
-* checkpatch-test-git_dir-changes.patch
-* scripts-tagssh-exclude-tools-directory-from-tags-generation.patch
-* fs-ocfs2-delete-repeated-words-in-comments.patch
-* ocfs2-clear-links-count-in-ocfs2_mknod-if-an-error-occurs.patch
-* ocfs2-fix-ocfs2-corrupt-when-iputting-an-inode.patch
-* ramfs-support-o_tmpfile.patch
-* kernel-watchdog-flush-all-printk-nmi-buffers-when-hardlockup-detected.patch
-  mm.patch
-* mm-slub-branch-optimization-in-free-slowpath.patch
-* mm-slub-fix-missing-alloc_slowpath-stat-when-bulk-alloc.patch
-* mm-slub-make-add_full-condition-more-explicit.patch
-* device-dax-fix-mismatches-of-request_mem_region.patch
-* mm-debug-do-not-dereference-i_ino-blindly.patch
-* mm-dump_page-rename-head_mapcount-head_compound_mapcount.patch
-* mm-gup_benchmark-use-pin_user_pages-for-foll_longterm-flag.patch
-* mm-gup-dont-permit-users-to-call-get_user_pages-with-foll_longterm.patch
-* mm-remove-activate_page-from-unuse_pte.patch
-* mm-remove-superfluous-__clearpageactive.patch
-* mm-remove-superfluous-__clearpagewaiters.patch
-* memremap-convert-devmap-static-branch-to-incdec.patch
-* mm-memcg-warning-on-memcg-after-readahead-page-charged.patch
-* mm-memcg-remove-useless-check-on-page-mem_cgroup.patch
-* mm-thp-move-lru_add_page_tail-func-to-huge_memoryc.patch
-* mm-thp-clean-up-lru_add_page_tail.patch
-* mm-thp-remove-code-path-which-never-got-into.patch
-* mm-thp-narrow-lru-locking.patch
-* mm-memcontrol-use-flex_array_size-helper-in-memcpy.patch
-* mm-memcontrol-use-the-preferred-form-for-passing-the-size-of-a-structure-type.patch
-* mm-account-pmd-tables-like-pte-tables.patch
-* mm-memory-fix-typo-in-__do_fault-comment.patch
-* mm-memoryc-replace-vmf-vma-with-variable-vma.patch
-* mm-mmap-rename-__vma_unlink_common-to-__vma_unlink.patch
-* mm-mmap-leverage-vma_rb_erase_ignore-to-implement-vma_rb_erase.patch
-* mmap-locking-api-add-mmap_lock_is_contended.patch
-* mm-smaps-extend-smap_gather_stats-to-support-specified-beginning.patch
-* mm-proc-smaps_rollup-do-not-stall-write-attempts-on-mmap_lock.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-dmapoolc-replace-open-coded-list_for_each_entry_safe.patch
-* mm-dmapoolc-replace-hard-coded-function-name-with-__func__.patch
-* mm-memory-failure-do-pgoff-calculation-before-for_each_process.patch
-* docs-vm-fix-mm_count-vs-mm_users-counter-confusion.patch
-* mm-page_alloc-tweak-comments-in-has_unmovable_pages.patch
-* mm-page_isolation-exit-early-when-pageblock-is-isolated-in-set_migratetype_isolate.patch
-* mm-page_isolation-drop-warn_on_once-in-set_migratetype_isolate.patch
-* mm-page_isolation-cleanup-set_migratetype_isolate.patch
-* virtio-mem-dont-special-case-zone_movable.patch
-* mm-document-semantics-of-zone_movable.patch
-* mm-huge_memoryc-update-tlb-entry-if-pmd-is-changed.patch
-* mips-do-not-call-flush_tlb_all-when-setting-pmd-entry.patch
-* kvm-ppc-book3s-hv-simplify-kvm_cma_reserve.patch
-* dma-contiguous-simplify-cma_early_percent_memory.patch
-* arm-xtensa-simplify-initialization-of-high-memory-pages.patch
-* arm64-numa-simplify-dummy_numa_init.patch
-* h8300-nds32-openrisc-simplify-detection-of-memory-extents.patch
-* riscv-drop-unneeded-node-initialization.patch
-* mircoblaze-drop-unneeded-numa-and-sparsemem-initializations.patch
-* memblock-make-for_each_memblock_type-iterator-private.patch
-* memblock-make-memblock_debug-and-related-functionality-private.patch
-* memblock-make-memblock_debug-and-related-functionality-private-fix.patch
-* memblock-reduce-number-of-parameters-in-for_each_mem_range.patch
-* arch-mm-replace-for_each_memblock-with-for_each_mem_pfn_range.patch
-* arch-drivers-replace-for_each_membock-with-for_each_mem_range.patch
-* x86-setup-simplify-initrd-relocation-and-reservation.patch
-* x86-setup-simplify-reserve_crashkernel.patch
-* memblock-remove-unused-memblock_mem_size.patch
-* memblock-implement-for_each_reserved_mem_region-using-__next_mem_region.patch
-* memblock-use-separate-iterators-for-memory-and-reserved-regions.patch
-* mmhwpoison-cleanup-unused-pagehuge-check.patch
-* mm-hwpoison-remove-recalculating-hpage.patch
-* mmhwpoison-inject-dont-pin-for-hwpoison_filter.patch
-* mmhwpoison-un-export-get_hwpoison_page-and-make-it-static.patch
-* mmhwpoison-kill-put_hwpoison_page.patch
-* mmhwpoison-unify-thp-handling-for-hard-and-soft-offline.patch
-* mmhwpoison-rework-soft-offline-for-free-pages.patch
-* mmhwpoison-rework-soft-offline-for-in-use-pages.patch
-* mmhwpoison-refactor-soft_offline_huge_page-and-__soft_offline_page.patch
-* mmhwpoison-return-0-if-the-page-is-already-poisoned-in-soft-offline.patch
-* mmhwpoison-introduce-mf_msg_unsplit_thp.patch
-* mmhwpoison-double-check-page-count-in-__get_any_page.patch
-* mm-vmstat-fix-proc-sys-vm-stat_refresh-generating-false-warnings.patch
-* mm-vmstat-fix-proc-sys-vm-stat_refresh-generating-false-warnings-fix.patch
-* mm-vmstat-fix-proc-sys-vm-stat_refresh-generating-false-warnings-fix-2.patch
-* mm-util-update-the-kerneldoc-for-kstrdup_const.patch
-* mm-memory_hotplug-inline-__offline_pages-into-offline_pages.patch
-* mm-memory_hotplug-enforce-section-granularity-when-onlining-offlining.patch
-* mm-memory_hotplug-simplify-page-offlining.patch
-* mm-page_alloc-simplify-__offline_isolated_pages.patch
-* mm-memory_hotplug-drop-nr_isolate_pageblock-in-offline_pages.patch
-* mm-page_isolation-simplify-return-value-of-start_isolate_page_range.patch
-* mm-memory_hotplug-simplify-page-onlining.patch
-* mm-page_alloc-drop-stale-pageblock-comment-in-memmap_init_zone.patch
-* mm-pass-migratetype-into-memmap_init_zone-and-move_pfn_range_to_zone.patch
-* mm-memory_hotplug-mark-pageblocks-migrate_isolate-while-onlining-memory.patch
-* mm-slab-remove-duplicate-include.patch
-* mm-page_reporting-drop-stale-list-head-check-in-page_reporting_cycle.patch
-* mm-highmem-clean-up-endif-comments.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* proc-sysctl-make-protected_-world-readable.patch
-* fs-configfs-delete-repeated-words-in-comments.patch
-* bitops-simplify-get_count_order_long.patch
-* bitops-use-the-same-mechanism-for-get_count_order.patch
-* checkpatch-add-kconfig-prefix.patch
-* checkpatch-move-repeated-word-test.patch
-* checkpatch-add-test-for-comma-use-that-should-be-semicolon.patch
-* panic-dump-registers-on-panic_on_warn.patch
-* aio-simplify-read_events.patch
-* proc-add-struct-mount-struct-super_block-addr-in-lx-mounts-command.patch
-* tasks-add-headers-and-improve-spacing-format.patch
-* romfs-support-inode-blocks-calculation.patch
-  linux-next.patch
-* ia64-fix-build-error-with-coredump.patch
-* mm-madvise-pass-task-and-mm-to-do_madvise.patch
-* pid-move-pidfd_get_pid-to-pidc.patch
-* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api.patch
-* mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-api-fix.patch
-* mm-madvise-check-fatal-signal-pending-of-target-process.patch
-* mm-memory-failure-remove-a-wrapper-for-alloc_migration_target.patch
-* mm-memory_hotplug-remove-a-wrapper-for-alloc_migration_target.patch
-* mm-migrate-avoid-possible-unnecessary-process-right-check-in-kernel_move_pages.patch
-* mm-mmap-add-inline-vma_next-for-readability-of-mmap-code.patch
-* mm-mmap-add-inline-munmap_vma_range-for-code-readability.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
+let's create an extra flags caps under hw->soc and the SoC capability
+check, something like hw->soc->caps & MTK_HW_CAPS_RMW_ATOMIC to easily
+extend various things for future SoC
+
+> +                       if (field == PINCTRL_PIN_REG_MODE)
+> +                               mtk_hw_set_mode_race_free(hw, &pf, value);
+> +                       else
+> +                               mtk_hw_set_value_race_free(hw, &pf, value);
+> +               }
+
+let's create a function holding that specific hardware stuff (at least
+currently it look like), something like
+
+static void mtk_hw_rmw(struct mtk_pinctrl *pctl,  struct mtk_pin_field *pf)
+{
+     if (pf->field == PINCTRL_PIN_REG_MODE) /* create a member field for pf */
+            mtk_hw_mwr(...);
+    else
+            mtk_hw_w1sc(...);
+}
+
+> +                       mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+> +                               (value & pf.mask) << pf.bitpos);
+> +       } else
+>                 mtk_hw_write_cross_field(hw, &pf, value);
+>
+>         return 0;
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index 27df087..95fb329 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -203,6 +203,8 @@ struct mtk_pin_soc {
+>         /* Specific parameters per SoC */
+>         u8                              gpio_m;
+>         bool                            ies_present;
+> +       bool                            race_free_access;
+> +       unsigned int                    mwr_field_width;
+>         const char * const              *base_names;
+>         unsigned int                    nbase_names;
+>
+> --
+> 1.8.1.1.dirty
