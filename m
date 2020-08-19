@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC57C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A2820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BFE20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgHSAsN (ORCPT
+        id S1727081AbgHSAtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:48:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1397 "EHLO mga07.intel.com"
+        Tue, 18 Aug 2020 20:49:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53238 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbgHSAsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:48:09 -0400
-IronPort-SDR: wntsWR/lgOfpAVx+p3o2OItHacY4bdg1lYlQdKTIyH2UhoAx/UWF5k/+MCViCsM0/tykPEJc5q
- aFNB+G/lIo9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="219331237"
+        id S1726717AbgHSAtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:49:22 -0400
+IronPort-SDR: QodW6lTM88M5lb4s54hMdHAhQNa5TXL5qZsMxMmpA1A8TGkW7JXc5r66EwuCWcLslPzE4DIy/v
+ eInnigaY387Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="154995741"
 X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="219331237"
+   d="scan'208";a="154995741"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 17:48:06 -0700
-IronPort-SDR: 9qJd5wQwY8EUpZi7B8IAT5r/6F0JBqSWuU9/1niXfoBvnekojvRa3gw/m7SMGPZXAbJ0ymFr2a
- EEf4d22Av6Ng==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 17:49:14 -0700
+IronPort-SDR: Z3hh+sU+VOyEIFBqBMektvPydshYXLHR4bT5YxxiHa0OGI+c+8WQx+7JCCcTE8xJ+SQixnGAZn
+ mVNfnQ20rF6A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="329154965"
+   d="scan'208";a="297034711"
 Received: from lkp-server02.sh.intel.com (HELO 2f0d8b563e65) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Aug 2020 17:48:04 -0700
+  by orsmga006.jf.intel.com with ESMTP; 18 Aug 2020 17:49:13 -0700
 Received: from kbuild by 2f0d8b563e65 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1k8CGq-0001V7-2k; Wed, 19 Aug 2020 00:48:04 +0000
-Date:   Wed, 19 Aug 2020 08:47:21 +0800
+        id 1k8CHw-0001WB-Jc; Wed, 19 Aug 2020 00:49:12 +0000
+Date:   Wed, 19 Aug 2020 08:48:04 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- 7a27ef5e83089090f3a4073a9157c862ef00acfc
-Message-ID: <5f3c7699.qPQBlroYolV+9b5H%lkp@intel.com>
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 527afc212231ea9d585b7709c0ab73263ecf0c85
+Message-ID: <5f3c76c4.WcMwmlV6Yqazx6yk%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,13 +55,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
-branch HEAD: 7a27ef5e83089090f3a4073a9157c862ef00acfc  x86/mm/64: Update comment in preallocate_vmalloc_pages()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
+branch HEAD: 527afc212231ea9d585b7709c0ab73263ecf0c85  x86/boot: Check that there are no run-time relocations
 
-elapsed time: 4040m
+elapsed time: 4041m
 
-configs tested: 191
-configs skipped: 91
+configs tested: 203
+configs skipped: 27
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -91,6 +92,10 @@ sh                          urquell_defconfig
 ia64                        generic_defconfig
 ia64                          tiger_defconfig
 csky                                defconfig
+arc                          axs101_defconfig
+powerpc                    amigaone_defconfig
+arm                      tct_hammer_defconfig
+arm                         lubbock_defconfig
 sh                        edosk7760_defconfig
 sh                           se7712_defconfig
 arm                         s5pv210_defconfig
@@ -110,6 +115,9 @@ arm                         ebsa110_defconfig
 sparc                               defconfig
 m68k                       m5275evb_defconfig
 ia64                      gensparse_defconfig
+h8300                       h8s-sim_defconfig
+sh                             sh03_defconfig
+arc                        nsim_700_defconfig
 powerpc                    adder875_defconfig
 nds32                             allnoconfig
 mips                          rb532_defconfig
@@ -134,6 +142,7 @@ arm                        clps711x_defconfig
 mips                      pic32mzda_defconfig
 mips                      maltasmvp_defconfig
 arm                           sunxi_defconfig
+x86_64                           alldefconfig
 riscv                    nommu_virt_defconfig
 powerpc                      pmac32_defconfig
 arm                      footbridge_defconfig
@@ -150,6 +159,10 @@ sh                               j2_defconfig
 sh                             espt_defconfig
 h8300                    h8300h-sim_defconfig
 mips                  decstation_64_defconfig
+arm                       imx_v4_v5_defconfig
+arm                       omap2plus_defconfig
+powerpc64                           defconfig
+arm                          lpd270_defconfig
 sh                          kfr2r09_defconfig
 sh                          sdk7786_defconfig
 arm                           spitz_defconfig
