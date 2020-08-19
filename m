@@ -2,82 +2,174 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA54C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A57C207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597859512;
-	bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AB/cXM521Glpv/RsMYZOw6zIHEcwEEHmeJLAZJ/WOfpQgxUQZiqMU0TpeTXAET1gz
-	 XaxfBD+5YZco5cyoCqA4VxO5BQXpO/1lOumi5ObrZT/S3AN7O7sQIGn1URx6EUcqlY
-	 KgV6fHVJ9WJ8jWcDM4lBulFcU5SsIx+ZMLLkopsA=
+	by mail.kernel.org (Postfix) with ESMTP id 3F98320758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:52:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilVda442"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgHSRvt (ORCPT
+        id S1726835AbgHSRwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHSRvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:51:46 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD7220758;
-        Wed, 19 Aug 2020 17:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597859506;
-        bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSwvVSWyiG9/khcwBoGOaVfY5XAVh206RjrXDPYAp0WwMUcluNAZVLukSAlAEbakq
-         Z0W2Zs4wUGS4hONtqysZJnkVK9xhIi3W7f5MnjestiyLWkmEN7i8wwddg1if3vFs4T
-         tJIt0XuVfyU+rXsUv7zjrp9bNS4T2CpybASzF+cU=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH 2/2] dma-buf: fence-chain: Document missing dma_fence_chain_init() parameter in kerneldoc
-Date:   Wed, 19 Aug 2020 19:51:34 +0200
-Message-Id: <20200819175134.19261-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819175134.19261-1-krzk@kernel.org>
-References: <20200819175134.19261-1-krzk@kernel.org>
+        Wed, 19 Aug 2020 13:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHSRwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:52:12 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143E0C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:52:12 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id c4so19698659otf.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CjMjzH3fehRCjIooC9HaoDNQWXnBk2N7r4YBAaodSRE=;
+        b=ilVda4423tQC2PN57v1Y+or7Ood8LoWFVJ+sJlsRWm2k71cek0UTL0bmC6S/YGy/8y
+         wjMoOuMep5J1MZojJAAT9rjKSTSOiH1WKSWvF2VjSbKyf9/0HzEZaGBcXY48iIG4oubx
+         I3lnS7pVKGjBqwy0PdQBPtlB1JcMeqJbZx+m5eVwl9b34nYeH6K1Kf+VcDmtFoNs5kbD
+         LVDG2qO6NBRSkes6cav0XvQVqY1iD8ylAHxorg0/9JXa0sm919fchCLDgz7Owc9mCw9b
+         3dQEMswJFD0cANQWk54fo+LnOQJlnViBNbOfM3PAZWpsVZpJpj4PQCNqEmUo8ZMpfPYg
+         c6NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CjMjzH3fehRCjIooC9HaoDNQWXnBk2N7r4YBAaodSRE=;
+        b=RPKfkpFop7fjhVWYG1RO3JFqamJvDpDsS+GYmgdTu8nUiKjz/upiox4kBYa5IcpfxG
+         Dc2tIh/5ArORl5oT2uooUu/5WKH3lJaF/uPmy/OBIBoljbu5wHEN7dTd/ZTynrO7+jLd
+         Gt+edn2VlyRaDK3V4Fh2GkaDc/ALVIFCQJuPQPDxL3XS8ZWS1WMgfK3aXPEcA5qsiOqe
+         25YSiTfpuwnzyNjsYPeQFxRWtpIRHqLzSCLlRlXD1AMmVoTtQyZKplt9/dhCBAUlsXnP
+         Ae3RWySZgR6meodrva10OFzFHqubJH1wS23YLFEAhcYU+eXaykaazwZ/gJkoSIAUqdW3
+         g59g==
+X-Gm-Message-State: AOAM531BSqLRl3AiTjZU5oOf+hfTv9KFpAK9ZXRQBaIktKvZl8DgvohO
+        rpAKL1o/G88n1yXxR6w9Uu7j5irWD8nO4rFRRdjqiA==
+X-Google-Smtp-Source: ABdhPJybPNjixtja1GlAsuU50hmtXdc2pKKDcKjwmlzD8tPzvqkUIfoyoP9CvF3XvtzCUpeLs6YxTdyOn6i9SQ/tqc0=
+X-Received: by 2002:a9d:7741:: with SMTP id t1mr18499997otl.368.1597859531040;
+ Wed, 19 Aug 2020 10:52:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200818234215.2255611-1-furquan@google.com> <20200819000845.GW1665100@dtor-ws>
+In-Reply-To: <20200819000845.GW1665100@dtor-ws>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Wed, 19 Aug 2020 10:51:54 -0700
+Message-ID: <CAEGmHFGfKtrEfODrqCpVoOvSS0jOnxWm_c6UYGm6_U2yjgFijw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: input: Use single i2c_transfer transaction when
+ using RM_CMD_BANK_SWITCH
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aaron Durbin <adurbin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 compile warnings (invalid kerneldoc):
+Hello Dmitry,
 
-    drivers/dma-buf/dma-fence-chain.c:233: warning: Function parameter or member 'seqno' not described in 'dma_fence_chain_init'
+On Tue, Aug 18, 2020 at 5:08 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Furquan,
+>
+> On Tue, Aug 18, 2020 at 04:42:15PM -0700, Furquan Shaikh wrote:
+> > On an AMD chromebook, where the same I2C bus is shared by both Raydium
+> > touchscreen and a trackpad device, it is observed that interleaving of
+> > I2C messages when raydium_i2c_read_message() is called leads to the
+> > Raydium touch IC reporting incorrect information. This is the sequence
+> > that was observed to result in the above issue:
+> >
+> > * I2C write to Raydium device for RM_CMD_BANK_SWITCH
+> > * I2C write to trackpad device
+> > * I2C read from trackpad device
+> > * I2C write to Raydium device for setting address
+> > * I2C read from Raydium device >>>> This provides incorrect
+> >   information
+> >
+> > This change updates raydium_i2c_read_message and
+> > raydium_i2c_send_message to perform all the I2C transfers in the
+> > function as part of a single i2c_transfer transaction. This ensures
+> > that no transactions are initiated to any other device on the same bus
+> > in between and hence the information obtained from the touchscreen
+> > device is correct. Verified with the patch across multiple
+> > reboots (>100) that the information reported by the Raydium
+> > touchscreen device during probe is correct.
+>
+> The devices (touchpad and touchscreen) have to have different addresses
+> and therefore should be able to operate independently of each other. Are
+> you sure that the problem is not in i2c controller implementation that
+> mixes up data streams from 2 separate devices?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/dma-buf/dma-fence-chain.c | 1 +
- 1 file changed, 1 insertion(+)
+Yes, the I2C addresses for the touchpad and touchscreen devices are
+different on this platform. Based on i2c tracing and the operations
+performed by the driver, the transactions are being sent out to the
+correct address. The issue occurs only when a transaction for the
+touchpad device is sent after the `RM_CMD_BANK_SWITCH` command is sent
+to the touchscreen device and before the driver reads back the
+required data. Snippet of tracing in good and bad case (with
+comments):
 
-diff --git a/drivers/dma-buf/dma-fence-chain.c b/drivers/dma-buf/dma-fence-chain.c
-index 3d123502ff12..7d129e68ac70 100644
---- a/drivers/dma-buf/dma-fence-chain.c
-+++ b/drivers/dma-buf/dma-fence-chain.c
-@@ -222,6 +222,7 @@ EXPORT_SYMBOL(dma_fence_chain_ops);
-  * @chain: the chain node to initialize
-  * @prev: the previous fence
-  * @fence: the current fence
-+ * @seqno: the sequence number to use for the fence chain
-  *
-  * Initialize a new chain node and either start a new chain or add the node to
-  * the existing chain of the previous fence.
--- 
-2.17.1
+Bad case:
+```
+i2c_write: i2c-0 #0 a=039 f=0000 l=5 [aa-20-00-1b-94] <<<<<<
+RM_CMD_BANK_SWITCH command to touchscreen device
+i2c_result: i2c-0 n=1 ret=1
+i2c_write: i2c-0 #0 a=015 f=0000 l=2 [03-01] <<<<<< Transaction to
+touchpad device
+i2c_read: i2c-0 #1 a=015 f=0001 l=2
+i2c_reply: i2c-0 #1 a=015 f=0001 l=2 [00-10]
+i2c_result: i2c-0 n=2 ret=2
+i2c_write: i2c-0 #0 a=039 f=0000 l=1 [94] <<<<<< Write/read after
+RM_CMD_BANK_SWITCH to touchscreen device
+i2c_read: i2c-0 #1 a=039 f=0001 l=16
+i2c_reply: i2c-0 #1 a=039 f=0001 l=16
+[15-00-20-74-07-00-d8-02-00-00-00-ef-ff-ff-ff-00] <<<<<< Incorrect
+data
+i2c_result: i2c-0 n=2 ret=2
+```
 
+Good case:
+```
+i2c_write: i2c-0 #0 a=015 f=0000 l=2 [03-01] <<<<<< Same transaction
+as above to touchpad device with same response from touchpad device
+i2c_read: i2c-0 #1 a=015 f=0001 l=2
+i2c_reply: i2c-0 #1 a=015 f=0001 l=2 [00-10]
+i2c_result: i2c-0 n=2 ret=2
+...
+i2c_write: i2c-0 #0 a=039 f=0000 l=5 [aa-20-00-1b-94] <<<<<<
+RM_CMD_BANK_SWITCH command to touchscreen device
+i2c_result: i2c-0 n=1 ret=1
+i2c_write: i2c-0 #0 a=039 f=0000 l=1 [94] <<<<<< Write/read after
+RM_CMD_BANK_SWITCH to touchscreen device
+i2c_read: i2c-0 #1 a=039 f=0001 l=16
+i2c_reply: i2c-0 #1 a=039 f=0001 l=16
+[42-18-22-a2-01-01-01-00-4a-2a-80-07-38-04-18-18] <<<<<< Correct data
+```
+
+It can be seen that the transaction which got interleaved in the bad
+case is also sent out in the good case with the same response from the
+touchpad device. Based on this evidence, the issue points towards a
+problem with touchscreen firmware expectations.
+
+Also, this same designware I2C driver is used on many other platforms
+as well. What is unique about this platform is that the touchpad and
+touchscreen devices share the same bus.
+
+Thanks,
+Furquan
+
+>
+> Thanks.
+
+>
+> --
+> Dmitry
