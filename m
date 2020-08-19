@@ -2,90 +2,131 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D643C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2D52075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70882205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHSCXT convert rfc822-to-8bit (ORCPT
+        id S1726847AbgHSCXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 22:23:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43403 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbgHSCXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:23:19 -0400
-IronPort-SDR: EpOzc/kNh3XgmpzDyhAcBAHxyHh/eYcHdyDfcrA2bYNVap+1v6Fi6WkPhxNrhUa0WGLeeU1bT/
- tmAVl5kfWxgQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="134554113"
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="134554113"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 19:23:17 -0700
-IronPort-SDR: haqcwgHPC5gRqDZZDGhSw9qb951yOxhfJKXto90QBLzLwbxrTfzcbGyyHE6/cjOdR23FvFSwET
- T1XtYwz48WDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="497068264"
-Received: from fmsmsx603-2.cps.intel.com (HELO fmsmsx603.amr.corp.intel.com) ([10.18.84.213])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Aug 2020 19:23:16 -0700
-Received: from shsmsx602.ccr.corp.intel.com (10.109.6.142) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 18 Aug 2020 19:23:15 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- SHSMSX602.ccr.corp.intel.com (10.109.6.142) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 19 Aug 2020 10:23:12 +0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Tue, 18 Aug 2020 19:23:11 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Tang, Feng" <feng.tang@intel.com>
-CC:     Borislav Petkov <bp@suse.de>,
-        "Chen, Rong A" <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>
-Subject: RE: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Thread-Topic: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Thread-Index: AQHWdTm7eFqn4vHQO0+vfjZnMLG+/6k+S8yAgADZR4D//46QUA==
-Date:   Wed, 19 Aug 2020 02:23:11 +0000
-Message-ID: <149e0cfb5b7e48dfb9bea966c7741336@intel.com>
-References: <20200425114414.GU26573@shao2-debian>
- <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
-In-Reply-To: <20200819020437.GA2605@shbuild999.sh.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 18 Aug 2020 22:23:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48744 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726372AbgHSCXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:23:44 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F059788C4DA54FD433DF;
+        Wed, 19 Aug 2020 10:23:18 +0800 (CST)
+Received: from huawei.com (10.90.52.227) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 10:23:12 +0800
+From:   qiuguorui1 <qiuguorui1@huawei.com>
+To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <zengweilin@huawei.com>,
+        <chenjianguo3@huawei.com>, <qiuguorui1@huawei.com>
+Subject: [PATCH] irqchip/stm32-exti: avoid interrupts losing due to clearing pending bit by mistake
+Date:   Wed, 19 Aug 2020 10:39:31 +0800
+Message-ID: <20200819023931.28997-1-qiuguorui1@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.52.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	0000000000019260 D pqr_state
+In the previous code, when the eoi handle of the exti clears the pending
+bit of the current interrupt, it will first read the values of fpr and
+rpr, then logically OR the corresponding bit of the interrupt number,
+and finally write back to fpr and rpr.
 
-Do you have /sys/fs/resctrl mounted?  This variable is read on every context switch.
-If your benchmark does a lot of context switching and this now shares a cache line
-with something different (especially something that is sometimes modified from another
-CPU) that could cause some cache line bouncing.
+We found through experiments that if two exti interrupts,
+we call them int1/int2, arrive almost at the same time. in our scenario,
+the time difference is 30 microseconds, assuming int1 is triggered first.
 
--Tony
+there will be an extreme scenario: both int's pending bit are set to 1,
+the irq handle of int1 is executed first, and eoi handle is then executed,
+at this moment, all pending bits are cleared, but the int 2 has not
+finally been reported to the cpu yet, which eventually lost int2.
+
+According to stm32's TRM description about rpr and fpr: Writing a 1 to this
+bit will trigger a rising edge event on event x, Writing 0 has no
+effect.
+
+Therefore, when clearing the pending bit, we only need to clear the
+pending bit of the irq.
+
+Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
+---
+ drivers/irqchip/irq-stm32-exti.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index 03a36be757d8..ee4faf5c90b8 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -26,6 +26,11 @@
+ 
+ #define HWSPNLCK_TIMEOUT	1000 /* usec */
+ 
++enum reg_ops {
++	REG_WRITE_ONLY,
++	REG_READ_WRITE
++};
++
+ struct stm32_exti_bank {
+ 	u32 imr_ofst;
+ 	u32 emr_ofst;
+@@ -416,13 +421,14 @@ static void stm32_irq_ack(struct irq_data *d)
+ 	irq_gc_unlock(gc);
+ }
+ 
+-static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
++static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg, enum reg_ops op)
+ {
+ 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
+ 	void __iomem *base = chip_data->host_data->base;
+-	u32 val;
++	u32 val = 0;
+ 
+-	val = readl_relaxed(base + reg);
++	if (op == REG_READ_WRITE)
++		val = readl_relaxed(base + reg);
+ 	val |= BIT(d->hwirq % IRQS_PER_BANK);
+ 	writel_relaxed(val, base + reg);
+ 
+@@ -449,9 +455,9 @@ static void stm32_exti_h_eoi(struct irq_data *d)
+ 
+ 	raw_spin_lock(&chip_data->rlock);
+ 
+-	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
++	stm32_exti_set_bit(d, stm32_bank->rpr_ofst, REG_WRITE_ONLY);
+ 	if (stm32_bank->fpr_ofst != UNDEF_REG)
+-		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
++		stm32_exti_set_bit(d, stm32_bank->fpr_ofst, REG_WRITE_ONLY);
+ 
+ 	raw_spin_unlock(&chip_data->rlock);
+ 
+@@ -478,7 +484,7 @@ static void stm32_exti_h_unmask(struct irq_data *d)
+ 	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
+ 
+ 	raw_spin_lock(&chip_data->rlock);
+-	chip_data->mask_cache = stm32_exti_set_bit(d, stm32_bank->imr_ofst);
++	chip_data->mask_cache = stm32_exti_set_bit(d, stm32_bank->imr_ofst, REG_READ_WRITE);
+ 	raw_spin_unlock(&chip_data->rlock);
+ 
+ 	if (d->parent_data->chip)
+-- 
+2.12.3
+
