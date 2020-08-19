@@ -2,236 +2,122 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92359C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71973205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91894206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBYVASY5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dIjzW/35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgHSKku (ORCPT
+        id S1727892AbgHSKli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43028 "EHLO
+        Wed, 19 Aug 2020 06:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgHSKks (ORCPT
+        with ESMTP id S1726782AbgHSKlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:40:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A800EC061757;
-        Wed, 19 Aug 2020 03:40:48 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 74so11449353pfx.13;
-        Wed, 19 Aug 2020 03:40:48 -0700 (PDT)
+        Wed, 19 Aug 2020 06:41:25 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC1DDC061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:41:24 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m22so24792559ljj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3/taaSSwO43T3oc5wD34j8cRbsw4iP1ZjgRFOGtK5pY=;
-        b=qBYVASY5hfdMO/SvJVzfxLQw1/Q6gXb23BAjAmEMUtyiwEnzzIdAmQg7ciEpAwbhif
-         Pb6IBmQbBH109u1U1FPnmF37a3O5/gIAjr/m7Unb2NWH+HtLDjlM/M0TTPxGDOgzRokD
-         uz5VgzedAV2Nws9yOhJNUhPoU7W+Cp1uxjIHhUYenufBQ1D7iv2FCPssKcO3VchdfhyU
-         C/xInnCMLKRXSDVifWvLb8XaKVC6nTXTX6YilTZY4KdCJGlurdZESdHoH1aR1DNn60LA
-         CaNb0a9iJJ9opCES3dvNrbXKuQI4A54zsusdBX3iWYcrygReI093bAOD//NXnHYHNA+x
-         BUfA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8j9EGJFaSYFS5klbcZOeULgDjTEPoTVPGEbkdeSYqgo=;
+        b=dIjzW/35yhnRnkFxvUPgMbWqfhAzruk/AqhRBDa2WxPDWwQYDGxGYfUp2HwEpekPS1
+         AWp6OT3mGiEZP3SLGhcpZOn+gwIUn/+8mk6dvxeY0+8kgMiReWklihQ24BZ52YeU3VI2
+         /jCyxxG4I/hzppae2+GHiGmr2UOufLHObk28gPDj/9K1PDpoDcIqzV4IvQNEZ34YAAmD
+         ENyVMVvQcsyDxMyjbag4fRSqtylR5Mtr6Db4A8KHpI5lXo5QUcWMf2AyX8cV7wLvAhoi
+         ro0wlCUEntEQgslF8gruZw3+mCQHccuTouSq7ivN9mFwWQhzVDuhLg8Rf1UggKLqrRz8
+         Cy0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3/taaSSwO43T3oc5wD34j8cRbsw4iP1ZjgRFOGtK5pY=;
-        b=oTXEj9hRCM+Jok6fqa2unJMRehkSQJtEiH4u5RE29AVzAXNdSwFoLv0VCGWEy0Z/K4
-         pe+htHworPAaEQeqyECNcWu15UBORt+6AnLnNoYRrAJjHV0QkGNhWRx49gQ2W5Wx9qm4
-         bY/RQbVg1IdFypNqCZBapaDtsSLqAsBzQc/ZkWjdrg+y1gnnEPgTpHf89Pis0aJV+PjZ
-         t9MLhQTjxAVEBVHYo5dzGp7JOxkJ6FBprqm3/0o2gIODrP7FwRT6QRVkZdBbzZfNElOK
-         VHxsWl7MsooZ3PoXELcLTJdD8fm690pXru5k1AwLmeIwr32nxxXvlKZ6+I9e9+y8uWTO
-         hCgw==
-X-Gm-Message-State: AOAM533pzHQXrdLAETM6zb4VybUeczgGBH47XzX3YwFQCrwEsEK92uMm
-        qx1DQvsZTPi0N7zLIuuXSF0+SDHl992ImZqKZmI=
-X-Google-Smtp-Source: ABdhPJyANAvip0iOJNMTBHtRuxrCZ86Aso3zZki/CssCkxnZIjEtqv2jPKc1r7ECvitN+Fm7bv0h2kXjteCtz/pXE1w=
-X-Received: by 2002:a63:f24a:: with SMTP id d10mr16243315pgk.4.1597833643342;
- Wed, 19 Aug 2020 03:40:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8j9EGJFaSYFS5klbcZOeULgDjTEPoTVPGEbkdeSYqgo=;
+        b=lHG3oBc5/9YD/xQbsWj6jTcUjl5HzVY3j6HWSr+KXlCmEG49yeuGQZDBhc23WcXZH7
+         lY5Kh/l7WZOjYO28qsuFw7XPGtrLnUZlJFTE9ViSkv5Kw1bGoWODmBnAgHUhovETvIpx
+         YrrNZr0VNODLDkSEHeS14B1t0hq7XDqs18tr7iKQmIY6YYtV5EFRGTdUQfFq+DkkQbcd
+         BxBe8nJjcBudixQAd+/9ChrZciXzi9vuayXEZVRK3YCvUqCYvrdFi5majj6hw7CEu5GA
+         2m1KyFex3JfBp5rd+qrA8adnIdh8tt39k1CJ9cFmp1sw18RRM86CfV+S79Sbf1ilpRgA
+         zUAw==
+X-Gm-Message-State: AOAM530izW8pZjCNPwgQKHCjMceC4f6PP5Ub3oXaHkZRRP5ToRNLRXzd
+        zZDkmLOOHaMs8CT/T8Mngb+NVg==
+X-Google-Smtp-Source: ABdhPJz2zqhf1rESCZqK5+UPE9Oyn+XjrrpI/jbRrqtY1rurHAv9YpsIlk7mPhkhznOPTWag/G+Fag==
+X-Received: by 2002:a2e:898d:: with SMTP id c13mr10887217lji.236.1597833682965;
+        Wed, 19 Aug 2020 03:41:22 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
+        by smtp.gmail.com with ESMTPSA id y13sm6534822ljd.19.2020.08.19.03.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 03:41:21 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, linux-pm@vger.kernel.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] PM / Domains: Add power on/off notifiers for genpd
+Date:   Wed, 19 Aug 2020 12:40:54 +0200
+Message-Id: <20200819104057.318230-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200809102511.2657644-1-Sandeep.Singh@amd.com> <20200809102511.2657644-3-Sandeep.Singh@amd.com>
-In-Reply-To: <20200809102511.2657644-3-Sandeep.Singh@amd.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 13:40:27 +0300
-Message-ID: <CAHp75VcOVHspaUYTGHHx++1qsWZ0NL=7qhh3avd+cK2sqoj8Ew@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] SFH: PCIe driver to add support of AMD sensor fusion
-To:     Sandeep Singh <Sandeep.Singh@amd.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        Richard Neumann <mail@richard-neumann.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shyam-sundar.S-k@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 9, 2020 at 1:25 PM Sandeep Singh <Sandeep.Singh@amd.com> wrote:
+A device may have specific HW constraints that must be obeyed to, before its
+corresponding PM domain (genpd) can be powered off - and vice verse at power
+on. These constraints can't be managed through the regular runtime PM based
+deployment for a device, because the access pattern for it, isn't always
+request based. In other words, using the runtime PM callbacks to deal with the
+constraints doesn't work for these cases.
 
-> AMD SFH uses HID over PCIe bus.SFH fw is part of MP2 processor
-> (MP2 which is an ARM=C2=AE Cortex-M4 core based co-processor to x86) and
-> it runs on MP2 where in driver resides on X86. This part of module
+For these reasons, this series introduces a power on/off notification mechanism
+to genpd. To add/remove a notifier for a device, the device must already have
+been attached to the genpd, which also means that it needs to be a part of the
+PM domain topology.
 
-where the driver
+The intent is to allow these genpd power on/off notifiers to replace the need
+for the existing CPU_CLUSTER_PM_ENTER|EXIT notifiers. For example, those would
+otherwise be needed in psci_pd_power_off() in cpuidle-psci-domain.c, when
+powering off the CPU cluster.
 
-> will communicate with MP2 FW and provide that data into DRAM
+Another series that enables drivers/soc/qcom/rpmh-rsc.c to make use of the new
+genpd on/off notifiers, are soon to be posted. However, I would appreciate any
+feedback on the approach taken, even before that series hits LKML.
 
-...
+Kind regards
+Ulf Hansson
 
-> +#
-> +#
 
-One is enough.
+Ulf Hansson (3):
+  PM / Domains: Rename power state enums for genpd
+  PM / Domains: Allow to abort power off when no ->power_off() callback
+  PM / Domains: Add support for PM domain on/off notifiers for genpd
 
-...
+ drivers/base/power/domain.c | 178 +++++++++++++++++++++++++++++-------
+ include/linux/pm_domain.h   |  19 +++-
+ 2 files changed, 162 insertions(+), 35 deletions(-)
 
-> +#define ACEL_EN                BIT(accel_idx)
-> +#define GYRO_EN                BIT(gyro_idx)
-> +#define MAGNO_EN       BIT(mag_idx)
-> +#define ALS_EN         BIT(als_idx)
+-- 
+2.25.1
 
-What is this?
-
-...
-
-> +int amd_mp2_get_sensor_num(struct amd_mp2_dev *privdata, u8 *sensor_id)
-> +{
-> +       int activestatus, num_of_sensors =3D 0;
-> +
-
-> +       if (!sensor_id)
-> +               return -EINVAL;
-
-Is it possible?
-
-> +       privdata->activecontrolstatus =3D readl(privdata->mmio + AMD_P2C_=
-MSG3);
-> +       activestatus =3D privdata->activecontrolstatus >> 4;
-> +       if (ACEL_EN  & activestatus)
-> +               sensor_id[num_of_sensors++] =3D accel_idx;
-> +
-> +       if (GYRO_EN & activestatus)
-> +               sensor_id[num_of_sensors++] =3D gyro_idx;
-> +
-> +       if (MAGNO_EN & activestatus)
-> +               sensor_id[num_of_sensors++] =3D mag_idx;
-> +
-> +       if (ALS_EN & activestatus)
-> +               sensor_id[num_of_sensors++] =3D als_idx;
-> +
-> +       return num_of_sensors;
-> +}
-
-...
-
-> +static int amd_mp2_pci_init(struct amd_mp2_dev *privdata, struct pci_dev=
- *pdev)
-> +{
-> +       int rc;
-> +
-
-> +       pci_set_drvdata(pdev, privdata);
-
-This is better to have after initial resources were retrieved.
-
-> +       pcim_enable_device(pdev);
-
-> +       pcim_iomap_regions(pdev, BIT(2), DRIVER_NAME);
-
-Where is the error check?
-
-> +       privdata->mmio =3D pcim_iomap_table(pdev)[2];
-> +       pci_set_master(pdev);
-> +
-> +       rc =3D pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
-> +       if (rc)
-> +               rc =3D pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-> +       return rc;
-> +}
-
-What is the point to have this function separated from ->probe()?
-
-...
-
-> +       rc =3D amd_sfh_hid_client_init(privdata);
-> +       if (rc)
-> +               return rc;
-> +       return 0;
-
-return amd_...(...);
-
-...
-
-> +static const struct pci_device_id amd_mp2_pci_tbl[] =3D {
-> +       { PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_MP2) },
-
-> +       {},
-
-No comma.
-
-> +};
-
-...
-
-> +#include <linux/pci.h>
-
-I don't see any users of it in the file.
-Use forward declaration instead.
-
-> +#include <linux/types.h>
-
-...
-
-> +enum command_id {
-> +       enable_sensor =3D 1,
-> +       disable_sensor =3D 2,
-> +       stop_all_sensors =3D 8,
-
-> +       invalid_cmd =3D 0xf
-
-GENMASK()?
-(Will require bits.h)
-
-> +};
-> +
-> +enum sensor_idx {
-> +       accel_idx =3D 0,
-> +       gyro_idx =3D 1,
-> +       mag_idx =3D 2,
-> +       als_idx =3D 19
-
-+ comma.
-
-> +};
-> +
-> +struct amd_mp2_dev {
-> +       struct pci_dev *pdev;
-> +       struct amdtp_cl_data *cl_data;
-
-> +       void __iomem *mmio;
-
-Is __iomem provided by linux/types.h? Otherwise include corresponding heade=
-r.
-
-> +       u32 activecontrolstatus;
-> +};
-
---=20
-With Best Regards,
-Andy Shevchenko
