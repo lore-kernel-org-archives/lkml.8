@@ -2,141 +2,101 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4235CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C32D206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oT2sQNKH"
+	by mail.kernel.org (Postfix) with ESMTP id DC00520786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHSKQX (ORCPT
+        id S1727813AbgHSKWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbgHSKQU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:16:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDBDC061757;
-        Wed, 19 Aug 2020 03:16:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f26so24733178ljc.8;
-        Wed, 19 Aug 2020 03:16:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PmuNCA8C1J0O1Ha2312XfEb0igOWHqaUnPbG9bzLCNc=;
-        b=oT2sQNKHBwoqtocu5xss6pTe050xjKx7Xm6n8w1yeKBnDOZCKLy+jdONHu71a00DG4
-         NseI1U26kkBM6w4vofkOT1JKfYrhdieK9LoNp0+ceTS2+Fdx3mQUQXhxJ0Og2twf7poc
-         CBuDPmt2eQH38F0STOKfnsmXXamHU3tnxKRWNlse/6a9856MYEPo3Gnh0n77ILDxBML7
-         9gSPiyo4qSeUXfZ7jhZjJv/IjjON9M3vsBK1y5k2ICpYiSTpclDUMacCXnOily5TELuM
-         JDNchGPNrWUzPnfDbDKyi1TMZ9DGapn8gfavtBXg4RN6yAUXUIvUUcb1PlFCPZbHUxgu
-         oyQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PmuNCA8C1J0O1Ha2312XfEb0igOWHqaUnPbG9bzLCNc=;
-        b=Tks7G4B7PAsQcUOxvNZoHeFLOxocwCe6c4EQVnflNV5Q8VH4r9NnJ/6NfC8QGNTpEx
-         ptAzj1wzc72xJPt8ey//I5qU4LaR1glFOafBWrNnd454ExhOjF/cFLCfsyyVE8IZVh10
-         OK9EPSTxv0KmInTC/85SkNlYSm2Dqh61fwIubtxbwRZ8cYxLzMZr2bhTvo9RRIs7IT3t
-         4JRnbMv/FzL8jMNeLCEZloCRoTis6hgvlUJjHae0F12m/1BHL2pNRrqzwMakOf/N/6X2
-         8DcuGSBM4M3aIzxGEQ+wFyoDP5K2ZZnwdXpLjpPqXQ4bQyP3GB1u5ndUhitLpT5vgVlR
-         Z5BA==
-X-Gm-Message-State: AOAM530CVFScWv1/zRheoN6mrSXvRJCMSjlKdznkZRpQ81VMFxDG0Jea
-        eS7ljhrVqnSbk3ilsi8oGRyvZamNEy4qz0DHJQzQFuKBq0w=
-X-Google-Smtp-Source: ABdhPJymMkRsWLyrLUupkQlTO2L8iBAdAJQrdzlms9YSPIf/rtNURQO06yV37hNiopDdSxXVpDyuCOYzl1oLMJaUfDY=
-X-Received: by 2002:a2e:3817:: with SMTP id f23mr10937015lja.118.1597832178487;
- Wed, 19 Aug 2020 03:16:18 -0700 (PDT)
+        Wed, 19 Aug 2020 06:22:21 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:17713 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbgHSKWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:22:20 -0400
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07JALZed012120
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Aug 2020 18:21:35 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 19 Aug 2020 18:21:38 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
+CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] btrfs: prevent hung check firing during long sync IO
+Date:   Wed, 19 Aug 2020 18:14:51 +0800
+Message-ID: <20200819101451.24266-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
- <20200818143633.GA628293@kroah.com> <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
- <20200818171457.GA736234@kroah.com> <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
- <20200818173656.GA748290@kroah.com> <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com>
- <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
-In-Reply-To: <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Wed, 19 Aug 2020 15:46:06 +0530
-Message-ID: <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
-Subject: Re: Scheduler benchmarks
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     Greg KH <greg@kroah.com>,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07JALZed012120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:45 PM peter enderborg
-<peter.enderborg@sony.com> wrote:
->
-> On 8/18/20 7:53 PM, Muni Sekhar wrote:
-> > On Tue, Aug 18, 2020 at 11:06 PM Greg KH <greg@kroah.com> wrote:
-> >> On Tue, Aug 18, 2020 at 11:01:35PM +0530, Muni Sekhar wrote:
-> >>> On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
-> >>>> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
-> >>>>> On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
-> >>>>>> On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
-> >>>>>>> Hi all,
-> >>>>>>>
-> >>>>>>> I=E2=80=99ve two identical Linux systems with only kernel differe=
-nces.
-> >>>>>> What are the differences in the kernels?
-> >>>> You didn't answer this question, is this the same kernel source bein=
-g
-> >>>> compared here?  Same version?  Same compiler?  Everything identical?
-> >>> Both systems are having exactly the same hardware configuration.
-> >>> Compiler and kernel versions are different. One system has Ubuntu
-> >>> 16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel an=
-d
-> >>> the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gc=
-c
-> >>> version 7.5.0).
-> >> Those are _very_ different kernel versions, with many years and tens o=
-f
-> >> thousands of different changes between them.
-> >>
-> >> Hopefully the newer kernel is faster, so just stick with that :)
-> > But unfortunately the newer kernel is very slow, that is the reason
-> > for starting this investigation :)
-> > Any type of help,  and guidelines to dive deeper will be highly appreci=
-ated.
->
-> On the 4.4 kernel you dont have
->
-> +CONFIG_RETPOLINE=3Dy
-> +CONFIG_INTEL_RDT=3Dy
-Thanks! That is helpful. Yes, I see 4.4 kernel don't have the above
-two config options.
-What analysis can be done to narrow down the root cause?
-Any example of reference could be helpful to understand.
+For sync and flush io, it may take long time to complete.
+So it's better to use wait_for_completion_io_timeout() in a
+while loop to avoid prevent hung check and crash(when set
+/proc/sys/kernel/hung_task_panic).
 
->
-> And your base is very different two.
->
-> Try to use mainline on both system and see.
->
-> You can also use the same base kernel version from ubuntu and
->
-> run your test.
->
->
-> >> greg k-h
-> >
-> >
->
+This is similar to prevent hung task check in submit_bio_wait(),
+blk_execute_rq().
 
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+---
+ fs/btrfs/disk-io.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---=20
-Thanks,
-Sekhar
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 9ae25f632..1eb560de0 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -17,6 +17,7 @@
+ #include <linux/error-injection.h>
+ #include <linux/crc32c.h>
+ #include <linux/sched/mm.h>
++#include <linux/sched/sysctl.h>
+ #include <asm/unaligned.h>
+ #include <crypto/hash.h>
+ #include "ctree.h"
+@@ -3699,12 +3700,21 @@ static void write_dev_flush(struct btrfs_device *device)
+ static blk_status_t wait_dev_flush(struct btrfs_device *device)
+ {
+ 	struct bio *bio = device->flush_bio;
++	unsigned long hang_check;
+ 
+ 	if (!test_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state))
+ 		return BLK_STS_OK;
+ 
+ 	clear_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state);
+-	wait_for_completion_io(&device->flush_wait);
++
++	/* Prevent hang_check timer from firing at us during very long I/O */
++	hang_check = sysctl_hung_task_timeout_secs;
++	if (hang_check)
++		while (!wait_for_completion_io_timeout(&device->flush_wait,
++						hang_check * (HZ/2)))
++			;
++	else
++		wait_for_completion_io(&device->flush_wait);
+ 
+ 	return bio->bi_status;
+ }
+-- 
+2.17.1
+
