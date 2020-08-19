@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A97DC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31B3C433E1
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21ACF2072D
+	by mail.kernel.org (Postfix) with ESMTP id AD5252072D
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597838272;
-	bh=/WIWw2n/+wrDPjDLyfC24PkcUx0wQWmEH1MOT30QfuU=;
+	bh=5GS0RTIKrmx37wIM0DKdGb8tbjBjS+1xmPyQ42ARTpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prXPiAAZIg89Hp/mLz/QZ6/8oWXzjmUt4mMQQBmUEF0c3IJJOGuukNRLsBn0qG3ZD
-	 SWVI/OfQSp5y4eeV5NEGqmGrFKz3N180BWlZgxODPZlNzGcX9nv34T2X3bfbuP2jxm
-	 YZ72qBdJ5vxF9xyEQvUm5e73Q1T3VlRcwkMsm75Y=
+	b=VRcXf837pvg9AP11+a5zFlar7mWEtW60xW0w5Kjb3Gga5vQdiROHqNXUZjpTDOEFh
+	 8cFZY2VaZHcY6GuZQM/ohSTxGusFiNKPRxaHGdnAZgAxW7XRZc/n83ocCEM/j40+52
+	 Q3tIkh9SgR+uXmin8p0Uu2OUmgikaFU89N95Arsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgHSL5t (ORCPT
+        id S1728463AbgHSL5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:57:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbgHSLtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728290AbgHSLtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 07:49:25 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5AA422D2C;
+        by mail.kernel.org (Postfix) with ESMTPSA id A69DE2312C;
         Wed, 19 Aug 2020 11:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597837584;
-        bh=/WIWw2n/+wrDPjDLyfC24PkcUx0wQWmEH1MOT30QfuU=;
+        bh=5GS0RTIKrmx37wIM0DKdGb8tbjBjS+1xmPyQ42ARTpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3NnZzKx3Xxxwblo150+RFJw4mTAOvHmpL+6NXk8pSjkUeorhZf6Oc6HP8M7m4kRt
-         3vH6G47mymUXenRfTYSOo4rpSd3YqnbDT4CJWTynANCLAmxnhDyW54aHsRZsr43BTA
-         L4k0ZcigMoo/30tyGQDLeFMDRq7yW+MRaHROuFYA=
+        b=oUmVK4NgKxFDLZLTXbMVUbYYyYMhmmd9fKYXotoAni1IqcKrso/lnz0pBxXbU+Blz
+         AWJXPfHQ8vmdXpyERgkVutmJoVABOKG05MseM89HcULnMVuBf+G7kmNQZ7lQkS23Nc
+         n8juiXA5jxEZSHcqcpd9I63xm/IkTZCjjNwXMnyg=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k8MXt-00EucC-Mx; Wed, 19 Aug 2020 13:46:21 +0200
+        id 1k8MXt-00Euc8-K1; Wed, 19 Aug 2020 13:46:21 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -52,18 +52,11 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Wei Xu <xuwei5@hisilicon.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH 47/49] dts: add support for Hikey 970 DRM
-Date:   Wed, 19 Aug 2020 13:46:15 +0200
-Message-Id: <0f87d492431d4163873498c954d87595bf8776a0.1597833138.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 45/49] dts: hikey970-pinctrl.dtsi: add missing pinctrl settings
+Date:   Wed, 19 Aug 2020 13:46:13 +0200
+Message-Id: <7e0450b87df8862852669d179eb9579b64fcf815.1597833138.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
 References: <cover.1597833138.git.mchehab+huawei@kernel.org>
@@ -74,244 +67,599 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the needed bits for the DRM driver to work with the
-Hikey 970 board.
+There are several pinctrl settings that are missing at this
+DT file.
+
+Also, the entries are out of order.
+
+Add the missing bits, as they'll be required by the DRM driver - and
+probably by other drivers not upstreamed yet.
+
+Reorder the entres, adding the missing bits.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |  52 +++++++
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |   6 +
- .../boot/dts/hisilicon/hikey970-drm.dtsi      | 130 ++++++++++++++++++
- 3 files changed, 188 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
+ .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 548 +++++++++++++++++-
+ 1 file changed, 537 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-index a9ad90e769ad..b3e16378182e 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-@@ -13,6 +13,7 @@
- #include "hi3670.dtsi"
- #include "hikey970-pinctrl.dtsi"
- #include "hikey970-pmic.dtsi"
-+#include "hikey970-drm.dtsi"
- 
- / {
- 	model = "HiKey970";
-@@ -40,6 +41,27 @@ memory@0 {
- 		reg = <0x0 0x0 0x0 0x0>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
+diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
+index d456b0aa6f58..75723a1ad5ab 100644
+--- a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
+@@ -61,6 +61,153 @@ uart6_pmx_func: uart6_pmx_func {
+ 					0x060 MUX_M1 /* UART6_TXD */
+ 				>;
+ 			};
 +
-+		drm_dma_reserved: drm_dma_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x32200000 0 0x8000000>;
-+			alignment = <0x400000>;
-+			no-map;
-+		};
-+	};
++			i2c3_pmx_func: i2c3_pmx_func {
++				pinctrl-single,pins = <
++					0x010 MUX_M1 /* I2C3_SCL */
++					0x014 MUX_M1 /* I2C3_SDA */
++				>;
++			};
 +
-+	fixed_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
++			i2c4_pmx_func: i2c4_pmx_func {
++				pinctrl-single,pins = <
++					0x03c MUX_M1 /* I2C4_SCL */
++					0x040 MUX_M1 /* I2C4_SDA */
++				>;
++			};
 +
- 	wlan_en: wlan-en-1-8v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan-en-regulator";
-@@ -435,3 +457,33 @@ &uart6 {
- 	label = "LS-UART1";
- 	status = "okay";
- };
++			cam0_rst_pmx_func: cam0_rst_pmx_func {
++				pinctrl-single,pins = <
++					0x714 MUX_M0 /* CAM0_RST */
++				>;
++			};
 +
-+&i2c4 {
-+	status = "okay";
++			cam1_rst_pmx_func: cam1_rst_pmx_func {
++				pinctrl-single,pins = <
++					0x048 MUX_M0 /* CAM1_RST */
++				>;
++			};
 +
-+	adv7533: adv7533@39 {
-+		compatible = "adi,adv7533";
-+		reg = <0x39>, <0x3f>, <0x3c>, <0x38>;
-+		reg-names = "main", "edid", "cec", "packet";
-+		v1p2-supply = <&ldo3>;
-+		avdd-supply = <&ldo3>;
-+		dvdd-supply = <&ldo3>;
-+		pvdd-supply = <&ldo3>;
-+		a2vdd-supply = <&ldo3>;
-+		v3p3-supply = <&fixed_3v3>;
++			cam0_pwd_n_pmx_func: cam0_pwd_n_pmx_func {
++				pinctrl-single,pins = <
++					0x098 MUX_M0 /* CAM0_PWD_N */
++				>;
++			};
 +
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <1 2>;
-+		pd-gpio = <&gpio27 1 0>;
-+		sel-gpio = <&gpio25 7 0>;
-+		adi,dsi-lanes = <4>;
-+		adi,disable-timing-generator;
-+		#sound-dai-cells = <0>;
++			cam1_pwd_n_pmx_func: cam1_pwd_n_pmx_func {
++				pinctrl-single,pins = <
++					0x044 MUX_M0 /* CAM1_PWD_N */
++				>;
++			};
 +
-+		port {
-+			adv7533_in: endpoint {
-+				remote-endpoint = <&dsi_out0>;
++			isp0_pmx_func: isp0_pmx_func {
++				pinctrl-single,pins = <
++					0x018 MUX_M1 /* ISP_CLK0 */
++					0x024 MUX_M1 /* ISP_SCL0 */
++					0x028 MUX_M1 /* ISP_SDA0 */
++				>;
++			};
++
++			isp1_pmx_func: isp1_pmx_func {
++				pinctrl-single,pins = <
++					0x01c MUX_M1 /* ISP_CLK1 */
++					0x02c MUX_M1 /* ISP_SCL1 */
++					0x030 MUX_M1 /* ISP_SDA1 */
++				>;
 +			};
 +		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-index 416f69c782d7..e2b2e21295a7 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-@@ -194,6 +194,12 @@ media2_crg: media2_crgctrl@e8900000 {
- 			#clock-cells = <1>;
++
++		pmx1: pinmux@fff11000 {
++			compatible = "pinctrl-single";
++			reg = <0x0 0xfff11000 0x0 0x73c>;
++			#gpio-range-cells = <0x3>;
++			#pinctrl-cells = <1>;
++			pinctrl-single,register-width = <0x20>;
++			pinctrl-single,function-mask = <0x7>;
++			/* pin base, nr pins & gpio function */
++			pinctrl-single,gpio-range = <&range 0 46 0>;
++
++			pwr_key_pmx_func: pwr_key_pmx_func {
++				pinctrl-single,pins = <
++					0x064 MUX_M0 /* GPIO_203 */
++				>;
++			};
++
++			pd_pmx_func: pd_pmx_func{
++				pinctrl-single,pins = <
++					0x080 MUX_M0 /* GPIO_221 */
++				>;
++			};
++
++			i2s2_pmx_func: i2s2_pmx_func {
++			    pinctrl-single,pins = <
++					0x050 MUX_M1 /* I2S2_DI */
++					0x054 MUX_M1 /* I2S2_DO */
++					0x058 MUX_M1 /* I2S2_XCLK */
++					0x05c MUX_M1 /* I2S2_XFS */
++			    >;
++			};
++
++			spi0_pmx_func: spi0_pmx_func {
++				pinctrl-single,pins = <
++					0x094 MUX_M1 /* SPI0_CLK */
++					0x098 MUX_M1 /* SPI0_DI */
++					0x09c MUX_M1 /* SPI0_DO */
++					0x0a0 MUX_M1 /* SPI0_CS0_N */
++				>;
++			};
++
++			spi2_pmx_func: spi2_pmx_func {
++				pinctrl-single,pins = <
++					0x710 MUX_M1 /* SPI2_CLK */
++					0x714 MUX_M1 /* SPI2_DI */
++					0x718 MUX_M1 /* SPI2_DO */
++					0x71c MUX_M1 /* SPI2_CS0_N */
++				>;
++			};
++
++			spi3_pmx_func: spi3_pmx_func {
++				pinctrl-single,pins = <
++					0x72c MUX_M1 /* SPI3_CLK */
++					0x730 MUX_M1 /* SPI3_DI */
++					0x734 MUX_M1 /* SPI3_DO */
++					0x738 MUX_M1 /* SPI3_CS0_N */
++				>;
++			};
++
++			i2c0_pmx_func: i2c0_pmx_func {
++				pinctrl-single,pins = <
++					0x020 MUX_M1 /* I2C0_SCL */
++					0x024 MUX_M1 /* I2C0_SDA */
++				>;
++			};
++
++			i2c1_pmx_func: i2c1_pmx_func {
++				pinctrl-single,pins = <
++					0x028 MUX_M1 /* I2C1_SCL */
++					0x02c MUX_M1 /* I2C1_SDA */
++				>;
++			};
++			i2c2_pmx_func: i2c2_pmx_func {
++				pinctrl-single,pins = <
++					0x030 MUX_M1 /* I2C2_SCL */
++					0x034 MUX_M1 /* I2C2_SDA */
++				>;
++			};
++
++			pcie_clkreq_pmx_func: pcie_clkreq_pmx_func {
++				pinctrl-single,pins = <
++					0x084 MUX_M1 /* PCIE0_CLKREQ_N */
++				>;
++			};
++
++			gpio185_pmx_func: gpio185_pmx_func {
++				pinctrl-single,pins = <0x01C    0x1>;
++			};
++
++			gpio185_pmx_idle: gpio185_pmx_idle {
++				pinctrl-single,pins = <0x01C    0x0>;
++			};
  		};
  
-+		iomcu_rst: reset {
-+			compatible = "hisilicon,hi3660-reset";
-+			hisi,rst-syscon = <&iomcu>;
-+			#reset-cells = <2>;
-+		};
+ 		pmx2: pinmux@e896c800 {
+@@ -184,6 +331,108 @@ PULL_UP
+ 					DRIVE7_02MA DRIVE6_MASK
+ 				>;
+ 			};
 +
- 		uart0: serial@fdf02000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf02000 0x0 0x1000>;
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
-new file mode 100644
-index 000000000000..3bd744b061ed
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/ {
-+	dpe: dpe@E8600000 {
-+		compatible = "hisilicon,kirin970-dpe";
-+		memory-region = <&drm_dma_reserved>;
-+		// DSS, PERI_CRG, SCTRL, PCTRL, NOC_DSS_Service_Target, PMCTRL, MEDIA_CRG
-+		reg = <0 0xE8600000 0 0xC0000>,
-+			<0 0xFFF35000 0 0x1000>,
-+			<0 0xFFF0A000 0 0x1000>,
-+			<0 0xE8A09000 0 0x1000>,
-+			<0 0xE86C0000 0 0x10000>,
-+			<0 0xFFF31000 0 0x1000>,
-+			<0 0xE87FF000 0 0x1000>;
-+		// dss-pdp
-+		interrupts = <0 245 4>;
-+
-+		clocks = <&media1_crg HI3670_ACLK_GATE_DSS>,
-+			<&media1_crg HI3670_PCLK_GATE_DSS>,
-+			<&media1_crg HI3670_CLK_GATE_EDC0>,
-+			<&media1_crg HI3670_CLK_GATE_LDI0>,
-+			<&media1_crg HI3670_CLK_GATE_DSS_AXI_MM>,
-+			<&media1_crg HI3670_PCLK_GATE_MMBUF>,
-+			<&crg_ctrl HI3670_PCLK_GATE_PCTRL>;
-+
-+		clock-names = "aclk_dss",
-+			"pclk_dss",
-+			"clk_edc0",
-+			"clk_ldi0",
-+			"clk_dss_axi_mm",
-+			"pclk_mmbuf",
-+			"pclk_pctrl";
-+
-+		dma-coherent;
-+
-+		port {
-+			dpe_out: endpoint {
-+				remote-endpoint = <&dsi_in>;
-+			};
-+		};
-+
-+		iommu_info {
-+			start-addr = <0x8000>;
-+			size = <0xbfff8000>;
-+		};
-+	};
-+
-+	dsi: dsi@E8601000 {
-+		compatible = "hisilicon,kirin970-dsi";
-+		reg = <0 0xE8601000 0 0x7F000>,
-+			<0 0xFFF35000 0 0x1000>,
-+			<0 0xE8A09000 0 0x1000>;
-+
-+		clocks = <&crg_ctrl HI3670_CLK_GATE_TXDPHY0_REF>,
-+			<&crg_ctrl HI3670_CLK_GATE_TXDPHY1_REF>,
-+			<&crg_ctrl HI3670_CLK_GATE_TXDPHY0_CFG>,
-+			<&crg_ctrl HI3670_CLK_GATE_TXDPHY1_CFG>,
-+			<&crg_ctrl HI3670_PCLK_GATE_DSI0>,
-+			<&crg_ctrl HI3670_PCLK_GATE_DSI1>;
-+		clock-names = "clk_txdphy0_ref",
-+					"clk_txdphy1_ref",
-+					"clk_txdphy0_cfg",
-+					"clk_txdphy1_cfg",
-+					"pclk_dsi0",
-+					"pclk_dsi1";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		mux-gpio = <&gpio25 7 0>;//HDMI_SEL(GPIO_207)
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dsi_in: endpoint {
-+					remote-endpoint = <&dpe_out>;
-+				};
++			i2c3_cfg_func: i2c3_cfg_func {
++				pinctrl-single,pins = <
++					0x014 0x0 /* I2C3_SCL */
++					0x018 0x0 /* I2C3_SDA */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
 +			};
 +
-+			port@1 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <1>;
-+
-+				dsi_out0: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&adv7533_in>;
-+				};
-+
-+				dsi_out1: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&panel0_in>;
-+				};
++			i2c4_cfg_func: i2c4_cfg_func {
++				pinctrl-single,pins = <
++					0x040 0x0 /* I2C4_SCL */
++					0x044 0x0 /* I2C4_SDA */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
 +			};
-+		};
 +
-+		panel@1 {
-+			compatible = "hisilicon,mipi-hikey";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			reg = <1>;
-+			panel-width-mm = <94>;
-+			panel-height-mm = <151>;
-+			vdd-supply = <&ldo3>;
-+			pwr-en-gpio = <&gpio21 3 0>;//GPIO_171
-+			bl-en-gpio = <&gpio6 4 0>;//GPIO_052
-+			pwm-gpio = <&gpio23 1 0>;//GPIO_185
-+
-+			port {
-+				panel0_in: endpoint {
-+					remote-endpoint = <&dsi_out1>;
-+				};
++			cam0_rst_cfg_func: cam0_rst_cfg_func {
++				pinctrl-single,pins = <
++					0x714 0x0 /* CAM0_RST */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
 +			};
-+		};
-+	};
 +
-+	panel_pwm {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "hisilicon,hisipwm";
-+		reg = <0 0xE8A04000 0 0x1000>,
-+			<0 0xFFF35000 0 0x1000>;
-+		clocks = <&crg_ctrl HI3670_CLK_GATE_PWM>;
-+		clock-names = "clk_pwm";
-+		pinctrl-names = "default","idle";
-+		pinctrl-0 = <&gpio185_pmx_func &gpio185_cfg_func>;
-+		pinctrl-1 = <&gpio185_pmx_idle &gpio185_cfg_idle>;
-+	};
-+};
++			cam1_rst_cfg_func: cam1_rst_cfg_func {
++				pinctrl-single,pins = <
++					0x04C 0x0 /* CAM1_RST */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
++			};
++
++			cam0_pwd_n_cfg_func: cam0_pwd_n_cfg_func {
++				pinctrl-single,pins = <
++					0x09C 0x0 /* CAM0_PWD_N */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
++			};
++
++			cam1_pwd_n_cfg_func: cam1_pwd_n_cfg_func {
++				pinctrl-single,pins = <
++					0x048 0x0 /* CAM1_PWD_N */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
++			};
++
++			isp0_cfg_func: isp0_cfg_func {
++				pinctrl-single,pins = <
++					0x01C 0x0 /* ISP_CLK0 */
++					0x028 0x0 /* ISP_SCL0 */
++					0x02C 0x0 /* ISP_SDA0 */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
++			};
++
++			isp1_cfg_func: isp1_cfg_func {
++				pinctrl-single,pins = <
++					0x020 0x0 /* ISP_CLK1 */
++					0x030 0x0 /* ISP_SCL1 */
++					0x034 0x0 /* ISP_SDA1 */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
++			};
+ 		};
+ 
+ 		pmx5: pinmux@fc182000 {
+@@ -338,22 +587,299 @@ DRIVE6_MASK
+ 			};
+ 		};
+ 
+-		pmx1: pinmux@fff11000 {
+-			compatible = "pinctrl-single";
+-			reg = <0x0 0xfff11000 0x0 0x73c>;
+-			#gpio-range-cells = <0x3>;
+-			#pinctrl-cells = <1>;
+-			pinctrl-single,register-width = <0x20>;
+-			pinctrl-single,function-mask = <0x7>;
+-			/* pin base, nr pins & gpio function */
+-			pinctrl-single,gpio-range = <&range 0 46 0>;
+-		};
+-
+ 		pmx16: pinmux@fff11800 {
+ 			compatible = "pinconf-single";
+ 			reg = <0x0 0xfff11800 0x0 0x73c>;
+ 			#pinctrl-cells = <1>;
+ 			pinctrl-single,register-width = <0x20>;
++
++			pwr_key_cfg_func: pwr_key_cfg_func {
++				pinctrl-single,pins = <
++					0x090 0x0 /* GPIO_203 */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_UP  PULL_UP   PULL_DIS  PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE7_02MA DRIVE6_MASK>;
++			};
++
++			usb_cfg_func: usb_cfg_func {
++				pinctrl-single,pins = <
++					0x0AC 0x0 /* GPIO_221 */
++				>;
++				pinctrl-single,bias-pulldown  = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup    = <
++					PULL_UP
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_02MA DRIVE6_MASK
++				>;
++			};
++
++			spi0_cfg_func: spi0_cfg_func {
++				pinctrl-single,pins = <
++					0x0c8 0x0 /* SPI0_DI */
++					0x0cc 0x0 /* SPI0_DO */
++					0x0d0 0x0 /* SPI0_CS0_N */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_06MA DRIVE6_MASK
++				>;
++			};
++
++			spi2_cfg_func: spi2_cfg_func {
++				pinctrl-single,pins = <
++					0x714 0x0 /* SPI2_DI */
++					0x718 0x0 /* SPI2_DO */
++					0x71c 0x0 /* SPI2_CS0_N */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_06MA DRIVE6_MASK
++				>;
++			};
++
++			spi3_cfg_func: spi3_cfg_func {
++				pinctrl-single,pins = <
++					0x730 0x0 /* SPI3_DI */
++					0x734 0x0 /* SPI3_DO */
++					0x738 0x0 /* SPI3_CS0_N */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_06MA DRIVE6_MASK
++				>;
++			};
++
++			spi0_clk_cfg_func: spi0_clk_cfg_func {
++				pinctrl-single,pins = <
++					0x0c4 0x0 /* SPI0_CLK */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_10MA DRIVE6_MASK
++				>;
++			};
++
++			spi2_clk_cfg_func: spi2_clk_cfg_func {
++				pinctrl-single,pins = <
++					0x710 0x0 /* SPI2_CLK */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_10MA DRIVE6_MASK
++				>;
++			};
++
++			spi3_clk_cfg_func: spi3_clk_cfg_func {
++				pinctrl-single,pins = <
++					0x72c 0x0 /* SPI3_CLK */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_10MA DRIVE6_MASK
++				>;
++			};
++
++			i2c0_cfg_func: i2c0_cfg_func {
++				pinctrl-single,pins = <
++					0x04c 0x0 /* I2C0_SCL */
++					0x050 0x0 /* I2C0_SDA */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
++
++			i2c1_cfg_func: i2c1_cfg_func {
++				pinctrl-single,pins = <
++					0x054 0x0 /* I2C1_SCL */
++					0x058 0x0 /* I2C1_SDA */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
++
++			i2c2_cfg_func: i2c2_cfg_func {
++				pinctrl-single,pins = <
++					0x05c 0x0 /* I2C2_SCL */
++					0x060 0x0 /* I2C2_SDA */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_04MA DRIVE6_MASK
++				>;
++			};
++
++			pcie_clkreq_cfg_func: pcie_clkreq_cfg_func {
++				pinctrl-single,pins = <
++					0x0b0 0x0
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_DIS
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_06MA DRIVE6_MASK
++				>;
++			};
++			i2s2_cfg_func: i2s2_cfg_func {
++				pinctrl-single,pins = <
++					0x07c 0x0 /* I2S2_DI */
++					0x080 0x0 /* I2S2_DO */
++					0x084 0x0 /* I2S2_XCLK */
++					0x088 0x0 /* I2S2_XFS */
++				>;
++				pinctrl-single,bias-pulldown = <
++					PULL_DIS
++					PULL_DOWN
++					PULL_DIS
++					PULL_DOWN
++				>;
++				pinctrl-single,bias-pullup = <
++					PULL_UP
++					PULL_UP
++					PULL_DIS
++					PULL_UP
++				>;
++				pinctrl-single,drive-strength = <
++					DRIVE7_02MA DRIVE6_MASK
++				>;
++			};
++
++			gpio185_cfg_func: gpio185_cfg_func {
++				pinctrl-single,pins = <0x048  0>;
++				pinctrl-single,bias-pulldown = <0 2 0 2>;
++				pinctrl-single,bias-pullup = <0 1 0 1>;
++				pinctrl-single,drive-strength = <0x00 0x70>;
++				pinctrl-single,slew-rate = <0x0 0x80>;
++			};
++
++			gpio185_cfg_idle: gpio185_cfg_idle {
++				pinctrl-single,pins = <0x048  0>;
++				pinctrl-single,bias-pulldown = <2 2 0 2>;
++				pinctrl-single,bias-pullup = <0 1 0 1>;
++				pinctrl-single,drive-strength = <0x00 0x70>;
++				pinctrl-single,slew-rate = <0x0 0x80>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.26.2
 
