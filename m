@@ -2,210 +2,204 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4432C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749FDC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD4B20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F60207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HkmeLJwY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tiT8YkFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgHSDuC (ORCPT
+        id S1726585AbgHSDyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgHSDuC (ORCPT
+        Tue, 18 Aug 2020 23:54:06 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:42054 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgHSDyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:50:02 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E5DC061389;
-        Tue, 18 Aug 2020 20:50:02 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWYh82z2Wz9sTW;
-        Wed, 19 Aug 2020 13:50:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597809000;
-        bh=QJL+2c44DsUVkajykUKbmCXXNUmUUBwF0maauwUnb+Y=;
+        Tue, 18 Aug 2020 23:54:05 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200819035401epoutp03e1f8aec2877b5803de71eec9c0206f41~sjwoHuBWt0524005240epoutp03Y
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:54:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200819035401epoutp03e1f8aec2877b5803de71eec9c0206f41~sjwoHuBWt0524005240epoutp03Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597809241;
+        bh=VWZYIWvbo8FyzZmp6q7gNu2nQM3g4xxG5QZg6Oj32mY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HkmeLJwY5OArIMblS8m2fc92cdbsvtXWDLTRmOBUOpxr0MisWi32/p/A/HG/xrMLq
-         gsESWCgoV2cuzYvA7hrMwniIi5oPmOCy2F1FPMhYAyrWfEr+Ob/I2gl4bfIO5YZ5dc
-         BZ2tBc6WuNYgp17oGA45CXPOT8Zw0Xb3H08jOgSlhhG3PZarXQqqblUXs0cG/7Cifo
-         wnCVuxhkdEp4s1nxUriyXCT/A1c9reiCBJqe8LLaOk9GTZRZvDKQfpVBXHBOIsOKXI
-         GdC3Vup0tOC5HKf/pA8trfUjHXiJBfX6gNdnE3JmmLz/lemilHeYgue7QTi0f2z70b
-         fVkgMmrnZ2nUg==
-Date:   Wed, 19 Aug 2020 13:49:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: linux-next: build failure after merge of the mhi tree
-Message-ID: <20200819134959.559a3639@canb.auug.org.au>
-In-Reply-To: <20200819134800.165b78a0@canb.auug.org.au>
-References: <20200819134800.165b78a0@canb.auug.org.au>
+        b=tiT8YkFLtBEN2v/C7UWZgWkMAFXuK6QhiHOH6XdeJfm0uHDmBLRUS8JVVWaogbRgm
+         TIYULmwPCH94ZgrrGoiBoUcvRBLKFjxaWhN8/XkO2RqOp+V4qAyD0vJa8LLP8G94oz
+         p8Bd03mbwjLZhCgAh88MdVFJ30N0rKxfQXTwRiDE=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200819035359epcas2p1d07fa5ac07155cbde39ec139311ac897~sjwnFdAJ02461124611epcas2p1X;
+        Wed, 19 Aug 2020 03:53:59 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.183]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BWYmj4q7PzMqYlt; Wed, 19 Aug
+        2020 03:53:57 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AC.5E.27013.552AC3F5; Wed, 19 Aug 2020 12:53:57 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200819035356epcas2p4bf6e672c27e14d4e0f728aae9a5f43fb~sjwjf74Jn2934829348epcas2p40;
+        Wed, 19 Aug 2020 03:53:56 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200819035356epsmtrp2add31132847dd79bcb8bff3a29704536~sjwje1X0n0355803558epsmtrp2E;
+        Wed, 19 Aug 2020 03:53:56 +0000 (GMT)
+X-AuditID: b6c32a48-d35ff70000006985-2b-5f3ca2551cd4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        71.85.08303.352AC3F5; Wed, 19 Aug 2020 12:53:55 +0900 (KST)
+Received: from KEI (unknown [12.36.155.227]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819035355epsmtip2ae445ec6236a53184e2ae990b7dada13~sjwjNPcQf0530505305epsmtip2C;
+        Wed, 19 Aug 2020 03:53:55 +0000 (GMT)
+Date:   Wed, 19 Aug 2020 12:46:26 +0900
+From:   Cho KyongHo <pullip.cho@samsung.com>
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     Hyesoo Yu <hyesoo.yu@samsung.com>, sumit.semwal@linaro.org,
+        minchan@kernel.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, joaodias@google.com, linux-mm@kvack.org,
+        surenb@google.com, vbabka@suse.cz, afd@ti.com,
+        benjamin.gaignard@linaro.org, lmark@codeaurora.org,
+        labbott@redhat.com, john.stultz@linaro.org,
+        christian.koenig@amd.com, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+Message-ID: <20200819034626.GB70898@KEI>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/24pYKJYbhFlbhyKiW5NJzJu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200818105557.svky5c7gdvk6khzu@DESKTOP-E1NTVVP.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTZxTH8/S29xZm5VKhPgMyuztnhI2X8vqIMM2m5kYdAcn2gei6rr0D
+        Yim15U2zBNiGIBW0wBhiXTuGY1YWHDJEkG20GASBMMBiYIMBZnMwXkYByQi4lisJ337nn/M/
+        5znn5OFjQgPhxU9WpTEalUxJ4a7cRqsv8n+vKkoa9P1/YjTXpSeQoa4WR59aunA00dUH0MxY
+        Cw8Z23t5aHBpDkdrF/p46IbuMxw9M01gqHvVH924t8JBi4PjHDTQbMDRxVs/8tBo7XMequy0
+        cdC3S3ME6q65iKG81nYCdf1uJ1BpvwlHV3OLwcGddF7/Gk7XflUL6IHiIg5tqk+n680XcLp+
+        oYSgC2cGOfRvtns4/aBilUuP6To49Mj6JEbP/fQIp4sbzIDuNrUTdMfjOxzaXv9KLJmgjEpi
+        ZApGI2ZU8lRFsioxmjoWL31HGhYeJPGX7EMRlFglS2GiqUPHY/2PJCsdu6DEGTJlukOKlWm1
+        VOBbUZrU9DRGnJSqTYumGLVCqZZI1AFaWYo2XZUYIE9NiZQEBQWHOTI/VCa13f4FqKu8s2ar
+        h7g5YF5UCFz4kAyFZcN/EIXAlS8kmwC059Ry2WABwEclxTw2sAO4XKF3BPwNi3U6kNWbAayb
+        /wZ3lhKS4wCO/8U4mUu+Di8NGzAn46QfvHmtAzi9HqQvzDVInV6MvMaF/+TrNrw7yAhoNRdw
+        nSwg98I6/QLGsjvsvPJkQ3chj0Jd/ZONOp7kbjjVlu2sA0mrC5yZKAfsOIeg0cy+B5I74FRH
+        A8GyF7TPtuKs4UsAZ42WF0m3HZO1uLMcAiv/zN8ohJFJcGJlEGMHfg22D3NZeTsssK4RrCyA
+        BeeFrHM3vPuFjbvZqrj18Qum4fXGzR32ALjUbOBcBrsqt4xWuaUby29CU8sCXulogZHesGad
+        z6IvrGsONAGeGYgYtTYlkdEGq0O33roebHwTP7oJXJ2ZD7AADh9YAORjlIegqHW/VChQyM6e
+        YzSpUk26ktFaQJjjTnrMy1Oe6vhnqjSpJCw4PDxoXxgKCw9G1E7BbGTfB0IyUZbGnGYYNaPZ
+        9HH4Ll45nPKJ8mrNHkLOnXZpe1jW9Xy0aNkWEvf3nu0d6Tq7DjTqa0oOiJTvFtsIS/K/Fl3H
+        yOmKKl/tylhb1rapIUN8v72352TpD43TYttL1kVh89HD1JjPKPSJEW07+XZc3rJxlQqpfVBG
+        9XI97mYUTRrDVyw9cdLCTDeflEL3p1duGT/q14wYnh72fvnMpZt3GuSLkYKFUyc+X03McyuS
+        iVxDGpqWE459nen5ScLHTa+eG1Kcz7Z0Th4ZcF0xG90kB3/dFUNH5N4P9iFjsxd16+sFzzJP
+        vV96lpkVVQeeeSht0b8ReiBfbK3Jqiw/IQm8rzg+mTG/F7uu+E60v4+I+VkgV8ZTXG2STOKH
+        abSy/wFXMz7nrwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWy7bCSvG7wIpt4gycXLCzen5rIbjFn/Ro2
+        i6ZDp9gsHp26wGjx9v5uVov5R86xWlz5+p7N4m/nBVaLld3NbBbfFzxitjjzW9di5Z4fTBZf
+        rjxksri8aw6bRc+GrawW99b8Z7WYdfIak8Wyr+/ZLc4s72G2aN17hN3i1N3P7BaTLy1gs5jd
+        2MfoIO7Reukvm8eaeWsYPS739TJ5LNhU6rFpVSebx6ZPk9g9ut5eYfK4c20Pm8eJGb9ZPO53
+        H2fyuP3vMbPH+31X2Tz6tqxi9Diz4Ai7x/Eb25k8Pm+SCxCI4rJJSc3JLEst0rdL4Mp48UGj
+        4JFERd/NP2wNjCdFuhg5OCQETCQOv9bvYuTiEBLYwShx6tEl9i5GTqC4lMS87rVMELawxP2W
+        I6wQRfcZJTrPX2IFSbAIqEr035rDDGKzCWhJrJ57nBFkqIiApkTjnHiQemaBhSwSV2ctYwOp
+        ERYwlzi8qoMFxOYV0JBYP/ETM8TQs4wSs45/YodICEqcnPkErIgZaOiNfy+ZQIYyC0hLLP/H
+        ARLmFPCS6N70BGyXqICKxKuD9RMYBWchaZ6FpHkWQvMCRuZVjJKpBcW56bnFhgVGeanlesWJ
+        ucWleel6yfm5mxjBiUBLawfjnlUf9A4xMnEwHmKU4GBWEuHt3WsdL8SbklhZlVqUH19UmpNa
+        fIhRmoNFSZz366yFcUIC6YklqdmpqQWpRTBZJg5OqQamDvHtZ96YTP+kLjh1fs6bpW2/X+w7
+        ZPbir2/3Ma6/P4uv3VRoVNb3eMN5zK/UW9aY224zp8e/h0eEtl4MsilT3ZXz4pjYhj7lEO8X
+        Ai8UN3TG6DfwcT2Ka2ixrfz7ZKn7LJPGZr3j8ac0niZPki2/symt5RaL9ZJ5rdWiP+rPXNNf
+        vW1u/HcR1XmrOP2awzg4jSMm/7xQ4CjTl8Hd/udSzX055vPLPFZc0NKZPq02/G/fvA/PNdwD
+        bJZN1G9Lf8druSD9nRvj7sDzIQ91FTJLN1hc323KX9i3aEtl1yLPiMulImp3ltz5+ummaVxO
+        TtREpxTXHzcuf5ny5oitcCjvB2M+qdWR7ytc81jOlxcrsRRnJBpqMRcVJwIAVw1au3MDAAA=
+X-CMS-MailID: 20200819035356epcas2p4bf6e672c27e14d4e0f728aae9a5f43fb
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----wn.C777VfLFf0j4dI6teQ5O7yZ9hP4.it_WB71vmM7CNsG.7=_322d9_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
+        <20200818080415.7531-1-hyesoo.yu@samsung.com>
+        <20200818105557.svky5c7gdvk6khzu@DESKTOP-E1NTVVP.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/24pYKJYbhFlbhyKiW5NJzJu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+------wn.C777VfLFf0j4dI6teQ5O7yZ9hP4.it_WB71vmM7CNsG.7=_322d9_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Hi all,
+On Tue, Aug 18, 2020 at 11:55:57AM +0100, Brian Starkey wrote:
+> Hi,
+> 
+> On Tue, Aug 18, 2020 at 05:04:12PM +0900, Hyesoo Yu wrote:
+> > These patch series to introduce a new dma heap, chunk heap.
+> > That heap is needed for special HW that requires bulk allocation of
+> > fixed high order pages. For example, 64MB dma-buf pages are made up
+> > to fixed order-4 pages * 1024.
+> > 
+> > The chunk heap uses alloc_pages_bulk to allocate high order page.
+> > https://lore.kernel.org/linux-mm/20200814173131.2803002-1-minchan@kernel.org
+> > 
+> > The chunk heap is registered by device tree with alignment and memory node
+> > of contiguous memory allocator(CMA). Alignment defines chunk page size.
+> > For example, alignment 0x1_0000 means chunk page size is 64KB.
+> > The phandle to memory node indicates contiguous memory allocator(CMA).
+> > If device node doesn't have cma, the registration of chunk heap fails.
+> 
+> This reminds me of an ion heap developed at Arm several years ago:
+> https://protect2.fireeye.com/v1/url?k=aceed8af-f122140a-acef53e0-0cc47a30d446-0980fa451deb2df6&q=1&e=a58a9bb0-a837-4fc5-970e-907089bfe25e&u=https%3A%2F%2Fgit.linaro.org%2Flanding-teams%2Fworking%2Farm%2Fkernel.git%2Ftree%2Fdrivers%2Fstaging%2Fandroid%2Fion%2Fion_compound_page.c
+> 
+> Some more descriptive text here:
+> https://protect2.fireeye.com/v1/url?k=83dc3e8b-de10f22e-83ddb5c4-0cc47a30d446-a406aa201ca7dddc&q=1&e=a58a9bb0-a837-4fc5-970e-907089bfe25e&u=https%3A%2F%2Fgithub.com%2FARM-software%2FCPA
+> 
+> It maintains a pool of high-order pages with a worker thread to
+> attempt compaction and allocation to keep the pool filled, with high
+> and low watermarks to trigger freeing/allocating of chunks.
+> It implements a shrinker to allow the system to reclaim the pool under
+> high memory pressure.
+> 
+> Is maintaining a pool something you considered? From the
+> alloc_pages_bulk thread it sounds like you want to allocate 300M at a
+> time, so I expect if you tuned the pool size to match that it could
+> work quite well.
+> 
+> That implementation isn't using a CMA region, but a similar approach
+> could definitely be applied.
+> 
+I have seriously considered CPA in our product but we developed our own
+because of the pool in CPA.
+The high-order pages are required by some specific users like Netflix
+app. Moreover required number of bytes are dramatically increasing
+because of high resolution videos and displays in these days.
 
-On Wed, 19 Aug 2020 13:48:00 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> After merging the mhi tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
+Gathering lots of free high-order pages in the background during
+run-time means reserving that amount of pages from the entier available
+system memory. Moreover the gathered pages are soon reclaimed whenever
+the system is sufferring from memory pressure (i.e. camera recording,
+heavy games). So we had to consider allocating hundreds of megabytes at
+at time. Of course we don't allocate all buffers by a single call to
+alloc_pages_bulk(). But still a buffer is very large.
+A single frame of 8K HDR video needs 95MB (7680*4320*2*1.5). Even a
+single frame of HDR 4K video needs 24MB and 4K HDR is now popular in
+Netflix, YouTube and Google Play video.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/bus/mhi/core/main.o
-WARNING: modpost: missing MODULE_LICENSE() in drivers/bus/mhi/core/pm.o
-WARNING: modpost: missing MODULE_LICENSE() in drivers/bus/mhi/core/boot.o
-ERROR: modpost: "mhi_read_reg_field" [drivers/bus/mhi/core/boot.ko] undefin=
-ed!
-ERROR: modpost: "mhi_state_str" [drivers/bus/mhi/core/boot.ko] undefined!
-ERROR: modpost: "mhi_read_reg" [drivers/bus/mhi/core/boot.ko] undefined!
-ERROR: modpost: "mhi_ee_str" [drivers/bus/mhi/core/boot.ko] undefined!
-ERROR: modpost: "mhi_write_reg_field" [drivers/bus/mhi/core/boot.ko] undefi=
-ned!
-ERROR: modpost: "mhi_write_reg" [drivers/bus/mhi/core/boot.ko] undefined!
-ERROR: modpost: "mhi_get_exec_env" [drivers/bus/mhi/core/boot.ko] undefined!
-ERROR: modpost: "mhi_set_mhi_state" [drivers/bus/mhi/core/boot.ko] undefine=
-d!
-ERROR: modpost: "mhi_ready_state_transition" [drivers/bus/mhi/core/boot.ko]=
- undefined!
-ERROR: modpost: "to_mhi_pm_state_str" [drivers/bus/mhi/core/boot.ko] undefi=
-ned!
-ERROR: modpost: "mhi_read_reg_field" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_deinit_free_irq" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_ring_er_db" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_state_str" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_read_reg" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_fw_load_handler" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_destroy_device" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_get_mhi_state" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_init_irq_setup" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_ring_cmd_db" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_deinit_dev_ctxt" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_init_mmio" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_write_reg_field" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_free_bhie_table" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_write_reg" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_write_db" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_ring_chan_db" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_get_exec_env" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_init_dev_ctxt" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "to_mhi_pm_state_str" [drivers/bus/mhi/core/pm.ko] undefine=
-d!
-ERROR: modpost: "mhi_create_devices" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "dev_state_tran_str" [drivers/bus/mhi/core/pm.ko] undefined!
-ERROR: modpost: "mhi_tryset_pm_state" [drivers/bus/mhi/core/main.ko] undefi=
-ned!
-ERROR: modpost: "mhi_state_str" [drivers/bus/mhi/core/main.ko] undefined!
-ERROR: modpost: "mhi_pm_m0_transition" [drivers/bus/mhi/core/main.ko] undef=
-ined!
-ERROR: modpost: "mhi_pm_m3_transition" [drivers/bus/mhi/core/main.ko] undef=
-ined!
-ERROR: modpost: "mhi_queue_state_transition" [drivers/bus/mhi/core/main.ko]=
- undefined!
-ERROR: modpost: "mhi_alloc_device" [drivers/bus/mhi/core/main.ko] undefined!
-ERROR: modpost: "mhi_init_chan_ctxt" [drivers/bus/mhi/core/main.ko] undefin=
-ed!
-ERROR: modpost: "mhi_ee_str" [drivers/bus/mhi/core/main.ko] undefined!
-ERROR: modpost: "mhi_deinit_chan_ctxt" [drivers/bus/mhi/core/main.ko] undef=
-ined!
-ERROR: modpost: "mhi_pm_sys_err_handler" [drivers/bus/mhi/core/main.ko] und=
-efined!
-ERROR: modpost: "mhi_pm_m1_transition" [drivers/bus/mhi/core/main.ko] undef=
-ined!
-ERROR: modpost: "mhi_bus_type" [drivers/bus/mhi/core/main.ko] undefined!
-ERROR: modpost: "to_mhi_pm_state_str" [drivers/bus/mhi/core/main.ko] undefi=
-ned!
-ERROR: modpost: "mhi_read_reg_field" [drivers/bus/mhi/core/init.ko] undefin=
-ed!
-ERROR: modpost: "mhi_db_brstmode_disable" [drivers/bus/mhi/core/init.ko] un=
-defined!
-ERROR: modpost: "mhi_process_data_event_ring" [drivers/bus/mhi/core/init.ko=
-] undefined!
-ERROR: modpost: "mhi_db_brstmode" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_rddm_prepare" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_intvec_threaded_handler" [drivers/bus/mhi/core/init.ko=
-] undefined!
-ERROR: modpost: "mhi_debugfs_init" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_read_reg" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_process_ctrl_ev_ring" [drivers/bus/mhi/core/init.ko] u=
-ndefined!
-ERROR: modpost: "mhi_ev_task" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_map_single_use_bb" [drivers/bus/mhi/core/init.ko] unde=
-fined!
-ERROR: modpost: "mhi_ctrl_ev_task" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_unmap_single_use_bb" [drivers/bus/mhi/core/init.ko] un=
-defined!
-ERROR: modpost: "mhi_prepare_channel" [drivers/bus/mhi/core/init.ko] undefi=
-ned!
-ERROR: modpost: "mhi_alloc_bhie_table" [drivers/bus/mhi/core/init.ko] undef=
-ined!
-ERROR: modpost: "mhi_unmap_single_no_bb" [drivers/bus/mhi/core/init.ko] und=
-efined!
-ERROR: modpost: "mhi_write_reg_field" [drivers/bus/mhi/core/init.ko] undefi=
-ned!
-ERROR: modpost: "mhi_intvec_handler" [drivers/bus/mhi/core/init.ko] undefin=
-ed!
-ERROR: modpost: "mhi_free_bhie_table" [drivers/bus/mhi/core/init.ko] undefi=
-ned!
-ERROR: modpost: "mhi_debugfs_exit" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_write_reg" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_map_single_no_bb" [drivers/bus/mhi/core/init.ko] undef=
-ined!
-ERROR: modpost: "mhi_reset_chan" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_pm_st_worker" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_create_debugfs" [drivers/bus/mhi/core/init.ko] undefin=
-ed!
-ERROR: modpost: "mhi_irq_handler" [drivers/bus/mhi/core/init.ko] undefined!
-ERROR: modpost: "mhi_destroy_debugfs" [drivers/bus/mhi/core/init.ko] undefi=
-ned!
+> Thanks,
+> -Brian
 
-> I am not sure which commit(s) caused this.
->=20
-> I have used the mhi tree from next-20200818 for today.
+Thank you!
 
---=20
-Cheers,
-Stephen Rothwell
+KyongHo
 
---Sig_/24pYKJYbhFlbhyKiW5NJzJu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+------wn.C777VfLFf0j4dI6teQ5O7yZ9hP4.it_WB71vmM7CNsG.7=_322d9_
+Content-Type: text/plain; charset="utf-8"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88oWcACgkQAVBC80lX
-0GyiLAf+OCgzNhMlzcvxkqJ0JeYDv/uneda6j5cTAx79ZdQbVr/ejvqXfvKMbTQB
-rm0U3UAi1WxsDATno7SzoZv62wC/L/fh0n1X7epR4gjJrcMwbDzmJZ1ltRNvp4VE
-yk1yDaOBZYmw+lkInIpZfL8p0z8EAV5oOFe3FZBQg+Za+1FvSzNiiOxir0w5v87t
-Lu84C1WsV9PdGGv5Vy4QbLP8Vt4zJnJcFRYVNB2ymjZZ0qAEUymRtYbmtG8D2Q55
-vSVahhNdc7J5bYj+KdHlmfhkZeykTofV8IPdsfSRBgOxMRPMF1K8djlcNAC+ndLS
-LZnGvVyTFXy9GCYKF3uPDqEqSYEioA==
-=Clxo
------END PGP SIGNATURE-----
-
---Sig_/24pYKJYbhFlbhyKiW5NJzJu--
+------wn.C777VfLFf0j4dI6teQ5O7yZ9hP4.it_WB71vmM7CNsG.7=_322d9_--
