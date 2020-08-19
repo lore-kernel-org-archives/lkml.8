@@ -2,125 +2,249 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F99DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC30C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832472078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78E6207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfxJxqRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgHSPzz convert rfc822-to-8bit (ORCPT
+        id S1728415AbgHSP6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:55:55 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26443 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728415AbgHSPzw (ORCPT
+        Wed, 19 Aug 2020 11:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726570AbgHSP6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:55:52 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-16-hHSNbmghP5KK9A30MkCOpQ-1; Wed, 19 Aug 2020 16:55:49 +0100
-X-MC-Unique: hHSNbmghP5KK9A30MkCOpQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 19 Aug 2020 16:55:47 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 19 Aug 2020 16:55:47 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Matthew Wilcox' <willy@infradead.org>
-CC:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Yoshinori Sato" <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        "Fenghua Yu" <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Ley Foon Tan" <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        Wed, 19 Aug 2020 11:58:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B86C061757;
+        Wed, 19 Aug 2020 08:58:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so25941867ljc.8;
+        Wed, 19 Aug 2020 08:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WpkGfu0CGdUr929P6iq5nI7Pjfdnb6xj4if00/aDIi0=;
+        b=MfxJxqRXXA2RQuHXtMcg2GAIh3wztVuChyqJRWq3BqpaYelSSoYL8iUtLnwpk4QX1t
+         KEe8j6ydTfRWQtvh1MY0EbpdZfyC15B8pxOF1dq6tYwlH5YqP46Fh2hs0bAOXHiiKfEa
+         qipcrMNjVorQEJGiybSULJ3e46hfRXEDMykJ5SE7zs5tumWeW5hSk6xHWAqd/QUswRf+
+         qMeq0D6hBWmsVYNHZY/WppnZk5adcRKycDhMc5ljjKMHHfF6mkrI15fLUXpRQbNwtMHr
+         LXZWK139vk9eVhe9Np798fOf7l8vSSqKphxAql4XvdcCVyxyisu8be+3gkA7DU7U7Tm1
+         TmaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WpkGfu0CGdUr929P6iq5nI7Pjfdnb6xj4if00/aDIi0=;
+        b=n3N40ORAgjVELBPI9LnkAx/e/5vso0pfWsV/ynlBZJBy5Hf59TI9doWibNSOMrq+Vs
+         w4c0p9X4W5mobFV1urOaB8wEzG/UN+6hHqrP4madnPy6LvzEDF0nISKBIR+c7skVWbbm
+         gxOKMbavPGz5rhm1//4nCJ68FO5+2iD13K9AR4XDfh88dXPknA8353YG6TCUI7+f4ibH
+         yQtkOTZDaO/07/B6nXtN+xtvln3Oj42dSnx1GdkurlnOhsX3kSrNL+yBA03OcoB3uVix
+         VdjXzX8kUlFvAKnMbjTEYgJzLEViI/3TyPxdq9y4u9Gg7nPcq4UIMPTfwEiX/GLQ+N7j
+         0dTw==
+X-Gm-Message-State: AOAM530ECS9+fERT4Vk3Pci904qNeu0cErLXHyJXqC6+9xoRUNygHO/k
+        bLepO5PP5he+Q6ECpnCSUM4=
+X-Google-Smtp-Source: ABdhPJw8Jk8NbRv1zVECV/5+Fr24imvCrzsJaQfMCdfSEvgfxA4oF6wNgtAF/IYcZZNgNdGSv18/tg==
+X-Received: by 2002:a2e:8642:: with SMTP id i2mr13245375ljj.368.1597852691270;
+        Wed, 19 Aug 2020 08:58:11 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id i26sm6756363ljj.102.2020.08.19.08.58.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 08:58:10 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 19 Aug 2020 17:58:08 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        "Stafford Horne" <shorne@gmail.com>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Tom Zanussi" <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "uclinux-h8-devel@lists.sourceforge.jp" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "kgdb-bugreport@lists.sourceforge.net" 
-        <kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: RE: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Thread-Topic: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Thread-Index: AQHWdjo738I4JRuBMEmE9DxJ3r/Mo6k/jYog///0u4CAABKhYA==
-Date:   Wed, 19 Aug 2020 15:55:47 +0000
-Message-ID: <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
-References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
- <20200818174447.GV17456@casper.infradead.org>
- <20200819074340.GW2674@hirez.programming.kicks-ass.net>
- <20200819084556.im5zfpm2iquzvzws@wittgenstein>
- <20200819111851.GY17456@casper.infradead.org>
- <87a6yq222c.fsf@x220.int.ebiederm.org>
- <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
- <87mu2qznlv.fsf@x220.int.ebiederm.org>
- <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
- <20200819154521.GE17456@casper.infradead.org>
-In-Reply-To: <20200819154521.GE17456@casper.infradead.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH] rcu: shrink each
+ possible cpu krcp
+Message-ID: <20200819155808.GA8817@pc636>
+References: <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+ <20200818171807.GI27891@paulmck-ThinkPad-P72>
+ <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+ <20200818210355.GM27891@paulmck-ThinkPad-P72>
+ <20200818215511.GA2538@pc636>
+ <20200818220245.GO27891@paulmck-ThinkPad-P72>
+ <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
+ <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <20200819135654.GB3875610@google.com>
+ <20200819152159.GX27891@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819152159.GX27891@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox
-> Sent: 19 August 2020 16:45
+On Wed, Aug 19, 2020 at 08:21:59AM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 19, 2020 at 09:56:54AM -0400, Joel Fernandes wrote:
+> > On Wed, Aug 19, 2020 at 03:00:55AM +0000, Zhang, Qiang wrote:
+> > > 
+> > > 
+> > > ________________________________________
+> > > 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 Joel Fernandes <joel@joelfernandes.org>
+> > > 发送时间: 2020年8月19日 8:04
+> > > 收件人: Paul E. McKenney
+> > > 抄送: Uladzislau Rezki; Zhang, Qiang; Josh Triplett; Steven Rostedt; Mathieu Desnoyers; Lai Jiangshan; rcu; LKML
+> > > 主题: Re: [PATCH] rcu: shrink each possible cpu krcp
+> > > 
+> > > On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > 
+> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > index b8ccd7b5af82..6decb9ad2421 100644
+> > > > > --- a/kernel/rcu/tree.c
+> > > > > +++ b/kernel/rcu/tree.c
+> > > > > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
+> > > > >  {
+> > > > >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> > > > >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+> > > > > +       struct kfree_rcu_cpu *krcp;
+> > > > >
+> > > > >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+> > > > >                 return 0;
+> > > > >
+> > > > > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
+> > > > > +       krcp = this_cpu_ptr(&krc)
+> > > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
+> > > > > +
+> > > > >
+> > > > > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
+> > > > > Maybe be never.
+> > > >
+> > > > Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
+> > > > hard time getting too worried about it.  ;-)
+> > > 
+> > > >Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
+> > > >on the cache reaper who's job is to flush the per-cpu caches. So I
+> > > >believe during CPU offlining, the per-cpu slab caches are flushed.
+> > > >
+> > > >thanks,
+> > > >
+> > >  >- Joel
+> > > 
+> > > When cpu going offline, the slub or slab only flush free objects in offline
+> > > cpu cache,  put these free objects in node list  or return buddy system,
+> > > for those who are still in use, they still stay offline cpu cache.
+> > > 
+> > > If we want clean per-cpu "krcp" objects when cpu going offline.  we should
+> > > free "krcp" cache objects in "rcutree_offline_cpu", this func be called
+> > > before other rcu cpu offline func. and then "rcutree_offline_cpu" will be
+> > > called in "cpuhp/%u" per-cpu thread.
+> > > 
+> > 
+> > Could you please wrap text properly when you post to mailing list, thanks. I
+> > fixed it for you above.
+> > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 8ce77d9ac716..1812d4a1ac1b 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3959,6 +3959,7 @@ int rcutree_offline_cpu(unsigned int cpu)
+> > >         unsigned long flags;
+> > >         struct rcu_data *rdp;
+> > >         struct rcu_node *rnp;
+> > > +       struct kfree_rcu_cpu *krcp;
+> > >  
+> > >         rdp = per_cpu_ptr(&rcu_data, cpu);
+> > >         rnp = rdp->mynode;
+> > > @@ -3970,6 +3971,11 @@ int rcutree_offline_cpu(unsigned int cpu)
+> > >  
+> > >         // nohz_full CPUs need the tick for stop-machine to work quickly
+> > >         tick_dep_set(TICK_DEP_BIT_RCU);
+> > > +
+> > > +       krcp = per_cpu_ptr(&krc, cpu);
+> > > +       raw_spin_lock_irqsave(&krcp->lock, flags);
+> > > +       schedule_delayed_work(&krcp->monitor_work, 0);
+> > > +       raw_spin_unlock_irqrestore(&krcp->lock, flags);
+> > >         return 0;
+> > 
+> > I realized the above is not good enough for what this is trying to do. Unlike
+> > the slab, the new kfree_rcu objects cannot always be drained / submitted to
+> > RCU because the previous batch may still be waiting for a grace period. So
+> > the above code could very well return with the yet-to-be-submitted kfree_rcu
+> > objects still in the cache.
+> > 
+> > One option is to spin-wait here for monitor_todo to be false and keep calling
+> > kfree_rcu_drain_unlock() till then.
+> > 
+> > But then that's not good enough either, because if new objects are queued
+> > when interrupts are enabled in the CPU offline path, then the cache will get
+> > new objects after the previous set was drained. Further, spin waiting may
+> > introduce deadlocks.
+> > 
+> > Another option is to switch the kfree_rcu() path to non-batching (so new
+> > objects cannot be cached in the offline path and are submitted directly to
+> > RCU), wait for a GP and then submit the work. But then not sure if 1-argument
+> > kfree_rcu() will like that.
 > 
-> On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
-> > Does linux have an O(1) (or do I mean o(1)) pid allocator?
-> > Or does it have to do a linear scan to find a gap??
+> Or spawn a workqueue that does something like this:
 > 
-> O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
-> number of PIDs currently allocated, and it's log_64 rather than log_2
-> (which makes no difference to O() but does make a bit of a difference
-> to performance)
+> 1.	Get any pending kvfree_rcu() requests sent off to RCU.
+> 
+> 2.	Do an rcu_barrier().
+> 
+> 3.	Do the cleanup actions.
+> 
+> > Probably Qian's original fix for for_each_possible_cpus() is good enough for
+> > the shrinker case, and then we can tackle the hotplug one.
+> 
+> It might take some experimentation to find the best solution.
+> 
 
-Still worse that O(1) - when that is just replacing a variable
-with a value read out of an array.
-Made pid lookup a trivial O(1) as well.
+<snip>
+static void do_idle(void)
+{
+...
+ while (!need_resched()) {
+  rmb();
 
-	David
+  local_irq_disable();
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+  if (cpu_is_offline(cpu)) {
+   tick_nohz_idle_stop_tick();
+   cpuhp_report_idle_dead();
+       -> cpuhp_report_idle_dead(void)
+              -> rcu_report_dead(smp_processor_id());
+   arch_cpu_idle_dead();
+  }
+...
+<snip>
 
+We have the rcu_report_dead() callback. When it gets called IRQs are off
+and CPU that is in question is offline.
+
+    krcp = per_cpu_ptr(&krc, cpu);
+    raw_spin_lock_irqsave(&krcp->lock, flags);
+    krcp->monotro_todo = true;
+    schedule_delayed_work(&krcp->monitor_work, 0);
+    raw_spin_unlock_irqrestore(&krcp->lock, flags);
+
+If there is a batch that is in progress, the job will rearm itself.
+But i agree, it requires more experiments.
+
+
+--
+Vlad Rezki
