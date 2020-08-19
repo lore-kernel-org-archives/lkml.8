@@ -2,126 +2,185 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE50C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5954B204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01477206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHSNrm (ORCPT
+        id S1728560AbgHSNsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:47:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59111 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbgHSNqr (ORCPT
+        Wed, 19 Aug 2020 09:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbgHSNoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:46:47 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8OQB-0005pv-If; Wed, 19 Aug 2020 13:46:31 +0000
-Date:   Wed, 19 Aug 2020 15:46:29 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, peterz@infradead.org,
-        Christoph Hewllig <hch@infradead.org>,
+        Wed, 19 Aug 2020 09:44:02 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45F3C06134D
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:44:00 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id HRjl2300N4C55Sk01Rjlxa; Wed, 19 Aug 2020 15:43:56 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8ONV-0003E2-IB; Wed, 19 Aug 2020 15:43:45 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8ONV-0007Ff-GY; Wed, 19 Aug 2020 15:43:45 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Message-ID: <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
-References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
- <20200818174447.GV17456@casper.infradead.org>
- <20200819074340.GW2674@hirez.programming.kicks-ass.net>
- <20200819084556.im5zfpm2iquzvzws@wittgenstein>
- <20200819111851.GY17456@casper.infradead.org>
- <87a6yq222c.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87a6yq222c.fsf@x220.int.ebiederm.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 5/7] ravb: Add support for explicit internal clock delay configuration
+Date:   Wed, 19 Aug 2020 15:43:42 +0200
+Message-Id: <20200819134344.27813-6-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819134344.27813-1-geert+renesas@glider.be>
+References: <20200819134344.27813-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 08:32:59AM -0500, Eric W. Biederman wrote:
-> Matthew Wilcox <willy@infradead.org> writes:
-> 
-> > On Wed, Aug 19, 2020 at 10:45:56AM +0200, Christian Brauner wrote:
-> >> On Wed, Aug 19, 2020 at 09:43:40AM +0200, peterz@infradead.org wrote:
-> >> > On Tue, Aug 18, 2020 at 06:44:47PM +0100, Matthew Wilcox wrote:
-> >> > > On Tue, Aug 18, 2020 at 07:34:00PM +0200, Christian Brauner wrote:
-> >> > > > The only remaining function callable outside of kernel/fork.c is
-> >> > > > _do_fork(). It doesn't really follow the naming of kernel-internal
-> >> > > > syscall helpers as Christoph righly pointed out. Switch all callers and
-> >> > > > references to kernel_clone() and remove _do_fork() once and for all.
-> >> > > 
-> >> > > My only concern is around return type.  long, int, pid_t ... can we
-> >> > > choose one and stick to it?  pid_t is probably the right return type
-> >> > > within the kernel, despite the return type of clone3().  It'll save us
-> >> > > some work if we ever go through the hassle of growing pid_t beyond 31-bit.
-> >> > 
-> >> > We have at least the futex ABI restricting PID space to 30 bits.
-> >> 
-> >> Ok, looking into kernel/futex.c I see 
-> >> 
-> >> pid_t pid = uval & FUTEX_TID_MASK;
-> >> 
-> >> which is probably what this referes to and /proc/sys/kernel/threads-max
-> >> is restricted to FUTEX_TID_MASK.
-> >> 
-> >> Afaict, that doesn't block switching kernel_clone() to return pid_t. It
-> >> can't create anything > FUTEX_TID_MASK anyway without yelling EAGAIN at
-> >> userspace. But it means that _if_ we were to change the size of pid_t
-> >> we'd likely need a new futex API. 
-> >
-> > Yes, there would be a lot of work to do to increase the size of pid_t.
-> > I'd just like to not do anything to make that harder _now_.  Stick to
-> > using pid_t within the kernel.
-> 
-> Just so people are aware.  If you look in include/linux/threads.h you
-> can see that the maximum value of PID_MAX_LIMIT limits pids to 22 bits.
-> 
-> Further the design decisions of pids keeps us densly using pids.  So I
-> expect it will be a while before we even come close to using 30 bits of
-> pid space.
+Some EtherAVB variants support internal clock delay configuration, which
+can add larger delays than the delays that are typically supported by
+the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
+properties).
 
-Also because it's simply annoying to have to type really large pid
-numbers on the shell. Yes yes, that's a very privileged
-developer-centric complaint but it matters when you have to do a quick
-kill -9. Chromebook users obviously won't care about how large their
-pids are for sure.
+Historically, the EtherAVB driver configured these delays based on the
+"rgmii-*id" PHY mode.  This caused issues with PHY drivers that
+implement PHY internal delays properly[1].  Hence a backwards-compatible
+workaround was added by masking the PHY mode[2].
 
-Tbf, related to discussions last year, systemd now actually raises the
-default limit from ~33000 to 4194304. Which seems like an ok compromise.
+Add proper support for explicit configuration of the MAC internal clock
+delays using the new "[rt]x-internal-delay-ps" properties.
+Fall back to the old handling if none of these properties is present.
 
-Christian
+[1] Commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for
+    the KSZ9031 PHY")
+[2] Commit 9b23203c32ee02cd ("ravb: Mask PHY mode to avoid inserting
+    delays twice").
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+---
+v3:
+  - No changes,
+
+v2:
+  - Add Reviewed-by,
+  - Split long line,
+  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps",
+  - Use 1 instead of true when assigning to a single-bit bitfield.
+---
+ drivers/net/ethernet/renesas/ravb.h      |  1 +
+ drivers/net/ethernet/renesas/ravb_main.c | 36 ++++++++++++++++++------
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+index e5ca12ce93c730a9..7453b17a37a2c8d0 100644
+--- a/drivers/net/ethernet/renesas/ravb.h
++++ b/drivers/net/ethernet/renesas/ravb.h
+@@ -1038,6 +1038,7 @@ struct ravb_private {
+ 	unsigned wol_enabled:1;
+ 	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
+ 	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
++	unsigned rgmii_override:1;	/* Deprecated rgmii-*id behavior */
+ 	int num_tx_desc;		/* TX descriptors per packet */
+ };
+ 
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 59dadd971345e0d1..aa120e3f1e4d4da5 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1034,11 +1034,8 @@ static int ravb_phy_init(struct net_device *ndev)
+ 		pn = of_node_get(np);
+ 	}
+ 
+-	iface = priv->phy_interface;
+-	if (priv->chip_id != RCAR_GEN2 && phy_interface_mode_is_rgmii(iface)) {
+-		/* ravb_set_delay_mode() takes care of internal delay mode */
+-		iface = PHY_INTERFACE_MODE_RGMII;
+-	}
++	iface = priv->rgmii_override ? PHY_INTERFACE_MODE_RGMII
++				     : priv->phy_interface;
+ 	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0, iface);
+ 	of_node_put(pn);
+ 	if (!phydev) {
+@@ -1989,20 +1986,41 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
+ };
+ 
+ /* Set tx and rx clock internal delay modes */
+-static void ravb_parse_delay_mode(struct net_device *ndev)
++static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
+ {
+ 	struct ravb_private *priv = netdev_priv(ndev);
++	bool explicit_delay = false;
++	u32 delay;
++
++	if (!of_property_read_u32(np, "rx-internal-delay-ps", &delay)) {
++		/* Valid values are 0 and 1800, according to DT bindings */
++		priv->rxcidm = !!delay;
++		explicit_delay = true;
++	}
++	if (!of_property_read_u32(np, "tx-internal-delay-ps", &delay)) {
++		/* Valid values are 0 and 2000, according to DT bindings */
++		priv->txcidm = !!delay;
++		explicit_delay = true;
++	}
+ 
++	if (explicit_delay)
++		return;
++
++	/* Fall back to legacy rgmii-*id behavior */
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
++	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+ 		priv->rxcidm = 1;
++		priv->rgmii_override = 1;
++	}
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
+ 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
+-			  phy_modes(priv->phy_interface)))
++			  phy_modes(priv->phy_interface))) {
+ 			priv->txcidm = 1;
++			priv->rgmii_override = 1;
++		}
+ 	}
+ }
+ 
+@@ -2148,7 +2166,7 @@ static int ravb_probe(struct platform_device *pdev)
+ 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
+ 
+ 	if (priv->chip_id != RCAR_GEN2) {
+-		ravb_parse_delay_mode(ndev);
++		ravb_parse_delay_mode(np, ndev);
+ 		ravb_set_delay_mode(ndev);
+ 	}
+ 
+-- 
+2.17.1
+
