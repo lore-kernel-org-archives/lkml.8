@@ -2,154 +2,125 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D44AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC83206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rRkzvlI3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mIs7IXED"
+	by mail.kernel.org (Postfix) with ESMTP id 07F74206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHSI4G (ORCPT
+        id S1727791AbgHSI4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgHSIxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:53:51 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130BDC061347;
-        Wed, 19 Aug 2020 01:52:13 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 08:52:10 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597827131;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xB62ipU3c36GDRZN7Srlw0bVi4SwB21C4BFlAs5SHvk=;
-        b=rRkzvlI3XGao8swR9/Z+VrwU/lKGCM2kLoZ7JIl7Aswt906xE6B9lTyhM6T+xNkCLchYgx
-        avOUCnNf0Aine9gRVG9yu8HtWZT0VD+K5LJ2G2OqWG2uJSUOoEIkBi9xG2wC+TR01G2KAK
-        /bQzMms6SuLz9D281L2QRFWIcF6CxoM1NN2kLTODpzyNadsITy2wb0Dfh1tOiXuisTtUgH
-        hDZIizEUPENknXOA7YMfmkcT7IIAFqg0pCdggaGVJa4jFohPzSm6KU7piCnPAT2FUFVyTt
-        6MDEDbiqJ/Gr+pOZEtPpv1ckU1hsOb9gpfvkl/aAatZngt6JmwM+aGLoGQfpAA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597827131;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xB62ipU3c36GDRZN7Srlw0bVi4SwB21C4BFlAs5SHvk=;
-        b=mIs7IXEDUmifJtmZOSJeoxHcqGhYAnSuiV0IqTBpX8VY/kE1INkfPY7qNS5dTJ9ZuZDEsA
-        JoZenpk90FaDTdDQ==
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel: Name the global status bit in NMI handler
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200723171117.9918-3-kan.liang@linux.intel.com>
-References: <20200723171117.9918-3-kan.liang@linux.intel.com>
+        Wed, 19 Aug 2020 04:56:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:58728 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgHSIys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:54:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30EB231B;
+        Wed, 19 Aug 2020 01:54:47 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C32DD3F6CF;
+        Wed, 19 Aug 2020 01:54:45 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/5] KVM: arm64: Add pvtime LPT support
+To:     Marc Zyngier <maz@kernel.org>, Keqian Zhu <zhukeqian1@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        wanghaibin.wang@huawei.com
+References: <20200817084110.2672-1-zhukeqian1@huawei.com>
+ <8308f52e4c906cad710575724f9e3855@kernel.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <f14cfd5b-c103-5d56-82fb-59d0371c6f21@arm.com>
+Date:   Wed, 19 Aug 2020 09:54:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159782713093.3192.8180456930454502423.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8308f52e4c906cad710575724f9e3855@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On 18/08/2020 15:41, Marc Zyngier wrote:
+> On 2020-08-17 09:41, Keqian Zhu wrote:
+>> Hi all,
+>>
+>> This patch series picks up the LPT pvtime feature originally developed
+>> by Steven Price: https://patchwork.kernel.org/cover/10726499/
+>>
+>> Backgroud:
+>>
+>> There is demand for cross-platform migration, which means we have to
+>> solve different CPU features and arch counter frequency between hosts.
+>> This patch series can solve the latter problem.
+>>
+>> About LPT:
+>>
+>> This implements support for Live Physical Time (LPT) which provides the
+>> guest with a method to derive a stable counter of time during which the
+>> guest is executing even when the guest is being migrated between hosts
+>> with different physical counter frequencies.
+>>
+>> Changes on Steven Price's work:
+>> 1. LPT structure: use symmatical semantics of scale multiplier, and use
+>>    fraction bits instead of "shift" to make everything clear.
+>> 2. Structure allocation: host kernel does not allocates the LPT 
+>> structure,
+>>    instead it is allocated by userspace through VM attributes. The 
+>> save/restore
+>>    functionality can be removed.
+>> 3. Since LPT structure just need update once for each guest run, add a 
+>> flag to
+>>    indicate the update status. This has two benifits: 1) avoid 
+>> multiple update
+>>    by each vCPUs. 2) If the update flag is not set, then return NOT 
+>> SUPPORT for
+>>    coressponding guest HVC call.
+>> 4. Add VM device attributes interface for userspace configuration.
+>> 5. Add a base LPT read/write layer to reduce code.
+>> 6. Support ptimer scaling.
+>> 7. Support timer event stream translation.
+>>
+>> Things need concern:
+>> 1. https://developer.arm.com/docs/den0057/a needs update.
+> 
+> LPT was explicitly removed from the spec because it doesn't really
+> solve the problem, specially for the firmware: EFI knows
+> nothing about this, for example. How is it going to work?
+> Also, nobody was ever able to explain how this would work for
+> nested virt.
+> 
+> ARMv8.4 and ARMv8.6 have the feature set that is required to solve
+> this problem without adding more PV to the kernel.
 
-Commit-ID:     60a2a271cf05cf046c522e1d7f62116b4bcb32a2
-Gitweb:        https://git.kernel.org/tip/60a2a271cf05cf046c522e1d7f62116b4bcb32a2
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 23 Jul 2020 10:11:05 -07:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 18 Aug 2020 16:34:34 +02:00
+Hi Marc,
 
-perf/x86/intel: Name the global status bit in NMI handler
+These are good points, however we do still have the situation that CPUs 
+that don't have ARMv8.4/8.6 clearly cannot implement this. I presume the 
+use-case Keqian is looking at predates the necessary support in the CPU 
+- Keqian if you can provide more details on the architecture(s) involved 
+that would be helpful.
 
-Magic numbers are used in the current NMI handler for the global status
-bit. Use a meaningful name to replace the magic numbers to improve the
-readability of the code.
+Nested virt is indeed more of an issue - we did have some ideas around 
+using SDEI that never made it to the spec. However I would argue that 
+the most pragmatic approach would be to not support the combination of 
+nested virt and LPT. Hopefully that can wait until the counter scaling 
+support is available and not require PV.
 
-Remove a Tab for all GLOBAL_STATUS_* and INTEL_PMC_IDX_FIXED_BTS macros
-to reduce the length of the line.
+We are discussing (re-)releasing the spec with the LPT parts added. If 
+you have fundamental objections then please me know.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200723171117.9918-3-kan.liang@linux.intel.com
----
- arch/x86/events/intel/core.c      |  4 ++--
- arch/x86/include/asm/perf_event.h | 22 ++++++++++++----------
- 2 files changed, 14 insertions(+), 12 deletions(-)
+Thanks,
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 5096347..ac1408f 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2389,7 +2389,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	/*
- 	 * PEBS overflow sets bit 62 in the global status register
- 	 */
--	if (__test_and_clear_bit(62, (unsigned long *)&status)) {
-+	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
- 		u64 pebs_enabled = cpuc->pebs_enabled;
- 
- 		handled++;
-@@ -2410,7 +2410,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	/*
- 	 * Intel PT
- 	 */
--	if (__test_and_clear_bit(55, (unsigned long *)&status)) {
-+	if (__test_and_clear_bit(GLOBAL_STATUS_TRACE_TOPAPMI_BIT, (unsigned long *)&status)) {
- 		handled++;
- 		if (unlikely(perf_guest_cbs && perf_guest_cbs->is_in_guest() &&
- 			perf_guest_cbs->handle_intel_pt_intr))
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 0c1b137..fd3eba6 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -225,16 +225,18 @@ struct x86_pmu_capability {
-  * values are used by actual fixed events and higher values are used
-  * to indicate other overflow conditions in the PERF_GLOBAL_STATUS msr.
-  */
--#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
--
--#define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
--#define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
--#define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
--#define GLOBAL_STATUS_ASIF				BIT_ULL(60)
--#define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
--#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
--#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
--#define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
-+#define INTEL_PMC_IDX_FIXED_BTS			(INTEL_PMC_IDX_FIXED + 16)
-+
-+#define GLOBAL_STATUS_COND_CHG			BIT_ULL(63)
-+#define GLOBAL_STATUS_BUFFER_OVF_BIT		62
-+#define GLOBAL_STATUS_BUFFER_OVF		BIT_ULL(GLOBAL_STATUS_BUFFER_OVF_BIT)
-+#define GLOBAL_STATUS_UNC_OVF			BIT_ULL(61)
-+#define GLOBAL_STATUS_ASIF			BIT_ULL(60)
-+#define GLOBAL_STATUS_COUNTERS_FROZEN		BIT_ULL(59)
-+#define GLOBAL_STATUS_LBRS_FROZEN_BIT		58
-+#define GLOBAL_STATUS_LBRS_FROZEN		BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-+#define GLOBAL_STATUS_TRACE_TOPAPMI_BIT		55
-+#define GLOBAL_STATUS_TRACE_TOPAPMI		BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
- 
- /*
-  * We model guest LBR event tracing as another fixed-mode PMC like BTS.
+Steve
