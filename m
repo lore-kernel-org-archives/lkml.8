@@ -2,141 +2,98 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5932078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0081207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxMAtY5L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="It2/zMJh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHST3i (ORCPT
+        id S1726732AbgHSTev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:29:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40476 "EHLO
+        Wed, 19 Aug 2020 15:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHST3h (ORCPT
+        with ESMTP id S1726435AbgHSTet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:29:37 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9A2C061757;
-        Wed, 19 Aug 2020 12:29:36 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id x6so11855391qvr.8;
-        Wed, 19 Aug 2020 12:29:36 -0700 (PDT)
+        Wed, 19 Aug 2020 15:34:49 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85737C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:34:49 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id v22so19077545edy.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vw4+xoevL6HCqwb25tJE3ItRuXy/EdPOYs2kBLSbjws=;
-        b=TxMAtY5Lk67k/57yY8ZQaT7UTKGeCtgnJAejc7o/H6pCqyR64aJJmHf6xRznjPMchp
-         JdyWYSTwnE8vLtLX9MJsi3sf7wns4KdlU2kcoBpSEcSe27acmnFwgT6s7c4P28DPChq4
-         8Nrsk19y+hvEXg8DWyDS+AusgkUVd6YnnE15coaloaCsQ9ap82jDYwylHBhWm60GY2os
-         AXB1dZfn9Su0j9HOvz2c+HyWPmjHKycbRT2FlsZam3p78VZdcaDeB1i6d0tm9U0bF/Ms
-         0uTmN92Ntx3b11FJWIIM+RnnQkSmRnag2lfxIHlmvyOMS4c1QTwAfdHNxy1XDneviA1j
-         Rknw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=IBIAq/aRalQqzRlQ/lTXnrrK/pEn1oTsWEQW2pLJvVY=;
+        b=It2/zMJhpbNifDeupP5coNvZtaSNVOZRoWJGfjQgSuBzlPVSMNl4Q1ow7pWpVWh96+
+         jOejtEagAblDa/AFoA/tK2luH611bwiDz8BYFsz2MPs3qiF654Q1AR0F1lFfpmK1+Mfh
+         UEjAyGgd3AWoMdjJRRyXMSzoUpFvz2FrUddK65BN+WJz2nXHMv9YEiy5/6yoPr9eHaHt
+         W9KdVlcdY/1C/4cwT9QrxU9rxjFLgHV6z5utZl6GHNUGd3hyZ33VEcrW9iBP9S91kkqH
+         tjeGmmxoT6gwy9Tv0GLQzIKvJDoL7OCSlaEqximGXwWYsmBg8zRGKZeiRZzn5VDBOZSN
+         r8xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Vw4+xoevL6HCqwb25tJE3ItRuXy/EdPOYs2kBLSbjws=;
-        b=ccwHrJWYvjs7f3vy9Y0eMU7xB7zbArngvHMTjbPrxgKzkKVeOf5LxtXKsVf+lLsnDA
-         9pBZYF/HQufl/LKAIjgBb9TuHGVPtcQHxpq6KcBIsIxGLiiiCwKU7DE2G5GFg0v1oLK1
-         wq7AZQDdY6z5OCbwR/m58JVhM565oWMGhmvR7YZQQKzXMxEMDodQuLp9g6IJG44mdYAo
-         NjFr/QOvoRjx7dx7W8HzcQ0E6V8aqtaZXMZ0SNkYpBRaqCTGlPHQdyO5y19DQiDV9Dqk
-         D4VcyGBG6wBfge55C2hW5TkVLELk4ASxC/dh1kzxplgJ5duDYJMihxHwbEpWOBgyjwwL
-         rI2Q==
-X-Gm-Message-State: AOAM5312mYevlUwXCpSjlcXcldkuJpgkCYOKq6kchd90VbfqBpqB9c9Q
-        jis+2WEk82tOBjgZeUSd3Yk=
-X-Google-Smtp-Source: ABdhPJxCwQflOM2eMeXREkpqyufZuZMseZYIsr6gWhc+I5qllV+5bet1IGAIgu2S4tsYX/20laJHSA==
-X-Received: by 2002:ad4:4a29:: with SMTP id n9mr25182148qvz.50.1597865376078;
-        Wed, 19 Aug 2020 12:29:36 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o48sm29816825qtf.14.2020.08.19.12.29.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=IBIAq/aRalQqzRlQ/lTXnrrK/pEn1oTsWEQW2pLJvVY=;
+        b=JJ96IvO7mM4CT4HjKdRPOxKWMyGAieUaRk3wcvBuo95qc9T3hFZQk3U01l3sJ7mO4t
+         0rJ3gBR8KOvZanmI4of7/j+lvIxBpLRQH6s5WJuuBj4tNzZ2m09FbzISHziavTB8P3mD
+         /dy4K1cfxMh0vasEuCmc1fnyxq2+edFdyGv2Z73/6TceQ4mkRptW13Lppjqj1hTP4xf0
+         NdijC39vOZLJlWlxvzlqwrc8e2DMeRRBkm+BXtbPly4RqQ13JowMRbO7dzrnpONe7m99
+         r/Mg2RL/kZoJKi/37aNhB2pPSnIov48pmfr6AdW/cF0l0j0pKq51IbxFdBi4WgO6isQ0
+         ZACA==
+X-Gm-Message-State: AOAM531teCMuoLyRVKQWqTyGmPr6Jit52+0vzaSKYpRMlu3v38zHw78q
+        yV5Qk4vuau5KWj/cBbbfW20=
+X-Google-Smtp-Source: ABdhPJx2cuOSho44M0UYvQyss6pr9d/vxjK+w6u+ICzKOppEkPxELogJ467lERx1j0FL2Fuc8HNNFA==
+X-Received: by 2002:a05:6402:28f:: with SMTP id l15mr26430494edv.233.1597865688290;
+        Wed, 19 Aug 2020 12:34:48 -0700 (PDT)
+Received: from tsnow (IGLD-83-130-68-114.inter.net.il. [83.130.68.114])
+        by smtp.gmail.com with ESMTPSA id e14sm18640165edl.86.2020.08.19.12.34.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 12:29:35 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 19 Aug 2020 15:29:32 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
+        Wed, 19 Aug 2020 12:34:47 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 22:34:43 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Riley Andrews <riandrews@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Subject: Re: [PATCH v2 4/5] x86/boot: use -fno-builtin-bcmp
-Message-ID: <20200819192932.GA58968@rani.riverdale.lan>
-References: <20200819191654.1130563-1-ndesaulniers@google.com>
- <20200819191654.1130563-5-ndesaulniers@google.com>
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] staging: android: Remove BUG/BUG_ON from ion
+Message-ID: <cover.1597865295.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819191654.1130563-5-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:16:53PM -0700, Nick Desaulniers wrote:
-> We're reverting
-> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> in favor of -fno-builtin-bcmp. Remove the additional definition here,
-> too.
-> 
-> arch/x86/purgatory/Makefile uses -ffreestanding, so there's no risk of
-> this libcall optimization occurring for arch/x86/boot/purgatory.ro.
-> 
-> arch/x86/boot/Makefile resets KBUILD_CFLAGS, so make sure to reset this
-> flag that was set for the top level Makefile.
-> 
-> Fixes: 4ce97317f41d ("x86/purgatory: Do not use __builtin_memcpy and __builtin_memset")
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/x86/boot/Makefile | 1 +
->  arch/x86/boot/string.c | 8 --------
->  2 files changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index fe605205b4ce..ef7f15bfceab 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -70,6 +70,7 @@ KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
->  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
-> +KBUILD_CFLAGS	+= -fno-builtin-bcmp
->  GCOV_PROFILE := n
->  UBSAN_SANITIZE := n
->  
+Removeing BUG/BUG_ON from androind/ion and add error handle to calling
+functions
 
-This should be unnecessary: KBUILD_CFLAGS in arch/x86/boot/Makefile is
-set to REALMODE_CFLAGS (defined in arch/x86/Makefile), which includes
--ffreestanding.
+Tomer Samara (2):
+  staging: android: Remove BUG_ON from ion_page_pool.c
+  staging: android: Remove BUG from ion_system_heap.c
+
+ drivers/staging/android/ion/ion_page_pool.c   | 14 ++++++++++----
+ drivers/staging/android/ion/ion_system_heap.c | 15 ++++++++++++---
+ 2 files changed, 22 insertions(+), 7 deletions(-)
+
+-- 
+2.25.1
+
