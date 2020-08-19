@@ -2,116 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B177C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80623C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 126792065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589982065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBl+WwvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgHSNGH (ORCPT
+        id S1728666AbgHSNGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:06:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41006 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbgHSNFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:05:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 09CA8AEE8;
-        Wed, 19 Aug 2020 13:06:14 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 15:05:46 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v1 09/11] mm/page_alloc: drop stale pageblock comment in
- memmap_init_zone*()
-Message-ID: <20200819130546.GN5422@dhcp22.suse.cz>
-References: <20200819101157.12723-1-david@redhat.com>
- <20200819101157.12723-10-david@redhat.com>
+        Wed, 19 Aug 2020 09:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbgHSNAX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:00:23 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B03C06135D;
+        Wed, 19 Aug 2020 05:59:36 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id u126so24472938iod.12;
+        Wed, 19 Aug 2020 05:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NtzkSuCwuVd+0UO9n6oA+BAW4tVVE+zEGyv58T8TdB4=;
+        b=FBl+WwvRGqGnorKLY+KDejdhfQgPSnP1ekvH33MA/ME8GETj8p+yLDx5UHYD8st7Wc
+         05o982Lz0UMjp/ZrZ5UCXLB4/HbZTywC0H1YmS5I58nLxcCoSbQky5c6U/SwreWXxTEq
+         PpMZX21CdKlOkg5dWPlRVxJ5G1uSNxLbpj5XygJWCjlwzielL07egsxNXKX3yHWTcWz6
+         D+KN4Fljr5dhFNeMyT+uE1zK1b6nGucRCnbLbULlgIfgyKmdxobG8yJr8r5RAGu2LciP
+         Ufu6kR8RkCsOvon1Hzo9ge+vLW0vwRZRdbSx9cJIbZF+DtTAN9Ujp08IZqX/Kg6QP/h8
+         K7fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NtzkSuCwuVd+0UO9n6oA+BAW4tVVE+zEGyv58T8TdB4=;
+        b=udgR3Y+fnC28tj7HruFfOSxseR8nRs0k1RSL9SOPuuU49JqrloyUiOfiNeUQZg2IYq
+         fczzj+aKnIVnt2akOI1/4KLSzXeLrZuvDRGWeFB1+LL+X/uR6PgaqiCmoCfbjIqJjq1T
+         qkjk586+c3zg6eggB4gfKCXGlwwzn2bT5rWAnxGeQWySV1JtfuvmeIlrXFyYQntL37OG
+         oMX5HAZ5SQjGvRc9sQTPT2BVBl1/A8qsd1l0UPeS14aQQip4EPvhLkxF2KoDvP+PoZB9
+         75GUUx8gQlnu6QXiL6yypu24by4BDm3msrSU0rQ8mRKPW4bDOKjXhtzr/3Xh2UoDqCQp
+         b3ww==
+X-Gm-Message-State: AOAM5314KZvbrFZ6TTH4gLBlbzm7vCSi/WxOTpOsPGKpT8Aj+niun1fn
+        tqFQy19khlNoskJ9kHPugWxRtaO/E3Sq/4y5
+X-Google-Smtp-Source: ABdhPJxoK4y5weKNZKYd6Bo31UrzQruDNpkUn3kcI2PMlwC+ga3JeKSQlr3x0203g5IVWZcE1EWoJA==
+X-Received: by 2002:a05:6638:1393:: with SMTP id w19mr23503106jad.113.1597841975108;
+        Wed, 19 Aug 2020 05:59:35 -0700 (PDT)
+Received: from aford-IdeaCentre-A730.lan ([2601:448:8400:9e8:b588:1a5f:55c3:870e])
+        by smtp.gmail.com with ESMTPSA id i5sm4138388ilc.69.2020.08.19.05.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 05:59:34 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     aford@beaconembedded.com, hns@goldelico.com,
+        Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 2/2] ARM: omap2plus_defconfig: Enable OMAP3_THERMAL
+Date:   Wed, 19 Aug 2020 07:59:24 -0500
+Message-Id: <20200819125925.2119434-2-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200819125925.2119434-1-aford173@gmail.com>
+References: <20200819125925.2119434-1-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819101157.12723-10-david@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 12:11:55, David Hildenbrand wrote:
-> Commit ac5d2539b238 ("mm: meminit: reduce number of times pageblocks are
-> set during struct page init") moved the actual zone range check, leaving
-> only the alignment check for pageblocks.
-> 
-> Let's drop the stale comment and make the pageblock check easier to read.
+With the additional power management options enabled,
+this patch enables OMAP3_THERMAL by default.
 
-I do agree athat IS_ALIGNED is easier to read in this case.
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2:  No change
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/page_alloc.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 848664352dfe2..5db0b35f95e20 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6022,13 +6022,8 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->  		 * to reserve their blocks rather than leaking throughout
->  		 * the address space during boot when many long-lived
->  		 * kernel allocations are made.
-> -		 *
-> -		 * bitmap is created for zone's valid pfn range. but memmap
-> -		 * can be created for invalid pages (for alignment)
-> -		 * check here not to call set_pageblock_migratetype() against
-> -		 * pfn out of zone.
->  		 */
-> -		if (!(pfn & (pageblock_nr_pages - 1))) {
-> +		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
->  			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
->  			cond_resched();
->  		}
-> @@ -6091,15 +6086,10 @@ void __ref memmap_init_zone_device(struct zone *zone,
->  		 * the address space during boot when many long-lived
->  		 * kernel allocations are made.
->  		 *
-> -		 * bitmap is created for zone's valid pfn range. but memmap
-> -		 * can be created for invalid pages (for alignment)
-> -		 * check here not to call set_pageblock_migratetype() against
-> -		 * pfn out of zone.
-> -		 *
->  		 * Please note that MEMMAP_HOTPLUG path doesn't clear memmap
->  		 * because this is done early in section_activate()
->  		 */
-> -		if (!(pfn & (pageblock_nr_pages - 1))) {
-> +		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
->  			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
->  			cond_resched();
->  		}
-> -- 
-> 2.26.2
-> 
-
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index fe383f5a92fb..efcc46305a47 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -303,6 +303,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
+ CONFIG_THERMAL_GOV_USER_SPACE=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_TI_THERMAL=y
++CONFIG_OMAP3_THERMAL=y
+ CONFIG_OMAP4_THERMAL=y
+ CONFIG_OMAP5_THERMAL=y
+ CONFIG_DRA752_THERMAL=y
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
