@@ -2,106 +2,131 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B242C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F6020738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0AD20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TTPgISsf"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="hZeHVyHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHSIPL (ORCPT
+        id S1726701AbgHSISG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:15:11 -0400
-Received: from mailgw02.mediatek.com ([216.200.240.185]:43957 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSIPJ (ORCPT
+        Wed, 19 Aug 2020 04:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSISD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:15:09 -0400
-X-UUID: e63d220e6d6b41f697a4ae4aaa33dc7e-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=QpCVJ4N+EUwFvE449ymwTfmxve8XNAYqWnZtBe4BZEA=;
-        b=TTPgISsfpcHTz1wn1542ppt7yDvS+sigVRpJ5bnyIPjKgbZvQckjKEqQFWY69joUd6hFcgWcTrX7jgcOaUIugl1DySfb1Kh/+kGqCnoEfM9kPikQKN6+aaH87hQpnvRr0hWe5zigEsYI2WXGM4Pf4bRVmQQWJbXxXAlV8vBVJ4Y=;
-X-UUID: e63d220e6d6b41f697a4ae4aaa33dc7e-20200819
-Received: from mtkcas68.mediatek.inc [(172.29.94.19)] by mailgw02.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 674850295; Wed, 19 Aug 2020 00:15:04 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 01:15:02 -0700
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 16:15:00 +0800
-Message-ID: <1597824901.31846.42.camel@mtksdccf07>
-Subject: Re: [PATCH net-next v2 7/7] arm64: dts: mt7622: add mt7531 dsa to
- bananapi-bpi-r64 board
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>,
-        "dqfext@gmail.com" <dqfext@gmail.com>
-Date:   Wed, 19 Aug 2020 16:15:01 +0800
-In-Reply-To: <20200818162433.elqh3dxmk6vilq6u@skbuf>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
-         <2a986604b49f7bfbee3898c8870bb0cf8182e879.1597729692.git.landen.chao@mediatek.com>
-         <20200818162433.elqh3dxmk6vilq6u@skbuf>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 19 Aug 2020 04:18:03 -0400
+X-Greylist: delayed 148804 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 19 Aug 2020 01:18:02 PDT
+Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9799DC061389
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:18:02 -0700 (PDT)
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+        by mxout1.routing.net (Postfix) with ESMTP id 2E6FE3FD3D;
+        Wed, 19 Aug 2020 08:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1597825079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FiBKRQX0Yu/oUfxbfaNVaqDxRl64gER3PIg7jU21vW4=;
+        b=hZeHVyHF2XrQ/a58hJfkW4rkNI7zUHPiGly8MkwO/TUBgNGu0YQ5rEIrPPwL5MqCYICJIP
+        0E0rFzS+RS8MOHHgeSqX66Ocsb8Lq8XDCiT4buZ0mFishA4OHmPDDJhooTQ/x6VgZQ6L8r
+        vqdRqbO/TWkphgOvqTCW/Cv/nVKYyT0=
+Received: from localhost.localdomain (fttx-pool-185.76.97.101.bambit.de [185.76.97.101])
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 4F837100539;
+        Wed, 19 Aug 2020 08:17:58 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v5 0/7] make hdmi work on bananapi-r2
+Date:   Wed, 19 Aug 2020 10:17:45 +0200
+Message-Id: <20200819081752.4805-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTE5IGF0IDAwOjI0ICswODAwLCBWbGFkaW1pciBPbHRlYW4gd3JvdGU6
-DQo+IE9uIFR1ZSwgQXVnIDE4LCAyMDIwIGF0IDAzOjE0OjEyUE0gKzA4MDAsIExhbmRlbiBDaGFv
-IHdyb3RlOg0KPiA+IEFkZCBtdDc1MzEgZHNhIHRvIGJhbmFuYXBpLWJwaS1yNjQgYm9hcmQgZm9y
-IDUgZ2lnYSBFdGhlcm5ldCBwb3J0cyBzdXBwb3J0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IExhbmRlbiBDaGFvIDxsYW5kZW4uY2hhb0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4u
-Li9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzICB8IDQ0ICsrKysrKysr
-KysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjItYmFu
-YW5hcGktYnBpLXI2NC5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYyMi1i
-YW5hbmFwaS1icGktcjY0LmR0cw0KPiA+IGluZGV4IGQxNzRhZDIxNDg1Ny4uYzU3YjI1NzExNjVm
-IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLWJh
-bmFuYXBpLWJwaS1yNjQuZHRzDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
-ay9tdDc2MjItYmFuYW5hcGktYnBpLXI2NC5kdHMNCj4gPiBAQCAtMTQzLDYgKzE0Myw1MCBAQA0K
-PiA+ICAJbWRpbzogbWRpby1idXMgew0KPiA+ICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+
-ICAJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQlzd2l0Y2hAMCB7DQo+ID4gKwkJ
-CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NTMxIjsNCj4gPiArDQpbc25pcF0NCj4gPiArCQkJ
-CXBvcnRANiB7DQo+ID4gKwkJCQkJcmVnID0gPDY+Ow0KPiA+ICsJCQkJCWxhYmVsID0gImNwdSI7
-DQo+ID4gKwkJCQkJZXRoZXJuZXQgPSA8JmdtYWMwPjsNCj4gPiArCQkJCQlwaHktbW9kZSA9ICIy
-NTAwYmFzZS14IjsNCj4gPiArCQkJCX07DQo+IA0KPiBJcyB0aGVyZSBhbnkgcmVhc29uIHdoeSB5
-b3UncmUgbm90IHNwZWNpZnlpbmcgYSBmaXhlZC1saW5rIG5vZGUgaGVyZT8NCkkgZ290IHRoZSBi
-ZWxvdyBmZWVkYmFjayBpbiB2MSwgc28gSSBmb2xsb3cgdGhlIERTQSBjb21tb24gZGVzaWduIGlu
-IHYyLg0KdjIgY2FuIHdvcmsgd2l0aCBmaXhlZC1saW5rIG5vZGUgb3Igd2l0aG91dCBmaXhlZC1s
-aW5rIG5vZGUgaW4gQ1BVIHBvcnQNCm5vZGUuDQoNCiAgIlRoaXMgZml4ZWQtbGluayBzaG91bGQg
-bm90IGJlIG5lZWRlZC4gVGhlIERTQSBkcml2ZXIgaXMgc3VwcG9zZWQgdG8NCiAgIGNvbmZpZ3Vy
-ZSB0aGUgQ1BVIHBvcnQgdG8gaXRzIGZhc3Rlc3Qgc3BlZWQgYnkgZGVmYXVsdC4gMjUwMCBpcw0K
-ICAgdGhlIGZhc3Rlc3Qgc3BlZWQgYSAyNTAwQmFzZS1YIGxpbmsgY2FuIGRvLi4uIg0KPiA+ICsJ
-CQl9Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICAJfTsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gLS0g
-DQo+ID4gMi4xNy4xDQo+IA0KPiBUaGFua3MsDQo+IC1WbGFkaW1pcg0KDQo=
+From: Frank Wunderlich <frank-w@public-files.de>
+
+This Patch-Series adds missing Patches/Bugfixes to get hdmi working
+on BPI-R2
+
+v4->v5:
+ - rebased on 5.9-rc1
+ - move existing display-related dts nodes to new mt7623n.dtsi
+   because mt7623a does not have gpu
+ - add new display nodes to this new dtsi
+v3->v4:
+ - fix removed const in "add ddp routing for mt7623"
+ - change subjects to "drm/mediatek:..."
+ - add documentation for mt7623-* compatibles
+ - dropped redundant display_components node (mmsys compatible)
+ - add reviewd-by collected in v3
+v2->v3:
+ - use own mmsys-routing for mt7623 instead of code getting different
+   routing from dts
+ - remove ddp routing bls -> dpi from bpir2/rfb dts
+ - updated some commit-Messages as suggested by CK Hu
+v1->v2:
+ - using get_possible_crtc API instead of hardcoded
+ - drop unused dts-nodes
+ - refine commit-messages as far as i can :)
+   "config component output by device node port" is needed to fix a WARN_ON()
+   "fix boot up for 720 and 480 but 1080" fixes flickering, 
+     which may cause also some resolutions not working on some TFT (had some pr>
+
+Frank Wunderlich (3):
+  dt-bindings: mediatek: add mt7623 display-nodes
+  drm/mediatek: add ddp routing for mt7623
+  arm: dts: mt7623: move display nodes to separate mt7623n.dtsi
+
+Jitao Shi (1):
+  drm/mediatek: dpi/dsi: change the getting possible_crtc way
+
+Ryder Lee (1):
+  arm: dts: mt7623: add display subsystem related device nodes
+
+Stu Hsieh (1):
+  drm/mediatek: Add get_possible_crtc API for dpi, dsi
+
+chunhui dai (1):
+  drm/mediatek: disable tmds on mt2701
+
+ .../display/mediatek/mediatek,disp.txt        |   2 +-
+ .../display/mediatek/mediatek,dpi.txt         |   2 +-
+ .../display/mediatek/mediatek,dsi.txt         |   4 +-
+ .../display/mediatek/mediatek,hdmi.txt        |   4 +
+ arch/arm/boot/dts/mt7623.dtsi                 | 123 -------
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  74 ++++-
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  74 ++++-
+ arch/arm/boot/dts/mt7623n.dtsi                | 305 ++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_dpi.c            |   3 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c   |  42 +++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |   2 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  23 ++
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |   3 +-
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.c       |   3 +
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.h       |   1 +
+ .../gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c    |   1 +
+ 16 files changed, 535 insertions(+), 131 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt7623n.dtsi
+
+-- 
+2.25.1
 
