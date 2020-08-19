@@ -2,116 +2,91 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53057C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86305C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319F220885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597880613;
-	bh=ElRgQNa+eCXKxKGiAwXCvT5SEdd/aIQYRPIeKR0A834=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uqRFLTvmf9COdWTc8bmpJz1uW8oSsj/pTHgDdNEqxp+zP3BLXa8ZB++Gzyof0/zj5
-	 3iSMdopj8J6QK8ZAf0AaPw2zjptOSnHcvn6bbquAVlLcDYNg2ZIC8daZ4vKWPf/euD
-	 sRugcdF/bYChAh/joRB8parkWQwtQvZ3FgNK3aAY=
+	by mail.kernel.org (Postfix) with ESMTP id 6D4AD20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHSXnc (ORCPT
+        id S1726749AbgHSXnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 19 Aug 2020 19:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
+Received: from mga11.intel.com ([192.55.52.93]:31506 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgHSXna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 19:43:30 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB4920885;
-        Wed, 19 Aug 2020 23:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597880609;
-        bh=ElRgQNa+eCXKxKGiAwXCvT5SEdd/aIQYRPIeKR0A834=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lsGv7IjxoikfbbLi8veuPzeJZ4LzzUuP8aF0z+SUXXzi6hloYN69Oxkth75X7fuhx
-         Pq3maN5J9QUHHgZNAc7O730nLvimgC0Ja4dzYQj3ncuK3mseUtibMYtnsOLeW8ZhvH
-         SJUXUHgEK++U51u9gKAggXVtsIWRGANPt6nP1VBw=
-Received: by mail-io1-f47.google.com with SMTP id t15so542274iob.3;
-        Wed, 19 Aug 2020 16:43:29 -0700 (PDT)
-X-Gm-Message-State: AOAM531iA1HECs8spdpL21INO6iEQEBvcBpSv7fAw/KVJTz+a5ccMpUT
-        r+HcoXmG32TaTE6QOEtxY/8OMcFu/rYhybONuMo=
-X-Google-Smtp-Source: ABdhPJywImw8dXNnBobaBopdocSp5GlcwoPSbxbSaryZt8nivOMkmwgkEBFD3B3CiPbqAgeiGZaHFLwLGbaFwxJnAgc=
-X-Received: by 2002:a6b:c88f:: with SMTP id y137mr321019iof.55.1597880609305;
- Wed, 19 Aug 2020 16:43:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597317260-24348-1-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1597317260-24348-1-git-send-email-hanks.chen@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 19 Aug 2020 16:43:18 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzq7H_KREyhxNy1zBsBJdFRAA7Zc1jkGc=ZiN_og1H9KBQ@mail.gmail.com>
-Message-ID: <CAGp9Lzq7H_KREyhxNy1zBsBJdFRAA7Zc1jkGc=ZiN_og1H9KBQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: check mtk_is_virt_gpio input parameter
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        sin_jieyang <sin_jieyang@mediatek.com>
+        id S1726342AbgHSXnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 19:43:31 -0400
+IronPort-SDR: AJTslrbvMK2dlnx4tkx5qzYFL9uCWdJaDiC/yCFyLYhwdBcn21NXCxVrZowznfWUq5h/AvXevc
+ 2fDe8KspCbqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152817807"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="152817807"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 16:43:30 -0700
+IronPort-SDR: O5tYOSNL62+SuASdmhJb8445k2uVVEXg0Cat/zdHSQN6aLC25N3+dLbxQfsJ3rnL525bEGHKbu
+ /ck8bJ7GJjnA==
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="497412099"
+Received: from dfugate-mobl1.amr.corp.intel.com (HELO dwf-u18040) ([10.212.117.189])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 16:43:29 -0700
+Message-ID: <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+From:   David Fugate <david.fugate@linux.intel.com>
+Reply-To: david.fugate@linux.intel.com
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        david.fugate@intel.com
+Date:   Wed, 19 Aug 2020 17:43:29 -0600
+In-Reply-To: <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200818052936.10995-1-joshi.k@samsung.com>
+         <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
+         <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de>
+         <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
+         <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
+         <d19605da52eb7aa3eb4132ad1781b5fbf636a8a0.camel@linux.intel.com>
+         <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
+Organization: Intel
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hanks,
+On Wed, 2020-08-19 at 15:10 -0700, Keith Busch wrote:
+> You're the one who left that thread dangling. You offered to have
+> your
+> firmware accommodate the Intel sponsored feature that makes your
+> patch
+> unnecessary in the first place. Your follow up made no sense and you
+> have not responded to the queries about it.
 
-On Thu, Aug 13, 2020 at 4:14 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
->
-> check mtk_is_virt_gpio input parameter,
-> virtual gpio need to support eint mode.
->
-> add error handler for the ko case
-> to fix this boot fail:
-> pc : mtk_is_virt_gpio+0x20/0x38 [pinctrl_mtk_common_v2]
-> lr : mtk_gpio_get_direction+0x44/0xb0 [pinctrl_paris]
+There were queries? My key takeaways were a maintainer NAK followed by
+instructions to make the Intel drive align with the driver by
+implementing NOIOB. While I disagree with the rejection as it appeared
+to be based entirely on politics, I can accept it as the quirk wasn't
+in the spec.
 
-it is better we post the complete call stack when the failure occurs
+It's not fair to make this same "your drive should align with the
+driver" demand of Samsung because we *are* talking about a spec'ed
+feature here. Technical critques of their patches and real performance
+degrades observed are fair game and objective; "your company did
+the nastiest possible move violating the normal NVMe procedures to make
+it optional" is not.
 
->
-> Fixes: edd546465002 ("pinctrl: mediatek: avoid virtual gpio trying to set reg")
-> Singed-off-by: sin_jieyang <sin_jieyang@mediatek.com>
-
-signed-off-by with the full name
-
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index c53e2c391e32..27ab9c512ae1 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -259,6 +259,10 @@ bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
->
->         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
->
-> +       /* if the GPIO is not supported for eint mode */
-> +       if (desc->eint.eint_m == EINT_NA)
-
-s/NO_EINT_SUPPORT/EINT_NA/ to align with pinctrl/mediatek/pinctrl-mtk-mt*.h uses
-
-> +               return virt_gpio;
-> +
->         if (desc->funcs && !desc->funcs[desc->eint.eint_m].name)
->                 virt_gpio = true;
->
-> --
-> 2.18.0
