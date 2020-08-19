@@ -2,124 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A615C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A4E20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5338F20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WFQFp6cS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtAam1Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHSWVO (ORCPT
+        id S1727935AbgHSWVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:21:14 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50135 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbgHSWVF (ORCPT
+        Wed, 19 Aug 2020 18:21:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42171 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727872AbgHSWVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:21:05 -0400
+        Wed, 19 Aug 2020 18:21:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597875664;
+        s=mimecast20190719; t=1597875665;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+4JPYlZ9QDYDC/mD0F6lPDwdYttMSKvhVad1UZeeChA=;
-        b=WFQFp6cSm5dIYu8cpeIq/WbzdETUyK9ywn+nTuumrNFMwXc65w3t4n1fQIq2nCPn30Ra6I
-        niP9RsyhowCXp/2Dm90v433UUlPFxqhNmQEmJ9A6gzorOKb6Lzj8ugI3Q1G3Zlxr+cIQ5g
-        TW7Z5+ZUPzjjdEf5onvlj80Wt2onirc=
+        bh=a8Fv9LTgyRB5SSl/Lk6ZNgWdBq14YjztlZgeO1B398g=;
+        b=CtAam1YraxNUtA3TOgNJ+SEJK9vauir6MiVP5zSG+doiXtVdjP38Bh1XdMXN48my/K12EK
+        pOMgTHbWuopW9cDBQrbT70Exyrux6iMVG9HYnP/IIzDeJv/WY3Xe9pSkbPhs6akmjjovFc
+        oZ32hf8sWeISKhHhBZTh+yejZBxU/oI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-79-mzDGoN68MzeM2JWyxMOSZw-1; Wed, 19 Aug 2020 18:21:02 -0400
-X-MC-Unique: mzDGoN68MzeM2JWyxMOSZw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-473-gPsvGkkkNICwda23EDgoVg-1; Wed, 19 Aug 2020 18:21:03 -0400
+X-MC-Unique: gPsvGkkkNICwda23EDgoVg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E05028030A1;
-        Wed, 19 Aug 2020 22:21:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 276FD425D2;
+        Wed, 19 Aug 2020 22:21:02 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-115-197.rdu2.redhat.com [10.10.115.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B0A35C88D;
-        Wed, 19 Aug 2020 22:20:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 04FDC7E303;
+        Wed, 19 Aug 2020 22:21:02 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C68142254FA; Wed, 19 Aug 2020 18:20:53 -0400 (EDT)
+        id 2B19C2256ED; Wed, 19 Aug 2020 18:20:54 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org, virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, dan.j.williams@intel.com,
-        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Subject: [PATCH v3 01/18] dax: Modify bdev_dax_pgoff() to handle NULL bdev
-Date:   Wed, 19 Aug 2020 18:19:39 -0400
-Message-Id: <20200819221956.845195-2-vgoyal@redhat.com>
+        dgilbert@redhat.com, dan.j.williams@intel.com
+Subject: [PATCH v3 15/18] fuse,virtiofs: Define dax address space operations
+Date:   Wed, 19 Aug 2020 18:19:53 -0400
+Message-Id: <20200819221956.845195-16-vgoyal@redhat.com>
 In-Reply-To: <20200819221956.845195-1-vgoyal@redhat.com>
 References: <20200819221956.845195-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtiofs does not have a block device but it has dax device.
-Modify bdev_dax_pgoff() to be able to handle that.
+This is done along the lines of ext4 and xfs. I primarily wanted ->writepages
+hook at this time so that I could call into dax_writeback_mapping_range().
+This in turn will decide which pfns need to be written back.
 
-If there is no bdev, that means dax offset is 0. (It can't be a partition
-block device starting at an offset in dax device).
-
-This is little hackish. There have been discussions about getting rid
-of dax not supporting partitions.
-
-https://lore.kernel.org/linux-fsdevel/20200107125159.GA15745@infradead.org/
-
-IMHO, this path can easily break exisitng users. For example
-ioctl(BLKPG_ADD_PARTITION) will start breaking on block devices
-supporting DAX. Also, I personally find it very useful to be able to
-partition dax devices and still be able to use DAX.
-
-Alternatively, I tried to store offset into dax device information in iomap
-interface, but that got NACKed.
-
-https://lore.kernel.org/linux-fsdevel/20200217133117.GB20444@infradead.org/
-
-I can't think of a good path to solve this issue properly. So to make
-progress, it seems this patch is least bad option for now and I hope
-we can take it.
-
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Vishal L Verma <vishal.l.verma@intel.com>
-Cc: "Weiny, Ira" <ira.weiny@intel.com>
-Cc: linux-nvdimm@lists.01.org
 ---
- drivers/dax/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/file.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index c82cbcb64202..505165752d8f 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -46,7 +46,8 @@ EXPORT_SYMBOL_GPL(dax_read_unlock);
- int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
- 		pgoff_t *pgoff)
- {
--	phys_addr_t phys_off = (get_start_sect(bdev) + sector) * 512;
-+	sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
-+	phys_addr_t phys_off = (start_sect + sector) * 512;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index f1ad8b95b546..0eecb4097c14 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2669,6 +2669,16 @@ static int fuse_writepages_fill(struct page *page,
+ 	return err;
+ }
  
- 	if (pgoff)
- 		*pgoff = PHYS_PFN(phys_off);
++static int fuse_dax_writepages(struct address_space *mapping,
++				struct writeback_control *wbc)
++{
++
++	struct inode *inode = mapping->host;
++	struct fuse_conn *fc = get_fuse_conn(inode);
++
++	return dax_writeback_mapping_range(mapping, fc->dax_dev, wbc);
++}
++
+ static int fuse_writepages(struct address_space *mapping,
+ 			   struct writeback_control *wbc)
+ {
+@@ -4021,6 +4031,13 @@ static const struct address_space_operations fuse_file_aops  = {
+ 	.write_end	= fuse_write_end,
+ };
+ 
++static const struct address_space_operations fuse_dax_file_aops  = {
++	.writepages	= fuse_dax_writepages,
++	.direct_IO	= noop_direct_IO,
++	.set_page_dirty	= noop_set_page_dirty,
++	.invalidatepage	= noop_invalidatepage,
++};
++
+ void fuse_init_file_inode(struct inode *inode)
+ {
+ 	struct fuse_inode *fi = get_fuse_inode(inode);
+@@ -4036,6 +4053,8 @@ void fuse_init_file_inode(struct inode *inode)
+ 	fi->writepages = RB_ROOT;
+ 	fi->dmap_tree = RB_ROOT_CACHED;
+ 
+-	if (fc->dax_dev)
++	if (fc->dax_dev) {
+ 		inode->i_flags |= S_DAX;
++		inode->i_data.a_ops = &fuse_dax_file_aops;
++	}
+ }
 -- 
 2.25.4
 
