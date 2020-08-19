@@ -2,185 +2,154 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7584EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB60C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1EE204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139132075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="lq+oDqnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgHSNvJ (ORCPT
+        id S1728556AbgHSNwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728393AbgHSNn7 (ORCPT
+        Wed, 19 Aug 2020 09:52:51 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:47719 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727773AbgHSNwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:43:59 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9DDC061346
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:43:56 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by baptiste.telenet-ops.be with bizsmtp
-        id HRjl2300W4C55Sk01RjlZl; Wed, 19 Aug 2020 15:43:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0003E9-Kd; Wed, 19 Aug 2020 15:43:45 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0007Fl-Iz; Wed, 19 Aug 2020 15:43:45 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 7/7] arm64: dts: renesas: rzg2: Convert EtherAVB to explicit delay handling
-Date:   Wed, 19 Aug 2020 15:43:44 +0200
-Message-Id: <20200819134344.27813-8-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819134344.27813-1-geert+renesas@glider.be>
-References: <20200819134344.27813-1-geert+renesas@glider.be>
+        Wed, 19 Aug 2020 09:52:45 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8OW8kd7KUuuXO8OWAkhNrT; Wed, 19 Aug 2020 15:52:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597845162; bh=S/1eF/z/kxWJPuHz7Azo9yGJbLE4i6USiGn52JbBhQ8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=lq+oDqnDj1m1TL8ecDhwJeaerWudIm6F8zwo1pKBlTEmosCkfDI5sYqCplE6WAm9i
+         Tke/22HaRqA1hgHUzBWB5mGzSJTo2mmGPiEMpYeH+aGaB2z0aSq0mX+AOaShuBspKh
+         yLnXIB1gPDDmt4i41dKl7eAAmrZHbkr8mePksRBIlsqTPjGVmOiuzaRe42xme1+V9t
+         HyhE1CAuBVXeSvQqWCxnjbXFEz6ENA93W+nDvGhmkxnRYENaggGfrbj8VVsgqLcdpw
+         INR9w0CyMl9JSPbzPFA6wATkNwJyVKulJy2wv49QD0ub6dOscPhW7Qo07XHJNn5VI3
+         jyGtlnyNtLDkw==
+Subject: Re: [PATCH 1/2] media: stm32-dcmi: create video dev within notifier
+ bound
+To:     Alain Volmat <alain.volmat@st.com>, hugues.fruchet@st.com,
+        mchehab@kernel.org
+Cc:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        yannick.fertre@st.com, hans.verkuil@cisco.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1595918278-9724-1-git-send-email-alain.volmat@st.com>
+ <1595918278-9724-2-git-send-email-alain.volmat@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <31ca9ccc-77d4-4368-1024-db70e8e1e7f2@xs4all.nl>
+Date:   Wed, 19 Aug 2020 15:52:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1595918278-9724-2-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEsrBXZOL/+O/UJgbLIac3a9mevUaGD8wdOuFN+0W9g/XWTkEyKbA09IgeextnTDSnp15fC//++Z9wrKcIDY5fSQ+gOOF8Pe380Fj1W3gVkcaNF1ZFJ6
+ kr58YhrhHMycmH5+PinH9L3rDjPjCksN2rLJY5pbl/IUTzpGFgx2oFwhuJabvvTtyN6ZM3i3ERlYx89csQMzigkKVe5t13ZJGdrvfyjZ1p+HV5gW15IrDtua
+ rmTCKtx4tfT0zb3WPkRb90S5YiFHK+ClhvmtfUL7aTNrGcnb3cw81OtuWIAt5DCR3XxaHQgG7WStfA7s6kSRikj7CmkPbsEa9/EXQUjChIbD9L221uNbi/Hi
+ +EW7MVGSQwDEKlIW7pY3f8lVCXF5NHBMrijN6x/NeWDBwjojAtHlDLZ6XyoCInE3tG0OWFBKtCBPgmnTPxdu/B/a5821t25ganGw0WbSoZoK8YDSXpF0kUQC
+ W0SfMKZvKKfP6GFo+CsWnwDzC7HX1vzi8sbyv3BKCoq6bp39JRxa0kVkCTBWh6kBijxksGdi+aXaoh1HIu3Iq9ZKtLfz5gAZk3GOHigwtalS5WTaykJsjkKq
+ 671eIh2b23FkIeAhWPc099igA6CxvhFYhyBD/iDrCYavbbCTUmmqMeHE7zqQ24S0s+4sChLJ0C3SnVaO9jz8oFw9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some EtherAVB variants support internal clock delay configuration, which
-can add larger delays than the delays that are typically supported by
-the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
-properties).
+On 28/07/2020 08:37, Alain Volmat wrote:
+> In case of an error during the initialization of the sensor,
+> the video device is still available since created at the
+> probe of the dcmi driver. Moreover the device wouldn't
+> be released even when removing the module since the release
+> is performed as part of the notifier unbind callback
+> (not called if no sensor is properly initialized).
+> 
+> This patch move the video device creation with the v4l2 notifier
+> bound handler in order to avoid having a video device created when
+> an error happen during the pipe (dcmi - sensor) initialization.
+> 
+> This also makes the video device creation symmetric with the
+> release which is already done within the notifier unbind handler.
+> 
+> Fixes: 37404f91ef8b ("[media] stm32-dcmi: STM32 DCMI camera interface driver")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index b8931490b83b..5e60d4c6eeeb 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -1747,6 +1747,15 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+>  
+>  	dev_dbg(dcmi->dev, "Subdev \"%s\" bound\n", subdev->name);
+>  
+> +	ret = video_register_device(dcmi->vdev, VFL_TYPE_VIDEO, -1);
+> +	if (ret) {
+> +		dev_err(dcmi->dev, "Failed to register video device\n");
+> +		return ret;
+> +	}
 
-Historically, the EtherAVB driver configured these delays based on the
-"rgmii-*id" PHY mode.  This was wrong, as these are meant solely for the
-PHY, not for the MAC.  Hence properties were introduced for explicit
-configuration of these delays.
+Why in the bound callback? The video device is typically created in the complete
+callback, since that's the point where everything is ready.
 
-Convert the RZ/G2 DTS files from the old to the new scheme:
-  - Add default "rx-internal-delay-ps" and "tx-internal-delay-ps"
-    properties to the SoC .dtsi files, to be overridden by board files
-    where needed,
-  - Convert board files from "rgmii-*id" PHY modes to "rgmii", adding
-    the appropriate "rx-internal-delay-ps" and/or "tx-internal-delay-ps"
-    overrides.
+You should not create a video device unless it is ready for use, and that's only
+valid at the end of the complete callback.
 
-Notes:
-  - RZ/G2E does not support TX internal delay handling.
+Regards,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This depends on "[PATCH v3 5/7] ravb: Add support for explicit internal
-clock delay configuration", and thus must not be applied before its
-dependency has hit upstream.
+	Hans
 
-v3:
-  - Update new beacon-renesom-som.dtsi and r8a774e1.dtsi,
-
-v2:
-  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps".
----
- arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi | 3 ++-
- arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi     | 2 +-
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi           | 2 ++
- arch/arm64/boot/dts/renesas/r8a774b1.dtsi           | 2 ++
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi           | 1 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi           | 2 ++
- 6 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-index 97272f5fa0abf92e..8ac167aa18f04743 100644
---- a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-@@ -55,7 +55,8 @@
- 	pinctrl-0 = <&avb_pins>;
- 	pinctrl-names = "default";
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii-id";
-+	rx-internal-delay-ps = <1800>;
-+	tx-internal-delay-ps = <2000>;
- 	status = "okay";
- 
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-index 178401a34cbf8d38..46f1ca0b7ef5e7c2 100644
---- a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-@@ -19,7 +19,7 @@
- 	pinctrl-0 = <&avb_pins>;
- 	pinctrl-names = "default";
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii-txid";
-+	tx-internal-delay-ps = <2000>;
- 	status = "okay";
- 
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 8e80f50132ad55f5..ed99863f1dd09fd0 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1115,6 +1115,8 @@
- 			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-index 49e5addcfd97af01..1c76de24d3ea4844 100644
---- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-@@ -989,6 +989,8 @@
- 			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 42171190cce4602d..9fdca4c55ba95608 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -960,6 +960,7 @@
- 			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 0f86cfd524258353..0975bcbc3c502535 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -1139,6 +1139,8 @@
- 			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.17.1
+> +
+> +	dev_dbg(dcmi->dev, "Device registered as %s\n",
+> +		video_device_node_name(dcmi->vdev));
+> +
+>  	/*
+>  	 * Link this sub-device to DCMI, it could be
+>  	 * a parallel camera sensor or a bridge
+> @@ -1759,10 +1768,11 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+>  				    &dcmi->vdev->entity, 0,
+>  				    MEDIA_LNK_FL_IMMUTABLE |
+>  				    MEDIA_LNK_FL_ENABLED);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(dcmi->dev, "Failed to create media pad link with subdev \"%s\"\n",
+>  			subdev->name);
+> -	else
+> +		video_unregister_device(dcmi->vdev);
+> +	} else
+>  		dev_dbg(dcmi->dev, "DCMI is now linked to \"%s\"\n",
+>  			subdev->name);
+>  
+> @@ -1974,15 +1984,6 @@ static int dcmi_probe(struct platform_device *pdev)
+>  	}
+>  	dcmi->vdev->entity.flags |= MEDIA_ENT_FL_DEFAULT;
+>  
+> -	ret = video_register_device(dcmi->vdev, VFL_TYPE_VIDEO, -1);
+> -	if (ret) {
+> -		dev_err(dcmi->dev, "Failed to register video device\n");
+> -		goto err_media_entity_cleanup;
+> -	}
+> -
+> -	dev_dbg(dcmi->dev, "Device registered as %s\n",
+> -		video_device_node_name(dcmi->vdev));
+> -
+>  	/* Buffer queue */
+>  	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+>  	q->io_modes = VB2_MMAP | VB2_READ | VB2_DMABUF;
+> 
 
