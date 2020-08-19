@@ -2,131 +2,185 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6082822B40
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF9320758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:21:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2l1Nfy+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgHSSUJ (ORCPT
+        id S1726841AbgHSSVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:20:09 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:56932 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHSSUI (ORCPT
+        Wed, 19 Aug 2020 14:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgHSSVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:20:08 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id EBB5320020;
-        Wed, 19 Aug 2020 20:20:04 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 20:20:03 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panel: novatek,nt39016: Remove 'dev' field in priv
- struct
-Message-ID: <20200819182003.GA12176@ravnborg.org>
-References: <20200819181412.137785-1-paul@crapouillou.net>
+        Wed, 19 Aug 2020 14:21:12 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A84C061757;
+        Wed, 19 Aug 2020 11:21:12 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id x24so19831435otp.3;
+        Wed, 19 Aug 2020 11:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zBMYHGoLqcQIDa75kPEyh/KB+iBrkpptU65EqjbhG7Y=;
+        b=o2l1Nfy+8w9JtCsVwTjWxIgVHG2aUehxoeLFi30efLZOoVWoTEEBaUi5FOCfLKi04y
+         b9mZolDBq8uWo4mIHYQnk61/OsVfF0WQUTy1P5jBSM/ArtN0BnwtUTTMMuDym8emq0E3
+         QvRYmTZu1FR1MR378xPRy2DVifzGjzDaCCcZpIleQBJabDFrDcpaGKvYA+zpOW4y9vm0
+         0xoXH4sDB65Re0fDGtrWucPfe7xdPAVtdJ1d50Jze9/V/alujo9zmKnslM/4bmD/FtpJ
+         GZpCnEHAqQIOPt7fLL1TmMrnAQqEhkgghq7JGTZ02MsEd8dU2v195s4TAiunFEIy/2ow
+         RhgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zBMYHGoLqcQIDa75kPEyh/KB+iBrkpptU65EqjbhG7Y=;
+        b=mOwwuyJwUQJ6S1gCczB6LpUQxkerbdzv07Ny/x/jy5qAaewxvOzI0ZLD6lRFVtek43
+         pHCbtYC2b+7CZvuzZoQmyOVueHr0hXa3Gh/uWAc7tCcXQufN8Q/IHc89d/tT5Yd2eT70
+         axK40Oe6m/1MUYvUNeZOkL6wxFcTc239atuGGwrIBQ7WvWgBLrPLhPdRsbG9sdUBM61R
+         v48Pb2myq89weRKNHrCD5rIPVGtq3o6dJmRJW6ERBhJxg3O7jS6s+uX+kO9FkJpeN0JN
+         Z30tsiVEgUSVdC5uBMVYUdMYoOukjM5UMxamMOJRmtPEQ1VL1s/RtMTwbmnMeVZTU+X3
+         8Ntw==
+X-Gm-Message-State: AOAM532VDnceF/HLiggW9K5/T3UIAqFhOx5Ro0UfyTMV9Foj7KcaV5aw
+        XdT2i5unt1wELI1z0bMeFz9uH6f0IDebtBztnwM=
+X-Google-Smtp-Source: ABdhPJyyFtBGtBDQDC0+qpIvbBVOSiO9PH5RJce1zRO3VRRQKtT74SqDuprv6s1YgJttg07Y2wYBSfyUOU1rwvHn3r0=
+X-Received: by 2002:a9d:429:: with SMTP id 38mr18272918otc.88.1597861271397;
+ Wed, 19 Aug 2020 11:21:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819181412.137785-1-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=C1W1wG20L6skF9YZcpEA:9
-        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
+References: <20200813084129.332730-1-josephsih@chromium.org>
+ <20200813164059.v1.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+ <CABBYNZJ-nBXeujF2WkMEPYPQhXAphqKCV39gr-QYFdTC3GvjXg@mail.gmail.com> <20200819143716.iimo4l3uul7lrpjn@pali>
+In-Reply-To: <20200819143716.iimo4l3uul7lrpjn@pali>
+From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date:   Wed, 19 Aug 2020 11:21:00 -0700
+Message-ID: <CABBYNZJVDk6LWqyY7h8=KwpA4Oub+aCb3WEWnxk_AGWPvgmatg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] Bluetooth: sco: expose WBS packet length in socket option
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Joseph Hwang <josephsih@chromium.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Joseph Hwang <josephsih@google.com>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+Hi Pali,
 
-On Wed, Aug 19, 2020 at 08:14:12PM +0200, Paul Cercueil wrote:
-> There is already a 'struct device' pointer in the drm_panel structure,
-> that we can access easily from our priv structure, so there's no need
-> for a separate 'dev' field there.
-> 
-> This also allows drm_panel_of_backlight() to work properly, as it
-> requires the drm_panel.dev field to be initialized.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/gpu/drm/panel/panel-novatek-nt39016.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> index 39f7be679da5..292ad1d58313 100644
-> --- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> +++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> @@ -56,7 +56,6 @@ struct nt39016_panel_info {
->  
->  struct nt39016 {
->  	struct drm_panel drm_panel;
-> -	struct device *dev;
->  	struct regmap *map;
->  	struct regulator *supply;
->  	const struct nt39016_panel_info *panel_info;
-> @@ -124,7 +123,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
->  
->  	err = regulator_enable(panel->supply);
->  	if (err) {
-> -		dev_err(panel->dev, "Failed to enable power supply: %d\n", err);
-> +		dev_err(drm_panel->dev, "Failed to enable power supply: %d\n", err);
->  		return err;
->  	}
->  
-> @@ -143,7 +142,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
->  	err = regmap_multi_reg_write(panel->map, nt39016_panel_regs,
->  				     ARRAY_SIZE(nt39016_panel_regs));
->  	if (err) {
-> -		dev_err(panel->dev, "Failed to init registers: %d\n", err);
-> +		dev_err(drm_panel->dev, "Failed to init registers: %d\n", err);
->  		goto err_disable_regulator;
->  	}
->  
-> @@ -173,7 +172,7 @@ static int nt39016_enable(struct drm_panel *drm_panel)
->  	ret = regmap_write(panel->map, NT39016_REG_SYSTEM,
->  			   NT39016_SYSTEM_RESET_N | NT39016_SYSTEM_STANDBY);
->  	if (ret) {
-> -		dev_err(panel->dev, "Unable to enable panel: %d\n", ret);
-> +		dev_err(drm_panel->dev, "Unable to enable panel: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -193,7 +192,7 @@ static int nt39016_disable(struct drm_panel *drm_panel)
->  	err = regmap_write(panel->map, NT39016_REG_SYSTEM,
->  			   NT39016_SYSTEM_RESET_N);
->  	if (err) {
-> -		dev_err(panel->dev, "Unable to disable panel: %d\n", err);
-> +		dev_err(drm_panel->dev, "Unable to disable panel: %d\n", err);
->  		return err;
->  	}
->  
-> @@ -252,7 +251,7 @@ static int nt39016_probe(struct spi_device *spi)
->  	if (!panel)
->  		return -ENOMEM;
->  
-> -	panel->dev = dev;
-> +	panel->drm_panel.dev = dev;
-This is wrong. You need to fix when drm_panel_of_backlight is called.
-From drm_panel.c:
-* drm_panel_of_backlight() must be called after the call to drm_panel_init().
+On Wed, Aug 19, 2020 at 7:37 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>
+> On Friday 14 August 2020 12:56:05 Luiz Augusto von Dentz wrote:
+> > Hi Joseph,
+> >
+> > On Thu, Aug 13, 2020 at 1:42 AM Joseph Hwang <josephsih@chromium.org> w=
+rote:
+> > >
+> > > It is desirable to expose the wideband speech packet length via
+> > > a socket option to the user space so that the user space can set
+> > > the value correctly in configuring the sco connection.
+> > >
+> > > Reviewed-by: Alain Michaud <alainm@chromium.org>
+> > > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> > > ---
+> > >
+> > >  include/net/bluetooth/bluetooth.h | 2 ++
+> > >  net/bluetooth/sco.c               | 8 ++++++++
+> > >  2 files changed, 10 insertions(+)
+> > >
+> > > diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetoot=
+h/bluetooth.h
+> > > index 9125effbf4483d..922cc03143def4 100644
+> > > --- a/include/net/bluetooth/bluetooth.h
+> > > +++ b/include/net/bluetooth/bluetooth.h
+> > > @@ -153,6 +153,8 @@ struct bt_voice {
+> > >
+> > >  #define BT_SCM_PKT_STATUS      0x03
+> > >
+> > > +#define BT_SCO_PKT_LEN         17
+> > > +
+> > >  __printf(1, 2)
+> > >  void bt_info(const char *fmt, ...);
+> > >  __printf(1, 2)
+> > > diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
+> > > index dcf7f96ff417e6..97e4e7c7b8cf62 100644
+> > > --- a/net/bluetooth/sco.c
+> > > +++ b/net/bluetooth/sco.c
+> > > @@ -67,6 +67,7 @@ struct sco_pinfo {
+> > >         __u32           flags;
+> > >         __u16           setting;
+> > >         __u8            cmsg_mask;
+> > > +       __u32           pkt_len;
+> > >         struct sco_conn *conn;
+> > >  };
+> > >
+> > > @@ -267,6 +268,8 @@ static int sco_connect(struct sock *sk)
+> > >                 sco_sock_set_timer(sk, sk->sk_sndtimeo);
+> > >         }
+> > >
+> > > +       sco_pi(sk)->pkt_len =3D hdev->sco_pkt_len;
+> > > +
+> > >  done:
+> > >         hci_dev_unlock(hdev);
+> > >         hci_dev_put(hdev);
+> > > @@ -1001,6 +1004,11 @@ static int sco_sock_getsockopt(struct socket *=
+sock, int level, int optname,
+> > >                         err =3D -EFAULT;
+> > >                 break;
+> > >
+> > > +       case BT_SCO_PKT_LEN:
+> > > +               if (put_user(sco_pi(sk)->pkt_len, (u32 __user *)optva=
+l))
+> > > +                       err =3D -EFAULT;
+> > > +               break;
+> >
+> > Couldn't we expose this via BT_SNDMTU/BT_RCVMTU?
+>
+> Hello!
+>
+> There is already SCO_OPTIONS sock option, uses struct sco_options and
+> contains 'mtu' member.
+>
+> I think that instead of adding new sock option, existing SCO_OPTIONS
+> option should be used.
 
-Then the assignment can go away.
+We are moving away from type specific options to so options like
+BT_SNDMTU/BT_RCVMTU should be supported in all socket types.
 
-	Sam
+>
+> > >         default:
+> > >                 err =3D -ENOPROTOOPT;
+> > >                 break;
+> > > --
+> > > 2.28.0.236.gb10cc79966-goog
+> > >
+> >
+> >
+> > --
+> > Luiz Augusto von Dentz
 
->  	spi_set_drvdata(spi, panel);
->  
->  	panel->panel_info = of_device_get_match_data(dev);
-> -- 
-> 2.28.0
+
+
+--=20
+Luiz Augusto von Dentz
