@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C99BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDAB2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC42205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597838845;
-	bh=lD1z+6B6Hv/5RcoylS7Y5W+SmGK/qiZiuARtEnKUb9w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUFuEy4pmjez4gOe0rZOWe9Rj4RsLoI+luUCXNk0o2OLrLLUmtXq4aNftqjE65npX
-	 HqHcbuqCyGNfSciD9zGjwXfGrLEYkRZGRwQJwn9u3gjCw9eC46/eMEFTX7bx7ubwzG
-	 3nSrs9iYA/8JeJ6mKsHysbZNnJZss4aYrHh2nKtA=
+	s=default; t=1597838877;
+	bh=9+A5km3rBzonFlpdLOc0whd9dr9SchgC9q+8u5/c76o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D6SbX9s2qa4EPmxFZkVHAxR6A8Y9oV5FXcGYcpo4Uj20c+oXX4+VMTB0T+SctU42z
+	 p5Ep/BPcuJYTQjI1p30Pz6sUBrH2idqZTFcx6pHV2bGMWFojEmbh6adLbgHbuJhjTO
+	 hMWkmpKy27glZ5s1vihv9/wzzFMQeDYWxss3WoBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgHSMGw (ORCPT
+        id S1728286AbgHSMHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47294 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 08:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgHSLrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:47:40 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        id S1728254AbgHSMGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:06:45 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A40C72083B;
-        Wed, 19 Aug 2020 11:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B862063A;
+        Wed, 19 Aug 2020 12:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597837582;
-        bh=lD1z+6B6Hv/5RcoylS7Y5W+SmGK/qiZiuARtEnKUb9w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fl0qUJV+Ju9cogwWDawaevyvFcOjBYfxwTK+81xiX8TPzd+EmfzYvfailIXS9FKaF
-         hY1d4bxk0Kq1nOhb+zkLfCE0wV0SoKlH4QpyxZJxDxulQuYkKI75WcNwm4LALA8twn
-         oAfzl97CdUFCwjF2bP8MdGM+BIM79RnWMdaDVdH8=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k8MXs-00EubA-Fp; Wed, 19 Aug 2020 13:46:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 28/49] staging: hikey9xx/gpu: remove an uneeded hack
-Date:   Wed, 19 Aug 2020 13:45:56 +0200
-Message-Id: <b9ad9a5922a9e53cac02af1c2c74f4a7d2fa262d.1597833138.git.mchehab+huawei@kernel.org>
+        s=default; t=1597838804;
+        bh=9+A5km3rBzonFlpdLOc0whd9dr9SchgC9q+8u5/c76o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EqviEmp8C9kRTc1t3ll7o04U9C+mageaSvMQi+eTgEkaJAfNO+/TmnpTtKM4Nvz4H
+         bxNgdgvqJkdTcKQzQkGRpyD4F9j4VO9dAwWKJ0xVSPlyt5SUUobxXDvLEKlZ5XTCkk
+         Jp+IfvNW6MUMRhr2/wHylrlkek3h+ytm1EFhLeks=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Leon Romanovsky <leonro@nvidia.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] fs: Add function declaration of simple_dname
+Date:   Wed, 19 Aug 2020 15:06:40 +0300
+Message-Id: <20200819120640.939889-1-leon@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,30 +55,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least on current upstream Kernels, forcing an event parse
-during init time isn't needed anymore.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The simple_dname() is declared in internal header file but the
+declaration is missing in d_path.c.
+
+The compilation with W=1 generates the following GCC warning.
+
+fs/d_path.c:311:7: warning: no previous prototype for 'simple_dname' [-Wmissing-prototypes]
+  311 | char *simple_dname(struct dentry *dentry, char *buffer, int buflen)
+      |       ^~~~~~~~~~~~
+
+Fixes: 7e5f7bb08b8c ("unexport simple_dname()")
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c | 5 -----
- 1 file changed, 5 deletions(-)
+Changelog:
+v1: Dropped "extern" removal chunk
+v0: https://lore.kernel.org/lkml/20200819083259.919838-1-leon@kernel.org/
+---
+ fs/d_path.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-index 44f7c15f386a..3d1b5f738a7f 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-@@ -122,11 +122,6 @@ static int kirin_drm_kms_init(struct drm_device *dev)
- 	/* init kms poll for handling hpd */
- 	drm_kms_helper_poll_init(dev);
- 
--#if 1
--	/* force detection after connectors init */
--	(void)drm_helper_hpd_irq_event(dev);
--#endif
--
- 	return 0;
- 
- err_unbind_all:
--- 
+diff --git a/fs/d_path.c b/fs/d_path.c
+index 0f1fc1743302..4b89448cc78e 100644
+--- a/fs/d_path.c
++++ b/fs/d_path.c
+@@ -8,6 +8,8 @@
+ #include <linux/prefetch.h>
+ #include "mount.h"
+
++#include "internal.h"
++
+ static int prepend(char **buffer, int *buflen, const char *str, int namelen)
+ {
+ 	*buflen -= namelen;
+--
 2.26.2
 
