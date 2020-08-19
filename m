@@ -2,166 +2,155 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E23BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69D4F2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D564520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597847843;
+	bh=9XcrtgpDa8lRtRYF9tZCoWHfFG44dFLLY6OtC69LqnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ms9dUjp+t07EsRWxSW0jArcj3uedyiek0RF0TsMmUM7PmPssnfzc+iSGjiuBIXLuA
+	 jXGIKGUCXM1R3yf7wc3DVqFMRJXyduFkxKFJsQCQijVZZ3rsha17idW0kmfgcwfICM
+	 IFDGrU4nzReTShZHjSsyOJx8VXcP3H3VoWmywrk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgHSOhN (ORCPT
+        id S1728593AbgHSOhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:37:13 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:54302 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727018AbgHSOhD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:37:03 -0400
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JESxB6012756;
-        Wed, 19 Aug 2020 14:36:59 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0a-002e3701.pphosted.com with ESMTP id 330m84fgur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 14:36:59 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 5AE934F;
-        Wed, 19 Aug 2020 14:36:58 +0000 (UTC)
-Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 201855)
-        id ED1C7200FDA48; Wed, 19 Aug 2020 09:36:57 -0500 (CDT)
-From:   Alex Kluver <alex.kluver@hpe.com>
-To:     linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ardb@kernel.org, mchehab@kernel.org, bp@alien8.de,
-        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
-        kluveralex@gmail.com, Alex Kluver <alex.kluver@hpe.com>
-Subject: [PATCH v2 2/2] cper,edac,efi: Memory Error Record: bank group/address and chip id
-Date:   Wed, 19 Aug 2020 09:35:44 -0500
-Message-Id: <20200819143544.155096-3-alex.kluver@hpe.com>
-X-Mailer: git-send-email 2.12.3
-In-Reply-To: <20200819143544.155096-1-alex.kluver@hpe.com>
-References: <20200819143544.155096-1-alex.kluver@hpe.com>
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_07:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 suspectscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190127
+        Wed, 19 Aug 2020 10:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727827AbgHSOhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:37:19 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AACFE20738;
+        Wed, 19 Aug 2020 14:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597847838;
+        bh=9XcrtgpDa8lRtRYF9tZCoWHfFG44dFLLY6OtC69LqnQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OowIhNuEd45rf/oFvYaOaETAGF+uvia8dB0Otcx6KfXxpYoM5JxASnYfjSb2YQfgj
+         5Ze4YoRi6VKMI3ZznYjQmc6sLIEd+20Ek70ZpcUQ4IMFkQTGStuQ3EPqkY3420WEdC
+         38xm9QiDDEVR790ymYcElxSonP2HDMCEbqyHXw6k=
+Received: by pali.im (Postfix)
+        id D79AD582; Wed, 19 Aug 2020 16:37:16 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 16:37:16 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc:     Joseph Hwang <josephsih@chromium.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Joseph Hwang <josephsih@google.com>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] Bluetooth: sco: expose WBS packet length in
+ socket option
+Message-ID: <20200819143716.iimo4l3uul7lrpjn@pali>
+References: <20200813084129.332730-1-josephsih@chromium.org>
+ <20200813164059.v1.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+ <CABBYNZJ-nBXeujF2WkMEPYPQhXAphqKCV39gr-QYFdTC3GvjXg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABBYNZJ-nBXeujF2WkMEPYPQhXAphqKCV39gr-QYFdTC3GvjXg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updates to the UEFI 2.8 Memory Error Record allow splitting the bank field
-into bank address and bank group, and using the last 3 bits of the extended
-field as a chip identifier.
+On Friday 14 August 2020 12:56:05 Luiz Augusto von Dentz wrote:
+> Hi Joseph,
+> 
+> On Thu, Aug 13, 2020 at 1:42 AM Joseph Hwang <josephsih@chromium.org> wrote:
+> >
+> > It is desirable to expose the wideband speech packet length via
+> > a socket option to the user space so that the user space can set
+> > the value correctly in configuring the sco connection.
+> >
+> > Reviewed-by: Alain Michaud <alainm@chromium.org>
+> > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> > ---
+> >
+> >  include/net/bluetooth/bluetooth.h | 2 ++
+> >  net/bluetooth/sco.c               | 8 ++++++++
+> >  2 files changed, 10 insertions(+)
+> >
+> > diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bluetooth.h
+> > index 9125effbf4483d..922cc03143def4 100644
+> > --- a/include/net/bluetooth/bluetooth.h
+> > +++ b/include/net/bluetooth/bluetooth.h
+> > @@ -153,6 +153,8 @@ struct bt_voice {
+> >
+> >  #define BT_SCM_PKT_STATUS      0x03
+> >
+> > +#define BT_SCO_PKT_LEN         17
+> > +
+> >  __printf(1, 2)
+> >  void bt_info(const char *fmt, ...);
+> >  __printf(1, 2)
+> > diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
+> > index dcf7f96ff417e6..97e4e7c7b8cf62 100644
+> > --- a/net/bluetooth/sco.c
+> > +++ b/net/bluetooth/sco.c
+> > @@ -67,6 +67,7 @@ struct sco_pinfo {
+> >         __u32           flags;
+> >         __u16           setting;
+> >         __u8            cmsg_mask;
+> > +       __u32           pkt_len;
+> >         struct sco_conn *conn;
+> >  };
+> >
+> > @@ -267,6 +268,8 @@ static int sco_connect(struct sock *sk)
+> >                 sco_sock_set_timer(sk, sk->sk_sndtimeo);
+> >         }
+> >
+> > +       sco_pi(sk)->pkt_len = hdev->sco_pkt_len;
+> > +
+> >  done:
+> >         hci_dev_unlock(hdev);
+> >         hci_dev_put(hdev);
+> > @@ -1001,6 +1004,11 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
+> >                         err = -EFAULT;
+> >                 break;
+> >
+> > +       case BT_SCO_PKT_LEN:
+> > +               if (put_user(sco_pi(sk)->pkt_len, (u32 __user *)optval))
+> > +                       err = -EFAULT;
+> > +               break;
+> 
+> Couldn't we expose this via BT_SNDMTU/BT_RCVMTU?
 
-When needed, print correct version of bank field, bank group, and chip
-identification
+Hello!
 
-Based on UEFI 2.8 Table 299. Memory Error Record
+There is already SCO_OPTIONS sock option, uses struct sco_options and
+contains 'mtu' member.
 
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Kyle Meyer <kyle.meyer@hpe.com>
-Reviewed-by: Russ Anderson <russ.anderson@hpe.com>
-Signed-off-by: Alex Kluver <alex.kluver@hpe.com>
----
+I think that instead of adding new sock option, existing SCO_OPTIONS
+option should be used.
 
-v1 -> v2:
-   * Add static inline cper_get_mem_extension() to make it
-    more readable, as suggested by Borislav Petkov.
-
-   * Add second patch for bank field, bank group, and chip id.
-
----
- drivers/edac/ghes_edac.c    | 9 +++++++++
- drivers/firmware/efi/cper.c | 9 +++++++++
- include/linux/cper.h        | 8 ++++++++
- 3 files changed, 26 insertions(+)
-
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index 98fcdaf72a09..31eb72b67265 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -337,6 +337,12 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 		p += sprintf(p, "rank:%d ", mem_err->rank);
- 	if (mem_err->validation_bits & CPER_MEM_VALID_BANK)
- 		p += sprintf(p, "bank:%d ", mem_err->bank);
-+	if (mem_err->validation_bits & CPER_MEM_VALID_BANK_GROUP)
-+		p += sprintf(p, "bank_group:%d ",
-+			     mem_err->bank >> CPER_MEM_BANK_GROUP_SHIFT);
-+	if (mem_err->validation_bits & CPER_MEM_VALID_BANK_ADDRESS)
-+		p += sprintf(p, "bank_address:%d ",
-+			     mem_err->bank & CPER_MEM_BANK_ADDRESS_MASK);
- 	if (mem_err->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
- 		u32 row = mem_err->row;
- 
-@@ -362,6 +368,9 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 		if (index >= 0)
- 			e->top_layer = index;
- 	}
-+	if (mem_err->validation_bits & CPER_MEM_VALID_CHIP_ID)
-+		p += sprintf(p, "chipID: %d ",
-+			     mem_err->extended >> CPER_MEM_CHIP_ID_SHIFT);
- 	if (p > e->location)
- 		*(p - 1) = '\0';
- 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index a60acd17bcaa..e15d484b6a5a 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -232,6 +232,12 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
- 		n += scnprintf(msg + n, len - n, "rank: %d ", mem->rank);
- 	if (mem->validation_bits & CPER_MEM_VALID_BANK)
- 		n += scnprintf(msg + n, len - n, "bank: %d ", mem->bank);
-+	if (mem->validation_bits & CPER_MEM_VALID_BANK_GROUP)
-+		n += scnprintf(msg + n, len - n, "bank_group: %d ",
-+			       mem->bank >> CPER_MEM_BANK_GROUP_SHIFT);
-+	if (mem->validation_bits & CPER_MEM_VALID_BANK_ADDRESS)
-+		n += scnprintf(msg + n, len - n, "bank_address: %d ",
-+			       mem->bank & CPER_MEM_BANK_ADDRESS_MASK);
- 	if (mem->validation_bits & CPER_MEM_VALID_DEVICE)
- 		n += scnprintf(msg + n, len - n, "device: %d ", mem->device);
- 	if (mem->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
-@@ -254,6 +260,9 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
- 	if (mem->validation_bits & CPER_MEM_VALID_TARGET_ID)
- 		scnprintf(msg + n, len - n, "target_id: 0x%016llx ",
- 			  mem->target_id);
-+	if (mem->validation_bits & CPER_MEM_VALID_CHIP_ID)
-+		scnprintf(msg + n, len - n, "chip_id: %d ",
-+			  mem->extended >> CPER_MEM_CHIP_ID_SHIFT);
- 
- 	msg[n] = '\0';
- 	return n;
-diff --git a/include/linux/cper.h b/include/linux/cper.h
-index bd2d8a77a784..6a511a1078ca 100644
---- a/include/linux/cper.h
-+++ b/include/linux/cper.h
-@@ -231,10 +231,18 @@ enum {
- #define CPER_MEM_VALID_CARD_HANDLE		0x10000
- #define CPER_MEM_VALID_MODULE_HANDLE		0x20000
- #define CPER_MEM_VALID_ROW_EXT			0x40000
-+#define CPER_MEM_VALID_BANK_GROUP		0x80000
-+#define CPER_MEM_VALID_BANK_ADDRESS		0x100000
-+#define CPER_MEM_VALID_CHIP_ID			0x200000
- 
- #define CPER_MEM_EXT_ROW_MASK			0x3
- #define CPER_MEM_EXT_ROW_SHIFT			16
- 
-+#define CPER_MEM_BANK_ADDRESS_MASK		0xff
-+#define CPER_MEM_BANK_GROUP_SHIFT		8
-+
-+#define CPER_MEM_CHIP_ID_SHIFT			5
-+
- #define CPER_PCIE_VALID_PORT_TYPE		0x0001
- #define CPER_PCIE_VALID_VERSION			0x0002
- #define CPER_PCIE_VALID_COMMAND_STATUS		0x0004
--- 
-2.26.2
-
+> >         default:
+> >                 err = -ENOPROTOOPT;
+> >                 break;
+> > --
+> > 2.28.0.236.gb10cc79966-goog
+> >
+> 
+> 
+> -- 
+> Luiz Augusto von Dentz
