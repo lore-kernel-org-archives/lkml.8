@@ -2,96 +2,135 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48066C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A09206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FE120786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597830043;
-	bh=zWlnnmPKekpNj9Y7nF8x2xH0z5eGvfiJTnebm6MK6iE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZmvPshjotz/4tjh/iR8GxqmMFruJh61XKNAVE7scjLqU9qPjadVyBw92AfXHGkaNz
-	 E5hr5K8gYCeyFKrHyfz2ea0idLmTnyKYgN3f/670rhj1DTET6fTOEKO4dQc+F9hUwG
-	 BAbybynpLO4OLBxaigf3DGQiuEonZrP1+qMhN2aY=
+	s=default; t=1597830189;
+	bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D8gBXc9py8Oz5pv9dz5YZF9J+LNIqEsytetYSeCWq0Ynl5zEsBcdaIODHQa0tqkHa
+	 DHpRQQyJgm/C/3u5FxXYiAmzMAebhpp7gDZXNx6LV59WbKI9FwaQFPOx4LKLpajCB4
+	 BX8ZatveHQ+w97HVApVKG2vC76BmYqG9t1iy1L48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgHSJkm (ORCPT
+        id S1727034AbgHSJnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43138 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 05:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSJkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:40:40 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1726803AbgHSJnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:43:05 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D803C206FA;
-        Wed, 19 Aug 2020 09:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85206206FA;
+        Wed, 19 Aug 2020 09:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597830040;
-        bh=zWlnnmPKekpNj9Y7nF8x2xH0z5eGvfiJTnebm6MK6iE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F1Ozp2FMCiu1nGYJ0WKQtL9pUQLIznu7r34psjTtEfcJa6NbQFH0nrK4XvfeDqivJ
-         9CCVmcn1TzRIBgLeNS24FrB5zlUZ1KMQKfkKiRFmvkIQyPIz7v+OzhSEP0YBY5v/2a
-         L8q02eB904x3nL8639fpF5sQY9wieu352DVPKO+A=
-Date:   Wed, 19 Aug 2020 12:40:37 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] ceph: Delete features that are not used in the kernel
-Message-ID: <20200819094037.GT7555@unreal>
-References: <20200819075747.917595-1-leon@kernel.org>
- <CAOi1vP-54DybxncMy0tyyy62nsgvQEn0DysbOTpmk_tnxnbv-g@mail.gmail.com>
+        s=default; t=1597830184;
+        bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oTtCwPnCyX7AXZ5deKcl0ylPWh4hsAbWdc6VVFHGPIFzKZggRNOlfKISY6gZfzMKA
+         2z3aqXCQIPT8QgiUY+OXkN/3jkj0GleL54IVej5nyCAYJ/ct6priOa6uiq58oEwzQW
+         //AguAVc6yros8+HkbnrXSFPHY8EDxAxbAc9toSE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k8KcZ-0049nd-22; Wed, 19 Aug 2020 10:43:03 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2] of: address: Work around missing device_type property in pcie nodes
+Date:   Wed, 19 Aug 2020 10:42:55 +0100
+Message-Id: <20200819094255.474565-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOi1vP-54DybxncMy0tyyy62nsgvQEn0DysbOTpmk_tnxnbv-g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com, frowand.list@gmail.com, jiaxun.yang@flygoat.com, robh+dt@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:47:38AM +0200, Ilya Dryomov wrote:
-> On Wed, Aug 19, 2020 at 9:57 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > The ceph_features.h has declaration of features that are not in-use
-> > in kernel code. This causes to seeing such compilation warnings in
-> > almost every kernel compilation.
-> >
-> > ./include/linux/ceph/ceph_features.h:14:24: warning: 'CEPH_FEATURE_UID' defined but not used [-Wunused-const-variable=]
-> >    14 |  static const uint64_t CEPH_FEATURE_##name = (1ULL<<bit);  \
-> >       |                        ^~~~~~~~~~~~~
-> > ./include/linux/ceph/ceph_features.h:75:1: note: in expansion of macro 'DEFINE_CEPH_FEATURE'
-> >    75 | DEFINE_CEPH_FEATURE( 0, 1, UID)
-> >       | ^~~~~~~~~~~~~~~~~~~
-> >
-> > The upstream kernel indeed doesn't have any use of them, so delete it.
-> >
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> > I'm sending this as RFC because probably the patch is wrong, but I
-> > would like to bring your attention to the existing problem and asking
-> > for an acceptable solution.
->
-> Hi Leon,
->
-> Yes, removing unused feature definitions is wrong.  Annotating them
-> as potentially unused would be much better -- I'll send a patch.
->
-> I don't think any of us builds with W=1, so these things don't get
-> noticed.
+Recent changes to the DT PCI bus parsing made it mandatory for
+device tree nodes describing a PCI controller to have the
+'device_type = "pci"' property for the node to be matched.
 
-Thanks, W=1 is our default compilation level for Mellanox RDMA submissions.
+Although this follows the letter of the specification, it
+breaks existing device-trees that have been working fine
+for years.  Rockchip rk3399-based systems are a prime example
+of such collateral damage, and have stopped discovering their
+PCI bus.
 
->
-> Thanks,
->
->                 Ilya
+In order to paper over it, let's add a workaround to the code
+matching the device type, and accept as PCI any node that is
+named "pcie",
+
+A warning will hopefully nudge the user into updating their
+DT to a fixed version if they can, but the incentive is
+obviously pretty small.
+
+Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/of/address.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 590493e04b01..b37bd9cc2810 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+  * PCI bus specific translator
+  */
+ 
++static bool of_node_is_pcie(struct device_node *np)
++{
++	bool is_pcie = of_node_name_eq(np, "pcie");
++
++	if (is_pcie)
++		pr_warn_once("%pOF: Missing device_type\n", np);
++
++	return is_pcie;
++}
++
+ static int of_bus_pci_match(struct device_node *np)
+ {
+ 	/*
+  	 * "pciex" is PCI Express
+ 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+ 	 * "ht" is hypertransport
++	 *
++	 * If none of the device_type match, and that the node name is
++	 * "pcie", accept the device as PCI (with a warning).
+ 	 */
+ 	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+-		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
++		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
++		of_node_is_pcie(np);
+ }
+ 
+ static void of_bus_pci_count_cells(struct device_node *np,
+-- 
+2.27.0
+
