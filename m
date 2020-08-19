@@ -2,171 +2,346 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822AEC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401D0207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="nCmM6FF3"
+	by mail.kernel.org (Postfix) with ESMTP id A5943207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgHSVJD (ORCPT
+        id S1727082AbgHSVJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:09:03 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51689 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHSVJB (ORCPT
+        Wed, 19 Aug 2020 17:09:05 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:32695 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgHSVJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:09:01 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 728CF806B6;
-        Thu, 20 Aug 2020 09:08:56 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1597871336;
-        bh=DhSFEokBzjedBepUeHhLEEbWaOcWeTm875VFY7F6sKM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=nCmM6FF3Zfj9wN8buvVaaNNOh0X3KT12MSbWcabX9wwAGpGgzOPa/CUfl3PO6EqQH
-         +0qGRtQy6rxUVeELa5uMP1PsgKb/+UNts9rjLWHR/xmb5WAtLcMLklPPBgEpmYAxx1
-         f/83O2h1jUMlTaVG8COAR+Ge407zF+DMinOCei0GSj0OymUe7g8MMO7Iorme4MIJtM
-         hvtmBZrJJ9XKiLb0r+jdovz/twrhVvSJkx2XPI5SlfqiXH1NW56sXm4gwZyfRkNpeb
-         Q9nM8ueLFOu2iZKIfvkmFjgT9+94wFe5+DCMAXHQtr1oG7bWht78M3S3EV/V1tph3c
-         TNHqEZLxrEFFQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f3d94e90001>; Thu, 20 Aug 2020 09:08:57 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 20 Aug 2020 09:08:56 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Thu, 20 Aug 2020 09:08:56 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "tiago.brusamarello@datacom.ind.br" 
-        <tiago.brusamarello@datacom.ind.br>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: fsl_espi errors on v5.7.15
-Thread-Topic: fsl_espi errors on v5.7.15
-Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4A=
-Date:   Wed, 19 Aug 2020 21:08:55 +0000
-Message-ID: <0ff80ebb-e6ae-d8e1-9f0d-8759b2556141@alliedtelesis.co.nz>
-References: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
- <c43a23bd-33ec-4ef2-2ca5-730342248db3@gmail.com>
- <3c72eec1-41ba-7389-eceb-3de80065555a@alliedtelesis.co.nz>
- <1bbb3726-b0a4-6eb9-9076-706b06dfb90f@alliedtelesis.co.nz>
- <61bb9800-9f90-9cd4-3b17-c14a7f83d792@gmail.com>
-In-Reply-To: <61bb9800-9f90-9cd4-3b17-c14a7f83d792@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A4E919F682F74946BCFC549E11F57A83@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 17:09:02 -0400
+Received: from localhost.localdomain ([77.205.40.3])
+        by mwinf5d50 with ME
+        id HZ8v23004045PnR03Z8vTs; Wed, 19 Aug 2020 23:08:58 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 19 Aug 2020 23:08:58 +0200
+X-ME-IP: 77.205.40.3
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     -kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        vaibhavgupta40@gmail.com
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] rtl818x_pci: switch from 'pci_' to 'dma_' API
+Date:   Wed, 19 Aug 2020 23:08:52 +0200
+Message-Id: <20200819210852.120826-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxOS8wOC8yMCA2OjE1IHBtLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6DQo+IE9uIDE5LjA4
-LjIwMjAgMDA6NDQsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+PiBIaSBBZ2FpbiwNCj4+DQo+PiBP
-biAxNy8wOC8yMCA5OjA5IGFtLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4NCj4+PiBPbiAxNC8w
-OC8yMCA2OjE5IHBtLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6DQo+Pj4+IE9uIDE0LjA4LjIwMjAg
-MDQ6NDgsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+Pj4+PiBIaSwNCj4+Pj4+DQo+Pj4+PiBJJ20g
-c2VlaW5nIGEgcHJvYmxlbSB3aXRoIGFjY2Vzc2luZyBzcGktbm9yIGFmdGVyIHVwZ3JhZGluZyBh
-IFQyMDgxDQo+Pj4+PiBiYXNlZCBzeXN0ZW0gdG8gbGludXggdjUuNy4xNQ0KPj4+Pj4NCj4+Pj4+
-IEZvciB0aGlzIGJvYXJkIHUtYm9vdCBhbmQgdGhlIHUtYm9vdCBlbnZpcm9ubWVudCBsaXZlIG9u
-IHNwaS1ub3IuDQo+Pj4+Pg0KPj4+Pj4gV2hlbiBJIHVzZSBmd19zZXRlbnYgZnJvbSB1c2Vyc3Bh
-Y2UgSSBnZXQgdGhlIGZvbGxvd2luZyBrZXJuZWwgbG9ncw0KPj4+Pj4NCj4+Pj4+ICMgZndfc2V0
-ZW52IGZvbz0xDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1
-dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFu
-c2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAw
-MDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xf
-ZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQh
-DQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RP
-TiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25l
-IGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBU
-cmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUx
-MTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBm
-c2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBz
-ZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElF
-X0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBk
-b25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3Bp
-OiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBm
-ZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+
-PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24n
-dCBzZXQhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBy
-eC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KPj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTog
-U1BJRV9SWENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0KPj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAw
-LnNwaTogVHJhbnNmZXIgZG9uZSBidXQgcngvdHggZmlmbydzIGFyZW4ndCBlbXB0eSENCj4+Pj4+
-IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAxLCBTUElFX1RYQ05UID0gMzIN
-Cj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IHJ4L3R4IGZp
-Zm8ncyBhcmVuJ3QgZW1wdHkhDQo+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBTUElFX1JY
-Q05UID0gMSwgU1BJRV9UWENOVCA9IDMyDQo+Pj4+PiAuLi4NCj4+Pj4+DQo+Pj4+IFRoaXMgZXJy
-b3IgcmVwb3J0aW5nIGRvZXNuJ3QgZXhpc3QgeWV0IGluIDQuNC4gU28geW91IG1heSBoYXZlIGFu
-IGlzc3VlDQo+Pj4+IHVuZGVyIDQuNCB0b28sIGl0J3MganVzdCBub3QgcmVwb3J0ZWQuDQo+Pj4+
-IERpZCB5b3UgdmVyaWZ5IHRoYXQgdW5kZXIgNC40IGZ3X3NldGVudiBhY3R1YWxseSBoYXMgYW4g
-ZWZmZWN0Pw0KPj4+IEp1c3QgZG91YmxlIGNoZWNrZWQgYW5kIHllcyB1bmRlciA0LjQgdGhlIHNl
-dHRpbmcgZG9lcyBnZXQgc2F2ZWQuDQo+Pj4+PiBJZiBJIHJ1biBmd19wcmludGVudiAoYmVmb3Jl
-IGdldHRpbmcgaXQgaW50byBhIGJhZCBzdGF0ZSkgaXQgaXMgYWJsZSB0bw0KPj4+Pj4gZGlzcGxh
-eSB0aGUgY29udGVudCBvZiB0aGUgYm9hcmRzIHUtYm9vdCBlbnZpcm9ubWVudC4NCj4+Pj4+DQo+
-Pj4+IFRoaXMgbWlnaHQgaW5kaWNhdGUgYW4gaXNzdWUgd2l0aCBzcGkgYmVpbmcgbG9ja2VkLiBJ
-J3ZlIHNlZW4gcmVsYXRlZA0KPj4+PiBxdWVzdGlvbnMsIGp1c3QgdXNlIHRoZSBzZWFyY2ggZW5n
-aW5lIG9mIHlvdXIgY2hvaWNlIGFuZCBjaGVjayBmb3INCj4+Pj4gZndfc2V0ZW52IGFuZCBsb2Nr
-ZWQuDQo+Pj4gSSdtIHJ1bm5pbmcgYSB2ZXJzaW9uIG9mIGZ3X3NldGVudiB3aGljaCBpbmNsdWRl
-cw0KPj4+IGh0dHBzOi8vZ2l0bGFiLmRlbnguZGUvdS1ib290L3UtYm9vdC8tL2NvbW1pdC9kYjgy
-MDE1OSBzbyBpdCBzaG91bGRuJ3QNCj4+PiBiZSBsb2NraW5nIHRoaW5ncyB1bm5lY2Vzc2FyaWx5
-Lg0KPj4+Pj4gSWYgYmVlbiB1bnN1Y2Nlc3NmdWwgaW4gcHJvZHVjaW5nIGEgc2V0dXAgZm9yIGJp
-c2VjdGluZyB0aGUgaXNzdWUuIEkgZG8NCj4+Pj4+IGtub3cgdGhlIGlzc3VlIGRvZXNuJ3Qgb2Nj
-dXIgb24gdGhlIG9sZCA0LjQueCBiYXNlZCBrZXJuZWwgYnV0IHRoYXQncw0KPj4+Pj4gcHJvYmFi
-bHkgbm90IG11Y2ggaGVscC4NCj4+Pj4+DQo+Pj4+PiBBbnkgcG9pbnRlcnMgb24gd2hhdCB0aGUg
-aXNzdWUgKGFuZC9vciBzb2x1dGlvbikgbWlnaHQgYmUuDQo+PiBJIGZpbmFsbHkgbWFuYWdlZCB0
-byBnZXQgb3VyIGJvYXJkIHJ1bm5pbmcgd2l0aCBhIHZhbmlsbGEga2VybmVsLiBXaXRoDQo+PiBj
-b3JlbmV0NjRfc21wX2RlZmNvbmZpZyBJIG9jY2FzaW9uYWxseSBzZWUNCj4+DQo+PiAgIMKgIGZz
-bF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQSUVfRE9OIGlzbid0IHNl
-dCENCj4+DQo+PiBvdGhlciB0aGFuIHRoZSBtZXNzYWdlIHRoaW5ncyBzZWVtIHRvIGJlIHdvcmtp
-bmcuDQo+Pg0KPj4gV2l0aCBhIGN1c3RvbSBkZWZjb25maWcgSSBzZWUNCj4+DQo+PiAgIMKgIGZz
-bF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQSUVfRE9OIGlzbid0IHNl
-dCENCj4+ICAgwqAgZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgcngv
-dHggZmlmbydzIGFyZW4ndCBlbXB0eSENCj4+ICAgwqAgZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTog
-U1BJRV9SWENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0KPj4gICDCoCAuLi4NCj4+DQo+PiBhbmQg
-YWNjZXNzIHRvIHRoZSBzcGktbm9yIGRvZXMgbm90IHdvcmsgdW50aWwgdGhlIGJvYXJkIGlzIHJl
-c2V0Lg0KPj4NCj4+IEknbGwgdHJ5IGFuZCBwaWNrIGFwYXJ0IHRoZSBkaWZmZXJlbmNlcyBiZXR3
-ZWVuIHRoZSB0d28gZGVmY29uZmlncy4NCg0KSSBub3cgdGhpbmsgbXkgZWFybGllciB0ZXN0aW5n
-IGlzIGludmFsaWQuIEkgaGF2ZSBzZWVuIHRoZSBwcm9ibGVtIHdpdGggDQplaXRoZXIgZGVmY29u
-ZmlnIGlmIEkgdHJ5IGhhcmQgZW5vdWdoLiBJIGhhZCBjb252aW5jZWQgbXlzZWxmIHRoYXQgdGhl
-IA0KcHJvYmxlbSB3YXMgQ09ORklHX1BSRUVNUFQgYnV0IHRoYXQgd2FzIGJlZm9yZSBJIGZvdW5k
-IGJvb3QtdG8tYm9vdCANCmRpZmZlcmVuY2VzIHdpdGggdGhlIHNhbWUga2VybmVsLg0KDQpJdCdz
-IHBvc3NpYmxlIHRoYXQgSSdtIGNoYXNpbmcgbXVsdGlwbGUgaXNzdWVzIHdpdGggdGhlIHNhbWUg
-c3ltcHRvbS4NCg0KVGhlIGVycm9yIEknbSBtb3N0IGNvbmNlcm5lZCB3aXRoIGlzIGluIHRoZSBz
-ZXF1ZW5jZQ0KMS4gYm9vdCB3aXRoIG9sZCBpbWFnZQ0KMi4gd3JpdGUgZW52aXJvbm1lbnQNCjMu
-IGJvb3Qgd2l0aCBuZXcgaW1hZ2UNCjQuIHdyaXRlIGVudmlyb25tZW50DQo1LiB3cml0ZSBmYWls
-cyBhbmQgZW52aXJvbm1lbnQgaXMgY29ycnVwdGVkDQoNCkFmdGVyIEkgcmVjb3ZlciB0aGUgc3lz
-dGVtIHRoaW5ncyBzb21ldGltZXMgc2VlbSBmaW5lLiBVbnRpbCBJIHJlcGVhdCANCnRoZSBzZXF1
-ZW5jZSBhYm92ZS4NCg0KPiBBbHNvIHJlbGV2YW50IG1heSBiZToNCj4gLSBXaGljaCBkdHMgYXJl
-IHlvdSB1c2luZz8NCkN1c3RvbSBidXQgYmFzZWQgaGVhdmlseSBvbiB0aGUgdDIwODByZGIuDQo+
-IC0gV2hhdCdzIHRoZSBzcGktbm9yIHR5cGUsIGFuZCBhdCB3aGljaCBmcmVxdWVuY3kgYXJlIHlv
-dSBvcGVyYXRpbmcgaXQ/DQpUaGUgYm9hcmQgaGFzIHNldmVyYWwgYWx0ZXJuYXRlIHBhcnRzIGZv
-ciB0aGUgc3BpLW5vciBzbyB0aGUgZHRzIGp1c3QgDQpzcGVjaWZpZXMgY29tcGF0aWJsZSA9ICJq
-ZWRlYyxzcGktbm9yIiB0aGUgYWN0dWFsIGNoaXAgZGV0ZWN0ZWQgb24gdGhlIA0KYm9hcmQgSSBo
-YXZlIGlzICJuMjVxMDMyYSAoNDA5NiBLYnl0ZXMpIi4gVGhlIGR0cyBzZXRzIHNwaS1tYXgtZnJl
-cXVlbmN5IA0KPSA8MTAwMDAwMDA+IEkgaGF2ZW4ndCBtZWFzdXJlZCB0aGUgYWN0dWFsIGZyZXF1
-ZW5jeSBvbiB0aGUgYnVzLg0KPiAtIERvZXMgdGhlIGlzc3VlIHN0aWxsIGhhcHBlbiBpZiB5b3Ug
-bG93ZXIgdGhlIGZyZXF1ZW5jeT8NCkkgZGlkIHBsYXkgYXJvdW5kIHdpdGggdGhlIGZyZXF1ZW5j
-eSBpbml0aWFsbHkgYnV0IEkgc2hvdWxkIHByb2JhYmx5IA0KZ2l2ZSB0aGF0IGFub3RoZXIgZ28g
-bm93IHRoYXQgSSBoYXZlIGEgYmV0dGVyIHJlcHJvZHVjdGlvbiBtZXRob2Qu
+The wrappers in include/linux/pci-dma-compat.h should go away.
+
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
+
+When memory is allocated in 'rtl8180_init_rx_ring()' and
+'rtl8180_init_tx_ring()' GFP_KERNEL can be used because both functions are
+called from 'rtl8180_start()', which is a .start function (see struct
+ieee80211_ops)
+.start function can sleep, as explicitly stated in include/net/mac80211.h.
+
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ .../wireless/realtek/rtl818x/rtl8180/dev.c    | 70 ++++++++++---------
+ 1 file changed, 37 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8180/dev.c b/drivers/net/wireless/realtek/rtl818x/rtl8180/dev.c
+index ba3286f732cc..2477e18c7cae 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8180/dev.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8180/dev.c
+@@ -260,20 +260,20 @@ static void rtl8180_handle_rx(struct ieee80211_hw *dev)
+ 			if (unlikely(!new_skb))
+ 				goto done;
+ 
+-			mapping = pci_map_single(priv->pdev,
+-					       skb_tail_pointer(new_skb),
+-					       MAX_RX_SIZE, PCI_DMA_FROMDEVICE);
++			mapping = dma_map_single(&priv->pdev->dev,
++						 skb_tail_pointer(new_skb),
++						 MAX_RX_SIZE, DMA_FROM_DEVICE);
+ 
+-			if (pci_dma_mapping_error(priv->pdev, mapping)) {
++			if (dma_mapping_error(&priv->pdev->dev, mapping)) {
+ 				kfree_skb(new_skb);
+ 				dev_err(&priv->pdev->dev, "RX DMA map error\n");
+ 
+ 				goto done;
+ 			}
+ 
+-			pci_unmap_single(priv->pdev,
++			dma_unmap_single(&priv->pdev->dev,
+ 					 *((dma_addr_t *)skb->cb),
+-					 MAX_RX_SIZE, PCI_DMA_FROMDEVICE);
++					 MAX_RX_SIZE, DMA_FROM_DEVICE);
+ 			skb_put(skb, flags & 0xFFF);
+ 
+ 			rx_status.antenna = (flags2 >> 15) & 1;
+@@ -355,8 +355,8 @@ static void rtl8180_handle_tx(struct ieee80211_hw *dev, unsigned int prio)
+ 
+ 		ring->idx = (ring->idx + 1) % ring->entries;
+ 		skb = __skb_dequeue(&ring->queue);
+-		pci_unmap_single(priv->pdev, le32_to_cpu(entry->tx_buf),
+-				 skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&priv->pdev->dev, le32_to_cpu(entry->tx_buf),
++				 skb->len, DMA_TO_DEVICE);
+ 
+ 		info = IEEE80211_SKB_CB(skb);
+ 		ieee80211_tx_info_clear_status(info);
+@@ -473,10 +473,10 @@ static void rtl8180_tx(struct ieee80211_hw *dev,
+ 	prio = skb_get_queue_mapping(skb);
+ 	ring = &priv->tx_ring[prio];
+ 
+-	mapping = pci_map_single(priv->pdev, skb->data,
+-				 skb->len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&priv->pdev->dev, skb->data, skb->len,
++				 DMA_TO_DEVICE);
+ 
+-	if (pci_dma_mapping_error(priv->pdev, mapping)) {
++	if (dma_mapping_error(&priv->pdev->dev, mapping)) {
+ 		kfree_skb(skb);
+ 		dev_err(&priv->pdev->dev, "TX DMA mapping error\n");
+ 		return;
+@@ -1004,8 +1004,9 @@ static int rtl8180_init_rx_ring(struct ieee80211_hw *dev)
+ 	else
+ 		priv->rx_ring_sz = sizeof(struct rtl8180_rx_desc);
+ 
+-	priv->rx_ring = pci_zalloc_consistent(priv->pdev, priv->rx_ring_sz * 32,
+-					      &priv->rx_ring_dma);
++	priv->rx_ring = dma_alloc_coherent(&priv->pdev->dev,
++					   priv->rx_ring_sz * 32,
++					   &priv->rx_ring_dma, GFP_KERNEL);
+ 	if (!priv->rx_ring || (unsigned long)priv->rx_ring & 0xFF) {
+ 		wiphy_err(dev->wiphy, "Cannot allocate RX ring\n");
+ 		return -ENOMEM;
+@@ -1018,20 +1019,23 @@ static int rtl8180_init_rx_ring(struct ieee80211_hw *dev)
+ 		dma_addr_t *mapping;
+ 		entry = priv->rx_ring + priv->rx_ring_sz*i;
+ 		if (!skb) {
+-			pci_free_consistent(priv->pdev, priv->rx_ring_sz * 32,
+-					priv->rx_ring, priv->rx_ring_dma);
++			dma_free_coherent(&priv->pdev->dev,
++					  priv->rx_ring_sz * 32,
++					  priv->rx_ring, priv->rx_ring_dma);
+ 			wiphy_err(dev->wiphy, "Cannot allocate RX skb\n");
+ 			return -ENOMEM;
+ 		}
+ 		priv->rx_buf[i] = skb;
+ 		mapping = (dma_addr_t *)skb->cb;
+-		*mapping = pci_map_single(priv->pdev, skb_tail_pointer(skb),
+-					  MAX_RX_SIZE, PCI_DMA_FROMDEVICE);
++		*mapping = dma_map_single(&priv->pdev->dev,
++					  skb_tail_pointer(skb), MAX_RX_SIZE,
++					  DMA_FROM_DEVICE);
+ 
+-		if (pci_dma_mapping_error(priv->pdev, *mapping)) {
++		if (dma_mapping_error(&priv->pdev->dev, *mapping)) {
+ 			kfree_skb(skb);
+-			pci_free_consistent(priv->pdev, priv->rx_ring_sz * 32,
+-					priv->rx_ring, priv->rx_ring_dma);
++			dma_free_coherent(&priv->pdev->dev,
++					  priv->rx_ring_sz * 32,
++					  priv->rx_ring, priv->rx_ring_dma);
+ 			wiphy_err(dev->wiphy, "Cannot map DMA for RX skb\n");
+ 			return -ENOMEM;
+ 		}
+@@ -1054,14 +1058,13 @@ static void rtl8180_free_rx_ring(struct ieee80211_hw *dev)
+ 		if (!skb)
+ 			continue;
+ 
+-		pci_unmap_single(priv->pdev,
+-				 *((dma_addr_t *)skb->cb),
+-				 MAX_RX_SIZE, PCI_DMA_FROMDEVICE);
++		dma_unmap_single(&priv->pdev->dev, *((dma_addr_t *)skb->cb),
++				 MAX_RX_SIZE, DMA_FROM_DEVICE);
+ 		kfree_skb(skb);
+ 	}
+ 
+-	pci_free_consistent(priv->pdev, priv->rx_ring_sz * 32,
+-			    priv->rx_ring, priv->rx_ring_dma);
++	dma_free_coherent(&priv->pdev->dev, priv->rx_ring_sz * 32,
++			  priv->rx_ring, priv->rx_ring_dma);
+ 	priv->rx_ring = NULL;
+ }
+ 
+@@ -1073,8 +1076,8 @@ static int rtl8180_init_tx_ring(struct ieee80211_hw *dev,
+ 	dma_addr_t dma;
+ 	int i;
+ 
+-	ring = pci_zalloc_consistent(priv->pdev, sizeof(*ring) * entries,
+-				     &dma);
++	ring = dma_alloc_coherent(&priv->pdev->dev, sizeof(*ring) * entries,
++				  &dma, GFP_KERNEL);
+ 	if (!ring || (unsigned long)ring & 0xFF) {
+ 		wiphy_err(dev->wiphy, "Cannot allocate TX ring (prio = %d)\n",
+ 			  prio);
+@@ -1103,14 +1106,15 @@ static void rtl8180_free_tx_ring(struct ieee80211_hw *dev, unsigned int prio)
+ 		struct rtl8180_tx_desc *entry = &ring->desc[ring->idx];
+ 		struct sk_buff *skb = __skb_dequeue(&ring->queue);
+ 
+-		pci_unmap_single(priv->pdev, le32_to_cpu(entry->tx_buf),
+-				 skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&priv->pdev->dev, le32_to_cpu(entry->tx_buf),
++				 skb->len, DMA_TO_DEVICE);
+ 		kfree_skb(skb);
+ 		ring->idx = (ring->idx + 1) % ring->entries;
+ 	}
+ 
+-	pci_free_consistent(priv->pdev, sizeof(*ring->desc)*ring->entries,
+-			    ring->desc, ring->dma);
++	dma_free_coherent(&priv->pdev->dev,
++			  sizeof(*ring->desc) * ring->entries, ring->desc,
++			  ring->dma);
+ 	ring->desc = NULL;
+ }
+ 
+@@ -1754,8 +1758,8 @@ static int rtl8180_probe(struct pci_dev *pdev,
+ 		goto err_free_reg;
+ 	}
+ 
+-	if ((err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) ||
+-	    (err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))) {
++	if ((err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) ||
++	    (err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32)))) {
+ 		printk(KERN_ERR "%s (rtl8180): No suitable DMA available\n",
+ 		       pci_name(pdev));
+ 		goto err_free_reg;
+-- 
+2.25.1
+
