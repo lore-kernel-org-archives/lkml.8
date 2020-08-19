@@ -2,154 +2,130 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC47C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19878C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166CF20639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050DA20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgHSSKZ (ORCPT
+        id S1726745AbgHSSKg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:10:25 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41658 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSSKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:10:23 -0400
-IronPort-SDR: jQj1Mk1ZVToKpl3yXkxfPYb0oS0T6yh2L3jNRLR6apeHN9qjjoowLQpP/nOqCHf9mcO+Yr8GNz
- gVI8FytSu6tA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="142991569"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="142991569"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 11:10:21 -0700
-IronPort-SDR: 8mEvfHP69qLN7sfOVIDlTJFWYcjXT02ADoJMOI63iBtuHd8BA/nto0NpxmIezBEHoZQ4fidDhA
- 5RPppjjf6KnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="329415221"
-Received: from lkp-server01.sh.intel.com (HELO 4cedd236b688) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Aug 2020 11:10:19 -0700
-Received: from kbuild by 4cedd236b688 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8SXS-0000Qg-Rk; Wed, 19 Aug 2020 18:10:18 +0000
-Date:   Thu, 20 Aug 2020 02:09:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 88f8ab921c9527ad7aef7ac04b059fc5d42979e8
-Message-ID: <5f3d6adf.aBSPyDIygG83CitF%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Aug 2020 14:10:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39206 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgHSSKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:10:34 -0400
+Received: from mail-pf1-f200.google.com ([209.85.210.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k8SXg-0001oc-3J
+        for linux-kernel@vger.kernel.org; Wed, 19 Aug 2020 18:10:32 +0000
+Received: by mail-pf1-f200.google.com with SMTP id d3so15505859pfh.17
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:10:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Je8zHXL3E4yI3+Q3331hn6P+qZfrANUnxzzTV6g5u4c=;
+        b=E/H46FK8sDHyL40rMGz1VGJxAaUOqxAm3NX+1rfBHMwRSn745VFlsMfvFRADnZbHi5
+         JR2mju5i6b0aK2EMWjPGFHWxbnNY3Ac2fN6I1X+GxqYZQRU4++JqfYm7OOqpe1mgr500
+         BiIE5DNSj2MuFptlueTgwfgr/AxWEsJXbN/CZQBBfazo9qyFTfFnXzrKEGaqJFbBO8mV
+         TY6UW+k2oRLg4bvRELj34BIkuVB4q603/+TlnmWOlGIfn1x6NiJON6ZTfPishOcn1Scm
+         kLW/HHR1i9GHJT8J6gW+NNbWBS31MTR38BGndwkL39H4SU0l8SLaDwUvegYgbqWsIOSD
+         mzJA==
+X-Gm-Message-State: AOAM5333Pgxv0lwOJElQYf6SaxcY6JROOp7kO/xC8IjJ2uPkUKBlIqB7
+        dRU8dJW2rDKCpAUu0sMXl7qbfDrWOPizntNrCxcPcXr3z9lmrwyoZfjXtNLQr4mFLioUfBU0hhJ
+        RFasVV+eIq+c4pn9DyrenEXRQl9U1NPWDitv1s5imqg==
+X-Received: by 2002:a63:488:: with SMTP id 130mr10710371pge.92.1597860630752;
+        Wed, 19 Aug 2020 11:10:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyzNb0fJeDpP/4/q3CDkMRjmU/MuofXu2/pplo0TwUEaQDklB48zes+bU2n69VEPG+Or0isYQ==
+X-Received: by 2002:a63:488:: with SMTP id 130mr10710353pge.92.1597860630372;
+        Wed, 19 Aug 2020 11:10:30 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id m4sm28353445pfh.129.2020.08.19.11.10.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Aug 2020 11:10:29 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] ALSA: usb-audio: Add prevent wakeup from s3 state trig by
+ Lenovo ThinkCentre TI024Gen3 USB-audio
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <s5h364ih7vd.wl-tiwai@suse.de>
+Date:   Thu, 20 Aug 2020 02:10:25 +0800
+Cc:     penghao <penghao@uniontech.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>, alexander@tsoy.me,
+        dan.carpenter@oracle.com, crwulff@gmail.com, gustavoars@kernel.org,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <74B3A9AD-8B49-4E5F-BE9F-BF88865304B7@canonical.com>
+References: <20200819115757.23168-1-penghao@uniontech.com>
+ <s5h364ih7vd.wl-tiwai@suse.de>
+To:     Takashi Iwai <tiwai@suse.de>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 88f8ab921c9527ad7aef7ac04b059fc5d42979e8  bitops, kcsan: Partially revert instrumentation for non-atomic bitops
 
-elapsed time: 722m
 
-configs tested: 83
-configs skipped: 3
+> On Aug 20, 2020, at 01:18, Takashi Iwai <tiwai@suse.de> wrote:
+> 
+> [ Adding a few more relevant people to Cc. ]
+> 
+> On Wed, 19 Aug 2020 13:57:57 +0200,
+> penghao wrote:
+>> 
+>> TI024Gen3 USB-audio is controlled by TI024Gen3,when TI024Gens
+>> enter sleep mode, USB-audio will disconnect from USB bus port,
+>> wakup form s3 state
+>> 
+>> Signed-off-by: penghao <penghao@uniontech.com>
+>> ---
+>> sound/usb/card.c | 6 ++++++
+>> 1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/sound/usb/card.c b/sound/usb/card.c
+>> index 696e788c5d31..6bdbb34009b3 100644
+>> --- a/sound/usb/card.c
+>> +++ b/sound/usb/card.c
+>> @@ -658,6 +658,12 @@ static int usb_audio_probe(struct usb_interface *intf,
+>> 	}
+>> 
+>> 	dev_set_drvdata(&dev->dev, chip);
+>> +	/*
+>> +	 *ALSA: usb-audio: Add prevent wakeup from s3 state trig by Lenovo
+>> +	 *ThinkCentre TI024Gen3 usb-audio
+>> +	 */
+>> +	if ((usb_id->idVendor == 0x17ef) && (usb_id->idProduct == 0xa012))
+>> +		device_set_wakeup_enable(＆dev->dev, 0);
+> 
+> Here it's no proper ASCII letter, and this must be broken.
+> Please check the actual patch before submitting.
+> 
+> In anyway, before going further, I'd like to hear from other people
+> whether this is really mandatory and appropriate.  And whether it's
+> specific to that device, too (not other Lenovo devices?)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+If USB remote wakeup on this device is broken then we need to fix it in USB core instead of USB audio.
+We need USB and xHCI logs to understand the real problem here, the commit message doesn't contain enough information.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                     powernv_defconfig
-arm                          pcm027_defconfig
-arm                        mvebu_v7_defconfig
-arm                          pxa168_defconfig
-powerpc                     skiroot_defconfig
-sh                         ap325rxa_defconfig
-arc                 nsimosci_hs_smp_defconfig
-microblaze                      mmu_defconfig
-arm                         vf610m4_defconfig
-arm                           h5000_defconfig
-mips                        nlm_xlp_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200818
-i386                 randconfig-a002-20200818
-i386                 randconfig-a001-20200818
-i386                 randconfig-a006-20200818
-i386                 randconfig-a003-20200818
-i386                 randconfig-a004-20200818
-x86_64               randconfig-a013-20200818
-x86_64               randconfig-a016-20200818
-x86_64               randconfig-a012-20200818
-x86_64               randconfig-a011-20200818
-x86_64               randconfig-a014-20200818
-x86_64               randconfig-a015-20200818
-i386                 randconfig-a016-20200818
-i386                 randconfig-a011-20200818
-i386                 randconfig-a015-20200818
-i386                 randconfig-a013-20200818
-i386                 randconfig-a012-20200818
-i386                 randconfig-a014-20200818
-i386                 randconfig-a016-20200819
-i386                 randconfig-a011-20200819
-i386                 randconfig-a015-20200819
-i386                 randconfig-a013-20200819
-i386                 randconfig-a012-20200819
-i386                 randconfig-a014-20200819
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Kai-Heng
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
+> 
+> thanks,
+> 
+> Takashi
+
