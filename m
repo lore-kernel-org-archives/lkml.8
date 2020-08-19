@@ -2,99 +2,91 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0854AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62002076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597842413;
-	bh=CWItnTqRFN3yuH8ano/fBbVxEL5ubVpgqDWWwD/gv+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aKy6FXyMG26+xtKjYVVOUVuZo52tOYJBvL44McH0LNL75wTVTGFBgUzu3n29WuURY
-	 TaZp3eKDKKa1F/rcpTisuKc5RZIEpf04F+IFfU6vAQBm0k1mCqzo0d/ppX98Sah3HU
-	 GD4Ikpp+jER61DlTwbLUd6kSM341yrXicDmkdmGo=
+	by mail.kernel.org (Postfix) with ESMTP id D7229207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:07:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="m9HbE6lZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHSNGu convert rfc822-to-8bit (ORCPT
+        id S1728329AbgHSNHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:06:50 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39955 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbgHSNG3 (ORCPT
+        Wed, 19 Aug 2020 09:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728498AbgHSMzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:06:29 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a14so18043819edx.7;
-        Wed, 19 Aug 2020 06:06:28 -0700 (PDT)
+        Wed, 19 Aug 2020 08:55:35 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3DCC061344
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:55:33 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so11350454pgm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eJyS7BjK7wDUsKL2rCrjdhtuG6HRkdolBIn6enpoXLE=;
+        b=m9HbE6lZJ4RKqfEHA2yd1nXSFEowGn6oCKQcUNU65nF8hQGmOPewZkZ6KGsSzL0RQq
+         KSU3SQrky/XIK8WvGZ6WzlDk+845U83Fd1JJuPUHFU4TZDMneUimIwkT8GLzSxCyiqnb
+         0W2Qlbj2bo4KZXRLlLh41NttK+CYgPuCUHseECCcKLqN8NDiCnJ2UbiGd+vOcdvI0Mco
+         HexL34mg6xmXk4QRqTQ+KTwicqoumgGoMqDgamXuF+GwfIFT2puE5TO0j4INgkVfN6IB
+         RW/9SffGVPFme31bR8J9syJDiIWfeNX2brIrOCPNDQbdMnJsUbOQliFq4sUvQMBY7wmj
+         viSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CkoDptvaZZNmItnX5xuwQ9H/oO/axh2EK0TfitHqla4=;
-        b=F35GqTTzex8JKyFEQg2EAtaeIHm9GLPislERqtmmyiWQhXbqw+u20x1oRrT2uwRbTV
-         rxGZhyEQkfiA0S/QP21iYLfwPA7ccFlI6jiQYtfQtcqFMT5oU/vtgoYhd1zAlKlDgZud
-         BZIyKM3x7WLBPEbOZzvxeCFb5SQCHwy1TwpZU1SLakhbAKu0wXE0pSBSwRbcZbM/Om0e
-         DFd6l4lbMJLeRJIWjmkM/L2lVSxvD5BDtOBRI3/MUCHPTWsPRkGpi24KoNFmuj96+QoJ
-         V11+I8yUzsf1A9VapSbDIK4/4z8qGIfkCSbsGZ3V6yUbQ2MStpWtIhOqJMz0K3NsX/0Z
-         /atg==
-X-Gm-Message-State: AOAM533Xa9Q21hhfVC4fUFdT4wIB90+w1PQBOFKhOWztgjVlDDsY3y8y
-        eYIlXp7P/0doWnMK5X1VGlw=
-X-Google-Smtp-Source: ABdhPJwwV0WcCmfVD+ifyEbNBaAywbSmIL4jqkHxU7ZQ9/DqvY9iD0ZSEWtUmwD+rCU4DKZ8XHcN9g==
-X-Received: by 2002:a05:6402:1504:: with SMTP id f4mr25029186edw.163.1597842387461;
-        Wed, 19 Aug 2020 06:06:27 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id dc12sm18833409ejb.124.2020.08.19.06.06.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 06:06:26 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 15:06:24 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 2/8] spi: spi-s3s64xx: Add S3C64XX_SPI_QUIRK_CS_AUTO for
- Exynos3250
-Message-ID: <20200819130624.GB18970@kozik-lap>
-References: <20200819123914.GC18122@kozik-lap>
- <CGME20200819130122eucas1p27e9e84c4399d01409858de6d01e11b52@eucas1p2.samsung.com>
- <dleftjpn7m23j2.fsf%l.stelmach@samsung.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eJyS7BjK7wDUsKL2rCrjdhtuG6HRkdolBIn6enpoXLE=;
+        b=YQZ75wvBxt/FvmwqqSWa1I3kcKlVLT7ct5u+2p/r3zIVwRgLV923cFFtSAQ8WM5Xcc
+         wzpO59HJOc0tcoEGpNpcklOlvrZE/dEjVb0gg33Lz6tq5qOjJ+QG95xrVM2nzt06P86o
+         P5PcXHXlv1B3o4RIRNv55C6uia+kvKm97wUlwDPKd3OceOeKH4fwSHwjppIPxv3ATMUn
+         JqheJfkyiZDnwCwxQVFGg/Spsaa6jnJPkCZjqvgRaYacqRMqA7ckhL24B/2hjE9bugNb
+         jfgW5mk0aVMv1b9AlYJzFvfb4lCPqybFzfr/wyX+hfMvo+DA0iAeq8qY8DNm4X4xSaCc
+         61GA==
+X-Gm-Message-State: AOAM533RYfheBNWP2KVsjINNhyj+5OVdl3heI11IKf/YfK0tkFOBFHXE
+        utEUfuUA0rYAeN+gDsaJT55ZFf/OBlthBbot
+X-Google-Smtp-Source: ABdhPJxvgfFos8NuS842i0OTcagtkYQEtKig33RmRzfeH4z0jn2Ve5ZHEgBBpsdZBttqkSJRo+2UHw==
+X-Received: by 2002:a63:c509:: with SMTP id f9mr16644768pgd.144.1597841732876;
+        Wed, 19 Aug 2020 05:55:32 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id n12sm29776266pfj.99.2020.08.19.05.55.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 05:55:32 -0700 (PDT)
+Subject: Re: [PATCH v2] MAINTAINERS: Add missing header files to BLOCK LAYER
+ section
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819123243.18983-1-geert+renesas@glider.be>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fd76fcd0-83b2-cc16-952b-8fb4c960bf28@kernel.dk>
+Date:   Wed, 19 Aug 2020 06:55:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200819123243.18983-1-geert+renesas@glider.be>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <dleftjpn7m23j2.fsf%l.stelmach@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:01:21PM +0200, Lukasz Stelmach wrote:
-> It was <2020-08-19 śro 14:39>, when Krzysztof Kozlowski wrote:
-> > On Wed, Aug 19, 2020 at 02:32:02PM +0200, Łukasz Stelmach wrote:
-> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> >
-> > Add a quirk - why?
-> 
-> Because stuff does not work without it and works with it and it is
-> turned on for other SoCs which have simmilar SPI HW.
-> 
-> > There is here no commit msg, no explanation.
-> 
-> As I wrote in the cover letter, this and previous commits make things
-> work on Exynos3250 (ARTIK5 precisely). I can't explain why. I read
-> everything I could about this HW and there were no details about
-> automatic CS handling other than how to turn it on and off.
+On 8/19/20 5:32 AM, Geert Uytterhoeven wrote:
+> The various <linux/blk*.h> header files are part of the Block Layer.
+> Add them to the corresponding section in the MAINTAINERS file, so
+> scripts/get_maintainer.pl will pick them up.
 
-At least this information would be useful. If vendor kernel also does
-it, that's another argument to use, since there are no better ones...
+Applied, thanks.
 
-Best regards,
-Krzysztof
+-- 
+Jens Axboe
+
