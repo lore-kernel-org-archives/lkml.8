@@ -2,83 +2,91 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3822C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7396DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47D82075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597795815;
-	bh=gIc/1QSGdJOTxbuS4FOF8Wzc4rCVAAIAQlMVG6PZujg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RVjgGNZ6D3hlmrgPKqWcWKllQJewVgLQKt9PxJVRrNcMIKoXrZv4B8Y7LKP5dmDyn
-	 ZpV/10P6URBoKjsMi07cmSqTcXKvaAfmsn0RstUZdEJ5M5xO2/2FKTPzyN024yVX4J
-	 R2t2r9rW8tW0BXY0tC/u+1YMjDfZBAnhmtATY1UM=
+	by mail.kernel.org (Postfix) with ESMTP id 3CD5720657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h63Vu4eW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgHSAKO (ORCPT
+        id S1727120AbgHSAMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgHSAKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:10:13 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4145F20709;
-        Wed, 19 Aug 2020 00:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597795812;
-        bh=gIc/1QSGdJOTxbuS4FOF8Wzc4rCVAAIAQlMVG6PZujg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z21pevWHoJnYGD2YnEH6De6N5Uv/egoCH2DrAhTu1D2uVgErjjKoNnAd5cebQtyPo
-         QokRdN7BbXy+KvF/UN9N6cANgMwgsgogpDG4kYAz6B8J6xsHncd2sOrfx0f3CnoQr5
-         IJdTbDYSXIsTbX9IG3/UebV+K23AzfQu1eiJvzek=
-Date:   Tue, 18 Aug 2020 17:10:10 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@nvidia.com>
-Cc:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
- to devlink reload command
-Message-ID: <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
-        <1597657072-3130-2-git-send-email-moshe@mellanox.com>
-        <20200817163612.GA2627@nanopsycho>
-        <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
+        Tue, 18 Aug 2020 20:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgHSAMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:12:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9386DC061389;
+        Tue, 18 Aug 2020 17:12:08 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so23394070ljc.8;
+        Tue, 18 Aug 2020 17:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CMZwxOv3Lvfi0TB5TG9oNmH0OF9cGItROpkDx6t7XuQ=;
+        b=h63Vu4eWlCuzTHXpPSMkKkkWhCNw9WcTFLD2JAM4kvMknLrJUawGvWyUtUaaU7moNp
+         DF1NEH7lEcLyx6bEEab+35EU3Yr4TBJi/QZNnX5Bd2JmUsZ+zYenDhNOS0NEeqHORC/+
+         wACllzckr7OYdZ6VBYRF9sY0OVVs/IhikJvvSYAQiUIdIo3I057Fj/4R6W37H8VJifWe
+         vkmcXmjSozsp34Ravu/mjz0OV6x6qmds0FT4t1XwDJZIKhkmNu12H+S7opFE0VEWyfRe
+         Ki8uk3TeEALZB5CV80JcR6P1QfgbngnFzdU5YjRDShSQBnpfAbGAvA5+uVdWz6cgOr/E
+         4itg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CMZwxOv3Lvfi0TB5TG9oNmH0OF9cGItROpkDx6t7XuQ=;
+        b=KL0HPorUSKyw5rNxGh/8qfGI9pHDQqq11DPN87IBu0Zj6YoZ6APPC4oJ0CnNH7iOZb
+         +b9b3x4pH+kqBPCo2O3eA0HWufs0cfFovQR5zz6b7q2d8KNVOpyzRi2bDwkKlqCYk/Rb
+         DI4D/cAOxWhjwiHrxRdfSd4AJBVItGEV3xMqegy2BexjHdea2DNyuBPaaNLFkp2evlqq
+         x92LJjGGixsqpBpmU9m0B2xI5fW5vbY2/R3EZXuO6B3fxI7uoXGz/72H3TErlNOW+0R8
+         vudo1p2Lxp17JTwZCoSvAc2zwdCZl5bDEj7t8Cr6ifdJ7HjJliGo94m6a9UFp1h1qc2x
+         UroQ==
+X-Gm-Message-State: AOAM531cYVZ9OukKSvp7jDV1fgIklfgsalTukboI/9WphbT1JuJqyhiC
+        Pv1A6F0gU2uc9COjgicGvQ7rruAARFjLh4wdxrA=
+X-Google-Smtp-Source: ABdhPJyZw15kABec0HQY94MdvEgS3Kv8I8ZafKEragLhOmF8JCQGexE12bVT/3A7XjRbZl8CZ83/hi6YFMFrn6xUG2U=
+X-Received: by 2002:a05:651c:82:: with SMTP id 2mr10503303ljq.2.1597795926981;
+ Tue, 18 Aug 2020 17:12:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200818071611.21923-1-vulab@iscas.ac.cn> <92e4b6ad-89a2-626e-d899-7d0e35f37ba5@fb.com>
+In-Reply-To: <92e4b6ad-89a2-626e-d899-7d0e35f37ba5@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 18 Aug 2020 17:11:55 -0700
+Message-ID: <CAADnVQK0cGx2QL+zNDP6hSo6N8yi71PVTSPJA5HLdsy0FP1VQw@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: convert comma to semicolon
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Xu Wang <vulab@iscas.ac.cn>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 12:10:36 +0300 Moshe Shemesh wrote:
-> On 8/17/2020 7:36 PM, Jiri Pirko wrote:
-> > Mon, Aug 17, 2020 at 11:37:40AM CEST, moshe@mellanox.com wrote:  
-> >> Add devlink reload action to allow the user to request a specific reload
-> >> action. The action parameter is optional, if not specified then devlink
-> >> driver re-init action is used (backward compatible).
-> >> Note that when required to do firmware activation some drivers may need
-> >> to reload the driver. On the other hand some drivers may need to reset  
-> > Sounds reasonable. I think it would be good to indicate that though. Not
-> > sure how...  
-> 
-> Maybe counters on the actions done ? Actually such counters can be 
-> useful on debug, knowing what reloads we had since driver was up.
+On Tue, Aug 18, 2020 at 8:54 AM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 8/18/20 12:16 AM, Xu Wang wrote:
+> > Replace a comma between expression statements by a semicolon.
+> >
+> > Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+>
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-Wouldn't we need to know all types of reset of drivers may do?
-
-I think documenting this clearly should be sufficient.
-
-A reset counter for the _requested_ reset type (fully maintained by
-core), however - that may be useful. The question "why did this NIC
-reset itself / why did the link just flap" comes up repeatedly.
+Applied. Thanks
