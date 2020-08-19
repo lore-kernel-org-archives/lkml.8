@@ -2,80 +2,117 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE180C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1A1207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EAC207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597816371;
-	bh=eDYPmryot5vJDEr3Oa+VhUcnmO1H55HLBUwMGfZDMQE=;
+	s=default; t=1597816448;
+	bh=7JTMi4mGGs7FnfIVJimozrVukuiOHNixS4gVormp8S0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdVi65XRED86HOHMmQG+UVdUV7phSiuMnfOuCjQW50f/BVuRbD6ekChhGKXfTUTah
-	 VA+MwrhgZ044oUGhTKSI0s+YDqlVJdVFEzhSmroiwSahgJqm+LqKTO/wZx0BIkyYGa
-	 89nT9wsfWhdJx41efw2WobvJuk4QkKReFNQF4u+Y=
+	b=ZKguvldrKCfdALzXUSdFkm7B4cAJAINoT9lKiXCvKRKWOraJIcX5x9pmyVZZcqioW
+	 zuIK78GBg0b1lqlxBArNnqDrjzlKrA/q8AALiwmRE3Hc4G/T8Pi9gyvPuZyBvCU4Ir
+	 aGfK4Rmh4JqKlDkHUsHxHgkGrnZW1YHRqqpxXN+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgHSFwu (ORCPT
+        id S1726641AbgHSFyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 01:52:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56048 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 01:54:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHSFwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 01:52:49 -0400
+        id S1726318AbgHSFyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 01:54:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 271F9207DA;
-        Wed, 19 Aug 2020 05:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC49320772;
+        Wed, 19 Aug 2020 05:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597816369;
-        bh=eDYPmryot5vJDEr3Oa+VhUcnmO1H55HLBUwMGfZDMQE=;
+        s=default; t=1597816445;
+        bh=7JTMi4mGGs7FnfIVJimozrVukuiOHNixS4gVormp8S0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qyp9M/VjLa/uZ+FA7mKFQ/n0NCtR4ezHk+Oldywlz/o7NBeLE16Y0WrK1rU1NmQ6D
-         MotSV9JCrq6FrLR0RJX9U4yWHsjFVB43wTDKuq8WFDY5+E2N/BbU7kkMl0Q5ixVbz8
-         jv2BixQUMd+XBPj3ODo6oFEFvWSCJ0uq4SW1a4pk=
-Date:   Wed, 19 Aug 2020 07:53:10 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Scott Branden <scott.branden@broadcom.com>,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v2 0/3] Add Broadcom VK driver
-Message-ID: <20200819055310.GA853200@kroah.com>
-References: <20200806004631.8102-1-scott.branden@broadcom.com>
- <202008181251.1CA80429@keescook>
+        b=rebZCrheWVgpDfkuB4bbsq5b0AVbjOJPei3t/JXJysuW0fPH6TyRyinMKSzjvoKxs
+         6FQgQ2+RCNX8dDy4E5wVD2dmK62Tr1Pc7091TUg6JdSS40rxEMRZWACahVwugWaUsp
+         TYzdG9eySvZTzkUHF1KHShMeC7ewNGNRYU3+U2hQ=
+Date:   Wed, 19 Aug 2020 07:54:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vaishnav M A <vaishnav@beagleboard.org>
+Cc:     greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, johan@kernel.org, elder@kernel.org, robh@kernel.org,
+        mchehab+huawei@kernel.org, davem@davemloft.net,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Drew Fustini <drew@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Ivan =?utf-8?B?UmFqa292acSH?= <rajkovic@mikroe.com>,
+        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com
+Subject: Re: [RFC PATCH v2 0/3] mikroBUS driver for add-on boards
+Message-ID: <20200819055427.GB853200@kroah.com>
+References: <20200818124815.11029-1-vaishnav@beagleboard.org>
+ <20200818152426.GA713928@kroah.com>
+ <CALudOK4jgtJiB8sn4CsDm2c=va=d8M7ocoa55f=NV9sTaBHJJg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202008181251.1CA80429@keescook>
+In-Reply-To: <CALudOK4jgtJiB8sn4CsDm2c=va=d8M7ocoa55f=NV9sTaBHJJg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:52:54PM -0700, Kees Cook wrote:
-> On Wed, Aug 05, 2020 at 05:46:28PM -0700, Scott Branden wrote:
-> > This patch series drops previous patches in [1]
-> > that were incorporated by Kees Cook into patch series
-> > "Introduce partial kernel_read_file() support" [2].
-> > 
-> > Remaining patches are contained in this series to add Broadcom VK driver.
-> > (which depends on request_firmware_into_buf API addition in
-> > other patch series [2] being applied first).
-> > 
-> > Please note this patch series will not compile without [2].
-> > 
-> > [1] https://lore.kernel.org/lkml/20200706232309.12010-1-scott.branden@broadcom.com/
-> > [2] https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/
+On Wed, Aug 19, 2020 at 03:22:48AM +0530, Vaishnav M A wrote:
+> On Tue, Aug 18, 2020 at 8:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 06:18:12PM +0530, Vaishnav M A wrote:
+> > > Hi,
+> > >
+> > > This Patch series is an update to the mikroBUS driver
+> > > RFC v1 Patch : https://lkml.org/lkml/2020/7/24/518 .
+> >
+> > Please use lore.kernel.org for links, we have no idea if lkml.org will
+> > be working tomorrow or not :)
+> >
+> Hi Greg,
 > 
-> Greg, is your intention to take [2] into your tree? AFAICT, it's got the
-> appropriate Acks, etc.
+> Thanks, will use lore.kernel.org for the links, attaching the corresponding
+> link to the v1 RFC patch thread for reference:
+> https://lore.kernel.org/lkml/20200724120637.GA427284@vaishnav-VirtualBox/
+> 
+> > > The mikrobus driver is updated to add mikrobus ports from device-tree
+> > > overlays, the debug interfaces for adding mikrobus ports through sysFS
+> > > is removed, and the driver considers the extended usage of mikrobus
+> > > port pins from their standard purposes.
+> >
+> > I don't know what "properties" and "device" mean with regards to things
+> > here, any chance you can provide a patch to the greybus spec itself that
+> > adds this information so we can better understand the reasoning here to
+> > see if the kernel changes match up with the goals?
+> >
+> > thanks,
+> >
+> > greg k-h
+> Sure, I will add a patch to the greybus-spec to describe the new descriptors,
+> the property and device descriptors are introduced to add information
+> about the SPI/I2C/UART chip/sensor which is required by the corresponding
+> device drivers, With these descriptors, it will be possible to describe devices
+> on I2C, SPI, UART, etc. behind a greybus device so as to bind existing kernel
+> drivers to them, This is not what is currently being done within the mikroBUS
+> driver, now it tries to instantiate devices on actual I2C, SPI, UART from
+> describing manifests, but the ultimate goal is to describe the devices on
+> I2C/SPI/UART behind a greybus device, thus enabling to attach existing
+> kernel drivers to devices present in add-on boards attached to mikroBUS
+> ports added via greybus.
+> 
+> Shall I submit a pull request to https://github.com/projectara/greybus-spec
+> for the specs, is there a different official upstream to greybus-spec?
 
-Yes, it is in my queue to do so, hopefully soon, digging out now from
-the big -rc1 patch-submission-pile...
+That's a good place, but for now, you can submit it as part of your
+patch series as well, so we can all see it and review it easier.
+
+thanks,
 
 greg k-h
