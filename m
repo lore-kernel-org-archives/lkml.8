@@ -7,121 +7,125 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80260C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1023C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CBE20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A36420738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dxRVNmi7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OXds1Fu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHSH3S (ORCPT
+        id S1727932AbgHSH3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40968 "EHLO
+        Wed, 19 Aug 2020 03:29:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbgHSHYv (ORCPT
+        with ESMTP id S1727043AbgHSHY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:24:51 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37EC061364
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c15so20427340wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:22 -0700 (PDT)
+        Wed, 19 Aug 2020 03:24:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2652EC061348
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:19 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t14so1120108wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bfE7YUSssid0azom0g6vClz47uYcy21+hGTRmt0JTBI=;
-        b=dxRVNmi7LtW/7lmGHRjFCjuxQP1F9s/8kvSh4etZPkfq8exwIAqqPNFL0aK3SmVfDB
-         fHrTrRMVtzuGPBrfz4+XBqHTclM6+fKesqjtjlM2VmRdsOTqBfwh5E+hUcfV6zwLp92b
-         fH2nmZpRtlLMovLVRE2Q9NvPh5Gm4KCpaSZpkxEVqoFQX8WhvR+uCaJn+AOy2H2IRgBE
-         idK19g+Z6/PGsCXH8WA1yRYhKbziLejExH4d1tqRZ3+3G4i2NlG5KHwpM2tG4KFI77hR
-         IcGyMdysPTTn9rGjtpo4ymfWtopmI6cAdfums19zH6QW4KngP6oO2kQIIXzJgAvGGYUb
-         Tb2w==
+        bh=PbKBLvVHaH2v5GCYgGjIlYZDy81EB6VKwDmcXvqDNxg=;
+        b=OXds1Fu1qKTN30kQh7VA0bF/2WfppMdJpu1WBsaU2U+5BdI5GdG9GRWftpfs28R00j
+         LiSm8dsDtg9VqEA+iEIVBJN0CAIP20vnFBIL8CwmytV9VdMPYxW9iGnSFO/gP4bDU1no
+         rM1tKqchdPiPs04+yDFvfhzHRalicb7QtGUQ0PhC18KLR1mHszACOgBEyovLQNpwCTtI
+         tuGJpL2QzJq0vnOwMC+o5QNuMON//UnmBmVQn3p1wVOIcXrd16Ng4DpnCwTJuQ/Peu38
+         V47gDngdpVAMSZOwy7SEMT/zEsU/0TJK2lWrmFMKM25yUI0aa4TpGB0aAu1NPlpo5BQx
+         uvXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bfE7YUSssid0azom0g6vClz47uYcy21+hGTRmt0JTBI=;
-        b=jR0wYbV2ZZQPE4tqAx7wVEU/Anw3nsyugr89dbTmATE7/PQx5+iNJ9RAdjmtH3DzO5
-         9MYSBMPjhJDxsdBBKyv5c/Mnx49nUCOMQegeT44L4uriAz+naoWzp0ucRtxEJkpkUKc1
-         yg3HQzUx7MVXqK/i31YDt5wM52gabklUkD3FYjUa3/NwtDq9K/NA5revnVl1wYHqjPGG
-         lJwcZAUJZwa8IvzQSNd+ZBpXD5m6NbR5hQDu851+YhG9Hc/JLv4CW2bDQCxYC2kleWJc
-         w4T9Pt51vtpwQfUmmfmVXz7AEXpgR2xu0LfKqxLv3Qe+3HKnPwUolVBRpMpFicwbZ3Km
-         6Oaw==
-X-Gm-Message-State: AOAM531yUtJYzx5E0vyNOyGxRO0rub2FK/MATQrUI2lrHFc9CiuXqGy9
-        G7NapmSr95bRxib2Nd1HwPkwog==
-X-Google-Smtp-Source: ABdhPJzRWBnbNFHIjAgUYgqM4NWDUtxLUBkI0z4KY8VqkEYCch07riiASN+lmqbrHFo7MFbLN2tOzA==
-X-Received: by 2002:a5d:6401:: with SMTP id z1mr23375743wru.272.1597821861337;
-        Wed, 19 Aug 2020 00:24:21 -0700 (PDT)
+        bh=PbKBLvVHaH2v5GCYgGjIlYZDy81EB6VKwDmcXvqDNxg=;
+        b=FhDf3DBm4x1P817rarPuLAFjx13C8s2BAxP/JjB1Hue1wSMqFg9DfvWSCobd4QUJUO
+         2z/UccQXcFezFaTZ4PVAfbmsIfdYIyjZ7gJ+odshJu7yNAYDFaf0yUKoW/97k2cFfwxq
+         I42HAx3lUQE3ZEsX9wGS2nCUIoWxpr3sca1j3yA0P03N2GgReGftiN26bXC0wXrvFq5K
+         9XqCP9mdA0jorkLT3DLRr731ANnZUyGFBXXmU2Gi2TIu8dXyhp3v764w4Fl3l0uVZR7H
+         AGIRG8XhTXW+6KPc1PZzFRJC+skx0IAG/D0kMoFLQF+tiQkLKZioEX99+vZnSjfOqAJt
+         Lr2g==
+X-Gm-Message-State: AOAM532fSu3S1MuheneFlovLlnV0d9XK7M1iwEe6r1OOQd+cgfeHD2+n
+        +7cWL9gAEpStQ4GGDGZ+fwnCig==
+X-Google-Smtp-Source: ABdhPJzktKf0Cr27eGyQgeRCt60ASIOSBcNvQFBXJQddtrhnePaDETm8O/YZgHWNlIrloQVil8hKQg==
+X-Received: by 2002:a05:600c:230e:: with SMTP id 14mr3354073wmo.3.1597821857777;
+        Wed, 19 Aug 2020 00:24:17 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.20
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:20 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:17 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        Dmitry Tarnyagin <dmitry.tarnyagin@lockless.no>
-Subject: [PATCH 13/28] wireless: st: cw1200: wsm: Remove 'dummy' variables
-Date:   Wed, 19 Aug 2020 08:23:47 +0100
-Message-Id: <20200819072402.3085022-14-lee.jones@linaro.org>
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>
+Subject: [PATCH 10/28] wireless: intel: iwlwifi: dvm: tx: Demote non-compliant kernel-doc headers
+Date:   Wed, 19 Aug 2020 08:23:44 +0100
+Message-Id: <20200819072402.3085022-11-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They're never read, so there is no reason for them to exist.
-
-They just cause the compiler to complain.
+None of these headers attempt to document any function parameters.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/st/cw1200/wsm.c: In function ‘wsm_ba_timeout_indication’:
- drivers/net/wireless/st/cw1200/wsm.c:1033:5: warning: variable ‘dummy2’ set but not used [-Wunused-but-set-variable]
- drivers/net/wireless/st/cw1200/wsm.c:1031:6: warning: variable ‘dummy’ set but not used [-Wunused-but-set-variable]
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c:811: warning: Function parameter or member 'priv' not described in 'iwlagn_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c:811: warning: Function parameter or member 'rate_n_flags' not described in 'iwlagn_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c:811: warning: Function parameter or member 'info' not described in 'iwlagn_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c:1267: warning: Function parameter or member 'priv' not described in 'iwlagn_rx_reply_compressed_ba'
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c:1267: warning: Function parameter or member 'rxb' not described in 'iwlagn_rx_reply_compressed_ba'
 
-Cc: Solomon Peachy <pizza@shaftnet.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Dmitry Tarnyagin <dmitry.tarnyagin@lockless.no>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/st/cw1200/wsm.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/st/cw1200/wsm.c b/drivers/net/wireless/st/cw1200/wsm.c
-index c86f31dcc9817..d9b6147bbb528 100644
---- a/drivers/net/wireless/st/cw1200/wsm.c
-+++ b/drivers/net/wireless/st/cw1200/wsm.c
-@@ -1028,14 +1028,12 @@ static int wsm_find_complete_indication(struct cw1200_common *priv,
- static int wsm_ba_timeout_indication(struct cw1200_common *priv,
- 				     struct wsm_buf *buf)
- {
--	u32 dummy;
- 	u8 tid;
--	u8 dummy2;
- 	u8 addr[ETH_ALEN];
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/tx.c b/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
+index fd454836adbed..e3962bb523289 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
+@@ -803,7 +803,7 @@ static void iwlagn_non_agg_tx_status(struct iwl_priv *priv,
+ 	rcu_read_unlock();
+ }
  
--	dummy = WSM_GET32(buf);
-+	WSM_GET32(buf);
- 	tid = WSM_GET8(buf);
--	dummy2 = WSM_GET8(buf);
-+	WSM_GET8(buf);
- 	WSM_GET(buf, addr, ETH_ALEN);
+-/**
++/*
+  * translate ucode response to mac80211 tx status control values
+  */
+ static void iwlagn_hwrate_to_tx_control(struct iwl_priv *priv, u32 rate_n_flags,
+@@ -1256,7 +1256,7 @@ void iwlagn_rx_reply_tx(struct iwl_priv *priv, struct iwl_rx_cmd_buffer *rxb)
+ 	}
+ }
  
- 	pr_info("BlockACK timeout, tid %d, addr %pM\n",
+-/**
++/*
+  * iwlagn_rx_reply_compressed_ba - Handler for REPLY_COMPRESSED_BA
+  *
+  * Handles block-acknowledge notification from device, which reports success
 -- 
 2.25.1
 
