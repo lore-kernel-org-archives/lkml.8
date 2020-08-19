@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CB7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE19207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD8E207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gTNIAuMQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqfYIi+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgHSIsW (ORCPT
+        id S1726883AbgHSIs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53880 "EHLO
+        Wed, 19 Aug 2020 04:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgHSIsV (ORCPT
+        with ESMTP id S1726494AbgHSIs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:48:21 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A064EC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:21 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh1so10477464plb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:21 -0700 (PDT)
+        Wed, 19 Aug 2020 04:48:26 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9240DC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id j13so787951pjd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Rx3HhZp0uE5X/bW9a/q8+qzsFbhTQfzF+43SkTUPg9s=;
-        b=gTNIAuMQTY8Lvc5UP14BLPihF+M1nvXwR88UCt5QqSEiOCRMamMULGYW1Anh3T5tZn
-         NWtqatFdWocT9No/CYkQfwfxN5pJn61WCIOkEecstyEQL76boB4LfF0qTtdS+/7HNzXO
-         v8U8Iml3Xf5cTkD+H/Mjyv8vpINPaDwPqTvkGo0V3vbvufBaw6BD9vaDMRKXrrmnbscy
-         LTstqgkbETC435s5Noy3jko49qHxDwUoVFNPOER/g0aIQBx236rx4XfNnAeLA2tpENLq
-         kqVmWe+4YXsypN+LAqInM3uRG2e/e0WY2SJf1tN7tAAlfXzn0h0yUCIZQvmNyer5wfIj
-         hptw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yFi8zTtrImZDILchnlZzIR1IxDR1uqiy2tgSbT1x9s8=;
+        b=OqfYIi+HkhrNDJaXoxGNw9xfIPQWaGQbceAbY/S48XEG94k3Imgo6Hg4slYsNTHK9K
+         0LEXROlE6/nW7Nb6voPpSBVnaS1rIBBgsgz2QUNH2Mx/XCE2Ro7aG1lABGqAIxYKEL6b
+         zsMxhkj/uz45O7VtOvSYZtAA+C4DdCu3QyOF4W+jWK86J5IJyVTVKBcrJ04Q/1M0pzGN
+         mHsKp/LlUtNLllvRy55f3EMeXPCGLD/S1iH17joZJ8WE750GuyHkFICKI2GrHTlTKGNG
+         B8jDLrhPhXTVqQ45EM1fw24MhpOrc/LicvB5y7Qp1sXQZaUaK/wG7//6nw1q0QQ/k7gf
+         XVtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Rx3HhZp0uE5X/bW9a/q8+qzsFbhTQfzF+43SkTUPg9s=;
-        b=nqQYnWpIqoxH7BAVkuLEPX4OFCDz06piSGFEYBwUHPhZYpqin5cR9xYY50QAEyzQIl
-         C9Su2l1RfbqbXhsiz4lzMulphMSxItu9fGwgXRUGWMDMmxtAwkgda4JFtdBdYjK2wSUQ
-         wIZh+gmJPWXWx4KYNWuqwVoXUdII8kCr6hrbKKDXOC8Q/UH91FSp7b7jP50f0d9VOooA
-         EpvO1J7xGWH3kLAU9Xifi146eJxIpZkjr9lsaBjgxDV2AaIU7g8O3X9dVJ4JHiK87ucg
-         unJaCTt2yhVzfJwCvF9PnmhzmHX6usLPNQpwMi2sJggiVZ5io9l66+0s+R7V0bgkxj2y
-         FwCw==
-X-Gm-Message-State: AOAM532ZozNtIIXYy3CiRIKv3UslHm8mfgyrifUONY5V8wO8ph0I2eDM
-        0y/qtCJJKJvDnJT/bbcJ2el2LQ==
-X-Google-Smtp-Source: ABdhPJymN378icNoISpPWEPx+twM+ttOqTAsgUY2Y3A9jKX584elnuebuLI7utTqJnZVJTNhFPaoQA==
-X-Received: by 2002:a17:902:9349:: with SMTP id g9mr18292755plp.313.1597826901058;
-        Wed, 19 Aug 2020 01:48:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yFi8zTtrImZDILchnlZzIR1IxDR1uqiy2tgSbT1x9s8=;
+        b=po6uNIBBF0j+FkQhXacPBdvINXmL1M2Da1NFgdsjlrEI6IB7tN3f6Z2FZqazqG+mU6
+         OvadRw9ZWCwCeDi4yLPruCdvLqrIi0f3xNmd7SwUmZnq4c5VxdKkIaWWpZcJeWdQRQUI
+         xgsU5QwvT/Mu6BTL4H4XmFNMBKBAEuhS3i+vCbMHEWDWd98B3Dtfv1amwjhu6BfGF8WY
+         JHzVg6kteEJetrasJJNdRneNHoGrLkRbY5SayeONE8Tk13iD5QQcll8SyY5YtLGUpL6t
+         zvVfAdK9rE3GJnE0jip4PIcO3Flt2Z/xxaMmmo6xGWNeMKX0Wpc9qCoq3lhYvR4Tpfvq
+         pLow==
+X-Gm-Message-State: AOAM530JhAuIQ7gsfL5BrBBRExqvXAsowcCgOYcKiC9WSlBJXdQNHpTS
+        9BGKLFbkCUs0KjVDKfwrODtwqw==
+X-Google-Smtp-Source: ABdhPJwWbnU935IzaGsltr+HTXM80XTYPnZrgfrNRJD2kJjhKoPlGyc+WMVx87B7iNrVY/YI89PEbA==
+X-Received: by 2002:a17:90a:ee8d:: with SMTP id i13mr3368081pjz.19.1597826906130;
+        Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
 Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id l24sm24795414pff.20.2020.08.19.01.48.20
+        by smtp.gmail.com with ESMTPSA id z25sm28153492pfg.150.2020.08.19.01.48.25
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 01:48:20 -0700 (PDT)
+        Wed, 19 Aug 2020 01:48:25 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -73,10 +74,12 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Al Grant <al.grant@arm.com>, Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 1/2] perf cs-etm: Fix corrupt data after perf inject from
-Date:   Wed, 19 Aug 2020 16:47:50 +0800
-Message-Id: <20200819084751.17686-1-leo.yan@linaro.org>
+Subject: [PATCH 2/2] perf intel-pt: Fix corrupt data after perf inject from
+Date:   Wed, 19 Aug 2020 16:47:51 +0800
+Message-Id: <20200819084751.17686-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819084751.17686-1-leo.yan@linaro.org>
+References: <20200819084751.17686-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -87,29 +90,28 @@ From: Al Grant <al.grant@arm.com>
 Commit 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
 changed the format of branch stacks in perf samples. When samples use
 this new format, a flag must be set in the corresponding event.
-Synthesized branch stacks generated from CoreSight ETM trace were using
-the new format, but not setting the event attribute, leading to
-consumers seeing corrupt data. This patch fixes the issue by setting the
-event attribute to indicate use of the new format.
+Synthesized branch stacks generated from Intel PT were using the new
+format, but not setting the event attribute, leading to consumers
+seeing corrupt data. This patch fixes the issue by setting the event
+attribute to indicate use of the new format.
 
 Fixes: 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
 Signed-off-by: Al Grant <al.grant@arm.com>
-Reviewed-by: Andrea Brunato <andrea.brunato@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 9 ++++++++-
+ tools/perf/util/intel-pt.c | 9 ++++++++-
  1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index c283223fb31f..a2a369e2fbb6 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1344,8 +1344,15 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
- 		attr.sample_type &= ~(u64)PERF_SAMPLE_ADDR;
- 	}
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 2a8d245351e7..0af4e81c46e2 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -3017,8 +3017,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
  
--	if (etm->synth_opts.last_branch)
-+	if (etm->synth_opts.last_branch) {
+ 	if (pt->synth_opts.callchain)
+ 		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
+-	if (pt->synth_opts.last_branch)
++	if (pt->synth_opts.last_branch) {
  		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
 +		/*
 +		 * We don't use the hardware index, but the sample generation
@@ -119,7 +121,7 @@ index c283223fb31f..a2a369e2fbb6 100644
 +		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
 +	}
  
- 	if (etm->synth_opts.instructions) {
+ 	if (pt->synth_opts.instructions) {
  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
 -- 
 2.17.1
