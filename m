@@ -2,93 +2,96 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E7DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B67B2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597859295;
-	bh=I1uHtAxU38yiutTWbu0ApG7CsinGmwjdQx8gheMenP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rGknOTXo8PBllbTGkrPwUFs5HpFPPZuVXANrF2zG97PoI8I0Sms4moBOesMb4hte3
-	 u1QQ/UiJUiTix8684ZyOCxzzM13WIi5oV4JTLv2YrQwE+pSUVXboL8QDoTq8rQGkKD
-	 lze3kPeztaJMBGLhX1OHoXYNSp+WeCQ4f132CWvU=
+	by mail.kernel.org (Postfix) with ESMTP id F21832067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m0t6n++Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgHSRsO (ORCPT
+        id S1726854AbgHSRsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:48:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35630 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHSRsK (ORCPT
+        Wed, 19 Aug 2020 13:48:16 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47748 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgHSRsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:48:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m20so18822787eds.2;
-        Wed, 19 Aug 2020 10:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zX9jwCX/Eaov1Rw6oFqsIG12piAHTYmOUPZHGAVnJAM=;
-        b=K4Qaob3pt4AeRlN2YNKstr686T33OyAo7wDY9LlLeWRiVEbYNB7srl3MLkaLCpBZdq
-         kFyfQWe5T2oKKl1svHOm4FYXmzlq+ke172bkVwH5tMPG+0mPz9IHqGN3Fo0xxcCFns5p
-         WNFJRFDOAI+fqdSQaM/FBSPs79sN2dw38/6k6C4bjw7pDblYVybGPfPXtmW23Dmaq7wC
-         6123QEOAQjlgx52D18V3/FLr/z3Ksmdl0W4L40986vw0wb+N/hncaYIEFgafQaeZa1mH
-         VGmo2iEf8bk9DhcUMhe85fexEk/vGNAsFDT/ZUtPYdN461Dpa2EG/6T0GCqhPxnYg7UX
-         aONA==
-X-Gm-Message-State: AOAM532Wvew9dANV4CZh+YQcpA6O/toettmmp/Nkd2yP6hid0aWDVV8c
-        9afmEtNZXMmf1mjG8kYzB7Y=
-X-Google-Smtp-Source: ABdhPJy7a8YQ6srCJ1yH086NTSH3EFod8CrU7Hoeaw8blgh1KR6D2HT1o1RXpPDLZA9IO0ZezxtWUg==
-X-Received: by 2002:aa7:d8d7:: with SMTP id k23mr26744142eds.54.1597859289105;
-        Wed, 19 Aug 2020 10:48:09 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id i9sm19116548ejb.48.2020.08.19.10.48.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 10:48:08 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 19:48:05 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/2] soc: mediatek: mtk-infracfg: Fix kerneldoc
-Message-ID: <20200819174805.GA394@kozik-lap>
-References: <20200729074415.28393-1-krzk@kernel.org>
- <92ac7165-765e-da75-4c0b-3b232521b5e9@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <92ac7165-765e-da75-4c0b-3b232521b5e9@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 19 Aug 2020 13:48:11 -0400
+Received: from testvm-timer.0wqf5yk0ngwuzjntifuk1ppqse.cx.internal.cloudapp.net (unknown [40.65.222.102])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1A40E20B4908;
+        Wed, 19 Aug 2020 10:48:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A40E20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597859290;
+        bh=oruyqdKng8+TpXlSXXiikHoCNNdO9Z8FHlgfX8r5vB0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=m0t6n++ZbcgJ9uS8BGrsR4ZCUeHQkIZgLz1/3jzay5U3fF/tyZWx4neN/mNaOVGG2
+         o1pyrsWP1m0UQTHCneJ8RNC2m9chEnlGtD6RiOwKtgRI9wR6ZN1jscBQX4n7e+M2Fq
+         6nRPnc215Zt+G1qK5VNscJef/3VUHaL6ErNZsIS4=
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hv_utils: drain the timesync packets on onchannelcallback
+Date:   Wed, 19 Aug 2020 17:47:40 +0000
+Message-Id: <20200819174740.47291-1-viremana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 09:53:59AM +0200, Matthias Brugger wrote:
-> 
-> 
-> On 29/07/2020 09:44, Krzysztof Kozlowski wrote:
-> > Fix W=1 compile warnings (invalid kerneldoc):
-> > 
-> >      drivers/soc/mediatek/mtk-infracfg.c:34: warning: Function parameter or member 'infracfg' not described in 'mtk_infracfg_set_bus_protection'
-> >      drivers/soc/mediatek/mtk-infracfg.c:34: warning: Excess function parameter 'regmap' description in 'mtk_infracfg_set_bus_protection'
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Queued for v5.9-next/soc
+There could be instances where a system stall prevents the timesync
+packaets to be consumed. And this might lead to more than one packet
+pending in the ring buffer. Current code empties one packet per callback
+and it might be a stale one. So drain all the packets from ring buffer
+on each callback.
 
-Hi,
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+---
+ drivers/hv/hv_util.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-It looks like this missed the merge window. Do you plan to keep it for
-v5.10?
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 1357861fd8ae..c0491b727fd5 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -387,10 +387,23 @@ static void timesync_onchannelcallback(void *context)
+ 	struct ictimesync_ref_data *refdata;
+ 	u8 *time_txf_buf = util_timesynch.recv_buffer;
+ 
+-	vmbus_recvpacket(channel, time_txf_buf,
+-			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
++	/*
++	 * Drain the ring buffer and use the last packet to update
++	 * host_ts
++	 */
++	while (1) {
++		int ret = vmbus_recvpacket(channel, time_txf_buf,
++					   HV_HYP_PAGE_SIZE, &recvlen,
++					   &requestid);
++		if (ret) {
++			pr_warn("TimeSync IC pkt recv failed (Err: %d)\n",
++				ret);
++			break;
++		}
++
++		if (!recvlen)
++			break;
+ 
+-	if (recvlen > 0) {
+ 		icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[
+ 				sizeof(struct vmbuspipe_hdr)];
+ 
+-- 
+2.17.1
 
-Best regards,
-Krzysztof
