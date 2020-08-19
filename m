@@ -2,166 +2,105 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E08C420639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597851948;
-	bh=LY7s8DW5LzHVd2/HzeQpHrXfth+2i2xQIeYAE410qEM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BC9iTuIdBbSh3oMFNCJ1OMYwjveCTOb7eChhpEtt3w/xftkM+ZnmnTnNtke4SndaY
-	 Lho35n1EXQp6Ny5oPzfAoZ8wCtaFNEUaEX35qCCJVEGZQZlTzklvfRxQ8Nfw8fhuzo
-	 iACTc+e8N+7B1FNhRx/a5fLpUQcXQqMm6faYCnDU=
+	by mail.kernel.org (Postfix) with ESMTP id B9BBE20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XWTJLEFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgHSPpr (ORCPT
+        id S1728722AbgHSPqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgHSPpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:45:05 -0400
-Received: from DESKTOP-GFFITBK.localdomain (218-161-90-76.HINET-IP.hinet.net [218.161.90.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E9F12083B;
-        Wed, 19 Aug 2020 15:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597851905;
-        bh=LY7s8DW5LzHVd2/HzeQpHrXfth+2i2xQIeYAE410qEM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSNZcU0/c39QVtQjD9rNre9x+4blRMS9rvcCpOFFvwPaKaEsEPlfGVWk8qcvnN/jL
-         LnEhO4vxU+Bl8dEK4HYN0qHhZAkRvDl539qw+qU9GAioG6xB/xM600Nd56t0bkCh51
-         MH8NCO7MX0yZ9AJcpAAPh/kFscCu5ir8voz9AsEg=
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, CK Hu <ck.hu@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v4 1/4] drm/mediatek: Move tz_disabled from mtk_hdmi_phy to mtk_hdmi driver
-Date:   Wed, 19 Aug 2020 23:44:18 +0800
-Message-Id: <20200819154421.7013-2-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819154421.7013-1-chunkuang.hu@kernel.org>
-References: <20200819154421.7013-1-chunkuang.hu@kernel.org>
+        Wed, 19 Aug 2020 11:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbgHSPpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:45:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00627C061757;
+        Wed, 19 Aug 2020 08:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sby85tADECWKuR0AV6X1Y6cFL27+oWWhcAc5MYjw2/M=; b=XWTJLEFcqr4laLVNr3nsFyNyqX
+        e+SlsapfynluFr3CfcykzGtYbYd/ET2mgqoBRiOVbPUY8SD8UznsRe7aqpmT4yJa07+5QvcGTgtQs
+        NjJR7HbwXfjtd/izhMgK433mSVsy/igtYk09QsTK022Hm28n/+XM2fL5PtoubxdQ40tWDVTyhIuRT
+        xaethkRRZPAUxksaFJVBQU1o+nyfyuU7Yfihft4a81CRFxM7X/FIh5aq48j/BGpFRbaXHEM8n52Tl
+        qJ2z2eNi0akCUR7VXHmnHWWmlPzXgusPelGvE9FjtcJuRVy7NaCzfptySDFjBm3Q4YK7AXK1R4nWU
+        EDEctJUg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8QHB-0002JA-TO; Wed, 19 Aug 2020 15:45:21 +0000
+Date:   Wed, 19 Aug 2020 16:45:21 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Christoph Hewllig <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "uclinux-h8-devel@lists.sourceforge.jp" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "kgdb-bugreport@lists.sourceforge.net" 
+        <kgdb-bugreport@lists.sourceforge.net>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Message-ID: <20200819154521.GE17456@casper.infradead.org>
+References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
+ <20200818174447.GV17456@casper.infradead.org>
+ <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+ <20200819084556.im5zfpm2iquzvzws@wittgenstein>
+ <20200819111851.GY17456@casper.infradead.org>
+ <87a6yq222c.fsf@x220.int.ebiederm.org>
+ <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
+ <87mu2qznlv.fsf@x220.int.ebiederm.org>
+ <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: CK Hu <ck.hu@mediatek.com>
+On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
+> Does linux have an O(1) (or do I mean o(1)) pid allocator?
+> Or does it have to do a linear scan to find a gap??
 
-tz_disabled is used to control mtk_hdmi output signal, but this variable
-is stored in mtk_hdmi_phy and mtk_hdmi_phy does not use it. So move
-tz_disabled to mtk_hdmi where it's used.
-
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c           | 19 ++++++++++++++++---
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h       |  1 -
- .../gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c    |  1 -
- 3 files changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index f2e9b429960b..d44348c7ecbe 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -145,11 +145,16 @@ struct hdmi_audio_param {
- 	struct hdmi_codec_params codec_params;
- };
- 
-+struct mtk_hdmi_conf {
-+	bool tz_disabled;
-+};
-+
- struct mtk_hdmi {
- 	struct drm_bridge bridge;
- 	struct drm_bridge *next_bridge;
- 	struct drm_connector conn;
- 	struct device *dev;
-+	const struct mtk_hdmi_conf *conf;
- 	struct phy *phy;
- 	struct device *cec_dev;
- 	struct i2c_adapter *ddc_adpt;
-@@ -234,7 +239,6 @@ static void mtk_hdmi_hw_vid_black(struct mtk_hdmi *hdmi, bool black)
- static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- {
- 	struct arm_smccc_res res;
--	struct mtk_hdmi_phy *hdmi_phy = phy_get_drvdata(hdmi->phy);
- 
- 	/*
- 	 * MT8173 HDMI hardware has an output control bit to enable/disable HDMI
-@@ -242,7 +246,7 @@ static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- 	 * The ARM trusted firmware provides an API for the HDMI driver to set
- 	 * this control bit to enable HDMI output in supervisor mode.
- 	 */
--	if (hdmi_phy->conf && hdmi_phy->conf->tz_disabled)
-+	if (hdmi->conf && hdmi->conf->tz_disabled)
- 		regmap_update_bits(hdmi->sys_regmap,
- 				   hdmi->sys_offset + HDMI_SYS_CFG20,
- 				   0x80008005, enable ? 0x80000005 : 0x8000);
-@@ -1723,6 +1727,7 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	hdmi->dev = dev;
-+	hdmi->conf = of_device_get_match_data(dev);
- 
- 	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev);
- 	if (ret)
-@@ -1803,8 +1808,16 @@ static int mtk_hdmi_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(mtk_hdmi_pm_ops,
- 			 mtk_hdmi_suspend, mtk_hdmi_resume);
- 
-+static const struct mtk_hdmi_conf mtk_hdmi_conf_mt2701 = {
-+	.tz_disabled = true,
-+};
-+
- static const struct of_device_id mtk_drm_hdmi_of_ids[] = {
--	{ .compatible = "mediatek,mt8173-hdmi", },
-+	{ .compatible = "mediatek,mt2701-hdmi",
-+	  .data = &mtk_hdmi_conf_mt2701,
-+	},
-+	{ .compatible = "mediatek,mt8173-hdmi",
-+	},
- 	{}
- };
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-index 2d8b3182470d..fc1c2efd1128 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-@@ -20,7 +20,6 @@
- struct mtk_hdmi_phy;
- 
- struct mtk_hdmi_phy_conf {
--	bool tz_disabled;
- 	unsigned long flags;
- 	const struct clk_ops *hdmi_phy_clk_ops;
- 	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-index d3cc4022e988..99fe05cd3598 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-@@ -237,7 +237,6 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
- }
- 
- struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
--	.tz_disabled = true,
- 	.flags = CLK_SET_RATE_GATE,
- 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
- 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
--- 
-2.17.1
-
+O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
+number of PIDs currently allocated, and it's log_64 rather than log_2
+(which makes no difference to O() but does make a bit of a difference
+to performance)
