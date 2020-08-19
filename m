@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88344C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7E232076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5966820758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SUykMmEv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Yv0z0oPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHSWYk (ORCPT
+        id S1727873AbgHSWYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:24:40 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:15994 "EHLO
+        Wed, 19 Aug 2020 18:24:46 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:15990 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHSWYc (ORCPT
+        with ESMTP id S1726466AbgHSWYe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:24:32 -0400
+        Wed, 19 Aug 2020 18:24:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597875872; x=1629411872;
+  t=1597875875; x=1629411875;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=amTGiaZ8zqeeZM7q4ZmfpkWXHfagHLna99ti1N7ecUg=;
-  b=SUykMmEvA0CAXbeG55sFkuOYP2KDuwq2KOxwVBrmkZPQ6r4ga+hSsAAJ
-   uqaZkA8HfV0EYItUATWCz8KjOeNKwxharr1YINTzomh80Ja7jAS4XYs5v
-   xJnj26W+UrFHCpe+NPwDPolqrFmh8LHDNxneGhrbZ2pF/VaDyyYLWUYHB
-   +VNwGcbeLAl1WNVSOzyQHRdoaL0XjgXoS/psaIjWBsM24+7iEFbAMl4Sb
-   9eS5jJTZ3yhvyYZ9O+ADD3uDC7At90GyEWPT+ClZDRAS1nCpEkfmnz9Ce
-   uarfTvhb6ft3EDe+C5S6PSoT2Cu8jcTP7sZAQxAZuIGtUhsg7Zu6rkbNu
-   Q==;
-IronPort-SDR: KoOpCBOg40X7+ppTktoSHWkiRfdmdxcnh1FthdhbWu3rZme+svITdxKnL8nhVF62+kWPejhJzH
- MbzQPF7cP8+uISGLOumLPduKcNo4l9lwU6gx4MUdu614jFhECmPJiXyA3E5c/XRzvh2ba4CNkD
- nieDtztIC5bMywOsJ8nAU7rvTjL67bClEGrgFn7iUYCRkpgzuo7kLGIQiAdBDSibb1yIfIH7qK
- Oxn96Ll+K55eoVihKAIvqa31dUz2CoBm4a25Do01ciJl9TSkbyNomvx37PoUmyl0lcwebBtyvE
- CWU=
+  bh=9dzVAvMQzryRH4OY4uy0c2IA1NXr4r5gdlmIqy/4veo=;
+  b=Yv0z0oPd7LMznr5WqkV+jseunOBZoDURblQEhVFR8i1GgSCF7eWxWLO0
+   WPF+4CKz+U4h08cx8Z/nk+FnG8wUhy6pmpL1EmG5yT7KZ5J6LccbBW7ob
+   8nysTm2H7UjgveJlFPlg9Ja9OM0VSxYtw/zswSdDO/l4VMTrInuetlNRX
+   M2IbsBrMgOYA+M6gTVFLFRVZJT9Ey8IUrj/fEh90XDKrkbZLgYwkHs45c
+   4tfdWRu6BBqbzCleD55/JFUGqFxiy78gUg6Nwe8OL5Pnc+ZxoVmqn6DgD
+   EZC963o5uxHggD7b0/0s8kSJ0ln4gsYY6dzxA2f+B7bTwoNC765UgVRNF
+   w==;
+IronPort-SDR: XRmMMCVOE7XWh8xHxUuE815r9uI1qfEimx1jg2NWMM7EO54+z40AEXPcdQ7Rybwyr/kkVDPtQ1
+ Yo4uwD+1JP99QT3P0aMf00gznOYs4toJXrnAkadjVA52358gIAhhnzBuyeruTnoI4imErTCI4c
+ m6eZyv/EYdKAaaDVcSGsTpxt6ibIOqzehbuE+OnQPzExRbi4Om7dFSZz5abbfnwcGOSn812CRd
+ dZtKBLtIKBzGqc1VR4oUK8UAtRf6unQnS9UUScuQqUNcq7hL78SYC+/sXqZO6pl/8UV3Zc9Bez
+ Dps=
 X-IronPort-AV: E=Sophos;i="5.76,332,1592841600"; 
-   d="scan'208";a="145373588"
+   d="scan'208";a="145373598"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Aug 2020 06:24:32 +0800
-IronPort-SDR: iPVfTGGKMJsSIh/aB17ROaDSDeTFD8CZpID+JsZqaIBuzG/GnQGyDWgt0bGjlIG6I0m21u52xB
- udXcn8UyV18g==
+  by ob1.hgst.iphmx.com with ESMTP; 20 Aug 2020 06:24:34 +0800
+IronPort-SDR: vSrObELSgynQ7IIiCf2OIXREiKkVGWTd2YNNRSodZQ/Y+x8FS4YRk/+ptaEJAFv3yNob7vkbDF
+ RWX3EWwbt+Eg==
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 15:12:13 -0700
-IronPort-SDR: Byr5+CNVXwDyEyzHf2Ka2FmQBYCQa6lhtYzIlDVyyF7mZH/vS/n8f1zXhXtFygV341Xdy7iM44
- BEr36YSbmfKA==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 15:12:16 -0700
+IronPort-SDR: x9Dw6rgvrMcdJEnAh9sokt2JSbRL+RqUXVRlVH8iEih69m7yf2qu57GsRmZ27cRELMBaBbPACS
+ O9HbZlS1FM0w==
 WDCIronportException: Internal
 Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.59.62])
-  by uls-op-cesaip01.wdc.com with ESMTP; 19 Aug 2020 15:24:31 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 19 Aug 2020 15:24:33 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Alistair Francis <alistair.francis@wdc.com>,
+        Anup Patel <anup.patel@wdc.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Damien Le Moal <damien.lemoal@wdc.com>,
@@ -77,9 +79,9 @@ Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
         Waiman Long <longman@redhat.com>, Zong Li <zong.li@sifive.com>,
         Daniel Schaefer <daniel.schaefer@hpe.com>,
         "abner.chang@hpe.com" <abner.chang@hpe.com>
-Subject: [PATCH v6 1/9] RISC-V: Move DT mapping outof fixmap
-Date:   Wed, 19 Aug 2020 15:24:17 -0700
-Message-Id: <20200819222425.30721-2-atish.patra@wdc.com>
+Subject: [PATCH v6 3/9] RISC-V: Implement late mapping page table allocation functions
+Date:   Wed, 19 Aug 2020 15:24:19 -0700
+Message-Id: <20200819222425.30721-4-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200819222425.30721-1-atish.patra@wdc.com>
 References: <20200819222425.30721-1-atish.patra@wdc.com>
@@ -90,184 +92,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anup Patel <anup.patel@wdc.com>
+Currently, page table setup is done during setup_va_final where fixmap can
+be used to create the temporary mappings. The physical frame is allocated
+from memblock_alloc_* functions. However, this won't work if page table
+mapping needs to be created for a different mm context (i.e. efi mm) at
+a later point of time.
 
-Currently, RISC-V reserves 1MB of fixmap memory for device tree. However,
-it maps only single PMD (2MB) space for fixmap which leaves only < 1MB space
-left for other kernel features such as early ioremap which requires fixmap
-as well. The fixmap size can be increased by another 2MB but it brings
-additional complexity and changes the virtual memory layout as well.
-If we require some additional feature requiring fixmap again, it has to be
-moved again.
+Use generic kernel page allocation function & macros for any mapping
+after setup_vm_final.
 
-Technically, DT doesn't need a fixmap as the memory occupied by the DT is
-only used during boot. That's why, We map device tree in early page table
-using two consecutive PGD mappings at lower addresses (< PAGE_OFFSET).
-This frees lot of space in fixmap and also makes maximum supported
-device tree size supported as PGDIR_SIZE. Thus, init memory section can be used
-for the same purpose as well. This simplifies fixmap implementation.
-
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/riscv/include/asm/fixmap.h  |  3 ---
- arch/riscv/include/asm/pgtable.h |  1 +
- arch/riscv/kernel/head.S         |  1 -
- arch/riscv/kernel/head.h         |  2 --
- arch/riscv/kernel/setup.c        |  9 +++++++--
- arch/riscv/mm/init.c             | 26 ++++++++++++--------------
- 6 files changed, 20 insertions(+), 22 deletions(-)
+ arch/riscv/mm/init.c | 130 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 99 insertions(+), 31 deletions(-)
 
-diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
-index 1ff075a8dfc7..11613f38228a 100644
---- a/arch/riscv/include/asm/fixmap.h
-+++ b/arch/riscv/include/asm/fixmap.h
-@@ -22,9 +22,6 @@
-  */
- enum fixed_addresses {
- 	FIX_HOLE,
--#define FIX_FDT_SIZE	SZ_1M
--	FIX_FDT_END,
--	FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
- 	FIX_PTE,
- 	FIX_PMD,
- 	FIX_TEXT_POKE1,
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index eaea1f717010..815f8c959dd4 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -464,6 +464,7 @@ static inline void __kernel_map_pages(struct page *page, int numpages, int enabl
- #define kern_addr_valid(addr)   (1) /* FIXME */
- 
- extern void *dtb_early_va;
-+extern uintptr_t dtb_early_pa;
- void setup_bootmem(void);
- void paging_init(void);
- 
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 0a4e81b8dc79..c6a37e8231a8 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -259,7 +259,6 @@ clear_bss_done:
- #endif
- 	/* Start the kernel */
- 	call soc_early_init
--	call parse_dtb
- 	tail start_kernel
- 
- .Lsecondary_start:
-diff --git a/arch/riscv/kernel/head.h b/arch/riscv/kernel/head.h
-index 105fb0496b24..b48dda3d04f6 100644
---- a/arch/riscv/kernel/head.h
-+++ b/arch/riscv/kernel/head.h
-@@ -16,6 +16,4 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa);
- extern void *__cpu_up_stack_pointer[];
- extern void *__cpu_up_task_pointer[];
- 
--void __init parse_dtb(void);
--
- #endif /* __ASM_HEAD_H */
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index f04373be54a6..6a0ee2405813 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -49,8 +49,9 @@ atomic_t hart_lottery __section(.sdata);
- unsigned long boot_cpu_hartid;
- static DEFINE_PER_CPU(struct cpu, cpu_devices);
- 
--void __init parse_dtb(void)
-+static void __init parse_dtb(void)
- {
-+	/* Early scan of device tree from init memory */
- 	if (early_init_dt_scan(dtb_early_va))
- 		return;
- 
-@@ -63,6 +64,7 @@ void __init parse_dtb(void)
- 
- void __init setup_arch(char **cmdline_p)
- {
-+	parse_dtb();
- 	init_mm.start_code = (unsigned long) _stext;
- 	init_mm.end_code   = (unsigned long) _etext;
- 	init_mm.end_data   = (unsigned long) _edata;
-@@ -77,7 +79,10 @@ void __init setup_arch(char **cmdline_p)
- #if IS_ENABLED(CONFIG_BUILTIN_DTB)
- 	unflatten_and_copy_device_tree();
- #else
--	unflatten_device_tree();
-+	if (early_init_dt_verify(__va(dtb_early_pa)))
-+		unflatten_device_tree();
-+	else
-+		pr_err("No DTB found in kernel mappings\n");
- #endif
- 	clint_init_boot_cpu();
- 
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 787c75f751a5..2b651f63f5c4 100644
+index b75ebe8e7a92..cac2c31f8beb 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
-@@ -28,7 +28,9 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
- EXPORT_SYMBOL(empty_zero_page);
+@@ -32,6 +32,17 @@ extern char _start[];
+ void *dtb_early_va __initdata;
+ uintptr_t dtb_early_pa __initdata;
  
- extern char _start[];
--void *dtb_early_va;
-+#define DTB_EARLY_BASE_VA      PGDIR_SIZE
-+void *dtb_early_va __initdata;
-+uintptr_t dtb_early_pa __initdata;
- 
++struct pt_alloc_ops {
++	pte_t *(*get_pte_virt)(phys_addr_t pa);
++	phys_addr_t (*alloc_pte)(uintptr_t va);
++#ifndef __PAGETABLE_PMD_FOLDED
++	pmd_t *(*get_pmd_virt)(phys_addr_t pa);
++	phys_addr_t (*alloc_pmd)(uintptr_t va);
++#endif
++};
++
++static struct pt_alloc_ops pt_ops;
++
  static void __init zone_sizes_init(void)
  {
-@@ -141,8 +143,6 @@ static void __init setup_initrd(void)
- }
- #endif /* CONFIG_BLK_DEV_INITRD */
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+@@ -211,7 +222,6 @@ EXPORT_SYMBOL(pfn_base);
+ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+ pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+ pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
+-static bool mmu_enabled;
  
--static phys_addr_t dtb_early_pa __initdata;
--
- void __init setup_bootmem(void)
- {
- 	struct memblock_region *reg;
-@@ -399,7 +399,7 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+ #define MAX_EARLY_MAPPING_SIZE	SZ_128M
  
- asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- {
--	uintptr_t va, end_va;
-+	uintptr_t va, pa, end_va;
- 	uintptr_t load_pa = (uintptr_t)(&_start);
- 	uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
- 	uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
-@@ -448,16 +448,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- 				   load_pa + (va - PAGE_OFFSET),
- 				   map_size, PAGE_KERNEL_EXEC);
- 
--	/* Create fixed mapping for early FDT parsing */
--	end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
--	for (va = __fix_to_virt(FIX_FDT); va < end_va; va += PAGE_SIZE)
--		create_pte_mapping(fixmap_pte, va,
--				   dtb_pa + (va - __fix_to_virt(FIX_FDT)),
--				   PAGE_SIZE, PAGE_KERNEL);
--
--	/* Save pointer to DTB for early FDT parsing */
--	dtb_early_va = (void *)fix_to_virt(FIX_FDT) + (dtb_pa & ~PAGE_MASK);
--	/* Save physical address for memblock reservation */
-+	/* Create two consecutive PGD mappings for FDT early scan */
-+	pa = dtb_pa & ~(PGDIR_SIZE - 1);
-+	create_pgd_mapping(early_pg_dir, DTB_EARLY_BASE_VA,
-+			   pa, PGDIR_SIZE, PAGE_KERNEL);
-+	create_pgd_mapping(early_pg_dir, DTB_EARLY_BASE_VA + PGDIR_SIZE,
-+			   pa + PGDIR_SIZE, PGDIR_SIZE, PAGE_KERNEL);
-+	dtb_early_va = (void *)DTB_EARLY_BASE_VA + (dtb_pa & (PGDIR_SIZE - 1));
- 	dtb_early_pa = dtb_pa;
+@@ -234,27 +244,46 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+ 	}
  }
  
-@@ -516,6 +513,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- #else
- 	dtb_early_va = (void *)dtb_pa;
+-static pte_t *__init get_pte_virt(phys_addr_t pa)
++static inline pte_t *__init get_pte_virt_early(phys_addr_t pa)
+ {
+-	if (mmu_enabled) {
+-		clear_fixmap(FIX_PTE);
+-		return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
+-	} else {
+-		return (pte_t *)((uintptr_t)pa);
+-	}
++	return (pte_t *)((uintptr_t)pa);
+ }
+ 
+-static phys_addr_t __init alloc_pte(uintptr_t va)
++static inline pte_t *__init get_pte_virt_fixmap(phys_addr_t pa)
++{
++	clear_fixmap(FIX_PTE);
++	return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
++}
++
++static inline pte_t *get_pte_virt_late(phys_addr_t pa)
++{
++	return (pte_t *) __va(pa);
++}
++
++static inline phys_addr_t __init alloc_pte_early(uintptr_t va)
+ {
+ 	/*
+ 	 * We only create PMD or PGD early mappings so we
+ 	 * should never reach here with MMU disabled.
+ 	 */
+-	BUG_ON(!mmu_enabled);
++	BUG();
++}
+ 
++static inline phys_addr_t __init alloc_pte_fixmap(uintptr_t va)
++{
+ 	return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+ }
+ 
++static phys_addr_t alloc_pte_late(uintptr_t va)
++{
++	unsigned long vaddr;
++
++	vaddr = __get_free_page(GFP_KERNEL);
++	if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
++		BUG();
++	return __pa(vaddr);
++}
++
+ static void __init create_pte_mapping(pte_t *ptep,
+ 				      uintptr_t va, phys_addr_t pa,
+ 				      phys_addr_t sz, pgprot_t prot)
+@@ -279,28 +308,46 @@ pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
  #endif
-+	dtb_early_pa = dtb_pa;
+ pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+ 
+-static pmd_t *__init get_pmd_virt(phys_addr_t pa)
++static pmd_t *__init get_pmd_virt_early(phys_addr_t pa)
+ {
+-	if (mmu_enabled) {
+-		clear_fixmap(FIX_PMD);
+-		return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
+-	} else {
+-		return (pmd_t *)((uintptr_t)pa);
+-	}
++	/* Before MMU is enabled */
++	return (pmd_t *)((uintptr_t)pa);
  }
  
- static inline void setup_vm_final(void)
+-static phys_addr_t __init alloc_pmd(uintptr_t va)
++static pmd_t *__init get_pmd_virt_fixmap(phys_addr_t pa)
+ {
+-	uintptr_t pmd_num;
++	clear_fixmap(FIX_PMD);
++	return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
++}
++
++static pmd_t *get_pmd_virt_late(phys_addr_t pa)
++{
++	return (pmd_t *) __va(pa);
++}
+ 
+-	if (mmu_enabled)
+-		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
++static phys_addr_t __init alloc_pmd_early(uintptr_t va)
++{
++	uintptr_t pmd_num;
+ 
+ 	pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+ 	BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+ 	return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+ }
+ 
++static phys_addr_t __init alloc_pmd_fixmap(uintptr_t va)
++{
++	return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
++}
++
++static phys_addr_t alloc_pmd_late(uintptr_t va)
++{
++	unsigned long vaddr;
++
++	vaddr = __get_free_page(GFP_KERNEL);
++	BUG_ON(!vaddr);
++	return __pa(vaddr);
++}
++
+ static void __init create_pmd_mapping(pmd_t *pmdp,
+ 				      uintptr_t va, phys_addr_t pa,
+ 				      phys_addr_t sz, pgprot_t prot)
+@@ -316,28 +363,28 @@ static void __init create_pmd_mapping(pmd_t *pmdp,
+ 	}
+ 
+ 	if (pmd_none(pmdp[pmd_idx])) {
+-		pte_phys = alloc_pte(va);
++		pte_phys = pt_ops.alloc_pte(va);
+ 		pmdp[pmd_idx] = pfn_pmd(PFN_DOWN(pte_phys), PAGE_TABLE);
+-		ptep = get_pte_virt(pte_phys);
++		ptep = pt_ops.get_pte_virt(pte_phys);
+ 		memset(ptep, 0, PAGE_SIZE);
+ 	} else {
+ 		pte_phys = PFN_PHYS(_pmd_pfn(pmdp[pmd_idx]));
+-		ptep = get_pte_virt(pte_phys);
++		ptep = pt_ops.get_pte_virt(pte_phys);
+ 	}
+ 
+ 	create_pte_mapping(ptep, va, pa, sz, prot);
+ }
+ 
+ #define pgd_next_t		pmd_t
+-#define alloc_pgd_next(__va)	alloc_pmd(__va)
+-#define get_pgd_next_virt(__pa)	get_pmd_virt(__pa)
++#define alloc_pgd_next(__va)	pt_ops.alloc_pmd(__va)
++#define get_pgd_next_virt(__pa)	pt_ops.get_pmd_virt(__pa)
+ #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)	\
+ 	create_pmd_mapping(__nextp, __va, __pa, __sz, __prot)
+ #define fixmap_pgd_next		fixmap_pmd
+ #else
+ #define pgd_next_t		pte_t
+-#define alloc_pgd_next(__va)	alloc_pte(__va)
+-#define get_pgd_next_virt(__pa)	get_pte_virt(__pa)
++#define alloc_pgd_next(__va)	pt_ops.alloc_pte(__va)
++#define get_pgd_next_virt(__pa)	pt_ops.get_pte_virt(__pa)
+ #define create_pgd_next_mapping(__nextp, __va, __pa, __sz, __prot)	\
+ 	create_pte_mapping(__nextp, __va, __pa, __sz, __prot)
+ #define fixmap_pgd_next		fixmap_pte
+@@ -421,6 +468,12 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ 	BUG_ON((load_pa % map_size) != 0);
+ 	BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+ 
++	pt_ops.alloc_pte = alloc_pte_early;
++	pt_ops.get_pte_virt = get_pte_virt_early;
++#ifndef __PAGETABLE_PMD_FOLDED
++	pt_ops.alloc_pmd = alloc_pmd_early;
++	pt_ops.get_pmd_virt = get_pmd_virt_early;
++#endif
+ 	/* Setup early PGD for fixmap */
+ 	create_pgd_mapping(early_pg_dir, FIXADDR_START,
+ 			   (uintptr_t)fixmap_pgd_next, PGDIR_SIZE, PAGE_TABLE);
+@@ -497,9 +550,16 @@ static void __init setup_vm_final(void)
+ 	phys_addr_t pa, start, end;
+ 	struct memblock_region *reg;
+ 
+-	/* Set mmu_enabled flag */
+-	mmu_enabled = true;
+-
++	/**
++	 * MMU is enabled at this point. But page table setup is not complete yet.
++	 * fixmap page table alloc functions should be used at this point
++	 */
++	pt_ops.alloc_pte = alloc_pte_fixmap;
++	pt_ops.get_pte_virt = get_pte_virt_fixmap;
++#ifndef __PAGETABLE_PMD_FOLDED
++	pt_ops.alloc_pmd = alloc_pmd_fixmap;
++	pt_ops.get_pmd_virt = get_pmd_virt_fixmap;
++#endif
+ 	/* Setup swapper PGD for fixmap */
+ 	create_pgd_mapping(swapper_pg_dir, FIXADDR_START,
+ 			   __pa_symbol(fixmap_pgd_next),
+@@ -533,6 +593,14 @@ static void __init setup_vm_final(void)
+ 	/* Move to swapper page table */
+ 	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
+ 	local_flush_tlb_all();
++
++	/* generic page allocation functions must be used to setup page table */
++	pt_ops.alloc_pte = alloc_pte_late;
++	pt_ops.get_pte_virt = get_pte_virt_late;
++#ifndef __PAGETABLE_PMD_FOLDED
++	pt_ops.alloc_pmd = alloc_pmd_late;
++	pt_ops.get_pmd_virt = get_pmd_virt_late;
++#endif
+ }
+ #else
+ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
 -- 
 2.24.0
 
