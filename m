@@ -2,107 +2,122 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DA4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A494AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEAAF2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807792076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="ZNxDmnru"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="V4wg9ffy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgHSOZs (ORCPT
+        id S1728388AbgHSO0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:25:48 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:49484 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgHSOZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:25:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597847146; x=1629383146;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YymJ3dZVzHVrgFLhK05T17oVu6zGDEJc8AVV1WphDOI=;
-  b=ZNxDmnrukdDhezm7QxgtcjdoP/Qg9bW0JO/u3xXFHqEL6MaupcNfks3m
-   z1THOqEhZKM/SZ6V1Dy6VHrg2vvs9CVwJ5rnbZg0GPrxMkTDfQmh7q+H3
-   Z4jxBpQhxURIksGHV3y2C+qkMQsIQ+5smFvMw3kIZh3dFg9j7NGsrEfVr
-   l04ek+c4cx4Ybtc+f7XZEq/OkakrR0/4D2cVlZsR44GrvzfTjr2pSAdA/
-   n9uhKBKmzVq9cuUFyQOGSH2fqow/sYouCR33GUTIccVr3agNzvNK4HFSV
-   UHsi59dx1DXCmOgiKSLyXqzf4sIOzdMDv+0jSahfORSEVmfdPtB6+WOje
-   A==;
-IronPort-SDR: 5PZhNmYKfRS1iEeazk3AUKjiex7CCBzJyiV0oe9bAGIFuqLnuWxvzOP+yOxygw0LMhZigOUvVQ
- Oh1reciiML1xT1TScCcBSeclRPTNjstksGsl+TaIVoY/ATKey4/zPptkdOvg8NSe9HjE+Aplpq
- 1MT9V3sFQa6u1SNwc/G8gdgsx7/Qzw7/ajztXCosU35zxddFuAW/MmfTcXf6NY1TTIij3D0ApU
- GG6BpbvaK3nicyTS5nXQ5X+jOD3Lsz2K8yCeR7dm7AQ8AZWUn6LW097UuGtm1cDm93J6JoWuLM
- gYk=
-X-IronPort-AV: E=Sophos;i="5.76,331,1592863200"; 
-   d="scan'208";a="2645167"
-From:   Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Robin Gong <yibin.gong@nxp.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
-Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Index: AQHWcWQZKYOChL0mPkuCFeZyDJy6mKk3KiiAgABS1/CAB7DUgIAAV/7Q
-Date:   Wed, 19 Aug 2020 14:25:43 +0000
-Message-ID: <6b5799a567d14cfb9ce34d278a33017d@skidata.com>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
- <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
-In-Reply-To: <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
-Accept-Language: en-US, de-AT
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.111.252]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 10:26:34 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:46775 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726560AbgHSO0c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:26:32 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8P2qkdNUQuuXO8P2skhYkN; Wed, 19 Aug 2020 16:26:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597847190; bh=an3aoXCY68YNrYl4FDHok9+pDEZ07hbqUHPLmI5S0vk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=V4wg9ffyl/o9q1L5mENqFFbl8Om746bPg8zZg+Hhx3quf+IOpOAPnA6ebP4UvobaE
+         F1leL+ue06IJ2eRhBTXK0C+p1pvY7D/gWvHzmyxHduzgPTcPD7jaeZ4iOBtbsHnkut
+         pCuvSvKs5lkLxW0+fFQOnkbb31ERmk/KvWEkEpm2A/PweuorsJ2+zzPVRgusyGS6d9
+         373t+yutCMNoV0seFRbUJgnNKisLuzkYur5vtMVsK5SnWjX7rZ7GvR3mhp6g8fvpX2
+         UQlKMedfLSEkwO1q4BtmZF1u8UiQUx7HNIOYk2cU7alKiUIk3Ti9pkICdEAMIQL6Ur
+         yqCnn8DOt3Bbg==
+Subject: Re: [Linux-kernel-mentees] [PATCH] v4l2-tpg: Fix global-out-of-bounds
+ read in precalculate_color()
+To:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+References: <20200810050532.640075-1-yepeilin.cs@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <774bcf2d-c8eb-086a-3569-c7e530d8a63d@xs4all.nl>
+Date:   Wed, 19 Aug 2020 16:26:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200810050532.640075-1-yepeilin.cs@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLzFeNLHyasxr8oleW+BAR5uLvlXTgWwhA2CzkB9O/O8uyO62GobzotEAlxa27V4vG2py1+kQEjsTWoR5uT+gWH6JZJMW6axa26jZRgY6tE+10xrfCwC
+ YRyf6JVVsbfyt6MKNxFWEoQYjxaaEJf2MjWFJl/mTMAkICS3b/2zd4xbT3v2mipyXazJBfsFUYvTYj9YtMSxIpIbDMsf1GIJyQe4CvbO4vkt2JvvbmEMiLfg
+ hnJpE9t7Q2ZR0p8/zC/XMOpVekD04dAhyY8FjukO0MlWue5mLfa4QlViUHhQAu/iop8X9qZBvGyWkHbk3z57S4nM3h4xrHkl6c52YrI18gNZFlistti+lqDT
+ 9vIpa1tc6CPUbs7L3LjUJOixwK+iecS/zGh967dyiIQiD2ehewHgQ/Cd7agMVmefNTvnEMbyB4u2iHQzINbL+EvCR3kc5XwDfhm2dneybFVv/WdI6mMWFYm9
+ 3C76Q4n6AfmPdzTK6lHaF0MXGl+EduWZVTpxu5fiyZkpsWDlIzPbJTCoqVZYnJ9E0qEh+CzsR45jPEr/bdbH3MBJMTuRyj5yln0kzQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMYXJzLVBldGVyIENsYXVzZW4g
-PGxhcnNAbWV0YWZvby5kZT4NCj4gU2VudDogTWl0dHdvY2gsIDE5LiBBdWd1c3QgMjAyMCAxMzow
-OA0KPiBJIHRoaW5rIHRoaXMgbWlnaHQgYmUgYW4gc2RtYSBzcGVjaWZpYyBwcm9ibGVtIGFmdGVy
-IGFsbC4NCj4gZG1hZW5naW5lX3Rlcm1pbmF0ZV9hc3luYygpIHdpbGwgaXNzdWUgYSByZXF1ZXN0
-IHRvIHN0b3AgdGhlIERNQS4gQnV0IGl0DQo+IGlzIHN0aWxsIHNhZmUgdG8gaXNzdWUgdGhlIG5l
-eHQgdHJhbnNmZXIsIGV2ZW4gd2l0aG91dCBjYWxsaW5nDQo+IGRtYWVuZ2luZV9zeW5jaHJvbml6
-ZSgpLiBUaGUgRE1BIHNob3VsZCBzdGFydCB0aGUgbmV3IHRyYW5zZmVyIGF0IGl0cw0KPiBlYXJs
-aWVzdCBjb252ZW5pZW5jZSBpbiB0aGF0IGNhc2UuDQo+IA0KPiBkbWFlZ2luZV9zeW5jaHJvbml6
-ZSgpIGlzIHNvIHRoYXQgdGhlIGNvbnN1bWVyIGhhcyBhIGd1YXJhbnRlZSB0aGF0IHRoZQ0KPiBE
-TUEgaXMgZmluaXNoZWQgdXNpbmcgdGhlIHJlc291cmNlcyAoZS5nLiB0aGUgbWVtb3J5IGJ1ZmZl
-cnMpIGFzc29jaWF0ZWQNCj4gd2l0aCB0aGUgRE1BIHRyYW5zZmVyIHNvIGl0IGNhbiBzYWZlbHkg
-ZnJlZSB0aGVtLg0KDQpUaGFuayB5b3UgZm9yIHRoZSBjbGFyaWZpY2F0aW9ucyENCg0KPiBJIGRv
-bid0IGtub3cgaG93IGZlYXNpYmxlIHRoaXMgaXMgdG8gaW1wbGVtZW50IGluIHRoZSBTRE1BIGRt
-YWVuZ2luZQ0KPiBkcml2ZXIuIEJ1dCBJIHRoaW5rIHdoYXQgaXMgc2hvdWxkIGRvIGlzIHRvIGhh
-dmUgc29tZSBmbGFnIHRvIGluZGljYXRlDQo+IGlmIGEgdGVybWluYXRlIGlzIGluIHByb2dyZXNz
-LiBJZiBhIG5ldyB0cmFuc2ZlciBpcyBpc3N1ZWQgd2hpbGUNCj4gdGVybWluYXRlIGlzIGluIHBy
-b2dyZXNzIHRoZSB0cmFuc2ZlciBzaG91bGQgZ28gb24gYSBsaXN0LiBPbmNlDQo+IHRlcm1pbmF0
-ZSBmaW5pc2hlcyBpdCBzaG91bGQgY2hlY2sgdGhlIGxpc3QgYW5kIHN0YXJ0IHRoZSB0cmFuc2Zl
-ciBpZg0KPiB0aGVyZSBhcmUgYW55IG9uIHRoZSBsaXN0Lg0KDQpJTUhPIHRoYXQncyBuZWFybHkg
-d2hhdCBSb2JpbidzIHBhdGNoZXMgZG9lcywgc28gdGhpcyBzaG91bGQgYmUgc3VmZmljaWVudDoN
-ClB1dHRpbmcgdGhlIGRlc2NyaXB0b3JzIHRvIGZyZWUgaW4gYW4gZXh0cmEgdGVybWluYXRpb24g
-bGlzdCBhbmQgZW5zdXJpbmcNCnRoYXQgYSBuZXcgdHJhbnNmZXIgaXMgaGFuZGxlZCBhZnRlciB0
-aGUgbGFzdCB0ZXJtaW5hdGlvbiBpcyBkb25lLg0KDQoNCkBSb2JpbjoNCklzIGl0IHBvc3NpYmxl
-IHRvIHRhZyB0aGUgY29tbWl0cyBmb3IgdGhlIHN0YWJsZS10cmVlDQpDYzogc3RhYmxlQHZnZXIu
-a2VybmVsLm9yZz8NCg0KQmVzdCByZWdhcmRzIGFuZCB0aGFuayB5b3UgYWxsIQ0KQmVuamFtaW4N
-ClJpY2hhcmQNCg0K
+Hi Peilin,
+
+On 10/08/2020 07:05, Peilin Ye wrote:
+> precalculate_color() is reading out of `sin` since `tpg->hue` is not being
+> properly checked. Fix it. `cos` is safe, as long as `tpg->hue` is higher
+> than or equal to -192.
+
+Thank you for this patch, but there is something I don't understand, namely
+just *how* tpg->hue can be out-of-range.
+
+From what I can see vivid sets hue via tpg_s_hue() when the V4L2_CID_HUE control
+is set. But that control has a range of -128...128, so ctrl->val should always be in
+that range.
+
+I would really like to know 1) what the value of tpg->hue actually is when it goes
+out of range, and 2) who is changing it to that value. Can you do a bit more digging?
+
+That said, it makes sense that precalculate_color() avoids reading out-of-bounds.
+
+> 
+> Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
+> Reported-and-tested-by: syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?id=db50123c788e2cc5a9d90de569c398b66293ee48
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> ---
+>  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> index 50f1e0b28b25..52205fe096f7 100644
+> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> @@ -930,6 +930,9 @@ static void precalculate_color(struct tpg_data *tpg, int k)
+>  		/* Implement these operations */
+>  		int tmp_cb, tmp_cr;
+>  
+> +		if (tpg->hue < -128 || tpg->hue > 128)
+> +			return;
+
+Rather than returning here, I prefer to just clamp tpg->hue to the valid range.
+
+I'd be willing to merge a patch that clamps tpg->hue (it certainly doesn't hurt),
+but I also would like to understand how it can be out of range in the first place.
+I have the feeling that this is a symptom of another problem elsewhere.
+
+Regards,
+
+	Hans
+
+> +
+>  		/* First convert to YCbCr */
+>  
+>  		color_to_ycbcr(tpg, r, g, b, &y, &cb, &cr);
+> 
+
