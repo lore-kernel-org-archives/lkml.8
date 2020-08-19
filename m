@@ -2,106 +2,194 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCA022083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54702083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CuUdyapr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+ZY76s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgHSO4U (ORCPT
+        id S1728548AbgHSO5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:56:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:45416 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727827AbgHSO4K (ORCPT
+        Wed, 19 Aug 2020 10:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgHSO53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:56:10 -0400
-X-UUID: 9bbb8ce1d5a84066a4409b007606cfb1-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AoeUUvCjkrCNhYfqve8JEcUAO7P8LbXeCUbXyAWumY0=;
-        b=CuUdyaprq4NzPSfPJNniWUlBoger3pChNskh8ssVrfZkkrpRIie3itK8Yk71o2YN2bvd3Htc5bWN4pkwZzpnj/sMbfMKGkfI5rd1ivuaPFfKXem+oJnEacT4gBBt2rzkacpfKEk9MZx6pL+9dtwJE8vPx0yeCm9KU05fqTUkf5M=;
-X-UUID: 9bbb8ce1d5a84066a4409b007606cfb1-20200819
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 909703223; Wed, 19 Aug 2020 22:56:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 22:56:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 22:56:02 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
-        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 19 Aug 2020 22:55:26 +0800
-Message-ID: <20200819145525.26315-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
-References: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
+        Wed, 19 Aug 2020 10:57:29 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD58C061757;
+        Wed, 19 Aug 2020 07:57:28 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id u126so24896361iod.12;
+        Wed, 19 Aug 2020 07:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VDgt+NfpwH6U6r2hvHr0dBMMv6qNBbALooemz8NFh5U=;
+        b=f+ZY76s5TRKLUXDOUW1UKWMOshJmecMeQftVcBsCsWkWr4125JZu9WJtY2mpOhQoPG
+         qsJ/dGsIR4iuWMWEBeaCXI22z2X+muEGh5TnoFmIDerzN/VXAPAsbPN/7xR8Dk2eGWx4
+         w4VaCqCZAoGVIR1bl2Smo3+3TxHihbXBwp9Ciz1699llS6GM6yAvU/XbPjS9Q72K3Pge
+         qtxmOF26p1U8NUaDlBngBuqZz1LHwJQqQGV9gjb/PYz4tx7Z16p/BVOLCP4Bur07EFLS
+         R2gYxBW87NUAFuNuUQubaJdFH84qd2+y7N8LItneA+hKUh1pddYAeHTHUiPrPqKxB4ke
+         G4dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VDgt+NfpwH6U6r2hvHr0dBMMv6qNBbALooemz8NFh5U=;
+        b=s1HM1JTef5VBiZZw5DRtF5oI42gJnYDzy4p5bBrOo8gZnbGRJAd+ddEnuVqqUynxgq
+         9/7CyLrzjyONjYER+3aqDoiiyoLJVzDtNj3ruSF7/cVUA9xHvZHwN/HIGqQe4rOuAd5g
+         4MAjB9If+wizhRavZsb/Ga6HCMejevtATotLEERLsaboJRimQGsvrWc/D1uVm02Lo991
+         Rwrgrrw9UBrrfkwhtP+pA3/idpi+ErLOrdh0SAlBPZ0iBKSGqFRQXnXUqhocxXPgFvQN
+         Q0vNLtnVcM4t/5ULnhK/YtCOgqmtjPbI2kJaJFuEJB81SGteTk6WyZn4NrAVI+KyTeX4
+         4gWA==
+X-Gm-Message-State: AOAM5333xd6kOtPVhiPA3gJ7v415LXpyBfaRN3Xo/VSRIHGMitQX//z1
+        nemz9XHqISz/bk4a8jLptV4GDXmmdjnBJbRkDQs=
+X-Google-Smtp-Source: ABdhPJw82IIwMfZIA4+g7ITehMEWVBDEC30ayD+Zb/ABgCE0UZQZtipSr3pQzvMOJHMijecJLpYfli+FMxDUybauTq8=
+X-Received: by 2002:a05:6602:2e83:: with SMTP id m3mr21190548iow.38.1597849047807;
+ Wed, 19 Aug 2020 07:57:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200819041852.23414.95939.stgit@localhost.localdomain>
+ <20200819042730.23414.41309.stgit@localhost.localdomain> <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
+In-Reply-To: <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 19 Aug 2020 07:57:16 -0700
+Message-ID: <CAKgT0UepdfjXn=j8e4xEBFmsNJdzJyN57em8dscr-Er4OBZCOg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/5] mm: Split release_pages work into 3 passes
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kbuild test robot <lkp@intel.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPk9uIDIwMjAtMDgtMTkgMTQ6
-MzEsIE1hcmstUEsgVHNhaSB3cm90ZToNCj4+IEZyb206IE1hcmMgWnluZ2llciA8bWF6QGtlcm5l
-bC5vcmc+DQo+PiANCj4+PiA+ICsNCj4+PiA+ICtzdGF0aWMgaW50IG1zdF9pbnRjX2RvbWFpbl9h
-bGxvYyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCB1bnNpZ25lZA0KPj4+ID4gaW50IHZpcnEs
-DQo+Pj4gPiArCQkJCSB1bnNpZ25lZCBpbnQgbnJfaXJxcywgdm9pZCAqZGF0YSkNCj4+PiA+ICt7
-DQo+Pj4gPiArCWludCBpOw0KPj4+ID4gKwlpcnFfaHdfbnVtYmVyX3QgaHdpcnE7DQo+Pj4gPiAr
-CXN0cnVjdCBpcnFfZndzcGVjIHBhcmVudF9md3NwZWMsICpmd3NwZWMgPSBkYXRhOw0KPj4+ID4g
-KwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXN0X2ludGNfY2hpcF9k
-YXRhDQo+Pj4gPiAqKWRvbWFpbi0+aG9zdF9kYXRhOw0KPj4+IA0KPj4+IE5vIGNhc3QgbmVjZXNz
-YXJ5IGhlcmUuDQo+Pj4gDQo+Pj4gPiArDQo+Pj4gPiArCS8qIE5vdCBHSUMgY29tcGxpYW50ICov
-DQo+Pj4gPiArCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQo+Pj4gPiArCQlyZXR1cm4g
-LUVJTlZBTDsNCj4+PiA+ICsNCj4+PiA+ICsJLyogTm8gUFBJIHNob3VsZCBwb2ludCB0byB0aGlz
-IGRvbWFpbiAqLw0KPj4+ID4gKwlpZiAoZndzcGVjLT5wYXJhbVswXSkNCj4+PiA+ICsJCXJldHVy
-biAtRUlOVkFMOw0KPj4+ID4gKw0KPj4+ID4gKwlpZiAoZndzcGVjLT5wYXJhbVsxXSA+PSBjZC0+
-bnJfaXJxcykNCj4+PiANCj4+PiBUaGlzIGNvbmRpdGlvbiBpcyBib2d1cywgYXMgaXQgZG9lc24n
-dCB0YWtlIGludG8gYWNjb3VudCB0aGUgbnJfaXJxcw0KPj4+IHBhcmFtZXRlci4NCj4+PiANCj4+
-IA0KPj4gDQo+PiBUaGUgaHdpcnEgbnVtYmVyIG5lZWQgdG8gYmUgaW4gdGhlIGlycSBtYXAgcmFu
-Z2UuIChwcm9wZXJ0eToNCj4+IG1zdGFyLGlycXMtbWFwLXJhbmdlKQ0KPj4gSWYgaXQncyBub3Qs
-IGl0IG11c3QgYmUgaW5jb3JyZWN0IGNvbmZpZ3VyYXRpb24uDQo+DQo+SSBhZ3JlZS4gQW5kIHNp
-bmNlIHlvdSBhcmUgY2hlY2tpbmcgd2hldGhlciB0aGUgY29uZmlndXJhdGlvbiBpcyANCj5jb3Jy
-ZWN0LA0KPml0J2QgYmV0dGVyIGJlIGNvbXBsZXRlbHkgY29ycmVjdC4NCj4NCj4+IFNvIGhvdyBh
-Ym91dCB1c2UgdGhlIGNvbmRpdGlvbiBhcyBmb2xsb3dpbmc/DQo+PiANCj4+IGlmIChod2lycSA+
-PSBjZC0+bnJfaXJxcykNCj4+IAlyZXR1cm4gLUVJTlZBTDsNCj4NCj5BZ2FpbiwgdGhpcyBzYXlz
-IG5vdGhpbmcgb2YgdGhlIHZhbGlkaXR5IG9mIChod2lycSArIG5yX2lycXMgLSAxKS4uLg0KPg0K
-DQpIb3cgYWJvdXQgbW92ZSB0aGlzIHRvIG1zdF9pbnRjX2RvbWFpbl90cmFuc2xhdGU/IFRoZW4g
-YWxsIHRoZSBpcnFfZndzcGVjDQpwb2ludCB0byBkb21haW4gbXN0X2ludGMgc2hvdWxkIGJlIHZh
-bGlkLg0KDQpUaGUgbXN0X2ludGNfZG9tYWluX3RyYW5zbGF0ZSB3aWxsIGJlIGFzIGZvbGxvd2lu
-ZzoNCg0Kc3RhdGljIGludCBtc3RfaW50Y19kb21haW5fdHJhbnNsYXRlKHN0cnVjdCBpcnFfZG9t
-YWluICpkLA0KCQkJCSAgICAgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywNCgkJCQkgICAgIHVu
-c2lnbmVkIGxvbmcgKmh3aXJxLA0KCQkJCSAgICAgdW5zaWduZWQgaW50ICp0eXBlKQ0Kew0KCXN0
-cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNkID0gZC0+aG9zdF9kYXRhOw0KDQoJaWYgKGlzX29m
-X25vZGUoZndzcGVjLT5md25vZGUpKSB7DQoJCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMp
-DQoJCQlyZXR1cm4gLUVJTlZBTDsNCg0KCQkvKiBObyBQUEkgc2hvdWxkIHBvaW50IHRvIHRoaXMg
-ZG9tYWluICovDQoJCWlmIChmd3NwZWMtPnBhcmFtWzBdICE9IDApDQoJCQlyZXR1cm4gLUVJTlZB
-TDsNCg0KCQlpZiAoZndzcGVjLT5wYXJhbVsxXSA+PSBjZC0+bnJfaXJxcykNCgkJCXJldHVybiAt
-RUlOVkFMOw0KDQoJCSpod2lycSA9IGZ3c3BlYy0+cGFyYW1bMV07DQoJCSp0eXBlID0gZndzcGVj
-LT5wYXJhbVsyXSAmIElSUV9UWVBFX1NFTlNFX01BU0s7DQoJCXJldHVybiAwOw0KCX0NCg0KCXJl
-dHVybiAtRUlOVkFMOw0KfQ0KDQoNCj4+IA0KPj4+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+Pj4g
-PiArDQo+Pj4gPiArCWh3aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCj4+PiA+ICsJZm9yIChpID0g
-MDsgaSA8IG5yX2lycXM7IGkrKykNCj4+PiA+ICsJCWlycV9kb21haW5fc2V0X2h3aXJxX2FuZF9j
-aGlwKGRvbWFpbiwgdmlycSArIGksIGh3aXJxICsgaSwNCj4+PiA+ICsJCQkJCSAgICAgICZtc3Rf
-aW50Y19jaGlwLA0KPj4+ID4gKwkJCQkJICAgICAgZG9tYWluLT5ob3N0X2RhdGEpOw==
+On Wed, Aug 19, 2020 at 12:54 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
+e:
+>
+>
+>
+> =E5=9C=A8 2020/8/19 =E4=B8=8B=E5=8D=8812:27, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > The release_pages function has a number of paths that end up with the
+> > LRU lock having to be released and reacquired. Such an example would be=
+ the
+> > freeing of THP pages as it requires releasing the LRU lock so that it c=
+an
+> > be potentially reacquired by __put_compound_page.
+> >
+> > In order to avoid that we can split the work into 3 passes, the first
+> > without the LRU lock to go through and sort out those pages that are no=
+t in
+> > the LRU so they can be freed immediately from those that can't. The sec=
+ond
+> > pass will then go through removing those pages from the LRU in batches =
+as
+> > large as a pagevec can hold before freeing the LRU lock. Once the pages=
+ have
+> > been removed from the LRU we can then proceed to free the remaining pag=
+es
+> > without needing to worry about if they are in the LRU any further.
+> >
+> > The general idea is to avoid bouncing the LRU lock between pages and to
+> > hopefully aggregate the lock for up to the full page vector worth of pa=
+ges.
+> >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >  mm/swap.c |  109 +++++++++++++++++++++++++++++++++++++----------------=
+--------
+> >  1 file changed, 67 insertions(+), 42 deletions(-)
+> >
+> > diff --git a/mm/swap.c b/mm/swap.c
+> > index fe53449fa1b8..b405f81b2c60 100644
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -795,6 +795,54 @@ void lru_add_drain_all(void)
+> >  }
+> >  #endif
+> >
+> > +static void __release_page(struct page *page, struct list_head *pages_=
+to_free)
+> > +{
+> > +     if (PageCompound(page)) {
+> > +             __put_compound_page(page);
+> > +     } else {
+> > +             /* Clear Active bit in case of parallel mark_page_accesse=
+d */
+> > +             __ClearPageActive(page);
+> > +             __ClearPageWaiters(page);
+> > +
+> > +             list_add(&page->lru, pages_to_free);
+> > +     }
+> > +}
+> > +
+> > +static void __release_lru_pages(struct pagevec *pvec,
+> > +                             struct list_head *pages_to_free)
+> > +{
+> > +     struct lruvec *lruvec =3D NULL;
+> > +     unsigned long flags =3D 0;
+> > +     int i;
+> > +
+> > +     /*
+> > +      * The pagevec at this point should contain a set of pages with
+> > +      * their reference count at 0 and the LRU flag set. We will now
+> > +      * need to pull the pages from their LRU lists.
+> > +      *
+> > +      * We walk the list backwards here since that way we are starting=
+ at
+> > +      * the pages that should be warmest in the cache.
+> > +      */
+> > +     for (i =3D pagevec_count(pvec); i--;) {
+> > +             struct page *page =3D pvec->pages[i];
+> > +
+> > +             lruvec =3D relock_page_lruvec_irqsave(page, lruvec, &flag=
+s);
+>
+> the lock bounce is better with the patch, would you like to do further
+> like using add_lruvecs to reduce bounce more?
+>
+> Thanks
+> Alex
 
+I'm not sure how much doing something like that would add. In my case
+I had a very specific issue that this is addressing which is the fact
+that every compound page was taking the LRU lock and zone lock
+separately. With this patch that is reduced to one LRU lock per 15
+pages and then the zone lock per page. By adding or sorting pages by
+lruvec I am not sure there will be much benefit as I am not certain
+how often we will end up with pages being interleaved between multiple
+lruvecs. In addition as I am limiting the quantity to a pagevec which
+limits the pages to 15 I am not sure there will be much benefit to be
+seen for sorting the pages beforehand.
+
+Thanks.
+
+- Alex
