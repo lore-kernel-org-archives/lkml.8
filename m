@@ -2,116 +2,155 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A33C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07B9204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ul91qwYc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ml5poECX"
+	by mail.kernel.org (Postfix) with ESMTP id C7EBB2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHSOHA (ORCPT
+        id S1728509AbgHSOHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbgHSOCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:02:47 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C3CC061342;
-        Wed, 19 Aug 2020 07:02:46 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:02:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597845764;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RZxacZYGwzkSlpWVldrL7lrGnse2xeeVTqQPZXow7kQ=;
-        b=ul91qwYcdqt139yZBuGFRjyATEbRSa07bUzS//Zmyp7UHh1I9vLB3/1fBu7ic4EqX0InM3
-        O5vLBH19YtJsS5H43NVX+V2FtcBA+34sQicUjTnQp4VyPH/gODHbb1Dbfo+cHg7yc9jd1V
-        doci6TqrZjVp4XiaaLYDJNsPQnTNhG+SF5ZKWAzjpjweplmDTzpH/WbuSFCzLgL78X8ezy
-        FO10DMtf6zhEiDF0pGKUavSrQKZg+rHm7V3aql9jdU/CWQOZ03BY757VO9Ayux8zIO9AmS
-        L29g5ZcuAF3dqgwT5izTNQNNMQ6ZmqgfA9kGOxNlgNc7QuW2D7eS8SMKqAEbVw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597845764;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RZxacZYGwzkSlpWVldrL7lrGnse2xeeVTqQPZXow7kQ=;
-        b=ml5poECXhNaofqWnWZwY/R8TKE5nSmWcR6hdqd5THWCoHjYC/q5xxleAP5MQ6uVucZQ5gJ
-        +p41OuIuQlyVcjCA==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Mark SD_SERIALIZE as SDF_NEEDS_GROUPS
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200817113003.20802-14-valentin.schneider@arm.com>
-References: <20200817113003.20802-14-valentin.schneider@arm.com>
+        Wed, 19 Aug 2020 10:07:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:38040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728415AbgHSOHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:07:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 671BB1045;
+        Wed, 19 Aug 2020 07:07:14 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9DCD3F71F;
+        Wed, 19 Aug 2020 07:07:07 -0700 (PDT)
+Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
+        linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org, Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        linux-mips@vger.kernel.org
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-6-hch@lst.de>
+ <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
+ <62e4f4fc-c8a5-3ee8-c576-fe7178cb4356@arm.com>
+ <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
+Date:   Wed, 19 Aug 2020 15:07:04 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159784576368.3192.17375211211805639534.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On 2020-08-19 13:49, Tomasz Figa wrote:
+> On Wed, Aug 19, 2020 at 1:51 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> Hi Tomasz,
+>>
+>> On 2020-08-19 12:16, Tomasz Figa wrote:
+>>> Hi Christoph,
+>>>
+>>> On Wed, Aug 19, 2020 at 8:56 AM Christoph Hellwig <hch@lst.de> wrote:
+>>>>
+>>>> The V4L2-FLAG-MEMORY-NON-CONSISTENT flag is entirely unused,
+>>>
+>>> Could you explain what makes you think it's unused? It's a feature of
+>>> the UAPI generally supported by the videobuf2 framework and relied on
+>>> by Chromium OS to get any kind of reasonable performance when
+>>> accessing V4L2 buffers in the userspace.
+>>>
+>>>> and causes
+>>>> weird gymanstics with the DMA_ATTR_NON_CONSISTENT flag, which is
+>>>> unimplemented except on PARISC and some MIPS configs, and about to be
+>>>> removed.
+>>>
+>>> It is implemented by the generic DMA mapping layer [1], which is used
+>>> by a number of architectures including ARM64 and supposed to be used
+>>> by new architectures going forward.
+>>
+>> AFAICS all that V4L2_FLAG_MEMORY_NON_CONSISTENT does is end up
+>> controling whether DMA_ATTR_NON_CONSISTENT is added to vb2_queue::dma_attrs.
+>>
+>> Please can you point to where DMA_ATTR_NON_CONSISTENT does anything at
+>> all on arm64?
+>>
+> 
+> With the default config it doesn't, but with
+> CONFIG_DMA_NONCOHERENT_CACHE_SYNC enabled it makes dma_pgprot() keep
+> the pgprot value as is, without enforcing coherence attributes.
 
-Commit-ID:     bdb7c802cc0a7e21f5223dc3ce41b7ac220c576e
-Gitweb:        https://git.kernel.org/tip/bdb7c802cc0a7e21f5223dc3ce41b7ac220c576e
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Mon, 17 Aug 2020 12:29:59 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Aug 2020 10:49:49 +02:00
+How active are the PA-RISC and MIPS ports of Chromium OS?
 
-sched/topology: Mark SD_SERIALIZE as SDF_NEEDS_GROUPS
+Hacking CONFIG_DMA_NONCOHERENT_CACHE_SYNC into an architecture that 
+doesn't provide dma_cache_sync() is wrong, since at worst it may break 
+other drivers. If downstream is wildly misusing an API then so be it, 
+but it's hardly a strong basis for an upstream argument.
 
-There would be no point in preserving a sched_domain with a single group
-just because it has this flag set. Add it to SD_DEGENERATE_GROUPS_MASK.
+>> Also, I posit that videobuf2 is not actually relying on
+>> DMA_ATTR_NON_CONSISTENT anyway, since it's clearly not using it properly:
+>>
+>> "By using this API, you are guaranteeing to the platform
+>> that you have all the correct and necessary sync points for this memory
+>> in the driver should it choose to return non-consistent memory."
+>>
+>> $ git grep dma_cache_sync drivers/media
+>> $
+> 
+> AFAIK dma_cache_sync() isn't the only way to perform the cache
+> synchronization. The earlier patch series that I reviewed relied on
+> dma_get_sgtable() and then dma_sync_sg_*() (which existed in the
+> vb2-dc since forever [1]). However, it looks like with the final code
+> the sgtable isn't acquired and the synchronization isn't happening, so
+> you have a point.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: https://lore.kernel.org/r/20200817113003.20802-14-valentin.schneider@arm.com
----
- include/linux/sched/sd_flags.h |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Using the streaming sync calls on coherent allocations has also always 
+been wrong per the API, regardless of the bodies of code that have 
+happened to get away with it for so long.
 
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index 729510a..b7f4d80 100644
---- a/include/linux/sched/sd_flags.h
-+++ b/include/linux/sched/sd_flags.h
-@@ -112,11 +112,12 @@ SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
-  * Only a single load balancing instance
-  *
-  * SHARED_PARENT: Set for all NUMA levels above NODE. Could be set from a
-- * different level upwards, but it doesn't change that if a domain has this flag
-- * set, then all of its parents need to have it too (otherwise the serialization
-- * doesn't make sense).
-+ *                different level upwards, but it doesn't change that if a
-+ *                domain has this flag set, then all of its parents need to have
-+ *                it too (otherwise the serialization doesn't make sense).
-+ * NEEDS_GROUPS: No point in preserving domain if it has a single group.
-  */
--SD_FLAG(SD_SERIALIZE, SDF_SHARED_PARENT)
-+SD_FLAG(SD_SERIALIZE, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
- 
- /*
-  * Place busy tasks earlier in the domain
+> FWIW, I asked back in time what the plan is for non-coherent
+> allocations and it seemed like DMA_ATTR_NON_CONSISTENT and
+> dma_sync_*() was supposed to be the right thing to go with. [2] The
+> same thread also explains why dma_alloc_pages() isn't suitable for the
+> users of dma_alloc_attrs() and DMA_ATTR_NON_CONSISTENT.
+
+AFAICS even back then Christoph was implying getting rid of 
+NON_CONSISTENT and *replacing* it with something streaming-API-based - 
+i.e. this series - not encouraging mixing the existing APIs. It doesn't 
+seem impossible to implement a remapping version of this new 
+dma_alloc_pages() for IOMMU-backed ops if it's really warranted 
+(although at that point it seems like "non-coherent" vb2-dc starts to 
+have significant conceptual overlap with vb2-sg).
+
+Robin.
