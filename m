@@ -2,134 +2,152 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B25BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8E2204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597844575;
-	bh=nRHlZ1MnhuRCWEVlVgqtKUWgqsrlzs+w4Nj+dZAbawc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pFGta+4opxGkCrqA1imetzUcadUtYoH1OhEirSC/+npYlJpzYbfo4X65momUFehsS
-	 SFIfC0raBmUaYnGTTSCNK7Jx2AyvlmW2qmB5C/jwzZAJLh1YEZ65ewV7nr5rWbdNEg
-	 pUYMRlaQRkI96IqxOdk9gNwdgud8YVjmJR/j4lkk=
+	by mail.kernel.org (Postfix) with ESMTP id 18D7B204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHSNmy (ORCPT
+        id S1728578AbgHSNop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgHSNmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:42:50 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3F5E204FD;
-        Wed, 19 Aug 2020 13:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597844569;
-        bh=nRHlZ1MnhuRCWEVlVgqtKUWgqsrlzs+w4Nj+dZAbawc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X2p4tG/lI4UDoGQ0sW7iBjo5mfR7OsNSzk2uNq3Xhim97qLQo2BUAax5CH6LxWxQ3
-         SyLd/JY3Anlf1Vkm7UkfpDCr9hyV2G5dviys/6P/0z35NeRRb/G3vtxR+wiuYLfK9Q
-         CM9M4FOLugd4F74QfZ7XQFOx/6L3XtyEgHhh141s=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8OMa-004DzN-87; Wed, 19 Aug 2020 14:42:48 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Aug 2020 14:42:48 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org,
-        jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de,
-        yj.chiang@mediatek.com
-Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller
- support
-In-Reply-To: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
-References: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
- <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mark-pk.tsai@mediatek.com, alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, yj.chiang@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wed, 19 Aug 2020 09:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728350AbgHSNn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:43:59 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8CFC061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:43:56 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by baptiste.telenet-ops.be with bizsmtp
+        id HRjl2300V4C55Sk01RjlZk; Wed, 19 Aug 2020 15:43:54 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8ONV-0003E0-Gz; Wed, 19 Aug 2020 15:43:45 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8ONV-0007Fc-FB; Wed, 19 Aug 2020 15:43:45 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 4/7] ravb: Split delay handling in parsing and applying
+Date:   Wed, 19 Aug 2020 15:43:41 +0200
+Message-Id: <20200819134344.27813-5-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819134344.27813-1-geert+renesas@glider.be>
+References: <20200819134344.27813-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-19 14:31, Mark-PK Tsai wrote:
-> From: Marc Zyngier <maz@kernel.org>
-> 
->> > +
->> > +static int mst_intc_domain_alloc(struct irq_domain *domain, unsigned
->> > int virq,
->> > +				 unsigned int nr_irqs, void *data)
->> > +{
->> > +	int i;
->> > +	irq_hw_number_t hwirq;
->> > +	struct irq_fwspec parent_fwspec, *fwspec = data;
->> > +	struct mst_intc_chip_data *cd = (struct mst_intc_chip_data
->> > *)domain->host_data;
->> 
->> No cast necessary here.
->> 
->> > +
->> > +	/* Not GIC compliant */
->> > +	if (fwspec->param_count != 3)
->> > +		return -EINVAL;
->> > +
->> > +	/* No PPI should point to this domain */
->> > +	if (fwspec->param[0])
->> > +		return -EINVAL;
->> > +
->> > +	if (fwspec->param[1] >= cd->nr_irqs)
->> 
->> This condition is bogus, as it doesn't take into account the nr_irqs
->> parameter.
->> 
-> 
-> 
-> The hwirq number need to be in the irq map range. (property:
-> mstar,irqs-map-range)
-> If it's not, it must be incorrect configuration.
+Currently, full delay handling is done in both the probe and resume
+paths.  Split it in two parts, so the resume path doesn't have to redo
+the parsing part over and over again.
 
-I agree. And since you are checking whether the configuration is 
-correct,
-it'd better be completely correct.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+---
+v3:
+  - No changes,
 
-> So how about use the condition as following?
-> 
-> if (hwirq >= cd->nr_irqs)
-> 	return -EINVAL;
+v2:
+  - Add Reviewed-by,
+  - Use 1 instead of true when assigning to a single-bit bitfield.
+---
+ drivers/net/ethernet/renesas/ravb.h      |  4 +++-
+ drivers/net/ethernet/renesas/ravb_main.c | 21 ++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-Again, this says nothing of the validity of (hwirq + nr_irqs - 1)...
-
-> 
->> > +		return -EINVAL;
->> > +
->> > +	hwirq = fwspec->param[1];
->> > +	for (i = 0; i < nr_irqs; i++)
->> > +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
->> > +					      &mst_intc_chip,
->> > +					      domain->host_data);
-
-... which you are using here.
-
-         M.
+diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+index 9f88b5db4f89843a..e5ca12ce93c730a9 100644
+--- a/drivers/net/ethernet/renesas/ravb.h
++++ b/drivers/net/ethernet/renesas/ravb.h
+@@ -1036,7 +1036,9 @@ struct ravb_private {
+ 	unsigned no_avb_link:1;
+ 	unsigned avb_link_active_low:1;
+ 	unsigned wol_enabled:1;
+-	int num_tx_desc;	/* TX descriptors per packet */
++	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
++	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
++	int num_tx_desc;		/* TX descriptors per packet */
+ };
+ 
+ static inline u32 ravb_read(struct net_device *ndev, enum ravb_reg reg)
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 99f7aae102ce12a1..59dadd971345e0d1 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1989,23 +1989,32 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
+ };
+ 
+ /* Set tx and rx clock internal delay modes */
+-static void ravb_set_delay_mode(struct net_device *ndev)
++static void ravb_parse_delay_mode(struct net_device *ndev)
+ {
+ 	struct ravb_private *priv = netdev_priv(ndev);
+-	int set = 0;
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
+-		set |= APSR_DM_RDM;
++		priv->rxcidm = 1;
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
+ 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
+ 			  phy_modes(priv->phy_interface)))
+-			set |= APSR_DM_TDM;
++			priv->txcidm = 1;
+ 	}
++}
+ 
++static void ravb_set_delay_mode(struct net_device *ndev)
++{
++	struct ravb_private *priv = netdev_priv(ndev);
++	u32 set = 0;
++
++	if (priv->rxcidm)
++		set |= APSR_DM_RDM;
++	if (priv->txcidm)
++		set |= APSR_DM_TDM;
+ 	ravb_modify(ndev, APSR, APSR_DM, set);
+ }
+ 
+@@ -2138,8 +2147,10 @@ static int ravb_probe(struct platform_device *pdev)
+ 	/* Request GTI loading */
+ 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
+ 
+-	if (priv->chip_id != RCAR_GEN2)
++	if (priv->chip_id != RCAR_GEN2) {
++		ravb_parse_delay_mode(ndev);
+ 		ravb_set_delay_mode(ndev);
++	}
+ 
+ 	/* Allocate descriptor base address table */
+ 	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
