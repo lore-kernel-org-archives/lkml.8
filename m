@@ -2,63 +2,86 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6A3C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B635C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3462078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Nz4x6SLP"
+	by mail.kernel.org (Postfix) with ESMTP id 288702083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597865050;
+	bh=6hhM8PiKqrI8OznN19QgLRQ0zl2av/Rwj0VbHVeg6TI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SvXWB1cm+3Xz0h4QDl/vopDn0TzrTQZHUN5L4Cwa9P9vg9/uGLxid67ZcvNwJ8s4s
+	 j+OGbvKCAaPPHIJ0l+ylhQ5QQt2RqJNZzvMFqbtLu3kGT8DnjCt7gWb0pVdd6b6RTV
+	 OSVorpd02HBpJUMcKKFVlmqX9W8/1tH1G+oiSwhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHSTXd (ORCPT
+        id S1726962AbgHSTYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSTX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:23:29 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DD6C061757;
-        Wed, 19 Aug 2020 12:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bGT9fwoymd6Ic9AGH3RntlECSDyDiGNWp2hinEX/z1I=; b=Nz4x6SLPB9YvHOHs9R+RjbXmsw
-        jiuyRjtli+sw8kM98fLFS5EIeX+rBOTraKKByIt9LXeg9v/m0CkpMXl8fxql5/7dGIU5s6CaDDlen
-        5ZDNxwMqLhM14odRkryCHduXiSpRZg47ztbMSWOLM8kuN1nard283L3+x0rwBxkmcUag=;
-Received: from p200300ccff0e87001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:8700:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k8Tfv-0007qx-2w; Wed, 19 Aug 2020 21:23:07 +0200
-Date:   Wed, 19 Aug 2020 21:23:05 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-pm@vger.kernel.org, aford@beaconembedded.com,
-        hns@goldelico.com, kernel test robot <lkp@intel.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Wed, 19 Aug 2020 15:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726646AbgHSTYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 15:24:08 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9402E2078D;
+        Wed, 19 Aug 2020 19:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597865047;
+        bh=6hhM8PiKqrI8OznN19QgLRQ0zl2av/Rwj0VbHVeg6TI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GeI8lPtKHV2olB+n1d/AHlFuCQdtbzjHW+ZeY/rUdgLakHkOt9wUYAnS0FY5DAaBS
+         I2RN/QPVX1NYA77mL4Gju2LBembz/syr0lV3QTr54MfcpA1iUpBgt41tqO0dgw0etA
+         mFQuuqulIWY5wbe9fNPxiTsAazhpzTtzhltFAhpw=
+Date:   Wed, 19 Aug 2020 12:24:05 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>, Daniel Axtens <dja@axtens.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] thermal: ti-soc-thermal: Enable addition power
- management
-Message-ID: <20200819212305.6caa4b7d@aktux>
-In-Reply-To: <20200819125925.2119434-1-aford173@gmail.com>
-References: <20200819125925.2119434-1-aford173@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH v3 09/17] memblock: make memblock_debug and related
+ functionality private
+Message-Id: <20200819122405.88e9719e86ac7c3c44b4db32@linux-foundation.org>
+In-Reply-To: <20200818151634.14343-10-rppt@kernel.org>
+References: <20200818151634.14343-1-rppt@kernel.org>
+        <20200818151634.14343-10-rppt@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,181 +89,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 07:59:23 -0500
-Adam Ford <aford173@gmail.com> wrote:
+On Tue, 18 Aug 2020 18:16:26 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 
-> The bandgap sensor can be idled when the processor is too, but it
-> isn't currently being done, so the power consumption of OMAP3
-> boards can elevated if the bangap sensor is enabled.
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> This patch attempts to use some additional power management
-> to idle the clock to the bandgap when not needed.
+> The only user of memblock_dbg() outside memblock was s390 setup code and it
+> is converted to use pr_debug() instead.
+> This allows to stop exposing memblock_debug and memblock_dbg() to the rest
+> of the kernel.
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> ---
-> V2: Fix issue where variable stating the suspend mode isn't being
->     properly set and cleared.
-> 
-I get
-root@(none):/# cat /sys/class/thermal/thermal_zone0/type 
-cpu_thermal
-root@(none):/# cat /sys/class/thermal/thermal_zone0/temp 
-50000
-root@(none):/# cat /sys/class/thermal/thermal_zone1/     
-available_policies  mode                subsystem/
-integral_cutoff     offset              sustainable_power
-k_d                 passive             temp
-k_i                 policy              type
-k_po                power/              uevent
-k_pu                slope               
-root@(none):/# cat /sys/class/thermal/thermal_zone1/type 
-bq27000-battery
-root@(none):/# cat /sys/kernel/debug/pm_debug/count 
-usbhost_pwrdm (ON),OFF:3459,RET:635,INA:0,ON:4095,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-sgx_pwrdm (OFF),OFF:1,RET:0,INA:1,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-core_pwrdm (ON),OFF:86,RET:7,INA:0,ON:94,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0,RET-MEMBANK2-OFF:0
-per_pwrdm (ON),OFF:1518,RET:64,INA:0,ON:1583,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-dss_pwrdm (ON),OFF:3459,RET:635,INA:0,ON:4095,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-cam_pwrdm (OFF),OFF:1,RET:1,INA:0,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-neon_pwrdm (ON),OFF:2845,RET:1131,INA:119,ON:4096,RET-LOGIC-OFF:0
-mpu_pwrdm (ON),OFF:2845,RET:1130,INA:119,ON:4095,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0
-iva2_pwrdm (OFF),OFF:1,RET:1,INA:0,ON:2,RET-LOGIC-OFF:0,RET-MEMBANK1-OFF:0,RET-MEMBANK2-OFF:0,RET-MEMBANK3-OFF:0,RET-MEMBANK4-OFF:0
-usbhost_clkdm->usbhost_pwrdm (1)
-sgx_clkdm->sgx_pwrdm (0)
-per_clkdm->per_pwrdm (13)
-cam_clkdm->cam_pwrdm (0)
-dss_clkdm->dss_pwrdm (1)
-d2d_clkdm->core_pwrdm (0)
-iva2_clkdm->iva2_pwrdm (0)
-mpu_clkdm->mpu_pwrdm (0)
-core_l4_clkdm->core_pwrdm (20)
-core_l3_clkdm->core_pwrdm (1)
-neon_clkdm->neon_pwrdm (0)
-root@(none):/# 
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -137,7 +137,10 @@ struct memblock_type physmem = {
+>  	     i < memblock_type->cnt;					\
+>  	     i++, rgn = &memblock_type->regions[i])
+>  
+> -int memblock_debug __initdata_memblock;
+> +#define memblock_dbg(fmt, ...) \
+> +	if (memblock_debug) printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+> +
 
-So things still turn off.
+checkpatch doesn't like this much.
 
-Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04
+ERROR: Macros starting with if should be enclosed by a do - while loop to avoid possible if/else logic defects
+#101: FILE: mm/memblock.c:140:
++#define memblock_dbg(fmt, ...) \
++	if (memblock_debug) printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
 
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> index ab19ceff6e2a..9404631bea4d 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> @@ -25,10 +25,18 @@
->  #include <linux/of_platform.h>
->  #include <linux/of_irq.h>
->  #include <linux/io.h>
-> +#include <linux/cpu_pm.h>
-> +#include <linux/device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pm.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  
->  #include "ti-bandgap.h"
->  
->  static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
-> +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-> +				  unsigned long cmd, void *v);
->  
->  /***   Helper functions to access registers and their bitfields   ***/
->  
-> @@ -1008,6 +1016,9 @@ int ti_bandgap_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
-> +	cpu_pm_register_notifier(&bgp->nb);
-> +
->  	return 0;
->  
->  remove_last_cooling:
-> @@ -1041,7 +1052,9 @@ int ti_bandgap_remove(struct platform_device *pdev)
->  	struct ti_bandgap *bgp = platform_get_drvdata(pdev);
->  	int i;
->  
-> -	/* First thing is to remove sensor interfaces */
-> +	cpu_pm_unregister_notifier(&bgp->nb);
-> +
-> +	/* Remove sensor interfaces */
->  	for (i = 0; i < bgp->conf->sensor_count; i++) {
->  		if (bgp->conf->sensors[i].unregister_cooling)
->  			bgp->conf->sensors[i].unregister_cooling(bgp, i);
-> @@ -1150,9 +1163,43 @@ static int ti_bandgap_suspend(struct device *dev)
->  	if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
->  		clk_disable_unprepare(bgp->fclock);
->  
-> +	bgp->is_suspended = true;
-> +
->  	return err;
->  }
->  
-> +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-> +				  unsigned long cmd, void *v)
-> +{
-> +	struct ti_bandgap *bgp;
-> +
-> +	bgp = container_of(nb, struct ti_bandgap, nb);
-> +
-> +	spin_lock(&bgp->lock);
-> +	switch (cmd) {
-> +	case CPU_CLUSTER_PM_ENTER:
-> +		if (bgp->is_suspended)
-> +			break;
-> +		ti_bandgap_save_ctxt(bgp);
-> +		ti_bandgap_power(bgp, false);
-> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> +			clk_disable(bgp->fclock);
-> +		break;
-> +	case CPU_CLUSTER_PM_ENTER_FAILED:
-> +	case CPU_CLUSTER_PM_EXIT:
-> +		if (bgp->is_suspended)
-> +			break;
-> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> +			clk_enable(bgp->fclock);
-> +		ti_bandgap_power(bgp, true);
-> +		ti_bandgap_restore_ctxt(bgp);
-> +		break;
-> +	}
-> +	spin_unlock(&bgp->lock);
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
->  static int ti_bandgap_resume(struct device *dev)
->  {
->  	struct ti_bandgap *bgp = dev_get_drvdata(dev);
-> @@ -1161,6 +1208,7 @@ static int ti_bandgap_resume(struct device *dev)
->  		clk_prepare_enable(bgp->fclock);
->  
->  	ti_bandgap_power(bgp, true);
-> +	bgp->is_suspended = false;
->  
->  	return ti_bandgap_restore_ctxt(bgp);
->  }
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> index fce4657e9486..ed0ea4b17b25 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> @@ -12,6 +12,10 @@
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
->  #include <linux/err.h>
-> +#include <linux/cpu_pm.h>
-> +#include <linux/device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pm.h>
->  
->  struct gpio_desc;
->  
-> @@ -203,6 +207,8 @@ struct ti_bandgap {
->  	int				irq;
->  	struct gpio_desc		*tshut_gpiod;
->  	u32				clk_rate;
-> +	struct notifier_block		nb;
-> +	unsigned int is_suspended:1;
->  };
->  
->  /**
+WARNING: Prefer [subsystem eg: netdev]_info([subsystem]dev, ... then dev_info(dev, ... then pr_info(...  to printk(KERN_INFO ...
+#102: FILE: mm/memblock.c:141:
++	if (memblock_debug) printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+
+ERROR: trailing statements should be on next line
+#102: FILE: mm/memblock.c:141:
++	if (memblock_debug) printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+
+
+The first one is significant:
+
+	if (foo)
+		memblock_dbg(...);
+	else
+		save_the_world();
+
+could end up inadvertently destroying the planet.
+
+This?
+
+--- a/mm/memblock.c~memblock-make-memblock_debug-and-related-functionality-private-fix
++++ a/mm/memblock.c
+@@ -137,8 +137,11 @@ struct memblock_type physmem = {
+ 	     i < memblock_type->cnt;					\
+ 	     i++, rgn = &memblock_type->regions[i])
+ 
+-#define memblock_dbg(fmt, ...) \
+-	if (memblock_debug) printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
++#define memblock_dbg(fmt, ...)						\
++	do {								\
++		if (memblock_debug)					\
++			pr_info(fmt, ##__VA_ARGS__);			\
++	} while (0)
+ 
+ static int memblock_debug __initdata_memblock;
+ static bool system_has_some_mirror __initdata_memblock = false;
+_
 
