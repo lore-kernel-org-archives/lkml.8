@@ -2,177 +2,167 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559AF2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0792B208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZDJ0ZjKL";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iCCbBwu7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cf6w4ypy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgHSRCu (ORCPT
+        id S1726835AbgHSRDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:02:50 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37204 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbgHSRCp (ORCPT
+        Wed, 19 Aug 2020 13:03:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgHSRDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:02:45 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JGxhRT014140;
-        Wed, 19 Aug 2020 10:02:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=facebook;
- bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
- b=ZDJ0ZjKL74Iy+uQLPRC0iv16AjfqVSa4zvy3V1UJ2SM/DqINQXI0RpAuYTKEJdTPrRE2
- o4NfCnv9XKcC7G0PxVkJ4GA04pLFXINAP/A1CCn+L70IZBNuOFpbesQZQ+7s54h+eYPl
- T8UK79wttqUzVhWpr/53uwITAkXHYH7SsSA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3304p81reh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 19 Aug 2020 10:02:22 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 19 Aug 2020 10:02:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D3OyvA2OgyAUvbo4os7uBU1fY/0UKyg/t1/22xWK66IlSJhsJpq4Ix4R98yohSoKAdaPz+ri86LvFJtKKF60Hjaa/vjDLW9l3XA5LN8MdXVE1CijqBMjxwjdK0TVZ/euThhsD0UH1eJJ3ffLAToILJHkA8WTnK3OdSboQvyfIB1GojRHW6mbag+1+IfirNudPjukr9q5kMPUnYoM1TmfF+kD3UhtTgRVGv8qa7Qc7HaHO3bCtBeBQDMpM7L5oNDYRiWIwIWT2scNe/3mlQPzkk4lI2ia7w1VhmNngTK8lgu84XHaGDKQoKtJc8pIQieuVxTpKlTyYK5zWIsMgFmu8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
- b=mtoBA5h/eksNSKE+UlOUm6LkacuWTwCfQHSiHcQ3VT8bTjPXXSGHlnf/UEy8LMkpBd5xrWMtmhK2jN9QNmdOzx6vvqtLbcbqlt7yJyCT3G01GHikkxk+veritB7Y7Dkq1xByDnqQJWt3cVX8YoDy4ChQYuy/Z0dssM1vmy1Fs4bx81Bx+hCp1WpHDqVD4sj/1F96bzthV0TNqPDF66OX2Y7ab+dDBtgaGpK/T7NSkuaO8yAgv7nbu72DYltnvYpeWqX+8/JNvC9h4PipgS60VLoCm4oWy53AGwiCnFu0omR0VuDqPlAFwMP1hrgcLSr8STe7PB6ceM4pA+TmDsrpjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
- b=iCCbBwu7q1fwb8yMChQsNNcqlidUidW34Go2/c67gevB14p+uyXtiUN+2bVvaEubXCutmhE9gCTasSDN94IMJUTJomXRGE91kjm3FaXtk6CXUsxHF3BZaNxOSmOnzQQmdjDmm5re4K7im4ME25lNYb/EUDj+X4iREyT6UlvpC9E=
-Authentication-Results: vivo.com; dkim=none (message not signed)
- header.d=none;vivo.com; dmarc=none action=none header.from=fb.com;
-Received: from BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32)
- by BYAPR15MB3191.namprd15.prod.outlook.com (2603:10b6:a03:107::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 19 Aug
- 2020 17:02:19 +0000
-Received: from BY5PR15MB3571.namprd15.prod.outlook.com
- ([fe80::d489:8f7f:614e:1b99]) by BY5PR15MB3571.namprd15.prod.outlook.com
- ([fe80::d489:8f7f:614e:1b99%7]) with mapi id 15.20.3283.018; Wed, 19 Aug 2020
- 17:02:19 +0000
-Date:   Wed, 19 Aug 2020 10:02:13 -0700
-From:   Martin KaFai Lau <kafai@fb.com>
-To:     =?utf-8?B?5rGf56a5?= <jyu.jiang@vivo.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        zhanglin <zhang.lin16@zte.com.cn>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ignatov <rdna@fb.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <opensource.kernel@vivo.com>
-Subject: Re: [PATCH] bpf: Add bpf_skb_get_sock_comm() helper
-Message-ID: <20200819170213.ji7a4bwpeiei24i6@kafai-mbp.dhcp.thefacebook.com>
-References: <20200810175529.qdsbziyoo6myw2dr@kafai-mbp.dhcp.thefacebook.com>
- <AFoAPQBqDUaFCjrcrhfZkKrn.3.1597817456174.Hmail.jyu.jiang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AFoAPQBqDUaFCjrcrhfZkKrn.3.1597817456174.Hmail.jyu.jiang@vivo.com>
-X-ClientProxiedBy: BY5PR20CA0002.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::15) To BY5PR15MB3571.namprd15.prod.outlook.com
- (2603:10b6:a03:1f6::32)
+        Wed, 19 Aug 2020 13:03:13 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F05C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:03:13 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so18314004qtg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
+        b=Cf6w4ypyePA72N9OwZ/X/gIqgQ3/Z2O3rsVEAnbMsPXxSteDXfBbrAJ2YKaLKzi+2G
+         eJlNvZyKM6mcCsbB8rTNwjE0zNlCUOU27vLJyO1vH/Kf6P5hVdc0XLNeLzE0ilaNzTIL
+         c/q/2eCUoXXxQCiuP4bqs7wWJmNaxuO94MGUY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
+        b=DeUJWFyBCBnLOG6kqqAbHNiOUpKKP6wzzAsf8ps2XG/4eBOyOLzTVMKBU3SRhxhGVk
+         0AK/T4RFUgCtisDeWJ1DyB9LScWDbYx6Aoy3+oJnyq3bvhm6tGDqEgBeWOoxc5nepD8M
+         gXffdCOViDUzd2MAO1Xpydr47NFbLZ1rsiNVokUoz59+oOwHQmcoUb5XLmy1UOcAr1dZ
+         Ec+0hJ2zNF9NloOs5SEY9eRZCruH08/AdQ0/iVFMVIXEanzQb85/mFY9SaxqafxZGLRk
+         lScj3WJw1IaP0cfjq/cSmumxuGLDasx2buIkxammqbsb3hd1W5PffMasA3UqayVGkvUC
+         r3Tw==
+X-Gm-Message-State: AOAM530zMBUi2osP72yO4dnAHZ+1JoN/cReyVULyuUc217nZwTzcB6ml
+        315Prk4fKyw+mmF6MOlJkz2g+2TKkeT/MA==
+X-Google-Smtp-Source: ABdhPJy4uqFrlp9JscWi0V5Z8TjsGzwyx/NT/ji6LdQToECbBmsHAUCw0a7qS6c6YGT3X7JKDSNLmg==
+X-Received: by 2002:aed:3461:: with SMTP id w88mr23201340qtd.180.1597856592326;
+        Wed, 19 Aug 2020 10:03:12 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 73sm16526360qtf.74.2020.08.19.10.02.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 10:02:41 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id a34so13689796ybj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:02:35 -0700 (PDT)
+X-Received: by 2002:a25:d802:: with SMTP id p2mr37420399ybg.446.1597856554388;
+ Wed, 19 Aug 2020 10:02:34 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:400::5:af4e) by BY5PR20CA0002.namprd20.prod.outlook.com (2603:10b6:a03:1f4::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 17:02:18 +0000
-X-Originating-IP: [2620:10d:c090:400::5:af4e]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 88292ce6-0662-4e96-a863-08d84461a1ce
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3191:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB31912095D0C9C0B445F73692D55D0@BYAPR15MB3191.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8PYG0BtLBNSEtbGsojLMo+OsZlKMip16iumb8fYMQZcZS07Ekcs8KTJAyUz5Gsuvm27+NtMtiMwg2tJ62C/gx4RoclyxJuaRzC8cEBJkUxUH0h2RMeYt+syfJXxf33AsA11sR9T27SVN5Nj4iEcE9zYFUf9vnMoMKBAm2QGxNIUFix1G4HtHRQ2e6UraHFEsPNfuFUsb07bg/rF7wya1vwJMgczXidTRNjcMwKaQnm+PMAr2owBpVYyjvIgFy+Vv98Nu6o8OMpnJuTyc2bWUkUSA4z3db3UN9qcYurf2qPNG1qWYTojG3+RKLjsARMHS
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3571.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(39860400002)(346002)(376002)(396003)(55016002)(52116002)(2906002)(4326008)(83380400001)(6666004)(478600001)(7696005)(9686003)(66476007)(1076003)(8936002)(8676002)(66946007)(5660300002)(316002)(186003)(66556008)(54906003)(6916009)(16526019)(7416002)(6506007)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: NvH47Q97WK2s+BxE7eZd72bL/hcQ37BYzc2gLiIa2oefYVuYw+1hHLltaZkwUDygHZBrUplD9rt2y6wUF39NpWcvMgMssDnOusjNMgoB9epgr+04jZkRwqA0VBcCzPdC2aSUMsDMQreSfSRUr+1KGQHUYQoyyDnElZEcady+KgOVgB/BU9vBbOAuICNxorFLiVJjdW+Npaf07COw2GkenPuEDnjlbhvuYt2lnESmhTSPHuIkyiVlWEpfVt7olAw/gaW850QFkFHAso6MD6lzsAxK3sAD3goK/OSm3a297qnJMq+DxqVyBvFzh4pbKbad46ZKfW51zzArpqbvgUOVLufk4N6/aKZc/+SbQ0bWd8yexR6X/b6hLtsgOSi/BBfp1ge2jek8epZezYxAwat4fRa6KxggIKEzKVvRKW2F28bD+RpYpZAIMY9FwVjrcboaKLUv62EtIvdMc0Yro2sDUbjCKVJdLVTBOik+QBpMek+1w9haxBF0WFpEkqDUH0coJOkpYGoy0/YIg8ogJcFe5+uoGykUJr2/r/IDdnetOrYcBt621Ody1QVJ0bf+jJ5IQtWcK7rXkraKHjopH7R1Gn0IAJSll1Ijk6qnGDMtEW27dQFtxipdm6KW6sQovrlp7DeVx44JCUqRosxQJvs7/qAbM4csmxUO1LHBTEc9SaM=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88292ce6-0662-4e96-a863-08d84461a1ce
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3571.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 17:02:19.4484
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D9g/opFVvHgGhwXoxkFFvQyYDJn2pfWZ+8Yx2N+jVVqjY1nl7wBPhCO1QqGZrXQv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3191
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_10:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
- adultscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- clxscore=1015 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008190142
-X-FB-Internal: deliver
+References: <20200817220238.603465-1-robdclark@gmail.com> <20200817220238.603465-11-robdclark@gmail.com>
+In-Reply-To: <20200817220238.603465-11-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 19 Aug 2020 10:02:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+Subject: Re: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for
+ Adreno GPU SMMU
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:10:56PM +0800, 江禹 wrote:
-> Dear Martin,
-> 
-> 
-> > One possibility is to use the "sk_bpf_storage" member immediately above
-> > instead of adding "sk_task_com[]".
-> > 
-> > It is an extensible sk storage for bpf.  There are examples in selftests,
-> > e.g tools/testing/selftests/bpf/progs/udp_limits.c which creates sk storage
-> > at socket creation time.  Another hook point option could be "connect()"
-> > for tcp, i.e. "cgroup/connect[46]".
-> > 
-> > Search "BPF_MAP_TYPE_SK_STORAGE" under the selftests/bpf for other examples.
-> > 
-> > It seems there is already a "bpf_get_current_comm()" helper which
-> > could be used to initialize the task comm string in the bpf sk storage.
-> > 
-> > btw, bpf-next is still closed.
-> 
-> 
-> I have rewrite my code according to your suggestion.  In general,it works as designed.
-> 
-> 
-> But the task comm string got from "bpf_get_current_comm()" helper is belong to specific thread.
-> It is not a obvious label for skb tracing. More reasonable tracing key is the task comm of process
-> which this skb belongs.
->  
-> It seems a new bpf helper is still needed.
-May be.  It is not clear to me whether it is better to account this skb
-to its process or to its thread.  I think this depends on the
-use-case/assumption.
+Hi,
 
-If bpf_get_current_comm() does not get what you need,
-then another helper may be added to get the process comm.
-This new helper may be useful for other use cases also.
+On Mon, Aug 17, 2020 at 3:03 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Jordan Crouse <jcrouse@codeaurora.org>
+>
+> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+> devices depend on unique features such as split pagetables,
+> different stall/halt requirements and other settings. Identify them
+> with a compatible string so that they can be identified in the
+> arm-smmu implementation specific code.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 503160a7b9a0..5ec5d0d691f6 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -40,6 +40,10 @@ properties:
+>                - qcom,sm8150-smmu-500
+>                - qcom,sm8250-smmu-500
+>            - const: arm,mmu-500
+> +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+> +        items:
+> +          - const: qcom,adreno-smmu
+> +          - const: qcom,smmu-v2
 
-btw, Have your thought about tracing at the sendmsg time?
-e.g. tcp_sendmsg()?
+I know I'm kinda late to the game, but this seems weird to me,
+especially given the later patches in the series like:
+
+https://lore.kernel.org/r/20200817220238.603465-19-robdclark@gmail.com
+
+Specifically in that patch you can see that this IOMMU already had a
+compatible string and we're changing it and throwing away the
+model-specific string?  I'm guessing that you're just trying to make
+it easier for code to identify the adreno iommu, but it seems like a
+better way would have been to just add the adreno compatible in the
+middle, like:
+
+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+        items:
+          - enum:
+              - qcom,msm8996-smmu-v2
+              - qcom,msm8998-smmu-v2
+              - qcom,sc7180-smmu-v2
+              - qcom,sdm845-smmu-v2
+        - const: qcom,adreno-smmu
+        - const: qcom,smmu-v2
+
+Then we still have the SoC-specific compatible string in case we need
+it but we also have the generic one?  It also means that we're not
+deleting the old compatible string...
+
+-Doug
+
+
+>        - description: Marvell SoCs implementing "arm,mmu-500"
+>          items:
+>            - const: marvell,ap806-smmu-500
+> --
+> 2.26.2
+>
