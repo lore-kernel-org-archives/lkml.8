@@ -2,190 +2,85 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B42C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC87207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:35:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W5MxTVC3"
+	by mail.kernel.org (Postfix) with ESMTP id 9012F207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgHSAfO (ORCPT
+        id S1726862AbgHSAiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHSAfN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:35:13 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA35C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:35:12 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j21so10523392pgi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Ir9zlPRO6ulJkS1ClGP8dughvLjcHTwT51vNND8Agxc=;
-        b=W5MxTVC3sdRTyvcpiy1o/54gA5IyInv/kudLtDP1IqKXBAuWYQwUkMQ9gGSGFr8dMd
-         BM+mRIzVYnr4bIvOPf6Q72yYuhWFUovSu2RfYT3r5hq14aHyr6Ureusp8dfSBTXGF8Hj
-         8peQzUxB7eStbNI8LbQswBQyA+pNtFP2HV2/8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Ir9zlPRO6ulJkS1ClGP8dughvLjcHTwT51vNND8Agxc=;
-        b=lGPeI/tVImRDtZlPIY2SC+8VkKNbPmzUle8G+jTtwpnNsxr5gi4UJ/PQphoBNBzvxR
-         VILTc3RqasHg/G1fL9TfKih5aRhTXCE2hHzRajeLiryING5X/rUsPDJ1pcz0QLVEoqSH
-         zSntj52Zf15XBRvJexr16vZjKMrjqS8kZPtGGKcdLk02aLGsU5ZX/C87nH9jyj873Vg8
-         nZTWuC8Kji8skgqe4QbtvvSaSiftQKbxFch4rpooGZvlYw/f1tvfb8or7S6XecVzL6Nk
-         8Lwh+71UCxMt+eDnFgshm87xcKME4UpIEbsdlpi+/cebxXlh7EW5XaWxSRcfP5M1T7Ac
-         o4Xw==
-X-Gm-Message-State: AOAM531drWMKpDxpLza5phiT2FsuwbdUCEWXrfL0V0KKuuwVNuoUzyPx
-        ae/PmQDCMSUX75i1UB1W2fb31w==
-X-Google-Smtp-Source: ABdhPJwvEbS0unsXE4XYp2rnebRdk2moAa3ndhaXogLwKqpVvI9vErUTsHldOxLqvjrSUBishRYq9Q==
-X-Received: by 2002:a65:60cb:: with SMTP id r11mr15283051pgv.131.1597797311342;
-        Tue, 18 Aug 2020 17:35:11 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id f89sm1061044pjg.5.2020.08.18.17.35.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 17:35:10 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] bcm-vk: add bcm_vk UAPI
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200806004631.8102-1-scott.branden@broadcom.com>
- <20200806004631.8102-2-scott.branden@broadcom.com>
- <20200818135313.GB495837@kroah.com>
- <8894c3c4-4d5c-cb94-bc90-a26833ebf268@broadcom.com>
- <20200818174451.GA749919@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <4adbd70e-c49b-c2d4-84c7-5e910f05e449@broadcom.com>
-Date:   Tue, 18 Aug 2020 17:35:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 20:38:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:47301 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgHSAiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:38:16 -0400
+IronPort-SDR: 89Q37X6ws2imSc10k4HBJcbF5TF6q6C8VE3YBbGKLzDNs6h9cvKgnEHhMViA2P3U6IEaqemFGh
+ /52ylZED0mkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="135093419"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="135093419"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 17:38:16 -0700
+IronPort-SDR: z+ryxSXWekjTNsVBa2eKrkv1pBi82hpSvhsBcfhMh/sPqoqTGC3HEYXY1cwPCYhrloH8EDWRId
+ 3lfixg7qrWFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="279551279"
+Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Aug 2020 17:38:15 -0700
+Date:   Wed, 19 Aug 2020 00:38:15 +0000
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Babu Moger <babu.moger@amd.com>, H Peter Anvin <hpa@zytor.com>,
+        x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] x86/resctrl: Enable user to view thread or core
+ throttling mode
+Message-ID: <20200819003815.GA358477@otcwcpicx6.sc.intel.com>
+References: <1594921994-66192-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818174451.GA749919@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-CA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594921994-66192-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, X86 maintainers,
 
+On Thu, Jul 16, 2020 at 10:53:12AM -0700, Fenghua Yu wrote:
+> This series enumerates Memory Bandwidth Allocation (MBA) per-thread
+> feature and introduces a new resctrl file "thread_throttle_mode".
+> The file shows either "per-thread" on newer systems that implement the MBA
+> per-thread feature or "max" on other systems that allocate maximum
+> throttling per-core.
+> 
+> Details about the feature can be found in the commit description and
+> in Chapter 9 of the most recent Intel ISE available from
+> https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+> 
+> This series replaces the original MBA thread throttling patch series
+> found at
+> https://lore.kernel.org/lkml/cover.1592841671.git.reinette.chatre@intel.com/
+> 
+> This is a simplified version of the previous series that skips the
+> min/max mode and just provides the per-core vs. per-thread indicator.
+> 
 
-On 2020-08-18 10:44 a.m., Greg Kroah-Hartman wrote:
-> On Tue, Aug 18, 2020 at 10:23:42AM -0700, Scott Branden wrote:
->> Hi Greg,
->>
->> On 2020-08-18 6:53 a.m., Greg Kroah-Hartman wrote:
->>> On Wed, Aug 05, 2020 at 05:46:29PM -0700, Scott Branden wrote:
->>>> Add user space api for bcm-vk driver.
->>>>
->>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>>> ---
->>>>  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
->>>>  1 file changed, 99 insertions(+)
->>>>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
->>>>
->>>> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
->>>> new file mode 100644
->>>> index 000000000000..783087b7c31f
->>>> --- /dev/null
->>>> +++ b/include/uapi/linux/misc/bcm_vk.h
->>>> @@ -0,0 +1,99 @@
->>>> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
->>>> +/*
->>>> + * Copyright 2018-2020 Broadcom.
->>>> + */
->>>> +
->>>> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
->>>> +#define __UAPI_LINUX_MISC_BCM_VK_H
->>>> +
->>>> +#include <linux/ioctl.h>
->>>> +#include <linux/types.h>
->>>> +
->>>> +#define BCM_VK_MAX_FILENAME 64
->>>> +
->>>> +struct vk_image {
->>>> +	__u32 type; /* Type of image */
->>>> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
->>>> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
->>>> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
->>>> +};
->>>> +
->>>> +struct vk_reset {
->>>> +	__u32 arg1;
->>>> +	__u32 arg2;
->>>> +};
->>>> +
->>>> +#define VK_MAGIC		0x5e
->>>> +
->>>> +/* Load image to Valkyrie */
->>>> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
->>>> +
->>>> +/* Send Reset to Valkyrie */
->>>> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
->>>> +
->>>> +/*
->>>> + * message block - basic unit in the message where a message's size is always
->>>> + *		   N x sizeof(basic_block)
->>>> + */
->>>> +struct vk_msg_blk {
->>>> +	__u8 function_id;
->>>> +#define VK_FID_TRANS_BUF	5
->>>> +#define VK_FID_SHUTDOWN		8
->>>> +	__u8 size;
->>>> +	__u16 trans_id; /* transport id, queue & msg_id */
->>>> +	__u32 context_id;
->>>> +	__u32 args[2];
->>>> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
->>>> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
->>>> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
->>>> +#define VK_CMD_MASK		0x0f00 /* command mask */
->>>> +};
->>>> +
->>>> +#define VK_BAR_FWSTS			0x41c
->>>> +#define VK_BAR_COP_FWSTS		0x428
->>>> +/* VK_FWSTS definitions */
->>>> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
->>> <snip>
->>>
->>> I thought BIT() was not allowed in uapi .h files, this really works
->>> properly???
->> I did some investigation and it looks like a few other header files in include/uapi also use the BIT() macro:
->> include/uapi/misc/uacce/uacce.h
->> include/uapi/linux/psci.h
->> include/uapi/linux/v4l2-subdev.h
-> Does the header install test target now fail for these?
-I do not understand the question above.  make headers_install works.
-But I guess the above headers would have similar issue with the BIT macro.
->
->> tools/include/uapi/linux/pkt_sched.h
-> That doesn't count :)
->
->> It does look like we end up defining the BIT() macro in our user space app that includes the header file.
->>
->> So, what is the proper thing to be done?
->> 1) Move the BIT() macro somewhere in include/uapi and include it in the necessary header files
->> 2) Use the _BITUL macro in include/uapi/linux/const.h instead?
->> 3) something else?
-> open-code it for now please, that's the best way as I am pretty sure we
-> can not contaminate the global C namespace with out BIT() macro, no
-> matter how much we would like to...
-OK, I will open-code it instead.
->
-> thanks,
->
-> greg k-h
+Any comment on this series? Could you please help push to upstream?
 
+Thanks.
+
+-Fenghua
