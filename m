@@ -2,215 +2,119 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D088EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38EA9204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nclwdakF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HGXtKA6T"
+	by mail.kernel.org (Postfix) with ESMTP id A93252076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597845985;
+	bh=hIHLV4cOF8AgV5MQLy5f4Vy87/PZEGKL0hxscBGc+gU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CnJ0cK1fU1AufaEEsOotkMmIPUXc5KHaFzDJc5p0R0mKlG1vXnCIewS24zOyeNyoS
+	 PfMpZWHdymFU6JXSRRzgAyTsJ3zf60LDonXIRjhBNSdvcmmt2PM1JinjdRLBwDKC6H
+	 tDoC37PtGiDnc9A8jctEiJSyU0Cj2zGsizDqQKKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgHSOGN (ORCPT
+        id S1728689AbgHSOGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:06:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39594 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgHSOCv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:02:51 -0400
-Date:   Wed, 19 Aug 2020 14:02:47 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597845768;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gCFQCll81+xGY9kK9qg0Qa9r7fDQY1OnzjtSox0/cOk=;
-        b=nclwdakFL+x97wq5mmsYuzQl1HVKQXJKYizdYrY61V9NGMWQ+080KD8OewU3iQIqH4+rcR
-        kxAOZGU7rwrnjGfqzA2TjtK5CbIGFoKaPhCqSRgyyxjAHCQzodqwWCL6wj4rkWS8W13+/z
-        JmW+sN4tLC0GFWqF7TG0GTVsZAOdVGayu42Shvgome931SoXBUGAsdNj3/I/IDydPtL5Ac
-        Vj//QNXTQ2uiw76C9jmGIJMHr4rN+koT5DNIAq3wA7KbDOCs+IMKpd4AjHfEV9nJV8Wk2C
-        dM0dZE5FrtnTXWTn3pYcLyuNhb78tmRMPcCXYEBeed1kNfhlHIl/lKTEd0ZQ1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597845768;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gCFQCll81+xGY9kK9qg0Qa9r7fDQY1OnzjtSox0/cOk=;
-        b=HGXtKA6T3tTNeFze0aTL1G16PDYmzGjY+jK80FkE05bSUNEkJdwJMgKCXDCxN8/umDbKRL
-        pS2+DGFu2dSZoJCA==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Introduce SD metaflag for flags
- needing > 1 groups
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200817113003.20802-8-valentin.schneider@arm.com>
-References: <20200817113003.20802-8-valentin.schneider@arm.com>
+        Wed, 19 Aug 2020 10:06:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728203AbgHSOCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:02:49 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF03204FD;
+        Wed, 19 Aug 2020 14:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597845769;
+        bh=hIHLV4cOF8AgV5MQLy5f4Vy87/PZEGKL0hxscBGc+gU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FIKLAputS/I4c2U1zr0YJRhToTkWAF4Wgaxd9YkGul9N09Xcq/NqL2KS7Q4wHdH3Z
+         7sDTFe2XNYlIN8PpjxE2jjEzmAMbvADRRfYr1l0bSvd87yUSErDcbQWU7vc9Xutzmf
+         HABBiDY93Nwm4rZQ+3gn1fe3Xwr4XvaQkLJKEK3w=
+Received: by mail-oi1-f169.google.com with SMTP id u24so19947017oic.7;
+        Wed, 19 Aug 2020 07:02:49 -0700 (PDT)
+X-Gm-Message-State: AOAM531YoGmOwtO5RnxnDTwwRjHxPMImpG2J0gKfqk7S6anjZOGsU2S8
+        KwXf6H273xqETsSExvWHGyjwEw3McJg+cXDl8w==
+X-Google-Smtp-Source: ABdhPJwEuXEemEZiUqYvno+DnR9HNhcBW8VWF3alaPB45jQ7e8T7cLXTiuC51U+Q1kwMXOw6ubpK4QLrTvpO4SI7asQ=
+X-Received: by 2002:aca:90a:: with SMTP id 10mr3316933oij.106.1597845768614;
+ Wed, 19 Aug 2020 07:02:48 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159784576761.3192.1970483124883229508.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru> <20200803215147.GA3201744@bogus>
+ <20200817100014.GG1891694@smile.fi.intel.com>
+In-Reply-To: <20200817100014.GG1891694@smile.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Aug 2020 08:02:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Mon, Aug 17, 2020 at 4:17 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Aug 03, 2020 at 03:51:47PM -0600, Rob Herring wrote:
+> > On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> > > Each DW DMA controller channel can be synthesized with different
+> > > parameters like maximum burst-length, multi-block support, maximum data
+> > > width, etc. Most of these parameters determine the DW DMAC channels
+> > > performance in its own aspect. On the other hand these parameters can
+> > > be implicitly responsible for the channels performance degradation
+> > > (for instance multi-block support is a very useful feature, but having
+> > > it disabled during the DW DMAC synthesize will provide a more optimized
+> > > core). Since DMA slave devices may have critical dependency on the DMA
+> > > engine performance, let's provide a way for the slave devices to have
+> > > the DMA-channels allocated from a pool of the channels, which according
+> > > to the system engineer fulfill their performance requirements.
+> > >
+> > > The pool is determined by a mask optionally specified in the fifth
+> > > DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> > > phandle arguments or the mask is zero, then the allocation will be
+> > > performed from a set of all channels provided by the DMA controller.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Rob, I have a question to clarify (it's not directly related to the series,
+> but to this schema and property names).
+>
+> We have two drivers for DMA controllers from Synopsys (they are different)
+> where properties with the same semantics (like block_size or data-width) have
+> different pattern of naming (okay, block_size for older driver even has _
+> instead of -), i.e. block_size vs. snps,block-size and data-width vs.
+> snps,data-width.
+>
+> I would like to unify them (*) in both drivers and would like to know which
+> naming pattern is preferred in such case?
 
-Commit-ID:     4ee4ea443a5dc3fc4d8ae338199676eae9d8ef02
-Gitweb:        https://git.kernel.org/tip/4ee4ea443a5dc3fc4d8ae338199676eae9d8ef02
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Mon, 17 Aug 2020 12:29:53 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Aug 2020 10:49:48 +02:00
+Unless there's some sign we'd use it with other vendors, I'd generally
+keep the vendor prefix. But I don't think it's worth supporting 3
+variants of 'data-width' in the name of unification.
 
-sched/topology: Introduce SD metaflag for flags needing > 1 groups
+Also, if they don't have a vendor prefix, then they should be in some
+standard units rather than an encoded register value. (Which seems to
+be the case here).
 
-In preparation of cleaning up the sd_degenerate*() functions, mark flags
-used in sd_degenerate() with the new SDF_NEEDS_GROUPS flag. With this,
-build a compile-time mask of those SD flags.
-
-Note that sd_parent_degenerate() uses an extra flag in its mask,
-SD_PREFER_SIBLING, which remains singled out for now.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: https://lore.kernel.org/r/20200817113003.20802-8-valentin.schneider@arm.com
----
- include/linux/sched/sd_flags.h | 39 +++++++++++++++++++++++----------
- include/linux/sched/topology.h |  7 ++++++-
- 2 files changed, 35 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index c24a45b..ee5cbfc 100644
---- a/include/linux/sched/sd_flags.h
-+++ b/include/linux/sched/sd_flags.h
-@@ -8,7 +8,7 @@
- #endif
- 
- /*
-- * Expected flag uses
-+ * Hierarchical metaflags
-  *
-  * SHARED_CHILD: These flags are meant to be set from the base domain upwards.
-  * If a domain has this flag set, all of its children should have it set. This
-@@ -29,29 +29,42 @@
-  * certain level (e.g. domain starts spanning CPUs outside of the base CPU's
-  * socket).
-  */
--#define SDF_SHARED_CHILD 0x1
--#define SDF_SHARED_PARENT 0x2
-+#define SDF_SHARED_CHILD       0x1
-+#define SDF_SHARED_PARENT      0x2
-+
-+/*
-+ * Behavioural metaflags
-+ *
-+ * NEEDS_GROUPS: These flags are only relevant if the domain they are set on has
-+ * more than one group. This is usually for balancing flags (load balancing
-+ * involves equalizing a metric between groups), or for flags describing some
-+ * shared resource (which would be shared between groups).
-+ */
-+#define SDF_NEEDS_GROUPS       0x4
- 
- /*
-  * Balance when about to become idle
-  *
-  * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_NEWIDLE, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_NEWIDLE, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on exec
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_EXEC, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_EXEC, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on fork, clone
-  *
-  * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ * NEEDS_GROUPS: Load balancing flag.
-  */
--SD_FLAG(SD_BALANCE_FORK, SDF_SHARED_CHILD)
-+SD_FLAG(SD_BALANCE_FORK, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Balance on wakeup
-@@ -69,24 +82,28 @@ SD_FLAG(SD_WAKE_AFFINE, SDF_SHARED_CHILD)
- 
- /*
-  * Domain members have different CPU capacities
-+ *
-+ * NEEDS_GROUPS: Per-CPU capacity is asymmetric between groups.
-  */
--SD_FLAG(SD_ASYM_CPUCAPACITY, 0)
-+SD_FLAG(SD_ASYM_CPUCAPACITY, SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU capacity (i.e. SMT)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * CPU capacity.
-+ *               CPU capacity.
-+ * NEEDS_GROUPS: Capacity is shared between groups.
-  */
--SD_FLAG(SD_SHARE_CPUCAPACITY, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_CPUCAPACITY, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Domain members share CPU package resources (i.e. caches)
-  *
-  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-- * the same cache(s).
-+ *               the same cache(s).
-+ * NEEDS_GROUPS: Caches are shared between groups.
-  */
--SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD)
-+SD_FLAG(SD_SHARE_PKG_RESOURCES, SDF_SHARED_CHILD | SDF_NEEDS_GROUPS)
- 
- /*
-  * Only a single load balancing instance
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 32f602f..2d59ca7 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -25,6 +25,13 @@ enum {
- };
- #undef SD_FLAG
- 
-+/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
-+#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
-+static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-+#include <linux/sched/sd_flags.h>
-+0;
-+#undef SD_FLAG
-+
- #ifdef CONFIG_SCHED_DEBUG
- #define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
- static const struct {
+Rob
