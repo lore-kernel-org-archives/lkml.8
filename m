@@ -2,102 +2,186 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D43C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A91DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449332076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8BF20882
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="bF4X2rLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHSPCf (ORCPT
+        id S1728093AbgHSPEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:02:35 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44832 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgHSPCW (ORCPT
+        Wed, 19 Aug 2020 11:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHSPEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:02:22 -0400
-Received: by mail-io1-f72.google.com with SMTP id m12so14378545iov.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:02:21 -0700 (PDT)
+        Wed, 19 Aug 2020 11:04:06 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13443C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:06 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id t6so11416871qvw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vzojOIjXWxLiO6TIP3hVvjZj3nBXkO4u+Tv0gqgyYy4=;
+        b=bF4X2rLiQ6gYsVqzGCpAtaMbPgC9tg9k7pWmdfdP7jhYjOW2lKP3GTqUtVfsNaZd8d
+         +tqW/r6n8N1HbXApppScuxmidM2ViNHo/ZeAXiHiaLoQy3WPkXNNO7mPSQVydyqLXIuW
+         XnpqxpmORbSAJVeFgOj201zzexuifWp1jNNvr321eHINNv2s3M1eX+wmoZA2L7kR6V6M
+         SIW/RrePFN/BaiNWuUtMLtaEBR3/6yBkaBbGlru0XyWD9BdZxfHPGCoKhFB/ej+cb6+M
+         vFTlEJzSyW8pN3j8a3+0/RXeGMps73CZtPy4yrelYf1bea10mWj7LectS+ERxQyNF0Kb
+         +k1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=67Gh75A1TSpN6NtiARVGU9hWjZqJ15XNNQGywFVosG0=;
-        b=HdbD5IbshU4KmntjWmjX+4C2v9XPv3jwXKSxuB2SE+TETVU7y5UJI51uUN+l9V5AIy
-         Bg0KUjTePhNKkCCPpbwh1zEDyPkEIqIzPRT3BsQiz3hPe/orwf/LaidQaUEtQ1mcCvvB
-         Ni2RCehqzUTkWWvtEGVvmU5vc5ArnfRkZOQW3hdkCfDQvqnnRv0ngmaGX7EAW1RHM+wx
-         tQrxfnyFW8JVe+M1x7pWmt5VVhCbKpO0cMg50coPis+imAkyBtT2D0bXtMgOeg8w96SS
-         Z9Cl9qaV8Z5FGdo0keMj5VUfOvNSffQvzPVHwpOjs5fglhh2jyt0edg8+6Bvv2FiU7HQ
-         4bKg==
-X-Gm-Message-State: AOAM531sGffb4EyF1+VUAL0dJqsaR93hEKwMVx7AkIXEUX1JmLQj4UH/
-        mYOSGq4eQMuFK0zXPDm8RuInTGYdq1lmF2CftDx9aWK7TyXG
-X-Google-Smtp-Source: ABdhPJyvN4+7Tvk6NZpG6almeZlIMGgzU5iWuaJVJIQJxIvHiNKvtJVyzgAjNmdVi5jHIVN0cpxmVvEtulJN3SDb4OQLAnh8xQ5A
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vzojOIjXWxLiO6TIP3hVvjZj3nBXkO4u+Tv0gqgyYy4=;
+        b=e5OoBmfP2xfT6Shvxy/JMCKVDP0PENW4B3vv20GL0Pupnk3sf+1eiXDqiPs1m+Qhi2
+         YTm+CucmORVVyR3Cni//MKGyoD2gAE38jwawYAyHfbWVZ/ckzzPMCE7bM+UPpyzW0KN2
+         gj8tPVkUQyuXhNtk4tAtLJpAUIZH9Il1yQNJFQGHvpxPKlwh7VkiVNv2mphBRhYS1qVi
+         P8qyqu8JKjYU7Tjw4bjBkcA0Ugn+vgl9eCz7kZfoB/APtb0weLQX/J1FmrX5IGhZ55jZ
+         prMloVdXTX3JGneDutK20psddOKAMvFZ/JbNuBR8Cn8BDcawxsHMHDIgqsnFFRzXE279
+         dmTA==
+X-Gm-Message-State: AOAM533tLW7CzPQc6QKJR4DPfwz5WZxvw6qWEmGrvb4qpxt+mwQeAJPO
+        heYn07iW2QIW/1Z+dLN9ZE/fEQ==
+X-Google-Smtp-Source: ABdhPJwgu8q8F0w+plBznp44QJ9D3FkKDpwk9b2oLbAg5Cc6+iUfzHSItu7Rm2kLrjAYixGSkmEQNw==
+X-Received: by 2002:ad4:46ad:: with SMTP id br13mr24285816qvb.234.1597849444454;
+        Wed, 19 Aug 2020 08:04:04 -0700 (PDT)
+Received: from localhost (mobile-166-177-185-175.mycingular.net. [166.177.185.175])
+        by smtp.gmail.com with ESMTPSA id s56sm25374308qtk.72.2020.08.19.08.04.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 08:04:03 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:03:59 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, Wambui Karuga <wambui.karugax@gmail.com>
+Subject: Re: [RFC 09/20] drm/i915/dp: Extract drm_dp_has_mst()
+Message-ID: <20200819150359.GA46474@art_vandelay>
+References: <20200811200457.134743-1-lyude@redhat.com>
+ <20200811200457.134743-10-lyude@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d782:: with SMTP id d2mr24126782iln.167.1597849341396;
- Wed, 19 Aug 2020 08:02:21 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 08:02:21 -0700
-In-Reply-To: <000000000000a7e38a05a997edb2@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000660e9a05ad3c4ace@google.com>
-Subject: Re: WARNING in __cfg80211_connect_result
-From:   syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811200457.134743-10-lyude@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Tue, Aug 11, 2020 at 04:04:46PM -0400, Lyude Paul wrote:
+> Just a tiny drive-by cleanup, we can consolidate i915's code for
+> checking for MST support into a helper to be shared across drivers.
+> 
 
-HEAD commit:    e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1664ac89900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
-dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dp.c | 18 ++----------------
+>  include/drm/drm_dp_mst_helper.h         | 22 ++++++++++++++++++++++
+>  2 files changed, 24 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index 79c27f91f42c0..1e29d3a012856 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -4699,20 +4699,6 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+>  	return true;
+>  }
+>  
+> -static bool
+> -intel_dp_sink_can_mst(struct intel_dp *intel_dp)
+> -{
+> -	u8 mstm_cap;
+> -
+> -	if (intel_dp->dpcd[DP_DPCD_REV] < 0x12)
+> -		return false;
+> -
+> -	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_MSTM_CAP, &mstm_cap) != 1)
+> -		return false;
+> -
+> -	return mstm_cap & DP_MST_CAP;
+> -}
+> -
+>  static bool
+>  intel_dp_can_mst(struct intel_dp *intel_dp)
+>  {
+> @@ -4720,7 +4706,7 @@ intel_dp_can_mst(struct intel_dp *intel_dp)
+>  
+>  	return i915->params.enable_dp_mst &&
+>  		intel_dp->can_mst &&
+> -		intel_dp_sink_can_mst(intel_dp);
+> +		drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
+>  }
+>  
+>  static void
+> @@ -4729,7 +4715,7 @@ intel_dp_configure_mst(struct intel_dp *intel_dp)
+>  	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+>  	struct intel_encoder *encoder =
+>  		&dp_to_dig_port(intel_dp)->base;
+> -	bool sink_can_mst = intel_dp_sink_can_mst(intel_dp);
+> +	bool sink_can_mst = drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
+>  
+>  	drm_dbg_kms(&i915->drm,
+>  		    "[ENCODER:%d:%s] MST support: port: %s, sink: %s, modparam: %s\n",
+> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+> index 8b9eb4db3381c..2d8983a713e8c 100644
+> --- a/include/drm/drm_dp_mst_helper.h
+> +++ b/include/drm/drm_dp_mst_helper.h
+> @@ -911,4 +911,26 @@ __drm_dp_mst_state_iter_get(struct drm_atomic_state *state,
+>  	for ((__i) = 0; (__i) < (__state)->num_private_objs; (__i)++) \
+>  		for_each_if(__drm_dp_mst_state_iter_get((__state), &(mgr), NULL, &(new_state), (__i)))
+>  
+> +/**
+> + * drm_dp_has_mst() - check whether or not a sink supports MST
+> + * @aux: The DP AUX channel to use
+> + * @dpcd: A cached copy of the DPCD capabilities for this sink
+> + *
+> + * Returns: %True if the sink supports MST, %false otherwise
+> + */
+> +static inline bool
+> +drm_dp_has_mst(struct drm_dp_aux *aux,
+> +	       const u8 dpcd[DP_RECEIVER_CAP_SIZE])
+> +{
+> +	u8 mstm_cap;
+> +
+> +	if (dpcd[DP_DPCD_REV] < DP_DPCD_REV_12)
+> +		return false;
+> +
+> +	if (drm_dp_dpcd_readb(aux, DP_MSTM_CAP, &mstm_cap) != 1)
+> +		return false;
+> +
+> +	return !!(mstm_cap & DP_MST_CAP);
+> +}
+> +
+>  #endif
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 234 at net/wireless/sme.c:757 __cfg80211_connect_result+0xf71/0x13a0 net/wireless/sme.c:757
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 234 Comm: kworker/u4:5 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: cfg80211 cfg80211_event_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:__cfg80211_connect_result+0xf71/0x13a0 net/wireless/sme.c:757
-Code: 89 be ac 02 00 00 48 c7 c7 60 0f 18 89 c6 05 ef ba 2b 03 01 e8 f5 4a d9 f9 e9 4f f6 ff ff e8 d6 cc f2 f9 0f 0b e8 cf cc f2 f9 <0f> 0b e9 0c f2 ff ff e8 c3 cc f2 f9 e8 2e bb 71 00 31 ff 89 c3 89
-RSP: 0018:ffffc900019c7bb8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff88808ae13000 RCX: ffffffff87816922
-RDX: ffff8880a8b0a540 RSI: ffffffff878174b1 RDI: 0000000000000005
-RBP: ffff88807be34818 R08: 0000000000000001 R09: ffffffff8c5f1a3f
-R10: 0000000000000000 R11: 1ffffffff1835405 R12: 0000000000000000
-R13: ffff88807be34828 R14: ffff88808ae13200 R15: ffff88807be34820
- cfg80211_process_wdev_events+0x2c6/0x5b0 net/wireless/util.c:893
- cfg80211_process_rdev_events+0x6e/0x100 net/wireless/util.c:934
- cfg80211_event_work+0x1a/0x20 net/wireless/core.c:320
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
