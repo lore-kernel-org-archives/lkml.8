@@ -2,64 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A425F20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB2F20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597823885;
+	bh=qVY/Tr2YPJpK284bWpyAgLY0JmZ7NnQxxLDZavUFr3Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1bc44v696lGeLdIuMrtoqebGZA4ZODX69hLuC4itKqEYgZHPcp1cMr59YyEoADiMg
+	 lDtcDXzE0h40qtybpD8C9U3h562xAAVstXh4WVC6Id/RdXauMlh4MZoNgFeIdsN40T
+	 Iyf2T3AcLPYfHKn6kY+jQpSGu0XlDxNyT34/+rEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHSH5i (ORCPT
+        id S1726868AbgHSH6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:57:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:57622 "EHLO foss.arm.com"
+        Wed, 19 Aug 2020 03:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgHSH5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:57:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85314101E;
-        Wed, 19 Aug 2020 00:57:37 -0700 (PDT)
-Received: from [10.163.66.190] (unknown [10.163.66.190])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4051E3F6CF;
-        Wed, 19 Aug 2020 00:57:35 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mm/pageblock: remove false sharing in
- pageblock_flags
-To:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <715f1588-9cd5-b845-51a5-ca58549c4d28@arm.com>
-Date:   Wed, 19 Aug 2020 13:27:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726861AbgHSH55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:57:57 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E09EE207BB;
+        Wed, 19 Aug 2020 07:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597823876;
+        bh=qVY/Tr2YPJpK284bWpyAgLY0JmZ7NnQxxLDZavUFr3Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Sq/pOTWPOgwCXcev5DyArofi/qfPNVyyLdFUgS01R4cHAu27P8Pp5kusPtaydsRcP
+         hAyXEf3rnG7fVYMuR7dC2O5c/4OlfZZcrvZ5bFm3DF/8h6qdr5SQW7CZvSe3Ng2mLS
+         WcknwwPh0V5ypA+EMiT9wxkU5Zjh365/ya/SDNm8=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>, Jeff Layton <jlayton@kernel.org>
+Cc:     Leon Romanovsky <leonro@nvidia.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] ceph: Delete features that are not used in the kernel
+Date:   Wed, 19 Aug 2020 10:57:47 +0300
+Message-Id: <20200819075747.917595-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Leon Romanovsky <leonro@nvidia.com>
 
+The ceph_features.h has declaration of features that are not in-use
+in kernel code. This causes to seeing such compilation warnings in
+almost every kernel compilation.
 
-On 08/19/2020 11:17 AM, Alex Shi wrote:
-> Current pageblock_flags is only 4 bits, so it has to share a char size
-> in cmpxchg when get set, the false sharing cause perf drop.
-> 
-> If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
-> the only cost is half char per pageblock, which is half char per 128MB
-> on x86, 4 chars in 1 GB.
+./include/linux/ceph/ceph_features.h:14:24: warning: 'CEPH_FEATURE_UID' defined but not used [-Wunused-const-variable=]
+   14 |  static const uint64_t CEPH_FEATURE_##name = (1ULL<<bit);  \
+      |                        ^~~~~~~~~~~~~
+./include/linux/ceph/ceph_features.h:75:1: note: in expansion of macro 'DEFINE_CEPH_FEATURE'
+   75 | DEFINE_CEPH_FEATURE( 0, 1, UID)
+      | ^~~~~~~~~~~~~~~~~~~
 
-Agreed that increase in memory utilization is negligible here but does
-this really improve performance ?
+The upstream kernel indeed doesn't have any use of them, so delete it.
+
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+---
+I'm sending this as RFC because probably the patch is wrong, but I
+would like to bring your attention to the existing problem and asking
+for an acceptable solution.
+---
+ include/linux/ceph/ceph_features.h | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/include/linux/ceph/ceph_features.h b/include/linux/ceph/ceph_features.h
+index fcd84e8d88f4..922e74c84c76 100644
+--- a/include/linux/ceph/ceph_features.h
++++ b/include/linux/ceph/ceph_features.h
+@@ -72,13 +72,9 @@
+  * the bit ever speak to each other.
+  */
+
+-DEFINE_CEPH_FEATURE( 0, 1, UID)
+-DEFINE_CEPH_FEATURE( 1, 1, NOSRCADDR)
+ DEFINE_CEPH_FEATURE_RETIRED( 2, 1, MONCLOCKCHECK, JEWEL, LUMINOUS)
+
+-DEFINE_CEPH_FEATURE( 3, 1, FLOCK)
+ DEFINE_CEPH_FEATURE( 4, 1, SUBSCRIBE2)
+-DEFINE_CEPH_FEATURE( 5, 1, MONNAMES)
+ DEFINE_CEPH_FEATURE( 6, 1, RECONNECT_SEQ)
+ DEFINE_CEPH_FEATURE( 7, 1, DIRLAYOUTHASH)
+ DEFINE_CEPH_FEATURE( 8, 1, OBJECTLOCATOR)
+@@ -176,10 +172,7 @@ DEFINE_CEPH_FEATURE_DEPRECATED(63, 1, RESERVED_BROKEN, LUMINOUS) // client-facin
+  * Features supported.
+  */
+ #define CEPH_FEATURES_SUPPORTED_DEFAULT		\
+-	(CEPH_FEATURE_NOSRCADDR |		\
+-	 CEPH_FEATURE_FLOCK |			\
+-	 CEPH_FEATURE_SUBSCRIBE2 |		\
+-	 CEPH_FEATURE_RECONNECT_SEQ |		\
++	(CEPH_FEATURE_RECONNECT_SEQ |		\
+ 	 CEPH_FEATURE_DIRLAYOUTHASH |		\
+ 	 CEPH_FEATURE_PGID64 |			\
+ 	 CEPH_FEATURE_PGPOOL3 |			\
+--
+2.26.2
+
