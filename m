@@ -2,85 +2,93 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B753EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224EE207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8980C207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597819317;
+	bh=BWEBCuvm5q9d7I+c3DM8z8AygKDBdmCoU8vt61HddsI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HgNds5/843Ik3cs7TAl8FT78rvGlm2PSaORfQhLL8gCAiAWSf316vSNvmeHiPj4a4
+	 /+4wdABJ9OAvYXiMf/fyHeXDl3KPPHhdD/OeLDGf7f4IX6VYnfeXQIQF37z9vLLIrw
+	 jX1Da7X9F2sOxHC7noGR6YACx5ySlaKkwRg6P/ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHSGkc (ORCPT
+        id S1726868AbgHSGl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:40:32 -0400
-Received: from muru.com ([72.249.23.125]:40890 "EHLO muru.com"
+        Wed, 19 Aug 2020 02:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgHSGk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:40:28 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C82A6807A;
-        Wed, 19 Aug 2020 06:40:27 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 09:40:55 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] n_gsm: Fix write handling for zero bytes written
-Message-ID: <20200819064055.GV2994@atomide.com>
-References: <20200817135454.28505-1-tony@atomide.com>
- <1b8538a8-d8b6-4287-36e1-aa1e0863ff2d@kernel.org>
- <20200818095609.GQ2994@atomide.com>
- <ea5e0639-4419-c60b-059a-8fbd057fc6e3@kernel.org>
- <20200818104714.GR2994@atomide.com>
- <34dd61d2-01c3-dcc1-21bd-494eb90759ac@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34dd61d2-01c3-dcc1-21bd-494eb90759ac@kernel.org>
+        id S1725275AbgHSGly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:41:54 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 141E7207DA;
+        Wed, 19 Aug 2020 06:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597819314;
+        bh=BWEBCuvm5q9d7I+c3DM8z8AygKDBdmCoU8vt61HddsI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LUkdBOm+uO0p+luP6tpWLUvRQIw4QRaQODJw4TiXlRg3r5j0dfFihVpzC7Zre5p0/
+         PCgEndMQT6n2WVuD14OLAqj6+GIZtLbH6jEB3lQqE06OnV6lhHGIxxKsoEs3p/qvnH
+         conmsUg9P+mV3mIpKF+zzukjZ3Fz8Ke2GSWBPM8E=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: [RESEND PATCH] ia64: Fix build error with !COREDUMP
+Date:   Wed, 19 Aug 2020 08:41:46 +0200
+Message-Id: <20200819064146.12529-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jiri Slaby <jirislaby@kernel.org> [200819 06:20]:
-> On 18. 08. 20, 12:47, Tony Lindgren wrote:
-> > * Jiri Slaby <jirislaby@kernel.org> [200818 10:14]:
-> >> On 18. 08. 20, 11:56, Tony Lindgren wrote:
-> >>> Hi,
-> >>>
-> >>> * Jiri Slaby <jirislaby@kernel.org> [200818 08:24]:
-> >>>> On 17. 08. 20, 15:54, Tony Lindgren wrote:
-> >>>>> If write returns zero we currently end up removing the message
-> >>>>> from the queue. Instead of removing the message, we want to just
-> >>>>> break out of the loop just like we already do for error codes.
-> >>>>
-> >>>> When exactly does the only writer (gsmld_output) return zero for
-> >>>> non-zero len parameter?
-> >>>
-> >>> I ran into this when testing with the WIP serial core PM runtime
-> >>> changes from Andy Shevchenko earlier. If there are also other
-> >>> cases where we have serial drivers return 0, I don't know about
-> >>> them.
-> >>
-> >> Sorry, I don't understand: my gsmld_output() ignores the return value
-> >> from drivers' write and returns something greater than zero or a
-> >> negative error. What tree/SHA do you run?
-> > 
-> > Oh right, good catch. I also had my WIP serdev-ngsm patches applied
-> > that uses gsm_serdev_output() and returns the bytes written. Andy's
-> > patches do not touch n_gsm.c.
-> > 
-> > Hmm sounds like we should also start returning value also from
-> > gsmld_output()? Any objections to making that change?
-> 
-> No objections here.
+Fix linkage error when CONFIG_BINFMT_ELF is selected but CONFIG_COREDUMP
+is not:
 
-OK thanks, I'll post an updated patch.
+    ia64-linux-ld: arch/ia64/kernel/elfcore.o: in function `elf_core_write_extra_phdrs':
+    elfcore.c:(.text+0x172): undefined reference to `dump_emit'
+    ia64-linux-ld: arch/ia64/kernel/elfcore.o: in function `elf_core_write_extra_data':
+    elfcore.c:(.text+0x2b2): undefined reference to `dump_emit'
 
-Regards,
+Cc: <stable@vger.kernel.org>
+Fixes: 1fcccbac89f5 ("elf coredump: replace ELF_CORE_EXTRA_* macros by functions")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Tony
+---
+
+This is similar fix to commit 42d91f612c87 ("um: Fix build error and
+kconfig for i386") although I put different fixes tag - the commit which
+introduced this part of code.
+---
+ arch/ia64/kernel/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/ia64/kernel/Makefile b/arch/ia64/kernel/Makefile
+index 1a8df6669eee..18d6008b151f 100644
+--- a/arch/ia64/kernel/Makefile
++++ b/arch/ia64/kernel/Makefile
+@@ -41,7 +41,7 @@ obj-y				+= esi_stub.o	# must be in kernel proper
+ endif
+ obj-$(CONFIG_INTEL_IOMMU)	+= pci-dma.o
+ 
+-obj-$(CONFIG_BINFMT_ELF)	+= elfcore.o
++obj-$(CONFIG_ELF_CORE)		+= elfcore.o
+ 
+ # fp_emulate() expects f2-f5,f16-f31 to contain the user-level state.
+ CFLAGS_traps.o  += -mfixed-range=f2-f5,f16-f31
+-- 
+2.17.1
+
