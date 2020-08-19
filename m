@@ -2,128 +2,174 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 330EE206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262A3207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vmLqJLLP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SjDpvwZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHSKJ1 (ORCPT
+        id S1727770AbgHSKLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:09:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55157 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgHSKJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:09:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597831764; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Ss165PFmLfrUltmfdxLdXxBgXxOxl/dVF2U4JC6NEFM=; b=vmLqJLLPq6L9iv6s1guDnu1v56RY70pz7LSzCKD6lxiHVbaWfymvlJjLjY0KHD0T0hMlcQQ3
- 7lKy481+wVZwUtRbZKcrJEVnFdpN0VVRWbu77yi8xMSDRw+mW+tn2KKmhlMO7lRCpROi7Y4c
- LBKgfKLPFeBlW7TCKp5z72l8By0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3cfa2d4c787f237be64bdb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 Aug 2020 10:08:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C488C433AD; Wed, 19 Aug 2020 10:08:45 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A4EDC433CA;
-        Wed, 19 Aug 2020 10:08:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A4EDC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        ulf.hansson@linaro.org, swboyd@chromium.org, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 2/2] Revert "Revert "soc: qcom: rpmh: Allow RPMH driver to be loaded as a module""
-Date:   Wed, 19 Aug 2020 15:37:50 +0530
-Message-Id: <1597831670-17401-3-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597831670-17401-1-git-send-email-mkshah@codeaurora.org>
-References: <1597831670-17401-1-git-send-email-mkshah@codeaurora.org>
+        Wed, 19 Aug 2020 06:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgHSKLQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:11:16 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FD2C061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:11:16 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id j188so11659195vsd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=y4FO5cAqB3SZpz4VRvo1nhldKsrJkQ6TRgib+7pzYvg=;
+        b=SjDpvwZqYxtOHCObUcm6slt6EBaXA5zpNsiIiroDWpj+Lju9UtnzT63d64RkVT8pgK
+         gefRLLDD0vykjfj6v4j2Wdhb54O5x7AMMzZhJxdBP1LHNetsDfHbxq5n9YwS49CPtadB
+         P8OLaamoDfeUlLF/MQL1970astHhK2wZFhH5wGNhOiAlaB2ru2EqAiwoPGUQL7fRycPQ
+         NYzl9aWkxz+53yPJwRs0+4MF2VXT6RhAwDyPD3obyiaWKOMhSud6CEFm4HuZgFD/M1sz
+         K5UlEzhsWpRlzB3ZxuODAzT2cMN+uX4XO2Vml+PnoBQEFnLhNlOTHI30I0DVgBdUJ7g4
+         6FWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=y4FO5cAqB3SZpz4VRvo1nhldKsrJkQ6TRgib+7pzYvg=;
+        b=cuqS5LU/t+CN7Uik/0rGYmB+h+eVLup/7E9y9O0SzdrAbFauSlffQ7eJSkY4WFA9SU
+         2EG9VghZwo7dqPJrqXrejMAk6+7tc16RG6lU/E8vTDpczYkiBcZLuqmf09grwPvfByN3
+         IpKC03FNd4MDEjM0X9EvW1S0VSSETp/J0dPImdSE6gE1q5c/BpDIY+2D162BYjwtrVUc
+         Dt4QMnOupaHzgbfSxRwttw/jQ4EbP1yrOISqy1eXMyzOm4JqF27WJYf+5CZTIAgG2QKu
+         +tKeLj4aA9+1b56jvFleuchSQpRLD+hGlVuYKy7ssVmkUxktY0qqmgyFNqjMPPbeN0Ha
+         TXKA==
+X-Gm-Message-State: AOAM530BAipl8NXwDf53GZIWU4s8QzafLUBDy2fw3HjiyZtFe1IxW7Hd
+        lFF40dEl/dCxB6xd5Kfpvl5brpl0ghl21NSSaaJ2jg==
+X-Google-Smtp-Source: ABdhPJxnoh7GyzgNwwBUXp6W3Slciha75RjgY4ldLN9aYhy/JUdOYNX+ljur0eYUKc3hod8uyWT2M945JOBAC1Ox9Q8=
+X-Received: by 2002:a67:e45:: with SMTP id 66mr13894325vso.191.1597831871908;
+ Wed, 19 Aug 2020 03:11:11 -0700 (PDT)
+MIME-Version: 1.0
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 19 Aug 2020 15:41:00 +0530
+Message-ID: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+Subject: Linux-next: Kernel panic - not syncing: Fatal exception in interrupt
+ - RIP: 0010:security_port_sid
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
+        omosnace@redhat.com, rgb@redhat.com,
+        Kees Cook <keescook@chromium.org>, casey@schaufler-ca.com,
+        yuehaibing@huawei.com, jeffv@google.com, kent.overstreet@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The _rcuidle tracepoints are removed from RPMH driver which prevented
-to compile it as module. Bring back the change to make it module.
+Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
 
-This reverts commit 1f7a3eb785e4a4e196729cd3d5ec97bd5f9f2940.
+ Kernel panic - not syncing: Fatal exception in interrupt
 
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/Kconfig    | 2 +-
- drivers/soc/qcom/rpmh-rsc.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
+  git describe: next-20200819
+  make_kernelversion: 5.9.0-rc1
+  kernel-config:
+https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 3dc3e3d..892bdc7 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -92,7 +92,7 @@ config QCOM_RMTFS_MEM
- 	  Say y here if you intend to boot the modem remoteproc.
- 
- config QCOM_RPMH
--	bool "Qualcomm RPM-Hardened (RPMH) Communication"
-+	tristate "Qualcomm RPM-Hardened (RPMH) Communication"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	help
- 	  Support for communication with the hardened-RPM blocks in
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index fabe390d..5fce87c 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -13,6 +13,7 @@
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -1025,6 +1026,7 @@ static const struct of_device_id rpmh_drv_match[] = {
- 	{ .compatible = "qcom,rpmh-rsc", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, rpmh_drv_match);
- 
- static struct platform_driver rpmh_driver = {
- 	.probe = rpmh_rsc_probe,
-@@ -1040,3 +1042,6 @@ static int __init rpmh_driver_init(void)
- 	return platform_driver_register(&rpmh_driver);
- }
- arch_initcall(rpmh_driver_init);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Driver");
-+MODULE_LICENSE("GPL v2");
+crash log:
+[    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
+[    3.704865] #PF: supervisor read access in kernel mode
+[    3.704865] #PF: error_code(0x0000) - not-present page
+[    3.704865] PGD 0 P4D 0
+[    3.704865] Oops: 0000 [#1] SMP NOPTI
+[    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
+5.9.0-rc1-next-20200819 #1
+[    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
+[    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+00 48
+[    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+[    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+[    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+[    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+[    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+[    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+[    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+knlGS:0000000000000000
+[    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+[    3.721157] Call Trace:
+[    3.721157]  sel_netport_sid+0x120/0x1e0
+[    3.721157]  selinux_socket_bind+0x15a/0x250
+[    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
+[    3.721157]  ? __local_bh_enable_ip+0x46/0x70
+[    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
+[    3.721157]  security_socket_bind+0x35/0x50
+[    3.721157]  __sys_bind+0xcf/0x110
+[    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
+[    3.730888]  ? do_syscall_64+0x14/0x50
+[    3.730888]  ? trace_hardirqs_on+0x38/0xf0
+[    3.732120]  __x64_sys_bind+0x1a/0x20
+[    3.732120]  do_syscall_64+0x38/0x50
+[    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[    3.732120] RIP: 0033:0x7f5ef37f3057
+[    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
+02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
+00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
+01 48
+[    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000031
+[    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
+[    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
+[    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
+[    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
+[    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
+[    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
+000000RIP: 0010:security_port_sid0000000000
+[    3.744849] Modules linked in:
+[    3.744849] CR2: 00000000000001c8
+[    3.744849] ---[ end trace 485eaaecdce54971 ]---
+[    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
+[    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+00 48
+[    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+[    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+[    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+[    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+[    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+[    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+[    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+knlGS:0000000000000000
+[    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+[    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
+Fatal exception in interrupt
+[    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
+interrupt ]---
+
+full test log link,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Linaro LKFT
+https://lkft.linaro.org
