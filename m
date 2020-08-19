@@ -2,188 +2,159 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E257CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A17C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0A3206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5059F2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0EtSvtsE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OFTJhTvg"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NuaimugX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHSMe6 (ORCPT
+        id S1728428AbgHSMfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgHSMdS (ORCPT
+        Wed, 19 Aug 2020 08:35:07 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60789 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgHSMct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:33:18 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD32C061757;
-        Wed, 19 Aug 2020 05:33:17 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 12:33:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597840389;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W3Jehl3a35aN5/4/NwUd3jBqhG6snxRKGpdWrkVAGSI=;
-        b=0EtSvtsEwCBOsrzwAXUHO8XbpNKitMzc7CnPZlUlhKKrc2Ht3nBXvnNC53GfE4PrD6/sM3
-        76ZrWIoj2ZU2OHMc+ATQ3Y0v9GlQndDb2qHHXg+0UL7t0UbGuug/Zh9ajWqt6aU9SmB+ip
-        7+4hfhxjLXB5XnbNKaOXatc/wzAVH8OszDe6dLat0gAK6C8wqmW2U/J+LS4RNh/K52mW6u
-        PIUIMMIdcQ2vKmM4NFpp3WClnCvpw6KbNrjvPm8YqgDv/mNUvQrCbJZER3iH+txYk1cCNk
-        Bq5h+aRQkeP56AFuq0lnICjJnSTpm2hhHihSXTBhPEYRtjO/BHtHND/TIVMWBw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597840389;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W3Jehl3a35aN5/4/NwUd3jBqhG6snxRKGpdWrkVAGSI=;
-        b=OFTJhTvgAqv1nFAuvab/WHjOl3YtSUQfpCIm7ymO1TmCdejOjU/9o6ZNOy9IPLiQl6StR3
-        4fXB7ImTRjeu0ZAg==
-From:   "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] cacheinfo: Move resctrl's get_cache_id() to the
- cacheinfo header file
-Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
-        Babu Moger <babu.moger@amd.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200708163929.2783-11-james.morse@arm.com>
-References: <20200708163929.2783-11-james.morse@arm.com>
+        Wed, 19 Aug 2020 08:32:49 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819123228euoutp027f8f72b39fa86709cb3793c4f6ffe4f4~sq1TboP7B1326013260euoutp021
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:32:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819123228euoutp027f8f72b39fa86709cb3793c4f6ffe4f4~sq1TboP7B1326013260euoutp021
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597840348;
+        bh=dodgnAl4aQ9JHWLPjyth7Ek4AxDLNCjB7Q2ZDPyW0+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NuaimugXLZRMElQAh0R57Va8jTcXjQ+CLPfqgkupGN/YUmXwiQdOXpF+umTE7fwMw
+         Pkko905kbX9EUpjKaLzBpO+rjiby1HTK8Wy7rwobXdjhLBYsmxBRblnaRVoWmi0kC5
+         fxIBFtf78UYCoykM1gs6gDgDbGiYe/JZ4G49cBGA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200819123228eucas1p28ecf3a4492d5091978a0d8f59aa69301~sq1TERT9k2958529585eucas1p2U;
+        Wed, 19 Aug 2020 12:32:28 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 58.3B.06456.CDB1D3F5; Wed, 19
+        Aug 2020 13:32:28 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200819123227eucas1p11ec027714c16d5a66c89c6ef1f7b3604~sq1Sp-jTa0820708207eucas1p1J;
+        Wed, 19 Aug 2020 12:32:27 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200819123227eusmtrp2101a6bb48ffcd56dc7f5fbb9180c5bb3~sq1SpYy982883128831eusmtrp2j;
+        Wed, 19 Aug 2020 12:32:27 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-b2-5f3d1bdcc277
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 34.DF.06314.BDB1D3F5; Wed, 19
+        Aug 2020 13:32:27 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819123227eusmtip28a317d3b9767d8c4e833ddbc2aa0ead6~sq1SgmJje0116101161eusmtip2W;
+        Wed, 19 Aug 2020 12:32:27 +0000 (GMT)
+From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH 6/8] spi: spi-s3c64xx: Check return values
+Date:   Wed, 19 Aug 2020 14:32:06 +0200
+Message-Id: <20200819123208.12337-7-l.stelmach@samsung.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200819123208.12337-1-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Message-ID: <159784038771.3192.628898918222476271.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Organization: Samsung R&D Institute Poland
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djP87p3pG3jDZ7fELZY/OM5k8XGGetZ
+        LaY+fMJm0f/4NbPF+fMb2C1uHlrBaLHp8TVWi8u75rBZzDi/j8mi8eNNdou1R+6yO3B7XF/y
+        idlj06pONo/NS+o9+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK6N/8gKWgpucFf/W/GVsYGzg
+        6GLk5JAQMJGYt/wNUxcjF4eQwApGiTmLdzNCOF8YJV5vn88C4XxmlFh5ZDkLTMvsri1QieWM
+        Er0nZkE5zxklfu1/xAZSxSbgKNG/9AQrSEJEYAKTxMNzb8ASzAKlEj07D4HZwgJWEqtmHwUb
+        yyKgKvG0r5ERxOYVsJY4sWEiE8Q6eYn25dvB6jkFbCQe/prCBlEjKHFy5hOwXn4BLYk1TddZ
+        IObLSzRvnc0MslhC4By7xPsJ54CGcgA5LhKnLwlCzBSWeHV8CzuELSPxf+d8JoiSeonJk8wg
+        WnsYJbbN+QH1srXEnXO/2EBqmAU0Jdbv0ocIO0ps/LoUqpVP4sZbQYgL+CQmbZvODBHmleho
+        E4KoVpFY178HaqCURO+rFYwTGJVmIfllFpL7ZyHsWsDIvIpRPLW0ODc9tdgwL7Vcrzgxt7g0
+        L10vOT93EyMwIZ3+d/zTDsavl5IOMQpwMCrx8Facs44XYk0sK67MPcQowcGsJMLrdPZ0nBBv
+        SmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2Mm/63/1wkWeYZ
+        kBg4Qbqm0nWZtu6P+Ocb1mdtPXV8EcO8pfd+GWW0RD+Zpv7ib9/F7hctFZEcB9cszDhUJlMo
+        NkP1ifC1Nd9yNN5bGKbV2r+VdE5fbHBg77pJYVLex2I1fQSq1+d9eujWuPD75F8cv/a+3/Rq
+        tu300qo7rwPdP966uee85EQ5cSWW4oxEQy3mouJEAIyZrshEAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7q3pW3jDXoumlks/vGcyWLjjPWs
+        FlMfPmGz6H/8mtni/PkN7BY3D61gtNj0+BqrxeVdc9gsZpzfx2TR+PEmu8XaI3fZHbg9ri/5
+        xOyxaVUnm8fmJfUefVtWMXp83iQXwBqlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
+        a2VkqqRvZ5OSmpNZllqkb5egl9E/eQFLwU3Oin9r/jI2MDZwdDFyckgImEjM7trC0sXIxSEk
+        sJRRouvdfSCHAyghJbFybjpEjbDEn2tdbCC2kMBTRok5SwRBbDYBR4n+pSdYQXpFBGYwSTy5
+        MZkVJMEsUC5xadZzdhBbWMBKYtXsoywgNouAqsTTvkZGEJtXwFrixIaJTBAL5CXal28HW8Ap
+        YCPx8NcUqGXWEl2LFzJB1AtKnJz5BOw2ZgF1ifXzhEDC/AJaEmuarrNArJWXaN46m3kCo9As
+        JB2zEDpmIalawMi8ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzD6th37uXkH46WNwYcYBTgY
+        lXh4K85ZxwuxJpYVV+YeYpTgYFYS4XU6ezpOiDclsbIqtSg/vqg0J7X4EKMp0JsTmaVEk/OB
+        iSGvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenFDBWJknrZdtM7N+x
+        f8vnx2ZfX6Qo/uyTq7n4ajf3t1r/iMAHeWc0l4nEqd46t8Lu/u/ZGtn3uTzPnPG7Nmd2TG/M
+        niX/ZHYY1KWaKKuo36jcebXiYn+a+I+AlztPr93qzcASYSp+8Y79+pPak53jnp//zXz5Tud+
+        4z3pevH+Zv+XyOeW3Lx6JVJUiaU4I9FQi7moOBEA3rAYbtQCAAA=
+X-CMS-MailID: 20200819123227eucas1p11ec027714c16d5a66c89c6ef1f7b3604
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-RootMTR: 20200819123227eucas1p11ec027714c16d5a66c89c6ef1f7b3604
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200819123227eucas1p11ec027714c16d5a66c89c6ef1f7b3604
+References: <20200819123208.12337-1-l.stelmach@samsung.com>
+        <CGME20200819123227eucas1p11ec027714c16d5a66c89c6ef1f7b3604@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cache branch of tip:
-
-Commit-ID:     709c4362725abb5fa1e36fd94893a9b0d049df82
-Gitweb:        https://git.kernel.org/tip/709c4362725abb5fa1e36fd94893a9b0d049df82
-Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Wed, 08 Jul 2020 16:39:29 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 19 Aug 2020 11:04:23 +02:00
-
-cacheinfo: Move resctrl's get_cache_id() to the cacheinfo header file
-
-resctrl/core.c defines get_cache_id() for use in its cpu-hotplug
-callbacks. This gets the id attribute of the cache at the corresponding
-level of a CPU.
-
-Later rework means this private function needs to be shared. Move
-it to the header file.
-
-The name conflicts with a different definition in intel_cacheinfo.c,
-name it get_cpu_cacheinfo_id() to show its relation with
-get_cpu_cacheinfo().
-
-Now this is visible on other architectures, check the id attribute
-has actually been set.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lkml.kernel.org/r/20200708163929.2783-11-james.morse@arm.com
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 ---
- arch/x86/kernel/cpu/resctrl/core.c | 17 ++---------------
- include/linux/cacheinfo.h          | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+), 15 deletions(-)
+ drivers/spi/spi-s3c64xx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index cbbd751..1c00f2f 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -350,19 +350,6 @@ static void rdt_get_cdp_l2_config(void)
- 	rdt_get_cdp_config(RDT_RESOURCE_L2, RDT_RESOURCE_L2CODE);
- }
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 505789f91fdf..27d77600a820 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -273,6 +273,7 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
+ 	struct s3c64xx_spi_driver_data *sdd;
+ 	struct dma_slave_config config;
+ 	struct dma_async_tx_descriptor *desc;
++	int ret;
  
--static int get_cache_id(int cpu, int level)
--{
--	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
--	int i;
--
--	for (i = 0; i < ci->num_leaves; i++) {
--		if (ci->info_list[i].level == level)
--			return ci->info_list[i].id;
--	}
--
--	return -1;
--}
--
- static void
- mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
- {
-@@ -560,7 +547,7 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
-  */
- static void domain_add_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct list_head *add_pos = NULL;
- 	struct rdt_domain *d;
+ 	memset(&config, 0, sizeof(config));
  
-@@ -606,7 +593,7 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+@@ -296,11 +297,22 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
  
- static void domain_remove_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct rdt_domain *d;
+ 	desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
+ 				       dma->direction, DMA_PREP_INTERRUPT);
++	if (!desc) {
++		dev_err(&sdd->pdev->dev, "unable to prepare %s scatterlist",
++			dma->direction == DMA_DEV_TO_MEM ? "rx" : "tx");
++		return;
++	}
  
- 	d = rdt_find_domain(r, id, NULL);
-diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-index 46b92cd..4f72b47 100644
---- a/include/linux/cacheinfo.h
-+++ b/include/linux/cacheinfo.h
-@@ -3,6 +3,7 @@
- #define _LINUX_CACHEINFO_H
+ 	desc->callback = s3c64xx_spi_dmacb;
+ 	desc->callback_param = dma;
  
- #include <linux/bitops.h>
-+#include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/smp.h>
- 
-@@ -119,4 +120,24 @@ int acpi_find_last_cache_level(unsigned int cpu);
- 
- const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);
- 
-+/*
-+ * Get the id of the cache associated with @cpu at level @level.
-+ * cpuhp lock must be held.
-+ */
-+static inline int get_cpu_cacheinfo_id(int cpu, int level)
-+{
-+	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-+	int i;
-+
-+	for (i = 0; i < ci->num_leaves; i++) {
-+		if (ci->info_list[i].level == level) {
-+			if (ci->info_list[i].attributes & CACHE_ID)
-+				return ci->info_list[i].id;
-+			return -1;
-+		}
+ 	dma->cookie = dmaengine_submit(desc);
++	ret = dma_submit_error(dma->cookie);
++	if (ret) {
++		dev_err(&sdd->pdev->dev, "dmaengine_submit() failed %d", ret);
++		return;
 +	}
 +
-+	return -1;
-+}
-+
- #endif /* _LINUX_CACHEINFO_H */
+ 	dma_async_issue_pending(dma->ch);
+ }
+ 
+-- 
+2.26.2
+
