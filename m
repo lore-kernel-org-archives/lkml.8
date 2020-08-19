@@ -2,163 +2,198 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D93C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20DB206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:46:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="jUGwK+gU";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QGQN/+E5"
+	by mail.kernel.org (Postfix) with ESMTP id 42497206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgHSMqK (ORCPT
+        id S1728381AbgHSMqy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:46:10 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:65264 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgHSMpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:45:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1597841133; x=1629377133;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=jwOWa14Iody65DgsA92lOrUhAOSm+sipDGaGbTJmcDI=;
-  b=jUGwK+gUV0lI9/mnkQg+0qgaa0yNkbKcrfeaRKRBEVxWBxxQnKxalSrB
-   FPP+9CEu8GlB5jLYXVSPKlBQoaNJzUc6kB12JssmmOzIwC7NnLxogqTop
-   j2RD0iSMoW0+8Cekp17OIAqN+fbhIyGqmoTkOcZprY0GZENJEa7gKo2lm
-   KA1zMve8vku4Wc5bJziB1Lx2j2aDjk7///x9vXVrAc4Zn46AqBzRYcB2g
-   n3S3VVvs0iM5aIOa4oGboa3sZMrBaGsbUrq7vJRO4CulHUqb7afqzKRiQ
-   A0bviRi1mrdXZJEVxICT0BWo1cLSdNX4LlISRh/ivofsOLsSypj1vTrzD
-   w==;
-IronPort-SDR: ZyPUfYtqsquSbnEuYaT0zy8FJ/pQw2CT9zgN3MwlT9ZWDQzB1Wm4ASxddkPh2yK5uVLmhyZl/k
- uBhlywCqlYtAa60QBeQ/jDyg7SZwls/F6DwE5uXlBnEhOl9x0AaXaux0J5DlzA1gWxl4Am1EUL
- D41koLAWOBGGa+iryOTTCMfrCk/zAtDLFrYl09GfXyQOws7jPPkcbSyMBZWMFtZMZ6VTTwxcW8
- F0Vxl/xIKwxhX8TugwdIOLQ9jOrCS2BNnETQ3UlMcGqJ1JAvUVWmYouEc+h5UQ8aOgXlx7ALh/
- WY8=
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="87731660"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Aug 2020 05:45:32 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 19 Aug 2020 05:44:34 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Wed, 19 Aug 2020 05:44:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HjgTClWGPYfOq44PSJkJ1T6YDTrEUQwlmejBO1eUx6VX2KjxOvqGYLxioafDsx9gazfs9I3f+xvob4SfR2vX026wgLLmPADRhGXZIKDhXp3AVIydKwOmPDf1pDVW9YyVzII2IcR/0juTYbsQkSQOoDH4/isGFYtsT0Vs47lkvzkkvoHy3YkPVCjcYuM5xhncRQZxGTW/HmTqd40Yx1KY8YSwYaqs+isX7Iwn6B+w8t6sdftx/frmqHY0WYxXVjWq+vM+Varnu8sAvKC6muSPaie/AdF7fXlgiEWCjAXQF4SdX6Rs6LV7lIqWIVWCJO0cpP1bCkHzZlKzPnsYQo8bmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jwOWa14Iody65DgsA92lOrUhAOSm+sipDGaGbTJmcDI=;
- b=QR+JZJ8lStUgdbpaKFMfqjuG+xBa0rs9FU/xE0ipFmSa+0Vqcx1PyoLVEdzZ2GmCUlOcSqDqEoEiZxJNH/RfqbVwT3fEmOlU1X2oysrM/uZho45ej0Au0JmS58x7Na4wSBK79oGjGtzEv8rdycMu+0gYcsHNBZij7p/LKQ4kbR0mUNy+WbVNQxYL612IFgIZ2RBykB0fX3w3mKfMPcFio8Mr2aKSvz/ZeHbJOyA6BSY8UubOJAtaN8kCmKR7fsumvdR1wRA1NtTgcESIDDj67wmDiFyTeJwUZXiudwnpygIRj5ghfhF1EVQOX32yw7zqE3qY41JLDq33ZmMwb3K14w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jwOWa14Iody65DgsA92lOrUhAOSm+sipDGaGbTJmcDI=;
- b=QGQN/+E5BSu1gkmjpuuSBTuaRHPPQHRl477E5oqawxzEWiyvhzFWOhVyD7JBPgB/OJFpE/dQIMFFFJkR+dTaz4USeb90/Ei/eqvMA85TYb+22lG7HEKzUldJaAptRXmkxd88LcOyfNxn5pXNW9ydBADbszASRkwMSJoyNTJp/B0=
-Received: from BYAPR11MB2999.namprd11.prod.outlook.com (2603:10b6:a03:90::17)
- by BY5PR11MB4166.namprd11.prod.outlook.com (2603:10b6:a03:191::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 19 Aug
- 2020 12:45:29 +0000
-Received: from BYAPR11MB2999.namprd11.prod.outlook.com
- ([fe80::9d17:b603:ad42:a2d4]) by BYAPR11MB2999.namprd11.prod.outlook.com
- ([fe80::9d17:b603:ad42:a2d4%7]) with mapi id 15.20.3305.024; Wed, 19 Aug 2020
- 12:45:29 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <sakari.ailus@iki.fi>
-CC:     <mchehab@kernel.org>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: csi2dc: add bindings for
- microchip csi2dc
-Thread-Topic: [PATCH v2 1/4] dt-bindings: media: csi2dc: add bindings for
- microchip csi2dc
-Thread-Index: AQHWUQ4jEadYX0HypkGv3SAUXQZrmKk25QKAgAjGG4A=
-Date:   Wed, 19 Aug 2020 12:45:29 +0000
-Message-ID: <07583628-1fd0-cb05-dc12-f4a3c76da3de@microchip.com>
-References: <20200703074416.55272-1-eugen.hristev@microchip.com>
- <20200703074416.55272-2-eugen.hristev@microchip.com>
- <20200813224619.GN840@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200813224619.GN840@valkosipuli.retiisi.org.uk>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
+        Wed, 19 Aug 2020 08:46:54 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3069 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728260AbgHSMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:46:06 -0400
+Received: from DGGEML403-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id B9E2EF04E3E9F5AFE1FB;
+        Wed, 19 Aug 2020 20:46:02 +0800 (CST)
+Received: from DGGEML505-MBX.china.huawei.com ([169.254.12.146]) by
+ DGGEML403-HUB.china.huawei.com ([fe80::74d9:c659:fbec:21fa%31]) with mapi id
+ 14.03.0487.000; Wed, 19 Aug 2020 20:45:54 +0800
+From:   qiuguorui <qiuguorui1@huawei.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "ludovic.barre@st.com" <ludovic.barre@st.com>,
+        Zengweilin <zengweilin@huawei.com>,
+        chenjianguo <chenjianguo3@huawei.com>
+Subject: Re: [PATCH] irqchip/stm32-exti: avoid interrupts losing due to
+ clearing pending bit by mistake
+Thread-Topic: [PATCH] irqchip/stm32-exti: avoid interrupts losing due to
+ clearing pending bit by mistake
+Thread-Index: AdZ2DMaF/HB72ziASqawGY+By7fWQg==
+Date:   Wed, 19 Aug 2020 12:45:53 +0000
+Message-ID: <85F0D3A887C4C146A2824A628E698AE51FFAC5E2@dggeml505-mbx.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: iki.fi; dkim=none (message not signed)
- header.d=none;iki.fi; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [86.121.125.215]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c3cbf8a-4dfc-4e7c-d6d2-08d8443dc0dd
-x-ms-traffictypediagnostic: BY5PR11MB4166:
-x-microsoft-antispam-prvs: <BY5PR11MB4166DD9038CC18A02F5C18FEE85D0@BY5PR11MB4166.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3v2udrP9BgLjOtq7GW2MMFU/ewW7p/7lQadKe4W1pF7YijBVjo0lVcaKxbyP+kCU44j8SD4tt6oy5T9/RkumoRF2NLfg4QaWz6sGzSDy+Y4btPeWWXvXbyOYtTC6ytxGRbNl7Y2X6uKMDDqHI/qeGMVMC4V8gwoqLpoULUZa4i90hn3/fXBIeKCvpe1NsT2ABq0dApjpYhgwSblR2fGUamZYC4YEU+nc525HTojw2om6R2A1I+IN0tHA8LSYIrQ0QBrQ/QkGKd1qoY2dHELd0x+m5/iaXjJHd5GabsysgGwqybs/JBeLBVqQx+cXasnMTMZU7tkC6zKpWJsCZFBrwHdJ+QmYqImlpeKlCPbQcOC66dFFcs3kpUvBPXg8jsl4
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(366004)(136003)(39860400002)(396003)(66446008)(64756008)(66556008)(66476007)(36756003)(26005)(31686004)(316002)(2906002)(5660300002)(8676002)(6512007)(2616005)(31696002)(478600001)(186003)(91956017)(6486002)(4326008)(54906003)(8936002)(6506007)(53546011)(71200400001)(66946007)(76116006)(6916009)(86362001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 7aHBEm1TwgY4FJKCXL3V9pG+01ufs6zfvbXJEfHTknho++o0gDGLSUifcrCsgzeptCGSqLcGj/Zz86ol1Hbc7ChWDRLBZ9q/9fjxkvUEnnNTccV9keQrblcGNDbF2jUd+aBrcDDHU8wxFLgtvvRifdKR8RzNJWaLuFYaz29n39mQZ/6Awqgm1lzuNGzIU8hvDK8hOGmNeFElCkDtDLCy8TO8Z1yX08fBQWFiGjfreQoSHsK9RiUusB6rFtomIPF1l/19lxizYVWZasPqI6k0BUSHBlnoAduqmUIIELwioBFjexS0BD8vVQwfbTX0RU59sXtQSRp8vPEQiMFVzdr4mFzwfsrZ2oXi4PYyEBjCR8tH7YDCXpPKSie4zV4cqZxVlD1qaXj6fjqfMm+7hFm6ZnVJ8EwdWv8Q1CbyvPWt5ss0lKpa+IEQZTJ/1EYTuG6h/1P0NPdY7OLlce//K5zqN/N67uNR3/oGFEkNCfuvlShjPoi17aS0TtfEBqueufb7s0z/tTRIUniGWzBuaRtveEOyuaXrW2v8Jq4ecm5bW2agLfFz/fQj/q9byUJZzNeGP7vhtjHJUHWrcgV2pHChHmsCFdeKzucAmy3L7ZTA+gufiS9iaAzDbWkp8dy7nMxKBy+EaK4eI56CZFAfl27xZQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <63295B18F5822A4389B4EF4DC50F1900@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-originating-ip: [10.67.103.69]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2999.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c3cbf8a-4dfc-4e7c-d6d2-08d8443dc0dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 12:45:29.1103
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0tKHFL+aMZ/nyJhjpm5c+88DzpmV3uXQ+nCyfignQd9J5XQS5xDScsxTJTw41Gs9eoOiZzUokactvvBOJzP0LhRUOmYgXqjWEybT1RCDl80=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4166
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTQuMDguMjAyMCAwMTo0NiwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBIaSBFdWdlbiwNCj4g
-DQo+IE9uIEZyaSwgSnVsIDAzLCAyMDIwIGF0IDEwOjQ0OjEzQU0gKzAzMDAsIEV1Z2VuIEhyaXN0
-ZXYgd3JvdGU6DQo+PiBBZGQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgbWljcm9jaGlwIENT
-STIgRGVtdWx0aXBsZXhlciBjb250cm9sbGVyLg0KPiANCj4gLi4uDQo+IA0KPj4gKyAgcG9ydEAx
-Og0KPj4gKyAgICB0eXBlOiBvYmplY3QNCj4+ICsgICAgZGVzY3JpcHRpb246DQo+PiArICAgICAg
-T3V0cHV0IHBvcnQgbm9kZSwgc2luZ2xlIGVuZHBvaW50LCBkZXNjcmliaW5nIHRoZSBvdXRwdXQg
-cGFkLg0KPj4gKw0KPj4gKyAgICBwcm9wZXJ0aWVzOg0KPj4gKyAgICAgICcjYWRkcmVzcy1jZWxs
-cyc6DQo+PiArICAgICAgICBjb25zdDogMQ0KPj4gKw0KPj4gKyAgICAgICcjc2l6ZS1jZWxscyc6
-DQo+PiArICAgICAgICBjb25zdDogMA0KPj4gKw0KPj4gKyAgICAgIHJlZzoNCj4+ICsgICAgICAg
-IGNvbnN0OiAxDQo+PiArDQo+PiArICAgIHBhdHRlcm5Qcm9wZXJ0aWVzOg0KPj4gKyAgICAgICJe
-ZW5kcG9pbnRAWzAtOWEtZl0kIjoNCj4+ICsgICAgICAgIHR5cGU6IG9iamVjdA0KPj4gKw0KPj4g
-KyAgICAgICAgcHJvcGVydGllczoNCj4+ICsgICAgICAgICAgcmVnOg0KPj4gKyAgICAgICAgICAg
-IGVudW06IFswLCAxLCAyLCAzXQ0KPj4gKyAgICAgICAgICAgIGRlc2NyaXB0aW9uOiB2aXJ0dWFs
-IGNoYW5uZWwgZm9yIHRoZSBlbmRwb2ludA0KPiANCj4gVW5sZXNzIHlvdSBuZWVkIHRoaXMgcmln
-aHQgbm93IEknZCBqdXN0IGhhcmQgY29kZSB0aGlzIHRvIHplcm8gaW4gdGhlDQo+IGRyaXZlci4g
-WW91IGNhbid0IGhhdmUgbW9yZSBlbmRwb2ludHMgZm9yIGFjdGl2ZSBkZXZpY2VzIGFueXdheSwg
-Y2FuIHlvdT8NCg0KSGVsbG8gU2FrYXJpLA0KDQpZb3UgYXJlIHJpZ2h0LCBidXQsIHRoZSB2aXJ0
-dWFsIElEIG11c3QgYmUgd3JpdHRlbiBpbiBoYXJkd2FyZSANCnJlZ2lzdGVycy4gU28gSSBjYW4g
-dGFrZSB0aGUgdmlydHVhbCBJRCBmcm9tIHRoaXMgcHJvcGVydHkuDQpPdGhlcndpc2UsIGlmIEkg
-aGFyZGNvZGUgdGhpcyBpbiB0aGUgZHJpdmVyLCBhbm90aGVyIHZpcnR1YWwgSUQgd291bGQgYmUg
-DQppbXBvc3NpYmxlIHRvIHVzZSB3aXRob3V0IGNoYW5naW5nIHRoZSBkcml2ZXIuIEFuZCBpZiB0
-aGUgYmluZGluZyBpcyANCmFjY2VwdGVkIHdpdGhvdXQgdGhpcyBwcm9wZXJ0eSwgaXQgd2lsbCBi
-ZSAnc2V0IGluIHN0b25lJyBhbmQgZGlmZmljdWx0IA0KdG8gY2hhbmdlIGFmdGVyd2FyZHMuDQoN
-CldoYXQgZG8geW91IHRoaW5rID8NCg0KRXVnZW4NCj4gDQo+IC0tDQo+IFNha2FyaSBBaWx1cw0K
-PiANCg0K
+On 2020-08-19 16:24, Marc Zyngier wrote:
+>On 2020-08-19 03:39, qiuguorui1 wrote:
+>> In the previous code, when the eoi handle of the exti clears the 
+>> pending bit of the current interrupt, it will first read the values of 
+>> fpr and rpr, then logically OR the corresponding bit of the interrupt 
+>> number, and finally write back to fpr and rpr.
+>> 
+>> We found through experiments that if two exti interrupts, we call them 
+>> int1/int2, arrive almost at the same time. in our scenario, the time 
+>> difference is 30 microseconds, assuming int1 is triggered first.
+>> 
+>> there will be an extreme scenario: both int's pending bit are set to 
+>> 1, the irq handle of int1 is executed first, and eoi handle is then 
+>> executed, at this moment, all pending bits are cleared, but the int 2 
+>> has not finally been reported to the cpu yet, which eventually lost 
+>> int2.
+>> 
+>> According to stm32's TRM description about rpr and fpr: Writing a 1 to 
+>> this bit will trigger a rising edge event on event x, Writing 0 has no 
+>> effect.
+>> 
+>> Therefore, when clearing the pending bit, we only need to clear the 
+>> pending bit of the irq.
+>
+>Interesting findings!
+Thanks!
+>
+>> 
+>> Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
+>
+>This definitely needs a Fixes: tag and a Cc: stable, as lost interrupts are not fun at all.
+OK.I will do this in the 2nd version of patch.
+>
+>> ---
+>>  drivers/irqchip/irq-stm32-exti.c | 18 ++++++++++++------
+>>  1 file changed, 12 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-stm32-exti.c
+>> b/drivers/irqchip/irq-stm32-exti.c
+>> index 03a36be757d8..ee4faf5c90b8 100644
+>> --- a/drivers/irqchip/irq-stm32-exti.c
+>> +++ b/drivers/irqchip/irq-stm32-exti.c
+>> @@ -26,6 +26,11 @@
+>> 
+>>  #define HWSPNLCK_TIMEOUT	1000 /* usec */
+>> 
+>> +enum reg_ops {
+>> +	REG_WRITE_ONLY,
+>> +	REG_READ_WRITE
+>> +};
+>> +
+>>  struct stm32_exti_bank {
+>>  	u32 imr_ofst;
+>>  	u32 emr_ofst;
+>> @@ -416,13 +421,14 @@ static void stm32_irq_ack(struct irq_data *d)
+>>  	irq_gc_unlock(gc);
+>>  }
+>> 
+>> -static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
+>> +static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg,
+>> enum reg_ops op)
+>>  {
+>>  	struct stm32_exti_chip_data *chip_data = 
+>> irq_data_get_irq_chip_data(d);
+>>  	void __iomem *base = chip_data->host_data->base;
+>> -	u32 val;
+>> +	u32 val = 0;
+>> 
+>> -	val = readl_relaxed(base + reg);
+>> +	if (op == REG_READ_WRITE)
+>> +		val = readl_relaxed(base + reg);
+>>  	val |= BIT(d->hwirq % IRQS_PER_BANK);
+>>  	writel_relaxed(val, base + reg);
+>> 
+>> @@ -449,9 +455,9 @@ static void stm32_exti_h_eoi(struct irq_data *d)
+>> 
+>>  	raw_spin_lock(&chip_data->rlock);
+>> 
+>> -	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
+>> +	stm32_exti_set_bit(d, stm32_bank->rpr_ofst, REG_WRITE_ONLY);
+>>  	if (stm32_bank->fpr_ofst != UNDEF_REG)
+>> -		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
+>> +		stm32_exti_set_bit(d, stm32_bank->fpr_ofst, REG_WRITE_ONLY);
+>> 
+>>  	raw_spin_unlock(&chip_data->rlock);
+>> 
+>> @@ -478,7 +484,7 @@ static void stm32_exti_h_unmask(struct irq_data *d)
+>>  	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
+>> 
+>>  	raw_spin_lock(&chip_data->rlock);
+>> -	chip_data->mask_cache = stm32_exti_set_bit(d, stm32_bank->imr_ofst);
+>> +	chip_data->mask_cache = stm32_exti_set_bit(d, stm32_bank->imr_ofst,
+>> REG_READ_WRITE);
+>>  	raw_spin_unlock(&chip_data->rlock);
+>> 
+>>  	if (d->parent_data->chip)
+>
+>I think this could be made much simpler by simply providing an accessor that doesn't do a RMW. Something like this (untested):
+Thanks for your advice! I will optimize in the 2nd version of patch.
+>
+>diff --git a/drivers/irqchip/irq-stm32-exti.c
+>b/drivers/irqchip/irq-stm32-exti.c
+>index 03a36be757d8..e35c5561a10d 100644
+>--- a/drivers/irqchip/irq-stm32-exti.c
+>+++ b/drivers/irqchip/irq-stm32-exti.c
+>@@ -416,6 +416,14 @@ static void stm32_irq_ack(struct irq_data *d)
+>  	irq_gc_unlock(gc);
+>  }
+>
+>+static void stm32_exti_write_bit(struct irq_data *d, u32 reg) {
+>+	struct stm32_exti_chip_data *chip_data =
+>irq_data_get_irq_chip_data(d);
+>+	void __iomem *base = chip_data->host_data->base;
+>+
+>+	writel_relaxed(BIT(d->hwirq % IRQS_PER_BANK), base + reg); }
+>+
+>  static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
+>  {
+>  	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d); @@ -449,9 +457,9 @@ static void stm32_exti_h_eoi(struct irq_data *d)
+>
+>  	raw_spin_lock(&chip_data->rlock);
+>
+>-	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
+>+	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
+>  	if (stm32_bank->fpr_ofst != UNDEF_REG)
+>-		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
+>+		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
+>
+>  	raw_spin_unlock(&chip_data->rlock);
+>
+>Thanks,
+>
+>         M.
+>--
+>Jazz is not dead. It just smells funny...
+>
