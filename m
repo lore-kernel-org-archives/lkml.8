@@ -2,223 +2,132 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F19EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E391C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C548207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251C4207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SZpHi4zo";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KkieMGIL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXxWdcY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgHSUNt (ORCPT
+        id S1726952AbgHSUP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:13:49 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:55628 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726435AbgHSUNr (ORCPT
+        Wed, 19 Aug 2020 16:15:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42301 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725997AbgHSUP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:13:47 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JKA0gx022260;
-        Wed, 19 Aug 2020 13:13:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=LpJzrv9ijRDddLWSu9x9Ux5pj2N3nYBd84+e4MbAJVQ=;
- b=SZpHi4zouzlPfs8v1Yd1TqYxLIIvYW9mjvuaNHDvJYT0TRP/BVi9PYFF52xNeSJDsmwj
- FURQRFs5Lfk0zUfk653mRbJ2BTFI6jbyMjuWlov/oPYMDZgCckkaxC2aYvPjA8AHe6ld
- gN4NbuLaNPM5Ipjd6nx7CX5DPSX4GbRv0CM= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 3318g0gsa1-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 19 Aug 2020 13:13:32 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 19 Aug 2020 13:13:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qh7VarsxnsM0jGuKfISfoTAucVdSc/KWrynqqrhcz6RVnkFPMlcrJ7iJrAwl842E4VHrQnpNq9h2FlGvrZxDxP3/gC3ScfUjSu+QMIHiPz9LZ6oOmGU9pHRbJ0OAvlbQNG0T1EJrLC5UxfxPPci+ajFlyV/fe3QEl4gqRuk1vWBaGCkPo8YkGJu/ctJ4k997nknUxN/4f5eurKAnjKsZGCZtNZxRFk9T2tqXIbkoa6NotI+YBU1pmkahpF+3rZT/T4OTlllsUMfp7HVA5xbb6f+zwNT9K9dHxcsi9Mao7ZilVgzoMQxxvTo7s71hjna0QaGAqR6baF7illkUu3Yglw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LpJzrv9ijRDddLWSu9x9Ux5pj2N3nYBd84+e4MbAJVQ=;
- b=REENorzz8vt/S1birQOW1JcdQRiWNFkJv+/lmmS7MSzy8mPunbMIS6VnB263+T9+ozc0NFoZEwVXVzcd4RIOUFfH6e35pB0aYKEko8cz4mC3q3jBCSh6wzQAjqHBaGDKdkehb59isiNZ7Wm1l/R0R5S44MzYFCGBKtVz+ajd0nAvHQ1u01n04C6Ia5G3bQMhKcfeyFE6RLYyfdyLxYVMAcye72Sbat16K6uY7keEEv8pkPhLix9v9323Ma8qRaFN91DLlKDOI8wHQwoXkCPvl0iUrRJ3d/x8CzDwCgikoJGQpzByAqRIxeVIGrpQCp5F3g3F3UPZydDJxJvcO/6Vhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LpJzrv9ijRDddLWSu9x9Ux5pj2N3nYBd84+e4MbAJVQ=;
- b=KkieMGIL01/oVJouLEBrHQr+GAdSZyim8QJBcuQWnPPYgmNPI8VwleGwCkGlO3WvfRsws+xX04IkZqdoW5+w2ZgT6QU5S2m8raiS714hqY6FxiIPhQ2YOc8peflxBqEU0bjXqe3o3CHZtOP4haCRzOlSkWT1P/12/l/O+cjMuUE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB2645.namprd15.prod.outlook.com (2603:10b6:a03:156::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.22; Wed, 19 Aug
- 2020 20:13:29 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 20:13:29 +0000
-Subject: Re: [PATCH bpf-next 4/6] bpf: override the meaning of
- ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
-To:     Lorenz Bauer <lmb@cloudflare.com>, <jakub@cloudflare.com>,
-        <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-CC:     <kernel-team@cloudflare.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-5-lmb@cloudflare.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <5d64158b-35ed-d28d-9857-6ee725d287f2@fb.com>
-Date:   Wed, 19 Aug 2020 13:13:23 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200819092436.58232-5-lmb@cloudflare.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR18CA0002.namprd18.prod.outlook.com
- (2603:10b6:208:23c::7) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Wed, 19 Aug 2020 16:15:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597868124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6wZSRsOZbW0ppoxwbf389BsXiaVqGjFLolCHa9KVfRI=;
+        b=YXxWdcY4HFERidCUvivy2lAFiT9sXrCtM0CK/AmL6kUoEWhaG+fIW4x0YTqvfVAYBzQklc
+        I2Embfj6ifM2Q14ueEhocZGy3f4hZj2HwTUbfF5HcbhHUSrnAzFaKmBv7gLIYJkJg86X52
+        JzjR4gxWQOcdUSJasVNzKl9Tlo6g25I=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-487-X3vWWMcLNg6XKdITSWTFnQ-1; Wed, 19 Aug 2020 16:15:22 -0400
+X-MC-Unique: X3vWWMcLNg6XKdITSWTFnQ-1
+Received: by mail-pj1-f72.google.com with SMTP id e2so2084101pjm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:15:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6wZSRsOZbW0ppoxwbf389BsXiaVqGjFLolCHa9KVfRI=;
+        b=OqtMZq7aMchOFdiqWlG4fCq+dvdmnJ7VbqOhLDeJar04E1xT+UDHOGzyAbmrKdM/XO
+         pVZhuE+SdwWhpyQhP9U4UNl43pbhJbMIZDWRi3iG3gFQKMqqJPlveChp8vM1GsfhxkbS
+         aWlui3pKW+KncGltfGr/fXYZsDeTKRaOSZ1GKCNEev53hvkbc3L0gB5E1XErrTLuA/5x
+         bvc/Jrq719M73ktGQJ6ZZDFn1VbXTgYufWjimJqYfddSLNi5Q2LDNbjKLgPP8G7Cnou1
+         6LLtI2l+ZH7NyCmBCJ4ZwY7E6OKhEdG/Jg1RqyRxG5VxA3lmZwGphXKIlD9jV/z7DNve
+         UJhQ==
+X-Gm-Message-State: AOAM533V/SzC1OM0YVV/jiyUqg+E+3CqK0yKtG/X6ojffEC4wPxhvMn7
+        v3XZcRYfBSqdv+T3V+ytFuOarSe/adXpRNYplZnLPd3UgHq6uD6/tZs0rIBwt4+/NlSiGsf4H1x
+        3Deuv1N4gIReaua0UXpySpUq1
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5515130pjb.129.1597868121452;
+        Wed, 19 Aug 2020 13:15:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxZ6K3xi/zuEXaLDp+AhVXh18fIyTkt9TT32R+RhUbJpOr/tX/cuBKSRunO6DGE9U7OgqK+kw==
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5515108pjb.129.1597868121185;
+        Wed, 19 Aug 2020 13:15:21 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id s125sm56651pfc.63.2020.08.19.13.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 13:15:20 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 04:15:09 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Rafael Aquini <aquini@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200819201509.GA26216@xiangao.remote.csb>
+References: <20200819195613.24269-1-hsiangkao@redhat.com>
+ <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c0a8:11e8::10d3] (2620:10d:c091:480::1:d29f) by MN2PR18CA0002.namprd18.prod.outlook.com (2603:10b6:208:23c::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 20:13:27 +0000
-X-Originating-IP: [2620:10d:c091:480::1:d29f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 975ee0cd-1c71-456a-f122-08d8447c5697
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2645:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB26456C2B78842345B539B967D35D0@BYAPR15MB2645.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7W5HphpCorKomONJ7oNCFwFbJFmfK55yMnw4/xx+ngI0G7xymrhUTuqAI7JNETJ3hOm8xIzaUudQLoZd25pvpYX3wCiavKJwqZtX9hNrkIbT9Bhkag0s6App1aAkbuypssUa9kdDHp/S9SJnqyMg0mjbf/UVFzUZcwlqQalykWcO9gsep7uoX1vASgProipExVLK2g83BCGnKdoB0wyFBV3xCI54iZ+kzbUBV3GOAuRwD21R6QWrsYfv5xFM66z+j0LubeV0p95mMYin+rsydhjCvh7IPb+dGDaKuwv4tpPrvYDiyxDqXUb2zOCi3n/R1jZiGIACHzx54fPd+ye6qHQe7/gtSEHAdME4a2dqWkVSp28xKBuIxFz8e6IoKab3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(366004)(136003)(396003)(36756003)(31686004)(86362001)(16526019)(4326008)(110136005)(6486002)(2906002)(316002)(5660300002)(8936002)(8676002)(31696002)(478600001)(66556008)(2616005)(186003)(66946007)(6666004)(53546011)(66476007)(52116002)(83380400001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: kC/+OSKifVu+BtmUH5wemhax3Q+hHaip9D+Z3QpopaA/Pz5TOmvOkDBzhacmwxj+I8Aja5bOY/GO51MiEPg/MfVq21uf3liIgPq3GxlOtPQqWqsyZJdX7eJnkstSwJnpbxEsevflpNk0iH1h1nIH3IgDL977rUNmYsXefshvJBAWH7H3orPto3NSLCm1w/2s9zesw7Xj/atUDMmj4Cr9DRKp8Sns4Y3kvxDsm4IZsuD/mXhzaQuvU1N+G/JzT4K+aUqPSBlZlDDkusmNNJWT3KXH8nTPcutvDZIsc+QwhpUUBncu5Zo9P8qj7q3KJhV/nauJHcKTXzYor5HqeVBiIjimxm0aTOv7OB7nLrSLNiCws5VNw/W3QittuiTCff3LN48pwwujd2kzWFIcR8RFSJA5DQEN1UBXUj4EzzEeZMCybhh4oOq0qM1nus3TUxDnTMNj9haOR0YZ28ObpOwRTqa3BxaftLxcY2fjeFR9J8P03GHOO0qTdJGoqrWzuOrxuC9trSBaV6E5nQ35wTUlusQ4x1OQ1ene+Cusa5NmvEyrnymoSfe0i9dYIhvETkoGsDzdWvo3WLuqzW1RHI1BipUIze5iNeUWLZSTii4iYyq0lX0KaurjCw9VggJSB6QfdxfJgML/wmStcBwQegm0DGoEeuxQCNwFio13LabE+MkpMHKeijLx8AicgyS2v448
-X-MS-Exchange-CrossTenant-Network-Message-Id: 975ee0cd-1c71-456a-f122-08d8447c5697
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 20:13:29.5065
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IBT3wjijnVvM95ziKdyCvSVV+u2AUozknx5fnvHdMc9FmNbdNiFR/JM/ZDtE1/Qk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2645
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_13:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 mlxscore=0 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190164
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
+On Wed, Aug 19, 2020 at 01:05:06PM -0700, Andrew Morton wrote:
+> On Thu, 20 Aug 2020 03:56:13 +0800 Gao Xiang <hsiangkao@redhat.com> wrote:
+> 
+> > SWP_FS doesn't mean the device is file-backed swap device,
+> > which just means each writeback request should go through fs
+> > by DIO. Or it'll just use extents added by .swap_activate(),
+> > but it also works as file-backed swap device.
+> 
+> This is very hard to understand :(
 
-On 8/19/20 2:24 AM, Lorenz Bauer wrote:
-> The verifier assumes that map values are simple blobs of memory, and
-> therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
-> map types where this isn't true. For example, sockmap and sockhash store
-> sockets. In general this isn't a big problem: we can just
-> write helpers that explicitly requests PTR_TO_SOCKET instead of
-> ARG_PTR_TO_MAP_VALUE.
-> 
-> The one exception are the standard map helpers like map_update_elem,
-> map_lookup_elem, etc. Here it would be nice we could overload the
-> function prototype for different kinds of maps. Unfortunately, this
-> isn't entirely straight forward:
-> We only know the type of the map once we have resolved meta->map_ptr
-> in check_func_arg. This means we can't swap out the prototype
-> in check_helper_call until we're half way through the function.
-> 
-> Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE* to
-> mean "the native type for the map" instead of "pointer to memory"
-> for sockmap and sockhash. This means we don't have to modify the
-> function prototype at all
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->   kernel/bpf/verifier.c | 40 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
-> 
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index b6ccfce3bf4c..47f9b94bb9d4 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -3872,6 +3872,38 @@ static int int_ptr_type_to_size(enum bpf_arg_type type)
->   	return -EINVAL;
->   }
->   
-> +static int override_map_arg_type(struct bpf_verifier_env *env,
-> +				 const struct bpf_call_arg_meta *meta,
-> +				 enum bpf_arg_type *arg_type)
-> +{
-> +	if (!meta->map_ptr) {
-> +		/* kernel subsystem misconfigured verifier */
-> +		verbose(env, "invalid map_ptr to access map->type\n");
-> +		return -EACCES;
-> +	}
-> +
-> +	switch (meta->map_ptr->map_type) {
-> +	case BPF_MAP_TYPE_SOCKMAP:
-> +	case BPF_MAP_TYPE_SOCKHASH:
-> +		switch (*arg_type) {
-> +		case ARG_PTR_TO_MAP_VALUE:
-> +			*arg_type = ARG_PTR_TO_SOCKET;
-> +			break;
-> +		case ARG_PTR_TO_MAP_VALUE_OR_NULL:
-> +			*arg_type = ARG_PTR_TO_SOCKET_OR_NULL;
-> +			break;
-> +		default:
-> +			verbose(env, "invalid arg_type for sockmap/sockhash\n");
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
->   static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
->   			  struct bpf_call_arg_meta *meta,
->   			  const struct bpf_func_proto *fn)
-> @@ -3904,6 +3936,14 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
->   		return -EACCES;
->   	}
->   
-> +	if (arg_type == ARG_PTR_TO_MAP_VALUE ||
-> +	    arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
-> +	    arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
+Thanks for your reply...
 
-We probably do not need ARG_PTR_TO_UNINIT_MAP_VALUE here.
+The related logic is in __swap_writepage() and setup_swap_extents(),
+and also see e.g generic_swapfile_activate() or iomap_swapfile_activate()...
 
-Do we need ARG_PTR_TO_MAP_VALUE_OR_NULL? bpf_map_update_elem arg type
-is ARG_PTR_TO_MAP_VALUE.
+I will also talk with "Huang, Ying" in person if no response here.
 
-> +		err = override_map_arg_type(env, meta, &arg_type);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->   	if (arg_type == ARG_PTR_TO_MAP_KEY ||
->   	    arg_type == ARG_PTR_TO_MAP_VALUE ||
->   	    arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
 > 
+> > So in order to achieve the goal of the original patch,
+> > SWP_BLKDEV should be used instead.
+> > 
+> > FS corruption can be observed with SSD device + XFS +
+> > fragmented swapfile due to CONFIG_THP_SWAP=y.
+> > 
+> > Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> > Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
+> 
+> Why do you think it has taken three years to discover this?
+
+I'm not sure if the Redhat BZ is available for public, it can be reproduced
+since rhel 8
+https://bugzilla.redhat.com/show_bug.cgi?id=1855474
+
+It seems hard to believe, but I think just because rare user uses the SSD device +
+THP + file-backed swap device combination... maybe I'm wrong here, but my test
+shows as it is.
+
+Thanks,
+Gao Xiang
+
+> 
+> 
+> 
+
