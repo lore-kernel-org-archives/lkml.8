@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC85C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC38207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6FE206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="APlJQv4y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4rOtRbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHSKMx (ORCPT
+        id S1728003AbgHSKM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:12:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25345 "EHLO
+        Wed, 19 Aug 2020 06:12:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46963 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727926AbgHSKMk (ORCPT
+        with ESMTP id S1727906AbgHSKMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:12:40 -0400
+        Wed, 19 Aug 2020 06:12:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597831957;
+        s=mimecast20190719; t=1597831954;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CWo5Jpi3Mz1v9jmBD5sqKDaxq4fd3i5IMfeKh874bis=;
-        b=APlJQv4yW/KzxzlliyC1ppwkAGjx9JeMziXSoGWMqtsMEybjjZtOftqvSfnYC0cU/ZyZFH
-        LiKjoXL6eV6xN4oFFUgUu3FP3LA3e9yV0DMzYpLFCkSnuC8/ITDLbsAFB2DDwtwhuUkhNc
-        0eFGX8W+gR8r+/RpB5+eJ3DdOIjBP98=
+        bh=IdguOjkQ24qzjm7ZRgHqOO4YkZqbDqwdE1w1x77wlyM=;
+        b=h4rOtRbKI3uTyP+mdrY1QsDuqCG8qMhaMGJ3dmX6bgnFkgEZ7LaDit15mD2bRhtz9lhQ9O
+        wVYrt3Qy1MvhwFHfko/rpRY63yTGhYrZ2GWCApW/ZTe1lD3nLbiglZcFOA/R933egTHVXZ
+        8817MJsSQeWmwn88opt1JyBXJGizbF4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-HAvIWK1fOG2LGWHGdhiw8w-1; Wed, 19 Aug 2020 06:12:35 -0400
-X-MC-Unique: HAvIWK1fOG2LGWHGdhiw8w-1
+ us-mta-279-RrJ7PefaNlWb0v9vZUwEag-1; Wed, 19 Aug 2020 06:12:30 -0400
+X-MC-Unique: RrJ7PefaNlWb0v9vZUwEag-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 664EB10066FB;
-        Wed, 19 Aug 2020 10:12:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B99F1006701;
+        Wed, 19 Aug 2020 10:12:28 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6634926366;
-        Wed, 19 Aug 2020 10:12:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87F5416597;
+        Wed, 19 Aug 2020 10:12:26 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
@@ -54,10 +54,10 @@ Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Baoquan He <bhe@redhat.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Oscar Salvador <osalvador@suse.de>,
-        Charan Teja Reddy <charante@codeaurora.org>
-Subject: [PATCH v1 11/11] mm/memory_hotplug: mark pageblocks MIGRATE_ISOLATE while onlining memory
-Date:   Wed, 19 Aug 2020 12:11:57 +0200
-Message-Id: <20200819101157.12723-12-david@redhat.com>
+        Mel Gorman <mgorman@suse.de>
+Subject: [PATCH v1 09/11] mm/page_alloc: drop stale pageblock comment in memmap_init_zone*()
+Date:   Wed, 19 Aug 2020 12:11:55 +0200
+Message-Id: <20200819101157.12723-10-david@redhat.com>
 In-Reply-To: <20200819101157.12723-1-david@redhat.com>
 References: <20200819101157.12723-1-david@redhat.com>
 MIME-Version: 1.0
@@ -68,22 +68,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, it can happen that pages are allocated (and freed) via the buddy
-before we finished basic memory onlining.
+Commit ac5d2539b238 ("mm: meminit: reduce number of times pageblocks are
+set during struct page init") moved the actual zone range check, leaving
+only the alignment check for pageblocks.
 
-For example, pages are exposed to the buddy and can be allocated before
-we actually mark the sections online. Allocated pages could suddenly
-fail pfn_to_online_page() checks. We had similar issues with pcp
-handling, when pages are allocated+freed before we reach
-zone_pcp_update() in online_pages() [1].
-
-Instead, mark all pageblocks MIGRATE_ISOLATE, such that allocations are
-impossible. Once done with the heavy lifting, use
-undo_isolate_page_range() to move the pages to the MIGRATE_MOVABLE
-freelist, marking them ready for allocation. Similar to offline_pages(),
-we have to manually adjust zone->nr_isolate_pageblock.
-
-[1] https://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
+Let's drop the stale comment and make the pageblock check easier to read.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -91,106 +80,48 @@ Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Charan Teja Reddy <charante@codeaurora.org>
+Cc: Mel Gorman <mgorman@suse.de>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/Kconfig          |  2 +-
- mm/memory_hotplug.c | 32 ++++++++++++++++++++++----------
- 2 files changed, 23 insertions(+), 11 deletions(-)
+ mm/page_alloc.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 6c974888f86f9..85a16ce1dbc49 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -152,6 +152,7 @@ config HAVE_BOOTMEM_INFO_NODE
- # eventually, we can have this option just 'select SPARSEMEM'
- config MEMORY_HOTPLUG
- 	bool "Allow for memory hot-add"
-+	select MEMORY_ISOLATION
- 	depends on SPARSEMEM || X86_64_ACPI_NUMA
- 	depends on ARCH_ENABLE_MEMORY_HOTPLUG
- 	depends on 64BIT || BROKEN
-@@ -178,7 +179,6 @@ config MEMORY_HOTPLUG_DEFAULT_ONLINE
- 
- config MEMORY_HOTREMOVE
- 	bool "Allow for memory hot remove"
--	select MEMORY_ISOLATION
- 	select HAVE_BOOTMEM_INFO_NODE if (X86_64 || PPC64)
- 	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
- 	depends on MIGRATION
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 1c16a5def781e..35d56cbd3e45b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -805,7 +805,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
- 
- 	/* associate pfn range with the zone */
- 	zone = zone_for_pfn_range(online_type, nid, pfn, nr_pages);
--	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_MOVABLE);
-+	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_ISOLATE);
- 
- 	arg.start_pfn = pfn;
- 	arg.nr_pages = nr_pages;
-@@ -816,6 +816,14 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
- 	if (ret)
- 		goto failed_addition;
- 
-+	/*
-+	 * Fixup the number of isolated pageblocks before marking the sections
-+	 * onlining, such that undo_isolate_page_range() works correctly.
-+	 */
-+	spin_lock_irqsave(&zone->lock, flags);
-+	zone->nr_isolate_pageblock += nr_pages / pageblock_nr_pages;
-+	spin_unlock_irqrestore(&zone->lock, flags);
-+
- 	/*
- 	 * If this zone is not populated, then it is not in zonelist.
- 	 * This means the page allocator ignores this zone.
-@@ -833,21 +841,25 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
- 	zone->zone_pgdat->node_present_pages += nr_pages;
- 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
- 
-+	node_states_set_node(nid, &arg);
-+	if (need_zonelists_rebuild)
-+		build_all_zonelists(NULL);
-+	zone_pcp_update(zone);
-+
-+	/* Basic onlining is complete, allow allocation of onlined pages. */
-+	undo_isolate_page_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE);
-+
- 	/*
- 	 * When exposing larger, physically contiguous memory areas to the
- 	 * buddy, shuffling in the buddy (when freeing onlined pages, putting
- 	 * them either to the head or the tail of the freelist) is only helpful
- 	 * for maintaining the shuffle, but not for creating the initial
- 	 * shuffle. Shuffle the whole zone to make sure the just onlined pages
--	 * are properly distributed across the whole freelist.
-+	 * are properly distributed across the whole freelist. Make sure to
-+	 * shuffle once pageblocks are no longer isolated.
- 	 */
- 	shuffle_zone(zone);
- 
--	node_states_set_node(nid, &arg);
--	if (need_zonelists_rebuild)
--		build_all_zonelists(NULL);
--	zone_pcp_update(zone);
--
- 	init_per_zone_wmark_min();
- 
- 	kswapd_run(nid);
-@@ -1550,9 +1562,9 @@ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- 	pr_info("Offlined Pages %ld\n", nr_pages);
- 
- 	/*
--	 * Onlining will reset pagetype flags and makes migrate type
--	 * MOVABLE, so just need to decrease the number of isolated
--	 * pageblocks zone counter here.
-+	 * The memory sections are marked offline, and the pageblock flags
-+	 * effectively stale; nobody should be touching them. Fixup the number
-+	 * of isolated pageblocks, memory onlining will properly revert this.
- 	 */
- 	spin_lock_irqsave(&zone->lock, flags);
- 	zone->nr_isolate_pageblock -= nr_pages / pageblock_nr_pages;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 848664352dfe2..5db0b35f95e20 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6022,13 +6022,8 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+ 		 * to reserve their blocks rather than leaking throughout
+ 		 * the address space during boot when many long-lived
+ 		 * kernel allocations are made.
+-		 *
+-		 * bitmap is created for zone's valid pfn range. but memmap
+-		 * can be created for invalid pages (for alignment)
+-		 * check here not to call set_pageblock_migratetype() against
+-		 * pfn out of zone.
+ 		 */
+-		if (!(pfn & (pageblock_nr_pages - 1))) {
++		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
+ 			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
+ 			cond_resched();
+ 		}
+@@ -6091,15 +6086,10 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 		 * the address space during boot when many long-lived
+ 		 * kernel allocations are made.
+ 		 *
+-		 * bitmap is created for zone's valid pfn range. but memmap
+-		 * can be created for invalid pages (for alignment)
+-		 * check here not to call set_pageblock_migratetype() against
+-		 * pfn out of zone.
+-		 *
+ 		 * Please note that MEMMAP_HOTPLUG path doesn't clear memmap
+ 		 * because this is done early in section_activate()
+ 		 */
+-		if (!(pfn & (pageblock_nr_pages - 1))) {
++		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
+ 			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
+ 			cond_resched();
+ 		}
 -- 
 2.26.2
 
