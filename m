@@ -2,202 +2,216 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C02920786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD16320786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JKKUjIko"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B0GbCmDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgHSSPH (ORCPT
+        id S1726809AbgHSSSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:15:07 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5218 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgHSSPG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:15:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3d6bec0002>; Wed, 19 Aug 2020 11:14:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 19 Aug 2020 11:15:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 19 Aug 2020 11:15:03 -0700
-Received: from [10.2.49.218] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Aug
- 2020 18:14:56 +0000
-Subject: Re: [PATCH] mm/gup: don't permit users to call get_user_pages with
- FOLL_LONGTERM
-To:     Barry Song <song.bao.hua@hisilicon.com>,
-        <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>, Jan Kara <jack@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Jonathan Corbet" <corbet@lwn.net>, Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-References: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <e4265ac0-793d-053b-81b1-15e57c04b830@nvidia.com>
-Date:   Wed, 19 Aug 2020 11:14:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 19 Aug 2020 14:18:03 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57422 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbgHSSSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:18:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597861078; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=+yY6ARtxEi7zwXwHoX/pmkrR5nxBNg14YNXmTQgs4QI=; b=B0GbCmDKyCZ8O2Y5qiZrkCP2tpo0gHXFzb8zjMGLkB1AX92EWCED6NHnkvshXKEBPqDXKf9c
+ Ov2tAbKj0xOahhvd0NNmnfpW/exDI9s2DIzQVIUbqFV30Yi4d4OHI7+Q4XJ0WPs2CWhwpTSh
+ EEmK0VfnfPxdFH3Ay0CXp/VmVBg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f3d6cc1673250c006118322 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 Aug 2020 18:17:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2355DC433CB; Wed, 19 Aug 2020 18:17:37 +0000 (UTC)
+Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51B0DC433C6;
+        Wed, 19 Aug 2020 18:17:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51B0DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH] usb: dwc3: Stop active transfers before halting the
+ controller
+To:     Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <20200819051739.22123-1-wcheng@codeaurora.org>
+ <87zh6qyihk.fsf@kernel.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <3b87cc4c-f45c-b168-a7e3-9e60101e526e@codeaurora.org>
+Date:   Wed, 19 Aug 2020 11:17:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <87zh6qyihk.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597860845; bh=gNdAT/etTZwZteED0BIN2T3CZYf5c64GDyXgROoUS1o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JKKUjIkoVN9iC4WXRB5nrYw218IysKH7+JRf9wi0cjxJrbhYBwzeU5CV+QVHgt1tF
-         XW03l6xc9F9fGw7Wr3N0EWXpC83URUk9jPN5SyYmRdGkht8QLZValtcSwUZ05bIwL0
-         fUC73aIfquDBW7xe298badhDUMs+2OuBVtpSYI+k1RAbSncdUuRLDISrRucv7RXUpW
-         1VOFlOxO7UptMfR0ahtUoUvreYKH4JmeZQnvZqvY3tplSsA/7E2U655uBLII6aOkjU
-         SoMDfOrkPqlsJII+J7QyGDd2OJy2w/tESfrhtPctzDjWobfW0RC4iZdsxhx0NayF8k
-         AH42Yl+2/kodg==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 4:01 AM, Barry Song wrote:
-> gug prohibits users from calling get_user_pages() with FOLL_PIN. But it
-
-Maybe Andrew can fix the typo above: gug --> gup.
 
 
-> allows users to call get_user_pages() with FOLL_LONGTERM only. It seems
-> insensible.
->=20
-> since FOLL_LONGTERM is a stricter case of FOLL_PIN, we should prohibit
-> users from calling get_user_pages() with FOLL_LONGTERM while not with
-> FOLL_PIN.
->=20
-> mm/gup_benchmark.c used to be the only user who did this improperly.
-> But it has been fixed by moving to use pin_user_pages().
+On 8/19/2020 4:37 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Wesley Cheng <wcheng@codeaurora.org> writes:
+>> In the DWC3 databook, for a device initiated disconnect, the driver is
+>> required to send dependxfer commands for any pending transfers.
+>> In addition, before the controller can move to the halted state, the SW
+>> needs to acknowledge any pending events.  If the controller is not halted
+>> properly, there is a chance the controller will continue accessing stale or
+>> freed TRBs and buffers.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>>
+>> ---
+>> Verified fix by adding a check for ETIMEDOUT during the run stop call.
+>> Shell script writing to the configfs UDC file to trigger disconnect and
+>> connect.  Batch script to have PC execute data transfers over adb (ie adb
+>> push)  After a few iterations, we'd run into a scenario where the
+>> controller wasn't halted.  With the following change, no failed halts after
+>> many iterations.
+>> ---
+>>  drivers/usb/dwc3/ep0.c    |  2 +-
+>>  drivers/usb/dwc3/gadget.c | 59 +++++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 57 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+>> index 59f2e8c31bd1..456aa87e8778 100644
+>> --- a/drivers/usb/dwc3/ep0.c
+>> +++ b/drivers/usb/dwc3/ep0.c
+>> @@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
+>>  	int				ret;
+>>  
+>>  	spin_lock_irqsave(&dwc->lock, flags);
+>> -	if (!dep->endpoint.desc) {
+>> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
+> 
+> these two should be the same. If pullups are not connected, there's no
+> way we can have an endpoint descriptor. Did you find a race condition here?
+> 
 
-For future patches, you don't have to write everything in the
-commit log. Some things are better placed in a cover letter or after
-the "---" line, because they don't need to be recorded forever.
+Hi Felipe,
 
-Anyway, the diffs seem fine, assuming that you've audited the call sites.
+At least for EP0, I don't see us clearing the EP0 desc after we set it
+during dwc3_gadget_init_endpoint().  In the dwc3_gadget_ep_disable() we
+only clear the desc for non control EPs:
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+static int __dwc3_gadget_ep_disable(struct dwc3_ep *dep)
+{
+...
+	/* Clear out the ep descriptors for non-ep0 */
+	if (dep->number > 1) {
+		dep->endpoint.comp_desc = NULL;
+		dep->endpoint.desc = NULL;
+	}
 
->=20
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->   mm/gup.c | 37 ++++++++++++++++++++++---------------
->   1 file changed, 22 insertions(+), 15 deletions(-)
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ae096ea7583f..4da669f79566 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1789,6 +1789,25 @@ static long __get_user_pages_remote(struct mm_stru=
-ct *mm,
->   				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
->   }
->  =20
-> +static bool is_valid_gup_flags(unsigned int gup_flags)
-> +{
-> +	/*
-> +	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> +	 * never directly by the caller, so enforce that with an assertion:
-> +	 */
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +		return false;
-> +	/*
-> +	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
-> +	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
-> +	 * FOLL_PIN.
-> +	 */
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->   /**
->    * get_user_pages_remote() - pin user pages in memory
->    * @mm:		mm_struct of target mm
-> @@ -1854,11 +1873,7 @@ long get_user_pages_remote(struct mm_struct *mm,
->   		unsigned int gup_flags, struct page **pages,
->   		struct vm_area_struct **vmas, int *locked)
->   {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that with an assertion:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->   		return -EINVAL;
->  =20
->   	return __get_user_pages_remote(mm, start, nr_pages, gup_flags,
-> @@ -1904,11 +1919,7 @@ long get_user_pages(unsigned long start, unsigned =
-long nr_pages,
->   		unsigned int gup_flags, struct page **pages,
->   		struct vm_area_struct **vmas)
->   {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that with an assertion:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->   		return -EINVAL;
->  =20
->   	return __gup_longterm_locked(current->mm, start, nr_pages,
-> @@ -2810,11 +2821,7 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast_only);
->   int get_user_pages_fast(unsigned long start, int nr_pages,
->   			unsigned int gup_flags, struct page **pages)
->   {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->   		return -EINVAL;
->  =20
->   	/*
->=20
+Is the desc for ep0 handled elsewhere? (checked ep0.c as well, but
+couldn't find any references there)
 
+>> @@ -1926,6 +1926,24 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
+>>  	return 0;
+>>  }
+>>  
+>> +static void dwc3_stop_active_transfers(struct dwc3 *dwc)
+>> +{
+>> +	u32 epnum;
+>> +
+>> +	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
+>> +		struct dwc3_ep *dep;
+>> +
+>> +		dep = dwc->eps[epnum];
+>> +		if (!dep)
+>> +			continue;
+>> +
+>> +		if (!(dep->flags & DWC3_EP_ENABLED))
+>> +			continue;
+>> +
+>> +		dwc3_remove_requests(dwc, dep);
+>> +	}
+>> +}
+>> +
+>>  static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
+>>  {
+>>  	u32			reg;
+>> @@ -1950,16 +1968,37 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
+>>  
+>>  		dwc->pullups_connected = true;
+>>  	} else {
+>> +		dwc->pullups_connected = false;
+>> +
+>> +		__dwc3_gadget_ep_disable(dwc->eps[0]);
+>> +		__dwc3_gadget_ep_disable(dwc->eps[1]);
+>> +
+>> +		/*
+>> +		 * The databook explicitly mentions for a device-initiated
+>> +		 * disconnect sequence, the SW needs to ensure that it ends any
+>> +		 * active transfers.
+>> +		 */
+>> +		dwc3_stop_active_transfers(dwc);
+> 
+> IIRC, gadget driver is required to dequeue transfers before
+> disconnecting. My memory is a bit fuzzy in that area, but anyway, how
+> did you trigger this problem?
+> 
+
+I had a script that just did the following to trigger the soft disconnect:
+echo "" > /sys/kernel/config/usb_gadget/g1/UDC
+sleep 4
+echo "a600000.dwc3" > /sys/kernel/config/usb_gadget/g1/UDC
+
+Then on the PC, I just had a batch file executing adb push (of a large
+file), in order to create the situation where there was a device
+initiated disconnect while an active transfer was occurring.  After
+maybe after 4-5 iterations, I saw that the controller halt failed.
+
+[   87.364252] dwc3_gadget_run_stop run stop = 0
+[   87.374168] ffs_epfile_io_complete: eshutdown
+[   87.376162] __dwc3_gadget_ep_queue
+[   87.386160] ffs_epfile_io_complete: eshutdown
+
+I added some prints to hopefully show that while we are disabling the
+controller, the gadget/function driver is still active.  The eshutdown
+prints happen due to the dwc3_stop_active_transfers() call, which means
+there are still some pending/active reqs.
+
+Thanks
+Wesley
+
+>> @@ -1994,9 +2033,15 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
+>>  		}
+>>  	}
+>>  
+>> +	/*
+>> +	 * Synchronize and disable any further event handling while controller
+>> +	 * is being enabled/disabled.
+>> +	 */
+>> +	disable_irq(dwc->irq_gadget);
+> 
+> looks like a call to synchronize_irq() would be enough here.
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
