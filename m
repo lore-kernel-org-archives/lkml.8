@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2A7207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39B820738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YhK7+Gkg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziVC/1++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHSHYc (ORCPT
+        id S1727820AbgHSHYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
+        Wed, 19 Aug 2020 03:24:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgHSHYN (ORCPT
+        with ESMTP id S1726838AbgHSHYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:24:13 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DBBC061343
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a14so20466313wra.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:11 -0700 (PDT)
+        Wed, 19 Aug 2020 03:24:11 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD36C061389
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:10 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so1116021wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1vaZ+GprAhy2WYAM7ouom3T40mlyDiSFdzkYLUqEOnA=;
-        b=YhK7+Gkgm60xh0/o16dYRkX3oK8trh5m0up4fYpP76ITHXS7Qvs+iz7mM/TtE/kt+C
-         Uuftv5fopnYrIQaSajIr9ZIRXMfpkKvj7QrXOKYAWWKVRi9iFObahuDTC+kpGL91CGek
-         RBYZGakNTHur0l17D+1PC5nI+cgyz2orPmCjyBdNe8uQ25T5tNYz6p9buAaOq0UN/TSY
-         WIXkK0KhDL30pdN59/ns00DgoGnLf5o6pZ62zQx0YhcnlTYJ7CIlI+QcDghQwTnOuqaN
-         NGrCgmC6/Z2u2axxK1T80a6o4llMhwkJNNy+qJMYsCTsobqlAgZ5dcQMVk/24EEKNUq/
-         VSWQ==
+        bh=XaDsSQHVumJ0BUhRTLnjnxnZZONxfiwBrtcxIjkBvh8=;
+        b=ziVC/1++Ib88HqfjC3EoHwZGANIpB5jltCZO3nejpCxFeZFY0hEcY9Rt2NkQSgdj4w
+         PScZGLSd1YxB9ZlcmgCF6H2voYIxHDd/cvXl3p0RUyBKEHyZvS5kVcOs7ge3aHRXm8k7
+         kQe/RrcbOkv1rNeVoVs0Jm6ikRmWm6Gq88oOD1EaPK32bd5MNp6c9EL/5HiGb6/moAqu
+         s6PEHHYVzxtJ6ic0sJujck1COtO3EM2AzExF1cilJnPAMr/W40eYKkFsj0ylk2Rfwg4f
+         IdlDdqLky+c7ikhRKVfrIoZb1zB0PoDadbiSonR6JWz9mOz9orQIcK/f1FJyLzfm5WPv
+         pZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1vaZ+GprAhy2WYAM7ouom3T40mlyDiSFdzkYLUqEOnA=;
-        b=EfbUXZMSFmtXGUbPCo1ibCyUt366hUSATE74vL4zhMebdMXGb6A+rtZWX1a5V25gRc
-         ltakWQgFCXUH3qLKhOyw0QrD7ek8BWcVtL+FbFClJjX5ZO+3F1sNdxHylpI+1VtcJ6wB
-         fIzy0hmXtDyZKU77bIfEYm4WBgKK8xzEPs36VfjsK+hhmRArZQGz7cu4lCzv2IuhjiOj
-         BKBlckl38X7bFxsZrL+YOj3rh2IOmKKuBlks1BPDeEzaIPAyvrHD14y1SlyWuwRraH5b
-         6NFWDatrNcJ6RGodqA6sMtq3QDo/aXS+eCaqsixRp2gPgFBaoYZR8cBaxp15EsX0C22n
-         TfXw==
-X-Gm-Message-State: AOAM530YH/SdQQMiENJZdf/3X6fE6siUy0JwaNSH9ZRPlhWUefny0Icv
-        Ihvvfpf5y3lcOTYUxTSvFoqC9dEYgc8flw==
-X-Google-Smtp-Source: ABdhPJwh4q+qWk7ffnlfepOmSFUtqSc9oXwvRWHyCij00qidVfOMj+GW8jr+2YbYNaQDA+dFBmihlQ==
-X-Received: by 2002:a05:6000:120c:: with SMTP id e12mr23301717wrx.354.1597821850019;
-        Wed, 19 Aug 2020 00:24:10 -0700 (PDT)
+        bh=XaDsSQHVumJ0BUhRTLnjnxnZZONxfiwBrtcxIjkBvh8=;
+        b=T5QnvSpwHPPyTD4GZ77ymYFc8Bh4kBoRTfAhXfQ0xaPSVdDTk38mVjxWuE3ppAthp5
+         TfTo0Uag79/d9d8RdErbuNgzQWJvbZO5aMaCgsX4BrdrveXjMtxdro30T/QJZ6fpKUhJ
+         bnbBpHf71Y2HL4MsYZQ6RxhtJKOtXLLRGYAUb4qLYIHsVC4GEJ7rUVWMtUJ5tcBoSeO3
+         hlzdcsqlbTlHKXtcZS1UJ460P7LwPOf+3UotWljcmCmFMKLgiSh3yEzt4FCOTi/cWEbM
+         hbId0nQkLnxNSgHj7CqIiM3coK4mD1nsU2l22aeD55gXPQDEMWjYCGwGctuqIiUjmXGU
+         NkSw==
+X-Gm-Message-State: AOAM530TGLf6FBF57lQeYhl8DoVOX8lhrmg5HuYWhnSpYIuQJHMaaFiC
+        u/X8IuhcZALV7KFIWrV8U5Rcsg==
+X-Google-Smtp-Source: ABdhPJzjydxh5RW2AnV46iOp6h8091Mjz/MKc4QW6Xm7U6kw+aXK8DwN977c9dsDaoTBL5nabk1SUA==
+X-Received: by 2002:a7b:c1c2:: with SMTP id a2mr3452861wmj.74.1597821848883;
+        Wed, 19 Aug 2020 00:24:08 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.08
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:09 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:08 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 04/28] wireless: marvell: libertas_tf: Demote non-conformant kernel-doc headers
-Date:   Wed, 19 Aug 2020 08:23:38 +0100
-Message-Id: <20200819072402.3085022-5-lee.jones@linaro.org>
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>
+Subject: [PATCH 03/28] wireless: rsi_91x_core: File header should not be kernel-doc
+Date:   Wed, 19 Aug 2020 08:23:37 +0100
+Message-Id: <20200819072402.3085022-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
@@ -76,18 +78,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are only 2 kernel-doc headers in this file and both are
-incorrect.  The first one does not attempt to document the function at
-all and the second one is suffering from severe doc-rot; the format is
-wrong and only 1 out of 3 parameters are being documented.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/marvell/libertas_tf/main.c:129: warning: Function parameter or member 't' not described in 'command_timer_fn'
- drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'card' not described in 'lbtf_add_card'
- drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'dmdev' not described in 'lbtf_add_card'
- drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'ops' not described in 'lbtf_add_card'
+ drivers/net/wireless/rsi/rsi_91x_core.c:23: warning: Incorrect use of kernel-doc format:  * rsi_determine_min_weight_queue() - This function determines the queue with
+ drivers/net/wireless/rsi/rsi_91x_core.c:30: warning: Function parameter or member 'common' not described in 'rsi_determine_min_weight_queue'
 
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+Cc: Siva Rebbagondla <siva8118@gmail.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -95,35 +92,19 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/marvell/libertas_tf/main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/main.c b/drivers/net/wireless/marvell/libertas_tf/main.c
-index 02bd7c99b3588..5937b645a5334 100644
---- a/drivers/net/wireless/marvell/libertas_tf/main.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/main.c
-@@ -121,7 +121,7 @@ static void lbtf_cmd_work(struct work_struct *work)
- 	lbtf_deb_leave(LBTF_DEB_CMD);
- }
- 
+diff --git a/drivers/net/wireless/rsi/rsi_91x_core.c b/drivers/net/wireless/rsi/rsi_91x_core.c
+index 3644d7d994638..2d49c5b5eefb4 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_core.c
++++ b/drivers/net/wireless/rsi/rsi_91x_core.c
+@@ -1,4 +1,4 @@
 -/**
 +/*
-  *  This function handles the timeout of command sending.
-  *  It will re-send the same command again.
-  */
-@@ -542,11 +542,9 @@ int lbtf_rx(struct lbtf_private *priv, struct sk_buff *skb)
- }
- EXPORT_SYMBOL_GPL(lbtf_rx);
- 
--/**
-+/*
-  * lbtf_add_card: Add and initialize the card.
+  * Copyright (c) 2014 Redpine Signals Inc.
   *
-- *  @card    A pointer to card
-- *
-  *  Returns: pointer to struct lbtf_priv.
-  */
- struct lbtf_private *lbtf_add_card(void *card, struct device *dmdev,
+  * Permission to use, copy, modify, and/or distribute this software for any
 -- 
 2.25.1
 
