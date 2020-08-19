@@ -2,120 +2,143 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC3582067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EShKUjMZ"
+	by mail.kernel.org (Postfix) with ESMTP id 53A5E2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHSIIH (ORCPT
+        id S1726685AbgHSIIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHSIHC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:07:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0DA4C061389
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fGk4v6s6eN3JR296fKsBOkY17sDWO96rtqu7J+SOg4A=; b=EShKUjMZcuL7FOhoFSQn2wu1hg
-        T3dsIsxb91aHIDC92mKvAWXyo+W3ZIeezLA+0YA6Lard83NUE4ga4k8aHgh1HPmUdaVR9voAhIkxA
-        3NXWVZJXA+ZsRreTZk0wHgO64YPYKI/JXirFQWvUKaPjM/Lg6NJ8B9vp+3nY4L8gmlyUHb/2cmXqe
-        EVQCoVcAinbT4MqsJ296aUa+9vpcgJl0RyND+/56h35PljPv5PPpszSx2e94hutYPgMG2FIlHoRw5
-        FIY/cwDzj1Gxwr3U4SFs6Eu+y110c4Biw4dBV1GmaJaUN+CdFcDmrQHZny4f9KsUFDyTm3iVdEprb
-        oTFf+/nA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8J7O-0005qD-F3; Wed, 19 Aug 2020 08:06:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5872C301A7A;
-        Wed, 19 Aug 2020 10:06:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 441592110B86A; Wed, 19 Aug 2020 10:06:45 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 10:06:45 +0200
-From:   peterz@infradead.org
-To:     Libing Zhou <libing.zhou@nokia-sbell.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, bp@suse.de,
-        x86@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com
-Subject: Re: [PATCH] x86/nmi: Fix nmi_handle duration miscalculation
-Message-ID: <20200819080645.GX2674@hirez.programming.kicks-ass.net>
-References: <20200817090441.44501-1-libing.zhou@nokia-sbell.com>
+        Wed, 19 Aug 2020 04:08:17 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51614 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbgHSIHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:07:44 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6F9F573DCBE657F3034D;
+        Wed, 19 Aug 2020 16:07:40 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 19 Aug 2020 16:07:33 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <mathieu.poirier@linaro.org>,
+        <suzuki.poulose@arm.com>, <mike.leach@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [RFC PATCH v2] coresight: etm4x: Modify core-commit of cpu to avoid the overflow of HiSilicon ETM
+Date:   Wed, 19 Aug 2020 16:06:37 +0800
+Message-ID: <1597824397-29894-1-git-send-email-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817090441.44501-1-libing.zhou@nokia-sbell.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 05:04:41PM +0800, Libing Zhou wrote:
-> In nmi_check_duration(), the 'whole_msecs' value should
-> get from 'duration' to reflect actual time duration,
-> but not 'action->max_duration'.
+When too much trace information is generated on-chip, the ETM will
+overflow, and cause data loss. This is a common phenomenon on ETM
+devices.
 
-Fixes: 248ed51048c4 ("x86/nmi: Remove irq_work from the long duration NMI handler")
+But sometimes we do not want to lose performance trace data, so we
+suppress the speed of instructions sent from CPU core to ETM to
+avoid the overflow of ETM.
 
-> Signed-off-by: Libing Zhou <libing.zhou@nokia-sbell.com>
-> ---
->  arch/x86/kernel/nmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 4fc9954a9560..c51ee659e520 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -102,7 +102,7 @@ fs_initcall(nmi_warning_debugfs);
->  
->  static void nmi_check_duration(struct nmiaction *action, u64 duration)
->  {
-> -	u64 whole_msecs = READ_ONCE(action->max_duration);
-> +	u64 whole_msecs = duration;
->  	int remainder_ns, decimal_msecs;
->  
->  	if (duration < nmi_longest_ns || duration < action->max_duration)
-
-The, IMO, saner solution is:
-
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
 ---
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 4fc9954a9560..47381666d6a5 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -102,7 +102,6 @@ fs_initcall(nmi_warning_debugfs);
- 
- static void nmi_check_duration(struct nmiaction *action, u64 duration)
+
+Changes since v1:
+- ETM on HiSilicon Hip09 platform supports backpressure, so does
+not need to modify core commit.
+
+ drivers/hwtracing/coresight/coresight-etm4x.c | 43 +++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 7797a57..7641f89 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -43,6 +43,10 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing on boot");
+ #define PARAM_PM_SAVE_NEVER	  1 /* never save any state */
+ #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
+
++#define CORE_COMMIT_CLEAR	0x3000
++#define CORE_COMMIT_SHIFT	12
++#define HISI_ETM_AMBA_ID_V1	0x000b6d01
++
+ static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
+ module_param(pm_save_enable, int, 0444);
+ MODULE_PARM_DESC(pm_save_enable,
+@@ -104,11 +108,40 @@ struct etm4_enable_arg {
+ 	int rc;
+ };
+
++static void etm4_cpu_actlr1_cfg(void *info)
++{
++	struct etm4_enable_arg *arg = (struct etm4_enable_arg *)info;
++	u64 val;
++
++	asm volatile("mrs %0,s3_1_c15_c2_5" : "=r"(val));
++	val &= ~CORE_COMMIT_CLEAR;
++	val |= arg->rc << CORE_COMMIT_SHIFT;
++	asm volatile("msr s3_1_c15_c2_5,%0" : : "r"(val));
++}
++
++static void etm4_config_core_commit(int cpu, int val)
++{
++	struct etm4_enable_arg arg = {0};
++
++	arg.rc = val;
++	smp_call_function_single(cpu, etm4_cpu_actlr1_cfg, &arg, 1);
++}
++
+ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
  {
--	u64 whole_msecs = READ_ONCE(action->max_duration);
- 	int remainder_ns, decimal_msecs;
- 
- 	if (duration < nmi_longest_ns || duration < action->max_duration)
-@@ -110,12 +109,12 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
- 
- 	action->max_duration = duration;
- 
--	remainder_ns = do_div(whole_msecs, (1000 * 1000));
-+	remainder_ns = do_div(duration, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		action->handler, whole_msecs, decimal_msecs);
-+		action->handler, duration, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
+ 	int i, rc;
++	struct amba_device *adev;
+ 	struct etmv4_config *config = &drvdata->config;
+ 	struct device *etm_dev = &drvdata->csdev->dev;
++	struct device *dev = drvdata->csdev->dev.parent;
++
++	adev = container_of(dev, struct amba_device, dev);
++	/*
++	 * If ETM device is HiSilicon ETM device, reduce the
++	 * core-commit to avoid ETM overflow.
++	 */
++	if (adev->periphid == HISI_ETM_AMBA_ID_V1)
++		etm4_config_core_commit(drvdata->cpu, 1);
+
+ 	CS_UNLOCK(drvdata->base);
+
+@@ -472,10 +505,20 @@ static void etm4_disable_hw(void *info)
+ {
+ 	u32 control;
+ 	struct etmv4_drvdata *drvdata = info;
++	struct device *dev = drvdata->csdev->dev.parent;
+ 	struct etmv4_config *config = &drvdata->config;
+ 	struct device *etm_dev = &drvdata->csdev->dev;
++	struct amba_device *adev;
+ 	int i;
+
++	adev = container_of(dev, struct amba_device, dev);
++	/*
++	 * If ETM device is HiSilicon ETM device, resume the
++	 * core-commit after ETM trace is complete.
++	 */
++	if (adev->periphid == HISI_ETM_AMBA_ID_V1)
++		etm4_config_core_commit(drvdata->cpu, 0);
++
+ 	CS_UNLOCK(drvdata->base);
+
+ 	if (!drvdata->skip_power_up) {
+--
+2.8.1
+
