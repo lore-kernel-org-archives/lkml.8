@@ -2,70 +2,108 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B344EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D60020786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E86520786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="aRVi+LKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgHSJor (ORCPT
+        id S1726974AbgHSJsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:44:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36831 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSJon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:44:43 -0400
-IronPort-SDR: YJFz21fbWjuguHNb3VX//ptQ9piHjtu/FCRLEuHUb9diF2m5cXlgIfKwmTwqaSAs/FfU04uFNt
- Ds/TfU41fCXw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="239910125"
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="239910125"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 02:44:41 -0700
-IronPort-SDR: tOe+WnNKOudW86yd9LjkvbnuZ8rWeHQsbepO9drctVMHU59upmn/8aflp1Dt598br903hDRRkf
- JJpLdsrV5cag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="327036449"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2020 02:44:39 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k8Ke5-009qaP-KV; Wed, 19 Aug 2020 12:44:37 +0300
-Date:   Wed, 19 Aug 2020 12:44:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
-        David Laight <David.Laight@aculab.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: -Werror for `make W=0`
-Message-ID: <20200819094437.GE1891694@smile.fi.intel.com>
+        Wed, 19 Aug 2020 05:48:46 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:60123 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725804AbgHSJsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:48:42 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8KhzkbGWquuXO8Ki0kgC51; Wed, 19 Aug 2020 11:48:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597830520; bh=rjyXPWRP1g01llTCNBoRc20RbTVne5BReTjfQigN/qE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=aRVi+LKuPvEAGBtVbilrwMVfjfRiLtzdmajEDiu1Wcf8Cq7SZ/MBSBMR+w6OVcjDk
+         UhL1Qi21AUJsJabaE1KSxxbCIbD0Z5oKK/8Ptxow60bjJDawXc8fYi7YNCm5V1ibsC
+         lsEPGSgldRvXIZlLhjpfmp3dD0kvsD4lBYLJbgvTyQNI7JVR4jBc3HgmdYrlrr8vV5
+         vm/Ek0kr1l3NI46NWtkCGP1p4YAsc2F4nkwyBCphdgwGhRcxScH6SGlBleCG49C8K4
+         1qxFoO9oB3jtfmOKr4zYIUnW1NeThgBBON7T1hM/6c43oYuco5LAOSzjdEc4k8U8Uf
+         UN8P9OdvyHxoA==
+Subject: Re: [PATCH v2 6/6] media: docs: Deprecate mfc frame skip control
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+ <20200721074538.505-7-stanimir.varbanov@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5619ba1a-c9e3-74f9-af21-76b4961d245b@xs4all.nl>
+Date:   Wed, 19 Aug 2020 11:48:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200721074538.505-7-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOfshgSS/4pnrc0r98ip6Dp7/2WOW9Q9jCnxE/ED9msv5AQOlP+XJ5tWWhVxDHU0mlTIH0FrR+PsE0/EwbZdTLUask/ZDkVFfpZ5Uy80GCygBGP33h7V
+ MAgQpLq0KKro9DdC9mn0LVhKYvIa263Y8Vmv9JN5Apk2Jw3LY4NuWis1+2F1QN0F6/m/2Q8CwXL5GBbngkSlLKMAM1kd52Z12VHTnCMMfdMld0S7pNJkFm4k
+ rLP6fC/V8yGbbF/Ye/nsnhxypOy3iyBTLcgzN1DKVHcrDmxeIcckxTZp0HiMBYZZ78za+FGaCI191hlOCNlPsoFIoGk7kKaUxM8PIXFO4L1G91QhWeKXmi3y
+ EkcxH2/0AeQoOsgJlQrxJOuOjvbe3Gd1Y8I4hdX/M692dtRZkvIb4e6HCuDjs1CNHc/XX9JAOvqIrsywYaJ93Ze84SwLFdYo6z4Ii9zIU/lit5mjUDngBmJi
+ mS2XxKqkkz0b8zL8naJC4Hyk8azijsK/DBr48tU+KfSfTtPtUgGVtP0+fMOZ2bY8OSKWawMXYTijBQLxHmS3YcRbKDPHMbOa3hNcZHzJ+q+zP9li9IOsF4rk
+ HObnjCxxPisc+u2eAOIhs6nCvzg6/bPRETL/yqAahSPtsICQ4VpyMBXEayuboK9HkIdYdswRdK1iINY+rQZqY6xQB/M1J/oipWXksuJoZrVdHG+EaSwYkBKB
+ sl7s5yRg5Jo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On 21/07/2020 09:45, Stanimir Varbanov wrote:
+> Deprecate mfc private frame skip mode control for new
+> clients and use the standard one instead.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Maybe silly idea, but would it make sense to enable -Werror for default warning
-level, let's say W=0, at some point?
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
+	Hans
+
+> ---
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index 985e4c2d29bf..31d77d1cdcc9 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -2821,6 +2821,11 @@ MFC 5.1 Control IDs
+>  ``V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE``
+>      (enum)
+>  
+> +    .. note::
+> +
+> +       This control is deprecated. Use the standard
+> +       ``V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE`` control instead.
+> +
+>  enum v4l2_mpeg_mfc51_video_frame_skip_mode -
+>      Indicates in what conditions the encoder should skip frames. If
+>      encoding a frame would cause the encoded stream to be larger then a
+> 
 
