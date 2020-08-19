@@ -2,221 +2,271 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63282C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F20D20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4452820897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHSQEm (ORCPT
+        id S1726741AbgHSQLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:04:42 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:43520 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgHSQEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:04:42 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AB31720024;
-        Wed, 19 Aug 2020 18:04:35 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 18:04:34 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 3/4] phy: mediatek: Move mtk_hdmi_phy driver into
- drivers/phy/mediatek folder
-Message-ID: <20200819160434.GA2655@ravnborg.org>
-References: <20200819154421.7013-1-chunkuang.hu@kernel.org>
- <20200819154421.7013-4-chunkuang.hu@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819154421.7013-4-chunkuang.hu@kernel.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
-        a=e5mUnYsNAAAA:8 a=tnxLhXcf9_o-TLNqnQEA:9 a=CjuIK1q_8ugA:10
-        a=6heAxKwa5pAsJatQ0mat:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+        Wed, 19 Aug 2020 12:11:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:40670 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgHSQK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 12:10:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C6C1FB;
+        Wed, 19 Aug 2020 09:10:57 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F24AA3F8C6;
+        Wed, 19 Aug 2020 09:10:55 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        Jonathan.Cameron@Huawei.com, cristian.marussi@arm.com
+Subject: [PATCH v5 1/3] firmware: arm_scmi: Add System Power Protocol support
+Date:   Wed, 19 Aug 2020 17:10:00 +0100
+Message-Id: <20200819161002.26637-2-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819161002.26637-1-cristian.marussi@arm.com>
+References: <20200819161002.26637-1-cristian.marussi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chun-Kuang
+Add bare protocol support for SCMI SystemPower as needed by an OSPM agent:
+basic initialization and SYSTEM_POWER_STATE_NOTIFIER core notification
+support.
 
-Two small details below.
+No event-handling logic is attached to such notification by this commit.
 
-	Sam
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+v4 --> v5
+- system notifications related fixes needed by v5.9-rc1 rebase
+V3 --> V4
+- fix alignment issues by checkpatch
+V2 --> V3
+- fixes related to SCMI Notifications core support V10
+V1 --> V2
+- use common event enums
+---
+ drivers/firmware/arm_scmi/Makefile |   2 +-
+ drivers/firmware/arm_scmi/system.c | 136 +++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h      |  18 ++++
+ 3 files changed, 155 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/system.c
 
-On Wed, Aug 19, 2020 at 11:44:20PM +0800, Chun-Kuang Hu wrote:
-> From: CK Hu <ck.hu@mediatek.com>
-> 
-> mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
-> more suitable to place a phy driver into phy driver folder, so move
-> mtk_hdmi_phy driver into phy driver folder.
-> 
-> Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  drivers/gpu/drm/mediatek/Kconfig                           | 7 -------
->  drivers/gpu/drm/mediatek/Makefile                          | 6 ------
->  drivers/phy/mediatek/Kconfig                               | 7 +++++++
->  drivers/phy/mediatek/Makefile                              | 6 ++++++
->  .../mediatek/phy-mtk-hdmi-mt2701.c}                        | 2 +-
->  .../mediatek/phy-mtk-hdmi-mt8173.c}                        | 2 +-
->  .../mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c}         | 2 +-
->  .../mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h}         | 0
->  8 files changed, 16 insertions(+), 16 deletions(-)
->  rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt2701.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt8173.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h} (100%)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-> index ca3cd871a350..65cd03a4be29 100644
-> --- a/drivers/gpu/drm/mediatek/Kconfig
-> +++ b/drivers/gpu/drm/mediatek/Kconfig
-> @@ -27,10 +27,3 @@ config DRM_MEDIATEK_HDMI
->  	select PHY_MTK_HDMI
->  	help
->  	  DRM/KMS HDMI driver for Mediatek SoCs
-> -
-> -config PHY_MTK_HDMI
-> -    tristate "MediaTek HDMI-PHY Driver"
-> -    depends on ARCH_MEDIATEK && OF
-> -    select GENERIC_PHY
-> -    help
-> -          Enable this to support HDMI-PHY
-> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-> index fcbef23aa6ce..77b0fd86063d 100644
-> --- a/drivers/gpu/drm/mediatek/Makefile
-> +++ b/drivers/gpu/drm/mediatek/Makefile
-> @@ -22,9 +22,3 @@ mediatek-drm-hdmi-objs := mtk_cec.o \
->  			  mtk_hdmi_ddc.o
->  
->  obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mediatek-drm-hdmi.o
-> -
-> -phy-mtk-hdmi-drv-objs := mtk_hdmi_phy.o \
-> -			 mtk_mt2701_hdmi_phy.o \
-> -			 mtk_mt8173_hdmi_phy.o
-> -
-> -obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-> diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-> index dee757c957f2..10f0ec2d5b54 100644
-> --- a/drivers/phy/mediatek/Kconfig
-> +++ b/drivers/phy/mediatek/Kconfig
-> @@ -35,3 +35,10 @@ config PHY_MTK_XSPHY
->  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
->  	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
->  	  multiple USB2.0, USB3.1 GEN2 ports.
-> +
-> +config PHY_MTK_HDMI
-> +    tristate "MediaTek HDMI-PHY Driver"
-> +    depends on ARCH_MEDIATEK && OF
-> +    select GENERIC_PHY
-> +    help
-> +          Enable this to support HDMI-PHY
-This helptext could use a bit more love and care - it is not obvious
-from the help text what this option does.
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 6f9cbc4aef22..643f2320f976 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -5,5 +5,5 @@ scmi-driver-y = driver.o notify.o
+ scmi-transport-y = shmem.o
+ scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
+ scmi-transport-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY) += smc.o
+-scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
++scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o
+ obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/system.c b/drivers/firmware/arm_scmi/system.c
+new file mode 100644
+index 000000000000..aa1e74f066a0
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/system.c
+@@ -0,0 +1,136 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * System Control and Management Interface (SCMI) System Power Protocol
++ *
++ * Copyright (C) 2020 ARM Ltd.
++ */
++
++#define pr_fmt(fmt) "SCMI Notifications SYSTEM - " fmt
++
++#include <linux/scmi_protocol.h>
++
++#include "common.h"
++#include "notify.h"
++
++#define SCMI_SYSTEM_NUM_SOURCES		1
++
++enum scmi_system_protocol_cmd {
++	SYSTEM_POWER_STATE_NOTIFY = 0x5,
++};
++
++struct scmi_system_power_state_notify {
++	__le32 notify_enable;
++};
++
++struct scmi_system_power_state_notifier_payld {
++	__le32 agent_id;
++	__le32 flags;
++	__le32 system_state;
++};
++
++struct scmi_system_info {
++	u32 version;
++};
++
++static int scmi_system_request_notify(const struct scmi_handle *handle,
++				      bool enable)
++{
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_system_power_state_notify *notify;
++
++	ret = scmi_xfer_get_init(handle, SYSTEM_POWER_STATE_NOTIFY,
++				 SCMI_PROTOCOL_SYSTEM, sizeof(*notify), 0, &t);
++	if (ret)
++		return ret;
++
++	notify = t->tx.buf;
++	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_xfer_put(handle, t);
++	return ret;
++}
++
++static int scmi_system_set_notify_enabled(const struct scmi_handle *handle,
++					  u8 evt_id, u32 src_id, bool enable)
++{
++	int ret;
++
++	ret = scmi_system_request_notify(handle, enable);
++	if (ret)
++		pr_debug("FAIL_ENABLE - evt[%X] - ret:%d\n", evt_id, ret);
++
++	return ret;
++}
++
++static void *scmi_system_fill_custom_report(const struct scmi_handle *handle,
++					    u8 evt_id, ktime_t timestamp,
++					    const void *payld, size_t payld_sz,
++					    void *report, u32 *src_id)
++{
++	const struct scmi_system_power_state_notifier_payld *p = payld;
++	struct scmi_system_power_state_notifier_report *r = report;
++
++	if (evt_id != SCMI_EVENT_SYSTEM_POWER_STATE_NOTIFIER ||
++	    sizeof(*p) != payld_sz)
++		return NULL;
++
++	r->timestamp = timestamp;
++	r->agent_id = le32_to_cpu(p->agent_id);
++	r->flags = le32_to_cpu(p->flags);
++	r->system_state = le32_to_cpu(p->system_state);
++	*src_id = 0;
++
++	return r;
++}
++
++static const struct scmi_event system_events[] = {
++	{
++		.id = SCMI_EVENT_SYSTEM_POWER_STATE_NOTIFIER,
++		.max_payld_sz =
++			sizeof(struct scmi_system_power_state_notifier_payld),
++		.max_report_sz =
++			sizeof(struct scmi_system_power_state_notifier_report),
++	},
++};
++
++static const struct scmi_event_ops system_event_ops = {
++	.set_notify_enabled = scmi_system_set_notify_enabled,
++	.fill_custom_report = scmi_system_fill_custom_report,
++};
++
++static int scmi_system_protocol_init(struct scmi_handle *handle)
++{
++	u32 version;
++	struct scmi_system_info *pinfo;
++
++	scmi_version_get(handle, SCMI_PROTOCOL_SYSTEM, &version);
++
++	dev_dbg(handle->dev, "System Power Version %d.%d\n",
++		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
++
++	pinfo = devm_kzalloc(handle->dev, sizeof(*pinfo), GFP_KERNEL);
++	if (!pinfo)
++		return -ENOMEM;
++
++	scmi_register_protocol_events(handle,
++				      SCMI_PROTOCOL_SYSTEM, SCMI_PROTO_QUEUE_SZ,
++				      &system_event_ops,
++				      system_events,
++				      ARRAY_SIZE(system_events),
++				      SCMI_SYSTEM_NUM_SOURCES);
++
++	pinfo->version = version;
++	handle->system_priv = pinfo;
++
++	return 0;
++}
++
++static int __init scmi_system_init(void)
++{
++	return scmi_protocol_register(SCMI_PROTOCOL_SYSTEM,
++				      &scmi_system_protocol_init);
++}
++subsys_initcall(scmi_system_init);
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index 7e5dd7d1e221..76fd0e24f3b6 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -292,6 +292,7 @@ struct scmi_handle {
+ 	void *sensor_priv;
+ 	void *reset_priv;
+ 	void *notify_priv;
++	void *system_priv;
+ };
+ 
+ enum scmi_std_protocol {
+@@ -304,6 +305,15 @@ enum scmi_std_protocol {
+ 	SCMI_PROTOCOL_RESET = 0x16,
+ };
+ 
++enum scmi_system_events {
++	SCMI_SYSTEM_SHUTDOWN,
++	SCMI_SYSTEM_COLDRESET,
++	SCMI_SYSTEM_WARMRESET,
++	SCMI_SYSTEM_POWERUP,
++	SCMI_SYSTEM_SUSPEND,
++	SCMI_SYSTEM_MAX
++};
++
+ struct scmi_device {
+ 	u32 id;
+ 	u8 protocol_id;
+@@ -378,6 +388,7 @@ enum scmi_notification_events {
+ 	SCMI_EVENT_SENSOR_TRIP_POINT_EVENT = 0x0,
+ 	SCMI_EVENT_RESET_ISSUED = 0x0,
+ 	SCMI_EVENT_BASE_ERROR_EVENT = 0x0,
++	SCMI_EVENT_SYSTEM_POWER_STATE_NOTIFIER = 0x0,
+ };
+ 
+ struct scmi_power_state_changed_report {
+@@ -387,6 +398,13 @@ struct scmi_power_state_changed_report {
+ 	unsigned int	power_state;
+ };
+ 
++struct scmi_system_power_state_notifier_report {
++	ktime_t		timestamp;
++	unsigned int	agent_id;
++	unsigned int	flags;
++	unsigned int	system_state;
++};
++
+ struct scmi_perf_limits_report {
+ 	ktime_t		timestamp;
+ 	unsigned int	agent_id;
+-- 
+2.17.1
 
-
-> diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-> index 08a8e6a97b1e..c9a3641f0b16 100644
-> --- a/drivers/phy/mediatek/Makefile
-> +++ b/drivers/phy/mediatek/Makefile
-> @@ -6,3 +6,9 @@
->  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
->  obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
->  obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-> +
-> +phy-mtk-hdmi-drv-objs := phy-mtk-hdmi.o \
-> +			 phy-mtk-hdmi-mt2701.o \
-> +			 phy-mtk-hdmi-mt8173.o
-> +
-The modern syntax is to use -y and not -objs.
-And getting rid of '\' would also be nice.
-So something like this:
-
-phy-mtk-hdmi-drv-y := phy-mtk-hdmi.o 
-phy-mtk-hdmi-drv-y += phy-mtk-hdmi-mt2701.o
-phy-mtk-hdmi-drv-y += phy-mtk-hdmi-mt8173.o
-
-Looks much more readable to me.
-
-> +obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> index 99fe05cd3598..a6cb1dea3d0c 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> @@ -4,7 +4,7 @@
->   * Author: Chunhui Dai <chunhui.dai@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  #define HDMI_CON0	0x00
->  #define RG_HDMITX_DRV_IBIAS		0
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> index 827b93786fac..6cdfdf5a698a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> @@ -4,7 +4,7 @@
->   * Author: Jie Qiu <jie.qiu@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  #define HDMI_CON0		0x00
->  #define RG_HDMITX_PLL_EN		BIT(31)
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi.c
-> index fe022acddbef..8fc83f01a720 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi.c
-> @@ -4,7 +4,7 @@
->   * Author: Jie Qiu <jie.qiu@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  static int mtk_hdmi_phy_power_on(struct phy *phy);
->  static int mtk_hdmi_phy_power_off(struct phy *phy);
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/phy/mediatek/phy-mtk-hdmi.h
-> similarity index 100%
-> rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> rename to drivers/phy/mediatek/phy-mtk-hdmi.h
-> -- 
-> 2.17.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
