@@ -2,82 +2,64 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2007BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3FCE20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="YhDLlpk0"
+	by mail.kernel.org (Postfix) with ESMTP id 96B8E20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgHSJLf (ORCPT
+        id S1727045AbgHSJMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:11:35 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:34040 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHSJL2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:11:28 -0400
-X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 05:11:27 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597828286;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=aJbBiqqEcgkxYh/T/PAcF1pQQBq2TFSlGmE/iQkN4AU=;
-        b=YhDLlpk0RvsGMyC1bR29eKjke/B6YZbj2YxYyQ6AiGjI/hczq1+izba1UcgbjOykj8
-        ooWA3i+3TLnYuuGJlwm5U1H/2PKWf4RCymVjbhhGiPGPzVluICqV/gxRv/A4FhXDg2qm
-        GHr55Qt+qsga1i8CLW/1GrJvXE6vgaAnjPQB1HdkHm/h91gpt6uQ+xwGn13LhP/oHa+j
-        oL8TqcZnPzP+oIac+20XXOwg8oxylyOEuN/5e1aIRG8z/XSBoTmrEeScIMiBfM2utbNA
-        e+SktiYlFScZUp4ox+UGTSpebOsEukf8C4Yi4GYPL7BNnFgKAYiWFKBWbC9DHBSCb/Cx
-        jkGw==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS3mkg"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id 60ad29w7J95I0WU
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 19 Aug 2020 11:05:18 +0200 (CEST)
-From:   Olaf Hering <olaf@aepfle.de>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Olaf Hering <olaf@aepfle.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH v1] tools: hv: remove cast from hyperv_die_event
-Date:   Wed, 19 Aug 2020 11:05:09 +0200
-Message-Id: <20200819090510.28995-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 19 Aug 2020 05:12:07 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3484 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726630AbgHSJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:12:04 -0400
+Received: from dggeme701-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 494607D03E04ADF6B140;
+        Wed, 19 Aug 2020 17:12:02 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme701-chm.china.huawei.com (10.1.199.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 19 Aug 2020 17:12:02 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Wed, 19 Aug 2020 17:12:01 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Ilya Dryomov <idryomov@gmail.com>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ceph: Convert to use the preferred fallthrough macro
+Thread-Topic: [PATCH] ceph: Convert to use the preferred fallthrough macro
+Thread-Index: AdZ2CIBSTTAHQIOHYEu6sY48YQCZSg==
+Date:   Wed, 19 Aug 2020 09:12:01 +0000
+Message-ID: <20c98648546841528d72bdd62308b415@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.176.142]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to cast a void pointer.
-
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
----
- drivers/hv/vmbus_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 910b6e90866c..187809977360 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -83,7 +83,7 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
- 			    void *args)
- {
--	struct die_args *die = (struct die_args *)args;
-+	struct die_args *die = args;
- 	struct pt_regs *regs = die->regs;
- 
- 	/* Don't notify Hyper-V if the die event is other than oops */
+SWx5YSBEcnlvbW92IDxpZHJ5b21vdkBnbWFpbC5jb20+IHdyb3RlOg0KPk9uIFdlZCwgQXVnIDE5
+LCAyMDIwIGF0IDEwOjUzIEFNIE1pYW9oZSBMaW4gPGxpbm1pYW9oZUBodWF3ZWkuY29tPiB3cm90
+ZToNCj4+DQo+PiBDb252ZXJ0IHRoZSB1c2VzIG9mIGZhbGx0aHJvdWdoIGNvbW1lbnRzIHRvIGZh
+bGx0aHJvdWdoIG1hY3JvLg0KPj4NCj4NCj5IaSBNaWFvaGUsDQo+DQo+SSd2ZSBhbHJlYWR5IGRv
+bmUgdGhhdCwgZm9sZGluZyBpbnRvIHlvdXIgcHJldmlvdXMgcGF0Y2g6DQo+DQo+ICBodHRwczov
+L2dpdGh1Yi5jb20vY2VwaC9jZXBoLWNsaWVudC9jb21taXQvM2YxOWFlODk1NDdkZjFiOGNjYmEz
+NTlhMmY3ZGRiYTBmMTA4ZmZiZA0KPg0KPlRoYW5rcywNCj4NCj4gICAgICAgICAgICAgICAgSWx5
+YQ0KDQpNYW55IHRoYW5rcy4gSSB0aG91Z2h0IEkgd2FzIHJlcXVlc3RlZCB0byBkbyB0aGlzLiBN
+eSBtaXN0YWtlLiA6KQ0KDQo=
