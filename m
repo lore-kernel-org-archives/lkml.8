@@ -2,135 +2,113 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2DC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F43C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 892A92075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA02D2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZLYSCTL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2jV8B13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgHSMVW (ORCPT
+        id S1728068AbgHSMWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
+        Wed, 19 Aug 2020 08:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgHSMVV (ORCPT
+        with ESMTP id S1726961AbgHSMV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:21:21 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FF7C061757;
-        Wed, 19 Aug 2020 05:21:21 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id v6so24355058iow.11;
-        Wed, 19 Aug 2020 05:21:21 -0700 (PDT)
+        Wed, 19 Aug 2020 08:21:56 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1B2C061757;
+        Wed, 19 Aug 2020 05:21:56 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s16so17544472qtn.7;
+        Wed, 19 Aug 2020 05:21:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HDXvGIgO4qr56J5pc+T+Ke6IzH5SYLMXSn24/sPplxw=;
-        b=pZLYSCTL7Cu78WmtherjVYFOkJMi+wdtF9ZcyUieW0OPhIjZcPNeB/VVYR+RFQ4DD2
-         0jFOWYb6dfTxXH5DDzxukA9J3ocPNKzuymsVG3cUBJH/2STXL6DK9hfBBszPl/Tw5J2C
-         yz/QuHxtWzmBFkpQvnmZHvRANLz+ODAOe9zREz39LNjHl9wIAjM7K2vhB4dEm8sLvAb1
-         Iyc/FA2df5B8l1zp9X5cSmzY6djuP2gTr8d57itnmEbGkJt+rOt0WtVLwbN48GnUewS2
-         chR5727ntKoKEzRyqPiEf8LR1cwOkSzC2huFN/y2KejdeLXo/gvvrSKF8Ijetav7Ia2e
-         6+LQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=8ilKX+a70jTPPEN//PJ60e7XsFBDrxK1bHnpEzpl1JY=;
+        b=Z2jV8B13DC70Ru2gQFkwcdUpG/4jYcVF3Zt8PiAh/6QCrw3nWLp1arQPSh64AagVww
+         gHMQZ3AUCIJ1Aj/J/XiGEpL956v6X8KJtx3cb2Zf1Q0oS69hv2Usld1HHt+zFk4sqvLo
+         YAuKRaSFvi4plK9CQ1ULQbVhELyotnZ0x8E3+w4Q3ad6A4jx9erikr1O5ZNjsRU5dUsp
+         UUft0A7LtcoX70srXjhjAmgYYXUXBzuA/04OGokFWoBqFZZ4ZVUV0LlPV5f8wmKpioWi
+         U7z9oixRIYE7EKW/cG/QqYcgd990b+Kkhw28R5G+sh10ZjxxlFMbdPljT35aKUKQhjbl
+         9/qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HDXvGIgO4qr56J5pc+T+Ke6IzH5SYLMXSn24/sPplxw=;
-        b=sfMi9n5sgELrxBC3iOJwHwlqFPC4+5nCt/tqbsP9SinxjpYB/ryvxudG1iONq0eeX8
-         cpUdR6v5IB4TusujWvsL4ZxGBg8ghalaS/U3Oku66reE40/OWGR9QxcEmBgwiiC8CPuz
-         qsqdjIWKO81/OZtbNoiK+ttXbF+dQ+43WUy1NbdlSqlHw1yH2ETxosClOXV9HvBh/Dg4
-         iq+jU2kzby0XgslvjSE8hFydYsxIJGKL5KsW46yif1IqW9y33ZDl4cbq9q7ENHTPKHqN
-         l26VcBLrYil7mUQMer3CIBlfLhy+Cd69c+Am0mtqO+njOwg01MiC6ruutZeexqQZC8r3
-         ZeBg==
-X-Gm-Message-State: AOAM53134IXqTWxC3zSo3dKEwPBqj7wVVUiQSgo5MFU1BPH8OwB2jXON
-        eDsNKqpDsn54bdFRH41oTcAvoLhsgO5yYsNGtKU=
-X-Google-Smtp-Source: ABdhPJxnurhXiQvzQfUbCrg4tnJkVP5y3QBbi20nLK+kb1MEy6AkyYCqs56cIeXNtREnXzd0q/nennp+xvMEYGSFBFA=
-X-Received: by 2002:a6b:e002:: with SMTP id z2mr19868369iog.178.1597839678885;
- Wed, 19 Aug 2020 05:21:18 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=8ilKX+a70jTPPEN//PJ60e7XsFBDrxK1bHnpEzpl1JY=;
+        b=oRpManZuxzTm7F9xN4tRYTSqpoV/A5OcYPuLhcYWTa52HxypBnkEkpd5ZUTVB90+ZV
+         WW7lLPKRfmenLdhUeAAVYxg5yPK0YR+ddkkMcjns7zYYBOwmNm55lWTI/nARBxH3M2hG
+         d7Vkt1+VcDTb4p19oXK07/b54yHtQRHAM8yO/2BidHWSgMd3bnMCHKoTp4U/4rwDuOlV
+         p8Bqht0iqXtDOC/fcKhBsVXpmW+h040y3dWHjbWSH6LyhaYd7i0kxzqG/S2L5AHkfvAD
+         nqG9emD/rG7YCyvLbe3Sibf9L6tDCQxZ0cpQQDMzFEfroosoY8cPVR8m+aC4SzuOUrsv
+         C01A==
+X-Gm-Message-State: AOAM5319kodOqkM0mJLQtj+XVqBfAVVSIjuAnznUUwSBpaAmAEpkgCzg
+        ExDZvGhfAC6iNMa2Mj3ZWC/yxB9b1NI=
+X-Google-Smtp-Source: ABdhPJzH7q8L+vI8V5vUJfXQoHxH9fOu3E+Z6yC2h55W8qD2RKcMIrp3AR6qs55Re4KR0YJkAVFMIg==
+X-Received: by 2002:aed:38e6:: with SMTP id k93mr21036770qte.90.1597839715641;
+        Wed, 19 Aug 2020 05:21:55 -0700 (PDT)
+Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
+        by smtp.gmail.com with ESMTPSA id v28sm29331368qtk.28.2020.08.19.05.21.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 05:21:55 -0700 (PDT)
+Subject: Re: [PATCH][next] selinux: fix allocation failure check on
+ newpolicy->sidtab
+To:     Colin King <colin.king@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819104256.51499-1-colin.king@canonical.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <20dcb065-7f19-423a-81c2-cb9524a730de@gmail.com>
+Date:   Wed, 19 Aug 2020 08:21:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200818154633.5421-1-aford173@gmail.com> <20200819045914.GS2994@atomide.com>
-In-Reply-To: <20200819045914.GS2994@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 19 Aug 2020 07:21:07 -0500
-Message-ID: <CAHCN7xKBzRfByvdYBPS=uWF2QvECAOf5zGZE0-pxjJ6A2-d95g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power management
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200819104256.51499-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:58 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Adam Ford <aford173@gmail.com> [200818 15:46]:
-> > @@ -1153,6 +1166,38 @@ static int ti_bandgap_suspend(struct device *dev)
-> >       return err;
-> >  }
-> >
-> > +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-> > +                               unsigned long cmd, void *v)
-> > +{
-> > +     struct ti_bandgap *bgp;
-> > +
-> > +     bgp = container_of(nb, struct ti_bandgap, nb);
-> > +
-> > +     spin_lock(&bgp->lock);
-> > +     switch (cmd) {
-> > +     case CPU_CLUSTER_PM_ENTER:
-> > +             if (bgp->is_suspended)
-> > +                     break;
-> > +             ti_bandgap_save_ctxt(bgp);
-> > +             ti_bandgap_power(bgp, false);
-> > +             if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> > +                     clk_disable(bgp->fclock);
-> > +             break;
-> > +     case CPU_CLUSTER_PM_ENTER_FAILED:
-> > +     case CPU_CLUSTER_PM_EXIT:
-> > +             if (bgp->is_suspended)
-> > +                     break;
-> > +             if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-> > +                     clk_enable(bgp->fclock);
-> > +             ti_bandgap_power(bgp, true);
-> > +             ti_bandgap_restore_ctxt(bgp);
-> > +             break;
-> > +     }
-> > +     spin_unlock(&bgp->lock);
-> > +
-> > +     return NOTIFY_OK;
-> > +}
->
-> Hmm to me it looks like is_suspended is not used right now?
-> I guess you want to set it in ti_bandgap_suspend() and clear
-> it in ti_bandgap_resume()?
->
-> Otherwise looks good to me, I can't test the power consumption
-> right now though so you may want to check it to make sure
-> device still hits off mode during idle.
+On 8/19/20 6:42 AM, Colin King wrote:
 
-I have a V2.  Do you want me to re-post 2/2 with V2 as no change, or
-should I just submit this patch alone?
-
-adam
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Regards,
+> The allocation check of newpolicy->sidtab is null checking if
+> newpolicy is null and not newpolicy->sidtab. Fix this.
 >
-> Tony
+> Addresses-Coverity: ("Logically dead code")
+> Fixes: c7c556f1e81b ("selinux: refactor changing booleans")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
+>   security/selinux/ss/services.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+> index f6f78c65f53f..d310910fb639 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -2224,7 +2224,7 @@ int security_load_policy(struct selinux_state *state, void *data, size_t len,
+>   		return -ENOMEM;
+>   
+>   	newpolicy->sidtab = kzalloc(sizeof(*newpolicy->sidtab), GFP_KERNEL);
+> -	if (!newpolicy)
+> +	if (!newpolicy->sidtab)
+>   		goto err;
+>   
+>   	rc = policydb_read(&newpolicy->policydb, fp);
