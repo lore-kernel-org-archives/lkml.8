@@ -2,146 +2,147 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3036C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4925CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3B820738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157E6207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgHSHRn (ORCPT
+        id S1727013AbgHSHTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:17:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52064 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgHSHRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:17:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 81A48B5C4;
-        Wed, 19 Aug 2020 07:18:03 +0000 (UTC)
-Subject: Re: [PATCH] drm: ast: fix double __iomem sparse warning
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Dave Airlie <airlied@redhat.com>
-References: <a8185578-a69a-16b0-6fdf-f4e46bc4f61f@infradead.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <71030cba-99dd-5815-8fac-bfd5de6319f8@suse.de>
-Date:   Wed, 19 Aug 2020 09:17:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 03:19:12 -0400
+Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:60656 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgHSHTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:19:11 -0400
+Received: from localhost.localdomain ([92.140.170.113])
+        by mwinf5d35 with ME
+        id HKK12300E2T8iuL03KK3bd; Wed, 19 Aug 2020 09:19:09 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 19 Aug 2020 09:19:09 +0200
+X-ME-IP: 92.140.170.113
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     amitkarwar@gmail.com, ganapathi.bhat@nxp.com,
+        huxinming820@gmail.com, kvalo@codeaurora.org, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] mwifiex: Clean up some err and dbg messages
+Date:   Wed, 19 Aug 2020 09:18:53 +0200
+Message-Id: <20200819071853.113185-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a8185578-a69a-16b0-6fdf-f4e46bc4f61f@infradead.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="kaUcTtSqfBc2VszyW3byftADwfZhXKfvs"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---kaUcTtSqfBc2VszyW3byftADwfZhXKfvs
-Content-Type: multipart/mixed; boundary="YEh9LdxfkK7sXNDV0JJ2rhIbvY9VHj2fy";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Randy Dunlap <rdunlap@infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
- Dave Airlie <airlied@redhat.com>
-Message-ID: <71030cba-99dd-5815-8fac-bfd5de6319f8@suse.de>
-Subject: Re: [PATCH] drm: ast: fix double __iomem sparse warning
-References: <a8185578-a69a-16b0-6fdf-f4e46bc4f61f@infradead.org>
-In-Reply-To: <a8185578-a69a-16b0-6fdf-f4e46bc4f61f@infradead.org>
+The error message if 'pci_set_consistent_dma_mask()' fails is misleading.
+The function call uses 32 bits, but the error message reports 64.
 
---YEh9LdxfkK7sXNDV0JJ2rhIbvY9VHj2fy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Moreover, according to the comment above 'dma_set_mask_and_coherent()'
+definition, such an error can never happen.
 
-Hi
+So, simplify code, axe the misleading message and use
+'dma_set_mask_and_coherent()' instead of 'dma_set_mask()' +
+'dma_set_coherent_mask()'
 
-Am 18.08.20 um 22:28 schrieb Randy Dunlap:
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> sparse complains about having 2 "__iomem" attributes on the same line
-> where only one is needed since the first one applies to everything
-> up to the ending ';'.
-> However, to make it clear(er) that both of these pointers are
-> "__iomem", use separate lines for them.
->=20
-> ../drivers/gpu/drm/ast/ast_cursor.c:256:26: CK: warning: duplicate [nod=
-eref]
-> ../drivers/gpu/drm/ast/ast_cursor.c:256:26: CK: error: multiple address=
- space given: __iomem & __iomem
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> ---
->  drivers/gpu/drm/ast/ast_cursor.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+While at it, make some clean-up:
+   - add # when reporting allocated length to be consistent between
+     functions
+   - s/consistent/coherent/
+   - s/unsigned int/u32/ to be consistent between functions
+   - align some code
 
-Thanks, added to drm-misc-next
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 25 +++++++++------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-Best regards
-Thomas
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 94fe121bc45f..cc6289aaf6c0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -850,13 +850,14 @@ static int mwifiex_pcie_create_txbd_ring(struct mwifiex_adapter *adapter)
+ 						   GFP_KERNEL);
+ 	if (!card->txbd_ring_vbase) {
+ 		mwifiex_dbg(adapter, ERROR,
+-			    "allocate consistent memory (%d bytes) failed!\n",
++			    "allocate coherent memory (%d bytes) failed!\n",
+ 			    card->txbd_ring_size);
+ 		return -ENOMEM;
+ 	}
++
+ 	mwifiex_dbg(adapter, DATA,
+-		    "info: txbd_ring - base: %p, pbase: %#x:%x, len: %x\n",
+-		    card->txbd_ring_vbase, (unsigned int)card->txbd_ring_pbase,
++		    "info: txbd_ring - base: %p, pbase: %#x:%x, len: %#x\n",
++		    card->txbd_ring_vbase, (u32)card->txbd_ring_pbase,
+ 		    (u32)((u64)card->txbd_ring_pbase >> 32),
+ 		    card->txbd_ring_size);
+ 
+@@ -915,7 +916,7 @@ static int mwifiex_pcie_create_rxbd_ring(struct mwifiex_adapter *adapter)
+ 						   GFP_KERNEL);
+ 	if (!card->rxbd_ring_vbase) {
+ 		mwifiex_dbg(adapter, ERROR,
+-			    "allocate consistent memory (%d bytes) failed!\n",
++			    "allocate coherent memory (%d bytes) failed!\n",
+ 			    card->rxbd_ring_size);
+ 		return -ENOMEM;
+ 	}
+@@ -973,14 +974,14 @@ static int mwifiex_pcie_create_evtbd_ring(struct mwifiex_adapter *adapter)
+ 
+ 	mwifiex_dbg(adapter, INFO,
+ 		    "info: evtbd_ring: Allocating %d bytes\n",
+-		card->evtbd_ring_size);
++		    card->evtbd_ring_size);
+ 	card->evtbd_ring_vbase = dma_alloc_coherent(&card->dev->dev,
+ 						    card->evtbd_ring_size,
+ 						    &card->evtbd_ring_pbase,
+ 						    GFP_KERNEL);
+ 	if (!card->evtbd_ring_vbase) {
+ 		mwifiex_dbg(adapter, ERROR,
+-			    "allocate consistent memory (%d bytes) failed!\n",
++			    "allocate coherent memory (%d bytes) failed!\n",
+ 			    card->evtbd_ring_size);
+ 		return -ENOMEM;
+ 	}
+@@ -1086,7 +1087,7 @@ static int mwifiex_pcie_alloc_sleep_cookie_buf(struct mwifiex_adapter *adapter)
+ 						      GFP_KERNEL);
+ 	if (!card->sleep_cookie_vbase) {
+ 		mwifiex_dbg(adapter, ERROR,
+-			    "pci_alloc_consistent failed!\n");
++			    "dma_alloc_coherent failed!\n");
+ 		return -ENOMEM;
+ 	}
+ 	/* Init val of Sleep Cookie */
+@@ -2928,15 +2929,9 @@ static int mwifiex_init_pcie(struct mwifiex_adapter *adapter)
+ 
+ 	pci_set_master(pdev);
+ 
+-	ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+-	if (ret) {
+-		pr_err("set_dma_mask(32) failed: %d\n", ret);
+-		goto err_set_dma_mask;
+-	}
+-
+-	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
++	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (ret) {
+-		pr_err("set_consistent_dma_mask(64) failed\n");
++		pr_err("dma_set_mask(32) failed: %d\n", ret);
+ 		goto err_set_dma_mask;
+ 	}
+ 
+-- 
+2.25.1
 
->=20
-> --- lnx-59-rc1.orig/drivers/gpu/drm/ast/ast_cursor.c
-> +++ lnx-59-rc1/drivers/gpu/drm/ast/ast_cursor.c
-> @@ -253,7 +253,8 @@ void ast_cursor_show(struct ast_private
->  		     unsigned int offset_x, unsigned int offset_y)
->  {
->  	u8 x_offset, y_offset;
-> -	u8 __iomem *dst, __iomem *sig;
-> +	u8 __iomem *dst;
-> +	u8 __iomem *sig;
->  	u8 jreg;
-> =20
->  	dst =3D ast->cursor.vaddr[ast->cursor.next_index];
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---YEh9LdxfkK7sXNDV0JJ2rhIbvY9VHj2fy--
-
---kaUcTtSqfBc2VszyW3byftADwfZhXKfvs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl880g0UHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiPxUQf/YdOLGIt6Sgea61/oWWBjlQ4oVDeV
-0hyIFeYRzvBn1H1vPdQiBRXu+V8psESdy7QEAV5KSfMHzlRHyHtpy1e/w5y0/Rck
-rvQQlPmmRAvypKQz2D1PijxF2AKrQ9Tpk3Zn4PTgAsO/vxX0exZTPq5+iYKYr38x
-AiBoSY4ldW8I2W3cqaHWgmpJf5VmVF5o2CaU9C0kuO64/vWxoS4ljRcl3iDTLpQ/
-F5mZBY81ETSVBEZbySNO1hkTWS99uD4yGoi7hZsQZKvkBYp8zTLJbBGqg+er/SBx
-0Tq4kRdNLGk/xtgeWnQNGDzSWIg2bXE/diDZI4aitmmRKAsC5usThdF1Fg==
-=5HZM
------END PGP SIGNATURE-----
-
---kaUcTtSqfBc2VszyW3byftADwfZhXKfvs--
