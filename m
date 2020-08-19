@@ -2,95 +2,134 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6207FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2567C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB120639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qlHcNEPN"
+	by mail.kernel.org (Postfix) with ESMTP id 9FBAC207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHSJ1d (ORCPT
+        id S1727787AbgHSJ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgHSJ13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:27:29 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3955C061757;
-        Wed, 19 Aug 2020 02:27:29 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g15so6634078plj.6;
-        Wed, 19 Aug 2020 02:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/x+ioxj0OECDWfuZ/8cLiBt08ZEEJV9C/RwFT59ZAOY=;
-        b=qlHcNEPNB5wNQZEWyxFpsV2++SFSMZh1dkF7Pyba7MLEMg3mkx3NQwLviJdrWE0EPz
-         MbV8sUmZnqEOpclkWErN1k6jtF7+iJnXTNBC5aOFOW5CaxPm+wYWXjGYES/peopTxTvo
-         sT2R9RjdVTa+xAFWGxTFBMxcaXsXOSf2lbbSNs+D/u5zNzZw9Ejozsg+GBNDVerdT+RB
-         6YegFcEtE49I32y9ESkVWu5d5WCvOx+GLXgXA5A1Sg/ULBdPECPUXCpBeDN169pBLUe2
-         MzxCR4DWc7g2pCkJ/D5u5CmuhtV14V82NDmFxKbsiMF/zrME9zPFmf0X1FVLe7/OlIyg
-         YhqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/x+ioxj0OECDWfuZ/8cLiBt08ZEEJV9C/RwFT59ZAOY=;
-        b=ssFJFvPVjTBkHDkvHdMVvx8EuytEg+Lvrlr9YoaS6lN8HG5oCQ8Zkk2iUVhFFP/uv2
-         n3msHOwQScc5YodSIAZJmyOzu3vqbVhqTjk0uoacQLS2D9/vbogWTzmGwLVkVpwaM7XO
-         hw9l65DHXxQPzvuXYsqIMWXruHZdqQSoEg7zmY6vnn+8Xy9nMkg3lOoOwecKdc9gt9bb
-         /IAnJyPITGoJeK+y5kb17iuSx0gzgN/tpUKlFk+yqzH9dYfnYKfG7zvoIwt/F2RbKFDb
-         BWi9nSv8ZH0payAFrtP+f0rPNGI/4dssnvLTAYlbSDRJZRGHq7go0HRhnuWuZud1f37f
-         AWYg==
-X-Gm-Message-State: AOAM532kiW2CVPooMdoEqoN5xXLgLyJTa5PQPvIWqYjEcm5wb9obOEYQ
-        dLx6V0Ektf2DMXSMr1VdtbM=
-X-Google-Smtp-Source: ABdhPJwoeJen/PV/xW1fP54d8Ex6WgD3SAgVdfzKFi8WkN+xy6V2pQqgMCP8FmW+r9hrzRGiROSg+A==
-X-Received: by 2002:a17:902:5991:: with SMTP id p17mr18666350pli.78.1597829248871;
-        Wed, 19 Aug 2020 02:27:28 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id v1sm1334067pjh.16.2020.08.19.02.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 02:27:28 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 18:27:26 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Tony Lindgren <tony@atomide.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        Raul Rangel <rrangel@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCHv2] serial: 8250: change lock order in
- serial8250_do_startup()
-Message-ID: <20200819092726.GB3302@jagdpanzerIV.localdomain>
-References: <20200817022646.1484638-1-sergey.senozhatsky@gmail.com>
- <20200819092106.GA4353@alley>
+        Wed, 19 Aug 2020 05:28:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9847 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726835AbgHSJ2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:28:14 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BF2C8A8F87271B5DAD12;
+        Wed, 19 Aug 2020 17:28:10 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 17:28:03 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] nfsd: Convert to use the preferred fallthrough macro
+Date:   Wed, 19 Aug 2020 05:26:58 -0400
+Message-ID: <20200819092658.35504-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819092106.GA4353@alley>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/08/19 11:21), Petr Mladek wrote:
-> 
-> The patch is committed in printk/linux.git, branch for-5.10.
+Convert the uses of fallthrough comments to fallthrough macro.
 
-Petr, as far as I can tell, Greg has applied it to gregkh/tty.git
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ fs/nfsd/nfs4callback.c | 2 +-
+ fs/nfsd/nfs4proc.c     | 2 +-
+ fs/nfsd/nfs4state.c    | 2 +-
+ fs/nfsd/nfsfh.c        | 2 +-
+ fs/nfsd/vfs.c          | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-	-ss
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 7fbe9840a03e..052be5bf9ef5 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		break;
+ 	case -ESERVERFAULT:
+ 		++session->se_cb_seq_nr;
+-		/* Fall through */
++		fallthrough;
+ 	case 1:
+ 	case -NFS4ERR_BADSESSION:
+ 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index a527da3d8052..eaf50eafa935 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 				goto out;
+ 			open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
+ 			reclaim = true;
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_OPEN_CLAIM_FH:
+ 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+ 			status = do_open_fhandle(rqstp, cstate, open);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 81ed8e8bab3f..2f77f4b66cbc 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		break;
+ 	default:				/* checked by xdr code */
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case SP4_SSV:
+ 		status = nfserr_encr_alg_unsupp;
+ 		goto out_nolock;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 37bc8f5f4514..a0a8d27539ae 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, struct svc_export *exp)
+ 	case FSID_UUID16:
+ 		if (!is_root_export(exp))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case FSID_UUID4_INUM:
+ 	case FSID_UUID16_INUM:
+ 		return exp->ex_uuid != NULL;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 7d2933b85b65..aba5af9df328 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				break;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_CREATE_EXCLUSIVE4_1:
+ 			if (   d_inode(dchild)->i_mtime.tv_sec == v_mtime
+ 			    && d_inode(dchild)->i_atime.tv_sec == v_atime
+@@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				goto set_attr;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS3_CREATE_GUARDED:
+ 			err = nfserr_exist;
+ 		}
+-- 
+2.19.1
+
