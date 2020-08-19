@@ -2,159 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19545C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39362054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597842320;
-	bh=iPKJsd2CPYvEph/ZHo1goct6k2TFLrE0+PJtMV8UXOI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=iYQ223NPjntvADcMCv5RC7QGaF8d8V4qmII8vtiPwybiKDcEOFxbzAt0IVDb/ixXO
-	 Inu0iq+wlDuT7VowklPpEPiWIRhHO8y3Q/3Hz98Vw/McOOh/KC2AHy82Gns5XMQR2K
-	 m3twwF3y1jnR/TlIx0h5evjwVmkjnonWOpVNP7e4=
+	by mail.kernel.org (Postfix) with ESMTP id B273B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ard4s932"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgHSNFS (ORCPT
+        id S1728647AbgHSNFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbgHSNEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:04:44 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F3D2054F;
-        Wed, 19 Aug 2020 13:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597842283;
-        bh=iPKJsd2CPYvEph/ZHo1goct6k2TFLrE0+PJtMV8UXOI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ycbsyyPyp5UjYWhPDWd97T5apLaI0ZAd4pB3Imn5XklopAsDBCsK1V3oJsqvOxGm4
-         A9NlX58n/x9eM8cNam4mWnseahtjMIWOW7FVhPRmgqkoK6tpaZ/ERYa+PP1Par6q/2
-         tBQ3NBOw36vzbvIdADKRuNctRoR/h7hfZGNHWWWk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5DDD03522728; Wed, 19 Aug 2020 06:04:43 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 06:04:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH] rcu: shrink each
- possible cpu krcp
-Message-ID: <20200819130443.GR27891@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200814064557.17365-1-qiang.zhang@windriver.com>
- <20200814185124.GA2113@pc636>
- <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
- <20200818171807.GI27891@paulmck-ThinkPad-P72>
- <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
- <20200818210355.GM27891@paulmck-ThinkPad-P72>
- <20200818215511.GA2538@pc636>
- <20200818220245.GO27891@paulmck-ThinkPad-P72>
- <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
- <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+        Wed, 19 Aug 2020 09:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgHSNEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:04:43 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658A7C061383;
+        Wed, 19 Aug 2020 06:04:42 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 140so12011976lfi.5;
+        Wed, 19 Aug 2020 06:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NDGVB4uc/9L8D6EYysA1otupkiXzJkfvAe8wQHNLxGA=;
+        b=Ard4s932bJYSYryZTKI5z99QM0+nDxvZnETpFePakQOdmcZu0nh6+SK4cSRXAWUpvy
+         DT5JwCtY1KAS+tkXlG6XVjhS2mg/4nCr2Qjud2UWkaVscXSfSV/6edu5jbYGw0CTNiZu
+         YU9/NpNTp42WF76ysCVoai4EnTX8RzIds09S22UUybPEbST6AChWpEjqb6t5yeWy3bIa
+         Kq5W7/lRoV2XtnFAWx+owWqLiAS/CuuXcwUSTcCPgIxwvKJ9GjeJ0Sg6UZr4Qe5aBK2x
+         4RTA0BTT1VTjDZqE2jtc5XJiaGqmzrTTLP7IbVPBneVpm8rHzRpvEe1y/RHD96dZlWqh
+         n4wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NDGVB4uc/9L8D6EYysA1otupkiXzJkfvAe8wQHNLxGA=;
+        b=pf41kKNNxH+3hDoKWNpnsQZaurQAPwUqzsj0cU/UDfeWUvLfIanRW5qG0UqriSl+dG
+         PNxNBAfzEE7t3pP6OaJ118hD7x4y/2yWlY0gWd5j7cs/Qz7krUNy+k+Omkixh2jizk21
+         bHt8BAShZZmVWp9pGlqSs2KhEokEf1rhG5ZWVlHwZoTu/Ly4BH1QGW2jjCc3TLSL4yGf
+         +QAj0CevjZl3RYP2nFTcLjchdf/rT5ROnpHJc5532Elj0Ct328A2pzlhVpiSk6hPboZW
+         rfm+W+rZT+cfWWBCn6CCeY+/tMI2sm83ptDwgp0xqz2UIytzHRhAbdLCDSbcvcrTiRHA
+         8pKg==
+X-Gm-Message-State: AOAM530IfzIU0Srkx4o0fCyE+Y+3mlmcnESoyY6gV+nVkCfoT1ttWAjS
+        LnvxoR/DWZBFAKgZGLyCHtmUQ/fE24Q3xY6WdgM=
+X-Google-Smtp-Source: ABdhPJyvznro++qCXyBYE7EoK74ppQEV9P6teSEM88ogypMzGoowstNWZ9Z5nzJX9vWeeM1LsWOd0NxqUwA+aqMfUjQ=
+X-Received: by 2002:a05:6512:3253:: with SMTP id c19mr11944089lfr.139.1597842280844;
+ Wed, 19 Aug 2020 06:04:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200615154114.13184-1-mayflowerera@gmail.com>
+ <20200615.182343.221546986577273426.davem@davemloft.net> <CAMdQvKvJ7MXihELmPW2LC3PAgXMK2OG6bJjPNJkCgE6eZftDVw@mail.gmail.com>
+ <CAMdQvKtrzFtg9PwZhyMQ96S48ZLG5gAu3gk8m=k+tFVMHeshXQ@mail.gmail.com> <CAMdQvKubUYCMRt0V+koj8nKAq+nZNABJZMAXX7jB-_fRiPeJog@mail.gmail.com>
+In-Reply-To: <CAMdQvKubUYCMRt0V+koj8nKAq+nZNABJZMAXX7jB-_fRiPeJog@mail.gmail.com>
+From:   Era Mayflower <mayflowerera@gmail.com>
+Date:   Wed, 19 Aug 2020 13:03:37 +0000
+Message-ID: <CAMdQvKuDzSXpMRr9N4_jXJO4R5dp9UZ-+WByZW+KRBmCLubN_w@mail.gmail.com>
+Subject: Re: [PATCH] macsec: Support 32bit PN netlink attribute for XPN links
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:00:55AM +0000, Zhang, Qiang wrote:
-> 
-> 
-> ________________________________________
-> 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 Joel Fernandes <joel@joelfernandes.org>
-> 发送时间: 2020年8月19日 8:04
-> 收件人: Paul E. McKenney
-> 抄送: Uladzislau Rezki; Zhang, Qiang; Josh Triplett; Steven Rostedt; Mathieu Desnoyers; Lai Jiangshan; rcu; LKML
-> 主题: Re: [PATCH] rcu: shrink each possible cpu krcp
-> 
-> On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index b8ccd7b5af82..6decb9ad2421 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
-> > >  {
-> > >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> > >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
-> > > +       struct kfree_rcu_cpu *krcp;
-> > >
-> > >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> > >                 return 0;
-> > >
-> > > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
-> > > +       krcp = this_cpu_ptr(&krc)
-> > > +       schedule_delayed_work(&krcp->monitor_work, 0);
-> > > +
-> > >
-> > > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
-> > > Maybe be never.
+On Wed, Jun 24, 2020 at 10:23 AM Era Mayflower <mayflowerera@gmail.com> wrote:
+>
+> On Wed, Jun 17, 2020 at 1:32 AM Era Mayflower <mayflowerera@gmail.com> wrote:
 > >
-> > Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
-> > hard time getting too worried about it.  ;-)
-> 
-> >Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
-> >on the cache reaper who's job is to flush the per-cpu caches. So I
-> >believe during CPU offlining, the per-cpu slab caches are flushed.
+> > On Wed, Jun 17, 2020 at 10:02 AM Era Mayflower <mayflowerera@gmail.com> wrote:
+> > >
+> > > On Tue, Jun 16, 2020 at 1:23 AM David Miller <davem@davemloft.net> wrote:
+> > > >
+> > > > From: Era Mayflower <mayflowerera@gmail.com>
+> > > > Date: Tue, 16 Jun 2020 00:41:14 +0900
+> > > >
+> > > > > +     if (tb_sa[MACSEC_SA_ATTR_PN]) {
+> > > >
+> > > > validate_add_rxsa() requires that MACSET_SA_ATTR_PN be non-NULL, so
+> > > > you don't need to add this check here.
+> > > >
+> > >
+> > > validate_add_rxsa() did not originally contain that requirement.
+> > > It does exist in validate_add_txsa(), which means that providing a PN
+> > > is necessary only when creating TXSA.
+> > > When creating an RXSA without providing a PN it will be set to 1
+> > > (init_rx_sa+15).
+> > > This is the original behavior which of course can be changed.
+> > >
+> > > - Era.
 > >
-> >thanks,
-> >
->  >- Joel
-> 
-> When cpu going offline, the slub or slab only flush free objects in offline cpu cache,  put these free objects in node list  or return buddy system,  for those who are still in use, they still stay offline cpu cache.
-> 
-> If we want clean per-cpu "krcp" objects when cpu going offline.
->  we should free "krcp" cache objects in "rcutree_offline_cpu", this func be called before other rcu cpu offline func. and then "rcutree_offline_cpu" will be called in "cpuhp/%u" per-cpu thread.
+> > Sorry for the time issues, just noticed I sent the previous mail with
+> > future time.
+> > Fixed it permanently on my computer.
+>
+> Hello, is there any news?
+>
+> - Era.
 
-If Joel and Uladislau are good with this, would you be willing to
-resend with a commit log and your Signed-off-by?
+This patch is important to help projects like iproute2 use XPN macsec links.
+Please let me know if there is anything I need to fix.
 
-							Thanx, Paul
-
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 8ce77d9ac716..1812d4a1ac1b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3959,6 +3959,7 @@ int rcutree_offline_cpu(unsigned int cpu)
->         unsigned long flags;
->         struct rcu_data *rdp;
->         struct rcu_node *rnp;
-> +       struct kfree_rcu_cpu *krcp;
->  
->         rdp = per_cpu_ptr(&rcu_data, cpu);
->         rnp = rdp->mynode;
-> @@ -3970,6 +3971,11 @@ int rcutree_offline_cpu(unsigned int cpu)
->  
->         // nohz_full CPUs need the tick for stop-machine to work quickly
->         tick_dep_set(TICK_DEP_BIT_RCU);
-> +
-> +       krcp = per_cpu_ptr(&krc, cpu);
-> +       raw_spin_lock_irqsave(&krcp->lock, flags);
-> +       schedule_delayed_work(&krcp->monitor_work, 0);
-> +       raw_spin_unlock_irqrestore(&krcp->lock, flags);
->         return 0;
->  }
-> 
-> thanks,
-> 
-> Zqiang
+- Era.
