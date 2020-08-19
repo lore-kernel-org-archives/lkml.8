@@ -2,114 +2,106 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67403C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29987207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49144207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:07:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wm3fvNiR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nth9Ndu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgHSUFu (ORCPT
+        id S1726971AbgHSUHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
+        Wed, 19 Aug 2020 16:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSUFq (ORCPT
+        with ESMTP id S1725997AbgHSUHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:05:46 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F1EC061757;
-        Wed, 19 Aug 2020 13:05:46 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id mw10so1618165pjb.2;
-        Wed, 19 Aug 2020 13:05:46 -0700 (PDT)
+        Wed, 19 Aug 2020 16:07:32 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE78C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:07:32 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id q13so12599106vsn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=0I6TG8OQ4MyMAK10jo0S7S3IILMCgjoAeTh1HO1wd0k=;
-        b=Wm3fvNiRAKqxyH/lkvyeYmyjkx8eH1wdX7slQRNcwhkjV72tGjQI8TKWU45YCRbWsN
-         trMRTA1G8ep+n21TzY9pC8NXLOHkZ8e1GGr1jCXjgMfsHAsHJaDdzvvIk7NtW2bervC7
-         PKKu0poqliI4jdKv8BacQm33kbvuqZ5AGYUW8YEb/EYdXTbigtpEZZfT4a0uMRFKaRm0
-         DpxbKyNBc/Pi+LHBsG0oh88qFpUDEzBls35SdNgXXQj+gOpkWeUR5r6/+QjSjvZIpEtW
-         ED9otUqtKsQgispUd1/ZMpjkOn5C1WRM4rNj/X7QAiiwxJcAg+65wp536SFoYqlJx426
-         GMgQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qeG68/iGaDfUT5GNDRtXeBjtRxO2lzb4494Br3HhoQ8=;
+        b=nth9Ndu3BBX7zAieFztilD8MMhjA3cdKplDrlZ5W49D+qhHUXF16NTrUFVUtNZIS5h
+         nrjyXqD0UKvz/RmioArJ9MppfKV1DecA3144QIXSTdy70+pM6+C0j1wW1xWuwQI0vTGk
+         xwDrfNSyE9v1KWX6aTq33r618HHrmZ26rfI20=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=0I6TG8OQ4MyMAK10jo0S7S3IILMCgjoAeTh1HO1wd0k=;
-        b=jXBdZvWdb5rIH/5zojlQPjBTUKPqVJm3bRaxB/QXFunsOkBSndgYknRHv8K29Ujv3g
-         tPk81/vGmv0vd9tsjPEUwZDqWnQIUU7NTaqmo7TQEwBD/ki1OIJ38ZLAuCCHtPs52czj
-         Tsx9+rbFYgHGV8LZKI5SE805sUh6ND+O+Gsg7YrOIe/hHnOi+G9hUJe3kSSalW7UXc7r
-         ir8UijBhwzlQlCbQRZUkSOCWSD/STnS4/nuhOW6eUCrQ/rZGyWVyRUKdlBC57O8k9lvg
-         +lKP2eVckJJunFvJLvrCwwkfSn9warFQn1+e6y94q43jiYt0jyRmGPHngTHxct6VHio6
-         uwCA==
-X-Gm-Message-State: AOAM531Cypax7y2IVqwTCKRuN64upLTCtDs/d3getBagB1b4qNOvbUYL
-        2ogoaqlCrBDTMRC9ovvJuLc=
-X-Google-Smtp-Source: ABdhPJwcrV5pwOyfgoe0lNQO5XV3rZza8MUk63iRiaKDKIH8CLCaYLK9IAFivn4tkTWuRq+767obXA==
-X-Received: by 2002:a17:90b:10f:: with SMTP id p15mr5535936pjz.171.1597867546130;
-        Wed, 19 Aug 2020 13:05:46 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id g5sm23419pfh.168.2020.08.19.13.05.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 13:05:45 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 13:05:36 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, jakub@cloudflare.com,
-        john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5f3d8610d335f_2c9b2adeefb585bcac@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200819092436.58232-2-lmb@cloudflare.com>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-2-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next 1/6] net: sk_msg: simplify sk_psock
- initialization
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qeG68/iGaDfUT5GNDRtXeBjtRxO2lzb4494Br3HhoQ8=;
+        b=CJG9hVUtUQCntZnwEYhTC9OQ7xiScjh9gHZtlXrfmaxT2J8XuTlhyX2heTqh8p/BTP
+         d1aT57ZzDx5j58fXOwTOuJyRxMDkYaD3qywnGXxUowpEqKpZtWssqfua9EYCl4CZlcjX
+         C6Z1z2buHhKkz68cp0BWN4YP22UfN1w6Df7DX20W13JvS+HDBZkfyxCwQ/4emo8g+jR2
+         DEKb2IF8uB3KlYu+PU2zDEg8HgSlz/WoohKUif2hU4JKsBlTtBW4V4YpA716+Tay9Evm
+         OdnpsIr50MnBZlggBmQG+wrOb35MAi4o3HhpX08M7KLEBhFwuBJ1sEOONSOg/YDalD+Z
+         1ucw==
+X-Gm-Message-State: AOAM532YPgWdIRKQtquFD/ogah7RvcAbloJkNOUqKkJdAvIj57lXYDnm
+        Atr1kWdRGG2aMggMqQ730gtIiizED4jCfQ==
+X-Google-Smtp-Source: ABdhPJyGsr3u+oFr2ePkN7DFvOpfeyqzSJLaCjQLmTB2zUgFKbS9L9qTcwXo7NLW3vo5bQYBocmX9Q==
+X-Received: by 2002:a67:f709:: with SMTP id m9mr35301vso.82.1597867651050;
+        Wed, 19 Aug 2020 13:07:31 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id t191sm4983660vkt.46.2020.08.19.13.07.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 13:07:30 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id j188so12625839vsd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:07:30 -0700 (PDT)
+X-Received: by 2002:a67:fd67:: with SMTP id h7mr14388451vsa.121.1597867649964;
+ Wed, 19 Aug 2020 13:07:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200806163126.22667-1-georgi.djakov@linaro.org> <20200806163126.22667-6-georgi.djakov@linaro.org>
+In-Reply-To: <20200806163126.22667-6-georgi.djakov@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 19 Aug 2020 13:07:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UBhxxd2zc6uu7z7LDc7q5sfVRONuJZXQrwKjZYuyMy=w@mail.gmail.com>
+Message-ID: <CAD=FV=UBhxxd2zc6uu7z7LDc7q5sfVRONuJZXQrwKjZYuyMy=w@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] arm64: dts: qcom: sdm845: Increase the number of
+ interconnect cells
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Initializing psock->sk_proto and other saved callbacks is only
-> done in sk_psock_update_proto, after sk_psock_init has returned.
-> The logic for this is difficult to follow, and needlessly complex.
-> 
-> Instead, initialize psock->sk_proto whenever we allocate a new
-> psock. Additionally, assert the following invariants:
-> 
-> * The SK has no ULP: ULP does it's own finagling of sk->sk_prot
-> * sk_user_data is unused: we need it to store sk_psock
-> 
-> Protect our access to sk_user_data with sk_callback_lock, which
-> is what other users like reuseport arrays, etc. do.
-> 
-> The result is that an sk_psock is always fully initialized, and
-> that psock->sk_proto is always the "original" struct proto.
-> The latter allows us to use psock->sk_proto when initializing
-> IPv6 TCP / UDP callbacks for sockmap.
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Hi,
+
+On Thu, Aug 6, 2020 at 9:31 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Increase the number of interconnect-cells, as now we can include
+> the tag information. The consumers can specify the path tag as an
+> additional argument to the endpoints.
+>
+> Tested-by: Sibi Sankar <sibis@codeaurora.org>
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 44 ++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
 
-Looks like a nice bit of cleanup thanks. I think we might be able to fold
-up more of this code as well, but I'll take a look in a bit.
+I believe you missed updating a few places...  Fixup can be found at
+<https://crrev.com/c/2364731> or look carefully under "ipa@1e40000"
+and "gpu@5000000".
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+-Doug
