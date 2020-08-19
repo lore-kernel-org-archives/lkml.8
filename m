@@ -2,96 +2,247 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F4CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3FC720772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F6C20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wq6KxU26"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sa4hsvL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHSHpv (ORCPT
+        id S1726799AbgHSHrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:45:51 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:46722 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHSHpu (ORCPT
+        Wed, 19 Aug 2020 03:47:22 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:28702 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgHSHrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:45:50 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 03:45:50 EDT
-X-UUID: f89b5b861c5f43ee874e5302307a12a6-20200818
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fA1ZbejQFXPVLQG+Xp5gLcjblRbOlo94pfMY0RDgam0=;
-        b=Wq6KxU26E3Hy1RaGgPDFkuiC1wtJh3NWU9TaEzhThMlD9GaXmHENZhNPnsPC7HQnnjXE2BwAhxR3HTpvzjVFRgW27h3lhsGvukd7t/hGDk2y7Wzq9Um8IcuWMPZ8ccC2tLjz+4opqS8oZ16viCadWg7a9/nrJLEIyjPMCuQ/D5Y=;
-X-UUID: f89b5b861c5f43ee874e5302307a12a6-20200818
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1275055599; Tue, 18 Aug 2020 23:40:44 -0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 00:38:35 -0700
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 15:38:23 +0800
-Message-ID: <1597822704.31846.27.camel@mtksdccf07>
-Subject: Re: [PATCH net-next v2 0/7] net-next: dsa: mt7530: add support for
- MT7531
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     DENG Qingfang <dqfext@gmail.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        David Miller <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        =?ISO-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        Frank Wunderlich <frank-w@public-files.de>
-Date:   Wed, 19 Aug 2020 15:38:24 +0800
-In-Reply-To: <CALW65jZRWwW4DqpsCM9J=GRp6KnxqT-9MHUO7WSRJtp4E9vnFw@mail.gmail.com>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
-         <CALW65jZRWwW4DqpsCM9J=GRp6KnxqT-9MHUO7WSRJtp4E9vnFw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 03:47:20 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200819074717epoutp0175f52ee69c3ce933904827310a6038d8~sm8S_UnM53171531715epoutp01n
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:47:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200819074717epoutp0175f52ee69c3ce933904827310a6038d8~sm8S_UnM53171531715epoutp01n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597823237;
+        bh=tzZBT7Q3Eg4d9Ue9IFgRF7Y6TYWz6NoqVLtrD6yuI60=;
+        h=Subject:Reply-To:From:To:Date:References:From;
+        b=sa4hsvL4qCMlUa+ekPrO4Lpj016Hgss5yEJlYnEq/DZRAh1lrvze8xj//4iTpfrma
+         susnV0H0xACX8Xs/eLLVmRNpoV6WtzlTFQm9rJjVyHLEUOItO2miCMm6yD9p1BlQEy
+         NdZ4ibx7wL1WYoHnPVPRoT3tTO92iVMqInEG5CoQ=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200819074716epcas1p2a299bf9ee69bc5419475bd8a63db0fef~sm8SxBJ_N3064130641epcas1p2z;
+        Wed, 19 Aug 2020 07:47:16 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BWfxv58RPzMqYkf; Wed, 19 Aug
+        2020 07:47:15 +0000 (GMT)
+X-AuditID: b6c32a39-8dfff70000006fa2-29-5f3cd9013ee7
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        41.9E.28578.109DC3F5; Wed, 19 Aug 2020 16:47:13 +0900 (KST)
+Mime-Version: 1.0
+Subject: [vmwgfx] Xwayland crash on latest linus git
+Reply-To: jongman.heo@samsung.com
+From:   =?UTF-8?B?7ZeI7KKF66eM?= <jongman.heo@samsung.com>
+To:     "linux-graphics-maintainer@vmware.com" 
+        <linux-graphics-maintainer@vmware.com>,
+        "sroland@vmware.com" <sroland@vmware.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483@epcms1p1>
+Date:   Wed, 19 Aug 2020 16:47:13 +0900
+X-CMS-MailID: 20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsWy7bCmri7jTZt4gxndFha9504yWfzfNpHZ
+        4srX92wWb44cY7S4vGsOm8XqTkcHNo+93xaweGz/9oDV4373cSaPz5vkPN7Nf8sWwBqVY5OR
+        mpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDdICSQlliTilQ
+        KCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK0MDAyBSoMiEn48+T
+        SawFS+IqHj7/w9rA2BvSxcjJISFgIvHn7GKWLkYuDiGBHYwS6/b8Zuxi5ODgFRCU+LtDGKRG
+        GKhmy7ujLCC2kICiRPvHiSwQcSuJA88fsILYbAIWEsvOXWIEmSMicI1J4seP6ewQC3glZrQ/
+        ZYGwpSW2L9/KCGGLStxc/ZYdxn5/bD5UXESi9d5ZZghbUOLBz91QcUmJl88uQtn1Emtv72MH
+        WSYh0MIo8XT+VqhB+hLd13eCLeMV8JWYO/ki2CAWAVWJ9T/usELUuEic6+5jA7GZBeQltr+d
+        wwzyMLOApsT6XfoQJYoSO3/PZYQo4ZN497WHFeaXHfOeMIGUSwCNvPA3Deatn5uWMUHYHhKr
+        PiyDhlWgxJ03+5gmMMrNQoToLCR7ZyHsXcDIvIpRLLWgODc9tdiwwBQ5EjcxghOdluUOxulv
+        P+gdYmTiYDzEKMHBrCTC27vXOl6INyWxsiq1KD++qDQntfgQoynQxxOZpUST84GpNq8k3tDU
+        yNjY2MLEzNzM1FhJnPfhLYV4IYH0xJLU7NTUgtQimD4mDk6pBqZs51ze63uz1yYc/OP75+W6
+        V75K5bqv7j/8J3nU6rDmk8ul5Rd/Tfe9GLwyzjajb3uM0lypryvYn50v2rwp5/gqRfuvDJEP
+        nVyqLNXNF28/M+32wp1bY+xPVxl7MExue7tZW/3ArM26c1a9uFR7ccVVqeXXLuX1yQgJXArq
+        u2A+77rWIb3gTU4vgrs474lf5cwJ1zUzyBLRu5rgtiJ3+kqF5efO2c30O3ckyPn2/L3HlzD7
+        Xr8k7MH0fPnyBBP2F/xxP18vubdzVtbMLTNf+tbeuyukai/mtXuJI0Och+5yDsnAzVKtKW80
+        hK45vTnh+/uNpEOYUP9ODYsfv8MffnTr3bZON9lPegGL/u5CtX4jJZbijERDLeai4kQA5mFO
+        w/0DAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483
+References: <CGME20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483@epcms1p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgREVORywNCg0KTVQ3NTMxIG1pcnJvciBwb3J0IGhhcyBiZWVuIGZpeGVkIGJ5IG5ldyBkZWZp
-bml0aW9uIG9mIHJlZ2lzdGVyIGJhc2UgaW4gDQpoZWFkZXIgZmlsZS4gVGhlIGxvZ2ljIG9mIG1p
-cnJvciBwb3J0IHNldHRpbmcgaW4gNzUzMC5jIGlzIHJldXNlZC4NCg0KQEAgLTQxLDYgKzQyLDMz
-IEBAICBlbnVtIG10NzUzeF9pZCB7DQogI2RlZmluZSAgTUlSUk9SX1BPUlQoeCkJCQkoKHgpICYg
-MHg3KQ0KICNkZWZpbmUgIE1JUlJPUl9NQVNLCQkJMHg3DQogDQorLyogUmVnaXN0ZXJzIGZvciBD
-UFUgZm9yd2FyZCBjb250cm9sICovDQorI2RlZmluZSBNVDc1MzFfQ0ZDCQkJMHg0DQorI2RlZmlu
-ZSAgTVQ3NTMxX01JUlJPUl9FTgkJQklUKDE5KQ0KKyNkZWZpbmUgIE1UNzUzMV9NSVJST1JfTUFT
-SwkJKE1JUlJPUl9NQVNLIDw8IDE2KQ0KKyNkZWZpbmUgIE1UNzUzMV9NSVJST1JfUE9SVF9HRVQo
-eCkJKCgoeCkgPj4gMTYpICYgTUlSUk9SX01BU0spDQorI2RlZmluZSAgTVQ3NTMxX01JUlJPUl9Q
-T1JUX1NFVCh4KQkoKCh4KSAmIE1JUlJPUl9NQVNLKSA8PCAxNikNCisjZGVmaW5lICBNVDc1MzFf
-Q1BVX1BNQVBfTUFTSwkJR0VOTUFTSyg3LCAwKQ0KKw0KKyNkZWZpbmUgTVQ3NTNYX01JUlJPUl9S
-RUcoaWQpCQkoKChpZCkgPT0gSURfTVQ3NTMxKSA/IFwNCisJCQkJCSBNVDc1MzFfQ0ZDIDogTVQ3
-NTMwX01GQykNCisjZGVmaW5lIE1UNzUzWF9NSVJST1JfRU4oaWQpCQkoKChpZCkgPT0gSURfTVQ3
-NTMxKSA/IFwNCisJCQkJCSBNVDc1MzFfTUlSUk9SX0VOIDogTUlSUk9SX0VOKQ0KKyNkZWZpbmUg
-TVQ3NTNYX01JUlJPUl9NQVNLKGlkKQkJKCgoaWQpID09IElEX01UNzUzMSkgPyBcDQorCQkJCQkg
-TVQ3NTMxX01JUlJPUl9NQVNLIDogTUlSUk9SX01BU0spDQoNCg0KT24gV2VkLCAyMDIwLTA4LTE5
-IGF0IDExOjQ5ICswODAwLCBERU5HIFFpbmdmYW5nIHdyb3RlOg0KPiBIaSwNCj4gDQo+IElzIHBv
-cnQgbWlycm9yaW5nIHdvcmtpbmc/IFBvcnQgbWlycm9yaW5nIHJlZ2lzdGVycyBvbiBNVDc1MzEg
-aGF2ZQ0KPiBtb3ZlZCwgYWNjb3JkaW5nIHRvIGJwaSdzIE1UNzUzMSByZWZlcmVuY2UgbWFudWFs
-Lg0KPiBQbGVhc2UgZml4IHRoYXQgYXMgd2VsbC4NCg0K
+
+Hi,
+
+
+I'm running Linux guest OS (Fedora 33 + custom build kernel) on Windows 10 host, with VMWare workstation.
+
+Kernel 5.8 was fine, but latest linus git kernel has a problem, Xwayland crashes. 
+
+Gnome login screen is Ok, but when I try login, crash occurs.
+
+I just see black screen, cannot see graphic screen after the login screen.
+
+
+ * If I disable 3D accelaration from VMWare setting, then this issue doesn't occur
+
+
+git bisect log follows;
+
+=================================================================================
+# git bisect log
+git bisect start '--' 'drivers/gpu/drm'
+# bad: [18445bf405cb331117bc98427b1ba6f12418ad17] Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi
+git bisect bad 18445bf405cb331117bc98427b1ba6f12418ad17
+# good: [bcf876870b95592b52519ed4aafcf9d95999bc9c] Linux 5.8
+git bisect good bcf876870b95592b52519ed4aafcf9d95999bc9c
+# good: [026c396b41a4c9412f6f2b6496077949ea99e3ad] drm/amdgpu: add ih ip block for navy_flounder
+git bisect good 026c396b41a4c9412f6f2b6496077949ea99e3ad
+# bad: [395be0f47a001a975d25a3e2a0bfe4f08ee193fa] Merge tag 'drm/tegra/for-5.9-rc1' of ssh://git.freedesktop.org/git/tegra/linux into drm-next
+git bisect bad 395be0f47a001a975d25a3e2a0bfe4f08ee193fa
+# good: [d524b87f77364db096855d7eb714ffacec974ddf] drm/i915: Update DRIVER_DATE to 20200702
+git bisect good d524b87f77364db096855d7eb714ffacec974ddf
+# bad: [3ffff3c6855bda1b39eae88f3730d2baddce3bfd] Merge tag 'drm-misc-next-2020-07-16' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+git bisect bad 3ffff3c6855bda1b39eae88f3730d2baddce3bfd
+# bad: [247c12fcba30ecb9473fe6b6c0375d46916417c9] drm/vc4: Reorder the bind order of the devices
+git bisect bad 247c12fcba30ecb9473fe6b6c0375d46916417c9
+# bad: [04f08f8831779e91fc59570dbbd3b7815c229d92] drm/ingenic-drm: drop use of legacy drm_bus_flags
+git bisect bad 04f08f8831779e91fc59570dbbd3b7815c229d92
+# good: [60e9eabf41fa916d2ef68c5bf929197975917578] Backmerge remote-tracking branch 'drm/drm-next' into drm-misc-next
+git bisect good 60e9eabf41fa916d2ef68c5bf929197975917578
+# bad: [35205ee9ba46dcb2a82dbb981ec5fb242c4d847d] drm/i915: Send hotplug event if edid had changed
+git bisect bad 35205ee9ba46dcb2a82dbb981ec5fb242c4d847d
+# bad: [3f1f6981afed9fa21efa12ce396b35ca684b8a29] drm: pl111: Credit where credit is due
+git bisect bad 3f1f6981afed9fa21efa12ce396b35ca684b8a29
+# bad: [2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b] drm/ttm: make TT creation purely optional v3
+git bisect bad 2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b
+# bad: [58e4d686d456c3e356439ae160ff4a0728940b8e] drm/ttm: cleanup ttm_mem_type_manager_func.get_node interface v3
+git bisect bad 58e4d686d456c3e356439ae160ff4a0728940b8e
+# first bad commit: [58e4d686d456c3e356439ae160ff4a0728940b8e] drm/ttm: cleanup ttm_mem_type_manager_func.get_node interface v3
+=================================================================================
+
+But I can't revert first bad commit, 58e4d686d456, due to conflict. So I couldn't test it with the commit reverted.
+Also, there was another issue, boot crash [1], which is now fixed. 
+But I'm afraid it affects git bisect result.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg828262.html
+
+Among above bad commits, followings are marked bad due to the boot crash, not the Xwayland crash.
+
+    395be0f47a001a975d25a3e2a0bfe4f08ee193fa
+    3ffff3c6855bda1b39eae88f3730d2baddce3bfd
+    247c12fcba30ecb9473fe6b6c0375d46916417c9
+    04f08f8831779e91fc59570dbbd3b7815c229d92
+    35205ee9ba46dcb2a82dbb981ec5fb242c4d847d
+    3f1f6981afed9fa21efa12ce396b35ca684b8a29
+    2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b
+
+
+And following is journalctl log.
+
+===================================================================================
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: VMware: vmw_ioctl_command error Cannot allocate memory.
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) Backtrace:
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 0: /usr/bin/Xwayland (XNFreallocarray+0xb9) [0x562e51c93bb>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 1: /lib64/libpthread.so.0 (funlockfile+0x60) [0x7fb5661702>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 2: /lib64/libc.so.6 (gsignal+0x145) [0x7fb565fcbbc5]
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 3: /lib64/libc.so.6 (abort+0x116) [0x7fb565fb48a4]
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 4: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 5: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 6: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 7: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 8: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions_>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 9: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions_>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 10: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 11: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+Aug 14 15:26:39 localhost.localdomain kernel: ioremap: invalid physical address f91ab40ed1340000
+Aug 14 15:26:39 localhost.localdomain kernel: ------------[ cut here ]------------
+Aug 14 15:26:39 localhost.localdomain kernel: WARNING: CPU: 6 PID: 1093 at arch/x86/mm/ioremap.c:198 __ioremap_caller.cold+0x47/0x65
+Aug 14 15:26:39 localhost.localdomain kernel: Modules linked in:
+Aug 14 15:26:39 localhost.localdomain kernel: CPU: 6 PID: 1093 Comm: Xwayland Not tainted 5.8.0+ #108
+Aug 14 15:26:39 localhost.localdomain kernel: Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, >
+Aug 14 15:26:39 localhost.localdomain kernel: RIP: 0010:__ioremap_caller.cold+0x47/0x65
+Aug 14 15:26:39 localhost.localdomain kernel: Code: e9 d7 fa ff ff 89 c6 48 c7 c7 a8 27 85 b5 45 31 e4 e8 49 0b 0d 00 e9 5d fa ff ff>
+Aug 14 15:26:39 localhost.localdomain kernel: RSP: 0018:ffffa973414e7938 EFLAGS: 00010282
+Aug 14 15:26:39 localhost.localdomain kernel: RAX: 0000000000000032 RBX: 0000000000000002 RCX: 0000000000000000
+Aug 14 15:26:39 localhost.localdomain kernel: RDX: ffff91ab7cba6ae0 RSI: ffff91ab7cb98900 RDI: ffff91ab7cb98900
+Aug 14 15:26:39 localhost.localdomain kernel: RBP: f91ab40ed1340000 R08: 0000000000000001 R09: 0000000000000694
+Aug 14 15:26:39 localhost.localdomain kernel: R10: 0000000000026680 R11: 0000000000000003 R12: ffff91aaf5c13000
+Aug 14 15:26:39 localhost.localdomain kernel: R13: 0000000001000000 R14: ffffa973414e7a38 R15: ffffffffb49ababa
+Aug 14 15:26:39 localhost.localdomain kernel: FS:  00007fb56585d5c0(0000) GS:ffff91ab7cb80000(0000) knlGS:0000000000000000
+Aug 14 15:26:39 localhost.localdomain kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Aug 14 15:26:39 localhost.localdomain kernel: CR2: 0000562e529a90f8 CR3: 0000000095374001 CR4: 00000000003706e0
+Aug 14 15:26:39 localhost.localdomain kernel: Call Trace:
+Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_ttm_unbind+0x60/0x60
+Aug 14 15:26:39 localhost.localdomain kernel:  ttm_mem_reg_ioremap+0xea/0xf0
+Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_move_memcpy+0x147/0x600
+Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_handle_move_mem+0x5ce/0x5e0
+Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_validate+0x144/0x160
+Aug 14 15:26:39 localhost.localdomain kernel:  vmw_validation_bo_validate_single+0x5b/0xa0
+Aug 14 15:26:39 localhost.localdomain kernel:  vmw_validation_bo_validate+0xa9/0xf0
+Aug 14 15:26:39 localhost.localdomain kernel:  ? ttm_eu_reserve_buffers+0xfa/0x2d0
+Aug 14 15:26:39 localhost.localdomain kernel:  vmw_execbuf_process+0x696/0x1120
+Aug 14 15:26:39 localhost.localdomain kernel:  ? pat_enabled+0x10/0x10
+Aug 14 15:26:39 localhost.localdomain kernel:  ? insert_pfn+0xe6/0x2c0
+Aug 14 15:26:39 localhost.localdomain kernel:  vmw_execbuf_ioctl+0x7c/0x150
+Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_execbuf_release_pinned_bo+0x50/0x50
+Aug 14 15:26:39 localhost.localdomain kernel:  drm_ioctl_kernel+0x86/0xd0
+Aug 14 15:26:39 localhost.localdomain kernel:  ? do_wp_page+0x1a9/0x720
+Aug 14 15:26:39 localhost.localdomain kernel:  drm_ioctl+0x20f/0x39a
+Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_execbuf_release_pinned_bo+0x50/0x50
+Aug 14 15:26:39 localhost.localdomain kernel:  ? do_user_addr_fault+0x1cc/0x3ed
+Aug 14 15:26:39 localhost.localdomain kernel:  __x64_sys_ioctl+0x83/0xb0
+Aug 14 15:26:39 localhost.localdomain kernel:  do_syscall_64+0x33/0x40
+Aug 14 15:26:39 localhost.localdomain kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Aug 14 15:26:39 localhost.localdomain kernel: RIP: 0033:0x7fb56608658b
+Aug 14 15:26:39 localhost.localdomain kernel: Code: 89 d8 49 8d 3c 1c 48 f7 d8 49 39 c4 72 b5 e8 1c ff ff ff 85 c0 78 ba 4c 89 e0 5b>
+Aug 14 15:26:39 localhost.localdomain kernel: RSP: 002b:00007ffd0e2b4988 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 14 15:26:39 localhost.localdomain kernel: RAX: ffffffffffffffda RBX: 00007ffd0e2b4a10 RCX: 00007fb56608658b
+Aug 14 15:26:39 localhost.localdomain kernel: RDX: 00007ffd0e2b4a10 RSI: 000000004028644c RDI: 000000000000000e
+Aug 14 15:26:39 localhost.localdomain kernel: RBP: 000000004028644c R08: 0000000000000000 R09: 0000000000000002
+Aug 14 15:26:39 localhost.localdomain kernel: R10: 0000562e521dead8 R11: 0000000000000246 R12: 0000000000000028
+Aug 14 15:26:39 localhost.localdomain kernel: R13: 000000000000000e R14: 00007ffd0e2b4a10 R15: 0000000000000001
+Aug 14 15:26:39 localhost.localdomain kernel: ---[ end trace 28b9197fbfdd95be ]---
+Aug 14 15:26:39 localhost.localdomain kernel: ioremap: invalid physical address f91ab40ed1340000
+Aug 14 15:26:39 localhost.localdomain audit[1093]: ANOM_ABEND auid=4294967295 uid=42 gid=42 ses=4294967295 pid=1093 comm="Xwayland" >
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 12: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 13: /usr/bin/Xwayland (fbClearVisualTypes+0x1c79) [0x562e5>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 14: /usr/bin/Xwayland (glamor_destroy_gc+0x508c) [0x562e51>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 15: /usr/bin/Xwayland (QueryColors+0x4f17) [0x562e51c52eb7]
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 16: /usr/bin/Xwayland (SetPictureClipRects+0x223c) [0x562e>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 17: /usr/bin/Xwayland (ReplyNotSwappd+0x184e) [0x562e51b36>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 18: /lib64/libc.so.6 (__libc_start_main+0xf2) [0x7fb565fb6>
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 19: /usr/bin/Xwayland (_start+0x2e) [0x562e51b364ee]
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: Fatal server error:
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) Caught signal 6 (Aborted). Server aborting
+Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+===================================================================================
 
