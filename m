@@ -2,150 +2,111 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CC8C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81186C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89252206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOup0pfW"
+	by mail.kernel.org (Postfix) with ESMTP id 65994207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgHSKMa (ORCPT
+        id S1727913AbgHSKMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:12:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36031 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727807AbgHSKMT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:12:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597831938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P5BwOp0hs0cGirzCiMB7Wivc0LM0Y2eMEhvclJKfJbc=;
-        b=dOup0pfWn1TFaW8cbinhXscCwarjSpdecGqTj1yC+nrm+RWTAZ0ST254TZjWSktAGdHyqS
-        PgI4PgumUY5rSE4fkchujDaQpAgYolQKxU5fWSaJK4maSZ+WLFEPssghT2/NauQ2iZBffN
-        vRkcNwqKJM5HpCj2Jyl4A3JutZH1eL4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-hE5cNfm8NKCqttB_B-pqRQ-1; Wed, 19 Aug 2020 06:12:16 -0400
-X-MC-Unique: hE5cNfm8NKCqttB_B-pqRQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC934800466;
-        Wed, 19 Aug 2020 10:12:14 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0277E16597;
-        Wed, 19 Aug 2020 10:12:12 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v1 04/11] mm/memory_hotplug: simplify offlining of pages in offline_pages()
-Date:   Wed, 19 Aug 2020 12:11:50 +0200
-Message-Id: <20200819101157.12723-5-david@redhat.com>
-In-Reply-To: <20200819101157.12723-1-david@redhat.com>
-References: <20200819101157.12723-1-david@redhat.com>
+        Wed, 19 Aug 2020 06:12:35 -0400
+Received: from mail.v3.sk ([167.172.186.51]:51730 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727808AbgHSKMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:12:22 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3FFD6DFA71;
+        Wed, 19 Aug 2020 10:11:24 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 3Ym15nfYp3ad; Wed, 19 Aug 2020 10:11:23 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id E05D0DFA44;
+        Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id AD0s2r5Zerf0; Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 81696DEE69;
+        Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] drm/panel: Add support for Innolux LS075AT011
+Date:   Wed, 19 Aug 2020 12:12:04 +0200
+Message-Id: <20200819101206.633253-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We make sure that we cannot have any memory holes right at the beginning
-of offline_pages(). We no longer need walk_system_ram_range() and can
-call __offline_isolated_pages() directly.
+Hi,
 
-offlined_pages always corresponds to nr_pages, so we can simplify that.
+Please take a look at the patches chanied to this message and consider
+applying them. They add description of the display panel found on OLPC
+laptops to the simple panel driver.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory_hotplug.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+There is no datasheet for the hardware and thus the timings were
+determined on a best effort basis. The clock range is gotten from the
+data sheet of the display controller [1] and the other timings are what
+OLPC laptops actually use. The panel seems to cope with different sync
+timings, but I'm not sure wherher there's any value in attempting to
+figure out what range is actually permissible.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index f64478349148d..50aa5df696e9d 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1373,17 +1373,6 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 	return ret;
- }
- 
--/* Mark all sections offline and remove all free pages from the buddy. */
--static int
--offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
--			void *data)
--{
--	unsigned long *offlined_pages = (unsigned long *)data;
--
--	*offlined_pages += __offline_isolated_pages(start, start + nr_pages);
--	return 0;
--}
--
- static int __init cmdline_parse_movable_node(char *p)
- {
- 	movable_node_enabled = true;
-@@ -1470,7 +1459,7 @@ static int count_system_ram_pages_cb(unsigned long start_pfn,
- int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- {
- 	const unsigned long end_pfn = start_pfn + nr_pages;
--	unsigned long pfn, system_ram_pages = 0, offlined_pages = 0;
-+	unsigned long pfn, system_ram_pages = 0;
- 	int ret, node, nr_isolate_pageblock;
- 	unsigned long flags;
- 	struct zone *zone;
-@@ -1570,11 +1559,10 @@ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- 		}
- 	} while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
- 
--	/* Ok, all of our target is isolated.
--	   We cannot do rollback at this point. */
--	walk_system_ram_range(start_pfn, end_pfn - start_pfn,
--			      &offlined_pages, offline_isolated_pages_cb);
--	pr_info("Offlined Pages %ld\n", offlined_pages);
-+	/* Mark all sections offline and remove free pages from the buddy. */
-+	__offline_isolated_pages(start_pfn, end_pfn);
-+	pr_info("Offlined Pages %ld\n", nr_pages);
-+
- 	/*
- 	 * Onlining will reset pagetype flags and makes migrate type
- 	 * MOVABLE, so just need to decrease the number of isolated
-@@ -1585,11 +1573,11 @@ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- 	spin_unlock_irqrestore(&zone->lock, flags);
- 
- 	/* removal success */
--	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
--	zone->present_pages -= offlined_pages;
-+	adjust_managed_page_count(pfn_to_page(start_pfn), -nr_pages);
-+	zone->present_pages -= nr_pages;
- 
- 	pgdat_resize_lock(zone->zone_pgdat, &flags);
--	zone->zone_pgdat->node_present_pages -= offlined_pages;
-+	zone->zone_pgdat->node_present_pages -= nr_pages;
- 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
- 
- 	init_per_zone_wmark_min();
--- 
-2.26.2
+I could not figure out the right definitions for the connector and the
+bus format. I'm not sure how necessary they are, but at least the
+drm-panel driver insists on connector type being defined so I picked
+LVDS because that seems to be used for internal laptop screens.
+
+The signalling is not actually differential. It uses TTL levels with
+data sampled on rising and falling clock edges; sort of like this (taken
+from [1], P.20):
+
+          __
+    FSTH /  \_______________________________________
+          ____      ____      ____      ____      __
+    FCLK /    \____/    \____/    \____/    \____/
+                  ____ ____ ____ ____ ____ ____ ____
+    FD00 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD01 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD10 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD11 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD20 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD21 ........X____X____X____X____X____X____X____
+                   |    |    |    |
+                   data 1    data 2   ...
+                   (2x6bit)  (2x6bit)
+
+I believe the data just carries brightness because each pixel on the
+panel has a fixed color; with the red, green and blue pixels organized
+in a pattern [2]. (The HX8837 that drives the color does the conversion
+from RGB).
+
+Tested on an OLPC XO-1.75 laptop. XO-1 and XO-1.5 use the same hardware,
+but their display controllers are not supported by DRM at the moment.
+
+[1] http://wiki.laptop.org/images/0/09/DCON_datasheet_HX8837-A.pdf
+[2] http://wiki.laptop.org/go/Display
+
+Thank you!
+Lubo
+
 
