@@ -2,90 +2,388 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB12206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90136206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MMwcAkNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgHSMld (ORCPT
+        id S1728220AbgHSMmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:41:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53843 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgHSMlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:41:32 -0400
-IronPort-SDR: i7ZOQqZPWly1gwwk5dEkPH1w3pmYGK+z2LYjRiC+d3ZVljK8SGRwmEARs3HBL6AghAsI8+NuwS
- FjmmcFLEoOcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="155065220"
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="155065220"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 05:41:31 -0700
-IronPort-SDR: ThmBhCzDpTbgXwskpFBlM6xhy4HnKxFKkNBo8NhGHuDXc9Sego4SuksV31OezWXPxgK2rn+gem
- /EjmnzLnlohg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="329320221"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Aug 2020 05:41:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A25771FD; Wed, 19 Aug 2020 15:41:28 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] mfd: intel-lpss: Add device IDs for UART ports for Lakefield
-Date:   Wed, 19 Aug 2020 15:41:27 +0300
-Message-Id: <20200819124127.61398-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 19 Aug 2020 08:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgHSMlz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:41:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59078C061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:41:54 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so26094871eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/y3jRYjISN6SJ5xQ83KSW3ddpwc4GdyAtPJH5CRfRJ0=;
+        b=MMwcAkNPoxSXmPkz0pR7sTwo66Xg5xE8uIJAgcgY7tIE1K+xayzXU/yLxzn1EmRPBz
+         cqK+MOxm4aZbhj43T3YSsPW3XM1y4yq7glyAHROQ4b1KQRxmH1gLlBRq+rhvyuZrYS+x
+         bdxpA7wELpjNG4SRngDWN43obystfj96snvms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/y3jRYjISN6SJ5xQ83KSW3ddpwc4GdyAtPJH5CRfRJ0=;
+        b=kgo7fML64d9Qa1I178wQr32aLdEwOkt5fj/iwFr+vVOhaiyVQj1Av5rdi3tD03pdYK
+         JOynY1ZYkWKr8Er5d9Y87V/Z72hRIVBGbQxAkrd87L+AnSxd1w9gHIoV/xGOM/qze9tN
+         Tp2VOtCqnimrwtWWrwcAA8HkUNTnXBXqcHzBo94VBWROWvioFwm8ONpNg2LAFH9FTQSw
+         ySZI9qLMRn6Fsa1mlHssC3pIgYcNLpQqLMp79cwYeIUz1+m5DHqudzSOhoJAyel8bVU5
+         HnOxtwNekQR3WHu4bcm3lfzTLxig78Iw11Q1jiRRwLelpKApueQyMUPT4AFs+7hG0iTX
+         O8sQ==
+X-Gm-Message-State: AOAM5301dYtSUiH7tdMDzPw7eE9LqDWFIsuClHshr3eVuCH9RsAAuMIb
+        EO6bv//qPOMw01eb0+4cM9EGrw==
+X-Google-Smtp-Source: ABdhPJzARsZBOTQokn+pLPQqdAoHgnbmZAYTqgVRhFkyXjlQCLD8bRL5hnqaqrbxwy82mMtNYBxSig==
+X-Received: by 2002:a17:906:86c9:: with SMTP id j9mr24478953ejy.5.1597840912462;
+        Wed, 19 Aug 2020 05:41:52 -0700 (PDT)
+Received: from [192.168.2.66] ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id t3sm17820566edq.26.2020.08.19.05.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 05:41:51 -0700 (PDT)
+Subject: Re: [PATCH bpf-next v8 3/7] bpf: Generalize bpf_sk_storage
+To:     Martin KaFai Lau <kafai@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200803164655.1924498-1-kpsingh@chromium.org>
+ <20200803164655.1924498-4-kpsingh@chromium.org>
+ <20200818010545.iix72le4tkhuyqe5@kafai-mbp.dhcp.thefacebook.com>
+From:   KP Singh <kpsingh@chromium.org>
+Message-ID: <6cb51fa0-61a5-2cf6-b44d-84d58d08c775@chromium.org>
+Date:   Wed, 19 Aug 2020 14:41:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200818010545.iix72le4tkhuyqe5@kafai-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
-Add PCI IDs for Lakefield to the list of supported UARTs.
 
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/mfd/intel-lpss-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 8/18/20 3:05 AM, Martin KaFai Lau wrote:
+> On Mon, Aug 03, 2020 at 06:46:51PM +0200, KP Singh wrote:
+>> From: KP Singh <kpsingh@google.com>
+>>
+>> Refactor the functionality in bpf_sk_storage.c so that concept of
+>> storage linked to kernel objects can be extended to other objects like
+>> inode, task_struct etc.
+>>
+>> Each new local storage will still be a separate map and provide its own
+>> set of helpers. This allows for future object specific extensions and
+>> still share a lot of the underlying implementation.
+>>
+>> This includes the changes suggested by Martin in:
+>>
+>>   https://lore.kernel.org/bpf/20200725013047.4006241-1-kafai@fb.com/
+>>
+>> which adds map_local_storage_charge, map_local_storage_uncharge,
+>> and map_owner_storage_ptr.
+> A description will still be useful in the commit message to talk
+> about the new map_ops, e.g.
+> they allow kernel object to optionally have different mem-charge strategy.
+> 
+>>
+>> Co-developed-by: Martin KaFai Lau <kafai@fb.com>
+>> Signed-off-by: KP Singh <kpsingh@google.com>
+>> ---
+>>  include/linux/bpf.h            |   9 ++
+>>  include/net/bpf_sk_storage.h   |  51 +++++++
+>>  include/uapi/linux/bpf.h       |   8 +-
+>>  net/core/bpf_sk_storage.c      | 246 +++++++++++++++++++++------------
+>>  tools/include/uapi/linux/bpf.h |   8 +-
+>>  5 files changed, 233 insertions(+), 89 deletions(-)
+>>
+>> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+>> index cef4ef0d2b4e..8e1e23c60dc7 100644
+>> --- a/include/linux/bpf.h
+>> +++ b/include/linux/bpf.h
+>> @@ -34,6 +34,9 @@ struct btf_type;
+>>  struct exception_table_entry;
+>>  struct seq_operations;
+>>  struct bpf_iter_aux_info;
+>> +struct bpf_local_storage;
+>> +struct bpf_local_storage_map;
+>> +struct bpf_local_storage_elem;
+> "struct bpf_local_storage_elem" is not needed.
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 7d208d2d7ebf..9d6daa780df7 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -308,6 +308,10 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x7afc), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x7afd), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x7afe), (kernel_ulong_t)&bxt_uart_info },
-+	/* LKF */
-+	{ PCI_VDEVICE(INTEL, 0x98a8), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x98a9), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x98c7), (kernel_ulong_t)&bxt_uart_info },
- 	/* SPT-LP */
- 	{ PCI_VDEVICE(INTEL, 0x9d27), (kernel_ulong_t)&spt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x9d28), (kernel_ulong_t)&spt_uart_info },
--- 
-2.28.0
+True, I moved it to bpf_sk_storage.h because it's needed there.
 
+> 
+>>  
+>>  extern struct idr btf_idr;
+>>  extern spinlock_t btf_idr_lock;
+>> @@ -104,6 +107,12 @@ struct bpf_map_ops {
+>>  	__poll_t (*map_poll)(struct bpf_map *map, struct file *filp,
+>>  			     struct poll_table_struct *pts);
+>>  
+>> +	/* Functions called by bpf_local_storage maps */
+>> +	int (*map_local_storage_charge)(struct bpf_local_storage_map *smap,
+>> +					void *owner, u32 size);
+>> +	void (*map_local_storage_uncharge)(struct bpf_local_storage_map *smap,
+>> +					   void *owner, u32 size);
+>> +	struct bpf_local_storage __rcu ** (*map_owner_storage_ptr)(void *owner);
+
+
+[...]
+
+>> +			struct bpf_local_storage_map *smap,
+>> +			struct bpf_local_storage_elem *first_selem);
+>> +
+>> +struct bpf_local_storage_data *
+>> +bpf_local_storage_update(void *owner, struct bpf_map *map, void *value,
+> Nit.  It may be more consistent to take "struct bpf_local_storage_map *smap"
+> instead of "struct bpf_map *map" here.
+> 
+> bpf_local_storage_map_check_btf() will be the only one taking
+> "struct bpf_map *map".
+
+That's because it is used in map operations as map_check_btf which expects
+a bpf_map *map pointer. We can wrap it in another function but is that
+worth doing? 
+
+> 
+>> +			 u64 map_flags);
+>> +
+>>  #ifdef CONFIG_BPF_SYSCALL
+>>  int bpf_sk_storage_clone(const struct sock *sk, struct sock *newsk);
+>>  struct bpf_sk_storage_diag *
+>> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+>> index b134e679e9db..35629752cec8 100644
+>> --- a/include/uapi/linux/bpf.h
+>> +++ b/include/uapi/linux/bpf.h
+>> @@ -3647,9 +3647,13 @@ enum {
+>>  	BPF_F_SYSCTL_BASE_NAME		= (1ULL << 0),
+>>  };
+>>  
+>> -/* BPF_FUNC_sk_storage_get flags */
+>> +/* BPF_FUNC_<local>_storage_get flags */
+> BPF_FUNC_<kernel_obj>_storage_get flags?
+> 
+
+Done.
+
+>>  enum {
+>> -	BPF_SK_STORAGE_GET_F_CREATE	= (1ULL << 0),
+>> +	BPF_LOCAL_STORAGE_GET_F_CREATE	= (1ULL << 0),
+>> +	/* BPF_SK_STORAGE_GET_F_CREATE is only kept for backward compatibility
+>> +	 * and BPF_LOCAL_STORAGE_GET_F_CREATE must be used instead.
+>> +	 */
+>> +	BPF_SK_STORAGE_GET_F_CREATE  = BPF_LOCAL_STORAGE_GET_F_CREATE,
+>>  };
+>>  
+>>  /* BPF_FUNC_read_branch_records flags. */
+>> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+>> index 99dde7b74767..bb2375769ca1 100644
+>> --- a/net/core/bpf_sk_storage.c
+>> +++ b/net/core/bpf_sk_storage.c
+>> @@ -84,7 +84,7 @@ struct bpf_local_storage_elem {
+>>  struct bpf_local_storage {
+>>  	struct bpf_local_storage_data __rcu *cache[BPF_LOCAL_STORAGE_CACHE_SIZE];
+>>  	struct hlist_head list; /* List of bpf_local_storage_elem */
+>> -	struct sock *owner;	/* The object that owns the the above "list" of
+
+[...]
+
+>>  }
+>>  
+>> -/* sk_storage->lock must be held and selem->sk_storage == sk_storage.
+>> +/* local_storage->lock must be held and selem->sk_storage == sk_storage.
+> This name change belongs to patch 1.
+> 
+> Also,
+> selem->"local_"storage == "local_"storage
+
+Done.
+
+> 
+>>   * The caller must ensure selem->smap is still valid to be
+>>   * dereferenced for its smap->elem_size and smap->cache_idx.
+>>   */
+> 
+> [ ... ]
+> 
+>> @@ -367,7 +401,7 @@ static int sk_storage_alloc(struct sock *sk,
+>>  		/* Note that even first_selem was linked to smap's
+>>  		 * bucket->list, first_selem can be freed immediately
+>>  		 * (instead of kfree_rcu) because
+>> -		 * bpf_sk_storage_map_free() does a
+>> +		 * bpf_local_storage_map_free() does a
+
+
+[...]
+
+>>  			kfree(selem);
+>> -			atomic_sub(smap->elem_size, &sk->sk_omem_alloc);
+>> +			mem_uncharge(smap, owner, smap->elem_size);
+>>  			return ERR_PTR(err);
+>>  		}
+>>  
+>> @@ -430,8 +464,8 @@ bpf_local_storage_update(struct sock *sk, struct bpf_map *map, void *value,
+>>  		 * such that it can avoid taking the local_storage->lock
+>>  		 * and changing the lists.
+>>  		 */
+>> -		old_sdata =
+>> -			bpf_local_storage_lookup(local_storage, smap, false);
+>> +		old_sdata = bpf_local_storage_lookup(local_storage, smap,
+>> +						     false);
+> Pure indentation change.  The same line has been changed in patch 1.  Please change
+> the identation in patch 1 if the above way is preferred.
+
+I removed this change. 
+
+> 
+>>  		err = check_flags(old_sdata, map_flags);
+>>  		if (err)
+>>  			return ERR_PTR(err);
+>> @@ -475,7 +509,7 @@ bpf_local_storage_update(struct sock *sk, struct bpf_map *map, void *value,
+>>  	 * old_sdata will not be uncharged later during
+>>  	 * bpf_selem_unlink_storage().
+>>  	 */
+>> -	selem = bpf_selem_alloc(smap, sk, value, !old_sdata);
+>> +	selem = bpf_selem_alloc(smap, owner, value, !old_sdata);
+>>  	if (!selem) {
+>>  		err = -ENOMEM;
+>>  		goto unlock_err;
+>> @@ -567,7 +601,7 @@ void bpf_sk_storage_free(struct sock *sk)
+>>  	 * Thus, no elem can be added-to or deleted-from the
+>>  	 * sk_storage->list by the bpf_prog or by the bpf-map's syscall.
+>>  	 *
+>> -	 * It is racing with bpf_sk_storage_map_free() alone
+>> +	 * It is racing with bpf_local_storage_map_free() alone
+> This name change belongs to patch 1 also.
+
+Done.
+
+> 
+>>  	 * when unlinking elem from the sk_storage->list and
+>>  	 * the map's bucket->list.
+>>  	 */
+>> @@ -587,17 +621,12 @@ void bpf_sk_storage_free(struct sock *sk)
+>>  		kfree_rcu(sk_storage, rcu);
+>>  }
+>>  
+>> -static void bpf_local_storage_map_free(struct bpf_map *map)
+
+[..]
+
+>>  
+>>  	/* bpf prog and the userspace can no longer access this map
+>>  	 * now.  No new selem (of this map) can be added
+>> -	 * to the sk->sk_bpf_storage or to the map bucket's list.
+>> +	 * to the bpf_local_storage or to the map bucket's list.
+> s/bpf_local_storage/owner->storage/
+
+Done.
+
+> 
+>>  	 *
+>>  	 * The elem of this map can be cleaned up here
+>>  	 * or
+>> -	 * by bpf_sk_storage_free() during __sk_destruct().
+>> +	 * by bpf_local_storage_free() during the destruction of the
+>> +	 * owner object. eg. __sk_destruct.
+> This belongs to patch 1 also.
+
+
+In patch, 1, changed it to:
+
+	 * The elem of this map can be cleaned up here
+	 * or when the storage is freed e.g.
+	 * by bpf_sk_storage_free() during __sk_destruct().
+
+> 
+>>  	 */
+>>  	for (i = 0; i < (1U << smap->bucket_log); i++) {
+>>  		b = &smap->buckets[i];
+>> @@ -627,22 +657,31 @@ static void bpf_local_storage_map_free(struct bpf_map *map)
+>>  		rcu_read_unlock();
+>>  	}
+>>  
+>> -	/* bpf_sk_storage_free() may still need to access the map.
+>> -	 * e.g. bpf_sk_storage_free() has unlinked selem from the map
+>> +	/* bpf_local_storage_free() may still need to access the map.
+> It is confusing.  There is no bpf_local_storage_free().
+
+	/* While freeing the storage we may still need to access the map.
+	 *
+	 * e.g. when bpf_sk_storage_free() has unlinked selem from the map
+	 * which then made the above while((selem = ...)) loop
+	 * exited immediately.
+
+> 
+>> +	 * e.g. bpf_local_storage_free() has unlinked selem from the map
+>>  	 * which then made the above while((selem = ...)) loop
+>>  	 * exited immediately.
+>>  	 *
+>> -	 * However, the bpf_sk_storage_free() still needs to access
+>> +	 * However, the bpf_local_storage_free() still needs to access
+> Same here.
+
+With the change above, this can stay bpf_sk_storage_free
+
+> 
+>>  	 * the smap->elem_size to do the uncharging in
+>>  	 * bpf_selem_unlink_storage().
+>>  	 *
+>>  	 * Hence, wait another rcu grace period for the
+>> -	 * bpf_sk_storage_free() to finish.
+>> +	 * bpf_local_storage_free() to finish.
+> and here.
+
+and this too can stay bpf_sk_storage_free
+
+> 
+>>  	 */
+>>  	synchronize_rcu();
+>>  
+>>  	kvfree(smap->buckets);
+>> -	kfree(map);
+>> +	kfree(smap);
+>> +}
+>> +
+>> +static void sk_storage_map_free(struct bpf_map *map)
+>> +{
+
+[...]
+
+_attr *attr)
+>>  		raw_spin_lock_init(&smap->buckets[i].lock);
+>>  	}
+>>  
+>> -	smap->elem_size = sizeof(struct bpf_local_storage_elem) + attr->value_size;
+>> -	smap->cache_idx = bpf_local_storage_cache_idx_get(&sk_cache);
+>> +	smap->elem_size =
+>> +		sizeof(struct bpf_local_storage_elem) + attr->value_size;
+> Same line has changed in patch 1.   Change the indentation in patch 1 also
+> if the above way is desired.
+
+Done.
+
+> Others LGTM.
+> 
