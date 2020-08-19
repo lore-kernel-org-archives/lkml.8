@@ -2,94 +2,87 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A093C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A69BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D459D20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C32620709
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="idqV3tBm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tONaBmoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHSDsI (ORCPT
+        id S1726675AbgHSDte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
+        Tue, 18 Aug 2020 23:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgHSDsH (ORCPT
+        with ESMTP id S1725903AbgHSDtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:48:07 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A48EBC061389;
-        Tue, 18 Aug 2020 20:48:05 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWYds612fz9sTW;
-        Wed, 19 Aug 2020 13:48:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597808882;
-        bh=TTZQrzXtn5V6y9tWZTEomrVhqPiwNyx9TGzs5ji/lFc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=idqV3tBmVsM3yJc9DEVw/lvmiX3gVDI67rb8Xml+0sCZMZauBjSJJzeWISW/WUtkz
-         MEKMP5ViPXNuBWROdx8yQezB5ehIatvIHUQ/TRMf+hGruwP0fn5m6aCn2O5GVyQvRv
-         hFC0DYVLYTaYPTYCYDCGdW3jiWqn9ZpG8tmp5ys2hbwlzZAPqNAJJcs+U9uY+ZMVVs
-         d9fN7nFUNxgWwoZGWgfTM1Q3BsSDxgt3oP/qTTJ6x4d4oZ9oTE9jhEW1i79v1G1e93
-         RKX8qzdGJ3DRsgvomioslzJEBA0HNucVuLlf62P+ahrVMP8sRTbyGoiQEJDWak+yEI
-         73pwjawX0/m1A==
-Date:   Wed, 19 Aug 2020 13:48:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: linux-next: build failure after merge of the mhi tree
-Message-ID: <20200819134800.165b78a0@canb.auug.org.au>
+        Tue, 18 Aug 2020 23:49:32 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009B0C061389;
+        Tue, 18 Aug 2020 20:49:31 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id s1so10265449iot.10;
+        Tue, 18 Aug 2020 20:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=31Pn+vyy/OxBJKmzJxO+6FXSIT/jmPkXuyC19k5Pzvs=;
+        b=tONaBmoOnjOaHU/VOEMNYXxmfOdznr+BZCfZdQluPThLLdL5dr7uBPm8KEy+cSlRPE
+         9CRB8HlU/XUON5y1jdnhtasvGpzgikjlcFhqjEcIqoeruLpnfaA3K+6LHJJYQxKKLeCm
+         WINSm8gQWy8nxZr4uGGAdDe4I2WJEWD3QxJ3xPvM/47/NxI79huw4dwEvTcfz+KOjxHr
+         3BgH8+Gb2GOtNZcBj3BlRGfAJViEY17VT79teaPto2gxNDmrYjUCVjn/II630n/oZZHy
+         yjN61HSqDpX5MOvzUp/YJR9rrfG4Dhwv57f/a03DvH1RQ/vQmNwQM6J7n2DCNd9dgvSd
+         YBEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=31Pn+vyy/OxBJKmzJxO+6FXSIT/jmPkXuyC19k5Pzvs=;
+        b=mDWEtZQsAQyQXaAJlB1QM3eM/ruw1KTpptD8H18Wo/bpdGLv+qJae1Qswc0kvpxYyv
+         vou2dpN1Y0ESmlDyF7Q4I4cDwmxgZiiGSIi849zzvkAv2ze0JCqVdjQ3+XdVfWYRoXIU
+         IO4KtVb8eJAUA86ubkJMmya7ADx+zXQUyPUJkSRhRliAms6YPI+Rmi81NerSsJD3GAnQ
+         bArNMlRdi7Lt26VLcQ4YlZHkpN894pwH3//BfmyeJDXrO4k5ZLhT9UiNI8UrWNBH3Ydz
+         X4QtPdi4F+5uYLvYFPgQ69AItGB523IY8rz14uZRpTNPVAh1wfIMsXh8nvpda/TiUhpS
+         VCWw==
+X-Gm-Message-State: AOAM530mY38gpE6+5SuUTX4d3zrErrccZ+y17O1PeTnukw4GXsWd6SzL
+        8M1OpsU0WoEwIO+aXhAPUdGncmDnV1B6AWNyru8=
+X-Google-Smtp-Source: ABdhPJxiFnwR4krw6L9w1YyGDNqAoI0e5YwKQ6usbijlbVVzNyvk9QdYWoQa+p7JAZtnW511U9jy+qym9HUzbER4o/c=
+X-Received: by 2002:a05:6638:1a7:: with SMTP id b7mr21799413jaq.1.1597808971328;
+ Tue, 18 Aug 2020 20:49:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UKvqG74hIunveY.sHCJ_jKh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+In-Reply-To: <cover.1597729692.git.landen.chao@mediatek.com>
+From:   DENG Qingfang <dqfext@gmail.com>
+Date:   Wed, 19 Aug 2020 11:49:20 +0800
+Message-ID: <CALW65jZRWwW4DqpsCM9J=GRp6KnxqT-9MHUO7WSRJtp4E9vnFw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/7] net-next: dsa: mt7530: add support for MT7531
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        vivien.didelot@savoirfairelinux.com,
+        Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        David Miller <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        Frank Wunderlich <frank-w@public-files.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UKvqG74hIunveY.sHCJ_jKh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
-
-After merging the mhi tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-
-I am not sure which commit(s) caused this.
-
-I have used the mhi tree from next-20200818 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UKvqG74hIunveY.sHCJ_jKh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88oPEACgkQAVBC80lX
-0Gx9qQf/RKHNqRP6e+Mk8Mx7lffC2Ste/J7aT8M0ev7RLRFfoQabRgk7JKZ5p8wr
-v/C98bfGHokPrcjJDA02FCObSXG1iQClbao9TmaqgGRTyP5B6JSLM68rR5capzjB
-ehib7nvH1sj/5KNqO1V9zLBXL/jlxGg8XK+BB+S3oLnyHpYyllSVzh48bCNlzR33
-OdK3c0M1ltFjvnX5icc3zVD5UnebrTTnDgKb1Ko9JynhdjH55fhDxrrRmz4Ft4bf
-vxFW5CEX7ZNndKOM4aTJNIwhTkc9nbT+52cETYXsd4B0KNGLhFKe2OYys0s33ycc
-MVqSpl2T9SUEIQFQ1qLSV6uO3f5h0g==
-=cjsZ
------END PGP SIGNATURE-----
-
---Sig_/UKvqG74hIunveY.sHCJ_jKh--
+Is port mirroring working? Port mirroring registers on MT7531 have
+moved, according to bpi's MT7531 reference manual.
+Please fix that as well.
