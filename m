@@ -2,88 +2,129 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A5EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385BB20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597859973;
-	bh=oxZuekvIPEtXM6zB/IiVbn+wXbPMFca/PZzTAFdxW30=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k24aNb09aPdOoh8ZnshE9WnFw90+BfN6bKO825XTf6+r7v/0uZIkCfxfahNmygT7f
-	 919KRYZXI74mXLaHosp86EZ9XecXi/PajbrtaCxXqVL9JohW7s3/W9xwi5khyluqXa
-	 0l5dDGRfYXmaImf7U4D3b3wxsGlf4baor/KVtDYk=
+	by mail.kernel.org (Postfix) with ESMTP id B187320658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OABquVbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHSR7b (ORCPT
+        id S1726912AbgHSSA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgHSR7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:59:24 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 19 Aug 2020 14:00:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60772 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726723AbgHSSAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:00:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597860010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CPg1htOBvj1u11Dr/5h+trV9SHXCNEw1kXJM9Y8zX7w=;
+        b=OABquVbPQOlTDXQmaj7AFpQuPu02NS34PRQob/gpRvNpsFCuLq6KoLj6/ucJlC0BmlPidF
+        unwc85X+HNsmcM+cr1arCts5k9pOrQE/JcL13BD+TT3F65pDcMqNuA3rkUP3xM3EuMFZUN
+        3ZmLhS3X0a+vphbzN/iEcHAXnzx6jUw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-_y44hPQYOL-tuOoC86aJzw-1; Wed, 19 Aug 2020 14:00:08 -0400
+X-MC-Unique: _y44hPQYOL-tuOoC86aJzw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42183207DE;
-        Wed, 19 Aug 2020 17:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597859964;
-        bh=oxZuekvIPEtXM6zB/IiVbn+wXbPMFca/PZzTAFdxW30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rza4KyGjkhaSeuTHw/gId1REqwnFuO1JZPzIYTt2vAkisBamb6jRtWgvbHG1UJQ3m
-         90x7E45t9u0VjIr8fWxKrmFfqnGpaHaMgNVLyMjKLbPGHzFv5bX83scFjoWtg59CHU
-         2DQKwfaimFtmmbpwqneci5aekMqDHvaWlH9pLv78=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH 5/5] ARM: dts: zx: Align L2 cache-controller nodename with dtschema
-Date:   Wed, 19 Aug 2020 19:58:53 +0200
-Message-Id: <20200819175853.21492-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819175853.21492-1-krzk@kernel.org>
-References: <20200819175853.21492-1-krzk@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A5C2D1C44;
+        Wed, 19 Aug 2020 18:00:06 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ACBBA100239A;
+        Wed, 19 Aug 2020 18:00:04 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2 01/10] mm/memory_hotplug: inline __offline_pages() into offline_pages()
+Date:   Wed, 19 Aug 2020 19:59:48 +0200
+Message-Id: <20200819175957.28465-2-david@redhat.com>
+In-Reply-To: <20200819175957.28465-1-david@redhat.com>
+References: <20200819175957.28465-1-david@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix dtschema validator warnings like:
-    l2-cache-controller@c00000: $nodename:0:
-        'l2-cache-controller@c00000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+There is only a single user, offline_pages(). Let's inline, to make
+it look more similar to online_pages().
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm/boot/dts/zx296702.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory_hotplug.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/zx296702.dtsi b/arch/arm/boot/dts/zx296702.dtsi
-index afd98de029be..f378c661b3bf 100644
---- a/arch/arm/boot/dts/zx296702.dtsi
-+++ b/arch/arm/boot/dts/zx296702.dtsi
-@@ -58,7 +58,7 @@
- 			clocks = <&topclk ZX296702_A9_PERIPHCLK>;
- 		};
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7f62d69660e06..c781d386d87f9 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1473,11 +1473,10 @@ static int count_system_ram_pages_cb(unsigned long start_pfn,
+ 	return 0;
+ }
  
--		l2cc: l2-cache-controller@c00000 {
-+		l2cc: cache-controller@c00000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x00c00000 0x1000>;
- 			cache-unified;
+-static int __ref __offline_pages(unsigned long start_pfn,
+-		  unsigned long end_pfn)
++int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ {
+-	unsigned long pfn, nr_pages = 0;
+-	unsigned long offlined_pages = 0;
++	const unsigned long end_pfn = start_pfn + nr_pages;
++	unsigned long pfn, system_ram_pages = 0, offlined_pages = 0;
+ 	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	struct zone *zone;
+@@ -1494,9 +1493,9 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	 * memory holes PG_reserved, don't need pfn_valid() checks, and can
+ 	 * avoid using walk_system_ram_range() later.
+ 	 */
+-	walk_system_ram_range(start_pfn, end_pfn - start_pfn, &nr_pages,
++	walk_system_ram_range(start_pfn, nr_pages, &system_ram_pages,
+ 			      count_system_ram_pages_cb);
+-	if (nr_pages != end_pfn - start_pfn) {
++	if (system_ram_pages != nr_pages) {
+ 		ret = -EINVAL;
+ 		reason = "memory holes";
+ 		goto failed_removal;
+@@ -1631,11 +1630,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	return ret;
+ }
+ 
+-int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+-{
+-	return __offline_pages(start_pfn, start_pfn + nr_pages);
+-}
+-
+ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
+ {
+ 	int ret = !is_memblock_offlined(mem);
 -- 
-2.17.1
+2.26.2
 
