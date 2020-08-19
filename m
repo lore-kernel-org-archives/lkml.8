@@ -2,150 +2,234 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB0C205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597843440;
-	bh=GUAK/3Erqnn4v6wmDx98GtQrAlIyBXmM7AhYh906syU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BsBOy9U0LJdViY6cCh/mV6/AQ0I6a1V2zXQl+srq1mM7pAtHWrghHW/UutZ3PNIYx
-	 fuUQrr3EWubm9pNGWT5/1MfbS+NyiTs0h7xf/6VAtBqaDXtWJYNLEwbbVKORD4KXwh
-	 X2P37FkQmx47nPW3j3EQC9L0mtomnDvTpVBJqKx0=
+	by mail.kernel.org (Postfix) with ESMTP id F0362206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHSNX5 (ORCPT
+        id S1727846AbgHSNQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgHSNXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:23:34 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170D9205CB;
-        Wed, 19 Aug 2020 13:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597843413;
-        bh=GUAK/3Erqnn4v6wmDx98GtQrAlIyBXmM7AhYh906syU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EuDaDJ4FYqnTEo41N6XrhzVujSM53sGEQYAhMSZjrC/NTp+E+XRXFxddwKP1wZ2Po
-         UtW1kppzqKMmPWgTaTLRlKxTtvvsB2S9RknaW/qOE+t00MZ7UBbolUu+R+/VsJkOkL
-         HZH9u8xjRg1IMeqtbAT+d+rr291T41+/20blr6BM=
-Date:   Wed, 19 Aug 2020 21:23:19 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Franck LENORMAND (OSS)" <franck.lenormand@oss.nxp.com>
-Cc:     s.hauer@pengutronix.de, festevam@gmail.com, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, aisheng.dong@nxp.com, abel.vesa@nxp.com,
-        Anson.Huang@nxp.com, linux@rempel-privat.de,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        qiangqing.zhang@nxp.com, peng.fan@nxp.com
-Subject: Re: [PATCH v2 0/5] Add support of SECVIO from SNVS on iMX8q/x
-Message-ID: <20200819132317.GA7114@dragon>
-References: <1595344835-67746-1-git-send-email-franck.lenormand@oss.nxp.com>
- <1597737122.73802.3.camel@oss.nxp.com>
+        Wed, 19 Aug 2020 09:16:51 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:2433 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgHSNMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:12:40 -0400
+IronPort-SDR: sgnuXoSGnZA8kGpvGIJRHMLbPKb87irF5jERhhiuQ4E53DLWD/wc/7AuVYiuwkD4awUdrM06vS
+ +K28wDIOL2VRQ1TT/dxMWXIftGcIVFH9NP9YlzPxgppY2gXfeU2f4kLntSkm3iff3QNp/a+mBP
+ bK3rWLvzwSRhI6qrmngYIJhCIfzWDlB9IhpGiroWr28f4bOMLYh9J6U52NNYtmiGw72DT38yVh
+ g2pp33Mst8231BvuWs8jAM+HL9rqyDRfSUFH0OnVXkrzZ285gsEnyZE9TCRjf1SdT6ft3prO4K
+ XEs=
+X-IronPort-AV: E=Sophos;i="5.76,331,1592899200"; 
+   d="scan'208";a="54241395"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 19 Aug 2020 05:12:30 -0800
+IronPort-SDR: ESPCdr3PB5nacUlfmLmN0RuCzcFWoXVmFTtIbiTTLRwe7ondCoy5uD3yMmdCR5+pGO962D9+rh
+ g/NAgyTcsAK+gOnQy/2cyTDWJAPCaBAtAQmXHnk56xNzuSvZEMLMvxzQ4Vkx4VTdxYOj3Q9S65
+ bTq8Lz9NBfWOXVxjnoyT5pyICOxgKsfiOYfFb9+7jeAknZHsMS2WEATQ2qLd+A3tvB7OEOYT+F
+ 0N3bL90Mf3vp/LrPQ030ufzyA5F55orpIzuA8SwsZeymuFofeWyPtQAkoa7omoXaWhmiGXfnsK
+ ud0=
+Subject: Re: PROBLEM: Long Workqueue delays V2
+From:   Jim Baxter <jim_baxter@mentor.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-block@vger.kernel.org>
+CC:     "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
+        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+Message-ID: <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
+Date:   Wed, 19 Aug 2020 14:12:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597737122.73802.3.camel@oss.nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+ SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 09:52:02AM +0200, Franck LENORMAND (OSS) wrote:
-> Hello,
+Added linux-block List which may also be relevant to this issue.
+
+-------- Original Message --------
+Subject: PROBLEM: Long Workqueue delays V2
+From: Jim Baxter <jim_baxter@mentor.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+CC: "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>, "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
+Date: Tue, 18 Aug 2020 12:58:13 +0100
+
+> I am asking this question again to include the fs-devel list.
 > 
-> Peng was able to do a firt pass of review on my patchset which led to this
-> second version. I hope a maintainer will be able to take a look at this
-> patchset once rested after all the work they did for 5.9.
-
-@Peng, are you okay with this version?
-
-@Aisheng, have a review on this?
-
-Shawn
-
 > 
-> On mar., 2020-07-21 at 17:20 +0200, franck.lenormand@oss.nxp.com wrote:
-> > From: Franck LENORMAND <franck.lenormand@oss.nxp.com>
-> > 
-> > This patchset aims to add support for the SECurity VIOlation (SECVIO) of the
-> > SNVS. A secvio is a signal emitted by the SNVS when a hardware attack
-> > is detected. On imx8x and imx8q SoC, the SNVS is controlled by the
-> > SECO and it is possible to interact with it using the SCU using the SC APIs.
-> > 
-> > For the driver to communicate with the SNVS via the SCU and the SECO, I had to:
-> >  - Add support for exchange of big message with the SCU (needed for
-> > imx_scu_irq_get_status)
-> >  - Add API to check linux can control the SECVIO (imx_sc_rm_is_resource_owned)
-> >  - Add APIs for the driver to read the state of the SECVIO registers of the
-> > SNVS and DGO (imx_sc_seco_secvio_enable and imx_sc_seco_secvio_enable).
-> > 
-> > To check the state of the SECVIO IRQ in the SCU, I added the
-> > imx_scu_irq_get_status API.
-> > 
-> > The secvio driver is designed to receive the IRQ produced by the
-> > SNVS in case of hardware attack and notify the status to the
-> > audit framework which can be used by the user.
-> > 
-> > The goal of the driver is to be self suficient but can be extended by the
-> > user to perform custom operations on values read (imx_sc_seco_secvio_enable)
-> > 
-> > v2:
-> >  - Removed (firmware: imx: scu-rm: Add Resource Management APIs)
-> > 	-> Code required is already present
-> >  - Removed (firmware: imx: scu: Support reception of messages of any size)
-> > 	-> The imx-scu is already working in fast-ipc mode
-> >  - (soc: imx8: Add the SC SECVIO driver):
-> > 	- Fixed the warnings reported by kernel test robot
-> > 
-> > Franck LENORMAND (5):
-> >   firmware: imx: scu-seco: Add SEcure Controller APIS
-> >   firmware: imx: scu-irq: Add API to retrieve status of IRQ
-> >   dt-bindings: firmware: imx-scu: Add SECVIO resource
-> >   dt-bindings: arm: imx: Documentation of the SC secvio driver
-> >   soc: imx8: Add the SC SECVIO driver
-> > 
-> >  .../bindings/arm/freescale/fsl,imx-sc-secvio.yaml  |  34 +
-> >  drivers/firmware/imx/Makefile                      |   2 +-
-> >  drivers/firmware/imx/imx-scu-irq.c                 |  37 +-
-> >  drivers/firmware/imx/imx-scu.c                     |   3 +
-> >  drivers/firmware/imx/seco.c                        | 275 +++++++
-> >  drivers/soc/imx/Kconfig                            |  10 +
-> >  drivers/soc/imx/Makefile                           |   1 +
-> >  drivers/soc/imx/secvio/Kconfig                     |  10 +
-> >  drivers/soc/imx/secvio/Makefile                    |   3 +
-> >  drivers/soc/imx/secvio/imx-secvio-audit.c          |  39 +
-> >  drivers/soc/imx/secvio/imx-secvio-debugfs.c        | 379 +++++++++
-> >  drivers/soc/imx/secvio/imx-secvio-sc-int.h         |  84 ++
-> >  drivers/soc/imx/secvio/imx-secvio-sc.c             | 858 +++++++++++++++++++++
-> >  include/dt-bindings/firmware/imx/rsrc.h            |   3 +-
-> >  include/linux/firmware/imx/ipc.h                   |   1 +
-> >  include/linux/firmware/imx/sci.h                   |   5 +
-> >  include/linux/firmware/imx/svc/seco.h              |  73 ++
-> >  include/soc/imx/imx-secvio-sc.h                    | 177 +++++
-> >  18 files changed, 1991 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx-sc-
-> > secvio.yaml
-> >  create mode 100644 drivers/firmware/imx/seco.c
-> >  create mode 100644 drivers/soc/imx/secvio/Kconfig
-> >  create mode 100644 drivers/soc/imx/secvio/Makefile
-> >  create mode 100644 drivers/soc/imx/secvio/imx-secvio-audit.c
-> >  create mode 100644 drivers/soc/imx/secvio/imx-secvio-debugfs.c
-> >  create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc-int.h
-> >  create mode 100644 drivers/soc/imx/secvio/imx-secvio-sc.c
-> >  create mode 100644 include/linux/firmware/imx/svc/seco.h
-> >  create mode 100644 include/soc/imx/imx-secvio-sc.h
-> > 
+> We have issues with the workqueue of the kernel overloading the CPU 0 
+> when we we disconnect a USB stick.
+> 
+> This results in other items on the shared workqueue being delayed by
+> around 6.5 seconds with a default kernel configuration and 2.3 seconds
+> on a config tailored for our RCar embedded platform.
+> 
+> 
+> 
+> We first noticed this issue on custom hardware and we have recreated it
+> on an RCar Starter Kit using a test module [1] to replicate the
+> behaviour, the test module outputs any delays of greater then 9ms.
+> 
+> To run the test we have a 4GB random file on a USB stick and perform
+> the following test.
+> The stick is mounted as R/O and we are copying data from the stick:
+> 
+> - Mount the stick.
+> mount -o ro,remount /dev/sda1
+> 
+> - Load the Module:
+> # taskset -c 0 modprobe latency-mon
+> 
+> - Copy large amount of data from the stick:
+> # dd if=/run/media/sda1/sample.txt of=/dev/zero
+> [ 1437.517603] DELAY: 10
+> 8388607+1 records in
+> 8388607+1 records out
+> 
+> 
+> - Disconnect the USB stick:
+> [ 1551.796792] usb 2-1: USB disconnect, device number 2
+> [ 1558.625517] DELAY: 6782
+> 
+> 
+> The Delay output 6782 is in milliseconds.
+> 
+> 
+> 
+> Using umount stops the issue occurring but is unfortunately not guaranteed
+> in our particular system.
+> 
+> 
+> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
+> 98% of the CPU.
+> 
+> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
+> and there is no particular workqueue function being executed a lot more then the 
+> others for the kworker/0:1+usb thread.
+> 
+> 
+> Using perf I identified the hub_events workqueue was spending a lot of time in
+> invalidate_partition(), I have included a cut down the captured data from perf in
+> [2] which shows the additional functions where the kworker spends most of its time.
+> 
+> 
+> I am aware there will be delays on the shared workqueue, are the delays
+> we are seeing considered normal?
+> 
+> 
+> Is there any way to mitigate or identify where the delay is?
+> I am unsure if this is a memory or filesystem subsystem issue.
+> 
+> 
+> Thank you for you help.
+> 
+> Thanks,
+> Jim Baxter
+> 
+> [1] Test Module:
+> // SPDX-License-Identifier: GPL-2.0
+> /*
+>  * Simple WQ latency monitoring
+>  *
+>  * Copyright (C) 2020 Advanced Driver Information Technology.
+>  */
+> 
+> #include <linux/init.h>
+> #include <linux/ktime.h>
+> #include <linux/module.h>
+> 
+> #define PERIOD_MS 100
+> 
+> static struct delayed_work wq;
+> static u64 us_save;
+> 
+> static void wq_cb(struct work_struct *work)
+> {
+> 	u64 us = ktime_to_us(ktime_get());
+> 	u64 us_diff = us - us_save;
+> 	u64 us_print = 0;
+> 
+> 	if (!us_save)
+> 		goto skip_print;
+> 
+> 
+> 	us_print = us_diff / 1000 - PERIOD_MS;
+> 	if (us_print > 9)
+> 		pr_crit("DELAY: %lld\n", us_print);
+> 
+> skip_print:
+> 	us_save = us;
+> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+> }
+> 
+> static int latency_mon_init(void)
+> {
+> 	us_save = 0;
+> 	INIT_DELAYED_WORK(&wq, wq_cb);
+> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
+> 
+> 	return 0;
+> }
+> 
+> static void latency_mon_exit(void)
+> {
+> 	cancel_delayed_work_sync(&wq);
+> 	pr_info("%s\n", __func__);
+> }
+> 
+> module_init(latency_mon_init);
+> module_exit(latency_mon_exit);
+> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
+> MODULE_LICENSE("GPL");
+> 
+> 
+> [2] perf trace:
+>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
+>     |
+>     ---ret_from_fork
+>        kthread
+>        worker_thread
+>        |          
+>         --95.15%--process_one_work
+> 		  |          
+> 		   --94.99%--hub_event
+> 			 |          
+> 			  --94.99%--usb_disconnect
+> 			  <snip>
+> 				|  
+> 				--94.90%--invalidate_partition
+> 				   __invalidate_device
+> 				   |          
+> 				   |--64.55%--invalidate_bdev
+> 				   |  |          
+> 				   |   --64.13%--invalidate_mapping_pages
+> 				   |     |          
+> 				   |     |--24.09%--invalidate_inode_page
+> 				   |     |   |          
+> 				   |     |   --23.44%--remove_mapping
+> 				   |     |     |          
+> 				   |     |      --23.20%--__remove_mapping
+> 				   |     |        |          
+> 				   |     |         --21.90%--arch_local_irq_restore
+> 				   |     |          
+> 				   |     |--22.44%--arch_local_irq_enable
+> 				   |          
+> 					--30.35%--shrink_dcache_sb 
+> 					<snip>
+> 					  |      
+> 					  --30.17%--truncate_inode_pages_range
 > 
