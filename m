@@ -2,265 +2,209 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D43C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A9F2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFB62078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERkuoRdn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gVPk5wRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHSVei (ORCPT
+        id S1726796AbgHSVgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:34:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24118 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726796AbgHSVeg (ORCPT
+        Wed, 19 Aug 2020 17:36:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgHSVgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:34:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597872874;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QBxDF3IUCX8aCR86kc12BR/uWRr4/k3zDVFWtKdcER0=;
-        b=ERkuoRdn5Q8Y7WXgSaBhutyen/ij9jxvj8k7Pka/uWAbGyN/UVeynFgWeBxpYsMrWsRXIY
-        R0Wp7+PSYXi8k8M39D67g02tlvOTlSnXxyCtX4Pmu5YVJjwXe8bOv5+1520gj4jLOUGq3P
-        ctBRNgXl82qk+0jbRGren/YWVHwwNrc=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-UOHIeCxfPxqNSIw8Df8nkA-1; Wed, 19 Aug 2020 17:34:19 -0400
-X-MC-Unique: UOHIeCxfPxqNSIw8Df8nkA-1
-Received: by mail-qt1-f197.google.com with SMTP id m34so17991qtf.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:34:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=QBxDF3IUCX8aCR86kc12BR/uWRr4/k3zDVFWtKdcER0=;
-        b=ca3cj5ez7KMPzkLs2LVyszNy5Rh4BsTMnf968YpYn6Nh/phO4MvLKZU3SYHIVsFAGg
-         BT810638+DXPOjoEta/UpAVjpjovLfB26quIVx4XYlG7MJibsGSb8Kzb+RVS1mmjW9kF
-         wD2SITov9VsXF58btRqjPwwD1G/7M6i3Me2fka+M/magynTLj6qPfvEHOhOiLMQcUUIo
-         oZW7DMguQZ8IuzuRxw5yIUS8BjjvqKnztqXeYubNQwyak9C+EUJmGN70hF382s0KRXsG
-         GKa7UFrHdqYqCSBMtz9mz+L8i7XLDBHkjlEZZHM+4S7QDcUzuE2uAeU+ojScN+noL/if
-         q8nQ==
-X-Gm-Message-State: AOAM531ZePfV8uvsixiijeYGNlT3tF4zITAjNYQCd1VyKivom+uRYL+I
-        vnvBx6MdR6GS+5tJz1VUHhvLzhOse3slr9Atxo51D+/7ND1T/Il5c1esTRJTGwxtpT+PqUTXtyF
-        /3nuZjhkmSlC0vMuyjOMNi4qG
-X-Received: by 2002:a05:620a:1212:: with SMTP id u18mr22699588qkj.319.1597872858582;
-        Wed, 19 Aug 2020 14:34:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwVNlhQ7amNmrTxK+EbgJ0YtfuKpPQ6pWpdz180NyjwAbWnqYVsy94Wd4ejd2YTxpnp8aar8g==
-X-Received: by 2002:a05:620a:1212:: with SMTP id u18mr22699572qkj.319.1597872858224;
-        Wed, 19 Aug 2020 14:34:18 -0700 (PDT)
-Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id l189sm25736302qke.67.2020.08.19.14.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 14:34:17 -0700 (PDT)
-Message-ID: <4d74a74aefcd8d0ea048b70252efda18820bc911.camel@redhat.com>
-Subject: Re: [RFC 13/20] drm/i915/dp: Extract drm_dp_downstream_read_info()
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     Sean Paul <sean@poorly.run>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Imre Deak <imre.deak@intel.com>
-Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?ISO-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Wambui Karuga <wambui.karugax@gmail.com>
-Date:   Wed, 19 Aug 2020 17:34:15 -0400
-In-Reply-To: <20200819151547.GB46474@art_vandelay>
-References: <20200811200457.134743-1-lyude@redhat.com>
-         <20200811200457.134743-14-lyude@redhat.com>
-         <20200819151547.GB46474@art_vandelay>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Wed, 19 Aug 2020 17:36:15 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78ED3C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UaMTQzQR/2iD7LYG3TBB/MsacjZTmGqhqlIGfP/7qyQ=; b=gVPk5wRJ1OVpBU+UO4Nn99K2Py
+        wKgQ8yNJ7e9p1Qs9SjO7zHIcoclTqoW4XqIwgbqx9e4oIGwtRUYeV71ZnUiER4vVB+PKimW0Oqxof
+        x3nra9YZl7BkRxUku+kMz+cv3X2DzPkYPmEQ7wQDfQsThDkkpTNnyLrt/5qTKV8xsYcg0cX0BRykf
+        hMoCE30BHD+mXBDJknaesJnDE+QhXTuTjoezkszkrpXVbItMlboKC0HGBKhA4e5HDiS6d+c+lZcMT
+        8o1Dia4T2to7XWZTKbWu29UCyZ4p85u2eka9AuqlO9k2TOZf3yyNV+m9w/NDnOoEu837bmg1jEJB5
+        hB1Ablfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8Vk9-0001Za-Ei; Wed, 19 Aug 2020 21:35:38 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D8EAD980C9E; Wed, 19 Aug 2020 23:35:34 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 23:35:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kyle Huey <me@kylehuey.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [REGRESSION 5.8] x86/entry: DR0 break-on-write not working
+Message-ID: <20200819213534.GQ3982@worktop.programming.kicks-ass.net>
+References: <CAP045Ao5-+vvTzCOaCkfwztsd2Q0_8kh85UxuXW0bbcfVbF40w@mail.gmail.com>
+ <20200819184149.GH2674@hirez.programming.kicks-ass.net>
+ <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(adding Ville and Imre to the cc here, they might be interested to know about
-this, comments down below)
+On Wed, Aug 19, 2020 at 12:28:16PM -0700, Kyle Huey wrote:
 
-On Wed, 2020-08-19 at 11:15 -0400, Sean Paul wrote:
-> On Tue, Aug 11, 2020 at 04:04:50PM -0400, Lyude Paul wrote:
-> > We're going to be doing the same probing process in nouveau for
-> > determining downstream DP port capabilities, so let's deduplicate the
-> > work by moving i915's code for handling this into a shared helper:
-> > drm_dp_downstream_read_info().
-> > 
-> > Note that when we do this, we also do make some functional changes while
-> > we're at it:
-> > * We always clear the downstream port info before trying to read it,
-> >   just to make things easier for the caller
-> > * We skip reading downstream port info if the DPCD indicates that we
-> >   don't support downstream port info
-> > * We only read as many bytes as needed for the reported number of
-> >   downstream ports, no sense in reading the whole thing every time
-> > 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > ---
-> >  drivers/gpu/drm/drm_dp_helper.c         | 32 +++++++++++++++++++++++++
-> >  drivers/gpu/drm/i915/display/intel_dp.c | 14 ++---------
-> >  include/drm/drm_dp_helper.h             |  3 +++
-> >  3 files changed, 37 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_dp_helper.c
-> > b/drivers/gpu/drm/drm_dp_helper.c
-> > index 4c21cf69dad5a..9703b33599c3b 100644
-> > --- a/drivers/gpu/drm/drm_dp_helper.c
-> > +++ b/drivers/gpu/drm/drm_dp_helper.c
-> > @@ -423,6 +423,38 @@ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux
-> > *aux,
-> >  }
-> >  EXPORT_SYMBOL(drm_dp_send_real_edid_checksum);
-> >  
-> > +/**
-> > + * drm_dp_downstream_read_info() - read DPCD downstream port info if
-> > available
-> > + * @aux: DisplayPort AUX channel
-> > + * @dpcd: A cached copy of the port's DPCD
-> > + * @downstream_ports: buffer to store the downstream port info in
-> > + *
-> > + * Returns: 0 if either the downstream port info was read successfully or
-> > + * there was no downstream info to read, or a negative error code
-> > otherwise.
-> > + */
-> > +int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
-> > +				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> > +				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS])
-> > +{
-> > +	int ret;
-> > +	u8 len;
-> > +
-> > +	memset(downstream_ports, 0, DP_MAX_DOWNSTREAM_PORTS);
-> > +
-> > +	/* No downstream info to read */
-> > +	if (!drm_dp_is_branch(dpcd) ||
-> > +	    dpcd[DP_DPCD_REV] < DP_DPCD_REV_10 ||
-> > +	    !(dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT))
-> > +		return 0;
-> > +
-> > +	len = (dpcd[DP_DOWN_STREAM_PORT_COUNT] & DP_PORT_COUNT_MASK) * 4;
+> > I'm guess that is not the expected outcome, is that the same failure you
+> > saw?
 > 
-> I'm having a hard time rationalizing DP_MAX_DOWNSTREAM_PORTS being 16, but
-> only
-> having 4 ports worth of data in the DP_DOWNSTREAM_PORT_* registers. Do you
-> know
-> what's supposed to happen if dpcd[DP_DOWN_STREAM_PORT_COUNT] is > 4?
-> 
-ok!! Taking a lesson from our available_pbn/full_pbn confusion in the past, I
-squinted very hard at the specification and eventually found something that I
-think clears this up. Surprise - we definitely had this implemented incorrectly
-in i915
+> Yes. Is status also 0x4d00 for you?
 
-From section 5.3.3.1:
+Indeed.
 
-   Either one or four bytes are used, per DFP type indication. Therefore, up to
-   16 (with 1-byte descriptor) or four (with 4-byte descriptor) DFP capabilities
-   can be stored.
+> The program is expected to complete with no assertions firing.
 
-So, a couple takeaways from this:
+When I comment out the break-on-exec test, the break-on-write test
+succeeds.
 
- * A DisplayPort connector can have *multiple* different downstream port types,
-   which I think actually makes sense as I've seen an adapter like this before.
- * We actually added the ability to determine the downstream port type for DP
-   connectors using the subconnector prop, but it seems like if we want to aim
-   for completeness we're going to need to come up with a new prop that can
-   report multiple downstream port types :\.
- * It's not explicitly mentioned, but I'm assuming the correct way of handling
-   multiple downstream BPC/pixel clock capabilities is to assume the max
-   BPC/pixel clock is derived from the lowest max BPC/pixel clock we find on
-   *connected* downstream ports (anything else wouldn't really make sense, imho)
+When I add a few printk()'s to our #DB handler (6) the program will
+magically work again.
 
-So I'm going to rewrite this so we handle this properly in
-drm_dp_downstream_read_info() and related helpers. I don't currently have the
-time to do this, but if there's interest upstream in properly reporting the
-downstream port types of DP ports in userspace someone might want to consider
-coming up with another prop that accounts for multiple different downstream port
-types.
+I'm not much for ptrace(), but are we sure the test program is well
+behaved?
 
-> Sean
-> 
-> > +	ret = drm_dp_dpcd_read(aux, DP_DOWNSTREAM_PORT_0, downstream_ports,
-> > +			       len);
-> > +
-> > +	return ret == len ? 0 : -EIO;
-> > +}
-> > +EXPORT_SYMBOL(drm_dp_downstream_read_info);
-> > +
-> >  /**
-> >   * drm_dp_downstream_max_clock() - extract branch device max
-> >   *                                 pixel rate for legacy VGA
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c
-> > b/drivers/gpu/drm/i915/display/intel_dp.c
-> > index 1e29d3a012856..984e49194ca31 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> > @@ -4685,18 +4685,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
-> >  			return false;
-> >  	}
-> >  
-> > -	if (!drm_dp_is_branch(intel_dp->dpcd))
-> > -		return true; /* native DP sink */
-> > -
-> > -	if (intel_dp->dpcd[DP_DPCD_REV] == 0x10)
-> > -		return true; /* no per-port downstream info */
-> > -
-> > -	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DOWNSTREAM_PORT_0,
-> > -			     intel_dp->downstream_ports,
-> > -			     DP_MAX_DOWNSTREAM_PORTS) < 0)
-> > -		return false; /* downstream port status fetch failed */
-> > -
-> > -	return true;
-> > +	return drm_dp_downstream_read_info(&intel_dp->aux, intel_dp->dpcd,
-> > +					   intel_dp->downstream_ports) == 0;
-> >  }
-> >  
-> >  static bool
-> > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> > index 5c28199248626..1349f16564ace 100644
-> > --- a/include/drm/drm_dp_helper.h
-> > +++ b/include/drm/drm_dp_helper.h
-> > @@ -1613,6 +1613,9 @@ int drm_dp_dpcd_read_link_status(struct drm_dp_aux
-> > *aux,
-> >  bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
-> >  				    u8 real_edid_checksum);
-> >  
-> > +int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
-> > +				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> > +				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS]);
-> >  int drm_dp_downstream_max_clock(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> >  				const u8 port_cap[4]);
-> >  int drm_dp_downstream_max_bpc(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> > -- 
-> > 2.26.2
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
--- 
-Sincerely,
-      Lyude Paul (she/her)
-      Software Engineer at Red Hat
+The below also always works..
+
+---
+/* -*- Mode: C; tab-width: 8; c-basic-offset: 2; indent-tabs-mode: nil; -*- */
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ptrace.h>
+#include <stdarg.h>
+#include <assert.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <string.h>
+#include <stddef.h>
+#include <sys/user.h>
+
+/**
+ * Print the printf-like arguments to stdout as atomic-ly as we can
+ * manage.  Async-signal-safe.  Does not flush stdio buffers (doing so
+ * isn't signal safe).
+ */
+__attribute__((format(printf, 1, 2))) inline static int atomic_printf(
+    const char* fmt, ...) {
+  va_list args;
+  char buf[1024];
+  int len;
+
+  va_start(args, fmt);
+  len = vsnprintf(buf, sizeof(buf) - 1, fmt, args);
+  va_end(args);
+  return write(STDOUT_FILENO, buf, len);
+}
+
+/**
+ * Write |str| on its own line to stdout as atomic-ly as we can
+ * manage.  Async-signal-safe.  Does not flush stdio buffers (doing so
+ * isn't signal safe).
+ */
+inline static int atomic_puts(const char* str) {
+  return atomic_printf("%s\n", str);
+}
+
+inline static int check_cond(int cond) {
+  if (!cond) {
+    atomic_printf("FAILED: errno=%d (%s)\n", errno, strerror(errno));
+  }
+  return cond;
+}
+
+#define test_assert(cond) assert("FAILED: !" && check_cond(cond))
+
+#define NEW_VALUE 0xabcdef
+
+static void breakpoint(void) {}
+
+static char watch_var;
+
+int main(void) {
+  pid_t child;
+  int status;
+  int pipe_fds[2];
+
+  test_assert(0 == pipe(pipe_fds));
+
+  if (0 == (child = fork())) {
+    char ch;
+    read(pipe_fds[0], &ch, 1);
+    breakpoint();
+    watch_var = 1;
+    return 77;
+  }
+
+  test_assert(0 == ptrace(PTRACE_ATTACH, child, NULL, NULL));
+  test_assert(child == waitpid(child, &status, 0));
+  test_assert(status == ((SIGSTOP << 8) | 0x7f));
+  test_assert(1 == write(pipe_fds[1], "x", 1));
+
+  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
+                          (void*)offsetof(struct user, u_debugreg[0]),
+                          (void*)breakpoint));
+  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
+                          (void*)offsetof(struct user, u_debugreg[1]),
+                          &watch_var));
+  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
+                          (void*)offsetof(struct user, u_debugreg[7]),
+                          (void*)0x100005));
+
+  test_assert(0 == ptrace(PTRACE_CONT, child, NULL, NULL));
+  test_assert(child == waitpid(child, &status, 0));
+  test_assert(status == ((SIGTRAP << 8) | 0x7f));
+  test_assert(0x1 == ptrace(PTRACE_PEEKUSER, child,
+                            (void*)offsetof(struct user, u_debugreg[6])));
+
+  test_assert(0 == ptrace(PTRACE_CONT, child, NULL, NULL));
+  test_assert(child == waitpid(child, &status, 0));
+  test_assert(status == ((SIGTRAP << 8) | 0x7f));
+  test_assert(0x2 == ptrace(PTRACE_PEEKUSER, child,
+                            (void*)offsetof(struct user, u_debugreg[6])));
+
+  test_assert(0 == ptrace(PTRACE_DETACH, child, NULL, NULL));
+
+  test_assert(child == waitpid(child, &status, 0));
+  test_assert(WIFEXITED(status));
+  test_assert(WEXITSTATUS(status) == 77);
+
+  atomic_puts("EXIT-SUCCESS");
+  return 0;
+}
 
