@@ -4,64 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8361FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45570207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597839375;
-	bh=ecmZFbmjBgtZFzBQbq7gL6gCy7ddk1819UscZzDFstI=;
+	s=default; t=1597839376;
+	bh=/MbaTQFZWMYuazygmw7csZlkRqCEGAQG/FDx2KXZmlo=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ulhzwdgtnxDhlKfq8IggEetxJ5lgzbLjwmQUZZfacDENSVvyz5K/+uBuo8Ad2q9Qm
-	 bUDNTrKoLKuhW96A/8eHwXQDXCNPStSsA5jSFZTdFHgDhR1LpUFiBkD/0XC4AZbCKu
-	 E1Ft6S78ErZMT3ICOSyaLwsA9ehmr3gxiVoKx3tg=
+	b=vrLgQkmwLPNmCLF8mMkLSXkxmNp44mn6A+6kul+7DNF51rDNenCqWjcaIF8PV5kUH
+	 5EhQ77K0JDyZmoaI/HRZ2aXZ0Qa6Cgnr4YhY1r29eIohQE6HvYLGI7F57iSxhzV4GK
+	 6HF4EY+LkDKrqJqrNL9sYZatcgFSRjxwLmDGtzGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgHSMQN (ORCPT
+        id S1727990AbgHSMQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 08:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgHSMQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:16:07 -0400
+        id S1727079AbgHSMQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:16:02 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24871206FA;
-        Wed, 19 Aug 2020 12:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 095C220738;
+        Wed, 19 Aug 2020 12:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597839366;
-        bh=ecmZFbmjBgtZFzBQbq7gL6gCy7ddk1819UscZzDFstI=;
+        s=default; t=1597839361;
+        bh=/MbaTQFZWMYuazygmw7csZlkRqCEGAQG/FDx2KXZmlo=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=hbtL9rqc+f0ahjMfQ7jdq544edl5NKyL0HrVpeIQ9L/wztWBedr3Kzxl3MW+n+jbJ
-         47R4RlyxN3ixMxTBnVwL6hmxczc+XgEy4MTUOsst5+ZzP0TJT5ylvR3UnMVpBaVfvi
-         sGojJEHs2v72klVNkInXRY+K/7AM9YQIKlufeccs=
-Date:   Wed, 19 Aug 2020 13:15:35 +0100
+        b=oSMIeWMXMrvFp4voxI5iMdujeB+Lp+HlOztmKzG8LZawk9CdEMwsC/ITDxW+mXFOU
+         kgcTmuGa0aYqB4rCCXpff0OZMhuWxZa5k6jZPJ2q0PM3NbYn5yAIgVkUWs92YGkz8g
+         N3+j40AOGRzS2R4pR4ks6AdvUV8kBedw64d/kxZ0=
+Date:   Wed, 19 Aug 2020 13:15:29 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Chen-Yu Tsai <wens@csie.org>
-In-Reply-To: <20200819034038.46418-1-samuel@sholland.org>
-References: <20200819113405.55582925@canb.auug.org.au> <20200819034038.46418-1-samuel@sholland.org>
-Subject: Re: [PATCH] ASoC: sun8i-codec: Hook up component probe function
-Message-Id: <159783932454.55025.7710161905600832608.b4-ty@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <20200806182059.2431-1-krzk@kernel.org>
+References: <20200806181932.2253-1-krzk@kernel.org> <20200806182059.2431-1-krzk@kernel.org>
+Subject: Re: [PATCH v2 01/41] ARM: s3c: Remove unneeded machine header includes
+Message-Id: <159783932455.55025.7979458249415199743.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 22:40:38 -0500, Samuel Holland wrote:
-> Due to a mistake made while reordering patches, commit 90cac932976e
-> ("ASoC: sun8i-codec: Fix DAPM to match the hardware topology") added
-> the sun8i_codec_component_probe function without referencing it from
-> the component definition. Add the reference so the probe function gets
-> called as expected.
+On Thu, 6 Aug 2020 20:20:18 +0200, Krzysztof Kozlowski wrote:
+> Not all units use the contents of mach/hardware.h and
+> mach/dma.h.  Remove these includes when not needed.
 
 Applied to
 
@@ -69,8 +67,16 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: sun8i-codec: Hook up component probe function
-      commit: ed7f0fbc9dca0961ac9a713c778319b7f24315ae
+[1/5] ASoC: samsung: h1940: turn into platform driver
+      commit: 2c5c4fdc710c5d3beff78ac5605c5732ebfa8ae5
+[2/5] ASoC: samsung: neo1973: turn into platform driver
+      commit: a65e8a320846b8c69f53a758dc3662e4b42e6a48
+[3/5] ASoC: samsung: rx1950: turn into platform driver
+      commit: a0f3315a2558e22e75873e1184d0c213c2f8315f
+[4/5] ASoC: samsung: s3c2412-i2s: avoid hardcoded S3C2410_PA_IIS
+      commit: 2f1525848844c996990aafd3104bddf0f0cb3a28
+[5/5] ARM: s3c24xx: move iis pinctrl config into boards
+      (no commit info)
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
