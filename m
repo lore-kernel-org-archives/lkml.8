@@ -2,52 +2,173 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E56C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D799C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB365207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F423206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lgBo+nLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHSHaG (ORCPT
+        id S1728121AbgHSHaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:30:06 -0400
-Received: from muru.com ([72.249.23.125]:41016 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbgHSH3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:29:46 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3C18C807A;
-        Wed, 19 Aug 2020 07:29:46 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 10:30:14 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: am335x: add common dtsi for MOXA UC-8100 series
-Message-ID: <20200819073014.GD2994@atomide.com>
-References: <HK2PR01MB3281D019E03891638F4B422AFA480@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Wed, 19 Aug 2020 03:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgHSHYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:24:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85300C06134D
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:12 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 184so1132093wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kFIC75bauZ6Rpz/avISlwE77tX9e6rPrMyzEdUSYEvc=;
+        b=lgBo+nLfWw6UD+4pt1UTY/3TXHxDnstMrcNhEXl7QEcvc5h/hM0LeUSSXQEJQQJ1o/
+         JR2AZRhWNJk/NU4uxKd521AxM8XLlKmwKHwCpCIji5uCxzp/sIne5zll2Tc6MdgEse/H
+         9OMRSEnvpPMQLhNCN5EjGfWho9jctYaqnf9oMAyXnLM5TsZBiD0Km+WA1WKErkMt0zmH
+         QQ4alnk4V03ep2zWKQk0LCBVTy66yYt7mhumvKHSbGfyZ9ZueSNxSRiAb//NLqXqe/ur
+         K9EGBqezMx/VP2exyAfHV8+521PHWEr4oMxAjX3ZxFtz+k4s/ry3PJ7aIaAZWNiH7MfQ
+         ohPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kFIC75bauZ6Rpz/avISlwE77tX9e6rPrMyzEdUSYEvc=;
+        b=HKWfAHQy0aLkKClV6SfgqUqiqdIvwXk+tVsxrjZ0+rvaFVtPHWLGRXVLVwWNBvaF45
+         ToDIMIWCH1czpALe2StFdMogs44KRvNFtc/jXqXjcwdLOfQDAMFtN8RhXDrL0DkegO5s
+         hGRe2LkXnSA9FLMmg3vP4Ww+QrOh9g4VhLD/WRVrBpsRHC5V5AApBDmEVPY/W1tVcx+k
+         yXjMNkhiNRwMKvlM38G85x9IPCtByMIV2J2rwi75d6PPSPt432d3pa1KTjkRzwgYrwvA
+         LuBNqvjuI1eIcZSCWb7lkSc3I/Fm9WGCTpvyq2QzCu1Y3mt0xpssjDO+TrBzJv9EeHN6
+         XCbA==
+X-Gm-Message-State: AOAM533ZDqeQg/WCuizxS6jNgcHpgumUoWLExNt6or6oBR7LtP1wQwbZ
+        GVNMqfPD7NtVqA9fuc7xVL3dbg==
+X-Google-Smtp-Source: ABdhPJxep9SAfEgQ3UqQQk5ZftteMUPLH4iMlYCMWjOj95LkdbfBmgFRoszaYn7hm9krZoUxri1XdQ==
+X-Received: by 2002:a1c:f60e:: with SMTP id w14mr3408680wmc.19.1597821851203;
+        Wed, 19 Aug 2020 00:24:11 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 00:24:10 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>
+Subject: [PATCH 05/28] wireless: intel: dvm: Demote non-compliant kernel-doc headers
+Date:   Wed, 19 Aug 2020 08:23:39 +0100
+Message-Id: <20200819072402.3085022-6-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
+References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB3281D019E03891638F4B422AFA480@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Johnson CH Chen (陳昭勳) <JohnsonCH.Chen@moxa.com> [200806 05:29]:
-> Add am335x-moxa-uc-8100-common.dtsi for many products of MOXA UC-8100
-> series, and remove common nodes from am335x-moxa-uc-8100-me-t.dts.
+None of these headers attempt to document any function parameters.
 
-Thanks applying into omap-for-v5.10/dt.
+Fixes the following W=1 kernel build warning(s):
 
-Tony
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:388: warning: Function parameter or member 't' not described in 'iwl_bg_statistics_periodic'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:545: warning: Function parameter or member 't' not described in 'iwl_bg_ucode_trace'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:771: warning: Function parameter or member 'priv' not described in 'iwl_alive_start'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'priv' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'start_idx' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'num_events' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'mode' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'pos' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'buf' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1692: warning: Function parameter or member 'bufsz' not described in 'iwl_print_event_log'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'priv' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'capacity' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'num_wraps' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'next_entry' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'size' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'mode' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'pos' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'buf' not described in 'iwl_print_last_event_logs'
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c:1772: warning: Function parameter or member 'bufsz' not described in 'iwl_print_last_event_logs'
+
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/intel/iwlwifi/dvm/main.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+index b882705ff66df..461af58311561 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
+@@ -374,7 +374,7 @@ int iwl_send_statistics_request(struct iwl_priv *priv, u8 flags, bool clear)
+ 					&statistics_cmd);
+ }
+ 
+-/**
++/*
+  * iwl_bg_statistics_periodic - Timer callback to queue statistics
+  *
+  * This callback is provided in order to send a statistics request.
+@@ -533,7 +533,7 @@ static void iwl_continuous_event_trace(struct iwl_priv *priv)
+ 	priv->event_log.next_entry = next_entry;
+ }
+ 
+-/**
++/*
+  * iwl_bg_ucode_trace - Timer callback to log ucode event
+  *
+  * The timer is continually set to execute every
+@@ -762,7 +762,7 @@ static void iwl_send_bt_config(struct iwl_priv *priv)
+ 		IWL_ERR(priv, "failed to send BT Coex Config\n");
+ }
+ 
+-/**
++/*
+  * iwl_alive_start - called after REPLY_ALIVE notification received
+  *                   from protocol/runtime uCode (initialization uCode's
+  *                   Alive gets handled by iwl_init_alive_start()).
+@@ -1682,9 +1682,8 @@ static void iwl_dump_nic_error_log(struct iwl_priv *priv)
+ 
+ #define EVENT_START_OFFSET  (4 * sizeof(u32))
+ 
+-/**
++/*
+  * iwl_print_event_log - Dump error event log to syslog
+- *
+  */
+ static int iwl_print_event_log(struct iwl_priv *priv, u32 start_idx,
+ 			       u32 num_events, u32 mode,
+@@ -1762,7 +1761,7 @@ static int iwl_print_event_log(struct iwl_priv *priv, u32 start_idx,
+ 	return pos;
+ }
+ 
+-/**
++/*
+  * iwl_print_last_event_logs - Dump the newest # of event log to syslog
+  */
+ static int iwl_print_last_event_logs(struct iwl_priv *priv, u32 capacity,
+-- 
+2.25.1
+
