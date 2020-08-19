@@ -2,134 +2,116 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2567C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0438CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBAC207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14C520639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJg96UPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgHSJ2O (ORCPT
+        id S1727823AbgHSJ2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:28:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9847 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726835AbgHSJ2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:28:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BF2C8A8F87271B5DAD12;
-        Wed, 19 Aug 2020 17:28:10 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 17:28:03 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] nfsd: Convert to use the preferred fallthrough macro
-Date:   Wed, 19 Aug 2020 05:26:58 -0400
-Message-ID: <20200819092658.35504-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+        Wed, 19 Aug 2020 05:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgHSJ2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:28:43 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0CCC061757;
+        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 128so11112244pgd.5;
+        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sfALJ3tnvI7h4k/zG4r6toxyODZkz1A4RL+TTCxV1MQ=;
+        b=UJg96UPNkqjdaV4Z8G1IDr8c6TPIWfXOxPYd3O0SO5WoJKuI7jCmUbACjWzBZHo9U7
+         0c7nnXAgDABQEBuR0un7P4giAqlg814vs3v74WUKa4O3jHlp5d9Peg+8lpFHu6SmfEBX
+         T8OsGUc+M40aP4W28v0M6kqxwGgTcZDzMTgzPm2JLXfUdp+3cII65MNQJdmQl8cWud4Z
+         k3F0lqNF8NUMnE5OQdYexzBoLJ2mSWn/W7hs6/zxeYfNl58kw70iZIseA4f0limFxE47
+         Smr+gNjgXUG+xFLsiOrrxvcHlpMjISJ9qMWHeHAqYXd6oxHVdWktrACBujKwqcrj972f
+         mkgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sfALJ3tnvI7h4k/zG4r6toxyODZkz1A4RL+TTCxV1MQ=;
+        b=IPyyRhnzb1UVApTLyYKUQ/t+YopR3LVLXnLpwE6tvtmfhSFyGhfYHnEaDP3aNRMruE
+         Xt2JedL9FxVsuvGcANAGVPzfyvfh1x86gvAICQybO1XsoVyt5n5p+4+geyFNsGxHzvsb
+         IijhAQ9MA0XY+CbEtPIuIe+FeX49zwK/usOXJqBCPhHD4MpKqzKvrwH5vZyF+O9KStgD
+         3YFZzMjGbk9dZTcav9ZqQ03IjR6vKUqp+voe4+3oRLcdOJMvPSMAgEQ4hFXCGAgUBXGN
+         ys0Au3Gu3LmN96xApNpKALxOQr/94GByOKEcBsQ16jbCpqOwo/7R5WXV6AP/tbh35v18
+         POdQ==
+X-Gm-Message-State: AOAM531B6gldqAib0bJLeryEO5g4WPumqQFmnMAU0Fyh9t0vFqCojbZ2
+        TjNI1njgRbNukjjVT+yaZWo=
+X-Google-Smtp-Source: ABdhPJx7gzRQZ4ej9DhjQf8YqJN5RJv4x/cQ7y4ijPpmhsFEfzKb+5fPtlTWpjDM8h6ry27HPjOUUg==
+X-Received: by 2002:a63:ff18:: with SMTP id k24mr16640114pgi.109.1597829323025;
+        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
+Received: from linux-691t.suse.de ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id y1sm27060156pfl.136.2020.08.19.02.28.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Aug 2020 02:28:42 -0700 (PDT)
+From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Lee, Chun-Yi" <jlee@suse.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] efi/efivars: create efivars mount point when get variable services are available
+Date:   Wed, 19 Aug 2020 17:28:38 +0800
+Message-Id: <20200819092838.11290-1-jlee@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro.
+The efivars filesystem depends on GetVariable or GetNextVariable EFI
+runtime services. So the /sys/firmware/efi/efivars does not need to be
+created when GetVariable and GetNextVariable are not available.
 
-Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+It is useful for userland to determine the availability of efivars
+filesystem.
+
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 ---
- fs/nfsd/nfs4callback.c | 2 +-
- fs/nfsd/nfs4proc.c     | 2 +-
- fs/nfsd/nfs4state.c    | 2 +-
- fs/nfsd/nfsfh.c        | 2 +-
- fs/nfsd/vfs.c          | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/firmware/efi/efi.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 7fbe9840a03e..052be5bf9ef5 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 		break;
- 	case -ESERVERFAULT:
- 		++session->se_cb_seq_nr;
--		/* Fall through */
-+		fallthrough;
- 	case 1:
- 	case -NFS4ERR_BADSESSION:
- 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index a527da3d8052..eaf50eafa935 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 				goto out;
- 			open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
- 			reclaim = true;
--			/* fall through */
-+			fallthrough;
- 		case NFS4_OPEN_CLAIM_FH:
- 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
- 			status = do_open_fhandle(rqstp, cstate, open);
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 81ed8e8bab3f..2f77f4b66cbc 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		break;
- 	default:				/* checked by xdr code */
- 		WARN_ON_ONCE(1);
--		/* fall through */
-+		fallthrough;
- 	case SP4_SSV:
- 		status = nfserr_encr_alg_unsupp;
- 		goto out_nolock;
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 37bc8f5f4514..a0a8d27539ae 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, struct svc_export *exp)
- 	case FSID_UUID16:
- 		if (!is_root_export(exp))
- 			return false;
--		/* fall through */
-+		fallthrough;
- 	case FSID_UUID4_INUM:
- 	case FSID_UUID16_INUM:
- 		return exp->ex_uuid != NULL;
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 7d2933b85b65..aba5af9df328 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 					*created = true;
- 				break;
- 			}
--			/* fall through */
-+			fallthrough;
- 		case NFS4_CREATE_EXCLUSIVE4_1:
- 			if (   d_inode(dchild)->i_mtime.tv_sec == v_mtime
- 			    && d_inode(dchild)->i_atime.tv_sec == v_atime
-@@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 					*created = true;
- 				goto set_attr;
- 			}
--			/* fall through */
-+			fallthrough;
- 		case NFS3_CREATE_GUARDED:
- 			err = nfserr_exist;
- 		}
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index fdd1db025dbf..929fbf4dfd5d 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -404,11 +404,14 @@ static int __init efisubsys_init(void)
+ 	if (error)
+ 		goto err_remove_group;
+ 
+-	/* and the standard mountpoint for efivarfs */
+-	error = sysfs_create_mount_point(efi_kobj, "efivars");
+-	if (error) {
+-		pr_err("efivars: Subsystem registration failed.\n");
+-		goto err_remove_group;
++	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
++				      EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
++		/* and the standard mountpoint for efivarfs */
++		error = sysfs_create_mount_point(efi_kobj, "efivars");
++		if (error) {
++			pr_err("efivars: Subsystem registration failed.\n");
++			goto err_remove_group;
++		}
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
 -- 
-2.19.1
+2.16.4
 
