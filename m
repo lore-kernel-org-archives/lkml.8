@@ -2,107 +2,101 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE89C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C17C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C88520758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EA6207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="BEW03iIu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dr3dJhrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgHSRyf (ORCPT
+        id S1726734AbgHSR4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        Wed, 19 Aug 2020 13:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgHSRyP (ORCPT
+        with ESMTP id S1726211AbgHSR4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:54:15 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADC9C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:54:14 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id g19so27301061ejc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:54:14 -0700 (PDT)
+        Wed, 19 Aug 2020 13:56:19 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3517BC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:56:19 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o22so18433377qtt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=uQuCMT3JAS43f6T45CVGGRAmxHBJTkERExczdcLcZVY=;
-        b=BEW03iIu095qgBD2t+0qPzvlw3Q4Ph0RcFBp2F+pwNCXFvvLBlfoSNly+Y2Fem9AyI
-         Q3d8jS01LKhSuzyG2o6DSO4T+cGAjv5Cdt9+DOnOcmUPrX0sxVluSrDDVkt8r6VSS5Rf
-         KApMApMu0YDehVWZEq0EHCdeUICnL7SoBHSZ7Qktq1KPY2hIcjEYYtoxHrwmGBw2Z8wV
-         yTX7uaH2b2RnvxJ1Y1wr2YJQTlxWklnQ74fB1S2O2ijKDhW6WebMT6PKYb0iW0xkK3pv
-         FUePRdolqgN8JYQBH/SOJUEo2vlhy/3JqFpM4ONJx/BqA2Eyv2rHC2Npc6nuiXGaJTAb
-         PVRw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gfiunOf44XI9+MPstBMX2TkSWz+lSVO6pH2bOmIQZyg=;
+        b=dr3dJhrH7Fmq9QexZ8NGZnM6Swg7W4thUUaNwI2rHnqIu5z4g6DUG/HdvRyI665jyN
+         UshRRSz1Eckur35WFE3NFtjEPKm+LSVU36xgljQ4KddIzTauT/Ld7fyVb6ur+Tw6cUOu
+         xwjI7yuH8xDlPGsE9lyHjvbNF7hCat8xT26w0T4b1C/dywBj6ynGmDzejPCwyC/VyqFK
+         4cDB/R028NBn2N1cGP7IWHEWnItDcJLhUuC5Ce9ld2XZt2cl+ezYlIlsTeUjPadIM4tW
+         qd22R/LWVasY9Aj6lvN+7ooEDxHu50trpxMP4EMGo4ftF/AaFhGpI7airSQTlk+Odcbm
+         A1oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=uQuCMT3JAS43f6T45CVGGRAmxHBJTkERExczdcLcZVY=;
-        b=Ank8czPIDOql7n3AEkPAAFF3Fcwo0mXvZHHK2ewI+6ZtvY7t1s1IngStHMCqkNRj1U
-         k/VSiibC0HIG0b5C6PIdy5wV9hLLBP0Gh7d0WmrG2CWLyoqeAipsqgQIU0eTxyAkZhro
-         6YVoEZcRu1vcSN7PJHTMjYMWXbc/DSaAE+Xxyuz81H67WP8oRL/Aaad6aDYAGDQuGTw6
-         ptC3i51Fbt8xypcZ0h55k+1GV2iHC/yCQQYkD0pX1pzPptNgpwKez5O4gJTC10gw9I7i
-         h1vGN51yeMGaKRke/ocC9jHUjgnDlhx+BbETFhUwBYeLcSjMyY7O5ZRmMYg2TzdmwKRu
-         ISCA==
-X-Gm-Message-State: AOAM5311RZmKEC+RL/EwlKoKtvFLTBx8jX2s90q4oCF4zOQ7mNNSqknY
-        p7XTuSEd8507oG/RnWgtJbFFNirD3o6AkROHoe70Mg==
-X-Google-Smtp-Source: ABdhPJwQzinONCrDVftCcA8T6ck8BmMOT9XvCK2EXjx2FD+4YpVUicQ9HjLRKVMyTKUsY/5QM8zLF4V/GIyNoZMxKgM=
-X-Received: by 2002:a17:906:c7d2:: with SMTP id dc18mr5678373ejb.135.1597859653240;
- Wed, 19 Aug 2020 10:54:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gfiunOf44XI9+MPstBMX2TkSWz+lSVO6pH2bOmIQZyg=;
+        b=UpN528NRKYGxPZLysns/Fpdu79K+c+z+SdUKGch8H4JY+zfwtd6amMBLhZz4DuICva
+         jD5Urc4lk95ofUAssghbOUiqmCKguoBELTFNsl088y/AJhmnwm2OV5tQHko/UwGvQlkL
+         nUWhciwI0MfY4OF5Q7imgWMYZEjt+Qk5SE0czttWI1TIo87nEour5soRTtjytSZCnXSp
+         zdHXFkw+QM6tyAH9TrVkGt+YUa2irhW7AYOBuD2Bjo9LINJwxyMUygqMVuE9y/J9AE5+
+         wD9LnS5JrejxGPDf0PUtLmHK70lcby8ekpeZ9Y0MF8/uEawnD4YJkhKFLW4BFSgs8j/w
+         lqTw==
+X-Gm-Message-State: AOAM531I0BZ89s4dSF+tKkLVTHbP8iDrnFg2ip78VT7c2FoLdvJtb3rt
+        JYJWOMDvAQ2NcPQHZFIYEB1WN9J2C9bU42CGpjwpHg==
+X-Google-Smtp-Source: ABdhPJyQtuknrzEQNakf3MeOPHKQ+Hx1XSYnrhn3uCBBj+Y38XMt1c6t8P7GG779ClFTdqFo8Nvm3vjlS2YB0moYWYE=
+X-Received: by 2002:ac8:4e39:: with SMTP id d25mr22979101qtw.208.1597859778427;
+ Wed, 19 Aug 2020 10:56:18 -0700 (PDT)
 MIME-Version: 1.0
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Wed, 19 Aug 2020 10:53:58 -0700
-Message-ID: <CAP045Ao5-+vvTzCOaCkfwztsd2Q0_8kh85UxuXW0bbcfVbF40w@mail.gmail.com>
-Subject: [REGRESSION 5.8] x86/entry: DR0 break-on-write not working
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     "Robert O'Callahan" <rocallahan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
+References: <20200721144832.750728-1-abanoubsameh@protonmail.com> <CAHp75VdFvAYR+z8c6R2J9Q2JK-WpHS4LU_-cWvsOa2g8+Gfk9w@mail.gmail.com>
+In-Reply-To: <CAHp75VdFvAYR+z8c6R2J9Q2JK-WpHS4LU_-cWvsOa2g8+Gfk9w@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 19 Aug 2020 19:56:07 +0200
+Message-ID: <CAMpxmJVW0yXdVVxYYiNjHw5XsKx+cyb6hV7KTeOQBxgFJWWx4w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-crystalcove.c: changed every 'unsigned' to
+ 'unsigned int'
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Abanoub Sameh <abanoubsameh8@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rr, a userspace record and replay debugger[0], has a test suite that
-attempts to exercise strange corners of the Linux API. One such
-test[1] began failing after 2bbc68f8373c0631ebf137f376fbea00e8086be7.
-I have not tried to understand what has changed in the kernel here but
-since the commit message says "No functional change" I assume
-something has gone wrong.
+On Tue, Jul 21, 2020 at 6:05 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Jul 21, 2020 at 5:49 PM Abanoub Sameh <abanoubsameh8@gmail.com> wrote:
+> >
+> > Changed 'unsigned' to 'unsigned int'.
+> > This makes the code more uniform, and compliant with the kernel coding style.
+>
+> In all patches you wrongly added 'gpio-' and '.c' parts. Also you
+> missed the version of the patches (I have told you about) and
+> changelog.
+>
+> No need to resend, I fixed that this time for you. Be careful in the future.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-The test expects to get a SIGTRAP when watchvar is written to in the
-forked child, but instead the program just exits normally and we get a
-status value corresponding to that (exit code 77 = wait status
-0x4d00). This test program should be usable outside of rr's test suite
-if you replace the test_assert/atomic_puts functions with
-assert/printf and replace the util.h include with appropriate standard
-includes.
+Hi Andy,
 
-This regression is present in 5.8.
+I was going through pending patches and noticed those from Abanoub:
+are you also the maintainer for gpio-crystalcove and gpio-msic? The
+MAINTAINERS entry for Intel GPIO drivers doesn't include those - do
+you want me to send a patch that adds them?
 
-- Kyle
-
-[0] https://rr-project.org/
-[1] https://github.com/mozilla/rr/blob/master/src/test/x86/ptrace_debug_regs.c#L55
+Bartosz
