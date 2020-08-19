@@ -2,132 +2,97 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00858C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72428C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26232072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C387207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaUObfPy"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ds0.me header.i=@ds0.me header.b="WMhMtygM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgHSI5U (ORCPT
+        id S1727122AbgHSI5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55020 "EHLO
+        Wed, 19 Aug 2020 04:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgHSIzn (ORCPT
+        with ESMTP id S1727943AbgHSI4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:55:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B331C061342;
-        Wed, 19 Aug 2020 01:55:41 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so10506842plt.3;
-        Wed, 19 Aug 2020 01:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nDuiQiXTW962b08Ia0CPUyPMivpXBTRFVOWfM281t2I=;
-        b=RaUObfPy9UGdUIMrmSu4v87RasnxOvjPoiDncMq5aYZjysFwPh6YqhgU4iv93cylyn
-         6RiJkNEaH4sDneCCrfnuE/KV0QI0wS8QPKXaTUAfY9th/MDkoj34WxdhG5dYgejmGC2W
-         CwzXXVGEDQdC9HFn1Y4hGYfwlwSLfU2IGVgMMobwATo4JiHupC1dav8/ZPt4Bgsc8DeI
-         uA4zQXbLq+oBLGrUq/AodY6T7xCEOuF+MuiIXVhs6/9aglNYHhrwUE/Aad5ZOqTcVZ7M
-         z8R+lzf+PjZnyuQ19L1PkpAJWvM+Y6K+z7UHtntlkzapeqOXbz+Tl6VjUOgaz5rXFi7k
-         c+VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nDuiQiXTW962b08Ia0CPUyPMivpXBTRFVOWfM281t2I=;
-        b=Ct3JjnRL1m1BBKlsfGq0ICsRSp+yO7HfHSOwRxjyFUu3445nzmnCvzo41T2ydCcIfC
-         TVKMYVxe30NT4VpLtQs5tVhf1+4DNJ5gUU9fUnqSjXvS5kG7jdambitPy1qw0giLcM4f
-         t7wPk4Qc+xMezMQ8QVbV5cnzTwkXV2ccnu5j3nFAGO7PDqb77o+jLap4e5Or34WQ++en
-         PuND8jZeTGURE3S2Rk4naICvyj0qdJJmeXDBxFdoKCsjavsiyOCwvycZRwkuEIqpVCxW
-         vd1jweMVh6zKc3Am1HbNM12TGytmYwGKHcHhMJD03yvZxytPMvYs4b3Pza7WOcT/Y4XQ
-         Jylw==
-X-Gm-Message-State: AOAM5324nQ16BgW/dOtI3C73sqot5y1H8F34ag93R5i8awM+/b7B15MR
-        gJLWW+ieBiGHps2ChsCwnuwTeV3oZyc=
-X-Google-Smtp-Source: ABdhPJyZ2JC161afsEyKpInkW87mBHllTI27riaA07jogoWCDLFoujX/REj5Fq8SGRgRid1pyYIwRQ==
-X-Received: by 2002:a17:90a:9405:: with SMTP id r5mr3416942pjo.74.1597827341075;
-        Wed, 19 Aug 2020 01:55:41 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id m15sm20209991pgr.2.2020.08.19.01.55.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Aug 2020 01:55:40 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 1/2] KVM: LAPIC: Fix updating DFR missing apic map recalculation
-Date:   Wed, 19 Aug 2020 16:55:26 +0800
-Message-Id: <1597827327-25055-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 19 Aug 2020 04:56:53 -0400
+X-Greylist: delayed 1016 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 19 Aug 2020 01:56:53 PDT
+Received: from ds0.me (ds0.me [IPv6:2602:ffc5::f9bc:b4ce])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F07C061346
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ds0.me; s=mail;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=WQNvN5XBxviNXp/nkEsX3Q8j54elLp096iKbVfrH+Do=;
+        b=WMhMtygMQgBy9ELSyWTfgSQAmbDdUzcHo0Om3w9OseuLTJc8Si9jgWIuddn0R8OQ4XgDHa3ATrZyfLJwEVSPAp95gH6FAhVpzwPcHWH0s1H85N6ydHwHXNlUBWGppiZU4vTcMV/3Y7SM0oXXM7AyWzPpY4d4jiUldQnq0oj3k0M=;
+Received: from 97e0b068.skybroadband.com ([151.224.176.104] helo=archlinux)
+        by ds0.me with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.84_2)
+        (envelope-from <dave@ds0.me>)
+        id 1k8JdR-0000V1-RV; Wed, 19 Aug 2020 04:39:54 -0400
+Message-ID: <ba4e3060d59250e744411097bf75af4aa3dec30d.camel@ds0.me>
+Subject: Re: [Letux-kernel] [PATCH] omap5: Fix DSI base address and clocks
+From:   David Shah <dave@ds0.me>
+To:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@pyra-handheld.com
+Date:   Wed, 19 Aug 2020 09:39:45 +0100
+In-Reply-To: <20200819055844.GT2994@atomide.com>
+References: <20200818095100.25412-1-dave@ds0.me>
+         <9081697A-02F9-42EA-9F22-F62381FA1C79@goldelico.com>
+         <20200819055844.GT2994@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+In any case the HDMI bug has reappeared while testing 5.9-rc1, although
+I can get the display to work by doing 'modprobe omapdrm' even if HDMI
+is enabled (as before it loads automatically if HDMI is disabled).
 
-There is missing apic map recalculation after updating DFR, if it is 
-INIT RESET, in x2apic mode, local apic is software enabled before. 
-This patch fix it by introducing the function kvm_apic_set_dfr() to 
-be called in INIT RESET handling path.
+Best
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+David
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 5ccbee7..248095a 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -310,6 +310,12 @@ static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
- 	atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
- }
- 
-+static inline void kvm_apic_set_dfr(struct kvm_lapic *apic, u32 val)
-+{
-+	kvm_lapic_set_reg(apic, APIC_DFR, val);
-+	atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
-+}
-+
- static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
- {
- 	return ((id >> 4) << 16) | (1 << (id & 0xf));
-@@ -1984,10 +1990,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- 		break;
- 
- 	case APIC_DFR:
--		if (!apic_x2apic_mode(apic)) {
--			kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
--			atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
--		} else
-+		if (!apic_x2apic_mode(apic))
-+			kvm_apic_set_dfr(apic, val | 0x0FFFFFFF);
-+		else
- 			ret = 1;
- 		break;
- 
-@@ -2303,7 +2308,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
- 			     SET_APIC_DELIVERY_MODE(0, APIC_MODE_EXTINT));
- 	apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
- 
--	kvm_lapic_set_reg(apic, APIC_DFR, 0xffffffffU);
-+	kvm_apic_set_dfr(apic, 0xffffffffU);
- 	apic_set_spiv(apic, 0xff);
- 	kvm_lapic_set_reg(apic, APIC_TASKPRI, 0);
- 	if (!apic_x2apic_mode(apic))
--- 
-2.7.4
+On Wed, 2020-08-19 at 08:58 +0300, Tony Lindgren wrote:
+> * H. Nikolaus Schaller <hns@goldelico.com> [200818 09:58]:
+> > > Am 18.08.2020 um 11:51 schrieb David Shah <dave@ds0.me>:
+> > > 
+> > > DSI was not probing due to base address off by 0x1000, and
+> > > sys_clk
+> > > missing.
+> > > 
+> > > With this patch, the Pyra display works if HDMI is disabled in
+> > > the
+> > > device tree.
+> > 
+> > For me it also works if HDMI is not disabled.
+> > So IMHO this comment is misleading.
+> > 
+> > Otherwise,
+> > 
+> > Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> 
+> Thanks pushed out into fixes. Looks like I missed removing the
+> HDMI disabled comment part but seems like that's not critical
+> and don't want to redo the branch after pushing out.
+> 
+> Regards,
+> 
+> Tony
+> _______________________________________________
+> https://projects.goldelico.com/p/gta04-kernel/
+> Letux-kernel mailing list
+> Letux-kernel@openphoenux.org
+> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
 
