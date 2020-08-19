@@ -2,145 +2,198 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C373C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E1D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3796D20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cV1u7p0w"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KEamFOrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHSPSA (ORCPT
+        id S1728760AbgHSPSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgHSPR0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:17:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC3FC061342;
-        Wed, 19 Aug 2020 08:17:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so1251757pjx.5;
-        Wed, 19 Aug 2020 08:17:26 -0700 (PDT)
+        Wed, 19 Aug 2020 11:18:38 -0400
+Received: from mail-bn7nam10on2044.outbound.protection.outlook.com ([40.107.92.44]:48186
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726951AbgHSPRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:17:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j7Ze09sw1lzpKbMSgr4SaZTzAu6B4ExsoyxO7ZPUHPtDX1DEF5ICxdw0whakPfOBo8QlezpUTUh72nwYn+3R+4Z/CYJUDphzypZFsUG+vEzgveVyftk5E+B0wLxXb1bREwB9PFAwdMZa2LRxLUVIrRzF8pqzDQkaLn22s91B3G6qvVGBjWleE43nLaui7bZQJM+HIATTDCscaShfWRjVia39i9gCzNprmxx01XJZWQuzAyZEOuDRyX3ql0kkTPyb+pkb1/oMWv6FJij/kQNaKSU0rgCUqX1CSBytICsoskisbDFzTw3/D3VoH2981TJooOXhTeoTTtDbrgCMKj7mYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xz0EjzPbtP7r/WHnhnHVKye2vpfYurUcEZzPObigktI=;
+ b=L8oNNrJy4eRtOKMSfTshyNa3+9erPUkSFLmd/WB5/O/FAdj1UjdU7AZKU2GVzRL0sHoR1alLN2qCKj7nUokDx5qbtMK2LUkgq64DQAWVcZRwom4AFahjslfqVMM04WdKzOwlGBFP/7lsnqDFHQX8KaXboarJWydm/HSRQXIusQSKUVT1AWdY266IPu+q0AyW+fHThQrTLWTJL2YnIhor6Dny9NQSw0MxmljFfgRBjaevkSK3W0LIIrTHx/iyAMaubPC2MhOidiV7bbARkh5DxqK0RgwOVUWXHLQwP9QQ8xNqqvrdbUMEkfDxtYH3oX81bQGmbTMNslwUX97lUpHB6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zmZ0nR+0stasAUqGKga9eB9ZFWY9muOXfNZAhE4dBCo=;
-        b=cV1u7p0wvXmqtQLXfxc15Ws4Qo4Zt6uUGQKQdnWwMiD37QPnpsYZ35tUxZW0DLjC2F
-         +DRi5ji/RLdDM5HuTLrg/vCsSsZSIr6f5Y/sG6t3cHpJsMcZJABAyXLH0INlx2A1IQu1
-         3HOcqdKTiqaVmjLVvF1LqSYOn4IjbEqAfyzY5pVuanO01IeEzMcJGd0jBFJrjAbks2TV
-         PfbjuFX4KkVmeoNUatXXTq9sbXlWbvfmIGeCSCxKNMOnUN8ni6M9HyGDqjcD/PKfHVcr
-         haMoVmXzA9dWws5GrRZemCI1FNXhC+9VcZwhEnPuDE+Hj+0zrnjO1jE595bSr3jFEtiu
-         xrJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zmZ0nR+0stasAUqGKga9eB9ZFWY9muOXfNZAhE4dBCo=;
-        b=r3HQV7LH//YpR95iVvyTzHeljd+zdFa+hwiKNQIrs/3Op/kgg/ZkDyEDs9YpY2xBVT
-         lu3aZK8OOrwcrWTRTze3spz0G94OFAICPTzQ4OohiR+Wf8gqADiTPtStHfSCgUGGnKBO
-         9/BCM6SNNMkGsJHFWrDZIUclwb08F/OiXU0BS4WRs82gZ7HG9m0c2c3KLVhflcIr/aRJ
-         LBCF7+yDEbM97Qqn0eZFQOSu8hqLSCC1Wk/1npRvsTK9a1af6FXU7WsOV966DtAyYm9z
-         tM9qNJJx6gugiQyVjNkrnAonJcae+5Fti9pTaZJsbenR/XwUD5Y02xnlTF7Jd5F7hIf2
-         ZNbA==
-X-Gm-Message-State: AOAM533rHsTkFDpgbcFIr84q7nuBtTniIs7hHJZLroZefvIq3b8G4fht
-        jQMXoX+DeyeXadpHfBP9vw==
-X-Google-Smtp-Source: ABdhPJyIOb9pNzAosEPNXQ9tef9OxRKUmm6zMqaUbTiiSDJ2RtWwlz1pjDLcFQ9c9klXpmg53OhF9A==
-X-Received: by 2002:a17:902:eb51:: with SMTP id i17mr19791500pli.278.1597850246185;
-        Wed, 19 Aug 2020 08:17:26 -0700 (PDT)
-Received: from PWN ([2600:3c01::f03c:91ff:fe6e:64cd])
-        by smtp.gmail.com with ESMTPSA id g23sm28739438pfo.95.2020.08.19.08.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 08:17:25 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:16:56 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] v4l2-tpg: Fix
- global-out-of-bounds read in precalculate_color()
-Message-ID: <20200819151656.GA106705@PWN>
-References: <20200810050532.640075-1-yepeilin.cs@gmail.com>
- <774bcf2d-c8eb-086a-3569-c7e530d8a63d@xs4all.nl>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xz0EjzPbtP7r/WHnhnHVKye2vpfYurUcEZzPObigktI=;
+ b=KEamFOrdRSQDTyn7cJngiydWfaBl3wnYBnELNOlpeHf/rFp4+UrzdVrSV0LCZREaCRxzYndjRTvV3BRAF+TD/Vae6bkc+gf4ta0p+FHDjShyQkGC6ZCGOPB6OCS0/tgH3RR7o9Etob/an6cGNtijmheFyjiP6S9ZaKzo8JNS2fo=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1307.namprd12.prod.outlook.com (2603:10b6:3:79::21) by
+ DM6PR12MB3227.namprd12.prod.outlook.com (2603:10b6:5:18d::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.24; Wed, 19 Aug 2020 15:17:00 +0000
+Received: from DM5PR12MB1307.namprd12.prod.outlook.com
+ ([fe80::15d7:c2da:d92a:2162]) by DM5PR12MB1307.namprd12.prod.outlook.com
+ ([fe80::15d7:c2da:d92a:2162%11]) with mapi id 15.20.3283.028; Wed, 19 Aug
+ 2020 15:17:00 +0000
+From:   eric van tassell <Eric.VanTassell@amd.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, hpa@zytor.com,
+        mingo@redhat.com, jmattson@google.com, joro@8bytes.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org, rientjes@google.com, junaids@google.com,
+        evantass@amd.com
+Subject: [Patch v2 3/4] KVM:SVM: Pin sev_launch_update_data() pages via sev_get_page()
+Date:   Wed, 19 Aug 2020 10:17:41 -0500
+Message-Id: <20200819151742.7892-4-Eric.VanTassell@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819151742.7892-1-Eric.VanTassell@amd.com>
+References: <20200819151742.7892-1-Eric.VanTassell@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR19CA0045.namprd19.prod.outlook.com
+ (2603:10b6:3:9a::31) To DM5PR12MB1307.namprd12.prod.outlook.com
+ (2603:10b6:3:79::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <774bcf2d-c8eb-086a-3569-c7e530d8a63d@xs4all.nl>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from evt-speedway-83bc.amd.com (165.204.78.2) by DM5PR19CA0045.namprd19.prod.outlook.com (2603:10b6:3:9a::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 15:16:59 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ee1bde45-b8a9-4e6f-5535-08d84452eb59
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3227:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB32272BFDF16C720FBDF39700E75D0@DM6PR12MB3227.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Z7IVoySYaUmQUu3Yeh7HvMYR8rDw5N9rCB25aqKZ6PqMOStgTKcQ3NK8fRvKcvgfzvp+4b+8mz2cI7OsZBP0/DdVC1ccO0QuQlhV4ZfpabBFO81F4htuih9ap8yGTqB7QwfAMGZ1gVIhjkZhydXdGXRA2QthgQwFdM8BwWwWHyNEW/ghC71Sc+z3MGwSY3LmntcfNEeXxFCMIheBAJ8pV8PhB2cykhwLULfDVg9A4JoKajaDmkKFVIDsH4wQ0pzcI5amZyDiAAebItLxsrLGIL/QEzEbYpzZVBU7gmM4cJFahLIAz5JSH+/ddIb8j3kd5WpfVH85LxEpZ2izY5Agfw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1307.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(66556008)(66476007)(8676002)(66946007)(26005)(86362001)(1076003)(5660300002)(478600001)(6486002)(36756003)(316002)(83380400001)(6666004)(7416002)(2906002)(8936002)(6916009)(4326008)(2616005)(7696005)(16526019)(52116002)(186003)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: w3N3JBp/MLyhSkF+aHd8MTDb8A0C2z7Yt2pjJIO6kKu7Y3nJG/B4kkEsWjc3YpXag52CHF0N9B7qpAafeaNlw5VGpmd36pBSty7dcTySDyOUHVKriT/WitRDFeo4j5o/E/KAKpxLamYWpHkB4VW/AhLgLruEkldKKIvq6cHeNtpQ6SUc9r1BsDLLCXXE78BhiSmxS34ac0tTutN4uBht/Q39SP9R/wbICp2t+e/VyITfDoOtFBgGtGIfXZEG1ZKC3kxrI0xx0eFf7FsP3mPsPDJFU3d19fT8rqrzhm0/aOnxYmk9IS2na3oT2GXL3gpjJxz2ayX5gVm3Sym9xgX2VUxc0ayfWkSOfXO+C0oRJe3ZFYD3rMFob6Aa8Nw2J9s4HzBZuXjeeaf3P/JofEstiD/NlCZFnQ5Au0bP8MMb/u2kX93KVLuGI6H3aBNApmIcrExSTz8j2AXgCqQGPCmSSvSgNQwObE95E2BJJ9t8C2KlZmn210eYuy5xEMxnWNLHyXxG74RtaF7CtmZY0HwWfuRjV1oUkIYzIlIKRzjHsy8AVS8X6zfdX8bxPy/SGDMSYAhDVaFBTdqlmKOFO98A3KR46uzptbDUV0CUw0I5vH7EaQYztBRl7+PpvKthr7IKo2btYXIvSHgaOVyZS3wQdg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee1bde45-b8a9-4e6f-5535-08d84452eb59
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1307.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 15:17:00.1251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ZQenWGgSMu6y87EliofdQlPCledpGkF+Ubfj8qHvdngbGuaogYd0ZLbylvXgY//IM6+eLupMnOZ/OnprKhyUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3227
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mr. Verkuil,
+Add 2 small infrastructure functions here which to enable pinning the SEV
+guest pages used for sev_launch_update_data() using sev_get_page().
 
-On Wed, Aug 19, 2020 at 04:26:28PM +0200, Hans Verkuil wrote:
-> Hi Peilin,
-> 
-> On 10/08/2020 07:05, Peilin Ye wrote:
-> > precalculate_color() is reading out of `sin` since `tpg->hue` is not being
-> > properly checked. Fix it. `cos` is safe, as long as `tpg->hue` is higher
-> > than or equal to -192.
-> 
-> Thank you for this patch, but there is something I don't understand, namely
-> just *how* tpg->hue can be out-of-range.
-> 
-> From what I can see vivid sets hue via tpg_s_hue() when the V4L2_CID_HUE control
-> is set. But that control has a range of -128...128, so ctrl->val should always be in
-> that range.
-> 
-> I would really like to know 1) what the value of tpg->hue actually is when it goes
-> out of range, and 2) who is changing it to that value. Can you do a bit more digging?
+Pin the memory for the data being passed to launch_update_data() because it
+gets encrypted before the guest is first run and must not be moved which
+would corrupt it.
 
-Sure, of course! I will try to figure that out first.
+Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: eric van tassell <Eric.VanTassell@amd.com>
+---
+ arch/x86/kvm/svm/sev.c | 57 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-Thank you,
-Peilin
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 8d56d1afb33e..4a0157254fef 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -454,6 +454,37 @@ static int sev_get_page(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn)
+ 	return 0;
+ }
+ 
++static struct kvm_memory_slot *hva_to_memslot(struct kvm *kvm,
++					      unsigned long hva)
++{
++	struct kvm_memslots *slots = kvm_memslots(kvm);
++	struct kvm_memory_slot *memslot;
++
++	kvm_for_each_memslot(memslot, slots) {
++		if (hva >= memslot->userspace_addr &&
++		    hva < memslot->userspace_addr +
++			      (memslot->npages << PAGE_SHIFT))
++			return memslot;
++	}
++
++	return NULL;
++}
++
++static bool hva_to_gfn(struct kvm *kvm, unsigned long hva, gfn_t *gfn)
++{
++	struct kvm_memory_slot *memslot;
++	gpa_t gpa_offset;
++
++	memslot = hva_to_memslot(kvm, hva);
++	if (!memslot)
++		return false;
++
++	gpa_offset = hva - memslot->userspace_addr;
++	*gfn = ((memslot->base_gfn << PAGE_SHIFT) + gpa_offset) >> PAGE_SHIFT;
++
++	return true;
++}
++
+ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ {
+ 	unsigned long vaddr, vaddr_end, next_vaddr, npages, pages, size, i;
+@@ -462,6 +493,7 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	struct sev_data_launch_update_data *data;
+ 	struct page **inpages;
+ 	int ret;
++	int srcu_idx;
+ 
+ 	if (!sev_guest(kvm))
+ 		return -ENOTTY;
+@@ -484,6 +516,31 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 		goto e_free;
+ 	}
+ 
++	/*
++	 * Increment the page ref count so that the pages do not get migrated or
++	 * moved after we are done from the LAUNCH_UPDATE_DATA.
++	 */
++
++	/* ensure hva_to_gfn translations remain valid */
++	srcu_idx = srcu_read_lock(&kvm->srcu);
++
++	for (i = 0; i < npages; i++) {
++		gfn_t gfn;
++
++		if (!hva_to_gfn(kvm, (vaddr + (i * PAGE_SIZE)) & PAGE_MASK, &gfn)) {
++			ret = -EFAULT;
++			break;
++		}
++
++		ret = sev_get_page(kvm, gfn, page_to_pfn(inpages[i]));
++		if (ret)
++			break;
++	}
++
++	srcu_read_unlock(&kvm->srcu, srcu_idx);
++	if (ret)
++		goto e_unpin;
++
+ 	/*
+ 	 * The LAUNCH_UPDATE command will perform in-place encryption of the
+ 	 * memory content (i.e it will write the same memory region with C=1).
+-- 
+2.17.1
 
-> That said, it makes sense that precalculate_color() avoids reading out-of-bounds.
-> 
-> > 
-> > Fixes: 63881df94d3e ("[media] vivid: add the Test Pattern Generator")
-> > Reported-and-tested-by: syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com
-> > Link: https://syzkaller.appspot.com/bug?id=db50123c788e2cc5a9d90de569c398b66293ee48
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> >  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> > index 50f1e0b28b25..52205fe096f7 100644
-> > --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> > +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> > @@ -930,6 +930,9 @@ static void precalculate_color(struct tpg_data *tpg, int k)
-> >  		/* Implement these operations */
-> >  		int tmp_cb, tmp_cr;
-> >  
-> > +		if (tpg->hue < -128 || tpg->hue > 128)
-> > +			return;
-> 
-> Rather than returning here, I prefer to just clamp tpg->hue to the valid range.
-> 
-> I'd be willing to merge a patch that clamps tpg->hue (it certainly doesn't hurt),
-> but I also would like to understand how it can be out of range in the first place.
-> I have the feeling that this is a symptom of another problem elsewhere.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > +
-> >  		/* First convert to YCbCr */
-> >  
-> >  		color_to_ycbcr(tpg, r, g, b, &y, &cb, &cr);
-> > 
-> 
