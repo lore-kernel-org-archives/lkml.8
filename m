@@ -2,82 +2,103 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2411C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87F22207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A96207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597825675;
-	bh=xkrOW1eiodxf6e55kbWanf+5qeDDwj1oob7ZKgc2bX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Plz95goNSrTrPAx7xQ+RwpnPpz4bdsAv7Q5GCs3qZx+Oti/qp4vURcLis/8yQ0T40
-	 zbvzogF5n1yaJrmWh24yskwjYII1NV8Yp0Q+Nz2+zjuN4F4EwhgrP+zLUqfxksCeFV
-	 3OfIGHHNw20x4WYA6gRDrO0pYaizKwYIRT17wMqE=
+	s=default; t=1597825991;
+	bh=KU8VLF79bhQTCzQXXN9H8OZHwlDn6KKht6tavPyIl3Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LEBaXcHU9xsk0h6eiWfl1ulD1jtpiuZyoeVQf3xvL84LXUEc3QSYTZSB4lwg2yn6s
+	 NnpA0YAbpBPZVnpb+/QJ7yL1n3DBdlTF/FNxdu2kCpY50YS1eA4I6oV2Yvl1PY4azV
+	 LOXpzkUsFPZINX32ABbqEaeIak2lniMBtw3nAKoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHSI1y (ORCPT
+        id S1726732AbgHSIdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 04:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgHSI1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:27:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726531AbgHSIdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:33:09 -0400
+Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8306C20738;
-        Wed, 19 Aug 2020 08:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEE4B20772;
+        Wed, 19 Aug 2020 08:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597825673;
-        bh=xkrOW1eiodxf6e55kbWanf+5qeDDwj1oob7ZKgc2bX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fbutXiAaMlm/H9YbBaBayrJHz65E2rmbWgxqxuAdUYACLzGZK6lRujSRmkHg6MBoT
-         jkPxKn2GE0mKyF++r7fCvlhIJSNDTQcpbUNxAFV9oO15FPtc09hhUgH/hTAm9Ueu5o
-         xhq/e/O3Z4iYD7DK533RIYA+NrqZcpkxHyKy533M=
-Date:   Wed, 19 Aug 2020 09:27:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Yang Shi <shy828301@gmail.com>, Yu Xu <xuyu@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [v3 PATCH] mm/memory.c: skip spurious TLB flush for retried page
- fault
-Message-ID: <20200819082747.GA17345@willie-the-truck>
-References: <20200815043041.132195-1-shy828301@gmail.com>
- <CAHk-=wjbaptBBKYS+XdCgdjU_RbFPaAd8EkT6_Un6CtNmezt9A@mail.gmail.com>
+        s=default; t=1597825988;
+        bh=KU8VLF79bhQTCzQXXN9H8OZHwlDn6KKht6tavPyIl3Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PcqTf5VHcbuId2XaVZ1YeNooY9oBdbdwwMc2tvuZYo8e6DOi++Qr9pU9lbIIKpT08
+         5oGW5GXYAVZ3useuKbpdGnKr67wTxO0/INvrZmut4t7Cox6abcceg7/OnzoQD4Jb8i
+         yJHjHZXrEDfE49XG3sNV7hk+nNrzIkvvLG6cvP44=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Leon Romanovsky <leonro@nvidia.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: Add function declaration of simple_dname
+Date:   Wed, 19 Aug 2020 11:32:59 +0300
+Message-Id: <20200819083259.919838-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjbaptBBKYS+XdCgdjU_RbFPaAd8EkT6_Un6CtNmezt9A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:01:43PM -0700, Linus Torvalds wrote:
-> On Mon, Aug 17, 2020 at 2:04 PM Yang Shi <shy828301@gmail.com> wrote:
-> >
-> > We could just skip the spurious TLB flush to mitigate the regression.
-> 
-> Ok, this patch I will apply.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-Cheers.
+The simple_dname() is declared in internal header file as extern
+and this generates the following GCC warning.
 
-> I still hope that arm64 fixes (maybe already fixed) their spurious TLB
-> function, and I think we should rename it to make sure everybody
-> understands it's local, but in the meantime this patch hides the
-> regression and isn't wrong.
+fs/d_path.c:311:7: warning: no previous prototype for 'simple_dname' [-Wmissing-prototypes]
+  311 | char *simple_dname(struct dentry *dentry, char *buffer, int buflen)
+      |       ^~~~~~~~~~~~
 
-I'll look at it for 5.10.
+Instead of that extern, reuse the fact that internal.h file is internal to fs/* and
+declare simple_dname() like any other function.
 
-Will
+Fixes: 7e5f7bb08b8c ("unexport simple_dname()")
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+---
+ fs/d_path.c   | 2 ++
+ fs/internal.h | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/d_path.c b/fs/d_path.c
+index 0f1fc1743302..4b89448cc78e 100644
+--- a/fs/d_path.c
++++ b/fs/d_path.c
+@@ -8,6 +8,8 @@
+ #include <linux/prefetch.h>
+ #include "mount.h"
+
++#include "internal.h"
++
+ static int prepend(char **buffer, int *buflen, const char *str, int namelen)
+ {
+ 	*buflen -= namelen;
+diff --git a/fs/internal.h b/fs/internal.h
+index 10517ece4516..2def264272f4 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -164,7 +164,7 @@ extern int d_set_mounted(struct dentry *dentry);
+ extern long prune_dcache_sb(struct super_block *sb, struct shrink_control *sc);
+ extern struct dentry *d_alloc_cursor(struct dentry *);
+ extern struct dentry * d_alloc_pseudo(struct super_block *, const struct qstr *);
+-extern char *simple_dname(struct dentry *, char *, int);
++char *simple_dname(struct dentry *d, char *buf, int len);
+ extern void dput_to_list(struct dentry *, struct list_head *);
+ extern void shrink_dentry_list(struct list_head *);
+
+--
+2.26.2
+
