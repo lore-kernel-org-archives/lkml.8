@@ -2,78 +2,87 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3042C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A44C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CAF207FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955CE20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:43:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sq2coitV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgHSIlj (ORCPT
+        id S1726819AbgHSInq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:41:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9844 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbgHSIlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:41:39 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A55D9D5636408194B6C0;
-        Wed, 19 Aug 2020 16:41:36 +0800 (CST)
-Received: from [10.174.179.61] (10.174.179.61) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 19 Aug 2020 16:41:26 +0800
-Subject: Re: [PATCH] mm/slub: sysfs cleanup on cpu partial when
- !SLUB_CPU_PARTIAL
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "David Rientjes" <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, <hewenliang4@huawei.com>,
-        <hushiyuan@huawei.com>,
-        "open list:SLAB ALLOCATOR" <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200813084858.1494-1-wuyun.wu@huawei.com>
- <20200818202619.6f04826a98d845e489890bba@linux-foundation.org>
-From:   Abel Wu <wuyun.wu@huawei.com>
-Message-ID: <1b6dd6d9-f613-846f-b102-b19df1b2eee8@huawei.com>
-Date:   Wed, 19 Aug 2020 16:41:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.0
+        Wed, 19 Aug 2020 04:43:46 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17227 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725903AbgHSInp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:43:45 -0400
+X-UUID: 833d184e013544a493d81f99e5afc5a3-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=AECUkhYUHBHHNyZQuHsduJ7+PYMR4h3yA3w0YXFQIAA=;
+        b=sq2coitVuMZkfuGBl2AkCsuFUClEws7szVGl4t20fw/WQnAPvH5I0ahgpRzzbAwB+1vo60ayt/D3J02vMd5saLV7IyebFm6LB7y4Ea3YOp18Ks7zQQGvvJuiTSnBMM34tmf07fcpWnBwOO/Ih4Eoi5YUODcZV8p6LeY9XLDKVwg=;
+X-UUID: 833d184e013544a493d81f99e5afc5a3-20200819
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 975283013; Wed, 19 Aug 2020 16:43:42 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 16:43:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 16:43:39 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>
+CC:     <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH] scsi: ufs-mediatek: Modify the minimum RX/TX lane count to 2
+Date:   Wed, 19 Aug 2020 16:43:40 +0800
+Message-ID: <20200819084340.7021-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200818202619.6f04826a98d845e489890bba@linux-foundation.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RnJvbTogQW5keSBUZW5nIDxhbmR5LnRlbmdAbWVkaWF0ZWsuY29tPg0KDQpNZWRpYVRlayBVRlMg
+aG9zdCBzdGFydHMgdG8gc3VwcG9ydCAyIGxhbmVzLCB0aHVzIG1vZGlmeSB0aGUNCm1pbmltdW0g
+bGFuZSBjb3VudCB0byAyLg0KDQpUaGlzIG1vZGlmaWNhdGlvbiBzaGFsbCBub3QgaW1wYWN0IG9s
+ZCAxLWxhbmUgaG9zdCBiZWNhdXNlDQpQQV9DT05ORUNURURSWERBVEFMQU5FUyBhbmQgUEFfQ09O
+TkVDVEVEVFhEQVRBTEFORVMgd2lsbCBsaW1pdCB0aGUNCnRhcmdldCBsYW5lcyBwcm9wZXJseSBk
+dXJpbmcgcG93ZXIgbW9kZSBjaGFuZ2UuIFNvIHdlIGNvdWxkIHJlbGF4DQp0aGUgbGltaXRhdGlv
+biBpbiB1ZnNfZGV2X3BhcmFtcy4NCg0KUmV2aWV3ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5
+LmNodUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0Bt
+ZWRpYXRlay5jb20+DQpTaW5nZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVk
+aWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuaCB8IDQgKyst
+LQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5oIGIvZHJpdmVycy9zY3Np
+L3Vmcy91ZnMtbWVkaWF0ZWsuaA0KaW5kZXggOGVkMjRkNWZjZmY5Li44NzY1NzM3NmQyN2EgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5oDQorKysgYi9kcml2ZXJz
+L3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5oDQpAQCAtMzMsOCArMzMsOCBAQA0KIC8qDQogICogVmVu
+ZG9yIHNwZWNpZmljIHByZS1kZWZpbmVkIHBhcmFtZXRlcnMNCiAgKi8NCi0jZGVmaW5lIFVGU19N
+VEtfTElNSVRfTlVNX0xBTkVTX1JYICAxDQotI2RlZmluZSBVRlNfTVRLX0xJTUlUX05VTV9MQU5F
+U19UWCAgMQ0KKyNkZWZpbmUgVUZTX01US19MSU1JVF9OVU1fTEFORVNfUlggIDINCisjZGVmaW5l
+IFVGU19NVEtfTElNSVRfTlVNX0xBTkVTX1RYICAyDQogI2RlZmluZSBVRlNfTVRLX0xJTUlUX0hT
+R0VBUl9SWCAgICAgVUZTX0hTX0czDQogI2RlZmluZSBVRlNfTVRLX0xJTUlUX0hTR0VBUl9UWCAg
+ICAgVUZTX0hTX0czDQogI2RlZmluZSBVRlNfTVRLX0xJTUlUX1BXTUdFQVJfUlggICAgVUZTX1BX
+TV9HNA0KLS0gDQoyLjE4LjANCg==
 
-
-On 2020/8/19 11:26, Andrew Morton wrote:
-> On Thu, 13 Aug 2020 16:48:54 +0800 <wuyun.wu@huawei.com> wrote:
-> 
->> Hide cpu partial related sysfs entries when !CONFIG_SLUB_CPU_PARTIAL to
->> avoid confusion.
->>
-> 
-> But it changes the userspace interface in ways which might cause
-> existing code to misbehave?
-Yes, indeed.
-> 
-> We just had to revert a different commit for this reason :(
-> 
-> http://lkml.kernel.org/r/20200811075412.12872-1-bhe@redhat.com
-> .
-> 
-OK, just ignore this patch and leave it as is!
-
-Thanks,
-	Abel
