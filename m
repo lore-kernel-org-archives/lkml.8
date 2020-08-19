@@ -2,206 +2,98 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B131C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11B2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE8F2207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE40720897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="We78s8ae"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ecu/ODBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgHSOm4 (ORCPT
+        id S1728125AbgHSOo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHSOmx (ORCPT
+        Wed, 19 Aug 2020 10:44:59 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4386 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHSOo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:42:53 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A5FC061757;
-        Wed, 19 Aug 2020 07:42:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id u126so24841884iod.12;
-        Wed, 19 Aug 2020 07:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mcVXNr/miBqBqBzPd9zMl9/P3yj0Py/DDVO/2K9/W8w=;
-        b=We78s8aeZBHNS8HsXJOECFtjGX0yBLXCmD9JNUeoRZJB6mQznUcKYUARlp2d8bBHSj
-         3MYtOox2aoiTCMZJHQ0aLbKAufrXDvLthlw1SYtqfpmsKIMKJ2AKJcyGEV9+c8l1w3Z1
-         gCVfjavBkDJIkR3fUr3gg57fqGnCjcqa0v128cNDQur3H2RzKvtWNedO3MfQvg9dIMe3
-         FJzHgpcTQvnbz5Ng96Mgg/91NthBPq/wlMFrT2EQKdfpKbLD5aEGeARJ24zu4Vn9Jf2V
-         ilqu/6IJiEUpeCdUs/PwxW30G3jBBEkpPghitItA81NmeiUXeGHVXCopiMY4J/OlNh08
-         ToMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mcVXNr/miBqBqBzPd9zMl9/P3yj0Py/DDVO/2K9/W8w=;
-        b=Z4VwzbNc2ltbym/9G81bgWJET4hcOZm1w9Zxouqzq+sApPF6dIXvAwaAJpH9tolhvM
-         Z4O5e/uRTd3dw978vDeXB8P+1Tj1EoF3G828V57s8k2iRWCVzvphwB7oxlWnIolzQE1o
-         egu8fh26khdR1ipHCq9eUR8/z1++1jKxKU5Ztgplq+d5VffCN/Ip3aCxANvt2xXiUD5n
-         AoqUfEI5jwcaimvf00BQeyEdkR8Vb3bSqFL09y2oNqeyk6IlOD8FqxRpVU55JZxT4KR7
-         9fsrRGFxuqxzr7tputz1G17Um9l2CKEl4wKyVm5i1wl9s7AYtA0nLNwfVwphB668uzwe
-         wR0g==
-X-Gm-Message-State: AOAM530ZMvnlyMSTDkdJr2o9uQWJJ5fI6xKCDu3hj7MyqwYOmSKE4i2j
-        p4JajsKNUZ/Fj4/ayRA1oWY5H6M4QCYd/Ggq1xBcKqfHDN4=
-X-Google-Smtp-Source: ABdhPJy0G9erP9ijJ2vX8Ai98AthvnT14z2zO5yP9aZ0guBPsZfdROzXXArHkB7NYbBxnMOHqKwUMXP/pKWqLBtWNUU=
-X-Received: by 2002:a6b:da0d:: with SMTP id x13mr20832998iob.138.1597848172300;
- Wed, 19 Aug 2020 07:42:52 -0700 (PDT)
+        Wed, 19 Aug 2020 10:44:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3d3a780001>; Wed, 19 Aug 2020 07:43:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 19 Aug 2020 07:44:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 19 Aug 2020 07:44:58 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Aug
+ 2020 14:44:54 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 19 Aug 2020 14:44:53 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f3d3ae20000>; Wed, 19 Aug 2020 07:44:52 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <tiwai@suse.com>, <perex@perex.cz>
+CC:     <kai.vehmanen@linux.intel.com>, <yang.jie@linux.intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>, <stable@vger.kernel.org>
+Subject: [PATCH] ALSA: hda: avoid reset of sdo_limit
+Date:   Wed, 19 Aug 2020 20:14:33 +0530
+Message-ID: <1597848273-25813-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042738.23414.60815.stgit@localhost.localdomain> <084c58a7-7aac-820c-9606-19391c35b9b5@linux.alibaba.com>
-In-Reply-To: <084c58a7-7aac-820c-9606-19391c35b9b5@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 19 Aug 2020 07:42:41 -0700
-Message-ID: <CAKgT0Ud3CZ8KHLXCrWNGJAX85x23-EWLnAV63-NMmJ+5vD1JAA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 5/5] mm: Split move_pages_to_lru into 3 separate passes
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597848184; bh=r259BE/Wv/192bTP/TCyvzCie6DbWCgPuvthR/nJltQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Ecu/ODBICncWcP0dg0JsCV7FRbRSnUqbk/Ft+GUPzyLqLLVoquI+v0jkGHvV/pJXk
+         CBYqHC4HjwVrM1m9RYJi785xNN0M7UZS1A2gpYlMiF7TGlwd2NJzGeo71R8aDAGD2i
+         wlH23T6yNpM4V/wmoCxc+J1s5KRTDVinuw6jcrLp42113HHq9f03zBlTkbkPXk5OKm
+         xNrvv2oGHIq5qRgiWizdodtisOT9F8YpP8cEGnpaUqbszfT9NosHWoXXdy0kHPHE7+
+         BpunBnyMDEjqos0NvUnRwoWzuozHoYw8P+mozSJq1jliIK0m4t/8j/+aUsz6tPOlXq
+         D1SVhSTbwzA0g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:58 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
-e:
->
->
->
-> =E5=9C=A8 2020/8/19 =E4=B8=8B=E5=8D=8812:27, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> >
-> > The current code for move_pages_to_lru is meant to release the LRU lock
-> > every time it encounters an unevictable page or a compound page that mu=
-st
-> > be freed. This results in a fair amount of code bulk because the lruvec=
- has
-> > to be reacquired every time the lock is released and reacquired.
-> >
-> > Instead of doing this I believe we can break the code up into 3 passes.=
- The
-> > first pass will identify the pages we can move to LRU and move those. I=
-n
-> > addition it will sort the list out leaving the unevictable pages in the
-> > list and moving those pages that have dropped to a reference count of 0=
- to
-> > pages_to_free. The second pass will return the unevictable pages to the
-> > LRU. The final pass will free any compound pages we have in the
-> > pages_to_free list before we merge it back with the original list and
-> > return from the function.
-> >
-> > The advantage of doing it this way is that we only have to release the =
-lock
-> > between pass 1 and 2, and then we reacquire the lock after pass 3 after=
- we
-> > merge the pages_to_free back into the original list. As such we only ha=
-ve
-> > to release the lock at most once in an entire call instead of having to
-> > test to see if we need to relock with each page.
-> >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  mm/vmscan.c |   68 ++++++++++++++++++++++++++++++++++-----------------=
---------
-> >  1 file changed, 39 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 3ebe3f9b653b..6a2bdbc1a9eb 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -1850,22 +1850,21 @@ static unsigned noinline_for_stack move_pages_t=
-o_lru(struct lruvec *lruvec,
-> >  {
-> >       int nr_pages, nr_moved =3D 0;
-> >       LIST_HEAD(pages_to_free);
-> > -     struct page *page;
-> > -     struct lruvec *orig_lruvec =3D lruvec;
-> > +     struct page *page, *next;
-> >       enum lru_list lru;
-> >
-> > -     while (!list_empty(list)) {
-> > -             page =3D lru_to_page(list);
-> > +     list_for_each_entry_safe(page, next, list, lru) {
-> >               VM_BUG_ON_PAGE(PageLRU(page), page);
-> > -             list_del(&page->lru);
-> > -             if (unlikely(!page_evictable(page))) {
-> > -                     if (lruvec) {
-> > -                             spin_unlock_irq(&lruvec->lru_lock);
-> > -                             lruvec =3D NULL;
-> > -                     }
-> > -                     putback_lru_page(page);
-> > +
-> > +             /*
-> > +              * if page is unevictable leave it on the list to be retu=
-rned
-> > +              * to the LRU after we have finished processing the other
-> > +              * entries in the list.
-> > +              */
-> > +             if (unlikely(!page_evictable(page)))
-> >                       continue;
-> > -             }
-> > +
-> > +             list_del(&page->lru);
-> >
-> >               /*
-> >                * The SetPageLRU needs to be kept here for list intergri=
-ty.
-> > @@ -1878,20 +1877,14 @@ static unsigned noinline_for_stack move_pages_t=
-o_lru(struct lruvec *lruvec,
-> >                *     list_add(&page->lru,)
-> >                *                                        list_add(&page-=
->lru,)
-> >                */
-> > -             lruvec =3D relock_page_lruvec_irq(page, lruvec);
->
-> It's actually changed the meaning from current func. which I had seen a b=
-ug if no relock.
-> but after move to 5.9 kernel, I can not reprodce the bug any more. I am n=
-ot sure if 5.9 fixed
-> the problem, and we don't need relock here.
+By default 'sdo_limit' is initialized with a default value of '8'
+as per spec. This is overridden in cases where a different value is
+required. However this is getting reset when snd_hdac_bus_init_chip()
+is called again, which happens during runtime PM cycle. Avoid reset
+by not initializing to default value everytime.
 
-So I am not sure what you mean here about "changed the meaning from
-the current func". Which function are you referring to and what
-changed?
+Fixes: 67ae482a59e9 ("ALSA: hda: add member to store ratio for stripe control")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ sound/hda/hdac_controller.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-From what I can tell the pages cannot change memcg because they were
-isolated and had the LRU flag stripped. They shouldn't be able to
-change destination LRU vector as a result. Assuming that, then they
-can all be processed under same LRU lock and we can avoid having to
-release it until we are forced to do so to call putback_lru_page or
-destroy the compound pages that were freed while we were shrinking the
-LRU lists.
+diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
+index 011b17c..0e26e96 100644
+--- a/sound/hda/hdac_controller.c
++++ b/sound/hda/hdac_controller.c
+@@ -538,7 +538,8 @@ bool snd_hdac_bus_init_chip(struct hdac_bus *bus, bool full_reset)
+ 	 *   { ((num_channels * bits_per_sample * rate/48000) /
+ 	 *	number of SDOs) >= 8 }
+ 	 */
+-	bus->sdo_limit = 8;
++	if (!bus->sdo_limit)
++		bus->sdo_limit = 8;
+ 
+ 	return true;
+ }
+-- 
+2.7.4
 
-> For the rest of this patch.
-> Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
-
-Thanks for the review.
-
-- Alex
