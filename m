@@ -2,217 +2,218 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C806C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E4821741
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE312054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="Cq4Szb2b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="joFN0ww+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgHSHFk (ORCPT
+        id S1728025AbgHSHFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:05:40 -0400
-Received: from mail-eopbgr680123.outbound.protection.outlook.com ([40.107.68.123]:58889
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728027AbgHSHF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:05:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eoyRhYyUCyeMmkcC14PV+OrSB2k09aAjPwCovhENep/gXDvmwXiloDxn4KC4I7ybaUpXLPbDzpWSPkzznCNqu6UCuh2H/A8UMI0Yl9QdnT7kqxKTIajD9V17CUOLHbS08zvhx2G3CF2MQuLg6IsE4KZUSVJXy9hGWnDUpzKDE5WHRkD0AkuC21+Bx9RzAPsSY6DNhkaJA4p8Rc5cwOCp0SUxR+2TGVfPc2fbfGK0zuJzvqOhPbjlTXL9X0KpQVOomHS5wY0p7GKLqINuBLu5R53XJXzBVxHWKkbKKJkOQTJ9NMiuZiBBWAq3ih/gqR7oRuzXdJdhWkmVq+s6CpJnvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FYWTiegyVIRDwQDyKiMoHHLE7nzFGm2qXIdWmFcvSs8=;
- b=m8VvMPSmec9k4GAvh+0PBUQKRaPxBQtD4J9mE+qfN3qvfl6elBaMMpx/EZPwo3SLhp89spHfzQX+E4NBusyQf3C60o82jpw6msnWedLqVuVIR4PUK3ZDkdMDQ9J+mwcre5AuOU96FVIU4mAaayP4/OzNc5UwHWAdrlwpgidVlPLly5yPcRE0L8pwLbAcT/jfSgpnYpW/cwNlOJNODcOS8eZK3AwhCOxYhg4C3qj15TiTeSFw6hJDJJMA0oglL+GDO+tQF39LjxMFO/Sqt+cgRi7iaxJwfZxWwkisZgYpclAs6GDT82gbMcYUnn7SyPdLF+ijZDTUJ09o1y73ySwAzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FYWTiegyVIRDwQDyKiMoHHLE7nzFGm2qXIdWmFcvSs8=;
- b=Cq4Szb2bqsMjleUqqAKm6imQ723CVTc7U6xj+g6aFgbM7UMi3mwmaaGBDZatPucb0j6QAXwTk1yfdKlIDnaMutuIzMMkSfzpQj0uWzhADuqODGbfubbRLywWrs4bRMaHjdaMg5931/xrq1p7m6U61P9eITaxTPO8aHYV3lIkEPg=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB6868.namprd04.prod.outlook.com (2603:10b6:a03:21a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 19 Aug
- 2020 07:05:23 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::6845:5e8c:51b:db77]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::6845:5e8c:51b:db77%9]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 07:05:23 +0000
-Date:   Wed, 19 Aug 2020 15:05:13 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: Fwd: [PATCH v14 0/2] Add initial support for slimport anx7625
-Message-ID: <20200819070513.GA8965@xin-VirtualBox>
-References: <cover.1594283160.git.xji@analogixsemi.com>
- <20200810203546.GA421906@ravnborg.org>
- <CAJMQK-h1BLDS_-q9n9vuOyYimqG7qonGsy7f5w8M=A_pffxHBQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJMQK-h1BLDS_-q9n9vuOyYimqG7qonGsy7f5w8M=A_pffxHBQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK0PR01CA0069.apcprd01.prod.exchangelabs.com
- (2603:1096:203:a6::33) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+        Wed, 19 Aug 2020 03:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgHSG5D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:57:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E42C061344;
+        Tue, 18 Aug 2020 23:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ZtUM/olxUf8C2TvkEPmqhqiLEztY8gyw8OoXm4S66J0=; b=joFN0ww+0aa92xQbCzyMJkP7LD
+        8JSoseHLlahhfiaA1lVSRSPW99kkw+xo4xdI9KQUb6l8fcvQ1JFGDjrE7lNY43skYEvkO6sJBvNuI
+        ovuZ3ghLBiC7cimGa0zz0lEel7wTzq1v5puhSiTWO2cPmzjRRujsGdGv+7If4seWQ/HNzI6MHxhU1
+        4byruJvxXeuiKXvhleriuiiuwda79/w7C/U8FbqJUTO3fTp2Ce0hz4Bob299SMDEONrIlqC/49BCx
+        +BqS2Tp5+L35IkWLeY8UQ1J6OQLxl09Os7Wuzp80LKtW6Hs8573Udi+/spUOj3c0bLw4Uerhc3GyD
+        uPnoXnjw==;
+Received: from [2001:4bb8:198:f3b2:86b6:2277:f429:37a1] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8I1C-0008OB-DC; Wed, 19 Aug 2020 06:56:19 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH 11/28] dma-mapping: add (back) arch_dma_mark_clean for ia64
+Date:   Wed, 19 Aug 2020 08:55:38 +0200
+Message-Id: <20200819065555.1802761-12-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819065555.1802761-1-hch@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK0PR01CA0069.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::33) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 07:05:22 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d18fd61c-6242-49fd-65ed-08d8440e3d8e
-X-MS-TrafficTypeDiagnostic: BY5PR04MB6868:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB6868E8A1EE4C975A9FD00581C75D0@BY5PR04MB6868.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: unLxwYZaQXl1D46mBVpQwtBQ2Pn7FHaFnQ4N8CrVYjZFbVmjDi5KZVmibIgxm4dvwi9TjF+dpRX1Zs+l30m5BLsZUnKsiaHbQoHAg/GrEytPTmr3aFs0KxRdGOJKNAyhE0HQwLLQdq/Jorix6fd2Hzhx9A7mfs6oFEnF9Ser02BaAQ/lL5dMg1Y1xaGYMXjAvJFEBAz8+L5UdWoqH0oHe51IF7i9nnz59v9NZCIe9xDNrMcIQ7ENhLjYLZv4CGuTFPbqAuhyhKMmqPpaKMk7dHR3XydOht6bD+snZwUkyEdsKVOUPrfC82fmd+7EKQQLuWd9WTSSnsH4kHAlowPJ1tKmg8AODf/DJ6aKcyRrY4o=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(39840400004)(376002)(136003)(396003)(366004)(52116002)(110136005)(55016002)(6666004)(316002)(66556008)(66476007)(26005)(16526019)(8676002)(9686003)(478600001)(966005)(2906002)(83380400001)(5660300002)(33656002)(107886003)(956004)(186003)(33716001)(86362001)(4326008)(54906003)(7416002)(8936002)(53546011)(66946007)(6496006)(1076003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: au6w/B4atshzW0B/LosvhSQlv9a3xUujrm9riOyvju7bQp7JKYXpnAa7X4eCod6LeC45Vx0GCll9HqVW3MEFkMyUYbwrWEHH1qqsgYe7msYtMBHUJeDw/fcF5qrIqQnNOdFvXo2/DK33kLi9wqtB/LMbgRNHIoYyk5ijRkU2oepzYAY726g4NuSmvgUttcGQ8+qRJ51Itk3j4Y4wBxvfqWrwMREZjFvekyhdolabjGq3bIF7dlQo5ev10EkiF+ZK/uhqxhrFkbUsQLJO4MuY6QjItDuphG1wo/KY3/bRUinBJkmyhxqW7PUtjrNQB1cc5bDH5lnE7yVHWdmIUtZNKUomRTAoUVfouppTxYlt9aEvKZuD6eLQdVIjs426qg3cKYcAPmyeVvp6VzUeE46j2LjR7WT1UUmyBWyyG9cBKeWu7xPxn4Iq4lcfbRgkMlMLQ6KXWNZoQqA9ZVP4f/mcrdmLEOp5mT4A1CU++hNa7NLdjtLA8IQFZ6lPhaEdygDpPtJJcaSW/oyJbE4J1qc2Bsm8J3dH92+h/6zBaLEjAhMBci0opz1JTjoiwlDJXJuHy2ACcQe+7XJtrFnar3EEKrWUJVecew0/qOl+GCq+Z813qDJhi+6iaMUkLcA4193anVAobPch58Spg+trmfi+hw==
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d18fd61c-6242-49fd-65ed-08d8440e3d8e
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6739.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 07:05:22.9084
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QSiqR3UVSaDfKtcXpluY1tynDH9NNm+HooHn4suLu7Qvs1S1oYEMwv+Noe4yesJoeIXApg2bFbSqHtRh9+0alw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6868
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:57:14PM +0800, Hsin-Yi Wang wrote:
-> I think you missed this email :)
-> 
-> ---------- Forwarded message ---------
-> From: Sam Ravnborg <sam@ravnborg.org>
-> Date: Tue, Aug 11, 2020 at 4:35 AM
-> Subject: Re: [PATCH v14 0/2] Add initial support for slimport anx7625
-> To: Xin Ji <xji@analogixsemi.com>
-> Cc: <devel@driverdev.osuosl.org>, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com>, Andrzej Hajda
-> <a.hajda@samsung.com>, Nicolas Boichat <drinkcat@google.com>, Jernej
-> Skrabec <jernej.skrabec@siol.net>, Nicolas Boichat
-> <drinkcat@chromium.org>, Pi-Hsun Shih <pihsun@chromium.org>, Jonas
-> Karlman <jonas@kwiboo.se>, David Airlie <airlied@linux.ie>, Neil
-> Armstrong <narmstrong@baylibre.com>, <linux-kernel@vger.kernel.org>,
-> <dri-devel@lists.freedesktop.org>, Sheng Pan <span@analogixsemi.com>,
-> Hsin-Yi Wang <hsinyi@chromium.org>, Dan Carpenter
-> <dan.carpenter@oracle.com>
-> 
-Hi Sam, I missed this email.
-> 
-> Hi Xin Ji.
-> 
-> On Thu, Jul 09, 2020 at 04:31:09PM +0800, Xin Ji wrote:
-> > Hi all,
-> >
-> > The following series add support for the Slimport ANX7625 transmitter, a
-> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> >
-> >
-> > This is the v14 version, any mistakes, please let me know, I will fix it in
-> > the next series.
-> >
-> > Change history:
-> > v14: Fix comments from Sam and Nicolas
-> >  - Check flags at drm_bridge_attach
-> >  - Use panel_bridge instead of drm_panel
-> >  - Fix not correct return value
-> 
-> Sorry for ignoring this for so long time.
-> The patch applies but no longer builds.
-> 
-> I could fix it locally but wanted to know if you have a later version to
-> be applied?
-> 
->         Sam
-Hi Sam, there is no new version patch. We have another patch for other
-project, so we will upstream new patch after this patch has been merged.
+Add back a hook to optimize dcache flushing after reading executable
+code using DMA.  This gets ia64 out of the business of pretending to
+be dma incoherent just for this optimization.
 
-Thanks,
-Xin
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/ia64/Kconfig               |  3 +--
+ arch/ia64/kernel/dma-mapping.c  | 14 +-------------
+ arch/ia64/mm/init.c             |  3 +--
+ include/linux/dma-direct.h      |  3 +++
+ include/linux/dma-noncoherent.h |  8 ++++++++
+ kernel/dma/Kconfig              |  6 ++++++
+ kernel/dma/direct.c             |  3 +++
+ 7 files changed, 23 insertions(+), 17 deletions(-)
 
-> 
-> 
-> >
-> > v13: Fix comments from Launrent Pinchart and Rob Herring
-> >  - Picked up Rob's Reviewed-By
-> >  - Add .detect and .get_edid interface in bridge funcs.
-> >
-> > v12: Fix comments from Hsin-Yi Wang
-> >  - Rebase the code on kernel 5.7, fix DRM interface not match issue.
-> >
-> > v11: Fix comments from Rob Herring
-> >  - Update commit message.
-> >  - Remove unused label.
-> >
-> > v10: Fix comments from Rob Herring, Daniel.
-> >  - Fix dt_binding_check warning.
-> >  - Update description.
-> >
-> > v9: Fix comments from Sam, Nicolas, Daniel
-> >  - Remove extcon interface.
-> >  - Remove DPI support.
-> >  - Fix dt_binding_check complains.
-> >  - Code clean up and update description.
-> >
-> > v8: Fix comments from Nicolas.
-> >  - Fix several coding format.
-> >  - Update description.
-> >
-> > v7:
-> >  - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
-> >    enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
-> >
-> >
-> > Xin Ji (2):
-> >   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
-> >   drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
-> >
-> >  .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
-> >  drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
-> >  5 files changed, 2435 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> >
-> > --
-> > 2.7.4
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 5b4ec80bf5863a..513ba0c5d33610 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -8,6 +8,7 @@ menu "Processor type and features"
+ 
+ config IA64
+ 	bool
++	select ARCH_HAS_DMA_MARK_CLEAN
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select ACPI
+@@ -32,8 +33,6 @@ config IA64
+ 	select TTY
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_VIRT_CPU_ACCOUNTING
+-	select DMA_NONCOHERENT_MMAP
+-	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select VIRT_TO_BUS
+ 	select GENERIC_IRQ_PROBE
+ 	select GENERIC_PENDING_IRQ if SMP
+diff --git a/arch/ia64/kernel/dma-mapping.c b/arch/ia64/kernel/dma-mapping.c
+index 09ef9ce9988d1f..f640ed6fe1d576 100644
+--- a/arch/ia64/kernel/dma-mapping.c
++++ b/arch/ia64/kernel/dma-mapping.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/dma-direct.h>
++#include <linux/dma-mapping.h>
+ #include <linux/export.h>
+ 
+ /* Set this to 1 if there is a HW IOMMU in the system */
+@@ -7,15 +7,3 @@ int iommu_detected __read_mostly;
+ 
+ const struct dma_map_ops *dma_ops;
+ EXPORT_SYMBOL(dma_ops);
+-
+-void *arch_dma_alloc(struct device *dev, size_t size,
+-		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+-{
+-	return dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
+-}
+-
+-void arch_dma_free(struct device *dev, size_t size, void *cpu_addr,
+-		dma_addr_t dma_addr, unsigned long attrs)
+-{
+-	dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
+-}
+diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+index 0b3fb4c7af2920..02e5aa08294ee0 100644
+--- a/arch/ia64/mm/init.c
++++ b/arch/ia64/mm/init.c
+@@ -73,8 +73,7 @@ __ia64_sync_icache_dcache (pte_t pte)
+  * DMA can be marked as "clean" so that lazy_mmu_prot_update() doesn't have to
+  * flush them when they get mapped into an executable vm-area.
+  */
+-void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
+-		enum dma_data_direction dir)
++void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
+ {
+ 	unsigned long pfn = PHYS_PFN(paddr);
+ 
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 5a3ce2a2479437..738485b3578062 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -153,6 +153,9 @@ static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+ 
+ 	if (unlikely(is_swiotlb_buffer(paddr)))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
++
++	if (dir == DMA_FROM_DEVICE)
++		arch_dma_mark_clean(paddr, size);
+ }
+ 
+ static inline dma_addr_t dma_direct_map_page(struct device *dev,
+diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+index ca09a4e07d2d3d..b9bc6c557ea46f 100644
+--- a/include/linux/dma-noncoherent.h
++++ b/include/linux/dma-noncoherent.h
+@@ -108,6 +108,14 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
+ }
+ #endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
+ 
++#ifdef CONFIG_ARCH_HAS_DMA_MARK_CLEAN
++void arch_dma_mark_clean(phys_addr_t paddr, size_t size);
++#else
++static inline void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
++{
++}
++#endif /* ARCH_HAS_DMA_MARK_CLEAN */
++
+ void *arch_dma_set_uncached(void *addr, size_t size);
+ void arch_dma_clear_uncached(void *addr, size_t size);
+ 
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 847a9d1fa6343d..6cf7f7947ae797 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -43,6 +43,12 @@ config ARCH_HAS_DMA_SET_MASK
+ config ARCH_HAS_DMA_WRITE_COMBINE
+ 	bool
+ 
++#
++# Select if the architectures provides the arch_dma_mark_clean hook
++#
++config ARCH_HAS_DMA_MARK_CLEAN
++	bool
++
+ config DMA_DECLARE_COHERENT
+ 	bool
+ 
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index bb0041e9965975..1123e767f4315f 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -340,6 +340,9 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 		if (unlikely(is_swiotlb_buffer(paddr)))
+ 			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
+ 					SYNC_FOR_CPU);
++
++		if (dir == DMA_FROM_DEVICE)
++			arch_dma_mark_clean(paddr, sg->length);
+ 	}
+ 
+ 	if (!dev_is_dma_coherent(dev))
+-- 
+2.28.0
+
