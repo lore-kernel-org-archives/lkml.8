@@ -7,80 +7,81 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6905C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F34220758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A788E207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597859917;
-	bh=FcKEK8nVUQ61VuZBZmyyOwDw3C6WJOxWeroTZ8ZuSBY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ev8nwQc5Oz0QNa6NVhownxjfW9wCrMPGJjTklZ1SQaYTzdRjqdL9uIEHulNuaH1A2
-	 GDonlVLcRtdecFgeDDBymdw8fi+i4v047htbrSQvjf4XNSxTMUkxkYYpSG/dz2xJHp
-	 7z+64Xy2IfDJ6mWtI8Dj0V9WRtCbWtfrhrnXIKjs=
+	s=default; t=1597859953;
+	bh=nGGMZWvsN3S1Ts/DraeRv1TrECa7+j+0GR9n0Z4CkCY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SuBa0DpBpDCDnBDR/PZzGxNaJqSeJSHd22xXzVFBlljjVjXuiZr7VH7Bdp/2hgfZi
+	 gjnvhC4j1K/UHhWTnVCxp9Q7q78xdArhSLqgXIE/CIg8LpmIJJV4dhw0LsuZ8CVO5S
+	 fVkBHr9IUQzx8q+RjSWFKqgVYdFk3X+aa9nsols0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgHSR6g (ORCPT
+        id S1726796AbgHSR7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34072 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 13:59:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgHSR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:58:27 -0400
+        id S1725804AbgHSR7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:59:07 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76DB520758;
-        Wed, 19 Aug 2020 17:58:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F31720758;
+        Wed, 19 Aug 2020 17:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597859907;
-        bh=FcKEK8nVUQ61VuZBZmyyOwDw3C6WJOxWeroTZ8ZuSBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFQNncgwiwmwxWsYWwE5iAJyUaG0++Q7dc59CZRO/qv8QTuh6YqKK6m+972q4/H9J
-         Je3bLVjZjVaCYkX9RUQqT/LmWGEY7lgCD3u3YZr71IKsMOcv6XTtTTyTxqUH7Y/tGJ
-         AH3d+JNZi7783S2SsZMfgypCq7xogJFiM7u4mo5A=
+        s=default; t=1597859947;
+        bh=nGGMZWvsN3S1Ts/DraeRv1TrECa7+j+0GR9n0Z4CkCY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WtO1uVALZmAlF+ZBxwK3R0PZf4WgmYujmYEETnODFzWWS5GykWF7u0Z3lpZg2OEQB
+         kExFEJjD2jjn8GtIasR5H+Y3I797H67jpF8+OrYa6ULegQMD9+HiFc+vyR0cSHNkBN
+         1yYtLk+ajSkYRRAHxnriAqxYTMHVrkv+V7Or4aWg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH 3/3] arm64: dts: alpine: Fix GIC unit address
-Date:   Wed, 19 Aug 2020 19:58:16 +0200
-Message-Id: <20200819175816.21398-3-krzk@kernel.org>
+Subject: [RESEND PATCH 1/5] ARM: dts: prima: Align L2 cache-controller nodename with dtschema
+Date:   Wed, 19 Aug 2020 19:58:49 +0200
+Message-Id: <20200819175853.21492-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819175816.21398-1-krzk@kernel.org>
-References: <20200819175816.21398-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Node unit address should be the same as first address appearing in "reg"
-property.  Fixes DTC warning:
-
-    arch/arm64/boot/dts/al/alpine-v2.dtsi:116.38-126.5:
-        Warning (simple_bus_reg): /soc/interrupt-controller@f0100000: simple-bus unit address format error, expected "f0200000"
+Fix dtschema validator warnings like:
+    l2-cache-controller@80040000: $nodename:0:
+        'l2-cache-controller@80040000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/amazon/alpine-v2.dtsi | 2 +-
+ arch/arm/boot/dts/prima2.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-index de2eaf77b1ff..4eb2cd14e00b 100644
---- a/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-+++ b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
-@@ -113,7 +113,7 @@
- 				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
+index 9c7b46b90c3c..7d3d93c22ed9 100644
+--- a/arch/arm/boot/dts/prima2.dtsi
++++ b/arch/arm/boot/dts/prima2.dtsi
+@@ -50,7 +50,7 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x40000000 0x40000000 0x80000000>;
  
--		gic: interrupt-controller@f0100000 {
-+		gic: interrupt-controller@f0200000 {
- 			compatible = "arm,gic-v3";
- 			reg = <0x0 0xf0200000 0x0 0x10000>,	/* GIC Dist */
- 			      <0x0 0xf0280000 0x0 0x200000>,	/* GICR */
+-		l2-cache-controller@80040000 {
++		cache-controller@80040000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x80040000 0x1000>;
+ 			interrupts = <59>;
 -- 
 2.17.1
 
