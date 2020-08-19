@@ -2,116 +2,143 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67902C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459D1207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47234206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiFY5EFg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="WC45bL65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgHSWj3 (ORCPT
+        id S1727846AbgHSWkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41682 "EHLO
+        Wed, 19 Aug 2020 18:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHSWj2 (ORCPT
+        with ESMTP id S1726466AbgHSWkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:39:28 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 660FEC061757;
-        Wed, 19 Aug 2020 15:39:28 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y3so276362wrl.4;
-        Wed, 19 Aug 2020 15:39:28 -0700 (PDT)
+        Wed, 19 Aug 2020 18:40:35 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB19C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:34 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id s29so139089qtc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nRpCADsHOf/cWhcypV5jnkA5SHzSc6g+QJdTCoTw3Ds=;
-        b=UiFY5EFg4f9I/213bZd57Gg8sKrk9+m6VDfEtWtAXi5DIt7Kb8yENRGuPg46iMtuHO
-         VF/6fWP3m0inhANxal8sMy2Cpy1Ui8Jj3ChCNwbL6voIjWBhlUHLJ+bjN/ihOAqJz1hJ
-         o95p+grke16tJSIiwBcl8gtbdLXl3Svbs6OEWhABY7wR+sIhu1pe2gIaPtSyEtxibn5k
-         xug8GlgMoFMeeCbtQrEtAZYZSifQ6miaW8ubqwnodnY8bA5c9bWJPEwr8f5qdyR1XxYF
-         UWqevL4r4pxh+pa70G0+Eo7ngQCEflQln2vQjxdqJS5TBMbmFVUjOGdBWBcT3aTEF0Ec
-         yFGg==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=EvVX+342SXuaBchy3/trMWGY/3AxdBYSkIWLg0jDdX0=;
+        b=WC45bL657ajNciULhddNw2JgJ3L33JA7MxGDn+WyCv9HIfw/NxIXHtYJgr5s/NQ+Au
+         GQ1KnB/WhKjdtqvnAl+B6R9wOUaRCRhVl1RHzge9cE3ZT/WHNrcuhe1r6pY7ssjl640n
+         oxMKCcMjdCzO1jSde2y84+mogDdCbH+boQ3kaD0nUm+lHMC4aar+44tEwgmFGnx693Nb
+         ICm6Amk423FRPU9gp28mVjfus4Z6p0jXbuCrv1kRmSE40AzDs70Kxz736HfHvezfbH48
+         1JXBKXM2g/UV/HI8d2ml9An0tBUUZlxGSZxpA/dsSqWtd8Ayn8oyjUdJIFPaybef7IS7
+         FP1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nRpCADsHOf/cWhcypV5jnkA5SHzSc6g+QJdTCoTw3Ds=;
-        b=NdDtnaJEZeMFRymGi4Al7neZe+1OEqELPJ64Yp8z9jZzPNnH/vrnzMM3MBIdIFkbQD
-         hc+grGQ8kjSo90+ru1dWfCFyMRJPILCAQ5W42vu1UlVw70m78kTXEY4Zy21zU+UXrN7H
-         pU4CiUMt+pP3fMaFNuqCgdki6AM94X9BCF8Vl70NoyryHLQMACjl30wFzcNPFC/VqPZW
-         EKNyOLmqp39MxrHDK+6aTjqqHXI4c5Gl0u3suvEEKb5V3vgEXNZPM3gFkCHA5BbxXe80
-         pvQgs51YGKVmpmFcND3wQf5Nt/ASbPM99uNfKpEgde3lJjVGDHR3EiQyn9mGna8ZCEMo
-         MRCw==
-X-Gm-Message-State: AOAM533HFZ8i1xL/r6JG28t1D9EBQr9pgMfBHUdEc/ewc98X2fr5Jvdw
-        el/aSbVmo/rbcb+rcE/+kZGVuy+q1m+b9g==
-X-Google-Smtp-Source: ABdhPJyFRJO0AZRVyZ+C0c3HOnzZQn+Vqb9ABZGDytFjKz/PRua8HhDRp9AbY74tQIK5x195uVkZ5g==
-X-Received: by 2002:a5d:4d8f:: with SMTP id b15mr191393wru.341.1597876766413;
-        Wed, 19 Aug 2020 15:39:26 -0700 (PDT)
-Received: from ziggy.stardust ([93.176.180.54])
-        by smtp.gmail.com with ESMTPSA id u7sm414472wrq.89.2020.08.19.15.39.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 15:39:25 -0700 (PDT)
-Subject: Re: [PATCH 1/2] soc: mediatek: mtk-infracfg: Fix kerneldoc
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200729074415.28393-1-krzk@kernel.org>
- <92ac7165-765e-da75-4c0b-3b232521b5e9@gmail.com>
- <20200819174805.GA394@kozik-lap>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <38e5f452-d049-f323-4a24-f7dafcbdb72f@gmail.com>
-Date:   Thu, 20 Aug 2020 00:39:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200819174805.GA394@kozik-lap>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=EvVX+342SXuaBchy3/trMWGY/3AxdBYSkIWLg0jDdX0=;
+        b=lV7Pjt4cygagR1xXLvmTfo2Mais/Z5u1Sl1mQHYX11xnFzK1WeeCJ5MU0z5ws+sUl1
+         NN82G20UGpEijAleOkkjiohztrxAzPawz/0HL2fi/OnGsEmZXk9nbCl3aB2NQ9NSeR42
+         iNRdNeyTOIXzWcOdtrkiopfWjc7WglbOGxmsn1m/elbhnz1G2c0GmwFQOmEYW4Bb/tZ2
+         WvPTkX0Q8MXSpAlRwBtr+RMNEbxDTYD9JDqWGQeum4SfWvaa7CpLYXZx1MN7Lo9fWtIt
+         Vb9Pg2l16L/+QmnVXRUn6KpvTphxrLOYJWFh3vj8gv39r/BhNIgs5KljG6WCmiSUcrOo
+         AU6Q==
+X-Gm-Message-State: AOAM533a2VSqtjOEHdXAnZFQLEMEz6dVZmcmjLXvvOU/MHYUEpeg5oud
+        kwWYPfnES2pmnRTX+/a7BEW4Eq27TvY=
+X-Google-Smtp-Source: ABdhPJxXcTQc4F9HjvdGQaSU0zuQOKiQ7mlX9TYnvGKi6DOmfJ4Myqy4u5T27jdfalORwFRyTn4kdYrF4no=
+X-Received: from haoluo.svl.corp.google.com ([2620:15c:2cd:202:f693:9fff:fef4:e444])
+ (user=haoluo job=sendgmr) by 2002:a0c:c248:: with SMTP id w8mr450623qvh.157.1597876834030;
+ Wed, 19 Aug 2020 15:40:34 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 15:40:22 -0700
+Message-Id: <20200819224030.1615203-1-haoluo@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH bpf-next v1 0/8] bpf: BTF support for ksyms
+From:   Hao Luo <haoluo@google.com>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Hao Luo <haoluo@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series extends the previously added __ksym externs with
+btf support.
 
+Right now the __ksym externs are treated as pure 64-bit scalar value.
+Libbpf replaces ld_imm64 insn of __ksym by its kernel address at load
+time. This patch series extend those externs with their btf info. Note
+that btf support for __ksym must come with the kernel btf that has
+VARs encoded to work properly. The corresponding chagnes in pahole
+is available at [1].
 
-On 19/08/2020 19:48, Krzysztof Kozlowski wrote:
-> On Wed, Jul 29, 2020 at 09:53:59AM +0200, Matthias Brugger wrote:
->>
->>
->> On 29/07/2020 09:44, Krzysztof Kozlowski wrote:
->>> Fix W=1 compile warnings (invalid kerneldoc):
->>>
->>>       drivers/soc/mediatek/mtk-infracfg.c:34: warning: Function parameter or member 'infracfg' not described in 'mtk_infracfg_set_bus_protection'
->>>       drivers/soc/mediatek/mtk-infracfg.c:34: warning: Excess function parameter 'regmap' description in 'mtk_infracfg_set_bus_protection'
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> Queued for v5.9-next/soc
-> 
-> Hi,
-> 
-> It looks like this missed the merge window. Do you plan to keep it for
-> v5.10?
-> 
+The first 5 patches in this series add support for general kernel
+global variables, which includes verifier checking (01/08), libbpf
+type checking (03/08) and btf_id resolving (04/08).
 
-Yes. I'm using the confusing way of v5.9-next branch, which means v5.10, as long 
-as Linus does not decide to switch to v6.x
+The last 3 patches extends that capability further by introducing a
+helper bpf_per_cpu_ptr(), which allows accessing kernel percpu vars
+correctly (06/08).
 
-Anyway it's queued for v5.10
+The tests of this feature were performed against the extended pahole.
+For kernel btf that does not have VARs encoded, the selftests will be
+skipped.
 
-Regards,
-Matthias
+[1] https://git.kernel.org/pub/scm/devel/pahole/pahole.git/commit/?id=f3d9054ba8ff1df0fc44e507e3a01c0964cabd42
+
+rfc -> v1:
+ - Encode VAR's btf_id for PSEUDO_BTF_ID.
+ - More checks in verifier. Checking the btf_id passed as
+   PSEUDO_BTF_ID is valid VAR, its name and type.
+ - Checks in libbpf on type compatibility of ksyms.
+ - Add bpf_per_cpu_ptr() to access kernel percpu vars. Introduced
+   new ARG and RET types for this helper.
+
+Hao Luo (8):
+  bpf: Introduce pseudo_btf_id
+  bpf: Propagate BPF_PSEUDO_BTF_ID to uapi headers in /tools
+  bpf: Introduce help function to validate ksym's type.
+  bpf/libbpf: BTF support for typed ksyms
+  bpf/selftests: ksyms_btf to test typed ksyms
+  bpf: Introduce bpf_per_cpu_ptr()
+  bpf: Propagate bpf_per_cpu_ptr() to /tools
+  bpf/selftests: Test for bpf_per_cpu_ptr()
+
+ include/linux/bpf.h                           |   3 +
+ include/linux/btf.h                           |  26 +++
+ include/uapi/linux/bpf.h                      |  52 +++++-
+ kernel/bpf/btf.c                              |  25 ---
+ kernel/bpf/verifier.c                         | 128 ++++++++++++-
+ kernel/trace/bpf_trace.c                      |  18 ++
+ tools/include/uapi/linux/bpf.h                |  53 +++++-
+ tools/lib/bpf/btf.c                           | 171 ++++++++++++++++++
+ tools/lib/bpf/btf.h                           |   2 +
+ tools/lib/bpf/libbpf.c                        | 130 +++++++++++--
+ .../selftests/bpf/prog_tests/ksyms_btf.c      |  81 +++++++++
+ .../selftests/bpf/progs/test_ksyms_btf.c      |  36 ++++
+ 12 files changed, 665 insertions(+), 60 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_ksyms_btf.c
+
+-- 
+2.28.0.220.ged08abb693-goog
+
