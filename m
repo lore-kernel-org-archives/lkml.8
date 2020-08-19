@@ -2,109 +2,100 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81441C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BDC206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB07207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gso9pMxr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mrDjElMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgHSKw1 (ORCPT
+        id S1728049AbgHSKwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44824 "EHLO
+        Wed, 19 Aug 2020 06:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHSKwL (ORCPT
+        with ESMTP id S1727888AbgHSKwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:52:11 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B9BC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:52:10 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id k63so4785555oob.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:52:10 -0700 (PDT)
+        Wed, 19 Aug 2020 06:52:34 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9BFC061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:52:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so21059800wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NVVSOWbVhc+1jDHdFns3ZSzRukenY167RTrEndwbU+M=;
-        b=Gso9pMxrOQWdMFS4oUDFDQopnA2DpTpiZCJFqq/B2ZEoa859lMA5DG1q5AfyFRQC2K
-         0BbOOMsaxojyLaYamQN/hpqRKPyyNI6tYgVnrQEOZwypkcXjeXNYOcmggJBzwWOAPH2t
-         uDby8ZfkUfgPuCVQ1hjydyCXloT/GD+ySll0NBJQxEcqa5ZYkvWZC8QcBYu6LNGB6qmy
-         BNwFxRP4pWhEXUL9/E4VkRndasu5/0pLNTSDu1EbLLgbuQ4nsZFmlQPPbC5atEOXRxVR
-         X7KawI1aJh0oYRDXgKsXSAYl9gDpUeMspxL/faww8IWo5Ubp2AZ/wAk+H184A02WZfBJ
-         /6Yg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9gkmD+jt+NPPAfuqcUBQK91Aso2a4xO+LXFVwtygFxw=;
+        b=mrDjElMbw8NA6E2pCjzZai3H8/y5gZFC3nyYQF7wTWfgpyCO5b/6UefVl+zv02OTnQ
+         lY8s0IN3LajIpW38QnPEKKQfMM0SFOyRmS8TWkTYekNg6Ira5ebYJkV8vwwT3ldbp6wk
+         QMDIhKTOHSFQk4ywhNRIsnmz49yfCLvYMPxH9+orJ97qoO85hU6nm9rMYp42fRuyVXnQ
+         +ptOQyD80xQ7YOitH4RNSp0W/BMk/7D7ae7pAmcNlHXHk5Jvj+/wKOUD7LcY29PmUMEN
+         MdQ16EDPWre8Ai4VcTDT2LWgCC6gRguYRDKKvJsU6PCTP5+IH1zZGe9qbpsbjueRbOGZ
+         1Irw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NVVSOWbVhc+1jDHdFns3ZSzRukenY167RTrEndwbU+M=;
-        b=RvNzHDwysQ3fpv0fHfUcRAiYYtdtpbG3i+oJ8IR14U5UKgF79SXU+/3SBiGt//cNXk
-         QHu6v5Qhmx8GABnf9ZgGviMQmaOl5O/rrJNMObvuOwRrjhDcIxWHCzGGcGJ2cZWUxkxI
-         iN33w9UoQtThhKpr48WcFHz7R0RK/hqdPgncBPqK+VWvM30isZuCzMweZhPAkyeVdnXo
-         w2UpuDq39qa7N7UaKdpEI7PglgsPtP+iiZ15gjJsxeA3/Us+B0EvM92wfx5vT8I3kYPJ
-         4s131ixHedc64jcO2k+y8sqr4fZN2zuMrcMTX8oG58gIELhPjXZHQsFTmCfk6AlFXywC
-         Grmg==
-X-Gm-Message-State: AOAM530gae4gksRXv0zSIXWUQpflNDLa7sNRF+as2mJaoA5BiwiEe5Mo
-        xxt/Y4c2jJtQGq0A+ux5TuyvQPWwlg9EYcSZORk=
-X-Google-Smtp-Source: ABdhPJza8N+paiL7BVopPlHy+EmjenRyRlSSITcfsn9ivsKXVK0GX/mlG+WzET1CjkKeuuz0KvlkntNnGGj9jJ4neCo=
-X-Received: by 2002:a4a:d62c:: with SMTP id n12mr18112364oon.38.1597834329556;
- Wed, 19 Aug 2020 03:52:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9gkmD+jt+NPPAfuqcUBQK91Aso2a4xO+LXFVwtygFxw=;
+        b=KHOTo7hjscqm5EGuXCWiX8ws7daZA/nOjKsfl2qMy+YCp2rKSnhaTRHm8btIa0db27
+         W/dtOqJOnPOTWhmSEki6mzx3PK/rElnhZrm0nizpSRkp655mm2lo72fr0aZbvqTQA56i
+         K4V9GpxiuhiYfBHTLMmf5DxcO71jCkDlPjdLxDIgeIOlh6aAh3AMavCBFWBisTxTKfxT
+         NNu1vvgc6g2vWoWRWWz+ZCLLPmJeDu/l8kyiN6mIk8KQo0Dd6r9Tc6sqcGjrBjquHPx0
+         gVd//+JHihLfuR0/gxk4YPubOmXFY3HKA8wWs3yydnX5VT+P3NwshC74WBAACc22Y37f
+         EZWA==
+X-Gm-Message-State: AOAM532M8k9fnPTX4ARXaCG5NLr9Th04JdRNkO3k0//Y2S5mmB9CxcWF
+        W2byy9YAKCihN2lprKwKCsoo+A==
+X-Google-Smtp-Source: ABdhPJwYp3v/FEV8ijzBdLsbUJihb8JD2xh0McefXGdZF4kT9nYWP0mx8pkRxosbgqVUJg9fNL7Kvg==
+X-Received: by 2002:a5d:6284:: with SMTP id k4mr25824583wru.372.1597834352734;
+        Wed, 19 Aug 2020 03:52:32 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id u6sm34957125wrn.95.2020.08.19.03.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 03:52:30 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:52:23 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     sre@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 2/2] mfd: rn5t618: Add a power supply subdevice
+Message-ID: <20200819105223.GB3248864@dell>
+References: <20200815165610.10647-1-andreas@kemnade.info>
+ <20200815165610.10647-3-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <20200817085703.25732-1-allen.cryptic@gmail.com>
- <s5hsgckl084.wl-tiwai@suse.de> <20200818104432.GB5337@sirena.org.uk>
-In-Reply-To: <20200818104432.GB5337@sirena.org.uk>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Wed, 19 Aug 2020 16:21:58 +0530
-Message-ID: <CAOMdWSK79WWsmsxJH9zUMZMfkBNRWXbmEHg-haxNZopHjC1cGw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] sound: convert tasklets to use new tasklet_setup()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, Allen Pais <allen.cryptic@gmail.com>,
-        perex@perex.cz, tiwai@suse.com, clemens@ladisch.de,
-        o-takashi@sakamocchi.jp, timur@kernel.org, nicoleotsuka@gmail.com,
-        Xiubo.Lee@gmail.com, Kees Cook <keescook@chromium.org>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815165610.10647-3-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> > Mark, may I apply those ASoC patches through my tree together with
-> > others?  Those seem targeting to 5.9, and I have a patch set to
-> > convert to tasklet for 5.10, which would be better manageable when
-> > based on top of those changes.
->
-> These patches which I wasn't CCed on and which need their subject lines
-> fixing :( .  With the subject lines fixed I guess so so
+On Sat, 15 Aug 2020, Andreas Kemnade wrote:
 
-Extremely sorry. I thought I had it covered. How would you like it
-worded?
+> The RN5T618 and RC5T619 both have a charger and a fuel gauge, so add
+> a subdevice for it. According to drivers in the wild, things
+> should be at least similar, but since it is not tested, add it
+> only to the RC5T619.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>  drivers/mfd/rn5t618.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-> Acked-by: Mark Brown <broonie@kernel.org>
->
-> but judging from some of the other threads about similar patches that I
-> was randomly CCed on I'm not sure people like from_tasklet() so perhaps
-> there might be issues.
-
-Yes, there is a new macro by name cast_out() is suggested in place of
-from_tasklet(). Hopefully it will go in soon. Will spin out V2 with the change
-and also re-word subject line.
-
-> Allen, as documented in submitting-patches.rst please send patches to
-> the maintainers for the code you would like to change.  The normal
-> kernel workflow is that people apply patches from their inboxes, if they
-> aren't copied they are likely to not see the patch at all and it is much
-> more difficult to apply patches.
-
-I understand, I'll take care of it in the future. Thank you.
+Applied, thanks.
 
 -- 
-       - Allen
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
