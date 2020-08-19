@@ -2,116 +2,149 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58325C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35FA42078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552C8206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W8u29Do1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AarEY3oJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHSLel (ORCPT
+        id S1728056AbgHSLfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
+        Wed, 19 Aug 2020 07:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHSLea (ORCPT
+        with ESMTP id S1726820AbgHSLfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:34:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A5DC061757;
-        Wed, 19 Aug 2020 04:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7yVfV8jmwfeaLjZjiHvvFJk+lpL/q6/SRgz1/vjVSa8=; b=W8u29Do1kwEZJ7t63grpX5Jg5F
-        kFBInhhDX0kCur8w1uTzPJ7dpwPfh/zkqz93CTWOBGnDUK+msXqyR8uNd9ikxOCtk/LdA4P7bkrEX
-        8NkomztzxzlAZ1X6lbvqdyK5GVCuyudCvdryQmomsemLbgy0bf1ieqmssFm6YYUzNJoU6imzVShKJ
-        Jt0F+xJ6+Nuqb13Jvd9SHVw3QnWRtZ/21M3FYeQwLMrUerQzpmlM0EjxzpjzCjxuAZbn3T9wond7r
-        P9NslT3QBeadiwJEFrrPA9G4w+jtIZlC5cyjYEpXPQT0V3f4E4i6mPxbtPu8fr3gERarcuPN+lAwP
-        CXzurXmQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8MMK-00020G-TN; Wed, 19 Aug 2020 11:34:25 +0000
-Date:   Wed, 19 Aug 2020 12:34:24 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: Add function declaration of simple_dname
-Message-ID: <20200819113424.GA17456@casper.infradead.org>
-References: <20200819083259.919838-1-leon@kernel.org>
+        Wed, 19 Aug 2020 07:35:44 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742BEC061757;
+        Wed, 19 Aug 2020 04:35:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so21191998wrh.3;
+        Wed, 19 Aug 2020 04:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=110aMJdO4FJWuQQUKPYb0A60VZ0r2GXGUT+vkrN3Zc0=;
+        b=AarEY3oJiH3iiy0uogYt50kcIBPxB9OZkiCe4STZrwU5RAUcPvl4N6vPw1Co9bWFkp
+         0cPmpQao7EOKfFBSPc/FhvQAZec1cBBo0eEXoJxU7RWXLuVNRO5DF5mqijGZPmvqQW5P
+         GSxJdacQmuQOQY8IZ3qbF3OBYMCNJ7b/JmMnQ1GxNdvU3x2RH2X47HldAxUJdietiZSA
+         KZIOWM1kpBPQPP3wTdc+J8uvQ74m9rbB3/b4dKBhRiYGOjt22RuwYA8ANN2Qn2p9YLtU
+         4dNxpOAdu7WAV31S0ErWtiqgp4PP/1HmXrY5z8aRD/Js9IShcZB7ZUgmzR6MyklxTf7p
+         lBKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=110aMJdO4FJWuQQUKPYb0A60VZ0r2GXGUT+vkrN3Zc0=;
+        b=nslH7inBjQ4C0IpbfW5sw3pj/XohP2230aZVHMam+xgPGFUx9BQc70yRLK7YU0KzNk
+         H1QFLd6r97TmBeTJVlSddj4G03bCTkwUwtfUl8CviRstyQDF7CRWvmUHorsl7KJS4a1O
+         O8LZADrXqT4nA33UeaTYL1cXRiwwvoV4HFQlfLAEstXQvBwdrM//TaILNQl4vgbPQJ9Y
+         v5Cl/Ak90X40Vf0NKWPFP9ku6t4EnCLGWwvKjAJnfkUkQnydH8ypFGM+gWeynqDCJZJS
+         Kj2dORWY89JgX6tiTxaK3fpLnKoZQJpqcXr1XTTqwlSyiR8Ru9S9CXenOMIzRfGW5tzx
+         638A==
+X-Gm-Message-State: AOAM533FDAzcthb0blkbwJuU96hn5dTIi5sjDBTf17QAv7z3OJ7kqz7I
+        +tB+waqvUyTe97vk811XVfI9MNkPcC4KbQTIM84=
+X-Google-Smtp-Source: ABdhPJxD4jtwJwas6XUTJqKh3M4I8uFgZSBWSM5cuRZig38CDncGHCJWEEKRDHkLN5VXed/CNqWemqYYp6i+jX2qAGU=
+X-Received: by 2002:a5d:42c5:: with SMTP id t5mr3759753wrr.370.1597836943101;
+ Wed, 19 Aug 2020 04:35:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819083259.919838-1-leon@kernel.org>
+References: <20200729093450.28585-1-zhang.lyra@gmail.com> <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
+In-Reply-To: <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Wed, 19 Aug 2020 19:35:06 +0800
+Message-ID: <CAAfSe-vEW5CDJnae3AHwciAsinvMvuUAdv8TiCkxEjNga8U=SQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:32:59AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> The simple_dname() is declared in internal header file as extern
-> and this generates the following GCC warning.
+[reply behalf on Taipin]
 
-The fact that it's declared as extern doesn't matter.  You don't need
-the change to internal.h at all.  The use of 'extern' on a function
-declaration is purely decorative:
+Hi Baolin,
 
-  5 If the declaration of an identifier for a function has no
-  storage-class specifier, its linkage is determined exactly as if it
-  were declared with the storage-class specifier extern.
+On Sat, 1 Aug 2020 at 07:59, Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> On Wed, Jul 29, 2020 at 5:35 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> >
+> > From: Taiping Lai <taiping.lai@unisoc.com>
+> >
+> > The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+> > which would trigger the interrupt event once enabled it from user side.
+> > This is the case for edge interrupts only. Adding a clear operation when
+> > setting interrupt type can avoid that.
+> >
+> > Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+> > Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  drivers/gpio/gpio-sprd.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> > index d7314d39ab65..36ea8a3bd451 100644
+> > --- a/drivers/gpio/gpio-sprd.c
+> > +++ b/drivers/gpio/gpio-sprd.c
+> > @@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
+> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+>
+> I think you should move this abonormal interrupt clearing operation to
+> sprd_gpio_request(), when users request a GPIO.
 
-I'd drop the change to internal.h and fix the changelog.
+We have a few considerations:
+1) Like described in the commit message, the problem this patch solves
+is for edge interrupt only; The interrupt requested by user is
+IRQ_TYPE_LEVEL_HIGH as default, so clearing interrupt when request is
+useless.
+2) We can set interrupt type to edge when request, and following up
+with clearing it, but the problem is still there once users set the
+interrupt type to level trggier.
+3) We can add a clear operation after each time of setting interrupt
+enable bit, but it is redundant for level trigger interrupt.
 
-> fs/d_path.c:311:7: warning: no previous prototype for 'simple_dname' [-Wmissing-prototypes]
->   311 | char *simple_dname(struct dentry *dentry, char *buffer, int buflen)
->       |       ^~~~~~~~~~~~
-> 
-> Instead of that extern, reuse the fact that internal.h file is internal to fs/* and
-> declare simple_dname() like any other function.
-> 
-> Fixes: 7e5f7bb08b8c ("unexport simple_dname()")
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  fs/d_path.c   | 2 ++
->  fs/internal.h | 2 +-
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/d_path.c b/fs/d_path.c
-> index 0f1fc1743302..4b89448cc78e 100644
-> --- a/fs/d_path.c
-> +++ b/fs/d_path.c
-> @@ -8,6 +8,8 @@
->  #include <linux/prefetch.h>
->  #include "mount.h"
-> 
-> +#include "internal.h"
-> +
->  static int prepend(char **buffer, int *buflen, const char *str, int namelen)
->  {
->  	*buflen -= namelen;
-> diff --git a/fs/internal.h b/fs/internal.h
-> index 10517ece4516..2def264272f4 100644
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@ -164,7 +164,7 @@ extern int d_set_mounted(struct dentry *dentry);
->  extern long prune_dcache_sb(struct super_block *sb, struct shrink_control *sc);
->  extern struct dentry *d_alloc_cursor(struct dentry *);
->  extern struct dentry * d_alloc_pseudo(struct super_block *, const struct qstr *);
-> -extern char *simple_dname(struct dentry *, char *, int);
-> +char *simple_dname(struct dentry *d, char *buf, int len);
->  extern void dput_to_list(struct dentry *, struct list_head *);
->  extern void shrink_dentry_list(struct list_head *);
-> 
+Therefore, adding a clear operation when setting interrupt type seems
+the best solutions which I can think out so far.
+
+>
+> >                 irq_set_handler_locked(data, handle_edge_irq);
+> >                 break;
+> >         case IRQ_TYPE_EDGE_FALLING:
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
+> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+> >                 irq_set_handler_locked(data, handle_edge_irq);
+> >                 break;
+> >         case IRQ_TYPE_EDGE_BOTH:
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
+> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+> >                 irq_set_handler_locked(data, handle_edge_irq);
+> >                 break;
+> >         case IRQ_TYPE_LEVEL_HIGH:
+> > --
+> > 2.20.1
+> >
+>
+>
 > --
-> 2.26.2
-> 
+> Baolin Wang
