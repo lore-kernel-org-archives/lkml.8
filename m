@@ -2,91 +2,85 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346BD2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA4D20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597859507;
+	bh=G1v8Y0rM+ilZYs/g4rxUC1FVBPLyodeBTtIrGaLV2n4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2WsiDuBYKqMWUY4aGUFXAtzIgpOZ6QDQspakstdNrHelCWlVin7m/+zGBnE4jIVwt
+	 9Dk/8KTXcStFhI4espwG4ekltXS1liBlYZ1V8V5arcncEuUh4RuAxtV9omo5Skuxpz
+	 6S7MrZzptFMf7+MdoKova7tJYJ9caN66thyMTwx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHSRtm (ORCPT
+        id S1726751AbgHSRvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:49:42 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38683 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725804AbgHSRtm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:49:42 -0400
-Received: from callcc.thunk.org (pool-108-49-65-20.bstnma.fios.verizon.net [108.49.65.20])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 07JHnPOv028075
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 13:49:25 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 0505342010C; Wed, 19 Aug 2020 13:49:24 -0400 (EDT)
-Date:   Wed, 19 Aug 2020 13:49:24 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        kbuild test robot <lkp@intel.com>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [ext4] d3b6f23f71: stress-ng.fiemap.ops_per_sec -60.5%
- regression
-Message-ID: <20200819174924.GB5561@mit.edu>
-References: <20200407080036.GA8179@shao2-debian>
- <20200715110437.7D0A3AE051@d06av26.portsmouth.uk.ibm.com>
- <705b788f-aac3-f622-a286-ecd99deb5ca9@linux.intel.com>
- <b29f6c18-f9c7-7e43-5b13-b5724fbf8d1a@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b29f6c18-f9c7-7e43-5b13-b5724fbf8d1a@linux.intel.com>
+        Wed, 19 Aug 2020 13:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbgHSRvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:51:44 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE7BB2067C;
+        Wed, 19 Aug 2020 17:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597859504;
+        bh=G1v8Y0rM+ilZYs/g4rxUC1FVBPLyodeBTtIrGaLV2n4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JCUogtEYZ/8me7HZojvQkJGKHBPzVDG7FKXGO0QrAiz4XeJt3D6ux8801PWaBqMjN
+         lqwTqO7vQd007s8BHaffjdoma815t5YCzuSxokNZwaOa4jMcUBLr3h3cPMdEOpv32c
+         hbK97T6qJHGN4zn6Hc1OuFU+TU5qyGr6RSuEx1KY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND PATCH 1/2] dma-buf: Fix kerneldoc of dma_buf_set_name()
+Date:   Wed, 19 Aug 2020 19:51:33 +0200
+Message-Id: <20200819175134.19261-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looking at what the stress-ng fiemap workload is doing, and
-it's.... interesting.
+Fix W=1 compile warnings (invalid kerneldoc):
 
-It is running 4 processes which are calling FIEMAP on a particular
-file in a loop, with a 25ms sleep every 64 times.  And then there is a
-fifth process which is randomly writing to the file and calling
-punch_hole to random offsets in the file.
+    drivers/dma-buf/dma-buf.c:328: warning: Function parameter or member 'dmabuf' not described in 'dma_buf_set_name'
 
-So this is quite different from what Ritesh has been benchmarking
-which is fiemap in isolation, as opposed to fiemap racing against a 3
-other fiemap processes plus a process which is actively modifying the
-file.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/dma-buf/dma-buf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-In the original code, if I remember correctly, we were using a shared
-reader/writer lock to look at the extent tree blocks directly, but we
-hold the i_data_sem rw_sempahore for the duration of the fiemap call.
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 1699a8e309ef..58564d82a3a2 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -316,9 +316,9 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+  * name of the dma-buf if the same piece of memory is used for multiple
+  * purpose between different devices.
+  *
+- * @dmabuf [in]     dmabuf buffer that will be renamed.
+- * @buf:   [in]     A piece of userspace memory that contains the name of
+- *                  the dma-buf.
++ * @dmabuf: [in]     dmabuf buffer that will be renamed.
++ * @buf:    [in]     A piece of userspace memory that contains the name of
++ *                   the dma-buf.
+  *
+  * Returns 0 on success. If the dma-buf buffer is already attached to
+  * devices, return -EBUSY.
+-- 
+2.17.1
 
-In the new code, we're going through the extent_status cache, which is
-grabbing the rw_spinlock each time we do a lookup in the extents
-status tree.  So this is a much finer-grained locking and that is
-probably the explanation for the increased time for running fiemap in
-the contended case.
-
-If this theory is correct, we would probably get back the performance
-by wrapping the calls to iomap_fiemap() with {up,down}_read(&ei->i_data_sem)
-in ext4_fiemap().
-
-That being said, however ---- it's clear what real-life workload cares
-about FIEMAP performance, especially with multiple threads all calling
-FIEMAP racing against a file which is being actively modified.  Having
-stress-ng do this to find potential kernel bugs is a great thing, so I
-understand why stress-ng might be doing this as a QA tool.  Why we
-should care about stress-ng as a performance benchmark, at least in
-this case, is much less clear to me.
-
-Cheers,
-
-					- Ted
