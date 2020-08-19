@@ -2,149 +2,184 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A180C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552C8206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AarEY3oJ"
+	by mail.kernel.org (Postfix) with ESMTP id EBA90206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgHSLfs (ORCPT
+        id S1728071AbgHSLg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHSLfo (ORCPT
+        Wed, 19 Aug 2020 07:36:28 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50165 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgHSLgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:35:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742BEC061757;
-        Wed, 19 Aug 2020 04:35:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so21191998wrh.3;
-        Wed, 19 Aug 2020 04:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=110aMJdO4FJWuQQUKPYb0A60VZ0r2GXGUT+vkrN3Zc0=;
-        b=AarEY3oJiH3iiy0uogYt50kcIBPxB9OZkiCe4STZrwU5RAUcPvl4N6vPw1Co9bWFkp
-         0cPmpQao7EOKfFBSPc/FhvQAZec1cBBo0eEXoJxU7RWXLuVNRO5DF5mqijGZPmvqQW5P
-         GSxJdacQmuQOQY8IZ3qbF3OBYMCNJ7b/JmMnQ1GxNdvU3x2RH2X47HldAxUJdietiZSA
-         KZIOWM1kpBPQPP3wTdc+J8uvQ74m9rbB3/b4dKBhRiYGOjt22RuwYA8ANN2Qn2p9YLtU
-         4dNxpOAdu7WAV31S0ErWtiqgp4PP/1HmXrY5z8aRD/Js9IShcZB7ZUgmzR6MyklxTf7p
-         lBKA==
+        Wed, 19 Aug 2020 07:36:17 -0400
+Received: by mail-io1-f69.google.com with SMTP id c1so14004292ioh.16
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:36:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=110aMJdO4FJWuQQUKPYb0A60VZ0r2GXGUT+vkrN3Zc0=;
-        b=nslH7inBjQ4C0IpbfW5sw3pj/XohP2230aZVHMam+xgPGFUx9BQc70yRLK7YU0KzNk
-         H1QFLd6r97TmBeTJVlSddj4G03bCTkwUwtfUl8CviRstyQDF7CRWvmUHorsl7KJS4a1O
-         O8LZADrXqT4nA33UeaTYL1cXRiwwvoV4HFQlfLAEstXQvBwdrM//TaILNQl4vgbPQJ9Y
-         v5Cl/Ak90X40Vf0NKWPFP9ku6t4EnCLGWwvKjAJnfkUkQnydH8ypFGM+gWeynqDCJZJS
-         Kj2dORWY89JgX6tiTxaK3fpLnKoZQJpqcXr1XTTqwlSyiR8Ru9S9CXenOMIzRfGW5tzx
-         638A==
-X-Gm-Message-State: AOAM533FDAzcthb0blkbwJuU96hn5dTIi5sjDBTf17QAv7z3OJ7kqz7I
-        +tB+waqvUyTe97vk811XVfI9MNkPcC4KbQTIM84=
-X-Google-Smtp-Source: ABdhPJxD4jtwJwas6XUTJqKh3M4I8uFgZSBWSM5cuRZig38CDncGHCJWEEKRDHkLN5VXed/CNqWemqYYp6i+jX2qAGU=
-X-Received: by 2002:a5d:42c5:: with SMTP id t5mr3759753wrr.370.1597836943101;
- Wed, 19 Aug 2020 04:35:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6Izm6KZJGkoT4ry2D4FMOXAmvEF08wicPMAS6AKBkCQ=;
+        b=W7b3jbvjQq/aZ/bRugnkYy/0qE0LTgCGChczfYwOk2h914vBzU00+w32k+QBHvwbZK
+         irbsqRK7rVPEWHKQpYfF91VWymXe01TVpXv1ZlQVbtAxqyFogHGM8ZDmB0eOj6yTOQfm
+         wadnWnm1sOEQVKEy4cqDAeCyeyIlvGgH3PufN9DjLWsxxTvqyE+U80QWJMXZNDkw9Kff
+         TNQ/ihS5uF2WD/kmtNcgQymPqnizyFZPCLuspvU6C31f4Q2rbz0joiCWRhWP/ic85Svv
+         cbQI9hD06OomKzgvmTkXVFQBX5BByjKrTKIPsonduVsEf0JtWi1qgMyUgEBc/UPtRrWY
+         afBg==
+X-Gm-Message-State: AOAM532JcaBS1jDwdOZIzxOSr1J6neJByzxSKsWdNxaZiMecd6LZ+9Re
+        CT3+0nxGgOQNVVTeLuYtB0ksBNeiU2dybY3vVrZahxIepEv0
+X-Google-Smtp-Source: ABdhPJyjk22LAvM0RK3pKXgF1KEeAJU6yYWQZUwekpox3+ieHfoCpkOr1HpO57I819EkY8XvvSXM7bi3zVEuYquMvQ5FSqDm6YDg
 MIME-Version: 1.0
-References: <20200729093450.28585-1-zhang.lyra@gmail.com> <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
-In-Reply-To: <CADBw62p=aB3EZYkMm44Zx4Krww21SS9vCsMnPOq0pn2DgA8VkQ@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Wed, 19 Aug 2020 19:35:06 +0800
-Message-ID: <CAAfSe-vEW5CDJnae3AHwciAsinvMvuUAdv8TiCkxEjNga8U=SQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Taiping Lai <taiping.lai@unisoc.com>
+X-Received: by 2002:a02:852c:: with SMTP id g41mr23876031jai.58.1597836975423;
+ Wed, 19 Aug 2020 04:36:15 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 04:36:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000544b0205ad3969d7@google.com>
+Subject: KASAN: slab-out-of-bounds Read in mxl5007t_attach
+From:   syzbot <syzbot+59c4a4184685764d112a@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, mkrufky@linuxtv.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[reply behalf on Taipin]
+Hello,
 
-Hi Baolin,
+syzbot found the following issue on:
 
-On Sat, 1 Aug 2020 at 07:59, Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> On Wed, Jul 29, 2020 at 5:35 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
-> > From: Taiping Lai <taiping.lai@unisoc.com>
-> >
-> > The raw interrupt status of GPIO maybe set before the interrupt is enabled,
-> > which would trigger the interrupt event once enabled it from user side.
-> > This is the case for edge interrupts only. Adding a clear operation when
-> > setting interrupt type can avoid that.
-> >
-> > Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
-> > Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  drivers/gpio/gpio-sprd.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-> > index d7314d39ab65..36ea8a3bd451 100644
-> > --- a/drivers/gpio/gpio-sprd.c
-> > +++ b/drivers/gpio/gpio-sprd.c
-> > @@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
-> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
->
-> I think you should move this abonormal interrupt clearing operation to
-> sprd_gpio_request(), when users request a GPIO.
+HEAD commit:    28157b8c USB: Better name for __check_usb_generic()
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=13a6a929900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ccafc70ac3d5f49c
+dashboard link: https://syzkaller.appspot.com/bug?extid=59c4a4184685764d112a
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-We have a few considerations:
-1) Like described in the commit message, the problem this patch solves
-is for edge interrupt only; The interrupt requested by user is
-IRQ_TYPE_LEVEL_HIGH as default, so clearing interrupt when request is
-useless.
-2) We can set interrupt type to edge when request, and following up
-with clearing it, but the problem is still there once users set the
-interrupt type to level trggier.
-3) We can add a clear operation after each time of setting interrupt
-enable bit, but it is redundant for level trigger interrupt.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Therefore, adding a clear operation when setting interrupt type seems
-the best solutions which I can think out so far.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+59c4a4184685764d112a@syzkaller.appspotmail.com
 
->
-> >                 irq_set_handler_locked(data, handle_edge_irq);
-> >                 break;
-> >         case IRQ_TYPE_EDGE_FALLING:
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
-> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
-> >                 irq_set_handler_locked(data, handle_edge_irq);
-> >                 break;
-> >         case IRQ_TYPE_EDGE_BOTH:
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> >                 sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
-> > +               sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
-> >                 irq_set_handler_locked(data, handle_edge_irq);
-> >                 break;
-> >         case IRQ_TYPE_LEVEL_HIGH:
-> > --
-> > 2.20.1
-> >
->
->
-> --
-> Baolin Wang
+au0828: recv_control_msg() Failed receiving control message, error -71.
+au8522_writereg: writereg error (reg == 0x106, val == 0x0001, ret == -5)
+==================================================================
+BUG: KASAN: slab-out-of-bounds in i2c_adapter_id include/linux/i2c.h:902 [inline]
+BUG: KASAN: slab-out-of-bounds in mxl5007t_attach+0x2b6/0x2e0 drivers/media/tuners/mxl5007t.c:853
+Read of size 4 at addr ffff8881d01247c8 by task kworker/0:3/136
+
+CPU: 0 PID: 136 Comm: kworker/0:3 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1c/0x210 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+ i2c_adapter_id include/linux/i2c.h:902 [inline]
+ mxl5007t_attach+0x2b6/0x2e0 drivers/media/tuners/mxl5007t.c:853
+ au0828_dvb_register+0x451/0x1360 drivers/media/usb/au0828/au0828-dvb.c:597
+ au0828_usb_probe+0x56f/0x5d5 drivers/media/usb/au0828/au0828-core.c:738
+ usb_probe_interface+0x315/0x7f0 drivers/usb/core/driver.c:374
+ really_probe+0x291/0xde0 drivers/base/dd.c:553
+ driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x228/0x4a0 drivers/base/dd.c:912
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xb51/0x1c70 drivers/base/core.c:2930
+ usb_set_configuration+0xf05/0x18a0 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0xba/0xf2 drivers/usb/core/generic.c:239
+ usb_probe_device+0xd9/0x250 drivers/usb/core/driver.c:272
+ really_probe+0x291/0xde0 drivers/base/dd.c:553
+ driver_probe_device+0x26b/0x3d0 drivers/base/dd.c:738
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:844
+ bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x228/0x4a0 drivers/base/dd.c:912
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0xb51/0x1c70 drivers/base/core.c:2930
+ usb_new_device.cold+0x71d/0xfd4 drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x2361/0x4390 drivers/usb/core/hub.c:5576
+ process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x392/0x470 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Allocated by task 25209:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:461
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ ep_alloc.constprop.0+0xff/0x370 fs/eventpoll.c:1016
+ do_epoll_create+0x97/0x1c0 fs/eventpoll.c:2064
+ __do_sys_epoll_create1 fs/eventpoll.c:2095 [inline]
+ __se_sys_epoll_create1 fs/eventpoll.c:2093 [inline]
+ __x64_sys_epoll_create1+0x2d/0x40 fs/eventpoll.c:2093
+ do_syscall_64+0x2d/0x40 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 25209:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xf3/0x130 mm/kasan/common.c:422
+ slab_free_hook mm/slub.c:1548 [inline]
+ slab_free_freelist_hook+0x53/0x140 mm/slub.c:1581
+ slab_free mm/slub.c:3142 [inline]
+ kfree+0xbe/0x470 mm/slub.c:4123
+ ep_eventpoll_release+0x41/0x60 fs/eventpoll.c:864
+ __fput+0x282/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x1a0 kernel/task_work.c:141
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xbaf/0x2890 kernel/exit.c:806
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ __do_sys_exit_group kernel/exit.c:914 [inline]
+ __se_sys_exit_group kernel/exit.c:912 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+ do_syscall_64+0x2d/0x40 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff8881d0124400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 456 bytes to the right of
+ 512-byte region [ffff8881d0124400, ffff8881d0124600)
+The buggy address belongs to the page:
+page:00000000182cf651 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff8881d0124000 pfn:0x1d0124
+head:00000000182cf651 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 ffffea0007296508 ffffea00074f9908 ffff8881da041280
+raw: ffff8881d0124000 000000000010000d 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881d0124680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881d0124700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8881d0124780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                              ^
+ ffff8881d0124800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d0124880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
