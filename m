@@ -2,194 +2,272 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54702083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8202083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+ZY76s5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n8MmBW8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgHSO5j (ORCPT
+        id S1728629AbgHSO6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
+        Wed, 19 Aug 2020 10:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgHSO53 (ORCPT
+        with ESMTP id S1728582AbgHSO6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:57:29 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD58C061757;
-        Wed, 19 Aug 2020 07:57:28 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id u126so24896361iod.12;
-        Wed, 19 Aug 2020 07:57:28 -0700 (PDT)
+        Wed, 19 Aug 2020 10:58:05 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255E0C061346
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:57:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c15so21813582wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VDgt+NfpwH6U6r2hvHr0dBMMv6qNBbALooemz8NFh5U=;
-        b=f+ZY76s5TRKLUXDOUW1UKWMOshJmecMeQftVcBsCsWkWr4125JZu9WJtY2mpOhQoPG
-         qsJ/dGsIR4iuWMWEBeaCXI22z2X+muEGh5TnoFmIDerzN/VXAPAsbPN/7xR8Dk2eGWx4
-         w4VaCqCZAoGVIR1bl2Smo3+3TxHihbXBwp9Ciz1699llS6GM6yAvU/XbPjS9Q72K3Pge
-         qtxmOF26p1U8NUaDlBngBuqZz1LHwJQqQGV9gjb/PYz4tx7Z16p/BVOLCP4Bur07EFLS
-         R2gYxBW87NUAFuNuUQubaJdFH84qd2+y7N8LItneA+hKUh1pddYAeHTHUiPrPqKxB4ke
-         G4dA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gNx7n7webYaK+hMWxyNwV8aV+v87tKouMeg3PXkBAf4=;
+        b=n8MmBW8b3ksN9T8Gafo3ZMOc4bhTXtjR+GeS0Rvibq/PzoG8Ye3N53BDrp8svnlv1n
+         NCO6QXaVozSNJMjlnQ5OShKx2UtailwRjMYqmmmurY9gvYVamal0vEIVKsDhh8K+8W26
+         WPEmayEJ3i7jIMuYtQRfCZ/+8a4/zcqFTDJpsQffHWVTTjOiGoLEoP2XGxgbqsgf/DDj
+         g8kTBETSBr9PCC/YyD3BzuaZDEj4xbQidp8pcS2SN8qiHkb+Aa3m1UDHtXXnDy9A2zpf
+         s+zE/8aI9eShP/kv/B+r9e3vocR244XTBvjbPCq4/aLjlqFZ6LbVgGFYOeq7pX62hhHU
+         PKpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VDgt+NfpwH6U6r2hvHr0dBMMv6qNBbALooemz8NFh5U=;
-        b=s1HM1JTef5VBiZZw5DRtF5oI42gJnYDzy4p5bBrOo8gZnbGRJAd+ddEnuVqqUynxgq
-         9/7CyLrzjyONjYER+3aqDoiiyoLJVzDtNj3ruSF7/cVUA9xHvZHwN/HIGqQe4rOuAd5g
-         4MAjB9If+wizhRavZsb/Ga6HCMejevtATotLEERLsaboJRimQGsvrWc/D1uVm02Lo991
-         Rwrgrrw9UBrrfkwhtP+pA3/idpi+ErLOrdh0SAlBPZ0iBKSGqFRQXnXUqhocxXPgFvQN
-         Q0vNLtnVcM4t/5ULnhK/YtCOgqmtjPbI2kJaJFuEJB81SGteTk6WyZn4NrAVI+KyTeX4
-         4gWA==
-X-Gm-Message-State: AOAM5333xd6kOtPVhiPA3gJ7v415LXpyBfaRN3Xo/VSRIHGMitQX//z1
-        nemz9XHqISz/bk4a8jLptV4GDXmmdjnBJbRkDQs=
-X-Google-Smtp-Source: ABdhPJw82IIwMfZIA4+g7ITehMEWVBDEC30ayD+Zb/ABgCE0UZQZtipSr3pQzvMOJHMijecJLpYfli+FMxDUybauTq8=
-X-Received: by 2002:a05:6602:2e83:: with SMTP id m3mr21190548iow.38.1597849047807;
- Wed, 19 Aug 2020 07:57:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042730.23414.41309.stgit@localhost.localdomain> <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
-In-Reply-To: <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 19 Aug 2020 07:57:16 -0700
-Message-ID: <CAKgT0UepdfjXn=j8e4xEBFmsNJdzJyN57em8dscr-Er4OBZCOg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 4/5] mm: Split release_pages work into 3 passes
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gNx7n7webYaK+hMWxyNwV8aV+v87tKouMeg3PXkBAf4=;
+        b=MwU+jQCqaSNNW6RDDsovrSoWbAND3T07wD7ouuTWF8TjaWDVp6Gm2oGfTn7b7lXvyO
+         OynKqHA/ZmwrdgUfM2IDWU6nFux3jYsSudok0TIsQePdeQPT+rQlZXCBD9WiOV+uDtCd
+         tvf82wPqXOq0ehpsQd0os3aNo53F9gnuTttlRSveZ0PEW6KL/lcPvt2wmf/KStQtFJFF
+         Ane0RYu3Z1f/bQzA8J/vJT1psh6CfBeGzvxs9P6/yVR5P1guKvBBbRRbP9cMNdtGtIlx
+         T9BLmC5IjLYzBsUryomYtr9n8HxyOFzRGfopwIiuNSaX+qORid/Y4OPiHlxpTFAnsI1k
+         Pglg==
+X-Gm-Message-State: AOAM530k7SdJ6zPFqxMstamaK5QXtuUD9upuzfIDfA7NBGPzRquw9ZyK
+        7nyRSb3dp8YJGeQVHjcQfIRtZQ==
+X-Google-Smtp-Source: ABdhPJzdW54EsERHAQyBaPPEEG3Xqf5CZuQ5mXiSSV+v29L8rIqau0aRKvT5VQZe07WUqRDjP2geRQ==
+X-Received: by 2002:adf:f64f:: with SMTP id x15mr27108964wrp.180.1597849074997;
+        Wed, 19 Aug 2020 07:57:54 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id h5sm44726104wrc.97.2020.08.19.07.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 07:57:53 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 15:57:51 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hewllig <hch@infradead.org>,
         Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: [PATCH v2 09/11] kgdbts: switch to kernel_clone()
+Message-ID: <20200819145751.uqblo3zh66nqnxmn@holly.lan>
+References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+ <20200819104655.436656-10-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819104655.436656-10-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:54 AM Alex Shi <alex.shi@linux.alibaba.com> wrot=
-e:
->
->
->
-> =E5=9C=A8 2020/8/19 =E4=B8=8B=E5=8D=8812:27, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> >
-> > The release_pages function has a number of paths that end up with the
-> > LRU lock having to be released and reacquired. Such an example would be=
- the
-> > freeing of THP pages as it requires releasing the LRU lock so that it c=
-an
-> > be potentially reacquired by __put_compound_page.
-> >
-> > In order to avoid that we can split the work into 3 passes, the first
-> > without the LRU lock to go through and sort out those pages that are no=
-t in
-> > the LRU so they can be freed immediately from those that can't. The sec=
-ond
-> > pass will then go through removing those pages from the LRU in batches =
-as
-> > large as a pagevec can hold before freeing the LRU lock. Once the pages=
- have
-> > been removed from the LRU we can then proceed to free the remaining pag=
-es
-> > without needing to worry about if they are in the LRU any further.
-> >
-> > The general idea is to avoid bouncing the LRU lock between pages and to
-> > hopefully aggregate the lock for up to the full page vector worth of pa=
-ges.
-> >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  mm/swap.c |  109 +++++++++++++++++++++++++++++++++++++----------------=
---------
-> >  1 file changed, 67 insertions(+), 42 deletions(-)
-> >
-> > diff --git a/mm/swap.c b/mm/swap.c
-> > index fe53449fa1b8..b405f81b2c60 100644
-> > --- a/mm/swap.c
-> > +++ b/mm/swap.c
-> > @@ -795,6 +795,54 @@ void lru_add_drain_all(void)
-> >  }
-> >  #endif
-> >
-> > +static void __release_page(struct page *page, struct list_head *pages_=
-to_free)
-> > +{
-> > +     if (PageCompound(page)) {
-> > +             __put_compound_page(page);
-> > +     } else {
-> > +             /* Clear Active bit in case of parallel mark_page_accesse=
-d */
-> > +             __ClearPageActive(page);
-> > +             __ClearPageWaiters(page);
-> > +
-> > +             list_add(&page->lru, pages_to_free);
-> > +     }
-> > +}
-> > +
-> > +static void __release_lru_pages(struct pagevec *pvec,
-> > +                             struct list_head *pages_to_free)
-> > +{
-> > +     struct lruvec *lruvec =3D NULL;
-> > +     unsigned long flags =3D 0;
-> > +     int i;
-> > +
-> > +     /*
-> > +      * The pagevec at this point should contain a set of pages with
-> > +      * their reference count at 0 and the LRU flag set. We will now
-> > +      * need to pull the pages from their LRU lists.
-> > +      *
-> > +      * We walk the list backwards here since that way we are starting=
- at
-> > +      * the pages that should be warmest in the cache.
-> > +      */
-> > +     for (i =3D pagevec_count(pvec); i--;) {
-> > +             struct page *page =3D pvec->pages[i];
-> > +
-> > +             lruvec =3D relock_page_lruvec_irqsave(page, lruvec, &flag=
-s);
->
-> the lock bounce is better with the patch, would you like to do further
-> like using add_lruvecs to reduce bounce more?
->
-> Thanks
-> Alex
+On Wed, Aug 19, 2020 at 12:46:53PM +0200, Christian Brauner wrote:
+> The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
+> The latter adheres to naming conventions for kernel internal syscall helpers.
+> 
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jason Wessel <jason.wessel@windriver.com>
+> Cc: kgdb-bugreport@lists.sourceforge.net
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-I'm not sure how much doing something like that would add. In my case
-I had a very specific issue that this is addressing which is the fact
-that every compound page was taking the LRU lock and zone lock
-separately. With this patch that is reduced to one LRU lock per 15
-pages and then the zone lock per page. By adding or sorting pages by
-lruvec I am not sure there will be much benefit as I am not certain
-how often we will end up with pages being interleaved between multiple
-lruvecs. In addition as I am limiting the quantity to a pagevec which
-limits the pages to 15 I am not sure there will be much benefit to be
-seen for sorting the pages beforehand.
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Thanks.
 
-- Alex
+Daniel.
+
+> ---
+> /* v2 */
+> unchanged
+> ---
+>  drivers/misc/kgdbts.c | 48 +++++++++++++++++++++----------------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+> index d5d2af4d10e6..945701bce553 100644
+> --- a/drivers/misc/kgdbts.c
+> +++ b/drivers/misc/kgdbts.c
+> @@ -33,16 +33,16 @@
+>   * You can also specify optional tests:
+>   * N## = Go to sleep with interrupts of for ## seconds
+>   *       to test the HW NMI watchdog
+> - * F## = Break at do_fork for ## iterations
+> + * F## = Break at kernel_clone for ## iterations
+>   * S## = Break at sys_open for ## iterations
+>   * I## = Run the single step test ## iterations
+>   *
+> - * NOTE: that the do_fork and sys_open tests are mutually exclusive.
+> + * NOTE: that the kernel_clone and sys_open tests are mutually exclusive.
+>   *
+>   * To invoke the kgdb test suite from boot you use a kernel start
+>   * argument as follows:
+>   * 	kgdbts=V1 kgdbwait
+> - * Or if you wanted to perform the NMI test for 6 seconds and do_fork
+> + * Or if you wanted to perform the NMI test for 6 seconds and kernel_clone
+>   * test for 100 forks, you could use:
+>   * 	kgdbts=V1N6F100 kgdbwait
+>   *
+> @@ -74,7 +74,7 @@
+>   * echo kgdbts=V1S10000 > /sys/module/kgdbts/parameters/kgdbts
+>   * fg # and hit control-c
+>   * fg # and hit control-c
+> - * ## This tests break points on do_fork
+> + * ## This tests break points on kernel_clone
+>   * while [ 1 ] ; do date > /dev/null ; done &
+>   * while [ 1 ] ; do date > /dev/null ; done &
+>   * echo kgdbts=V1F1000 > /sys/module/kgdbts/parameters/kgdbts
+> @@ -209,8 +209,8 @@ static unsigned long lookup_addr(char *arg)
+>  		addr = (unsigned long)kgdbts_break_test;
+>  	else if (!strcmp(arg, "sys_open"))
+>  		addr = (unsigned long)do_sys_open;
+> -	else if (!strcmp(arg, "do_fork"))
+> -		addr = (unsigned long)_do_fork;
+> +	else if (!strcmp(arg, "kernel_clone"))
+> +		addr = (unsigned long)kernel_clone;
+>  	else if (!strcmp(arg, "hw_break_val"))
+>  		addr = (unsigned long)&hw_break_val;
+>  	addr = (unsigned long) dereference_function_descriptor((void *)addr);
+> @@ -310,7 +310,7 @@ static int check_and_rewind_pc(char *put_str, char *arg)
+>  
+>  	if (arch_needs_sstep_emulation && sstep_addr &&
+>  	    ip + offset == sstep_addr &&
+> -	    ((!strcmp(arg, "sys_open") || !strcmp(arg, "do_fork")))) {
+> +	    ((!strcmp(arg, "sys_open") || !strcmp(arg, "kernel_clone")))) {
+>  		/* This is special case for emulated single step */
+>  		v2printk("Emul: rewind hit single step bp\n");
+>  		restart_from_top_after_write = 1;
+> @@ -596,19 +596,19 @@ static struct test_struct singlestep_break_test[] = {
+>  };
+>  
+>  /*
+> - * Test for hitting a breakpoint at do_fork for what ever the number
+> + * Test for hitting a breakpoint at kernel_clone for what ever the number
+>   * of iterations required by the variable repeat_test.
+>   */
+> -static struct test_struct do_fork_test[] = {
+> +static struct test_struct do_kernel_clone_test[] = {
+>  	{ "?", "S0*" }, /* Clear break points */
+> -	{ "do_fork", "OK", sw_break, }, /* set sw breakpoint */
+> +	{ "kernel_clone", "OK", sw_break, }, /* set sw breakpoint */
+>  	{ "c", "T0*", NULL, get_thread_id_continue }, /* Continue */
+> -	{ "do_fork", "OK", sw_rem_break }, /*remove breakpoint */
+> -	{ "g", "do_fork", NULL, check_and_rewind_pc }, /* check location */
+> +	{ "kernel_clone", "OK", sw_rem_break }, /*remove breakpoint */
+> +	{ "g", "kernel_clone", NULL, check_and_rewind_pc }, /* check location */
+>  	{ "write", "OK", write_regs, emul_reset }, /* Write registers */
+>  	{ "s", "T0*", emul_sstep_get, emul_sstep_put }, /* Single step */
+> -	{ "g", "do_fork", NULL, check_single_step },
+> -	{ "do_fork", "OK", sw_break, }, /* set sw breakpoint */
+> +	{ "g", "kernel_clone", NULL, check_single_step },
+> +	{ "kernel_clone", "OK", sw_break, }, /* set sw breakpoint */
+>  	{ "7", "T0*", skip_back_repeat_test }, /* Loop based on repeat_test */
+>  	{ "D", "OK", NULL, final_ack_set }, /* detach and unregister I/O */
+>  	{ "", "", get_cont_catch, put_cont_catch },
+> @@ -935,11 +935,11 @@ static void run_bad_read_test(void)
+>  	kgdb_breakpoint();
+>  }
+>  
+> -static void run_do_fork_test(void)
+> +static void run_kernel_clone_test(void)
+>  {
+>  	init_simple_test();
+> -	ts.tst = do_fork_test;
+> -	ts.name = "do_fork_test";
+> +	ts.tst = do_kernel_clone_test;
+> +	ts.name = "do_kernel_clone_test";
+>  	/* Activate test with initial breakpoint */
+>  	kgdb_breakpoint();
+>  }
+> @@ -967,7 +967,7 @@ static void run_singlestep_break_test(void)
+>  static void kgdbts_run_tests(void)
+>  {
+>  	char *ptr;
+> -	int fork_test = 0;
+> +	int clone_test = 0;
+>  	int do_sys_open_test = 0;
+>  	int sstep_test = 1000;
+>  	int nmi_sleep = 0;
+> @@ -981,7 +981,7 @@ static void kgdbts_run_tests(void)
+>  
+>  	ptr = strchr(config, 'F');
+>  	if (ptr)
+> -		fork_test = simple_strtol(ptr + 1, NULL, 10);
+> +		clone_test = simple_strtol(ptr + 1, NULL, 10);
+>  	ptr = strchr(config, 'S');
+>  	if (ptr)
+>  		do_sys_open_test = simple_strtol(ptr + 1, NULL, 10);
+> @@ -1025,16 +1025,16 @@ static void kgdbts_run_tests(void)
+>  		run_nmi_sleep_test(nmi_sleep);
+>  	}
+>  
+> -	/* If the do_fork test is run it will be the last test that is
+> +	/* If the kernel_clone test is run it will be the last test that is
+>  	 * executed because a kernel thread will be spawned at the very
+>  	 * end to unregister the debug hooks.
+>  	 */
+> -	if (fork_test) {
+> -		repeat_test = fork_test;
+> -		printk(KERN_INFO "kgdbts:RUN do_fork for %i breakpoints\n",
+> +	if (clone_test) {
+> +		repeat_test = clone_test;
+> +		printk(KERN_INFO "kgdbts:RUN kernel_clone for %i breakpoints\n",
+>  			repeat_test);
+>  		kthread_run(kgdbts_unreg_thread, NULL, "kgdbts_unreg");
+> -		run_do_fork_test();
+> +		run_kernel_clone_test();
+>  		return;
+>  	}
+>  
+> -- 
+> 2.28.0
+> 
