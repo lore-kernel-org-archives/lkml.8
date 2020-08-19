@@ -2,78 +2,104 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D97C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA32DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA3A20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CB720738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GSbjxZPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgHSHkj (ORCPT
+        id S1726858AbgHSHoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:40:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:36564 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgHSHkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:40:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 910686736F; Wed, 19 Aug 2020 09:40:35 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 09:40:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Javier Gonzalez <javier@javigon.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>, kbusch@kernel.org,
-        Damien.LeMoal@wdc.com, axboe@kernel.dk, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        johannes.thumshirn@wdc.com, Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200819074035.GA21991@lst.de>
-References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com> <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de> <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local> <20200818155004.GA26688@lst.de> <20200818180428.obipue6adpqqpwjj@MacBook-Pro.localdomain>
+        Wed, 19 Aug 2020 03:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHSHoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:44:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97393C061389;
+        Wed, 19 Aug 2020 00:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J4VLIDE+jMck3vXa9rHkkbq93VX4dA7h042aAl3zgek=; b=GSbjxZPVDWY9S2GcrIk8B4gIZK
+        j92/xIYVxtuoQcdVQihAza5CL3O+d/4dVnYCOtqcw95X6MI1MCZZSH6hwnnNv59Rv6M/0DxxfI85Z
+        UetDLZWdWsUi0gxQgyvX8fGCj5GmxgkNMNSwgrePOzzo081IyNCOy8gMqm/f6tWnpCOgk7R6crldh
+        OlQrG9icVQmb7q55F07IEfNtZO5gIevhdDF5gCkOdzt7019673F7x8Bn8IOD8fbZrRBUSRYhjoZpr
+        mvZYw/yBuHHrZ3B/X+3SaSMawrw2fW9khhY7o7saT7DmXZNOoFnK3Bqb3KZy6UsHyVp/CwyDsiZsC
+        KS6aDo8Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8Il4-0004Sk-Ty; Wed, 19 Aug 2020 07:43:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 033743003E1;
+        Wed, 19 Aug 2020 09:43:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D771C21A87267; Wed, 19 Aug 2020 09:43:40 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 09:43:40 +0200
+From:   peterz@infradead.org
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Christoph Hewllig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Message-ID: <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
+ <20200818174447.GV17456@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818180428.obipue6adpqqpwjj@MacBook-Pro.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200818174447.GV17456@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 08:04:28PM +0200, Javier Gonzalez wrote:
-> I understand that you want vendor alignment in the NVMe driver and I
-> agree. We are not pushing for a non-append model - you can see that we
-> are investing effort in implementing the append path in thee block layer
-> and io_uring and we will continue doing so as patches get merged.
->
-> This said, we do have some OEM models that do not implement append and I
-> would like them to be supported in Linux. As you know, new TPs are being
-> standardized now and the append emulation is the based for adding
-> support for this. I do not believe it is unreasonable to find a way to
-> add support for this SSDs.
+On Tue, Aug 18, 2020 at 06:44:47PM +0100, Matthew Wilcox wrote:
+> On Tue, Aug 18, 2020 at 07:34:00PM +0200, Christian Brauner wrote:
+> > The only remaining function callable outside of kernel/fork.c is
+> > _do_fork(). It doesn't really follow the naming of kernel-internal
+> > syscall helpers as Christoph righly pointed out. Switch all callers and
+> > references to kernel_clone() and remove _do_fork() once and for all.
+> 
+> My only concern is around return type.  long, int, pid_t ... can we
+> choose one and stick to it?  pid_t is probably the right return type
+> within the kernel, despite the return type of clone3().  It'll save us
+> some work if we ever go through the hassle of growing pid_t beyond 31-bit.
 
-I do not think we should support anything but Zone Append, especially not
-the new TP, which is going to add even more horrible code for absolutely
-no good reason.
-
-> If you completely close the door this approach, the alternative is
-> carrying off-tree patches to the several OEMs that use these devices.
-> This is not good for the zoned ecosystem nor for the future of Zone
-> Append.
-
-I really don't have a problem with that.  If these OEMs want to use
-an inferior access model only, they have to pay the price for it.
-I also don't think that proxy arguments are very useful.  If you OEMs
-are troubled by carrying patches becomes they decided to buy inferior
-drivers they are perfectly happy to argue their cause here on the list.
-
-> Are you open to us doing some characterization and if the impact
-> to the fast path is not significant, moving ahead to a Zone Append
-> emulation like in SCSI? I will promise that we will remove this path if
-> requests for these devices terminate.
-
-As said I do not think implementing zone append emulation or the TP that
-shall not be named are a good idea for Linux.
+We have at least the futex ABI restricting PID space to 30 bits.
