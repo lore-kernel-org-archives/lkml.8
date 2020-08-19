@@ -2,97 +2,176 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89414C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B095C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EEC2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DB62063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkyFs4wx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXT5iDBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHSVQu (ORCPT
+        id S1727811AbgHSVQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        Wed, 19 Aug 2020 17:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgHSVQq (ORCPT
+        with ESMTP id S1726646AbgHSVQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:16:46 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1014CC061757;
-        Wed, 19 Aug 2020 14:16:45 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id b30so12806701lfj.12;
-        Wed, 19 Aug 2020 14:16:44 -0700 (PDT)
+        Wed, 19 Aug 2020 17:16:54 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEB0C061757;
+        Wed, 19 Aug 2020 14:16:53 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w17so19265983edt.8;
+        Wed, 19 Aug 2020 14:16:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xg5qNlyjDK4H9Bsa0SxjBV5q9nAUK79Dx84r0nHodF4=;
-        b=DkyFs4wxFzSvzO4KjO65oA/ou2mXckXka5g3fyo0dbU9Vr/+/dDyHO26PGm+ml2ntA
-         GBNoxFHh+7q4p0nEysDmUqICgy1Q7zm/3QuTWU9ehTGesdI0KXYSWGtzprLuJnmtYmpB
-         DjZ9EoGtZtYpThn8JxUG/fLDCNWQcayQp+oHSIwKjFuEaDAIPp8+loSp6wOLwrEVS4zc
-         kKVNHg0dd/TngzHF19ba3/r4vH982TrZSppzaRLw1xPpo9f7XHsxZ0TmrQRijsptKBAu
-         Za9nHvu+NGKsW2ueisNClpaQVTlQIaGb+XdoiygCwYItOje/uT65x7TMmkLGve0982a7
-         yMMw==
+        h=subject:date:from:to:cc:message-id:in-reply-to:references;
+        bh=L+xw/TvXzS5DRJVpZyjyebx0Vc5+Vwu/ASyNp17Shxw=;
+        b=sXT5iDBPCqhvexexP0UNPc3NTSFzCnX6obN0oTekbXYys4YReg7gAGj4CZlHT5Wwpj
+         f2rsyl1WWZFv1TizDpw+ONIRN+WPoVPUJl8v50ORRkHZknOIxSDOCLvDGUAt9Gk8Bcq0
+         C8b6Mhyi0AHgEW/CG9jiEefdadwgwwKQkSlifmyCbx+wYFy56dF7XfPwOLqHr6pSl9gf
+         4VkddbdAgaqdZt8/Sz3JRbpt3WrIFfsOOPTSlB8b16KHQZEBc5/ufDkgMl7me21bJEMH
+         NYz3PL/aVuhIRisnGJTku+3Lgi1n3Qb4LlrRdqmKBW8MYCzrLwo+rVgrGlqNO5wCNnwx
+         7gbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xg5qNlyjDK4H9Bsa0SxjBV5q9nAUK79Dx84r0nHodF4=;
-        b=QBhsvokYhtUdHMwAwjdR+Gi1Apc1rVE3qIcfMiGxF+OHQdsShwd9qttWuvRqRb+LUm
-         NHnNTd20isYaw6+5YTXwKVDFoAnplQbyJz9xy3dJux2A95iR8w5Dy6JoNA0s+wTQp12L
-         1oVkO3ll4QzSDbHjU6EkqedECZXytKqZ8sc2onhfVPP8JQzfdQhzAJQ2xAY7NDN6rIXB
-         9qG8dgNpvjgDsX6ua1hRE+HzBa0SfN3rmrGHRFJtBuoptrErylQ4TWdMcpHW/w4ZDwI7
-         t4a1/ZWJLWFLehIkoxe/5bbNA7iRtD2Ra/ZZnXiY3BdFegER1mp2NCanhRe1uo6EeOnH
-         899g==
-X-Gm-Message-State: AOAM533E8jE83PKmzTBorVRWPfMdQb8eijBKLw2Pc23GzV4ODobcSz8W
-        NSAzSCBb7vxQAaWwN+Q2pLoerbmNmZvakkoEXFQ=
-X-Google-Smtp-Source: ABdhPJyGmgefAqX2JVKjpv6UI6kte9JS0c2dIxSnfGOXva/YnJe0UhsHDjklh9MQ3Vc9JxT2knWW4DConUyKAXVFI3o=
-X-Received: by 2002:a19:cc3:: with SMTP id 186mr27554lfm.134.1597871802486;
- Wed, 19 Aug 2020 14:16:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819020027.4072288-1-zenczykowski@gmail.com>
-In-Reply-To: <20200819020027.4072288-1-zenczykowski@gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Aug 2020 14:16:30 -0700
-Message-ID: <CAADnVQLAmaAcEnozc76DykkmbUA4Lc0-hcBAyCgroRzCwevmcg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] net-veth: add type safety to veth_xdp_to_ptr()
- and veth_ptr_to_xdp()
-To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
-Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linux Network Development Mailing List 
-        <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
+         :references;
+        bh=L+xw/TvXzS5DRJVpZyjyebx0Vc5+Vwu/ASyNp17Shxw=;
+        b=PUpjslujFzHlFEmUnaNt/ukrE52XizrfncAem4uNLZ4RJlXC5qIHAOl6HR99Yr36lY
+         dgIWjO7CIznztX+ErQ2yjnAxB0WxHBzOG6gF6h6JsNTS3oNjVz6/NWrkHea9rm8ybIH0
+         1CYs7EeygxGsxPJPO3Gx9OocgPgfJMBW7tE8Q8FSswVYhQBNiCDMNpLfxn80NtttChTu
+         JLnpqGpQFfe5JQIGLdKOCoqaNf6Prtd+ArvB0UYgZQ63NdCqF+LzSWdZo0aV/nZQI0Ut
+         v0cm+JgZY9hRHYcauuwuIOS0lDEwFuQDHMUfvLITk10cA+bFUawa9G20YYMJVVis6GOx
+         20qQ==
+X-Gm-Message-State: AOAM532Fts2afU2UYS9qWWBImNrOtrqw9/xFItw4DdzD9q9zpwv86sT2
+        6O26bhkJqkVtVNpStYTFuRL6kBeYzquOdbvcShU=
+X-Google-Smtp-Source: ABdhPJyZ9Fpa9727PI1C6+RwTJZP1XISd5vH5YOM+f07DH3Ncyt2AUCjQtDSMUNBHgSUL4BKmLSrUA==
+X-Received: by 2002:aa7:c2c6:: with SMTP id m6mr27047423edp.118.1597871811854;
+        Wed, 19 Aug 2020 14:16:51 -0700 (PDT)
+Received: from gmail.com (relay4.tor.ian.sh. [51.75.64.187])
+        by smtp.gmail.com with ESMTPSA id fx15sm39815ejb.1.2020.08.19.14.16.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 14:16:51 -0700 (PDT)
+Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
+Date:   Wed, 19 Aug 2020 21:15:00 -0000
+From:   Michael Witten <mfwitten@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Levon <john.levon@joyent.com>,
+        John Levon <levon@movementarian.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Message-ID: <3b508e7d9d2a44079d161707819dfd88@gmail.com>
+In-Reply-To: <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
+References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
+  <20200816175303.GB1236603@ZenIV.linux.org.uk>
+  <20200817204223.GB12414@amd>
+  <87lfid6kpi.fsf@x220.int.ebiederm.org>
+  <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
+  <20200817220908.GA3701@amd>
+  <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
+  <20200818051717.GA3134537@gmail.com>
+  <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
+  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
+  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
+  <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 7:00 PM Maciej =C5=BBenczykowski
-<zenczykowski@gmail.com> wrote:
->
-> From: Maciej =C5=BBenczykowski <maze@google.com>
->
-> This reduces likelihood of incorrect use.
->
-> Test: builds
+The quick RFC patch I just proposed in the parent email is
+broken in its implementation. I will submit an updated
+version soon.
 
-I kept this in the commit log though it's a pointless comment.
-Please reconsider for the future.
-If you want to mention how you've tested it, please say so after "---" line=
-.
+Michael Witten (Tue, 18 Aug 2020 22:05:00 -0000):
 
-> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
-
-Applied. Thanks.
+> I think there's an important distinction to make between
+> the following 2 kinds of code:
+>
+>   * The curated code people just want to build.
+>   * The new patches that maintainers are reviewing.
+>
+> Certainly, maintainers should have a wide range of tools
+> at their disposal to probe the quality of a patch; then,
+> after bending rules of style to taste, the maintainers
+> declare the merged code to be curated, after which that
+> merged code need not be probed so invasively every time
+> it is built.
+>
+> To this end, I propose the following new patch, which
+> introduces some build-time switches that will help
+> people make this distinction.
+>
+>   As you know, you can save this email to some path:
+>
+>     /path/to/email.eml
+>
+>   Then apply and review the patch as follows:
+>
+>     $ cd /path/to/linux/repo
+>     $ git reset --hard HEAD
+>     $ git checkout --detach origin/master
+>     $ git am --scissors /path/to/email.eml
+>     $ git log -1 -p
+>
+> At this point, the patch is intended as a[n] RFC;
+> I haven't tested it, and just wanted to get the
+> idea out there.
+>
+> Sincerely,
+> Michael Witten
+>
+> ---8<------8<------8<------8<------8<------8<------8<------8<---
+> Subject: [PATCH] kbuild: Introduce "Warnings for maintainers"
+> This commit introduces the following new Kconfig options:
+>
+>   CONFIG_MAINTAINERS_WARNINGS
+>     |
+>     +-> CONFIG_WARN_DECLARATION_AFTER_STATEMENT
+>     |
+>     +-> CONFIG_WARN_MAYBE_UNINITIALIZED
+>
+> These produce the following menu items:
+>
+>   -> Kernel hacking
+>     -> Compile-time checks and compiler options
+>       -> Warnings for maintainers                                [NEW]
+>          * Warn about mixing variable definitions and statements [NEW]
+>          * Warn about use of potentially uninitialized variables [NEW]
+>
+> In short:
+>
+>   * CONFIG_MAINTAINERS_WARNINGS
+>       is the umbrella control.
+>
+>   * CONFIG_WARN_DECLARATION_AFTER_STATEMENT
+>       determines whether "-Wdeclaration-after-statement" is used.
+>
+>   * CONFIG_WARN_MAYBE_UNINITIALIZED
+>       determines whether "-Wmaybe-uninitialized" is used.
+>
+> Currently, the default is "y" for each, but it is expected that
+> eventually the default will be "n" for CONFIG_MAINTAINERS_WARNINGS.
+>
+> Running "make" with "W=2" should turn both warnings on, unless
+> they are thwarted by some other Kbuild logic.
+>
+> Signed-off-by: Michael Witten <mfwitten@gmail.com>
+>
+> [... PATCH ...]
