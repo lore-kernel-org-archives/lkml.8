@@ -7,58 +7,63 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830ADC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E652020885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607EF2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597837629;
-	bh=zqNspMux401BCdm+pH7vmh4yZc0oA2hxinQ5YNZNPGQ=;
+	s=default; t=1597837660;
+	bh=27YoqCzmydSp3olHMeOrDUwXFIPAGPfc/YzDgqMVKcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SP50uBnlXfiY0MXVP/ABKF/vk0aoHqZzJNJXZkxMHRfD4xPTj5JR17SRX2pP9gwc+
-	 Xb2KfJ9uYUPp8qD5Es4IEXeP3MOlp5GyIZEP8D/00xmEAycVmtdI/vMRbbGX1UCZJ8
-	 +DHc+ILKgWWfdWQFSEj/c65HnmOpg/lHnRJRbf2I=
+	b=GPKlF5fuBTAO+mDrtjVYUVrZDrBR019UKFsjz641Jq7Mh/Xpj883Rl8uCv82WnhB3
+	 RT3aqjN1yGRt/Uq/PFDHE1oY30KM3NwpqAHvC4I4wHTAZJTOzpt8QEFoLGje6JfxGS
+	 vJzO9SUwelZFijaWZfUSXSfhnN2aBxQPT9fFhAK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgHSLrC (ORCPT
+        id S1728196AbgHSLrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbgHSLqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:46:22 -0400
+        id S1728060AbgHSLqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:46:31 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278CB2075E;
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F43208DB;
         Wed, 19 Aug 2020 11:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597837581;
-        bh=zqNspMux401BCdm+pH7vmh4yZc0oA2hxinQ5YNZNPGQ=;
+        bh=27YoqCzmydSp3olHMeOrDUwXFIPAGPfc/YzDgqMVKcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UPn3TXjWYhmWE7KZaa/M5ggJjamyqh6koKVtwDL3upfa5dNsaquLtvtWIk1wul73h
-         sd1JRUAylh+fA6MH1LMkVtCPUo0/HcakPLHXaT9YFq8l/c/so9qNdB1sxidL7k0/uS
-         PgXfhLcv4uPGDjEN/GbPraxEDtKzztDNe5eRASBk=
+        b=ZR0vqHwSatPDbmsultS+4AMQG13FkHDGbAJ4B0IKKNzKTW2AMYZT6TPEhBErPajF+
+         hqAx06gxT6fGMrrsa0HT9BrFRm5dyCcTICuhRAXxHAGNoBElaXw90oUKz4YC4Q+VUT
+         Gl6G7kjglDW1Q98z/8Z1b360HcUuhYasx+bIPNMM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k8MXr-00Eua0-59; Wed, 19 Aug 2020 13:46:19 +0200
+        id 1k8MXr-00EuaH-LM; Wed, 19 Aug 2020 13:46:19 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
         Manivannan Sadhasivam <mani@kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
         Liwei Cai <cailiwei@hisilicon.com>,
-        Liuyao An <anliuyao@huawei.com>,
         Chen Feng <puck.chen@hisilicon.com>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/49] staging: hikey9xx/gpu: port it to work with Kernel v4.9
-Date:   Wed, 19 Aug 2020 13:45:30 +0200
-Message-Id: <e89c20fc6f7ad8ae07e77d406e859043f75db962.1597833138.git.mchehab+huawei@kernel.org>
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Liuyao An <anliuyao@huawei.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 08/49] staging: hikey9xx/gpu: Support MIPI DSI 3 lanes for hikey970.
+Date:   Wed, 19 Aug 2020 13:45:36 +0200
+Message-Id: <11d875c4d945febe2dceb7f7ca991003551b57b1.1597833138.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
 References: <cover.1597833138.git.mchehab+huawei@kernel.org>
@@ -69,227 +74,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Xiubin Zhang <zhangxiubin1@huawei.com>
 
-Update the driver to work with v4.9 kernels
+Modfiy mipi dsi lanes to improve HDMI compatibility.
 
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Xiubin Zhang <zhangxiubin1@huawei.com>
+Signed-off-by: Liuyao An <anliuyao@huawei.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/hikey9xx/gpu/dw_drm_dsi.c     |  4 +-
- drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h  |  1 +
- drivers/staging/hikey9xx/gpu/kirin_drm_drv.c  |  3 +-
- drivers/staging/hikey9xx/gpu/kirin_drm_drv.h  |  1 +
- drivers/staging/hikey9xx/gpu/kirin_drm_dss.c  | 46 ++++++++-----------
- .../hikey9xx/gpu/kirin_drm_overlay_utils.c    |  7 ++-
- 6 files changed, 30 insertions(+), 32 deletions(-)
+ drivers/staging/hikey9xx/gpu/dw_drm_dsi.c     | 24 ++++++++++++-------
+ drivers/staging/hikey9xx/gpu/hdmi/adv7535.c   |  4 ----
+ .../staging/hikey9xx/gpu/kirin970_dpe_reg.h   |  1 +
+ 3 files changed, 16 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c b/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
-index 1d1d4f49609c..9871b375416b 100644
+index e87363ab7373..2ba94fa15d0f 100644
 --- a/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
 +++ b/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
-@@ -1079,7 +1079,7 @@ static int dw_drm_encoder_init(struct device *dev,
+@@ -359,7 +359,10 @@ static void get_dsi_dphy_ctrl(struct dw_dsi *dsi,
+ 	if (bpp < 0)
+ 		return;
  
- 	encoder->possible_crtcs = crtc_mask;
- 	ret = drm_encoder_init(drm_dev, encoder, &dw_encoder_funcs,
--			       DRM_MODE_ENCODER_DSI);
-+			       DRM_MODE_ENCODER_DSI, NULL);
- 	if (ret) {
- 		DRM_ERROR("failed to init dsi encoder\n");
- 		return ret;
-@@ -1104,7 +1104,7 @@ static int dsi_host_attach(struct mipi_dsi_host *host,
- 	dsi->client[id].lanes = mdsi->lanes;
- 	dsi->client[id].format = mdsi->format;
- 	dsi->client[id].mode_flags = mdsi->mode_flags;
--	dsi->client[id].phy_clock = mdsi->phy_clock;
-+	dsi->client[id].phy_clock = 0;
- 
- 	DRM_INFO("host attach, client name=[%s], id=%d\n", mdsi->name, id);
- 
-diff --git a/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
-index 61af8ef81878..9fad9ef942bd 100644
---- a/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
-+++ b/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
-@@ -18,6 +18,7 @@
- #include <linux/kernel.h>
- #include <linux/wait.h>
- #include <linux/bug.h>
-+#include <linux/iommu.h>
- 
- #include <linux/ion.h>
- #include <linux/hisi/hisi_ion.h>
-diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
-index edb690062f64..ffa0cd792bf1 100644
---- a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
-@@ -200,9 +200,8 @@ static int kirin_drm_connectors_register(struct drm_device *dev)
- 
- static struct drm_driver kirin_drm_driver = {
- 	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
--				  DRIVER_ATOMIC | DRIVER_HAVE_IRQ | DRIVER_RENDER,
-+				  DRIVER_ATOMIC | DRIVER_RENDER,
- 	.fops				= &kirin_drm_fops,
--	.set_busid			= drm_platform_set_busid,
- 
- 	.gem_free_object	= drm_gem_cma_free_object,
- 	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.h b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.h
-index b361f5f69932..2f842ad36ae9 100644
---- a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.h
-+++ b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.h
-@@ -12,6 +12,7 @@
- #define __KIRIN_DRM_DRV_H__
- 
- #include <drm/drmP.h>
-+#include <linux/iommu.h>
- #include <linux/ion.h>
- #include <linux/hisi/hisi_ion.h>
- #include <linux/hisi/hisi-iommu.h>
-diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c b/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
-index 2a92372d0c81..c47d860f4697 100644
---- a/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
-@@ -213,6 +213,7 @@ static void dss_disable_vblank(struct drm_device *dev, unsigned int pipe)
- static irqreturn_t dss_irq_handler(int irq, void *data)
- {
- 	struct dss_crtc *acrtc = data;
-+	struct drm_crtc *crtc = &acrtc->base;
- 	struct dss_hw_ctx *ctx = acrtc->ctx;
- 	void __iomem *dss_base = ctx->base;
- 
-@@ -241,8 +242,10 @@ static irqreturn_t dss_irq_handler(int irq, void *data)
- 		wake_up_interruptible_all(&ctx->vactive0_start_wq);
- 	}
- 
--	if (isr_s2 & BIT_VSYNC)
-+	if (isr_s2 & BIT_VSYNC) {
- 		ctx->vsync_timestamp = ktime_get();
-+		drm_crtc_handle_vblank(crtc);
-+	}
- 
- 	if (isr_s2 & BIT_LDI_UNFLOW) {
- 		mask = inp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INT_MSK);
-@@ -271,6 +274,7 @@ static void dss_crtc_enable(struct drm_crtc *crtc)
- 	}
- 
- 	acrtc->enable = true;
-+	drm_crtc_vblank_on(crtc);
- }
- 
- static void dss_crtc_disable(struct drm_crtc *crtc)
-@@ -282,13 +286,7 @@ static void dss_crtc_disable(struct drm_crtc *crtc)
- 
- 	/*dss_power_down(acrtc);*/
- 	acrtc->enable = false;
--}
--
--static int dss_crtc_atomic_check(struct drm_crtc *crtc,
--				 struct drm_crtc_state *state)
--{
--	/* do nothing */
--	return 0;
-+	drm_crtc_vblank_off(crtc);
- }
- 
- static void dss_crtc_mode_set_nofb(struct drm_crtc *crtc)
-@@ -315,13 +313,24 @@ static void dss_crtc_atomic_flush(struct drm_crtc *crtc,
- 				  struct drm_crtc_state *old_state)
- 
- {
-+	struct drm_pending_vblank_event *event = crtc->state->event;
-+
-+	if (event) {
-+		crtc->state->event = NULL;
-+
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		if (drm_crtc_vblank_get(crtc) == 0)
-+			drm_crtc_arm_vblank_event(crtc, event);
-+		else
-+			drm_crtc_send_vblank_event(crtc, event);
-+		spin_unlock_irq(&crtc->dev->event_lock);
-+	}
- 
- }
- 
- static const struct drm_crtc_helper_funcs dss_crtc_helper_funcs = {
- 	.enable		= dss_crtc_enable,
- 	.disable	= dss_crtc_disable,
--	.atomic_check	= dss_crtc_atomic_check,
- 	.mode_set_nofb	= dss_crtc_mode_set_nofb,
- 	.atomic_begin	= dss_crtc_atomic_begin,
- 	.atomic_flush	= dss_crtc_atomic_flush,
-@@ -357,7 +366,7 @@ static int dss_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
- 	crtc->port = port;
- 
- 	ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
--					&dss_crtc_funcs);
-+					&dss_crtc_funcs, NULL);
- 	if (ret) {
- 		DRM_ERROR("failed to init crtc.\n");
- 		return ret;
-@@ -369,19 +378,6 @@ static int dss_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
- 	return 0;
- }
- 
--static int dss_plane_prepare_fb(struct drm_plane *plane,
--				const struct drm_plane_state *new_state)
--{
--	/* do nothing */
--	return 0;
--}
--
--static void dss_plane_cleanup_fb(struct drm_plane *plane,
--				 const struct drm_plane_state *old_state)
--{
--	/* do nothing */
--}
--
- static int dss_plane_atomic_check(struct drm_plane *plane,
- 				  struct drm_plane_state *state)
- {
-@@ -441,8 +437,6 @@ static void dss_plane_atomic_disable(struct drm_plane *plane,
- }
- 
- static const struct drm_plane_helper_funcs dss_plane_helper_funcs = {
--	.prepare_fb = dss_plane_prepare_fb,
--	.cleanup_fb = dss_plane_cleanup_fb,
- 	.atomic_check = dss_plane_atomic_check,
- 	.atomic_update = dss_plane_atomic_update,
- 	.atomic_disable = dss_plane_atomic_disable,
-@@ -471,7 +465,7 @@ static int dss_plane_init(struct drm_device *dev, struct dss_plane *aplane,
- 		return ret;
- 
- 	ret = drm_universal_plane_init(dev, &aplane->base, 1, &dss_plane_funcs,
--				       fmts, fmts_cnt, type);
-+				       fmts, fmts_cnt, type, NULL);
- 	if (ret) {
- 		DRM_ERROR("fail to init plane, ch=%d\n", aplane->ch);
- 		return ret;
-diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c b/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
-index 98ab748b8d8e..095335eba16d 100644
---- a/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
-@@ -1117,7 +1117,7 @@ void hisi_fb_pan_display(struct drm_plane *plane)
- 	dss_rect_ltrb_t rect;
- 	u32 bpp;
- 	u32 stride;
--	u32 display_addr;
-+	u32 display_addr = 0;
- 	u32 hal_fmt;
- 	int chn_idx = DSS_RCHN_D2;
- 
-@@ -1138,7 +1138,10 @@ void hisi_fb_pan_display(struct drm_plane *plane)
- 	bpp = fb->bits_per_pixel / 8;
- 	stride = fb->pitches[0];
- 
--	display_addr = (u32)fbdev->smem_start + src_y * stride;
-+	if (fbdev)
-+		display_addr = (u32)fbdev->smem_start + src_y * stride;
+-	dsi->client[id].lanes = 4;
++	if (mode->clock > 80000)
++	    dsi->client[id].lanes = 4;
 +	else
-+		printk("JDB: fbdev is null?\n");
++	    dsi->client[id].lanes = 3;
  
- 	rect.left = 0;
- 	rect.right = src_w - 1;
+ 	if (dsi->client[id].phy_clock)
+ 		dphy_req_kHz = dsi->client[id].phy_clock;
+@@ -935,8 +938,7 @@ static void mipi_config_dphy_spec1v2_parameter(struct dw_dsi *dsi, char __iomem
+ 	u32 lanes;
+ 
+ 	lanes =  dsi->client[dsi->cur_client].lanes - 1;
+-
+-	for (i = 0; i <= (lanes+1); i++) {
++	for (i = 0; i <= (lanes + 1); i++) {
+ 		//Lane Transmission Property
+ 		addr = MIPIDSI_PHY_TST_LANE_TRANSMISSION_PROPERTY + (i << 5);
+ 		dsi_phy_tst_set(mipi_dsi_base, addr, 0x43);
+@@ -960,10 +962,12 @@ static void mipi_config_dphy_spec1v2_parameter(struct dw_dsi *dsi, char __iomem
+ 	//clock lane timing ctrl - t_hs_trial
+ 	dsi_phy_tst_set(mipi_dsi_base, MIPIDSI_PHY_TST_CLK_TRAIL, DSS_REDUCE(dsi->phy.clk_t_hs_trial));
+ 
+-	for (i = 0; i <= (lanes + 1); i++) {
+-		if (i == 2) {
++	for (i = 0; i <= 4; i++) {
++		if (lanes == 2 && i == 1) /*init mipi dsi 3 lanes shoud skip lane3*/
++			i++;
++
++		if (i == 2) /* skip clock lane*/
+ 			i++;  //addr: lane0:0x60; lane1:0x80; lane2:0xC0; lane3:0xE0
+-		}
+ 
+ 		//data lane pre_delay
+ 		addr = MIPIDSI_PHY_TST_DATA_PRE_DELAY + (i << 5);
+@@ -1019,6 +1023,9 @@ static void dsi_mipi_init(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
+ 	dss_rect_t rect;
+ 	u32 cmp_stopstate_val = 0;
+ 	u32 lanes;
++#if !defined (CONFIG_HISI_FB_970)
++	int i = 0;
++#endif
+ 
+ 	WARN_ON(!dsi);
+ 	WARN_ON(!mipi_dsi_base);
+@@ -1132,7 +1139,7 @@ static void dsi_mipi_init(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
+ 	/* clock lane timing ctrl - t_hs_trial*/
+ 	dsi_phy_tst_set(mipi_dsi_base, 0x25, dsi->phy.clk_t_hs_trial);
+ 
+-	for (int i = 0; i <= lanes; i++) {
++	for (i = 0; i <= lanes; i++) {
+ 		/* data lane pre_delay*/
+ 		tmp = 0x30 + (i << 4);
+ 		dsi_phy_tst_set(mipi_dsi_base, tmp, DSS_REDUCE(dsi->phy.data_pre_delay));
+@@ -1361,10 +1368,9 @@ static int mipi_dsi_on_sub1(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
+ 
+ static int mipi_dsi_on_sub2(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
+ {
++	u64 pctrl_dphytx_stopcnt = 0;
+ 	WARN_ON(!mipi_dsi_base);
+-	u64 pctrl_dphytx_stopcnt;
+ 
+-	pctrl_dphytx_stopcnt = 0;
+ 	/* switch to video mode */
+ 	set_reg(mipi_dsi_base + MIPIDSI_MODE_CFG_OFFSET, 0x0, 1, 0);
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c b/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
+index 0343b2cd4c45..a21a8f8b917e 100644
+--- a/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
++++ b/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
+@@ -939,14 +939,10 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 		struct mipi_dsi_device *dsi = adv7511->dsi;
+ 		int lanes, ret;
+ 
+-#if defined(CONFIG_HISI_FB_970)
+-		lanes = 4;
+-#else
+ 		if (adj_mode->clock > 80000)
+ 			lanes = 4;
+ 		else
+ 			lanes = 3;
+-#endif
+ 
+ 		if (lanes != dsi->lanes) {
+ 			mipi_dsi_detach(dsi);
+diff --git a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
+index 867266073bc0..5c2ddcf01b26 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
++++ b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
+@@ -449,6 +449,7 @@ enum dss_chn_module {
+ 	MODULE_SCL_LUT,
+ 	MODULE_ARSR2P,
+ 	MODULE_ARSR2P_LUT,
++	MODULE_POST_CLIP_ES,
+ 	MODULE_POST_CLIP,
+ 	MODULE_PCSC,
+ 	MODULE_CSC,
 -- 
 2.26.2
 
