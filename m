@@ -2,208 +2,385 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE62C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406A820888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5296208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPSQeyfO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="CaHLnB3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHSWll (ORCPT
+        id S1727987AbgHSWlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        Wed, 19 Aug 2020 18:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgHSWla (ORCPT
+        with ESMTP id S1727854AbgHSWkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:41:30 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2729C061383;
-        Wed, 19 Aug 2020 15:41:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id j13so99265pjd.4;
-        Wed, 19 Aug 2020 15:41:29 -0700 (PDT)
+        Wed, 19 Aug 2020 18:40:53 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 625F1C06134E
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:47 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b127so75685ybh.21
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=ejbU9wiMvRABH95+7vVgeFIowVeF650G8x7BsTQc4xM=;
-        b=fPSQeyfOR8pxiw9y+HfuBmp02HhWUmvpRcO6pUEaYTG5nPEu62ffgQVmuI4te7kccI
-         lIVIPdNM03idJM2nWNOKZ69hxjS0kP0de//8vW/Z8sFN/o6ahM1TU1WPFQvHNg2aLudB
-         tfg9E7bMn4tiemv0Rli+6TFKNqXx8htc5Uy0kZtsGmKfJnJEIL1FIepLS7UdZ32eYl6k
-         bUcGQtAm3eJTe1EXi6ImxdEj3B41uP5AC+lUxpnUSb4HhcEss5GLVI2j9N+X/eTmpvuk
-         7cNsHbaiFiBDZVQMsXZsQp68qOpAAJrmebi35vitrrvLQDspdGE0w3amkx7ohyus/p0p
-         MxFA==
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=afpt0scmaMzcHXIzp9Twx0dB3tEDbNEdi+Fw7mN7FIw=;
+        b=CaHLnB3haQfx6MS2XC38I9D/MfLgVT1XUQHMfUepLNppnOGkbLBb6SsG8xp2hB1g8U
+         tC7lmStG8YvCaDdZPVJ9y6PhlH8t6310HFK0znFVybfVuzTCH1LxDNU4GaUYKgr+/osQ
+         SCLCNd4Eo7U9VbRDFwLW5Xqz0P0jD+xRUykjThPnNtGIJtjieBvbawYs0ubT8ytXBJT4
+         kNsGqSjTt/rS2kNgemuUknrhD8obiU3x8HV6FW8HzYE7HHCbIOEKLRRv5AyHrGgQXt8e
+         TadPkVYURET9F3BWrG1yVcvGYWzdofaf+Reg2BhmzEaVhI2hmvwsoMGqzRIbvgdPhBuR
+         NFIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=ejbU9wiMvRABH95+7vVgeFIowVeF650G8x7BsTQc4xM=;
-        b=P3qpH477XKdo65Cch6qi4yt//OTmY6U4OJBujE3RgPe7kR2n8s747vSoF89S+rvxVe
-         /j9S4BFe56dD0V41YhOrQdIuXU8uCTJd4wMSx1VxxjlrQ+wVrD4gZ0ZlAwf5l3pSek9z
-         CzRpzDQNPj1zjLu6FPqTDcOg2NhPEi4py3/hVBPi1sRDBaEXVoBVUOoCtMYNSrpB1kSi
-         vVVHiDjuDkO31cobcILT2smp89pQuFFhRCe8jy0ZkBd911fX+rhJknVwUQZlQq5Xuq/I
-         blG+ULIXzZAQ+fW5gxh2bveFoeCRT2jxMKGXoOR+pGQ8Wl7cE8csZ7ulRSwY4p7piMqu
-         hL5A==
-X-Gm-Message-State: AOAM532cBttPX/nPKhQohsjf2l0bQ/EBO2xlEKHpnBDvN0AAChUSp3Ja
-        KB859PUtYH7slu9XgTPL6NU=
-X-Google-Smtp-Source: ABdhPJzUzXp7NEbydKWCfez4krNStXJtwrBEI9AlFXJnczBqndXt31EHxlQQHUEtTj/xUL6jdM0bKQ==
-X-Received: by 2002:a17:90a:eb18:: with SMTP id j24mr103652pjz.76.1597876889512;
-        Wed, 19 Aug 2020 15:41:29 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id v78sm252407pfc.121.2020.08.19.15.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 15:41:28 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 15:41:21 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Lorenz Bauer <lmb@cloudflare.com>, jakub@cloudflare.com,
-        john.fastabend@gmail.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5f3daa91265a7_1b0e2ab87245e5c05@john-XPS-13-9370.notmuch>
-In-Reply-To: <5f3d982f51f22_2c9b2adeefb585bccb@john-XPS-13-9370.notmuch>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-6-lmb@cloudflare.com>
- <5f3d982f51f22_2c9b2adeefb585bccb@john-XPS-13-9370.notmuch>
-Subject: RE: [PATCH bpf-next 5/6] bpf: sockmap: allow update from BPF
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=afpt0scmaMzcHXIzp9Twx0dB3tEDbNEdi+Fw7mN7FIw=;
+        b=m/UaLqlAv5LSKLf7Yt7rxWYC4iHNmq2dO/CbeW0PjBmFtOEiFiFMA30zOZiDLRbK0+
+         pdRJ5CNtefx/tpsCCOri5BfuWHzJisQ+aWPItFJZYszcskDZaxTcwwiDNwhFVEtGfDEL
+         ILoJnLdU7wGsdfoKz6TxgGeR+A/UPJuyUOkQybCl6TMkCUk0dWRAJZwcvxkD38fPiwuF
+         YYXfLJfs32j70AaYhR7qacIn5cTXV6ocKD3XafTpygjeIQuXUFFS+SyXFIcl+Hh2YYN0
+         uyejhsq5ZwzPdlADAtjxyWdyVJMT6CXcYdHFgZoDRDy3HVGNwemnBDPEXpiUKq38dUNH
+         sRng==
+X-Gm-Message-State: AOAM533+ceWYYXZ1A715QO1vXWmp1Sj8Lbq/qbZB1PiBSgEEzHvU/4w7
+        KPmukhtLxbng3tBf9EPK8wDuZapz78k=
+X-Google-Smtp-Source: ABdhPJx1SBqLs8Bkr7O8Zl7ClzzAPwhu+tQxqiv7VTVMn7zbURfW1doOwgpZE92q6ImKVA/MAqPhIBzkBew=
+X-Received: from haoluo.svl.corp.google.com ([2620:15c:2cd:202:f693:9fff:fef4:e444])
+ (user=haoluo job=sendgmr) by 2002:a25:c347:: with SMTP id t68mr961734ybf.105.1597876846395;
+ Wed, 19 Aug 2020 15:40:46 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 15:40:28 -0700
+In-Reply-To: <20200819224030.1615203-1-haoluo@google.com>
+Message-Id: <20200819224030.1615203-7-haoluo@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20200819224030.1615203-1-haoluo@google.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+Subject: [PATCH bpf-next v1 6/8] bpf: Introduce bpf_per_cpu_ptr()
+From:   Hao Luo <haoluo@google.com>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Hao Luo <haoluo@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John Fastabend wrote:
-> Lorenz Bauer wrote:
-> > Allow calling bpf_map_update_elem on sockmap and sockhash from a BPF
-> > context. The synchronization required for this is a bit fiddly: we
-> > need to prevent the socket from changing it's state while we add it
-> > to the sockmap, since we rely on getting a callback via
-> > sk_prot->unhash. However, we can't just lock_sock like in
-> > sock_map_sk_acquire because that might sleep. So instead we disable
-> > softirq processing and use bh_lock_sock to prevent further
-> > modification.
-> > 
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >  kernel/bpf/verifier.c |  6 ++++--
-> >  net/core/sock_map.c   | 24 ++++++++++++++++++++++++
-> >  2 files changed, 28 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index 47f9b94bb9d4..421fccf18dea 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -4254,7 +4254,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
-> >  		    func_id != BPF_FUNC_map_delete_elem &&
-> >  		    func_id != BPF_FUNC_msg_redirect_map &&
-> >  		    func_id != BPF_FUNC_sk_select_reuseport &&
-> > -		    func_id != BPF_FUNC_map_lookup_elem)
-> > +		    func_id != BPF_FUNC_map_lookup_elem &&
-> > +		    func_id != BPF_FUNC_map_update_elem)
-> >  			goto error;
-> >  		break;
-> >  	case BPF_MAP_TYPE_SOCKHASH:
-> > @@ -4263,7 +4264,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
-> >  		    func_id != BPF_FUNC_map_delete_elem &&
-> >  		    func_id != BPF_FUNC_msg_redirect_hash &&
-> >  		    func_id != BPF_FUNC_sk_select_reuseport &&
-> > -		    func_id != BPF_FUNC_map_lookup_elem)
-> > +		    func_id != BPF_FUNC_map_lookup_elem &&
-> > +		    func_id != BPF_FUNC_map_update_elem)
-> 
-> I lost track of a detail here, map_lookup_elem should return
-> PTR_TO_MAP_VALUE_OR_NULL but if we want to feed that back into
-> the map_update_elem() we need to return PTR_TO_SOCKET_OR_NULL
-> and then presumably have a null check to get a PTR_TO_SOCKET
-> type as expect.
-> 
-> Can we use the same logic for expected arg (previous patch) on the
-> ret_type. Or did I miss it:/ Need some coffee I guess.
+Add bpf_per_cpu_ptr() to help bpf programs access percpu vars.
+bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the kernel
+except that it may return NULL. This happens when the cpu parameter is
+out of range. So the caller must check the returned value.
 
-OK, I tracked this down. It looks like we rely on mark_ptr_or_null_reg()
-to update the reg->tyype to PTR_TO_SOCKET. I do wonder if it would be
-a bit more straight forward to do something similar to the previous
-patch and refine it earlier to PTR_TO_SOCKET_OR_NULL, but should be
-safe as-is for now.
+Signed-off-by: Hao Luo <haoluo@google.com>
+---
+ include/linux/bpf.h      |  3 ++
+ include/linux/btf.h      | 11 +++++++
+ include/uapi/linux/bpf.h | 14 +++++++++
+ kernel/bpf/btf.c         | 10 -------
+ kernel/bpf/verifier.c    | 64 ++++++++++++++++++++++++++++++++++++++--
+ kernel/trace/bpf_trace.c | 18 +++++++++++
+ 6 files changed, 107 insertions(+), 13 deletions(-)
 
-I still have the below question though.
-
-> 
-> >  			goto error;
-> >  		break;
-> >  	case BPF_MAP_TYPE_REUSEPORT_SOCKARRAY:
-> > diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> > index 018367fb889f..b2c886c34566 100644
-> > --- a/net/core/sock_map.c
-> > +++ b/net/core/sock_map.c
-> > @@ -603,6 +603,28 @@ int sock_map_update_elem_sys(struct bpf_map *map, void *key,
-> >  	return ret;
-> >  }
-> >  
-> > +static int sock_map_update_elem(struct bpf_map *map, void *key,
-> > +				void *value, u64 flags)
-> > +{
-> > +	struct sock *sk = (struct sock *)value;
-> > +	int ret;
-> > +
-> > +	if (!sock_map_sk_is_suitable(sk))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	local_bh_disable();
-> > +	bh_lock_sock(sk);
-> 
-> How do ensure we are not being called from some context which
-> already has the bh_lock_sock() held? It seems we can call map_update_elem()
-> from any context, kprobes, tc, xdp, etc.?
-> 
-> > +	if (!sock_map_sk_state_allowed(sk))
-> > +		ret = -EOPNOTSUPP;
-> > +	else if (map->map_type == BPF_MAP_TYPE_SOCKMAP)
-> > +		ret = sock_map_update_common(map, *(u32 *)key, sk, flags);
-> > +	else
-> > +		ret = sock_hash_update_common(map, key, sk, flags);
-> > +	bh_unlock_sock(sk);
-> > +	local_bh_enable();
-> > +	return ret;
-> > +}
-> > +
-> >  BPF_CALL_4(bpf_sock_map_update, struct bpf_sock_ops_kern *, sops,
-> >  	   struct bpf_map *, map, void *, key, u64, flags)
-> >  {
-> > @@ -687,6 +709,7 @@ const struct bpf_map_ops sock_map_ops = {
-> >  	.map_free		= sock_map_free,
-> >  	.map_get_next_key	= sock_map_get_next_key,
-> >  	.map_lookup_elem_sys_only = sock_map_lookup_sys,
-> > +	.map_update_elem	= sock_map_update_elem,
-> >  	.map_delete_elem	= sock_map_delete_elem,
-> >  	.map_lookup_elem	= sock_map_lookup,
-> >  	.map_release_uref	= sock_map_release_progs,
-> > @@ -1180,6 +1203,7 @@ const struct bpf_map_ops sock_hash_ops = {
-> >  	.map_alloc		= sock_hash_alloc,
-> >  	.map_free		= sock_hash_free,
-> >  	.map_get_next_key	= sock_hash_get_next_key,
-> > +	.map_update_elem	= sock_map_update_elem,
-> >  	.map_delete_elem	= sock_hash_delete_elem,
-> >  	.map_lookup_elem	= sock_hash_lookup,
-> >  	.map_lookup_elem_sys_only = sock_hash_lookup_sys,
-> > -- 
-> > 2.25.1
-> > 
-> 
-> 
-
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 55f694b63164..613404beab33 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -268,6 +268,7 @@ enum bpf_arg_type {
+ 	ARG_PTR_TO_ALLOC_MEM,	/* pointer to dynamically allocated memory */
+ 	ARG_PTR_TO_ALLOC_MEM_OR_NULL,	/* pointer to dynamically allocated memory or NULL */
+ 	ARG_CONST_ALLOC_SIZE_OR_ZERO,	/* number of allocated bytes requested */
++	ARG_PTR_TO_PERCPU_BTF_ID,	/* pointer to in-kernel percpu type */
+ };
+ 
+ /* type of values returned from helper functions */
+@@ -281,6 +282,7 @@ enum bpf_return_type {
+ 	RET_PTR_TO_SOCK_COMMON_OR_NULL,	/* returns a pointer to a sock_common or NULL */
+ 	RET_PTR_TO_ALLOC_MEM_OR_NULL,	/* returns a pointer to dynamically allocated memory or NULL */
+ 	RET_PTR_TO_BTF_ID_OR_NULL,	/* returns a pointer to a btf_id or NULL */
++	RET_PTR_TO_MEM_OR_BTF_OR_NULL,	/* returns a pointer to a valid memory or a btf_id or NULL */
+ };
+ 
+ /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF programs
+@@ -360,6 +362,7 @@ enum bpf_reg_type {
+ 	PTR_TO_RDONLY_BUF_OR_NULL, /* reg points to a readonly buffer or NULL */
+ 	PTR_TO_RDWR_BUF,	 /* reg points to a read/write buffer */
+ 	PTR_TO_RDWR_BUF_OR_NULL, /* reg points to a read/write buffer or NULL */
++	PTR_TO_PERCPU_BTF_ID,	 /* reg points to percpu kernel type */
+ };
+ 
+ /* The information passed from prog-specific *_is_valid_access
+diff --git a/include/linux/btf.h b/include/linux/btf.h
+index cee4089e83c0..dc3509246913 100644
+--- a/include/linux/btf.h
++++ b/include/linux/btf.h
+@@ -72,6 +72,11 @@ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+ 	     i < btf_type_vlen(struct_type);			\
+ 	     i++, member++)
+ 
++#define for_each_vsi(i, struct_type, member)			\
++	for (i = 0, member = btf_type_var_secinfo(struct_type);	\
++	     i < btf_type_vlen(struct_type);			\
++	     i++, member++)
++
+ static inline bool btf_type_is_ptr(const struct btf_type *t)
+ {
+ 	return BTF_INFO_KIND(t->info) == BTF_KIND_PTR;
+@@ -156,6 +161,12 @@ static inline const struct btf_member *btf_type_member(const struct btf_type *t)
+ 	return (const struct btf_member *)(t + 1);
+ }
+ 
++static inline const struct btf_var_secinfo *btf_type_var_secinfo(
++		const struct btf_type *t)
++{
++	return (const struct btf_var_secinfo *)(t + 1);
++}
++
+ #ifdef CONFIG_BPF_SYSCALL
+ const struct btf_type *btf_type_by_id(const struct btf *btf, u32 type_id);
+ const char *btf_name_by_offset(const struct btf *btf, u32 offset);
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 468376f2910b..c7e49a102ed2 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -3415,6 +3415,19 @@ union bpf_attr {
+  *		A non-negative value equal to or less than *size* on success,
+  *		or a negative error in case of failure.
+  *
++ * void *bpf_per_cpu_ptr(const void *ptr, u32 cpu)
++ *	Description
++ *		Take the address of a percpu ksym and return a pointer pointing
++ *		to the variable on *cpu*. A ksym is an extern variable decorated
++ *		with '__ksym'. A ksym is percpu if there is a global percpu var
++ *		(either static or global) defined of the same name in the kernel.
++ *
++ *		bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the
++ *		kernel, except that bpf_per_cpu_ptr() may return NULL. This
++ *		happens if *cpu* is larger than nr_cpu_ids. The caller of
++ *		bpf_per_cpu_ptr() must check the returned value.
++ *	Return
++ *		A generic pointer pointing to the variable on *cpu*.
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -3559,6 +3572,7 @@ union bpf_attr {
+ 	FN(skc_to_tcp_request_sock),	\
+ 	FN(skc_to_udp6_sock),		\
+ 	FN(get_task_stack),		\
++	FN(bpf_per_cpu_ptr),		\
+ 	/* */
+ 
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index b6d8f653afe2..e735804f5f34 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -186,11 +186,6 @@
+ 	     i < btf_type_vlen(struct_type);				\
+ 	     i++, member++)
+ 
+-#define for_each_vsi(i, struct_type, member)			\
+-	for (i = 0, member = btf_type_var_secinfo(struct_type);	\
+-	     i < btf_type_vlen(struct_type);			\
+-	     i++, member++)
+-
+ #define for_each_vsi_from(i, from, struct_type, member)				\
+ 	for (i = from, member = btf_type_var_secinfo(struct_type) + from;	\
+ 	     i < btf_type_vlen(struct_type);					\
+@@ -511,11 +506,6 @@ static const struct btf_var *btf_type_var(const struct btf_type *t)
+ 	return (const struct btf_var *)(t + 1);
+ }
+ 
+-static const struct btf_var_secinfo *btf_type_var_secinfo(const struct btf_type *t)
+-{
+-	return (const struct btf_var_secinfo *)(t + 1);
+-}
+-
+ static const struct btf_kind_operations *btf_type_ops(const struct btf_type *t)
+ {
+ 	return kind_ops[BTF_INFO_KIND(t->info)];
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 47badde71f83..c2db6308d6fa 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -238,6 +238,7 @@ struct bpf_call_arg_meta {
+ 	int ref_obj_id;
+ 	int func_id;
+ 	u32 btf_id;
++	u32 ret_btf_id;
+ };
+ 
+ struct btf *btf_vmlinux;
+@@ -503,6 +504,7 @@ static const char * const reg_type_str[] = {
+ 	[PTR_TO_XDP_SOCK]	= "xdp_sock",
+ 	[PTR_TO_BTF_ID]		= "ptr_",
+ 	[PTR_TO_BTF_ID_OR_NULL]	= "ptr_or_null_",
++	[PTR_TO_PERCPU_BTF_ID]	= "percpu_ptr_",
+ 	[PTR_TO_MEM]		= "mem",
+ 	[PTR_TO_MEM_OR_NULL]	= "mem_or_null",
+ 	[PTR_TO_RDONLY_BUF]	= "rdonly_buf",
+@@ -569,7 +571,9 @@ static void print_verifier_state(struct bpf_verifier_env *env,
+ 			/* reg->off should be 0 for SCALAR_VALUE */
+ 			verbose(env, "%lld", reg->var_off.value + reg->off);
+ 		} else {
+-			if (t == PTR_TO_BTF_ID || t == PTR_TO_BTF_ID_OR_NULL)
++			if (t == PTR_TO_BTF_ID ||
++			    t == PTR_TO_BTF_ID_OR_NULL ||
++			    t == PTR_TO_PERCPU_BTF_ID)
+ 				verbose(env, "%s", kernel_type_name(reg->btf_id));
+ 			verbose(env, "(id=%d", reg->id);
+ 			if (reg_type_may_be_refcounted_or_null(t))
+@@ -2183,6 +2187,7 @@ static bool is_spillable_regtype(enum bpf_reg_type type)
+ 	case PTR_TO_RDONLY_BUF_OR_NULL:
+ 	case PTR_TO_RDWR_BUF:
+ 	case PTR_TO_RDWR_BUF_OR_NULL:
++	case PTR_TO_PERCPU_BTF_ID:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -3959,6 +3964,15 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 			if (type != expected_type)
+ 				goto err_type;
+ 		}
++	} else if (arg_type == ARG_PTR_TO_PERCPU_BTF_ID) {
++		expected_type = PTR_TO_PERCPU_BTF_ID;
++		if (type != expected_type)
++			goto err_type;
++		if (!reg->btf_id) {
++			verbose(env, "Helper has zero btf_id in R%d\n", regno);
++			return -EACCES;
++		}
++		meta->ret_btf_id = reg->btf_id;
+ 	} else if (arg_type == ARG_PTR_TO_BTF_ID) {
+ 		expected_type = PTR_TO_BTF_ID;
+ 		if (type != expected_type)
+@@ -4904,6 +4918,30 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
+ 		regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
+ 		regs[BPF_REG_0].id = ++env->id_gen;
+ 		regs[BPF_REG_0].mem_size = meta.mem_size;
++	} else if (fn->ret_type == RET_PTR_TO_MEM_OR_BTF_OR_NULL) {
++		const struct btf_type *t;
++
++		mark_reg_known_zero(env, regs, BPF_REG_0);
++		t = btf_type_skip_modifiers(btf_vmlinux, meta.ret_btf_id, NULL);
++		if (!btf_type_is_struct(t)) {
++			u32 tsize;
++			const struct btf_type *ret;
++			const char *tname;
++
++			/* resolve the type size of ksym. */
++			ret = btf_resolve_size(btf_vmlinux, t, &tsize, NULL, NULL);
++			if (IS_ERR(ret)) {
++				tname = btf_name_by_offset(btf_vmlinux, t->name_off);
++				verbose(env, "unable to resolve the size of type '%s': %ld\n",
++					tname, PTR_ERR(ret));
++				return -EINVAL;
++			}
++			regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
++			regs[BPF_REG_0].mem_size = tsize;
++		} else {
++			regs[BPF_REG_0].type = PTR_TO_BTF_ID_OR_NULL;
++			regs[BPF_REG_0].btf_id = meta.ret_btf_id;
++		}
+ 	} else if (fn->ret_type == RET_PTR_TO_BTF_ID_OR_NULL) {
+ 		int ret_btf_id;
+ 
+@@ -7210,10 +7248,15 @@ static inline int check_pseudo_btf_id(struct bpf_verifier_env *env,
+ 				      struct bpf_insn *insn)
+ {
+ 	struct bpf_reg_state *regs = cur_regs(env);
+-	u32 type, id = insn->imm;
++	u32 datasec_id, type, id = insn->imm;
+ 	u64 addr;
+ 	const char *sym_name;
+ 	const struct btf_type *t = btf_type_by_id(btf_vmlinux, id);
++	const struct btf_type *datasec;
++	const struct btf_var_secinfo *vsi;
++	int i;
++
++	bool percpu = false;
+ 
+ 	if (!t) {
+ 		verbose(env, "%s: invalid btf_id %d\n", __func__, id);
+@@ -7243,9 +7286,24 @@ static inline int check_pseudo_btf_id(struct bpf_verifier_env *env,
+ 	insn[1].imm = addr >> 32;
+ 	mark_reg_known_zero(env, regs, insn->dst_reg);
+ 
++	datasec_id = btf_find_by_name_kind(btf_vmlinux, ".data..percpu",
++					   BTF_KIND_DATASEC);
++	if (datasec_id > 0) {
++		datasec = btf_type_by_id(btf_vmlinux, datasec_id);
++		for_each_vsi(i, datasec, vsi) {
++			if (vsi->type == id) {
++				percpu = true;
++				break;
++			}
++		}
++	}
++
+ 	type = t->type;
+ 	t = btf_type_skip_modifiers(btf_vmlinux, type, NULL);
+-	if (!btf_type_is_struct(t)) {
++	if (percpu) {
++		regs[insn->dst_reg].type = PTR_TO_PERCPU_BTF_ID;
++		regs[insn->dst_reg].btf_id = type;
++	} else if (!btf_type_is_struct(t)) {
+ 		u32 tsize;
+ 		const struct btf_type *ret;
+ 		const char *tname;
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index a8d4f253ed77..7f0033960d82 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1098,6 +1098,22 @@ static const struct bpf_func_proto bpf_send_signal_thread_proto = {
+ 	.arg1_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_2(bpf_per_cpu_ptr, const void *, ptr, u32, cpu)
++{
++	if (cpu >= nr_cpu_ids)
++		return 0;
++
++	return (u64)per_cpu_ptr(ptr, cpu);
++}
++
++static const struct bpf_func_proto bpf_per_cpu_ptr_proto = {
++	.func		= bpf_per_cpu_ptr,
++	.gpl_only	= false,
++	.ret_type	= RET_PTR_TO_MEM_OR_BTF_OR_NULL,
++	.arg1_type	= ARG_PTR_TO_PERCPU_BTF_ID,
++	.arg2_type	= ARG_ANYTHING,
++};
++
+ const struct bpf_func_proto *
+ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+@@ -1182,6 +1198,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_jiffies64_proto;
+ 	case BPF_FUNC_get_task_stack:
+ 		return &bpf_get_task_stack_proto;
++	case BPF_FUNC_bpf_per_cpu_ptr:
++		return &bpf_per_cpu_ptr_proto;
+ 	default:
+ 		return NULL;
+ 	}
+-- 
+2.28.0.220.ged08abb693-goog
 
