@@ -2,92 +2,92 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC756C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0567206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597841042;
-	bh=p1vhfj05/ImpL1YamOJt4Amr4O07pdWTDsBGH/jAeBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D8rUS8VPvtUq3MCMRV64Zjnp15NT4EzyUMJMzDjSY3xQxik5tufZArW3PQuuGwjJh
-	 4EZiuWeW5kitDKwHNn16eAKxWfQvi3rFqkhwBNFCDtHlykA/Hs84PZsO8ZPhJSZDTe
-	 UuBMBychv2zAUMyqRC/Ve34ublNzk6ttKCzzjGNk=
+	by mail.kernel.org (Postfix) with ESMTP id DE90B206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BdbnORcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgHSMn5 convert rfc822-to-8bit (ORCPT
+        id S1728453AbgHSMoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:43:57 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:40826 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgHSMnl (ORCPT
+        Wed, 19 Aug 2020 08:44:09 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:60353 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728290AbgHSMnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:43:41 -0400
-Received: by mail-ej1-f66.google.com with SMTP id o18so26101061eje.7;
-        Wed, 19 Aug 2020 05:43:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZctuP1CMTcrHiFJrxq/97buNSvRxRav1gdS+WK4BXKE=;
-        b=a5lHJZTPfCV5q2Emon8VA5pz+87CCjuN6FuoDyNLroBT/dJ510VQWyJNZ/OO5vyCA+
-         PLy5f50YJSIDULHMdqcjyvO/aEN0xUMrcNRUiBgLKtyW6BhOHEnpuLluhmmdHBkrZ+An
-         UHSJJW6oUnHuR4by1qccNit5K3CqwnvVJ6EOOpld0NdP+nSSFMbtVEqhnjBD9AlQ3VfZ
-         90DDvPdhtGA8HBR9MCo7ll7iCRyzCth53cU3XnwSZhZ18fbvcvOdCdyCInjtd50iT9Hm
-         yvdKa5WJ9yFF+d2aU+sEMLagocwT+BM+mB0QYitQP4GC0Blcqbh2ELQG/g4RtCy4vGlF
-         rB+A==
-X-Gm-Message-State: AOAM530Eq/Q7QFOaMu1jWDeF7PqjLLvLeLXhfk8w9qPrTTI9CgHvwfUX
-        k3H839eWe5Rd2EJt1KkT/LY=
-X-Google-Smtp-Source: ABdhPJx7aI8b4UuPppvm7ZVq9l8TZjjwjaoKNcHU2tnGRaF3hJhwZoXkU9F4920cWP8Hq9PaligR6w==
-X-Received: by 2002:a17:906:1b04:: with SMTP id o4mr26301964ejg.332.1597841018997;
-        Wed, 19 Aug 2020 05:43:38 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id g11sm17995300edt.88.2020.08.19.05.43.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 05:43:38 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:43:36 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 3/8] spi: spi-s3c64xx: Report more information when
- errors occur
-Message-ID: <20200819124336.GD18122@kozik-lap>
-References: <20200819123208.12337-1-l.stelmach@samsung.com>
- <CGME20200819123226eucas1p2dc50cd60f71f2155524ec21bf4dcdd74@eucas1p2.samsung.com>
- <20200819123208.12337-4-l.stelmach@samsung.com>
+        Wed, 19 Aug 2020 08:43:03 -0400
+X-UUID: 7ce18b06918c40bc94240a3df908dba3-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Dpta4H1SRQk7Li++WBp2aI6qhPf7vOedFdtzx5lB+FM=;
+        b=BdbnORcN+z0BJUp0H5lM60jMuurtL4cB15OO/QYJ12tJhKS9/6FznXN2GGk3eSF3XIDtkJj3kFFUXRHxKqu5i9N4ANiSlXvwgB5Q73pHMFPehfMyc+iWU8lXpYbNWjNrZ7NCSqEpMHrCbh4WoI6p+2fIsbij+Thh2RL9zM+zO+w=;
+X-UUID: 7ce18b06918c40bc94240a3df908dba3-20200819
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1470467389; Wed, 19 Aug 2020 20:42:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 20:42:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 20:42:52 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 10/10] usb: udc: net2280: convert to readl_poll_timeout_atomic()
+Date:   Wed, 19 Aug 2020 20:41:05 +0800
+Message-ID: <1597840865-26631-10-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1597840865-26631-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1597840865-26631-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200819123208.12337-4-l.stelmach@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E0EC442A6D048C3678D031DC199AB4D56B601BF5917F13DC48DE34E7762CD3F22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:32:03PM +0200, Łukasz Stelmach wrote:
-> Report amount of pending data when a transfer stops due to errors.
-> 
-> Report if DMA was used to transfer data and print the status code.
-> 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> ---
->  drivers/spi/spi-s3c64xx.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
-
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+VXNlIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSB0byBzaW1wbGlmeSBjb2RlDQoNCkNjOiBB
+bGFuIFN0ZXJuIDxzdGVybkByb3dsYW5kLmhhcnZhcmQuZWR1Pg0KQ2M6IEZlbGlwZSBCYWxiaSA8
+YmFsYmlAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcu
+eXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvbmV0MjI4MC5j
+IHwgMjEgKysrKysrKysrKy0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlv
+bnMoKyksIDExIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0
+L3VkYy9uZXQyMjgwLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL25ldDIyODAuYw0KaW5kZXgg
+NzUzMGJkOS4uZjFhMjFmNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvbmV0
+MjI4MC5jDQorKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL25ldDIyODAuYw0KQEAgLTUyLDYg
+KzUyLDcgQEANCiAjaW5jbHVkZSA8bGludXgvdXNiL2dhZGdldC5oPg0KICNpbmNsdWRlIDxsaW51
+eC9wcmVmZXRjaC5oPg0KICNpbmNsdWRlIDxsaW51eC9pby5oPg0KKyNpbmNsdWRlIDxsaW51eC9p
+b3BvbGwuaD4NCiANCiAjaW5jbHVkZSA8YXNtL2J5dGVvcmRlci5oPg0KICNpbmNsdWRlIDxhc20v
+aXJxLmg+DQpAQCAtMzYwLDE4ICszNjEsMTYgQEAgc3RhdGljIGlubGluZSB2b2lkIGVuYWJsZV9w
+Y2lpcnFlbmIoc3RydWN0IG5ldDIyODBfZXAgKmVwKQ0KIHN0YXRpYyBpbnQgaGFuZHNoYWtlKHUz
+MiBfX2lvbWVtICpwdHIsIHUzMiBtYXNrLCB1MzIgZG9uZSwgaW50IHVzZWMpDQogew0KIAl1MzIJ
+cmVzdWx0Ow0KKwlpbnQJcmV0Ow0KIA0KLQlkbyB7DQotCQlyZXN1bHQgPSByZWFkbChwdHIpOw0K
+LQkJaWYgKHJlc3VsdCA9PSB+KHUzMikwKQkJLyogImRldmljZSB1bnBsdWdnZWQiICovDQotCQkJ
+cmV0dXJuIC1FTk9ERVY7DQotCQlyZXN1bHQgJj0gbWFzazsNCi0JCWlmIChyZXN1bHQgPT0gZG9u
+ZSkNCi0JCQlyZXR1cm4gMDsNCi0JCXVkZWxheSgxKTsNCi0JCXVzZWMtLTsNCi0JfSB3aGlsZSAo
+dXNlYyA+IDApOw0KLQlyZXR1cm4gLUVUSU1FRE9VVDsNCisJcmV0ID0gcmVhZGxfcG9sbF90aW1l
+b3V0X2F0b21pYyhwdHIsIHJlc3VsdCwNCisJCQkJCSgocmVzdWx0ICYgbWFzaykgPT0gZG9uZSB8
+fA0KKwkJCQkJIHJlc3VsdCA9PSBVMzJfTUFYKSwNCisJCQkJCTEsIHVzZWMpOw0KKwlpZiAocmVz
+dWx0ID09IFUzMl9NQVgpCQkvKiBkZXZpY2UgdW5wbHVnZ2VkICovDQorCQlyZXR1cm4gLUVOT0RF
+VjsNCisNCisJcmV0dXJuIHJldDsNCiB9DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCB1c2JfZXBf
+b3BzIG5ldDIyODBfZXBfb3BzOw0KLS0gDQoxLjkuMQ0K
 
