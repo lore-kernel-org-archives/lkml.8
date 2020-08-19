@@ -2,153 +2,72 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FD6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B866C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792A720772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StO/KDkr"
+	by mail.kernel.org (Postfix) with ESMTP id 308C220772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgHSBH1 (ORCPT
+        id S1727120AbgHSBIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgHSBHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:07:24 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D82C061389;
-        Tue, 18 Aug 2020 18:07:23 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mt12so334756pjb.4;
-        Tue, 18 Aug 2020 18:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mzBSluQ6mqyIVMuRi2ojSGjM+D4X/wlWcsHhPwNSdIU=;
-        b=StO/KDkryIDm355jHPzc2OJN+l25RHo2rsDNfvr+/2cPMEa9yrHeIOXAC0/BrW+Gmn
-         vtf4riwT4cJDSaWR04ESXNad4C0nIfo/WXuwnqBXUXq0aTY65sE0EvErddFnBKLdckXG
-         IvjishHENFX2YV0IBCZTo8mmrs4DAKTXmJPQ/NBNgXbN92h/+4T+ap2AtS7VqPJ/WLe3
-         K+y8kOGCEI2cv5AUYy45j59jYZisoWL15ocDjQnfXzRK7lYRfY/WAMBov6Qzjc+qq5HC
-         7/U9eTANzkKXcSvdX6VgOp23Vh/9+2vg7n0C0bus0HapepcXRPYkkRq1ZsAgv4ycfWQZ
-         M6dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mzBSluQ6mqyIVMuRi2ojSGjM+D4X/wlWcsHhPwNSdIU=;
-        b=e/m085B5QDzSxqB2HW9Q928SVSzjq6rnwmqa89J1xr87vyDPZcH8feNrfMlqJga/GG
-         B5WcdGh5erT1hXWBCOarjhL9wd8ORgog76syCBX697TbI/VNVQyX9P00oqBgmTLllNCB
-         pgCxYVTxjDOihbBliOMWBbxqlGjKLTyR2DD7X7cY2ZZdHSN1z+G4tGLrb+1hTXKKaSDZ
-         0wWgb8OeWq5PVsd7glHOyQsMrQBgNh9YecH84+b/gFYqAQ3GmNiZ8Bv6dAmBWtryTNR8
-         htiDyZ5RtaQGH1fO1UL66zqrZ7OEJzZ6KgPnOiBBhrRsRQKBHRoSgfd7+HfGYuJsviDt
-         17kg==
-X-Gm-Message-State: AOAM533E1BLA6gUJZ1XB9W67uwj204wM7KKpy9b9InEmFWOb7wNjinBJ
-        xpKy/OClmRRPkS7tJ7l9yeI=
-X-Google-Smtp-Source: ABdhPJwyvJ/T5PYNuVUQilWtQeYqkoX46QhAdfXd0VeN7ukEkYw/rlecjQttxxkbL99vUKhPMZiXIQ==
-X-Received: by 2002:a17:902:7897:: with SMTP id q23mr17417597pll.310.1597799243274;
-        Tue, 18 Aug 2020 18:07:23 -0700 (PDT)
-Received: from athina.mtv.corp.google.com ([2620:15c:211:0:a28c:fdff:fee1:f370])
-        by smtp.gmail.com with ESMTPSA id 193sm25881853pfu.169.2020.08.18.18.07.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 18:07:22 -0700 (PDT)
-From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
-To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH bpf-next 2/2] net-tun: eliminate two tun/xdp related function calls from vhost-net
-Date:   Tue, 18 Aug 2020 18:07:10 -0700
-Message-Id: <20200819010710.3959310-2-zenczykowski@gmail.com>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-In-Reply-To: <20200819010710.3959310-1-zenczykowski@gmail.com>
-References: <20200819010710.3959310-1-zenczykowski@gmail.com>
+        Tue, 18 Aug 2020 21:08:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726486AbgHSBIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 21:08:05 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 55D2713F051FD3159F59;
+        Wed, 19 Aug 2020 09:08:01 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.253) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 09:07:59 +0800
+Subject: Re: [PATCH 1/3] libnvdimm: Fix memory leaks in of_pmem.c
+To:     Markus Elfring <Markus.Elfring@web.de>, <linux-nvdimm@lists.01.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+References: <5ca9f6e3-38d7-fc65-5010-22c992ecf851@web.de>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <fdbd9d2d-2e5d-8190-5d7c-eec5c4cdadbb@huawei.com>
+Date:   Wed, 19 Aug 2020 09:07:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <5ca9f6e3-38d7-fc65-5010-22c992ecf851@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Żenczykowski <maze@google.com>
 
-This provides a minor performance boost by virtue of inlining
-instead of cross module function calls.
 
-Test: builds
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
----
- drivers/net/tun.c      | 18 ------------------
- include/linux/if_tun.h | 15 ++++++++++++---
- 2 files changed, 12 insertions(+), 21 deletions(-)
+On 8/19/2020 3:00 AM, Markus Elfring wrote:
+>> The memory priv->bus_desc.provider_name allocated by kstrdup() should be
+>> freed.
+> 
+> * Would an imperative wording be preferred for the change description?
+> 
+> * I propose to add the tag “Fixes” to the commit message.
+Thanks for your suggestion, I will add it in v2.
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 5dd7f353eeef..efaef83b8897 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -219,24 +219,6 @@ struct veth {
- 	__be16 h_vlan_TCI;
- };
- 
--bool tun_is_xdp_frame(void *ptr)
--{
--	return (unsigned long)ptr & TUN_XDP_FLAG;
--}
--EXPORT_SYMBOL(tun_is_xdp_frame);
--
--void *tun_xdp_to_ptr(struct xdp_frame *xdp)
--{
--	return (void *)((unsigned long)xdp | TUN_XDP_FLAG);
--}
--EXPORT_SYMBOL(tun_xdp_to_ptr);
--
--struct xdp_frame *tun_ptr_to_xdp(void *ptr)
--{
--	return (void *)((unsigned long)ptr & ~TUN_XDP_FLAG);
--}
--EXPORT_SYMBOL(tun_ptr_to_xdp);
--
- static int tun_napi_receive(struct napi_struct *napi, int budget)
- {
- 	struct tun_file *tfile = container_of(napi, struct tun_file, napi);
-diff --git a/include/linux/if_tun.h b/include/linux/if_tun.h
-index 6c37e1dbc5df..2a7660843444 100644
---- a/include/linux/if_tun.h
-+++ b/include/linux/if_tun.h
-@@ -27,9 +27,18 @@ struct tun_xdp_hdr {
- #if defined(CONFIG_TUN) || defined(CONFIG_TUN_MODULE)
- struct socket *tun_get_socket(struct file *);
- struct ptr_ring *tun_get_tx_ring(struct file *file);
--bool tun_is_xdp_frame(void *ptr);
--void *tun_xdp_to_ptr(struct xdp_frame *xdp);
--struct xdp_frame *tun_ptr_to_xdp(void *ptr);
-+static inline bool tun_is_xdp_frame(void *ptr)
-+{
-+       return (unsigned long)ptr & TUN_XDP_FLAG;
-+}
-+static inline void *tun_xdp_to_ptr(struct xdp_frame *xdp)
-+{
-+       return (void *)((unsigned long)xdp | TUN_XDP_FLAG);
-+}
-+static inline struct xdp_frame *tun_ptr_to_xdp(void *ptr)
-+{
-+       return (void *)((unsigned long)ptr & ~TUN_XDP_FLAG);
-+}
- void tun_ptr_free(void *ptr);
- #else
- #include <linux/err.h>
--- 
-2.28.0.220.ged08abb693-goog
+Fixes: 49bddc73d15c ("libnvdimm/of_pmem: Provide a unique name for bus provider")
+
+
+> 
+> Regards,
+> Markus
+> 
+> 
 
