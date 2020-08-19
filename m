@@ -2,189 +2,184 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79109C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC23206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EE0206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:51:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sxcKRey4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgHSMva (ORCPT
+        id S1728489AbgHSMv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:51:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54684 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbgHSMvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:51:23 -0400
-IronPort-SDR: SSBKDOW7Cn88tsLacciSZ65qKRDDFpQb6ZwoI+/TxE3/32wsgoMdBXiCAMbrKh4GOiF5HIyJ9Q
- WuanUnlyYKlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="155066293"
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="155066293"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 05:51:23 -0700
-IronPort-SDR: 3dy8y2A8oSdidDSnXqM8E134GtdCXR5NIuRm42jFP9i1sA+ZCssbcc/hzHJphPqZGGvrtGUr9J
- G7kJTHnooNlw==
-X-IronPort-AV: E=Sophos;i="5.76,331,1592895600"; 
-   d="scan'208";a="472222927"
-Received: from mdessai-mobl1.amr.corp.intel.com (HELO [10.209.78.93]) ([10.209.78.93])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 05:51:21 -0700
-Subject: Re: [PATCH] soundwire: cadence: fix race condition between suspend
- and Slave device alerts
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200817222340.18042-1-yung-chuan.liao@linux.intel.com>
- <20200819090637.GE2639@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <8d60fa6f-bb7f-daa8-5ae2-51386b87ccad@linux.intel.com>
-Date:   Wed, 19 Aug 2020 07:51:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 08:51:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40490 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgHSMvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:51:52 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819125150euoutp0235d109206cbe80258b8dfc771ba94274~srGN1KRgN2513825138euoutp02Y;
+        Wed, 19 Aug 2020 12:51:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819125150euoutp0235d109206cbe80258b8dfc771ba94274~srGN1KRgN2513825138euoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597841511;
+        bh=gzhlptWpxVbsUHuvhCGM3F9nelOeibRw24yuW4FNoY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sxcKRey47qqk6gnLKRU4WlBzCzCFYBOWV7JRgLc7g5gIoa16UXvJGrUlnvLjM6nLJ
+         eEbYyQ8dv0ttbTvbZGAef6kSIltGAfybg9xxtLyNBxwNDGxvHAEvJMGHgWRq4657ya
+         drViUhagX1kGAll9mPp4k2EzbONrx+/HfWveaNmA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200819125150eucas1p2f61c758e3e1afe709f09efcc31546da5~srGNi5XFx3079830798eucas1p24;
+        Wed, 19 Aug 2020 12:51:50 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1E.4E.06456.6602D3F5; Wed, 19
+        Aug 2020 13:51:50 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200819125150eucas1p1965fab59b6e75cf54cac262161c5695b~srGNJ7lm_3265032650eucas1p1S;
+        Wed, 19 Aug 2020 12:51:50 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200819125150eusmtrp29139167e8ff9315f0d5da482e0c90473~srGNJPv-X0843508435eusmtrp2U;
+        Wed, 19 Aug 2020 12:51:50 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-01-5f3d2066c128
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 52.C2.06314.6602D3F5; Wed, 19
+        Aug 2020 13:51:50 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819125150eusmtip19e0c6d8be57ba852ebcef12b65f74a25~srGM-FaxI0503105031eusmtip1Z;
+        Wed, 19 Aug 2020 12:51:50 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 1/8] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
+ s3c64xx_enable_datapath()
+Date:   Wed, 19 Aug 2020 14:51:27 +0200
+In-Reply-To: <20200819123834.GB18122@kozik-lap> (Krzysztof Kozlowski's
+        message of "Wed, 19 Aug 2020 14:38:34 +0200")
+Message-ID: <dleftjtuwy23zk.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200819090637.GE2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0yMcRj3vffe995u3vb2ih75MW5hMpcWeRUNs7kmm7FhDTl6dejucm+l
+        8odDKidSzfq5UqGcdc65Ja1hzbQ0HRpJ0ii7dMwqTeVnb99s/vs8n+fz/TzP59mXJrhnpD99
+        2JAomAzaeBWllNc9HmtbfmjBupgVlc8D+KpRt4y/XXiL5C+/76P4nF4PwbtcdgXv6H1F8u0N
+        pRRf6Lov408Ndir42kfdivVKTcfVIULjsJ6jNHeuntRcdFqRZtgxfxsZrVwbK8QfThZMQRH7
+        lbpOczeRMM6mFLc9JM2o3tuCvGhgV0Jz/WmFBSlpjq1BcD7rMoGLbwjKmm0IF8MI8sbHSAui
+        J5/kmhdjvhqB52ULhQs3gsaKekoSUawaamt3SyN82aXQ8es7KWkItloG17pOIakxg40FT0O2
+        TMJydhFct1QREvZik8Ha34UkH4ZdDZkPfCV6JrsGnP09CgkzrA+0FPXJJUyweihyfZ5cFNh3
+        Cmgvt5I42yaoKclEGM+AgWanAuO58OdeuQyHOQn5eaH4bTaCutJROdaEw9u2cQrjDfD94SDC
+        em94/cUHz/WGvLoCAtMMZGVwWB0AtpzGKRd/uDBQM7WBBkZyH09d+jSCdw86iUtoQfF/cYr/
+        i1M8YUtMnO5WQxCml8H1Cg+B8Tqw2b7KryDSivyEJFEfJ4jBBuG4WtTqxSRDnPqgUe9AE3+r
+        9XfzUD0aeXGgCbE0Uk1nUtrCYzhSmyym6ptQwITTB/vNZ8hfbjAaBJUvs/Fp6z6OidWmpgkm
+        Y4wpKV4Qm9AcWq7yY0IqP+3l2DhtonBUEBIE07+ujPbyNyNb6bQbWzV3exq550yjXTHHKCvo
+        cgb9cKvCLFGcNWGgd1q+J5ByM5E7s6neXTvckS/8gjdH2o0dZ81P7nBjjj+z3hxYeCRdF37m
+        mKpIJaa6Ai/oolsSZutORO31HZmfkx6m/jlYtj2j5JB5vU8TrXY2fFxi/xm6J21VRMiW1NZ5
+        Krmo0wYHEiZR+xc/oTXBYwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7ppCrbxBu2fuC0W/3jOZLFxxnpW
+        i6kPn7BZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWjR9vslusPXKX3YHL4/qST8wem1Z1
+        snlsXlLv0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
+        djYpqTmZZalF+nYJehk3G+4yF/wSqJh17gBrA+MOvi5GDg4JAROJiQ1qXYxcHEICSxklbpz8
+        yw4Rl5JYOTe9i5ETyBSW+HOtiw2i5imjxIKTTSwgNWwCehJr10aA1IgIaEpc//udFcRmFpjP
+        JPH7lweILSyQJHHpwCUWEFsIqPz178dsIDaLgKrEsq7FzCA2p0CZxIruf2AjeQXMJdr3i4CE
+        RQUsJba8uM8OYvMKCEqcnPmEBWJ8tsTX1c+ZJzAKzEKSmoUkNQtoEjPQRet36UOEtSWWLXzN
+        DGHbSqxb955lASPrKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMB423bs5+YdjJc2Bh9iFOBg
+        VOLhrThnHS/EmlhWXJl7iFEFaMyjDasvMEqx5OXnpSqJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8
+        iNEU6M2JzFKiyfnAFJFXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNT
+        qoHRaMPz6EWyUxuq3BybWefsTlz6JuzKrLf259o2qyyxuLPx5epbXXpz61e0dLRqss0p4has
+        +RNzaklqx7b9lt/avS6tObkq+at14NIfm7Qcg7OqtfM2q1QlNy16t0lcZ/uFJv7S2miXtTsE
+        ql6Gql87vHK2U0HEmqKUro+84XYTW5Vzoj27doQosRRnJBpqMRcVJwIA1QaaCdkCAAA=
+X-CMS-MailID: 20200819125150eucas1p1965fab59b6e75cf54cac262161c5695b
+X-Msg-Generator: CA
+X-RootMTR: 20200819125150eucas1p1965fab59b6e75cf54cac262161c5695b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200819125150eucas1p1965fab59b6e75cf54cac262161c5695b
+References: <20200819123834.GB18122@kozik-lap>
+        <CGME20200819125150eucas1p1965fab59b6e75cf54cac262161c5695b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+It was <2020-08-19 =C5=9Bro 14:38>, when Krzysztof Kozlowski wrote:
+> On Wed, Aug 19, 2020 at 02:32:01PM +0200, =C5=81ukasz Stelmach wrote:
+>> Fix issues with DMA transfers bigger than 512 on Exynos3250.
+>
+> Fix, but how? With proper explanation this should go to CC-stable.
 
-On 8/19/20 4:06 AM, Vinod Koul wrote:
-> On 18-08-20, 06:23, Bard Liao wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> In system suspend stress cases, the SOF CI reports timeouts. The root
->> cause is that an alert is generated while the system suspends. The
->> interrupt handling generates transactions on the bus that will never
->> be handled because the interrupts are disabled in parallel.
->>
->> As a result, the transaction never completes and times out on resume.
->> This error doesn't seem too problematic since it happens in a work
->> queue, and the system recovers without issues.
->>
->> Nevertheless, this race condition should not happen. When doing a
->> system suspend, or when disabling interrupts, we should make sure the
->> current transaction can complete, and prevent new work from being
->> queued.
->>
->> BugLink: https://github.com/thesofproject/linux/issues/2344
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
->> Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
->> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Honestly, I don't know and I couldn't find out why. It makes stuff
+work. There has been a commit like this before
+
+    0f5a751ace25 spi/s3c64xx: Enable GPIO /CS prior to starting hardware
+
+Apparently, it was lost in
+
+    0732a9d2a155 spi/s3c64xx: Use core message handling
+
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
 >> ---
->>   drivers/soundwire/cadence_master.c | 24 +++++++++++++++++++++++-
->>   drivers/soundwire/cadence_master.h |  1 +
->>   2 files changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
->> index 24eafe0aa1c3..1330ffc47596 100644
->> --- a/drivers/soundwire/cadence_master.c
->> +++ b/drivers/soundwire/cadence_master.c
->> @@ -791,7 +791,16 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
->>   			     CDNS_MCP_INT_SLAVE_MASK, 0);
->>   
->>   		int_status &= ~CDNS_MCP_INT_SLAVE_MASK;
->> -		schedule_work(&cdns->work);
+>>  drivers/spi/spi-s3c64xx.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> index cf67ea60dc0e..fb5e2ba4b6b9 100644
+>> --- a/drivers/spi/spi-s3c64xx.c
+>> +++ b/drivers/spi/spi-s3c64xx.c
+>> @@ -678,11 +678,11 @@ static int s3c64xx_spi_transfer_one(struct spi_mas=
+ter *master,
+>>  		sdd->state &=3D ~RXBUSY;
+>>  		sdd->state &=3D ~TXBUSY;
+>>=20=20
+>> -		s3c64xx_enable_datapath(sdd, xfer, use_dma);
+>> -
+>>  		/* Start the signals */
+>>  		s3c64xx_spi_set_cs(spi, true);
+>>=20=20
+>> +		s3c64xx_enable_datapath(sdd, xfer, use_dma);
 >> +
->> +		/*
->> +		 * Deal with possible race condition between interrupt
->> +		 * handling and disabling interrupts on suspend.
->> +		 *
->> +		 * If the master is in the process of disabling
->> +		 * interrupts, don't schedule a workqueue
->> +		 */
->> +		if (cdns->interrupt_enabled)
->> +			schedule_work(&cdns->work);
-> 
-> would it not make sense to mask the interrupts first and then cancel the
-> work? that way you are guaranteed that after this call you dont have
-> interrupts and work scheduled?
+>>  		spin_unlock_irqrestore(&sdd->lock, flags);
+>>=20=20
+>>  		if (use_dma)
+>> --=20
+>> 2.26.2
+>>=20
 
-cancel_work_sync() will either
-a) wait until the current work completes, or
-b) prevent a new one from starting.
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
-there's no way to really 'abort' a workqueue, 'cancel' means either 
-complete or don't start.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-if you disable the interrupts then cancel the work, you have a risk of 
-not letting the work complete if it already started (case a).
+-----BEGIN PGP SIGNATURE-----
 
-The race is
-a) the interrupt thread (this function) starts
-b) the work is scheduled and starts
-c) the suspend handler starts and disables interrupts in [1] below.
-d) the work initiates transactions which will never complete since 
-Cadence interrupts have been disabled.
-
-So the idea was that before disabling interrupts, the suspend handler 
-changes the status, and then calls cancel_work_sync(). the status is 
-also used to prevent a new work from being scheduled if you already know 
-the suspend is on-going. The test on the status above is not strictly 
-necessary, I believe the sequence is safe without it but it avoid 
-starting a useless work.
-
-If you want to follow the flow it's better to start with what the 
-suspend handler does below first, then look at how the interrupt thread 
-might interfere. The diff format does not help, might be also easier to 
-apply the patch and look at the rest of the code, e.g the 3 mask updates 
-mentioned below are not included in the diff.
-
-> 
->>   	}
->>   
->>   	cdns_writel(cdns, CDNS_MCP_INTSTAT, int_status);
->> @@ -924,6 +933,19 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
->>   		slave_state = cdns_readl(cdns, CDNS_MCP_SLAVE_INTSTAT1);
->>   		cdns_writel(cdns, CDNS_MCP_SLAVE_INTSTAT1, slave_state);
->>   	}
-
-[1]
-
->> +	cdns->interrupt_enabled = state;
->> +
->> +	/*
->> +	 * Complete any on-going status updates before updating masks,
->> +	 * and cancel queued status updates.
->> +	 *
->> +	 * There could be a race with a new interrupt thrown before
->> +	 * the 3 mask updates below are complete, so in the interrupt
->> +	 * we use the 'interrupt_enabled' status to prevent new work
->> +	 * from being queued.
->> +	 */
->> +	if (!state)
->> +		cancel_work_sync(&cdns->work);
->>   
->>   	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0, slave_intmask0);
->>   	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1, slave_intmask1);
->> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
->> index fdec62b912d3..4d1aab5b5ec2 100644
->> --- a/drivers/soundwire/cadence_master.h
->> +++ b/drivers/soundwire/cadence_master.h
->> @@ -133,6 +133,7 @@ struct sdw_cdns {
->>   
->>   	bool link_up;
->>   	unsigned int msg_count;
->> +	bool interrupt_enabled;
->>   
->>   	struct work_struct work;
->>   
->> -- 
->> 2.17.1
-> 
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl89IE8ACgkQsK4enJil
+gBAUlggApUTqPdsn1ouHqpWeD9cWT+uRv8GGM8gtU0ek4a0ppZG4xlm/Pvjv6QvY
+5kqUEcGKmj+1UwxYIxlJv3yySNnu+IvoxCQEMACxzd9UjK8+ZDDhyeT3ocXQpA2S
+jKg6VNacPq/jG/2TOZsMX/rkJR3LBJrUkA7zZULMavgTET62WOfWn962b4H/BOk/
+2SmbNFMsAg6XpyvNQm6+D7MRK37pyIb116WZWAE8SAMqJQwVYo7FxlEcobVYn4dA
+IqMZzJZyNlhhIs1PjX/Sfal4aagLIgfMrbWqHV6LPY5U+bWWa3yDJ1zoM2MjE2tn
+8ykl1sbm0+wW2sJqQButwhS/CSZghA==
+=TpUg
+-----END PGP SIGNATURE-----
+--=-=-=--
