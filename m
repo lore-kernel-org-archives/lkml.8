@@ -2,211 +2,188 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59907C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA6D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4AE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZRl2zMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgHSROn (ORCPT
+        id S1726675AbgHSRQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:14:43 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59322 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgHSROb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:14:31 -0400
-IronPort-SDR: 9d8RIdjTEbL0fQ/CXjh2wAWyIFOe6CVioLW728TE855KnKe+bE5ARHqfhnV67gViIrZgm5cZRw
- YcIQF+BDDGMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="142790823"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="gz'50?scan'50,208,50";a="142790823"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:14:30 -0700
-IronPort-SDR: ieGdFWC5l60qaNPQAAT+A5czmLipddawxL22tTEfAX9Q7QgPxh0K5qi/wfbB2qj3f9bXxeB0ik
- owF9eg7htM5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="gz'50?scan'50,208,50";a="334741712"
-Received: from lkp-server01.sh.intel.com (HELO 4cedd236b688) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Aug 2020 10:14:27 -0700
-Received: from kbuild by 4cedd236b688 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8RfO-0000O4-FZ; Wed, 19 Aug 2020 17:14:26 +0000
-Date:   Thu, 20 Aug 2020 01:14:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     kbuild-all@lists.01.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
-Subject: Re: [PATCH v5 2/2] mm: add a field to store names for private
- anonymous memory
-Message-ID: <202008200159.CjwHBHM6%lkp@intel.com>
-References: <20200819141650.7462-3-sumit.semwal@linaro.org>
+        Wed, 19 Aug 2020 13:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgHSRQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:16:04 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0C9C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:16:03 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id f24so27243537ejx.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XRqa7rD+3TPE1bG2h+MbFmHitdNtLwxzxGM/+CI+Rdk=;
+        b=ZZRl2zMJAdWdkotK88EQbw8bXL3Fqo22rxMyJDQljJubgOmdGX2UQn+ksXEQyE29SL
+         WLPdcDA3fZSO4TIt2A3JBbwJ0ON3Q6raRZ3Zaw9FStagZoXRtdXSNnC7hMXYIP+qIwGj
+         T1J0gjQaUjcS+fbSnTLkBiP9Ycni9t+IKg3ki72wmMRLL16hLMMhqlTI2dByQLM5OcET
+         M5ZJgiUzLNUnZrImtVOStVKIfQJoFbjnULzqCMnaoirIawisorTh1J4tM93QsjV1AuEw
+         FdC2VA900h53fi4FqWO0O70EkJrkYgg8DyBcO47g6O2L0fv3GIe6znk33rAvQs9Emlvz
+         LcCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XRqa7rD+3TPE1bG2h+MbFmHitdNtLwxzxGM/+CI+Rdk=;
+        b=k5zOOTfUkQ4fQssBU8IGi2VUo9QtZJNlaKP0sJKKI9sM8Rh1yy5Y67GMFAE+WYeXpT
+         Viq0ZJZnVCXwTbl3COOGlrfo8R5dbB3fN33+RqhU+7V4IWjgAa8bX73rH3MD8ETErvph
+         thgzfsQHyH/z/IUCjapSl9I9sIAQ33UNKYkYmli6lrIrsOKFBcmtGLOZaGaIQEJZL0Nl
+         t9pjtiEa36Zx7cIwuIdkABBRJoUL/8ARf31HM4xiw+ufy96LCGS3G34a1BbWKbPRInRl
+         GABKTVZrjKJB8NwRLmBwiLHXvGO2zo8wnhpsT4kjRkpC7wxtXfZi5Cx5lff6fH3hlXyk
+         R1fg==
+X-Gm-Message-State: AOAM530ANmod9iKEtDclu2CxVaPgaAiDgxIfGIY3Bqvde94YJ2XndXW7
+        DIyy3LrVay0taFJZx8DCJ1/F0XdQAec=
+X-Google-Smtp-Source: ABdhPJzg6yn2d3YhjlksWnytCWJiCl/tQ1npRji9uuyfS6hX1VW18Yx1aPGrJuVUhfuPb1bAJHqBuA==
+X-Received: by 2002:a17:907:10d9:: with SMTP id rv25mr24666958ejb.264.1597857362180;
+        Wed, 19 Aug 2020 10:16:02 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id s9sm20373831edt.36.2020.08.19.10.16.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 10:16:01 -0700 (PDT)
+Subject: Re: [PATCH v2] mm: include CMA pages in lowmem_reserve at boot
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Doug Berger <opendmb@gmail.com>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1597423766-27849-1-git-send-email-opendmb@gmail.com>
+ <20200818201817.351499e75cba2a84e8bf33e6@linux-foundation.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <e22cbcdc-e9ce-50b7-aa88-6a3579ffd509@gmail.com>
+Date:   Wed, 19 Aug 2020 10:15:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-In-Reply-To: <20200819141650.7462-3-sumit.semwal@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200818201817.351499e75cba2a84e8bf33e6@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/18/20 8:18 PM, Andrew Morton wrote:
+> On Fri, 14 Aug 2020 09:49:26 -0700 Doug Berger <opendmb@gmail.com> wrote:
+> 
+>> The lowmem_reserve arrays provide a means of applying pressure
+>> against allocations from lower zones that were targeted at
+>> higher zones. Its values are a function of the number of pages
+>> managed by higher zones and are assigned by a call to the
+>> setup_per_zone_lowmem_reserve() function.
+>>
+>> The function is initially called at boot time by the function
+>> init_per_zone_wmark_min() and may be called later by accesses
+>> of the /proc/sys/vm/lowmem_reserve_ratio sysctl file.
+>>
+>> The function init_per_zone_wmark_min() was moved up from a
+>> module_init to a core_initcall to resolve a sequencing issue
+>> with khugepaged. Unfortunately this created a sequencing issue
+>> with CMA page accounting.
+>>
+>> The CMA pages are added to the managed page count of a zone
+>> when cma_init_reserved_areas() is called at boot also as a
+>> core_initcall. This makes it uncertain whether the CMA pages
+>> will be added to the managed page counts of their zones before
+>> or after the call to init_per_zone_wmark_min() as it becomes
+>> dependent on link order. With the current link order the pages
+>> are added to the managed count after the lowmem_reserve arrays
+>> are initialized at boot.
+>>
+>> This means the lowmem_reserve values at boot may be lower than
+>> the values used later if /proc/sys/vm/lowmem_reserve_ratio is
+>> accessed even if the ratio values are unchanged.
+>>
+>> In many cases the difference is not significant, but for example
+>> an ARM platform with 1GB of memory and the following memory layout
+>> [    0.000000] cma: Reserved 256 MiB at 0x0000000030000000
+>> [    0.000000] Zone ranges:
+>> [    0.000000]   DMA      [mem 0x0000000000000000-0x000000002fffffff]
+>> [    0.000000]   Normal   empty
+>> [    0.000000]   HighMem  [mem 0x0000000030000000-0x000000003fffffff]
+>>
+>> would result in 0 lowmem_reserve for the DMA zone. This would allow
+>> userspace to deplete the DMA zone easily.
+> 
+> Sounds fairly serious for thos machines.  Was a cc:stable considered?
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Sumit,
-
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v5.9-rc1]
-[cannot apply to hnaz-linux-mm/master linux/master next-20200819]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Sumit-Semwal/Anonymous-VMA-naming-patches/20200819-222011
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 18445bf405cb331117bc98427b1ba6f12418ad17
-config: nds32-allnoconfig (attached as .config)
-compiler: nds32le-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=nds32 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   nds32le-linux-ld: kernel/sys.o: in function `__se_sys_prctl':
->> sys.c:(.text+0x16a6): undefined reference to `madvise_set_anon_name'
->> nds32le-linux-ld: sys.c:(.text+0x16aa): undefined reference to `madvise_set_anon_name'
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-H4sICDVYPV8AAy5jb25maWcAnVxbj9u4kn6fXyFkgMUMkGT6lpwJFv1AS5TNY91apOzuvAiO
-re4Y6bZ7fZlJ9tdvFSlZlFR05uwBziRRFW/FYtVXxaJ//eVXjx0P25fFYb1cPD//8J6qTbVb
-HKqV97h+rv7bC1IvSZXHA6HeA3O03hy//7FZ7a+vvA/vP72/eLdbXnrTarepnj1/u3lcPx2h
-+Xq7+eXXX/w0CcW49P1yxnMp0qRU/F7dvtHNn6t3z9jZu6fl0vtt7Pu/e5/eX7+/eGM1E7IE
-wu2P5tO47er208X1xUVDiILT96vrmwv9v1M/EUvGJ/KF1f2EyZLJuBynKm0HsQgiiUTCW5Ka
-5JwF8DlM4T+lYnIKRFjpr95Yy+3Z21eH42u79lGeTnlSwtJlnLUdiUSokiezkuUweRELdXt9
-Bb00U0jjTEQcxCWVt957m+0BOz6tNvVZ1CzozZu2nU0oWaFSovGoECAtySKFTeuPAQ9ZESk9
-L+LzJJUqYTG/ffPbZrupfreGlA9yJjLfHuhEmzPlT8q7ghecpPt5KmUZ8zjNH0qmFPMnJF8h
-eSRGNkmLXOR33v74Zf9jf6heWpGPecJzAcqT35Vyks4t9bEo/kTY+wFfgjRmImm/TVgSwB6Y
-z8gBpF+9arPyto+9sfsDKBHzcgaige2IhuP7sE9TPuOJko36qPVLtdtTy5l8LjNolQbC1xOo
-PycpUgTMkBSZJpOUiRhPypxLPclcdnnq1Q1m00wmyzmPMwXd62Nx6rT5PkujIlEsfyCHrrkG
-G+lnxR9qsf/mHWBcbwFz2B8Wh723WC63x81hvXlqxaGEPy2hQcl8P4WxRDLuTEQKckX/YAg9
-ldwvPDncBBjmoQSaPRT8s+T3sDfUEZWG2W4um/b1lLpDtf2KqfnLQExy+bVaHZ+rnfdYLQ7H
-XbXXn+vuCKp10sZ5WmSSPoUT7k+zVCQK1UKlOa1REvgCbVR0XyRPziNGb/0omoI1mWkDkwc0
-S5qqcrj01iqnGais+MzLMM3xTMAfMUv8jiL22ST8hejN7JvdMAY7J8DQ5PTix1zFYO3L+kzT
-TA8ylGc5QmNT6MORSnFPHsrT6YEtmtKiK8b0dyZBDIVrNgW4Y5LCs9S1RjFOWBTSO6gn76Bp
-c+egyQn4AJLCREp+F2lZgDjoVbNgJmDd9UbQwoQBRyzPhWO/p9jwIabbjrLw7C6jFmm/2V1u
-I4h4xIOAB7ajmXGtz+XJJ7Sb7l9e3AwsQY23smr3uN29LDbLyuN/VRuwZwyMgY8WDey3sa11
-P233pH38hz22Hc5i012prbBLZxHIMAUoiNZbGbERISIZFSNbCDJKR872sJX5mDdQxc0WgvOJ
-hAQjB2cwpdWtyzhheQAe26WzRRgCPMgYDA6aAMgLTKfj4KahiAbaWku+CxwbESSBvL4ikAMD
-IJQzhesFU0swyCIefp3MOXh9ZTmknPkcMU0YsTHYrCLL0tyiS8BiU8M0oIVgpjjLowf4N56j
-lpKNFRuBTCLQjEjeXtVuSzs4T/14reDf+lO22y6r/X6788LWkzUqA759hOckCQRLOrYdKJFQ
-CkYwRNqqZQXlPqCtD/gS90ow2UMNSE0uP9AqrGnXZ2gXTlpwps+g286izK5bkYKuAlTTSoau
-rLyZdk5Gn/znlD4o2K0w6w+ExE1yz+s/YpvnQnEIi9JiTGP3+ShhNA6dN6pVFuBSwK/EaE4A
-1nHpMCZ6xOjK1V3WRS5a0+LqZbv74S17kallxmQGOlVeU5ijJSKosOXeUK5oD9SQL6le9W6l
-YSi5ur34Prqoo9WTQSCnfLILOUpf3l42H+LYwpnaaugIDxBnGaiRiQ4bhGgdRNuNhDaabKOO
-ywtKQYFw9eHClgV8ub6gz4Dphe7mFroZ+J+wha5oJrZ/A5wFb7R4ql7AGXnbVxSGZSxYDgGm
-LGQGBgERlBSgsx3XYWi0XY5Jg+wctRPnL3bLr+tDtcTpvltVr9CYnKF27nqa2pxO0nRqnW78
-fn01AlUBhShVDxPkHGwzHHFjjuujUbJMtHxxGhQRmADAHCWPQo3Ae73we+jeZC6sJEcEERzg
-Q386By/XgRy1zzbTQkg3OFRjP529+7LYVyvvm9m31932cf1sArXWs51j67u/n8jzlL1ARCtj
-DKsvLTRnpOCIPCDYJjTQ5HZKmcFJKRJkqmP8Ll0nfAz9HI1sq42jq7FNrFtr4fHv1fJ4WHx5
-rnQGztN47NA5nCORhLHC/aZXbMjSz0VGA6KaIxaSTtz4EAQGRZyR58M1QdvexmfOLEAO1YEN
-+KFM0oAjmihjZuVljBnNlBaSNnw3PUX1lUhpIKDtbM7Rw7gihamMCc1osl4xTAVklEBAEeS3
-NxefPp7sLIdQGCC19oTTuHN6Ig4xKXoqWrIx7Q0/Z2lKRxOfRwVtvj7rY5DSOwiTw7mB4egD
-/gYaFlk54ok/iVkfnHf9ELGVVpqJD7M5QfXXGsKHYLf+qx+E+D7rBv+tSV0v6xZeelKYNqIy
-ocaER5kjYAv4TMVZSK8VpJAEDC2eKy2luw9FHoM15CZFOphmuN69/L3YVd7zdrGqdvb8wnkZ
-pSzoz60WZL+hBd9g/+Y6L0KfuNPiIMAvg1zMnKvXDHyWO4ygYcB0ct0NHIw4nVGpkVMkgSCP
-zwT4HDtr5dgsLY3Rce+t9O53di+eCBApHXfaTSzlTBwQMFZUSB0o644gDe3jmIZgYiFmoBPp
-QEXjoyDiszsw4Q1NQlsAXrjzrWP7U3TCkuczMBHGzNmTAZnnrhxZxnI0VgPFS2bgg+Xx9XW7
-O9j+tfPdWN/1fkntAGhW/IDTpFMzCaABWYDi47Rxw+lTlDM6ar7H4Pa+lEHIHcZolrFEOFzN
-FblmziFqjr29tepmtppSfrr27z/S/qnb1KTXq++LvSc2+8Pu+KLTGvuvcCJX3mG32OyRzwNY
-UnkrEOD6Ff9qC/r/0Vo3Z88HwDZemI0ZuMraCKy2f2/QEHgvW0zXer/tqv85rgHzeuLK/72J
-kMXmAHgpBqH9l7ernvWFHCGMWZo5j9a5Lixx+pOUNv+2LplA3pei/mLNpdEOICIOs20F1aBe
-3evxMOyqTe8lWTHUiclit9IiFH+kHjbp6LjESxLa1bGY95XsNEeq01aCxDTNmLD/iyXsLnXa
-lKLPN86QRdrcD/asWXgWi/riibb0EOaeyV9B165MKpCmLpry4f/9aKg93NGDS8WGYmgbmmlC
-1FOA08Hc/tBDGl248kkVuPJprbbYLe5r2roAund8j2nCpH9/1Jiw7uWJCU9V5i2ft8tv1vyN
-8dpodJxNHvDaEi+bACfN03xawicdUgEiiTNEpYct9Fd5h6+Vt1it1uhMIRjSve7f2zZoOJg1
-OZH4Kqfh4zgTae/ytM3NXDpuIuYAENjMcQ2hqeji6NjC0DG1E9HHYDKPHYhdTXgOmJaeK94l
-BymVUJFyRMf+kkoujwCCk+yjHjY3HvX4fFg/HjdL3JnGFKyG0DYOgxLDmghQA7/3Heez5ZpE
-fkCrLPLEeFLoQAHJE/Hx5uqyzGKHT50oH8CEFD6dtcQupjzOIjqu0BNQH68//ctJlvGHC1p3
-2Oj+w8WFhrPu1g/Sd2gAkpUoWXx9/eG+VNJnZ6Sk7uL7P2kMcHbbLBvFx0XkzNvHPBCs9Lnf
-JCrPcBEcJrbZLV6/rpd7ysQFeTzgZ/DNdin1euzPJhjZLV4q78vx8RGMbzD0QeGIlAvZzGD3
-xfLb8/rp6wHQAujmGecMVKypkbIOD+gMA/OnEd45nGFtQoCfjHyKPPqitE56WiRUYFCAZUgn
-vuheG7RYHent/YZ1gTcqiygbRC0WWWfusExo4ge9poM9xW8aJLZ24/Q9+/pjj5VXXrT4gW50
-aFkSgHg44r3PxYwU4Jl+umsas2DssNrqIXOAd2yYpyA8ORfKUaATx45TymOJBRskMeEQNfOA
-9jIm1ylGEFp00VRzcsHEgVvr1GMo3ygbjX/Qpg6CG5OwiNmoCK1EVatXD4lfhsJxDWLalRhH
-wy4pEdL+rmabcNYvwKj3rze+JYTiPhAyc8WLhQPvzkTehPm0LJBBpLA7SUHTg4x2PjMsBBu0
-q0PP5W673z4evMmP12r3buY9Hav9oWNATpHFeVZL/oqNXbm7cRoFoZATQjl02tuPpna6e4qw
-O0rTaZH18uNAwxQQRN9WpA8eHFBK3YmV3JsCQgxofW6b4BUpRv+xY4Mmc8w69/PSRvE0xJPb
-466DM9rxZe7rjju3gMrPhLoEv6srMOijKPw8xaI3QIvq4w3tHsjRrT6YiEYpXTIiYPWF0w3m
-1cv2UL3utkvKxGEuSmHUTkN+orHp9PVl/0T2l8Wy0XK6x07Lnh+ZC+IeUcLcfqsv0NINBD7r
-19+9/Wu1XD+ekmEnw85enrdP8Flu/c70GmdOkE076BCCdFezIdV47t12sVpuX1ztSLpJLN1n
-f4S7qtqD46i8u+1O3Lk6+Rmr5l2/j+9dHQxomnh3XDzD1JxzJ+n2fmGt5WCz7vGO6fugz266
-auYXpG5QjU8JjX+kBVYsFCPwCXPuSLzdKycQ1kWx9ElzWJVsPoSTmPJbwiyH+Rqg1CWwVjYa
-DJcj6u73Y00nw7tJV0JDx4lY1acAQ0RE+A8RcafgsrXvdR4aGUiE6cflNE0YApQrJxcG3BBE
-8MTnJeD8nCeOqNXiC/5JZ5JFM8c+AFcoo1JAdBLf9RFhhy0GPxHBfwFqnh00u2fl1Z9JjOkJ
-R4rV5kKJkNvYFXYvZvcZffsQ+/QCcjaEUmyz2m3XK3sfWRLkqQjI+TTsFlhitHtJ+oktkxGc
-Ywp2ud48UYGKVHQULhIFUlcTckpEl1ZUhZlcqsvQkTaSwuEuZSRiZxIQ6+ng7wn3aWWtS+5o
-MNm9fatvrsBmm03vWMIZi0SAxWQh1hDlruJXfo8+HXj0VXqZOuqIESfjC4SpC7FBD3B08ofM
-eWULHABahSN/GpwB2cLQSmcFb8jOtL4rUkVvLNY7h/KmdNwsGrKLGmJVhoNWXwT1yGZ3Fsuv
-vWheEjfKDWYz3MaY7qvjaquv5YntRoDlmo6mgUOIAjCRtMZidbNDHfEPQgyN1RnOysal0oRY
-0L/ijorbxFHFWyTCTwNaLh2lNxiuWh5368MPKtKb8gfHrRf3C9RICOO41P5MgVdy1JnWvCGV
-NdCxRlNSqvXUT7OHtnS0U1LVZ6OHUwyCa80TgxSGt+PNuanrGdqlMOu+NJLx7RvE/Xgx9fbH
-4mXxFq+nXtebt/vFYwX9rFdv15tD9YSye/vl9fFNp3rs62K3qjZoL1ux2qUg6836sF48r/+3
-9ypMP4EyhU391ySahC+YUDan6TtsRsOMZbtO3m5JQ39KvSI0YkUnANhXIesUoGFLB4c5Wn/Z
-LWDM3fZ4WG+6xxqRU89YNuBGKCxKAJM8LOYFBUx80JwQr0Fx82mWiCcN1TqpeeACEDm+WUqK
-eNTLGpy8PVptFnW6g1jU94VyeKncv/zoopQQrgaCrl9CslBFSd3YA03XRdvM11eg2lHouOOv
-GSLh89HDn0RTQ7lxTQVZWD4HN3mGA/bLRf3o7NlJoBPvkRjpwRz36Ln/pwOm4T2cQ0ZtUPQZ
-zo5PiK9RKdtOnayUxLDfLuUyn3RRb6eOC78HsVWZqCuo4AuyaUNmKTp+hslELOegsROOoL1X
-M4n96eQc8uI7H5Pb+xmXnxUEC1IxAUQMhiSwTg1Bl4R1qScSFnB1STkfcAciB1B3otg5Qqzr
-NHU653ZBpbEAlepYy/yu7L/XaVUmDDqpbfReydihC7WRG5iswfvJtLe0hgDjlUxOokBcO4m5
-kxidI8aFu1c/zgJBvJZAWnEidp3W8pupVtVfX3fg4L7pm9rVS7V/GhYtwh8y1fh2rF83NJ7m
-9l9OjrtCcHV7c6rU5VJiReKghxsbY8WjFOxRyfMc39uS2+OcrHEt25dXQD7v9DtHQIbLb3vN
-ujTfdxT4MdVh+KqZxv+JftUR40W+fixIaFqYw3TLOcuT28uLq5uuwmX6MbXzPRWW0eoRmKQD
-tgnH+1CwLAlYClLRzQoA4KCTQkwZ43WxVUfao+iZAkqIHjqnUPcChsLHV3OJaaKfJmA1NB2T
-WE3mnE2bqlAaqv/TvemURdYqG1Rfjk9PiEqsQqTOFTQbo+t/kI4yr3qqDiQ9kv33NL2Cv7PT
-6O7DlOcJj4aS7dcb2zDx1G8XII2xfl3xRLpCRtMzMp4phtUvLuaJIzTU5CwVMk1coasZJR39
-G/TICe7rxYNDjEAThstvKGdGMHi4QENBQ379CNdw4ZOHwXHs9TdzFQPp7TAP7xFAU7jJ/AzC
-lIFiNBZ18CMJWNSC/iRJgUsofILUFkj2YXe7xYNlT3q1iXUhMfB76fZ1/9aLIEA5vprjMlls
-nno4GuJAjAHSXm6ComPWo+Dt70AYIl6cpIW6vbBknYa67rzIYJYKNt5RJmCI5aQAOeAvQpBM
-8zuygsVK25xb6y/d59/dszJ4/+2WM65yynnWU3MTqODVT3u6f9tDBKjLkN56L8dD9b2Cv1SH
-5fv3738f+g7qPquvbfja+Gx5cj6XrgSAYTDoBxA7LOEMW52D0oCqATp0tzqfBfuqsPjViY3n
-czP5n6Cm/0B+nRi+fmhJD41uCgxbWSQSEDOc/bPVf9rKGCvlOE31Q5zV4rDw0HwvBy+/ahkK
-hzBqe/sTujxnRnUiTrgup7WhTcqAKQTXeV4Q6cLOoXEsqT+qn4P8EiVYNMy44U8xkA4If+NB
-P512Kgdy/FSDkCnnYYlvxn/C5tYF/XsTd3IYI3R+UcJ9+MEEGZySDxCK7cVOwEfPpBPu2dRx
-zrIJzRM8AHaFcxpqar8D86o41jlsEAqmJLrvknV8MizKCd2SkSzOIqKww/xMkb2xdgygqj3+
-7oc2s/72r2q3eKo6KcEicUT1jQIjTIeoUiT/5u5nSM0P6xA8XV8KHtRPZ/XT7KzzYy85/tBJ
-bDQHxeOs3ACX7jRQZ5c9SIGZ+Oj/ANtbgfAgSgAA
-
---1yeeQ81UyVL57Vl7--
+Since there is a Fixes: tag, it may have been assumed that the patch
+would be picked up and as soon as it reaches Linus' tree it would be
+picked up by the stable selection.
+-- 
+Florian
