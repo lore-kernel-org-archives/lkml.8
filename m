@@ -2,89 +2,69 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5220A2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ji3IzFdB"
+	by mail.kernel.org (Postfix) with ESMTP id 2BCBD2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597867936;
+	bh=wCiqSWw7+dELXrP0i9ukDIaG6ZmIp6AkyvOOF38BHhE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H5W6ncageQuENgLipV/Cebn/Z9u5y8ZR2DRr7HPuCVKNBYnVcCubEnQo+3SvQy0eK
+	 hES0K+6O8faAbBv4Tcf+YNdy5BmPrdhAGzPHIeSqhY1a8FCGHrsD6NEcufExSX1lbM
+	 I4tBAPQCFl7J0NS9lluZO2lVqayBqfNbXMj1A0Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgHSULt (ORCPT
+        id S1727113AbgHSUMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSULt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:11:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B61BC061757;
-        Wed, 19 Aug 2020 13:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aWJlZuyBEoP4j5aoc4JrDsUNwgvnVjmYGVt0UgJZ9d0=; b=Ji3IzFdBJP0RJnXsOKuepMkSP3
-        Dry6qmMNImqRP/gKYNREt724rVeU3rOs/ANZVz8gD74oH+K58RAqd8GUuB8InXFCG0y/MyjCtOhBu
-        rJdf1PyCMELT8EjVyz0fwj4/AzCF46m04DSdgnKMezRM4qzmDjZHh+rMaDESMZLI2D1OgaNrMF4zz
-        n5H35+fg2ksMi0RhPJdqNp0IwJJ/CGGB4owBNNORj0I12xhazRXLofFt9E10J74hwqtRjconQpLg/
-        fZ0/noTQg++0r/vFE9XhHURfgqP/Y4NL490Jc3kLnOWnlN7xbO0jJm76iLOBxfLGvDiO9HPNfajPs
-        59FgxwcQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8UQk-00041q-1O; Wed, 19 Aug 2020 20:11:31 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 48069980C9E; Wed, 19 Aug 2020 22:11:27 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 22:11:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 2/2] sched: Cache task_struct::flags in
- sched_submit_work()
-Message-ID: <20200819201127.GP3982@worktop.programming.kicks-ass.net>
-References: <20200819142134.GD2674@hirez.programming.kicks-ass.net>
- <20200819195505.y3fxk72sotnrkczi@linutronix.de>
- <20200819200025.lqvmyefqnbok5i4f@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819200025.lqvmyefqnbok5i4f@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Aug 2020 16:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgHSUML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 16:12:11 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60F7C2078D;
+        Wed, 19 Aug 2020 20:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597867931;
+        bh=wCiqSWw7+dELXrP0i9ukDIaG6ZmIp6AkyvOOF38BHhE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fJn0qJu+brZMju6egaLEThAXIfIpqw+HI2cdO85N+QLjA8pTMhMzxD+EcD0kyLtCF
+         CzUbgTsJGGXpdpSWLFyvrGIsHJvPrAx/Skq5fVj259IuWkDmkyBYkE9qdfHUvHuutN
+         2YoHbMEPsjDuhAONpVpfC2oytz3MIYXF3Ie/oXyY=
+Date:   Wed, 19 Aug 2020 13:12:10 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/mmap: rename __vma_unlink_common() to
+ __vma_unlink()
+Message-Id: <20200819131210.dc5c045a626d1bf4475214d1@linux-foundation.org>
+In-Reply-To: <20200809232057.23477-1-richard.weiyang@linux.alibaba.com>
+References: <20200809232057.23477-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:00:25PM +0200, Sebastian Andrzej Siewior wrote:
-> sched_submit_work() is considered to be a hot path. The preempt_disable()
-> instruction is a compiler barrier and forces the compiler to load
-> task_struct::flags for the second comparison.
-> By using a local variable, the compiler can load the value once and keep it in
-> a register for the second comparison.
-> 
-> Verified on x86-64 with gcc-10.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> 
-> Optimisation at molecule level, part two. Drop this in case this branch
-> isn't consider *that* hot and the cache hot value can be loaded again.
-> But then the value is around and be speculated early on :)
+On Mon, 10 Aug 2020 07:20:56 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
 
-That's fine, task->flags can only be changed by current.
+> __vma_unlink_common() and __vma_unlink() are counterparts. Since there is
 
-Patches look good to me, I'll stuff them in tomorrow. Thanks!
+I assume you meant "__vma_link()" here?
+
+> not function named __vma_unlink(), let's rename it to __vma_unlink() to
+> make the code more self-explain and easy for audience to understand.
+> 
+> Otherwise we may expect there are several variants of vma_unlink and
+> __vma_unlink_common() is used by them.
