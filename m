@@ -2,110 +2,150 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189B1C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7694207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597865931;
-	bh=Lx8A+4JGDQaw7o2vhsJrOmveD7jfN5pP0/WfbZJP56g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vp/usgnytRh5rlIR1+TDz3U14xdScDPQD3PlFOuOpnoZ3gNinx2RWPUWSrtQ0Khhd
-	 vvwKd5bm1sSYRPzsTuVCXZe10Bdf3Y8LqIVouYGTalzgB0Tr9fX4mNv7yRWEWMXG03
-	 tlwjMIS3V2BI8c0IsdyEag6HcxYje0u83qSwPUig=
+	by mail.kernel.org (Postfix) with ESMTP id 2F4B7207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/TMCp2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgHSTiu (ORCPT
+        id S1726980AbgHSTjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgHSTit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:38:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E793B207BB;
-        Wed, 19 Aug 2020 19:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597865928;
-        bh=Lx8A+4JGDQaw7o2vhsJrOmveD7jfN5pP0/WfbZJP56g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T6hchO+WKQcxzx0U9ePi3GDXU6ZFMdMZsJpIIyqIt7ejyd1S19hVsCjIuTEvqXXbf
-         v08ZOCo6eAqhgMXU/8olDYcVYtUKbxzbiGFRTIv7hQgOpLy9KrlNhdE7V18idBK0dk
-         feez/vr2kE/bDYZXhuv37SkVIJ4XyouB77/g0++s=
-Date:   Wed, 19 Aug 2020 20:38:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 2/8] spi: spi-s3s64xx: Add S3C64XX_SPI_QUIRK_CS_AUTO for
- Exynos3250
-Message-ID: <20200819193816.GB38371@sirena.org.uk>
-References: <20200819123914.GC18122@kozik-lap>
- <CGME20200819130122eucas1p27e9e84c4399d01409858de6d01e11b52@eucas1p2.samsung.com>
- <dleftjpn7m23j2.fsf%l.stelmach@samsung.com>
+        Wed, 19 Aug 2020 15:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgHSTi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 15:38:58 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B2BC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:38:57 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id jp10so27740962ejb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YRPJpeT5dhxWJ12GIFcarr8oc1JgRi4yV8j1UvVpQQs=;
+        b=Y/TMCp2AfpTBeZ1xLSiaWieg09HkNJpTltYziCwR0usYRnVKobknSYN9bZc2H9GOU3
+         RlIzAqE9UhP0dz/dIgffplwsHnZ1x+3PLshll/AhehzZn2KTF23JO76enX5pTX5OJsup
+         8WmPltVJM2ZOJdjgexK8RyQ0dCeuBPqsGfwdgFRz+oF84/sKwsu+AC5jELgEtq0rgbQE
+         PjJIav1YKoqMmyPrZWdFV3DEyAjPYgVOlnEnEkUMxzCHp3n575g0i3fAw1QUt6gfcOIp
+         DcmV0sGoZMEdYhGzIEsBf1K6jqr4iBeu7ULnw1jnCMq4sCDnr/ug208FqJx8N6exgCI8
+         bXhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YRPJpeT5dhxWJ12GIFcarr8oc1JgRi4yV8j1UvVpQQs=;
+        b=AS5AH5ilqM/CAPAogKxvsQhEZ4f/VHHhXbkkXQYyZYSQ/0H30sj24VGyLAlgPQHISW
+         Ugn+H67eVitRuko7stz+RXQe2BVTbb4LQKhuXvG2UvRFHRGvaH5he6y/0/M0t0w4Nsf0
+         3/XLevYSykS12Sx3cduNcI2t0TT65ILoVZlsmChOsDaLisL8AlGJvD61Ydn/kG5ylo8m
+         qMHtuv2FvdqLlEXs256wrobAZqL+ptEGJtTi24AVQ/DwdGTGJmO8gkDao6gI9Sa7Ujwa
+         FtYM/h6JDf6KEksz8w6EYVBttez+j8ef6x8A+sFohkNXI/A4Igm/NBuJRjV+HzD6RTIo
+         oK3Q==
+X-Gm-Message-State: AOAM531BgAEJvBdj7z/+ZeOzgK2okFL9kd5hF4dUcmPHvm95zEq0LU09
+        WrPyAO5c3QzPd1FaY+L8Uds=
+X-Google-Smtp-Source: ABdhPJwaiRRbcYN8dZl/U4YqQD41O2+zpth7YbXzWPNZCNAzTKai7VUycG9u+6QMlPAbQdRSaR7nAQ==
+X-Received: by 2002:a17:906:c187:: with SMTP id g7mr6051159ejz.108.1597865936360;
+        Wed, 19 Aug 2020 12:38:56 -0700 (PDT)
+Received: from tsnow (IGLD-83-130-68-114.inter.net.il. [83.130.68.114])
+        by smtp.gmail.com with ESMTPSA id x16sm18064084edr.25.2020.08.19.12.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 12:38:55 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 22:38:47 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Riley Andrews <riandrews@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] staging: android: Remove BUG_ON from ion_page_pool.c
+Message-ID: <2e6c71ad168f92170ef856922b9a0c8dd0f85e11.1597865771.git.tomersamara98@gmail.com>
+References: <cover.1597865771.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dleftjpn7m23j2.fsf%l.stelmach@samsung.com>
-X-Cookie: Absence makes the heart grow frantic.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1597865771.git.tomersamara98@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+BUG_ON() is removed at ion_page_pool.c and add error handleing to
+ion_page_pool_shrink
 
---98e8jtXdkpgskNou
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes the following issue:
+Avoid crashing the kernel - try using WARN_ON & recovery code ratherthan BUG() or BUG_ON().
 
-On Wed, Aug 19, 2020 at 03:01:21PM +0200, Lukasz Stelmach wrote:
-> It was <2020-08-19 =C5=9Bro 14:39>, when Krzysztof Kozlowski wrote:
+Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
+---
+ drivers/staging/android/ion/ion_page_pool.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-> > There is here no commit msg, no explanation.
+diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
+index 0198b886d906..ae2bc57bcbe8 100644
+--- a/drivers/staging/android/ion/ion_page_pool.c
++++ b/drivers/staging/android/ion/ion_page_pool.c
+@@ -46,11 +46,13 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
+ 	struct page *page;
+ 
+ 	if (high) {
+-		BUG_ON(!pool->high_count);
++		if (!pool->high_count)
++			return NULL;
+ 		page = list_first_entry(&pool->high_items, struct page, lru);
+ 		pool->high_count--;
+ 	} else {
+-		BUG_ON(!pool->low_count);
++		if (!pool->low_count)
++			return NULL;
+ 		page = list_first_entry(&pool->low_items, struct page, lru);
+ 		pool->low_count--;
+ 	}
+@@ -65,7 +67,8 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
+ {
+ 	struct page *page = NULL;
+ 
+-	BUG_ON(!pool);
++	if (!pool)
++		return NULL;
+ 
+ 	mutex_lock(&pool->mutex);
+ 	if (pool->high_count)
+@@ -82,7 +85,8 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
+ 
+ void ion_page_pool_free(struct ion_page_pool *pool, struct page *page)
+ {
+-	BUG_ON(pool->order != compound_order(page));
++	if (pool->order != compound_order(page))
++		return;
+ 
+ 	ion_page_pool_add(pool, page);
+ }
+@@ -124,6 +128,8 @@ int ion_page_pool_shrink(struct ion_page_pool *pool, gfp_t gfp_mask,
+ 			break;
+ 		}
+ 		mutex_unlock(&pool->mutex);
++		if (!page)
++			break;
+ 		ion_page_pool_free_pages(pool, page);
+ 		freed += (1 << pool->order);
+ 	}
+-- 
+2.25.1
 
-> As I wrote in the cover letter, this and previous commits make things
-> work on Exynos3250 (ARTIK5 precisely). I can't explain why. I read
-> everything I could about this HW and there were no details about
-> automatic CS handling other than how to turn it on and off.
-
-What is similar about those other SoCs - could you be more specific
-here, or what goes wrong if you don't set this?  The auto mode (or at
-least the auto mode that was on the Exynos7) is not compatible with many
-SPI devices if the controller chip select is actually in use, the quirk
-was added for controllers that just don't have the manual mode.
-
-See also:
-
-  https://lore.kernel.org/linux-spi/CAAgF-BfGwcNzMx0meFVkJqNMTbQ4_PP1PZ3i6e=
-dOm6U3bc26_Q@mail.gmail.com/
-
-for an explanation of the quirk.
-
---98e8jtXdkpgskNou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl89f6cACgkQJNaLcl1U
-h9Bmfgf/Wm0OF/5d35c0AFf1yO1of1+7rl0W7mzfcaCAgcfAfic1SfJF/XhDfrkK
-oCHW2fDnCllISAZFdWGUtkiGEzUP+rVr0IIDpbQv0i4Onwl+hTI1O9ajO5txeGQJ
-XrLH+OzcuhOjtDGR+5qi074Yp6r0fGPhtiMn7/HsFkJMhx9XJKM+Rex83iTZyQrP
-0lgBARjqXLZGjr66jJEb0FgsqtF+84TBZWv33hz1zserxSyVtYVZa8uBatg25FqM
-sbxBnlFL8D/OsyLLUJl+EIGwpqd6+nyTdg4Q+XCM3vw1W3RQqsFntmf64Dk7KRDX
-C+mYuD6hIFhPeuO9stuBQmbt4KwHkA==
-=rPWW
------END PGP SIGNATURE-----
-
---98e8jtXdkpgskNou--
