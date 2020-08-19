@@ -2,46 +2,46 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89875C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF087C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 598D82080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB20B207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597837789;
-	bh=VjNc5JFUvoN5A0Ro+s3Ld1Lo9J+b152vB+hxRMelsFc=;
+	s=default; t=1597837796;
+	bh=oGWGSlXE6B6nkn4KhA/fJuyX0Tb0fZzkJdtSK1EuSh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zp1nXVnMwKJiP1MPfydRGhP7fTypkQ87fOkQ8/nZBWnybRewaKK/4x7aLCMCP9mdv
-	 bKRe4YHivmCcBFDKT7J0ll5G5C97nb8ZII0RBYvytzbgAUi9Zh+nxBlTpj8B8Ienz2
-	 lrikWpP1rg/cn7zmZDrxRmiJloIt8D721+LiGRog=
+	b=J/Pf6aY2rNcJzJ8Gkq+RM+lKAGJWmrWj3mozys7PVnDPyasO+rH7wSAAVfQ9pX+Xl
+	 UajlF5BVbP6laenczhHPcitS0NyYkzeqSr3vJZbAyCHmTvrYp+quMkFKny2Iq0KnFy
+	 /EM4A+fZ7oz09dve8sUOkqla0gksJojNgKbI1Hww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgHSLtr (ORCPT
+        id S1728034AbgHSLtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46514 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728125AbgHSLqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:46:52 -0400
+        id S1728123AbgHSLqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:46:46 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45DF622CA0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F1822B40;
         Wed, 19 Aug 2020 11:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597837582;
-        bh=VjNc5JFUvoN5A0Ro+s3Ld1Lo9J+b152vB+hxRMelsFc=;
+        bh=oGWGSlXE6B6nkn4KhA/fJuyX0Tb0fZzkJdtSK1EuSh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BA5qOAXEqN55ggNtrgIejmWTeCp3mIWRwmoYjzZdKSzGQ26FtS1kwnkF/MmghyhrY
-         72n0PqjIoDY32qjo3lELyTeIUl0rl1QI3MKor4ThRAa6d9v4jE+GI3HG43MMGxhsT0
-         ju9mcFXyRPRZ6RyLPMk4TDpKeKtf6T5bMyqlfdcI=
+        b=wCkNn+vMGRsAvIGGpN1UAXYIBZUXT3odo/LMOKyC9v9jKgJ8eFKuFlaB7D1h2VkYK
+         a2rIJRu4jfunnQWy2NKRBY1KMO9klktcKnJH180L19rMkYrKen28HGETklCnGdcxLM
+         BWaZErxVnt6jdJ+Y4YqeluJHCEkzCeYzAZG+003Y=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k8MXs-00Euaq-7z; Wed, 19 Aug 2020 13:46:20 +0200
+        id 1k8MXs-00EuaX-03; Wed, 19 Aug 2020 13:46:20 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -55,9 +55,9 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Chen Feng <puck.chen@hisilicon.com>,
         Wanchun Zheng <zhengwanchun@hisilicon.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/49] staging: hikey9xx/gpu: add support for using a reserved CMA memory
-Date:   Wed, 19 Aug 2020 13:45:49 +0200
-Message-Id: <04e21a7298d2c076d5de89a1a937b9cb40bcc213.1597833138.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 15/49] staging: hikey9xx/gpu: get rid of some ifdefs
+Date:   Wed, 19 Aug 2020 13:45:43 +0200
+Message-Id: <0d77c3397e01d1d623b012c29988bbd01544ce45.1597833138.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
 References: <cover.1597833138.git.mchehab+huawei@kernel.org>
@@ -68,195 +68,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate the framebuffer memory via CMA, as otherwise the
-drm driver may not work properly with X11.
+There are some #ifdefs there for non-existing CONFIG_ options
+(nor even at the downstream code).
 
-Part of the changes here were based on a patch originally
-authored by:
-
-	alik <hou.xiaoyong@hihope.org>
-
-The original version can be found at:
-	https://github.com/Bigcountry907/linux/commit/046e29834ef1c523c73614747377d3660eec3964
+Let's get rid of those. It can be re-added later if ever needed.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../staging/hikey9xx/gpu/kirin9xx_drm_drv.c   | 36 ++++++-------------
- .../staging/hikey9xx/gpu/kirin9xx_drm_drv.h   |  4 +--
- .../hikey9xx/gpu/kirin9xx_drm_overlay_utils.c | 16 ++-------
- 3 files changed, 13 insertions(+), 43 deletions(-)
+ .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.c     | 36 -------------------
+ .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.h     |  4 ---
+ .../hikey9xx/gpu/kirin9xx_drm_overlay_utils.c | 14 --------
+ 3 files changed, 54 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-index 49f591da1cf7..fee686760c78 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-@@ -21,6 +21,7 @@
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_drv.h>
-+#include <drm/drm_fb_helper.h>
- #include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
-@@ -29,13 +30,6 @@
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
+index 887c5d609ab6..8aa43619c888 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
+@@ -275,17 +275,8 @@ void init_ldi(struct dss_crtc *acrtc)
  
- #include "kirin9xx_drm_drv.h"
+ 	/*ldi_data_gate(ctx, true);*/
  
--#ifdef CONFIG_DRM_FBDEV_EMULATION
--static bool fbdev = true;
--MODULE_PARM_DESC(fbdev, "Enable fbdev compat layer");
--module_param(fbdev, bool, 0600);
--#endif
--
--
- static struct kirin_dc_ops *dc_ops;
- 
- static int kirin_drm_kms_cleanup(struct drm_device *dev)
-@@ -60,22 +54,7 @@ static void kirin_fbdev_output_poll_changed(struct drm_device *dev)
- 
- 	dsi_set_output_client(dev);
- 
--#ifdef CMA_BUFFER_USED
--	if (priv->fbdev) {
--		DRM_INFO("hotplug_event!!!!!!\n");
--		drm_fbdev_cma_hotplug_event(priv->fbdev);
--	} else {
--		DRM_INFO("cma_init!!!!!!\n");
--		priv->fbdev = drm_fbdev_cma_init(dev, 32,
--				dev->mode_config.num_crtc,
--				dev->mode_config.num_connector);
--		if (IS_ERR(priv->fbdev))
--			priv->fbdev = NULL;
--	}
+-#ifdef CONFIG_HISI_FB_LDI_COLORBAR_USED
+-	/* colorbar width*/
+-	set_reg(ldi_base + LDI_CTRL, DSS_WIDTH(0x3c), 7, 6);
+-	/* colorbar ort*/
+-	set_reg(ldi_base + LDI_WORK_MODE, 0x0, 1, 1);
+-	/* colorbar enable*/
+-	set_reg(ldi_base + LDI_WORK_MODE, 0x0, 1, 0);
 -#else
--	if (priv->fbdev)
--		drm_fb_helper_hotplug_event(priv->fbdev);
+ 	/* normal*/
+ 	set_reg(ldi_base + LDI_WORK_MODE, 0x1, 1, 0);
 -#endif
-+	drm_fb_helper_hotplug_event(priv->fbdev);
+ 
+ 	/* ldi disable*/
+ 	set_reg(ldi_base + LDI_CTRL, 0x0, 1, 0);
+@@ -493,33 +484,6 @@ void init_dpp(struct dss_crtc *acrtc)
+ 		(DSS_HEIGHT(mode->vdisplay) << 16) | DSS_WIDTH(mode->hdisplay));
+ 	outp32(dpp_base + DPP_IMG_SIZE_AFT_SR,
+ 		(DSS_HEIGHT(mode->vdisplay) << 16) | DSS_WIDTH(mode->hdisplay));
+-
+-#ifdef CONFIG_HISI_FB_DPP_COLORBAR_USED
+-	#if defined (CONFIG_HISI_FB_970)
+-	outp32(dpp_base + DPP_CLRBAR_CTRL, (0x30 << 24) | (0 << 1) | 0x1);
+-	set_reg(dpp_base + DPP_CLRBAR_1ST_CLR, 0x3FF00000, 30, 0); //Red
+-	set_reg(dpp_base + DPP_CLRBAR_2ND_CLR, 0x000FFC00, 30, 0); //Green
+-	set_reg(dpp_base + DPP_CLRBAR_3RD_CLR, 0x000003FF, 30, 0); //Blue
+-	#else
+-	void __iomem *mctl_base;
+-	outp32(dpp_base + DPP_CLRBAR_CTRL, (0x30 << 24) | (0 << 1) | 0x1);
+-	set_reg(dpp_base + DPP_CLRBAR_1ST_CLR, 0xFF, 8, 16);
+-	set_reg(dpp_base + DPP_CLRBAR_2ND_CLR, 0xFF, 8, 8);
+-	set_reg(dpp_base + DPP_CLRBAR_3RD_CLR, 0xFF, 8, 0);
+-
+-	mctl_base = ctx->base +
+-		g_dss_module_ovl_base[DSS_OVL0][MODULE_MCTL_BASE];
+-
+-	set_reg(mctl_base + MCTL_CTL_MUTEX, 0x1, 1, 0);
+-	set_reg(mctl_base + MCTL_CTL_EN, 0x1, 32, 0);
+-	set_reg(mctl_base + MCTL_CTL_TOP, 0x2, 32, 0); /*auto mode*/
+-	set_reg(mctl_base + MCTL_CTL_DBG, 0xB13A00, 32, 0);
+-
+-	set_reg(mctl_base + MCTL_CTL_MUTEX_ITF, 0x1, 2, 0);
+-	set_reg(mctl_sys_base + MCTL_OV0_FLUSH_EN, 0x8, 4, 0);
+-	set_reg(mctl_base + MCTL_CTL_MUTEX, 0x0, 1, 0);
+-	#endif
+-#endif
  }
  
- static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
-@@ -98,7 +77,7 @@ static void kirin_drm_mode_config_init(struct drm_device *dev)
+ void enable_ldi(struct dss_crtc *acrtc)
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
+index b0bcc5d7a0c1..5ef5c6c6edbb 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
+@@ -21,10 +21,6 @@
+ #endif
+ #include "kirin_drm_drv.h"
  
- static int kirin_drm_kms_init(struct drm_device *dev)
- {
--	struct kirin_drm_private *priv;
-+	struct kirin_drm_private *priv = dev->dev_private;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -256,6 +235,7 @@ static int kirin_drm_bind(struct device *dev)
- {
- 	struct drm_driver *driver = &kirin_drm_driver;
- 	struct drm_device *drm_dev;
-+	struct kirin_drm_private *priv;
- 	int ret;
- 
- 	drm_dev = drm_dev_alloc(driver, dev);
-@@ -270,6 +250,9 @@ static int kirin_drm_bind(struct device *dev)
- 	if (ret)
- 		goto err_kms_cleanup;
- 
-+	drm_fbdev_generic_setup(drm_dev, 32);
-+	priv = drm_dev->dev_private;
-+
- 	/* connectors should be registered after drm device register */
- 	ret = kirin_drm_connectors_register(drm_dev);
- 	if (ret)
-@@ -340,6 +323,7 @@ static int kirin_drm_platform_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct component_match *match = NULL;
- 	struct device_node *remote;
-+	int ret;
- 
- 	dc_ops = (struct kirin_dc_ops *)of_device_get_match_data(dev);
- 	if (!dc_ops) {
-@@ -356,9 +340,9 @@ static int kirin_drm_platform_probe(struct platform_device *pdev)
- 
- 	component_match_add(dev, &match, compare_of, remote);
- 
-+	if (ret)
-+		DRM_ERROR("cma device init failed!");
- 	return component_master_add_with_match(dev, &kirin_drm_ops, match);
+-/*#define CONFIG_HISI_FB_OV_BASE_USED*/
+-/*#define CONFIG_HISI_FB_DPP_COLORBAR_USED*/
+-/*#define CONFIG_HISI_FB_LDI_COLORBAR_USED*/
 -
--	return 0;
- }
+ void set_reg(char __iomem *addr, uint32_t val, uint8_t bw, uint8_t bs);
+ uint32_t set_bits32(uint32_t old_val, uint32_t val, uint8_t bw, uint8_t bs);
  
- static int kirin_drm_platform_remove(struct platform_device *pdev)
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-index b704f025d64b..261259cb8f5f 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-@@ -13,6 +13,7 @@
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_drv.h>
-+#include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_print.h>
- 
-@@ -21,8 +22,6 @@
- 
- #define MAX_CRTC	2
- 
--#define to_kirin_fbdev(x) container_of(x, struct kirin_fbdev, fb_helper)
--
- /* display controller init/cleanup ops */
- struct kirin_dc_ops {
- 	int (*init)(struct drm_device *dev);
-@@ -32,7 +31,6 @@ struct kirin_dc_ops {
- };
- 
- struct kirin_drm_private {
--	struct drm_fb_helper *fb_helper;
- 	struct drm_fb_helper *fbdev;
- 	struct drm_crtc *crtc[MAX_CRTC];
- };
 diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-index 8be5865b615c..2b9672a3d057 100644
+index a1f58c5f7239..6246316d81b0 100644
 --- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
 +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-@@ -1517,15 +1517,10 @@ void hisi_fb_pan_display(struct drm_plane *plane)
- 	struct dss_crtc *acrtc = aplane->acrtc;
- 	struct dss_hw_ctx *ctx = acrtc->ctx;
+@@ -1211,14 +1211,8 @@ int hisi_dss_ovl_base_config(struct dss_hw_ctx *ctx, u32 xres, u32 yres)
+ 		set_reg(ovl0_base + OVL_SIZE, (xres - 1) |
+ 			((yres - 1) << 16), 32, 0);
  
--#ifndef CMA_BUFFER_USED
--	struct kirin_drm_private *priv = plane->dev->dev_private;
--	struct kirin_fbdev *fbdev = to_kirin_fbdev(priv->fbdev);
+-#ifdef CONFIG_HISI_FB_OV_BASE_USED
+-		DRM_INFO("CONFIG_HISI_FB_OV_BASE_USED !!. \n");
+-		set_reg(ovl0_base + OV_BG_COLOR_RGB, 0x3FF00000, 32, 0);
+-		set_reg(ovl0_base + OV_BG_COLOR_A, 0x3FF, 32, 0);
 -#else
- 	struct drm_gem_cma_object *obj = drm_fb_cma_get_gem_obj(state->fb, 0);
+ 		set_reg(ovl0_base + OV_BG_COLOR_RGB, 0x00000000, 32, 0);
+ 		set_reg(ovl0_base + OV_BG_COLOR_A, 0x00000000, 32, 0);
 -#endif
- 
- 	bool afbcd = false;
--	bool mmu_enable = true;
-+	bool mmu_enable = false;
- 	dss_rect_ltrb_t rect;
- 	u32 bpp;
- 	u32 stride;
-@@ -1550,14 +1545,7 @@ void hisi_fb_pan_display(struct drm_plane *plane)
- 	bpp = fb->format->cpp[0];
+ 		set_reg(ovl0_base + OV_DST_STARTPOS, 0x0, 32, 0);
+ 		set_reg(ovl0_base + OV_DST_ENDPOS, (xres - 1) |
+ 			((yres - 1) << 16), 32, 0);
+@@ -1228,11 +1222,7 @@ int hisi_dss_ovl_base_config(struct dss_hw_ctx *ctx, u32 xres, u32 yres)
+ 		set_reg(ovl0_base + OVL6_REG_DEFAULT, 0x1, 32, 0);
+ 		set_reg(ovl0_base + OVL6_REG_DEFAULT, 0x0, 32, 0);
+ 		set_reg(ovl0_base + OVL_SIZE, (xres - 1) | ((yres - 1) << 16), 32, 0);
+-#ifdef CONFIG_HISI_FB_OV_BASE_USED
+-		set_reg(ovl0_base + OVL_BG_COLOR, 0xFFFF0000, 32, 0);
+-#else
+ 		set_reg(ovl0_base + OVL_BG_COLOR, 0xFF000000, 32, 0);
+-#endif
+ 		set_reg(ovl0_base + OVL_DST_STARTPOS, 0x0, 32, 0);
+ 		set_reg(ovl0_base + OVL_DST_ENDPOS, (xres - 1) | ((yres - 1) << 16), 32, 0);
+ 		set_reg(ovl0_base + OVL_GCFG, 0x10001, 32, 0);
+@@ -1559,10 +1549,6 @@ void hisi_fb_pan_display(struct drm_plane *plane)
+ 	bpp = fb->bits_per_pixel / 8;
  	stride = fb->pitches[0];
  
--#ifndef CMA_BUFFER_USED
--	if (fbdev)
--		display_addr = (u32)fbdev->smem_start + src_y * stride;
--	else
--		DRM_ERROR("fbdev is null? \n");
--#else
- 	display_addr = (u32)obj->paddr + src_y * stride;
+-#if defined(CONFIG_HISI_FB_LDI_COLORBAR_USED) || defined(CONFIG_HISI_FB_DPP_COLORBAR_USED) || defined(CONFIG_HISI_FB_OV_BASE_USED)
+-	return;
 -#endif
- 
- 	rect.left = 0;
- 	rect.right = src_w - 1;
-@@ -1609,7 +1597,7 @@ void hisi_dss_online_play(struct kirin_fbdev *fbdev, struct drm_plane *plane, dr
- 	struct dss_hw_ctx *ctx = acrtc->ctx;
- 
- 	bool afbcd = false;
--	bool mmu_enable = true;
-+	bool mmu_enable = false;
- 	dss_rect_ltrb_t rect;
- 	u32 bpp;
- 	u32 stride;
+-
+ #ifndef CMA_BUFFER_USED
+ 	if (fbdev)
+ 		display_addr = (u32)fbdev->smem_start + src_y * stride;
 -- 
 2.26.2
 
