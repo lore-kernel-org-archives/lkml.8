@@ -2,174 +2,128 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE5E204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D3204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Frc+qrSU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyXkGltY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgHSNkD (ORCPT
+        id S1728249AbgHSNl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:40:03 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:33723 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgHSNj7 (ORCPT
+        Wed, 19 Aug 2020 09:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgHSNlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:39:59 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819133957euoutp02c4db272be98c3e46bf19a6c49ff125a6~srwOY63NE2769327693euoutp02G;
-        Wed, 19 Aug 2020 13:39:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819133957euoutp02c4db272be98c3e46bf19a6c49ff125a6~srwOY63NE2769327693euoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597844397;
-        bh=iIcTFaAdH5T4Y8qwSWvOXJbTBOWw25ScDXfJBdoMYqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Frc+qrSUisj399CD7uY1wZYCtt9VCjPcRrnpuUBB7lFi8aqJM7jYU89Cyug/KQCL1
-         v/ZjyrPjF5APZgr33R3YJHAxujInx6mUFBH4d0VPQi9jErMJfAyghtn9BsI3O/ooNs
-         cqM7/c6dM3MbcP98AMPUmeGf+wqSVvUj9kL/kSoU=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200819133957eucas1p14647d055caeef55d2670aca5aedf558a~srwOGZ2am2661626616eucas1p1R;
-        Wed, 19 Aug 2020 13:39:57 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id F2.66.06456.DAB2D3F5; Wed, 19
-        Aug 2020 14:39:57 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200819133957eucas1p293192baeabb9788ac9148068c1627a57~srwNwCL-d3012430124eucas1p2z;
-        Wed, 19 Aug 2020 13:39:57 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200819133957eusmtrp2303b4fb4ea45a2e8997edc066b5d2d49~srwNvTWnJ0526905269eusmtrp2h;
-        Wed, 19 Aug 2020 13:39:57 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-c9-5f3d2bad9bff
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 39.AA.06314.DAB2D3F5; Wed, 19
-        Aug 2020 14:39:57 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200819133956eusmtip270353a676e9ad14b01447d5daf6d269c~srwNlKNcY1052810528eusmtip2_;
-        Wed, 19 Aug 2020 13:39:56 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 7/8] spi: spi-s3c64xx: Increase transfer timeout
-Date:   Wed, 19 Aug 2020 15:39:56 +0200
-In-Reply-To: <20200819124940.GG18122@kozik-lap> (Krzysztof Kozlowski's
-        message of "Wed, 19 Aug 2020 14:49:40 +0200")
-Message-ID: <dleftjblj621qr.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 19 Aug 2020 09:41:24 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98735C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:41:22 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j22so12094906lfm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3uRot0J1Di9E+0e7vb+dEOT/StlUzO3fYMSg8aMNhC8=;
+        b=cyXkGltYkaC0McaUgHwD/5OoYZHYrz1MPdgnHwimVl0oxwnZEOo3utozL+huPGOMnK
+         fJlPFllGiLVBlhgztZ0pLPpqCK/EfPGn3tk9YTs7zoTwdUzDgGx8ia2bxbxU9c5el5Hg
+         OuzIPd5cymAEH4QTUDRThsbB/qYzXRuptB2DXU1jA4UbP8aCfUH5CcYOC8+FzOlfAdtE
+         Pr3N3yqcFoc23rjyPWsUncxefwaccKDSZ/GYgy+G5zTwoOerpp7bIX7B89EhCUtwYwSd
+         Fho4czVHifLsI7yjvGbE0t/5hWexJp3XAUsa0vPi9+403ADvKUmAnAWzIVvrjRcJCU6x
+         F40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3uRot0J1Di9E+0e7vb+dEOT/StlUzO3fYMSg8aMNhC8=;
+        b=SlZQEWNvr+xvmdFXU2o+U0dIc9wpQmJsXckSzm9F6RGMzCYYfRlWbrfDzdrC+2h6Mu
+         lo6RSCqBIzbiYDEzKj9qHY/mkk5VomZDuoJXIc6vNozuRoBUdokpDzIcHGVVZj353b6h
+         rwqqX+7DHehfDlKCvuHb4Fsurr1Yg8ILPWyc4xWc8oDeSSHez2VkeYXOvR0pXZEHAH29
+         7oeEs7r6MIy+UM8RZmPZjOAbArRvZvCGLH2BtWTPF+1IbLfQZaaUjIq4F03HYsBwSShw
+         0alUxAFW9Fl7UlouhliQCCNSROP0m/L37oP/WB+ZjGiF2BGsvRVkJhtCG9Wnc5YFAM97
+         ThLA==
+X-Gm-Message-State: AOAM533klZvSPAujIqNyryaJ8tF2MaqMphpjKQ/25p94//iplCX/jUUo
+        nnfpLYWkD8Vy12zRh+qvt0f1uJ067r0bKac7O2s=
+X-Google-Smtp-Source: ABdhPJzVwh/eBPB/toCwEXC1n2x1b6nK7nRhjxc6nhA1rUb5IApOF8C7HR2OqQXVcWiQDBmwt/Wd3ey06LZXHWJ+En0=
+X-Received: by 2002:a19:ae06:: with SMTP id f6mr12088967lfc.42.1597844479512;
+ Wed, 19 Aug 2020 06:41:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOduZo8jqVPWilLCVM1MTKE2mYGgyJ8kOEBaVLD2q5qTu6
-        0j54iS5e0tDMS0Jp3jLmLR0pUiFeKJszK69peQHzUpFLtCht8yj07ff+n/9z5RUSEgPfThit
-        SmDUKkWMTCAidd2/DG5aV9/Qfb1DUvrR6iyPbiyq59MFkzMCOnd6gaANhgaKbpoe5NPv2koF
-        dJHhOY9O+zFC0drOccpPJB+qWCLkTbUZAvnTihR5TnMtkhubdgXzz4p8IpiYaA2j9jgSJorK
-        0K1Rcbn4ynLjMJWKxsWZyEIIeD/oG4yUmSW4BkHe8MFMJDLxTwTfXlYT3MOIwLhSgbYyat7f
-        Q1xGNYLSCSlnmkXwuWDKFBAKBdgdtNoQs8cGu8DQ3xW+2UPgah5UjqVtJFvjQFidXyLMTGJn
-        aL+es8EWWAMt2h6emcXYG/QDYxu6LT4EzV8+UZxuBa+KZ0gzE1gJxYbFzeFGKdDfDOc4EMoX
-        qwmOrWG+p5nieAestz7gmecEnAL5eRsbA85GoCtdJTnPYfjY91vA8VHoGlwjOL8lDH+14tpa
-        Qp6ucFMWw60bEs7tBHW57ZtV7OD2fM3mZHKYWxohuVOlIxguv4buIMeS/7Yp+W+bElNZwnS6
-        +jYPTnaFqrIFgmNfqKv7Tj5E/FokZRJZZSTDeqqYy+6sQskmqiLdw2OVTcj0tXrXepaeoeWB
-        Cx0IC5FsuzhY5hsq4Ss0bJKyAzmZKk01POlHdqQqVsXIbMT++t7zEnGEIimZUceGqhNjGLYD
-        2QtJmVTsVT53ToIjFQnMJYaJY9RbUZ7Qwi4V+X2YcrTtdHmdH+2lbUtw8SkqX2/2ZwoLnLP1
-        4S1BmgB13IE9206N/pEeTzrt7VryJvrkXcqW3TnYWj8dlbR70n7Qo1LxQhvW4tCXVSbXHEOR
-        J7zG+89M6ia8xtI1b/FM30xX1mhZ6ojI2H1/KqDqcYdbd1B8CP/iwHrr1XhHh2QZyUYpPPcS
-        albxD/esshNiAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsVy+t/xe7prtW3jDZ6vYbZY/OM5k8XGGetZ
-        LaY+fMJm0f/4NbPF+fMb2C02Pb7GanF51xw2ixnn9zFZNH68yW6x9shddgcuj+tLPjF7bFrV
-        yeaxeUm9R9+WVYwenzfJBbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp
-        29mkpOZklqUW6dsl6GV0bvvHXtAvUPF14w32Bsa7vF2MnBwSAiYSK65MY+xi5OIQEljKKHGp
-        7zFzFyMHUEJKYuXcdIgaYYk/17rYIGqeMkpcfvaLBaSGTUBPYu3aCJAaEQFNiet/v7OC2MwC
-        85kkfv/yALGFBVwkfrz6BDZSCKh88wkLkDCLgKrEntY+ZhCbU6BM4s8JkPGcHLwC5hJnL90G
-        i4sKWEpseXGfHSIuKHFy5hMWiPHZEl9XP2eewCgwC0lqFpLULKBtzEAXrd+lDxHWlli28DUz
-        hG0rsW7de5YFjKyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiNu27Gfm3cwXtoYfIhRgINR
-        iYc3QMk2Xog1say4MvcQowrQmEcbVl9glGLJy89LVRLhdTp7Ok6INyWxsiq1KD++qDQntfgQ
-        oynQnxOZpUST84FJIq8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dU
-        A6NqjvUc3nSttSs3+R89Nn/pIo5DF39yrg2Qms57f73JNn2ldQdsT9+zfj5v8w8htdQf6ewJ
-        ck5GyUxtvkf61PIKHJvVJO85+XZxxYueFqg/GCKrp91qt65pa15GR2mNy/zSc+nfpndJlOVb
-        FIcXW3JElMX/239Bad6G5XOlvpd37XH+2v+kVImlOCPRUIu5qDgRAIkJNMDaAgAA
-X-CMS-MailID: 20200819133957eucas1p293192baeabb9788ac9148068c1627a57
-X-Msg-Generator: CA
-X-RootMTR: 20200819133957eucas1p293192baeabb9788ac9148068c1627a57
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200819133957eucas1p293192baeabb9788ac9148068c1627a57
-References: <20200819124940.GG18122@kozik-lap>
-        <CGME20200819133957eucas1p293192baeabb9788ac9148068c1627a57@eucas1p2.samsung.com>
+References: <20200805205911.20927-1-trix@redhat.com>
+In-Reply-To: <20200805205911.20927-1-trix@redhat.com>
+From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date:   Wed, 19 Aug 2020 15:41:08 +0200
+Message-ID: <CAMeQTsbQP+hsVtPRJdehwS3yULP0Mif1T8e9G18mJp7dpH77Lg@mail.gmail.com>
+Subject: Re: [PATCH] drm/gma500: fix error check
+To:     trix@redhat.com
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>, yakui.zhao@intel.com,
+        Alan Cox <alan@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-It was <2020-08-19 =C5=9Bro 14:49>, when Krzysztof Kozlowski wrote:
-> On Wed, Aug 19, 2020 at 02:32:07PM +0200, =C5=81ukasz Stelmach wrote:
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+On Wed, Aug 5, 2020 at 10:59 PM <trix@redhat.com> wrote:
 >
-> Why? Everything works fine and suddenly minimum timeout is 100 ms?
-
-Actually I am not 100% sure the max() call is required, maybe +30 is
-enough. Definitely some minimum value is required because for small
-tranfers (100s of bytes) ms is 0 after the first assignment.
-
->> ---
->>  drivers/spi/spi-s3c64xx.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
->> index 27d77600a820..27db1e0f6f32 100644
->> --- a/drivers/spi/spi-s3c64xx.c
->> +++ b/drivers/spi/spi-s3c64xx.c
->> @@ -464,7 +464,8 @@ static int s3c64xx_wait_for_dma(struct s3c64xx_spi_d=
-river_data *sdd,
->>=20=20
->>  	/* millisecs to xfer 'len' bytes @ 'cur_speed' */
->>  	ms =3D xfer->len * 8 * 1000 / sdd->cur_speed;
->> -	ms +=3D 10; /* some tolerance */
->> +	ms =3D (ms * 10) + 30;    /* some tolerance */
->> +	ms =3D max(ms, 100);      /* minimum timeout */
->>=20=20
->>  	val =3D msecs_to_jiffies(ms) + 10;
->>  	val =3D wait_for_completion_timeout(&sdd->xfer_completion, val);
->> --=20
->> 2.26.2
->>=20
+> From: Tom Rix <trix@redhat.com>
 >
+> Reviewing this block of code in cdv_intel_dp_init()
 >
+> ret = cdv_intel_dp_aux_native_read(gma_encoder, DP_DPCD_REV, ...
+>
+> cdv_intel_edp_panel_vdd_off(gma_encoder);
+> if (ret == 0) {
+>         /* if this fails, presume the device is a ghost */
+>         DRM_INFO("failed to retrieve link info, disabling eDP\n");
+>         drm_encoder_cleanup(encoder);
+>         cdv_intel_dp_destroy(connector);
+>         goto err_priv;
+> } else {
+>
+> The (ret == 0) is not strict enough.
+> cdv_intel_dp_aux_native_read() returns > 0 on success
+> otherwise it is failure.
+>
+> So change to <=
 
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+Thanks for the patch. Looks correct.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Will apply to drm-misc-next
 
------BEGIN PGP SIGNATURE-----
+-Patrik
 
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl89K6wACgkQsK4enJil
-gBAGyAf8DV/xvxnpKI9QcLDIG7j5YcNjd6eJRT9NfVCSEj36wbS1vI62YA8RMCWr
-9lVuQTXgZXhVsbv3JnYny82tw8mdxwd/QwMrK6n4RmXOCcowe5xNAOyd9B5jqiSZ
-/bsY53uMtgMKMAlHjTg5FPEgJwb+rTU+zUFNp3CygSRUFaCMF6mWI/WNeTxFwc2e
-hEhkhSNJr3nzJxr5YdRrOPFhTA234L5U9bu5cGv5wGxdvT7Ha8j/KcFMXoOXTKEp
-0HGYWrKNGmww+iPGnPIWdbLnNMV5V34z7THEQaQ/Blchv3jUwEIDsoytPMY2U4H6
-UJs/IX/FmYzeZCdwO/nSKBPYNYspPA==
-=i4e8
------END PGP SIGNATURE-----
---=-=-=--
+>
+> Fixes: d112a8163f83 ("gma500/cdv: Add eDP support")
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/gpu/drm/gma500/cdv_intel_dp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+> index f41cbb753bb4..720a767118c9 100644
+> --- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
+> +++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+> @@ -2078,7 +2078,7 @@ cdv_intel_dp_init(struct drm_device *dev, struct psb_intel_mode_device *mode_dev
+>                                                intel_dp->dpcd,
+>                                                sizeof(intel_dp->dpcd));
+>                 cdv_intel_edp_panel_vdd_off(gma_encoder);
+> -               if (ret == 0) {
+> +               if (ret <= 0) {
+>                         /* if this fails, presume the device is a ghost */
+>                         DRM_INFO("failed to retrieve link info, disabling eDP\n");
+>                         drm_encoder_cleanup(encoder);
+> --
+> 2.18.1
+>
