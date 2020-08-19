@@ -2,134 +2,69 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17D8C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA36E207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iM2jo4Vk"
+	by mail.kernel.org (Postfix) with ESMTP id 060A7207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgHSPj7 (ORCPT
+        id S1728837AbgHSPkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgHSPj5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:39:57 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B7EC061757;
-        Wed, 19 Aug 2020 08:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=A/NLDEqSKQO5M1WQObNymH18o4NlNdxjll2by5D8bbE=; b=iM2jo4Vkp8b1Brl9BuejvbdL4q
-        uyEe0Iygv7v92s+Gs5XNITaVQMbU+ie4eWP1lPmZsJroegcnyl5wqfRGY1bweEH1cH+NLqkOhjCs7
-        ihL+pVwi1DffiQyKENwc0G2/7+6VUVt5ihMWefbrvGSks18PYeyBXSM6XXdsiToUhza/SifSRn9/K
-        65swPPEhRGGab8qDuBogNkb76IGW313uWwSetAhxG+WPw0EdnM1WMQ8ghH6zi1Pc/Xyj7HlEUY+8I
-        hFV7ER+hErZgX+VFmlgEENeHALwZlA7S1SKEH3ew1MtMkOMme5SS7h745f//FCWrV6v2qnY89unTQ
-        YCHyzPRQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8QBr-0007p3-8U; Wed, 19 Aug 2020 15:39:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7BACF3059C6;
-        Wed, 19 Aug 2020 17:39:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5FEE82BEB7F3D; Wed, 19 Aug 2020 17:39:49 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 17:39:49 +0200
-From:   peterz@infradead.org
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
- synchronisation with actual irq state
-Message-ID: <20200819153949.GO35926@hirez.programming.kicks-ass.net>
-References: <20200723105615.1268126-1-npiggin@gmail.com>
- <20200807111126.GI2674@hirez.programming.kicks-ass.net>
- <1597220073.mbvcty6ghk.astroid@bobo.none>
- <20200812103530.GL2674@hirez.programming.kicks-ass.net>
- <1597735273.s0usqkrlsk.astroid@bobo.none>
- <20200818154143.GT2674@hirez.programming.kicks-ass.net>
- <1597793862.l8c4pmmzpq.astroid@bobo.none>
- <7fadb5ab-9869-396d-ff5d-c0adb6fc0b35@ozlabs.ru>
- <20200819153250.GF2674@hirez.programming.kicks-ass.net>
+        Wed, 19 Aug 2020 11:40:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57464 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgHSPkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:40:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F357AB5FD;
+        Wed, 19 Aug 2020 15:40:44 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 0393CDA703; Wed, 19 Aug 2020 17:39:12 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 17:39:12 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Fixes to GCC warnings while compiling with W=1 level
+Message-ID: <20200819153912.GP2026@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Leon Romanovsky <leon@kernel.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Leon Romanovsky <leonro@nvidia.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200819141630.1338693-1-leon@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819153250.GF2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200819141630.1338693-1-leon@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:32:50PM +0200, peterz@infradead.org wrote:
-> On Wed, Aug 19, 2020 at 08:39:13PM +1000, Alexey Kardashevskiy wrote:
+On Wed, Aug 19, 2020 at 05:16:27PM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> The series of trivial fixes for GCC warnings seen while compiling with W=1.
 > 
-> > > or current upstream?
-> > 
-> > The upstream 18445bf405cb (13 hours old) also shows the problem. Yours
-> > 1/2 still fixes it.
-> 
-> Afaict that just reduces the window.
-> 
-> Isn't the problem that:
-> 
-> arch/powerpc/kernel/exceptions-64e.S
-> 
-> 	START_EXCEPTION(perfmon);
-> 	NORMAL_EXCEPTION_PROLOG(0x260, BOOKE_INTERRUPT_PERFORMANCE_MONITOR,
-> 				PROLOG_ADDITION_NONE)
-> 	EXCEPTION_COMMON(0x260)
-> 	INTS_DISABLE
-> #	  RECONCILE_IRQ_STATE
-> #	    TRACE_DISABLE_INTS
-> #	      TRACE_WITH_FRAME_BUFFER(trace_hardirqs_off)
-> #
-> # but we haven't done nmi_enter() yet... whoopsy
-> 
-> 	CHECK_NAPPING()
-> 	addi	r3,r1,STACK_FRAME_OVERHEAD
-> 	bl	performance_monitor_exception
-> #	 perf_irq()
-> #          perf_event_interrupt
-> #	     __perf_event_interrupt
-> #	      nmi_enter()
-> 
-> 
-> 
-> That is, afaict your entry code is buggered.
+> Leon Romanovsky (3):
+>   fs/btfrs: Fix -Wunused-but-set-variable warnings
+>   fs/btrfs: Fix -Wignored-qualifiers warnings
+>   fs/btrfs: Fix -Wmissing-prototypes warnings
 
-That is, patch 1/2 doesn't change the case:
+The warnings from patch 2 and 3 got fixed recently, it's in the
+development branch that hasn't been pushed to linux-next yet.
 
-	local_irq_enable()
-	  trace_hardirqs_on()
-	  <NMI>
-	    trace_hardirqs_off()
-	    ...
-	    if (regs_irqs_disabled(regs)) // false
-	      trace_hardirqs_on();
-	  </NMI>
-	  raw_local_irq_enable()
-
-Where local_irq_enable() has done trace_hardirqs_on() and the NMI hits
-and undoes it, but doesn't re-do it because the hardware state is still
-disabled.
-
-What's supposed to happen is:
-
-	<NMI>
-	  nmi_enter()
-	  trace_hardirqs_off() // no-op, because in_nmi() (or previously because lockdep_off())
-	  ...
-	</NMI>
-
+Patch 1 reports unused variables, we get occasional patches that just
+silence the warning but it needs to be fixed properly (move setting
+feature bits out of sysfs context).  As it's probably the last code
+warning with W=1 left I guess I'll apply it, I don't have ETA for the
+proper fix but at least this would save people time reporing it.
