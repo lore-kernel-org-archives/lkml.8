@@ -2,94 +2,68 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38229C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B75DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D24207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:50:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll89NYVb"
+	by mail.kernel.org (Postfix) with ESMTP id 0C05D20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgHSHua (ORCPT
+        id S1726894AbgHSHu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:50:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHSHua (ORCPT
+        Wed, 19 Aug 2020 03:50:57 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47923 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHSHuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:50:30 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5281C061389;
-        Wed, 19 Aug 2020 00:50:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id u10so10422024plr.7;
-        Wed, 19 Aug 2020 00:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ke+wFCJWvMAP2+w0IdS/4S5iRQrwezKZ5RtTFmjUQBA=;
-        b=ll89NYVbW1bVNVi/IhBgduKZYfYR6hzxQFxy5h+jb5/5FqiPqYdShpyzlBVvUmjIdg
-         al7qRr7ln8bD0cNQ31/19TceKoI55k4TmwJprVcBP0wfOiOppn4bAQT4NjXwDf0Bgbx4
-         jJdiLd6aq0g7AWEIllQNE+jNP4bzBvJTOe/BVAGfSCkPbH/w84F5qUVQDYIs16vu83Nj
-         iUmieID+X+lLha+LtxueDQh1fzK4p9xjm2DepQoENKKOCcxNm5McKBwg5aIHIXiKf1qA
-         o1B5AxHNAwdHbNPDNauWJv9+g2C6koHVJdbaDsRGecLoGuZoRilAWVsWcRH0q76np0c1
-         mf8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ke+wFCJWvMAP2+w0IdS/4S5iRQrwezKZ5RtTFmjUQBA=;
-        b=bmxc0FcQPSHYQa1mw2dxSLmab0/67MCm1AyrMmHMr31DQdyyr50nXhl1dqx5sFHllk
-         9HOYuwkzNTqFsG/WanumcWjK0MhI8jsTBF5kQArCuEP1BlTWd0z12GtvJ0yum2Y9Ipva
-         gVQFOmcUQyq7IZeXq335AzoICnEvfolHhLDA0d11cQ9rGqMCVDRLDEJjT0DhUBLRIwT/
-         QUpuQg4AKBRGCGHSc9UiEGo/Bp+J3mFMJsjFzNlIlj19K0w1g8ZHHKzpC34/X8RORBL1
-         u4An57s30IfMMnXmXiKaIxKbU2UiRP6l/X4xKRqwUwRh6062O2O/XcNhmWbL8J1iIH9+
-         86mw==
-X-Gm-Message-State: AOAM531Ah3ubvQky+BHeRkZThmN5aDo0Zn6bVPwHvTMUzKkEzn9p3FDS
-        28TQBDpWwdeptoPaMB/wGstXJLFt/bEMWHDPoAgLZt5sbmB2NQ==
-X-Google-Smtp-Source: ABdhPJzguy6Y47uqQoTztAlR1Ib+TDOaev40sCIeYf0eQCMUO4xIa6Al45JJW1//72glFVcXMnB7DuWOkT0WRWiIwUs=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr3003273pjv.181.1597823429126;
- Wed, 19 Aug 2020 00:50:29 -0700 (PDT)
+        Wed, 19 Aug 2020 03:50:55 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k8Is0-0002uD-C9; Wed, 19 Aug 2020 07:50:52 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] soc: ti: omap-prm: fix spelling mistake "unusupported" -> "unsupported"
+Date:   Wed, 19 Aug 2020 08:50:52 +0100
+Message-Id: <20200819075052.48833-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200818180223.14282-1-kenneth.t.chan@gmail.com>
-In-Reply-To: <20200818180223.14282-1-kenneth.t.chan@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 10:50:12 +0300
-Message-ID: <CAHp75VdWhSTqCikgnF5vvgw5x96QV5MXBDOWnL4gWt+Z-QK0MQ@mail.gmail.com>
-Subject: Re: [PATCH] add support for battery charging threshold, mute.
- correctly save ac/dc brightness to hardware registers
-To:     Kenneth Chan <kenneth.t.chan@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Harald Welte <laforge@gnumonks.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 9:03 PM Kenneth Chan <kenneth.t.chan@gmail.com> wrote:
->
+From: Colin Ian King <colin.king@canonical.com>
 
-Thank you for a patch, but it misses few crucial points:
- - it should have good description as commit message (body of this letter)
- - it should have signature of origin (Signed-off-by tag) that I can
-proceed (I see, it's in wrong position, use `git commit -s` to fix
-this)
- - it should be split per one logical change in a patch, e.g. 1)
-replacing ACPI prints by pr_*() macros, 2) split MODULE_AUTHOR() by
-one author per macro call, 3) etc...
+There is a spelling mistake in a dev_warn warning. Fix it.
 
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/soc/ti/omap_prm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Kenneth Chan <kenneth.t.chan@gmail.com>
-
-
-
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+index 980b04c38fd9..30862fc174ae 100644
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -343,7 +343,7 @@ static int omap_prm_domain_attach_dev(struct generic_pm_domain *domain,
+ 		return ret;
+ 
+ 	if (pd_args.args_count != 0)
+-		dev_warn(dev, "%s: unusupported #power-domain-cells: %i\n",
++		dev_warn(dev, "%s: unsupported #power-domain-cells: %i\n",
+ 			 prmd->pd.name, pd_args.args_count);
+ 
+ 	genpd_data = dev_gpd_data(dev);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
