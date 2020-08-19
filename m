@@ -2,186 +2,136 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5743C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C8F20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597832922;
-	bh=ToWcC1fxg1trjzBqdQ1AZ/Au9BYW3af1OWhvBcf2eQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iMknAQvENmwV9L322VF22Yq+ZaUhmQvA7KWCE6qKjKCYMSZKlPdGq+jYNLLhMcwVa
-	 6k3RtqLJ2icIWnLMEEFYuAEnN3xXjLAb0jZjTqKHBuYJO2yBkLgo6xT06vnGvmFGtO
-	 L6rbPLbVrGSsW3bF1gvBioBvSdJSKSirpRX5Hg2U=
+	by mail.kernel.org (Postfix) with ESMTP id 7E1EF20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:29:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lRjpuSCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgHSK2k (ORCPT
+        id S1727831AbgHSK3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgHSK2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:28:39 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2C02072D;
-        Wed, 19 Aug 2020 10:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597832918;
-        bh=ToWcC1fxg1trjzBqdQ1AZ/Au9BYW3af1OWhvBcf2eQA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Z+nBJDT9QcofaSVIzSl136xTiji62s1yQ3bk5kBtrdMjrrP51TPCH4lO7fid+wazi
-         7M2aAIJtEGNbLSw+arJawsoGoC2GMvf2fOviMctcIydMHMANCyuYFk0+Wh3UJ3yNTs
-         DANPDoBh4Pky/Hod9KgSN9Lphpj3L5//uG+E3CZY=
-Date:   Wed, 19 Aug 2020 12:28:32 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-Message-ID: <20200819122832.3cd5f834@coco.lan>
-In-Reply-To: <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
-        <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
-        <20200818172909.71f5243a@coco.lan>
-        <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
-        <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Aug 2020 06:29:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726642AbgHSK3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:29:00 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JA1a06146945;
+        Wed, 19 Aug 2020 06:28:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=vAVx19PN5evAuL1yft8QctVm3MEbjgVTzM0AEmd3lu8=;
+ b=lRjpuSCp10DoMysfqOcmcU5aufeygLjPEgxdiJ8jV5YUS4CgcCkxwzVaSaLD/9UtEnnI
+ VDpJ73Npda2qV4zp9hHT+04djr14hFHB42sM+CPXjCfPc77mOSMf7ueX6Xuj5EBr6ZTP
+ YCoJhjDzDVdaNSgbfYnKc2JSjqDCPiU89jnjxWTf/5WKD6MiebeDLiBgSXXKbbm0qljL
+ DK9gnm6nA8LHUxfSTUtGTYOUtQa18Xm6jY3W3+0HLPMj8M1yTkZWwdTetIEnz2Xh/Bp0
+ MNmUhiz19X5EGHEvAgZzmtjGCg/MTf6xzWEqtHmikvYkSeLRDKkZxP1yAYXq7w0rDMpN pg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304ru5fny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 06:28:51 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07JAPIms005141;
+        Wed, 19 Aug 2020 10:28:49 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 3304um1q59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 10:28:49 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07JASkkB21365094
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Aug 2020 10:28:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0BBA42064;
+        Wed, 19 Aug 2020 10:28:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0409242041;
+        Wed, 19 Aug 2020 10:28:45 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.116.28])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Aug 2020 10:28:44 +0000 (GMT)
+From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
+To:     hch@infradead.org, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        riteshh@linux.ibm.com, anju@linux.vnet.ibm.com
+Subject: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Date:   Wed, 19 Aug 2020 15:58:41 +0530
+Message-Id: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_04:2020-08-19,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=708 priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 clxscore=1011 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 18 Aug 2020 15:02:54 -0700
-John Stultz <john.stultz@linaro.org> escreveu:
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-> On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:  
-> > > Em Tue, 18 Aug 2020 15:47:55 +0100
-> > > Basically, the DT binding has this, for IOMMU:
-> > >
-> > >
-> > >       smmu_lpae {
-> > >               compatible = "hisilicon,smmu-lpae";
-> > >       };
-> > >
-> > > ...
-> > >       dpe: dpe@e8600000 {
-> > >               compatible = "hisilicon,kirin970-dpe";
-> > >               memory-region = <&drm_dma_reserved>;
-> > > ...
-> > >               iommu_info {
-> > >                       start-addr = <0x8000>;
-> > >                       size = <0xbfff8000>;
-> > >               };
-> > >       }
-> > >
-> > > This is used by kirin9xx_drm_dss.c in order to enable and use
-> > > the iommu:
-> > >
-> > >
-> > >       static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
-> > >       {
-> > >               struct device *dev = NULL;
-> > >
-> > >               dev = &pdev->dev;
-> > >
-> > >               /* create iommu domain */
-> > >               ctx->mmu_domain = iommu_domain_alloc(dev->bus);
-> > >               if (!ctx->mmu_domain) {
-> > >                       pr_err("iommu_domain_alloc failed!\n");
-> > >                       return -EINVAL;
-> > >               }
-> > >
-> > >               iommu_attach_device(ctx->mmu_domain, dev);
-> > >
-> > >               return 0;
-> > >       }
-> > >
-> > > The only place where the IOMMU domain is used is on this part of the
-> > > code(error part simplified here) [1]:
-> > >
-> > >       void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
-> > >       {
-> > >               uint64_t fama_phy_pgd_base;
-> > >               uint32_t phy_pgd_base;
-> > > ...
-> > >               fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
-> > >               phy_pgd_base = (uint32_t)fama_phy_pgd_base;
-> > >               if (WARN_ON(!phy_pgd_base))
-> > >                       return;
-> > >
-> > >               set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
-> > >       }
-> > >
-> > > [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
-> > >
-> > > In other words, the driver needs to get the physical address of the frame
-> > > buffer (mapped via iommu) in order to set some DRM-specific register.
-> > >
-> > > Yeah, the above code is somewhat hackish. I would love to replace
-> > > this part by a more standard approach.  
-> >
-> > OK, so from a quick look at that, my impression is that your display
-> > controller has its own MMU and you don't need to pretend to use the
-> > IOMMU API at all. Just have the DRM driver use io-pgtable directly to
-> > run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
-> > example (but try to ignore the wacky "Mali LPAE" format).  
-> 
-> Yea. For the HiKey960, there was originally a similar patch series but
-> it was refactored out and the (still out of tree) DRM driver I'm
-> carrying doesn't seem to need it (though looking we still have the
-> iommu_info subnode in the dts that maybe needs to be cleaned up).
+__bio_try_merge_page() may return same_page = 1 and merged = 0. 
+This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
+Handle this case in iomap_add_to_ioend() by incrementing write_count.
+This scenario mostly happens where we have too much dirty data accumulated. 
 
-Funny... while the Hikey 970 DRM driver has such IOMMU code, it
-doesn't actually use it!
+w/o the patch we hit below kernel warning,
+ 
+ WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
+ CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
+ Call Trace:
+  __remove_mapping+0x154/0x320 (unreliable)
+  iomap_releasepage+0x80/0x180
+  try_to_release_page+0x94/0xe0
+  invalidate_inode_page+0xc8/0x110
+  invalidate_mapping_pages+0x1dc/0x540
+  generic_fadvise+0x3c8/0x450
+  xfs_file_fadvise+0x2c/0xe0 [xfs]
+  vfs_fadvise+0x3c/0x60
+  ksys_fadvise64_64+0x68/0xe0
+  sys_fadvise64+0x28/0x40
+  system_call_exception+0xf8/0x1c0
+  system_call_common+0xf0/0x278
 
-The driver has a function called hisi_dss_smmu_config() with
-sets the registers on a different way in order to use IOMMU
-or not, at the hisi_fb_pan_display() function. It can also
-use a mode called "afbcd".
+Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+---
+ fs/iomap/buffered-io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Well, this function sets both to false:
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index bcfc288dba3f..4e8062279e66 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1332,10 +1332,12 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
+ 
+ 	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
+ 			&same_page);
+-	if (iop && !same_page)
++	if (iop && merged && !same_page)
+ 		atomic_inc(&iop->write_count);
+ 
+ 	if (!merged) {
++		if (iop)
++			atomic_inc(&iop->write_count);
+ 		if (bio_full(wpc->ioend->io_bio, len)) {
+ 			wpc->ioend->io_bio =
+ 				iomap_chain_bio(wpc->ioend->io_bio);
+-- 
+2.25.4
 
-	bool afbcd = false;
-	bool mmu_enable = false;
-
-I ended commenting out the code which depends at the iommu
-driver and everything is working as before.
-
-So, I'll just forget about this iommu driver, as we can live
-without that.
-
-For now, I'll keep the mmu code there commented out, as
-it could be useful on a future port for it to use io-pgtable.
-
--
-
-Robin,
-
-Can the Panfrost driver use io-pgtable while the KMS driver
-won't be using it? Or this would cause it to not work?
-
-My end goal here is to be able to test the Panfrost driver ;-)
-
-Thanks,
-Mauro
