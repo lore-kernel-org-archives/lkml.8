@@ -2,156 +2,124 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B621C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9717C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7B8207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA568207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxXLwp55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHSQce convert rfc822-to-8bit (ORCPT
+        id S1726735AbgHSQhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:32:34 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37842 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726640AbgHSQca (ORCPT
+        Wed, 19 Aug 2020 12:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgHSQhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:32:30 -0400
-Received: from [78.134.86.56] (port=55002 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1k8R0i-000Bvx-2V; Wed, 19 Aug 2020 18:32:24 +0200
-Subject: Re: [PATCH 2/3] fpga manager: xilinx-spi: provide better diagnostics
- on programming failure
-To:     Tom Rix <trix@redhat.com>, linux-fpga@vger.kernel.org
-Cc:     Moritz Fischer <mdf@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200817165911.32589-1-luca@lucaceresoli.net>
- <20200817165911.32589-2-luca@lucaceresoli.net>
- <b1a1a9d9-d36b-40f0-24e3-f793e55db929@redhat.com>
- <51694865-2a05-ac67-43a0-dbcb9989cbab@lucaceresoli.net>
- <397b99e2-9b39-5a67-e1c6-8dcf3482f96b@redhat.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <8c055a1d-e8f5-6d23-18c4-cb87d95bbc5a@lucaceresoli.net>
-Date:   Wed, 19 Aug 2020 18:32:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 12:37:32 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE59C061757;
+        Wed, 19 Aug 2020 09:37:31 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id v6so25253073iow.11;
+        Wed, 19 Aug 2020 09:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S0X/vbriFVnWWVZ5CjN02GNpsIqupceWmrYzbhZ7QUo=;
+        b=kxXLwp558f4WUskUKC2YtyusCu2kJ76eIdjy8pThlVKpa4Px4X5RZKR8ctMjEWU0iE
+         tPNiT87Mcj97vH0O7J0p1yIejp25/GM06hu5c+ts9U1UxNk1vOL03DPDVidKS9oTZAtr
+         M2skvcTVA1ufmtbR6/knE1V4Dn7eEWQoueLQLWcqKPH6ZrRLSQU0jki/FHCkvjrJuhlQ
+         uwE19BnTWFr7peo0uRnfIBONCXFJCqZQh/CN4L2BbYU+/bfUeF2pal9KSwCbxzd4XRVB
+         hUU3L/Ob04dwgM9bimBln9Pjlc63IEGogA6y6/pEj8Nn7rYo/RLk/6MhV1DZ4JhRP5Dj
+         kVvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S0X/vbriFVnWWVZ5CjN02GNpsIqupceWmrYzbhZ7QUo=;
+        b=bsfu2+FxdhSpUiRkKPHr/wrUVl4rmJ7TFXD03Fch3OeuWSSBJDiNPPxbPGb79RMzI3
+         wpR+BOncyxN42cDgUE1wMDWpRVjKCIPKWv4QzA7rtPNyyHysV5m8X9Wuu9nO+icT+OdI
+         srJzK5b1H3E3FV8uYzwXhZWk+MsYxFlcjY8LulD76XlQGtzv2L3LZQYTfJ4Tj6ukCwHD
+         sQvKwQcc7fEqJFgwpnAcqGYjd70nxNJ39tEjeyf76GQb2AScY9MiOYcol9SkdfTZ3rZZ
+         DU/+R7Kz9J9XsdXB1HuWvUhkwFlPK+ce9LxZzFYI/b7JLTaXoGwu96DrjlyZ37ufM5vJ
+         TZxQ==
+X-Gm-Message-State: AOAM531L0OYEtr4hHhVI3+87O2nlZJfRL3Shvu6d2bNWh+LWTETPy0Pe
+        OeFl4xqglG3CKllS2zMFG76jgPHhFx8Syy9hfVU=
+X-Google-Smtp-Source: ABdhPJwQgGfXpfjFcgyzo55Xm2hlisDkSmmnFpbdU3B7UkbHGnYnlb807ccg0oXcXYTBp0E5J6z8mZqNeMZhLZ3tqKs=
+X-Received: by 2002:a6b:7d42:: with SMTP id d2mr21173344ioq.17.1597855050836;
+ Wed, 19 Aug 2020 09:37:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <397b99e2-9b39-5a67-e1c6-8dcf3482f96b@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200816064901.977682-1-ztong0001@gmail.com> <75b8354b-362a-0215-8038-45bd68be7de5@xs4all.nl>
+In-Reply-To: <75b8354b-362a-0215-8038-45bd68be7de5@xs4all.nl>
+From:   Tong Zhang <ztong0001@gmail.com>
+Date:   Wed, 19 Aug 2020 12:37:20 -0400
+Message-ID: <CAA5qM4BqzwiRijEkk=0EEGCwgjm1BnN3RbT2=51z0pzCGHqngg@mail.gmail.com>
+Subject: Re: [PATCH] media: pvrusb2: fix parsing error
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, isely@pobox.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/08/20 16:21, Tom Rix wrote:
-> 
-> On 8/18/20 3:20 AM, Luca Ceresoli wrote:
->> [a question for GPIO maintainers below]
->>
->> Hi Tom,
->>
->> thanks for your review!
->>
->> On 17/08/20 20:15, Tom Rix wrote:
->>> The other two patches are fine.
->>>
->>> On 8/17/20 9:59 AM, Luca Ceresoli wrote:
->>>> When the DONE pin does not go high after programming to confirm programming
->>>> success, the INIT_B pin provides some info on the reason. Use it if
->>>> available to provide a more explanatory error message.
->>>>
->>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>>> ---
->>>>  drivers/fpga/xilinx-spi.c | 11 ++++++++++-
->>>>  1 file changed, 10 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
->>>> index 502fae0d1d85..2aa942bb1114 100644
->>>> --- a/drivers/fpga/xilinx-spi.c
->>>> +++ b/drivers/fpga/xilinx-spi.c
->>>> @@ -169,7 +169,16 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
->>>>  			return xilinx_spi_apply_cclk_cycles(conf);
->>>>  	}
->>>>  
->>>> -	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
->>>> +	if (conf->init_b) {
->>>> +		int init_b_asserted = gpiod_get_value(conf->init_b);
->>> gpiod_get_value can fail. So maybe need split the first statement.
->>>
->>> init_b_asserted < 0 ? "invalid device"
->>>
->>> As the if-else statement is getting complicated, embedding the ? : makes this hard to read.  'if,else if, else' would be better.
->> Thanks for the heads up. However I'm not sure which is the best thing to
->> do here.
->>
->> First, I've been reading the libgpiod code after your email and yes, the
->> libgpiod code _could_ return runtime errors received from the gpiochip
->> driver, even though the docs state:
->>
->>> The get/set calls do not return errors because “invalid GPIO”> should have been reported earlier from gpiod_direction_*().
->> (https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html)
->>
->> On the other hand there are plenty of calls to gpiod_get/set_value in
->> the kernel that don't check for error values. I guess this is because
->> failures getting/setting a GPIO are very uncommon (perhaps impossible
->> with platform GPIO).
->>
->> When still a GPIO get/set operation fails I'm not sure adding thousands
->> of error-checking code lines in hundreds of drivers is the best way to
->> go. I feel like we should have a unique, noisy dev_err() in the error
->> path in libgpio but I was surprised in not finding any [1].
->>
->> Linus, Bartosz, what's your opinion? Should all drivers check for errors
->> after every gpiod_[sg]et_value*() call?
-> 
-> My opinion is that you know the driver / hw is in a bad state and you
-> 
-> are trying to convey useful information.  So you should
-> 
-> be as careful as possible and not assume gpio did not fail.
+Hi Hans,
+Thank you very much for your comments.
+The change looks good to me.
+ -- However, I'm not quite familiar with the patch submission process
+in this situation.
+Would you like to go ahead and create an improved version?
+Thanks,
+- Tong
 
-This patch aims at providing better diagnostics after programming has
-already gone bad. Neglecting an error might lead to a misleading error
-message, but this doesn't lead programming to fail -- it has failed already.
-
-On the other hand a gpiod_get/set_value() call might fail earlier, along
-the normal execution path, and lead to real failures without an error
-message emitted after the gpiod call that failed.
-
-Which doesn't mean I'm against your proposal of adding error checking
-code. Rather, if we want error checking, we want it mainly in other
-places: at the very least at the first usage of each of the GPIOs, maybe
-at each usage. Have a look at the beginning of
-xilinx_spi_write_complete() [0] for example: if gpiod_get_value() fails
-there the driver would think programming has been successfully completed
-(DONE asserted). To me this is worse than just printing the wrong error
-message.
-
-[0]
-https://elixir.bootlin.com/linux/v5.8.2/source/drivers/fpga/xilinx-spi.c#L114
-
--- 
-Luca
-
+On Wed, Aug 19, 2020 at 10:38 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> Hi Tong,
+>
+> On 16/08/2020 08:49, Tong Zhang wrote:
+> > pvr2_std_str_to_id() returns 0 on failure and 1 on success,
+> > however the caller is checking failure case using <0
+> >
+> > Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+> > ---
+> >  drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+> > index 1cfb7cf64131..db5aa66c1936 100644
+> > --- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+> > +++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+> > @@ -867,7 +867,8 @@ static int ctrl_std_sym_to_val(struct pvr2_ctrl *cptr,
+> >       int ret;
+> >       v4l2_std_id id;
+> >       ret = pvr2_std_str_to_id(&id,bufPtr,bufSize);
+> > -     if (ret < 0) return ret;
+> > +     if (ret == 0)
+> > +             return ret;
+>
+> But now you return 0 instead of an error when pvr2_std_str_to_id failed.
+>
+> Just do this:
+>
+>         if (!pvr2_std_str_to_id(&id,bufPtr,bufSize))
+>                 return -EINVAL;
+>
+> And you can drop the ret variable as well since that's no longer needed.
+>
+> Regards,
+>
+>         Hans
+>
+> >       if (mskp) *mskp = id;
+> >       if (valp) *valp = id;
+> >       return 0;
+> >
+>
