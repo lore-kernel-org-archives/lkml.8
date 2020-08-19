@@ -2,87 +2,159 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10091C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21529C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF832078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597873380;
-	bh=pinhTPqoqxH2L+AXIWvBK5hfDh/tddhsdx7m0Akw4vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DzkHuH7lFxdNFQbd0vFs6P319wovreJAAigRLw/aYHuyswaz8bs5LXWS9nSQ48w5R
-	 wnth03bEm9K5KDZyQZH+L4dlMEVLNMeyS+f9Joz1u4N6fkU+Hl180PH3KJ5lRO9WP2
-	 SkVvk+2Mhn0n7OMkFselnfssDjfm3u0v7QTy0bKI=
+	by mail.kernel.org (Postfix) with ESMTP id EFF12207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="hbJllX8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHSVm7 (ORCPT
+        id S1726841AbgHSVqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgHSVmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:42:51 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A952067C;
-        Wed, 19 Aug 2020 21:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597873371;
-        bh=pinhTPqoqxH2L+AXIWvBK5hfDh/tddhsdx7m0Akw4vk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AEuC7bxpfxQb5NULJo7ameLMi/uRkCDBFssg2Hh9Ph/nCuIth358SMN0YUN207pZC
-         CRLee7W5b83xTup6n9ZwhSREsQek5bjjgoIWNMn/nhs9P5SPlaV9RW+TpuGWaKXKW0
-         khJL2F8teLty+rZYfHxwczK5xb/U1f7+B0pkSIQs=
-Date:   Wed, 19 Aug 2020 14:42:48 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     David Fugate <david.fugate@linux.intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200819214248.GA26769@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com>
- <20200818071249.GB2544@lst.de>
- <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
+        Wed, 19 Aug 2020 17:46:32 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:7054 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgHSVq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:46:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1597873586; x=1629409586;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:mime-version:content-transfer-encoding;
+  bh=8yNDh/opgTq3MOkRXljbjOdyBIIBWdSe+NfyiDr9uJc=;
+  b=hbJllX8Ta7QfGUIFnScaf7sATGV4R0t2YDm5n7VhqIY4+HXJfwYYGDr5
+   m6qW+fOU7CgmZ2SGwE6se+PUedGSd7GWFSeYZG8srXaqAiODguE0+Zf8/
+   sTi6Jo/QkVUhdT5bDAFURTzr1eNjm50DLVxME3ETpApJei8yJT2lr4KtV
+   s=;
+X-IronPort-AV: E=Sophos;i="5.76,332,1592870400"; 
+   d="scan'208";a="68104990"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 19 Aug 2020 21:46:08 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id 86BCBA256F;
+        Wed, 19 Aug 2020 21:46:03 +0000 (UTC)
+Received: from EX13D01EUA003.ant.amazon.com (10.43.165.113) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 19 Aug 2020 21:46:02 +0000
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13D01EUA003.ant.amazon.com (10.43.165.113) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 19 Aug 2020 21:46:01 +0000
+Received: from EX13D20UWC001.ant.amazon.com ([10.43.162.244]) by
+ EX13D20UWC001.ant.amazon.com ([10.43.162.244]) with mapi id 15.00.1497.006;
+ Wed, 19 Aug 2020 21:46:00 +0000
+From:   "Graf (AWS), Alexander" <graf@amazon.de>
+To:     Jim Mattson <jmattson@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Raslan, KarimAllah" <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] Allow user space to restrict and augment MSR
+ emulation
+Thread-Topic: [PATCH v4 0/3] Allow user space to restrict and augment MSR
+ emulation
+Thread-Index: AQHWdnIgDTv6kcTSi0aUujnOWdtoeA==
+Date:   Wed, 19 Aug 2020 21:46:00 +0000
+Message-ID: <B0FD5408-E2C1-444C-AFCE-7C622EA75F66@amazon.de>
+References: <20200803211423.29398-1-graf@amazon.com>,<CALMp9eRHmhmKP21jmBr13n3DvttPg9OQEn5Zn0LxyiKiq2uTkA@mail.gmail.com>
+In-Reply-To: <CALMp9eRHmhmKP21jmBr13n3DvttPg9OQEn5Zn0LxyiKiq2uTkA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 01:11:58PM -0600, David Fugate wrote:
-> Intel does not support making *optional* NVMe spec features *required*
-> by the NVMe driver. 
 
-This is inaccurate. As another example, the spec optionally allows a
-zone size to be a power of 2, but linux requires a power of 2 if you
-want to use it with this driver.
 
-> Provided there's no glaring technical issues
+> Am 19.08.2020 um 23:27 schrieb Jim Mattson <jmattson@google.com>:
+> =
 
-There are many. Some may be improved through a serious review process,
-but the mess it makes out of the fast path is measurably harmful to
-devices that don't subscribe to this. That issue is not so easily
-remedied.
+>> On Mon, Aug 3, 2020 at 2:14 PM Alexander Graf <graf@amazon.com> wrote:
+>> =
 
-Since this patch is a copy of the scsi implementation, the reasonable
-thing is take this fight to the generic block layer for a common
-solution. We're not taking this in the nvme driver.
+>> While tying to add support for the MSR_CORE_THREAD_COUNT MSR in KVM,
+>> I realized that we were still in a world where user space has no control
+>> over what happens with MSR emulation in KVM.
+>> =
+
+>> That is bad for multiple reasons. In my case, I wanted to emulate the
+>> MSR in user space, because it's a CPU specific register that does not
+>> exist on older CPUs and that really only contains informational data that
+>> is on the package level, so it's a natural fit for user space to provide
+>> it.
+>> =
+
+>> However, it is also bad on a platform compatibility level. Currrently,
+>> KVM has no way to expose different MSRs based on the selected target CPU
+>> type.
+>> =
+
+>> This patch set introduces a way for user space to indicate to KVM which
+>> MSRs should be handled in kernel space. With that, we can solve part of
+>> the platform compatibility story. Or at least we can not handle AMD spec=
+ific
+>> MSRs on an Intel platform and vice versa.
+>> =
+
+>> In addition, it introduces a way for user space to get into the loop
+>> when an MSR access would generate a #GP fault, such as when KVM finds an
+>> MSR that is not handled by the in-kernel MSR emulation or when the guest
+>> is trying to access reserved registers.
+>> =
+
+>> In combination with the allow list, the user space trapping allows us
+>> to emulate arbitrary MSRs in user space, paving the way for target CPU
+>> specific MSR implementations from user space.
+> =
+
+> This is somewhat misleading. If you don't modify the MSR permission
+> bitmaps, as Aaron has done, you cannot emulate *arbitrary* MSRs in
+> userspace. You can only emulate MSRs that kvm is going to intercept.
+> Moreover, since the set of intercepted MSRs evolves over time, this
+> isn't a stable API.
+
+Yeah, I wrote up a patch today to do the passthrough bitmap masking dynamic=
+ally, partly based on Aaron's patches. I have not verified it yet though an=
+d will need to clean up SVM as well. I'll see how far I get with it for the=
+ rest of the week.
+
+Special MSRs like EFER also irritate me a bit. We can't really trap on them=
+ - most code paths just know they're handled in kernel. Maybe I'll add some=
+ sanity checks as well...
+
+
+Alex
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
