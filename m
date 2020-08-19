@@ -2,148 +2,157 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC1E207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B23B207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597819659;
+	bh=gyXXT4D4VYYaIOu1+gQnW//kuaEEXVrmB2ft+K3ew70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EAFXGIs5F2HdIUQF2VIHhLMkJFsKDYIl5efHy5eZ2UmZblE3KU10MbOXeKvGth+7q
+	 ADR8nG+oLbZMkSpeQ3krKO4WmLkuR2ci6eu/Qv7P/sIB6dBDSyPfIiLgmoxH88Xr6O
+	 okOxOgl3iQeRdVZF3YjOPwYo7VegKNId54OWwntE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHSGr2 (ORCPT
+        id S1727046AbgHSGrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:47:28 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36074 "EHLO mga02.intel.com"
+        Wed, 19 Aug 2020 02:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgHSGrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:47:16 -0400
-IronPort-SDR: H+jCP1FCpMPb+FfVOVmMeTEPfggoKVRA/GN/mWOgmmr2qziOBndNDQ92K3XJUeLRQoQ15eLw9i
- MerlpQqYWHfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142873170"
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="142873170"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 23:47:15 -0700
-IronPort-SDR: nDtdpQEtjW6bR6NbnhJShYKoWr8/YTIylohsfGMpZfvj0J7JyKo7zlBcN1Ts3a7hvxtlH1LgZo
- HihV6B2x7OwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="310679252"
-Received: from lxy-dell.sh.intel.com ([10.239.159.21])
-  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2020 23:47:12 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v10 1/9] x86/split_lock: Rename TIF_SLD to TIF_SLD_DISABLED
-Date:   Wed, 19 Aug 2020 14:46:59 +0800
-Message-Id: <20200819064707.1033569-2-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200819064707.1033569-1-xiaoyao.li@intel.com>
-References: <20200819064707.1033569-1-xiaoyao.li@intel.com>
+        id S1727013AbgHSGr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:47:26 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03CF2063A;
+        Wed, 19 Aug 2020 06:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597819645;
+        bh=gyXXT4D4VYYaIOu1+gQnW//kuaEEXVrmB2ft+K3ew70=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iF574zjF4YALNQMlPIlYyUhMlOaowp0aKXeBobiMvul/9VebVzPb0GGL2pL6IrOfO
+         biszHrPoThMJ8qaY9wBHRZEXPInyq/UK06/Ftx+cpClRBnctvE0kAc4ZdaGx85SamP
+         /aqnKXglUaQQcpUzJBj/EPMyDqj/degt0zaMtzTc=
+Date:   Wed, 19 Aug 2020 09:47:18 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
+Message-ID: <20200819064718.GR752365@kernel.org>
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+ <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+ <20200724092746.GD517988@gmail.com>
+ <20200725031648.GG17052@linux.intel.com>
+ <20200726081408.GB2927915@kernel.org>
+ <20200818053029.GE44714@linux.intel.com>
+ <20200818115141.GO752365@kernel.org>
+ <20200818163033.GF137138@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818163033.GF137138@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TIF_SLD can only be set if a user space thread hits split lock and
-sld_state == sld_warn. This flag is set to indicate SLD (split lock
-detection) is turned off for the thread, so rename it to
-TIF_SLD_DISABLED, which is pretty self explaining.
+On Tue, Aug 18, 2020 at 07:30:33PM +0300, Jarkko Sakkinen wrote:
+> On Tue, Aug 18, 2020 at 02:51:41PM +0300, Mike Rapoport wrote:
+> > On Tue, Aug 18, 2020 at 08:30:29AM +0300, Jarkko Sakkinen wrote:
+> > > On Sun, Jul 26, 2020 at 11:14:08AM +0300, Mike Rapoport wrote:
+> > > > > 
+> > > > > I'm not still sure that I fully understand this feedback as I don't see
+> > > > > any inherent and obvious difference to the v4. In that version fallbacks
+> > > > > are to module_alloc() and module_memfree() and text_alloc() and
+> > > > > text_memfree() can be overridden by arch.
+> > > > 
+> > > > The major difference between your v4 and my suggestion is that I'm not
+> > > > trying to impose a single ARCH_HAS_TEXT_ALLOC as an alternative to
+> > > > MODULES but rather to use per subsystem config option, e.g.
+> > > > HAVE_KPROBES_TEXT_ALLOC.
+> > > > 
+> > > > Another thing, which might be worth doing regardless of the outcome of
+> > > > this discussion is to rename alloc_insn_pages() to text_alloc_kprobes()
+> > > > because the former is way too generic and does not emphasize that the 
+> > > > instruction page is actually used by kprobes only.
+> > > 
+> > > What if we in kernel/kprobes.c just:
+> > > 
+> > > #ifndef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > 
+> > I don't think that CONFIG_ARCH_HAS_TEXT_ALLOC will work for all
+> > architectures.
+> > 
+> > If an architecture has different restrictions for allocation of text
+> > for, say, modules, kprobes, bfp, it won't be able to use a single
+> > ARCH_HAS_TEXT_ALLOC. Which means that this architecture is stuck with
+> > dependency of kprobes on MODULES until the next rework.
+> 
+> I was thinking to name it as CONFIG_HAS_KPROBES_ALLOC_PAGE, alogn the
+> lines described below, so it is merely a glitch in my example.
+ 
+IMHO, it would be better to emphasize that this is text page. I liked
+Mark's idea [1] to have text_alloc_<subsys>() naming for the allocation
+functions. The Kconfig options then would become
+HAVE_TEXT_ALLOC_<SUBSYS>.
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/include/asm/thread_info.h | 6 +++---
- arch/x86/kernel/cpu/intel.c        | 6 +++---
- arch/x86/kernel/process.c          | 2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+[1] https://lore.kernel.org/linux-riscv/20200714133314.GA67386@C02TD0UTHF1T.local/
 
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 267701ae3d86..fdb458a74557 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -92,7 +92,7 @@ struct thread_info {
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
--#define TIF_SLD			18	/* Restore split lock detection on context switch */
-+#define TIF_SLD_DISABLED	18	/* split lock detection is turned off */
- #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
- #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
-@@ -122,7 +122,7 @@ struct thread_info {
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
--#define _TIF_SLD		(1 << TIF_SLD)
-+#define _TIF_SLD_DISABLED	(1 << TIF_SLD_DISABLED)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
- #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
-@@ -136,7 +136,7 @@ struct thread_info {
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW_BASE					\
- 	(_TIF_NOCPUID | _TIF_NOTSC | _TIF_BLOCKSTEP |		\
--	 _TIF_SSBD | _TIF_SPEC_FORCE_UPDATE | _TIF_SLD)
-+	 _TIF_SSBD | _TIF_SPEC_FORCE_UPDATE | _TIF_SLD_DISABLED)
- 
- /*
-  * Avoid calls to __switch_to_xtra() on UP as STIBP is not evaluated.
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 59a1e3ce3f14..c48b3267c141 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1090,11 +1090,11 @@ static void split_lock_warn(unsigned long ip)
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
--	 * progress and set TIF_SLD so the detection is re-enabled via
-+	 * progress and set TIF_SLD_DISABLED so the detection is re-enabled via
- 	 * switch_to_sld() when the task is scheduled out.
- 	 */
- 	sld_update_msr(false);
--	set_tsk_thread_flag(current, TIF_SLD);
-+	set_tsk_thread_flag(current, TIF_SLD_DISABLED);
- }
- 
- bool handle_guest_split_lock(unsigned long ip)
-@@ -1132,7 +1132,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-  */
- void switch_to_sld(unsigned long tifn)
- {
--	sld_update_msr(!(tifn & _TIF_SLD));
-+	sld_update_msr(!(tifn & _TIF_SLD_DISABLED));
- }
- 
- /*
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 994d8393f2f7..e9265c6b9256 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -641,7 +641,7 @@ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- 		__speculation_ctrl_update(~tifn, tifn);
- 	}
- 
--	if ((tifp ^ tifn) & _TIF_SLD)
-+	if ((tifp ^ tifn) & _TIF_SLD_DISABLED)
- 		switch_to_sld(tifn);
- }
- 
+
+> > > void __weak *alloc_insn_page(void)
+> > > {
+> > > 	return module_alloc(PAGE_SIZE);
+> > > }
+> > > 
+> > > void __weak free_insn_page(void *page)
+> > > {
+> > > 	module_memfree(page);
+> > > }
+> > > #endif
+> > > 
+> > > In Kconfig (as in v5):
+> > > 
+> > > config KPROBES
+> > > 	bool "Kprobes"
+> > > 	depends on MODULES || ARCH_HAS_TEXT_ALLOC
+> > > 
+> > > I checked architectures that override alloc_insn_page(). With the
+> > > exception of x86, they do not call module_alloc().
+> > > 
+> > > If no rename was done, then with this approach a more consistent.
+> > > config flag name would be CONFIG_ARCH_HAS_ALLOC_INSN_PAGE.
+> > > 
+> > > I'd call the function just as kprobes_alloc_page(). Then the
+> > > config flag would become CONFIG_HAS_KPROBES_ALLOC_PAGE.
+> > > 
+> > > > -- 
+> > > > Sincerely yours,
+> > > > Mike.
+> > > 
+> > > Thanks for the feedback!
+> > > 
+> > > /Jarkko
+> > 
+> 
+> > -- 
+> > Sincerely yours,
+> > Mike.
+> 
+> BR,
+> /Jarkko
+
 -- 
-2.18.4
-
+Sincerely yours,
+Mike.
