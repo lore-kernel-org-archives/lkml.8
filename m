@@ -2,114 +2,98 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F319C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E412420738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597818004;
-	bh=vl71KL+eGXR0jV2XwfQLzxUirijwxQjH7PY1V4bGlN8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ElLdbpuhc55uOFDeY7UCGQSW1WSS6Lhh8w/BuagSOLjBVBHYVidF95YkVh9EKTFhN
-	 O9n2NAItE/BmyrdCeFk1pvB8hgHzvmNW2k2jtWWSxGu+sGuknT++AX5Pl9tHrD/3Jq
-	 cTIIOVIzYfhmmcrWvKII4HbdT1k/92UZRhit5QMw=
+	by mail.kernel.org (Postfix) with ESMTP id 8CC0220738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N7XpPa9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHSGUD (ORCPT
+        id S1726702AbgHSG0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:20:03 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:36700 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSGUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:20:02 -0400
-Received: by mail-ej1-f66.google.com with SMTP id kq25so24901057ejb.3;
-        Tue, 18 Aug 2020 23:20:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=el+F6G6X74vs681XhpTMhoN92meVVmppJ6dMHUb8u5s=;
-        b=q9OKDBF5lfC70/MY76NGmsQKAhpbFkK3NweccqZhgUy2PfAxbmqfYKlWfv2TVEpgXx
-         ZtuY8rBHCPPEWaPNJ1JqSPHRyPf9hlGpE5KDkEALG3/XA3bVdlfWUn4VVQZOGm4tWLmH
-         utrJjls1quog+5NBDfA+VTn5SXCiuUapEt9ayscyCH3n9qBqtFQbTqKSl2RQGF6vqOG0
-         RkLuGAPqCk9RIMcDVbAXCLJw2wZnN9kRLTb8rpg5b7Lx/ZKXXNMxm8YpzQPpbuDd6ccA
-         5CpB+GMXaa88wHT/Z76YStqrrNmPgVIJcur7bEZKLx4rmBiG5RGZmsmtllrPQv86GD7m
-         qn5w==
-X-Gm-Message-State: AOAM530xJW+XEZanonCXPdbFKgUXJ1KnTrhhxiHO/yL7xRL+PD6BG0hF
-        Z7UK/XkUdZNotjLvZtitUjX09oktFuY=
-X-Google-Smtp-Source: ABdhPJxZRI+rHX1AL3hw80zpDQrRYPm0EuVAmVt4YL9021IB+bNagX7l7JaJOvbIX2gil9cAe9M8gA==
-X-Received: by 2002:a17:906:858:: with SMTP id f24mr23152924ejd.543.1597818000880;
-        Tue, 18 Aug 2020 23:20:00 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id d2sm18214610ejm.19.2020.08.18.23.19.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 23:20:00 -0700 (PDT)
-Subject: Re: [PATCH] n_gsm: Fix write handling for zero bytes written
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200817135454.28505-1-tony@atomide.com>
- <1b8538a8-d8b6-4287-36e1-aa1e0863ff2d@kernel.org>
- <20200818095609.GQ2994@atomide.com>
- <ea5e0639-4419-c60b-059a-8fbd057fc6e3@kernel.org>
- <20200818104714.GR2994@atomide.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <34dd61d2-01c3-dcc1-21bd-494eb90759ac@kernel.org>
-Date:   Wed, 19 Aug 2020 08:19:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 02:26:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:21718 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbgHSG0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:26:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597818396; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=PN6zE1gpjyYIM9fr5EdDm53UBzFyP2EjiyqPgnc+nnw=; b=N7XpPa9A9y8Ju6NGBC/SpifFq9ZcDySZFLN3JTOmyEZ/D2T1GXAAVFkqvWitNa4bn8qWW3Sy
+ s7uSY4+WHzFgQ5+jyF/EPsJrcVWshsu/2nb4d2kFPmsfdgLRBpJGZDHxGVi6Y5E9NQNGjzg/
+ tcDs9sj3aEW0Fwq5fkAPUjj+gzM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3cc61b2889723bf871e31d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 Aug 2020 06:26:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5FD51C43387; Wed, 19 Aug 2020 06:26:35 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E4AAC433C6;
+        Wed, 19 Aug 2020 06:26:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E4AAC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Wireless <linux-wireless@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the wireless-drivers-next tree with the kspp-gustavo tree
+References: <20200819111815.73cae4b0@canb.auug.org.au>
+Date:   Wed, 19 Aug 2020 09:26:31 +0300
+In-Reply-To: <20200819111815.73cae4b0@canb.auug.org.au> (Stephen Rothwell's
+        message of "Wed, 19 Aug 2020 11:18:15 +1000")
+Message-ID: <87364jjgmg.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200818104714.GR2994@atomide.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 08. 20, 12:47, Tony Lindgren wrote:
-> * Jiri Slaby <jirislaby@kernel.org> [200818 10:14]:
->> On 18. 08. 20, 11:56, Tony Lindgren wrote:
->>> Hi,
->>>
->>> * Jiri Slaby <jirislaby@kernel.org> [200818 08:24]:
->>>> On 17. 08. 20, 15:54, Tony Lindgren wrote:
->>>>> If write returns zero we currently end up removing the message
->>>>> from the queue. Instead of removing the message, we want to just
->>>>> break out of the loop just like we already do for error codes.
->>>>
->>>> When exactly does the only writer (gsmld_output) return zero for
->>>> non-zero len parameter?
->>>
->>> I ran into this when testing with the WIP serial core PM runtime
->>> changes from Andy Shevchenko earlier. If there are also other
->>> cases where we have serial drivers return 0, I don't know about
->>> them.
->>
->> Sorry, I don't understand: my gsmld_output() ignores the return value
->> from drivers' write and returns something greater than zero or a
->> negative error. What tree/SHA do you run?
-> 
-> Oh right, good catch. I also had my WIP serdev-ngsm patches applied
-> that uses gsm_serdev_output() and returns the bytes written. Andy's
-> patches do not touch n_gsm.c.
-> 
-> Hmm sounds like we should also start returning value also from
-> gsmld_output()? Any objections to making that change?
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-No objections here.
+> Today's linux-next merge of the wireless-drivers-next tree got a
+> conflict in:
+>
+>   drivers/net/wireless/ath/ath11k/dp_rx.c
+>
+> between commit:
+>
+>   58e813cceabd ("treewide: Use fallthrough pseudo-keyword")
+>
+> from the kspp-gustavo tree and commit:
+>
+>   0b294aebb6a0 ("ath11k: Use fallthrough pseudo-keyword")
+>
+> from the wireless-drivers-next tree.
+>
+> I fixed it up (the latter removed an extra blank line) and can carry the
+> fix as necessary. This is now fixed as far as linux-next is concerned,
+> but any non trivial conflicts should be mentioned to your upstream
+> maintainer when your tree is submitted for merging.  You may also want
+> to consider cooperating with the maintainer of the conflicting tree to
+> minimise any particularly complex conflicts.
 
-thanks,
+Gustavo, why do you have patches changing ath11k in your tree? PLEASE
+don't do that! Instead properly send them to linux-wireless and ath11k
+lists, as you have done before. That way there are no unncessary
+conflicts like this one which cause extra work for the maintainers.
+
 -- 
-js
-suse labs
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
