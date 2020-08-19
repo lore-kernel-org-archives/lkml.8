@@ -2,194 +2,119 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0052063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uzGckYbh"
+	by mail.kernel.org (Postfix) with ESMTP id D67912063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHSVXJ (ORCPT
+        id S1727837AbgHSVXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHSVXH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:23:07 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83BCC061757;
-        Wed, 19 Aug 2020 14:23:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ep8so21454pjb.3;
-        Wed, 19 Aug 2020 14:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=btY89Txg+8uaXE0k0GApRaRoixmsf2CD33KKqig2JcQ=;
-        b=uzGckYbhvmooulRyFafT6ihfOPKIF3wD0VVYp08F1KTsV6GQTLy+MqNj1NqzMjTF3g
-         m74g7SgX+o4fWuCrwpeauKvO88vPJYSbPRWJmUhRVFb6CEF1lu2gnSVIg2M+PyscrGMb
-         qXhkWcXtMvZKgPBcajRe374uxFD3eKZrin8HS7AU0FM3yloN8BuGshyAYcAHHZSBatxY
-         F2Rm7SSdxtXvywadIZrLg6H/vIcNYqiLHyWqR0KDhhgAKklyqyHUQxXO9LnFGEEycTjh
-         CkY5Jk57xzAX/VZtiZxdjxpKBk2PcjcmdgK6AqEHLfs5Rmu+x9RyfRY/JUNm0GhdOcEP
-         ct2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=btY89Txg+8uaXE0k0GApRaRoixmsf2CD33KKqig2JcQ=;
-        b=gvpqSQeKr3JCwNduBwrFMVvCWNDtorXo9j7TFCMw6Y2io5Hr6goNP4fMzDuwsiquNV
-         ZAgx1VMr7AELA/512Itek8Jgzh/tW0dQ+PDJRiDvJSrU6LLV0SPmAvM8ISbleTGy1eJg
-         j8Rs65ZPgMseG9FjfCDCSSSsjJ+Zj3+gYLBeTVj/k4ooDyomot76nIPMnjdNxykXfqCQ
-         0ae2/EqAPg+v4Xe0eKfZi0xPr5iwFqKaZS9TW2nn1M2Rm1BpkClVz6UbcNpNlPbc4MHm
-         URx0nNg//LPrqxPXKebLUTK7No88j5WX4EKljpIueagd5XYKgynDqlWJDPSbOjpopEWL
-         BGkA==
-X-Gm-Message-State: AOAM533xLqJQmKcptmlL/GXns43hGLv5AccQBrl5Ia+CHYFWp4Rn4bug
-        a9dtmE/TSoJmz9jmtYJGOs0=
-X-Google-Smtp-Source: ABdhPJxO0ZtsTvP5Luy+Pe9LO6rJvGHTAXst7+degYUTQtrp2fp92aQk0C79bjai40irJIiUd7B4Lw==
-X-Received: by 2002:a17:902:b7c2:: with SMTP id v2mr82656plz.34.1597872184330;
-        Wed, 19 Aug 2020 14:23:04 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id b20sm138503pfp.140.2020.08.19.14.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 14:23:03 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:22:55 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, jakub@cloudflare.com,
-        john.fastabend@gmail.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5f3d982f51f22_2c9b2adeefb585bccb@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200819092436.58232-6-lmb@cloudflare.com>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-6-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next 5/6] bpf: sockmap: allow update from BPF
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Aug 2020 17:23:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30684 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgHSVXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:23:22 -0400
+IronPort-SDR: nHWf+TfeVtnLZhsJUORWFQDEj1a6OBGVM6JnHdOdQc2l1epUlNCO93tlU8ndpU15P3ZSLVCgE7
+ BmUCgRetv4HA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="134719952"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="134719952"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:23:14 -0700
+IronPort-SDR: tRb8EujjyCF0q4Yu824iRPVt9sZdfq6cyYnW7g0yXcljMbzu3dvfpJL0L5Cm6fwDUYNkV/9e0T
+ sBw2f1edk84A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="400947509"
+Received: from abojanow-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.52.107])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2020 14:23:08 -0700
+Date:   Thu, 20 Aug 2020 00:23:07 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, Borislav Petkov <bp@alien8.de>,
+        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
+        Christian Ludloff <ludloff@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200819212307.GG9942@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+ <20200810222317.GG14724@linux.intel.com>
+ <20200818145234.GC132200@linux.intel.com>
+ <20200818150627.GD132200@linux.intel.com>
+ <CAOASepNxu0YtSPjXynLaVgyt-S0uSad8HVrNgMNWf+Z7iamPvQ@mail.gmail.com>
+ <20200818164353.GH137138@linux.intel.com>
+ <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Allow calling bpf_map_update_elem on sockmap and sockhash from a BPF
-> context. The synchronization required for this is a bit fiddly: we
-> need to prevent the socket from changing it's state while we add it
-> to the sockmap, since we rely on getting a callback via
-> sk_prot->unhash. However, we can't just lock_sock like in
-> sock_map_sk_acquire because that might sleep. So instead we disable
-> softirq processing and use bh_lock_sock to prevent further
-> modification.
+On Wed, Aug 19, 2020 at 09:33:45AM -0400, Nathaniel McCallum wrote:
+> On Tue, Aug 18, 2020 at 12:44 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 11:15:32AM -0400, Nathaniel McCallum wrote:
+> > > That seems like overkill to me. I'm just asking for one additional mov
+> > > instruction. :)
+> >
+> > I started to consider eBPF since the complexity and constraints of the
+> > callback look like an overkill and without doubt will be a burden to
+> > maintain.
 > 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  kernel/bpf/verifier.c |  6 ++++--
->  net/core/sock_map.c   | 24 ++++++++++++++++++++++++
->  2 files changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 47f9b94bb9d4..421fccf18dea 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -4254,7 +4254,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
->  		    func_id != BPF_FUNC_map_delete_elem &&
->  		    func_id != BPF_FUNC_msg_redirect_map &&
->  		    func_id != BPF_FUNC_sk_select_reuseport &&
-> -		    func_id != BPF_FUNC_map_lookup_elem)
-> +		    func_id != BPF_FUNC_map_lookup_elem &&
-> +		    func_id != BPF_FUNC_map_update_elem)
->  			goto error;
->  		break;
->  	case BPF_MAP_TYPE_SOCKHASH:
-> @@ -4263,7 +4264,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
->  		    func_id != BPF_FUNC_map_delete_elem &&
->  		    func_id != BPF_FUNC_msg_redirect_hash &&
->  		    func_id != BPF_FUNC_sk_select_reuseport &&
-> -		    func_id != BPF_FUNC_map_lookup_elem)
-> +		    func_id != BPF_FUNC_map_lookup_elem &&
-> +		    func_id != BPF_FUNC_map_update_elem)
+> That feels to me like more complexity just to move the existing
+> complexity from one place to another.
 
-I lost track of a detail here, map_lookup_elem should return
-PTR_TO_MAP_VALUE_OR_NULL but if we want to feed that back into
-the map_update_elem() we need to return PTR_TO_SOCKET_OR_NULL
-and then presumably have a null check to get a PTR_TO_SOCKET
-type as expect.
+My thinking was that there is like two parts on AEX handler:
 
-Can we use the same logic for expected arg (previous patch) on the
-ret_type. Or did I miss it:/ Need some coffee I guess.
+A. You have a set of data and some application dependent logic.
+   Right now this part is written in assembly most of the time.
+B. You have code that decide how to continue based on that logic.
 
->  			goto error;
->  		break;
->  	case BPF_MAP_TYPE_REUSEPORT_SOCKARRAY:
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index 018367fb889f..b2c886c34566 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -603,6 +603,28 @@ int sock_map_update_elem_sys(struct bpf_map *map, void *key,
->  	return ret;
->  }
->  
-> +static int sock_map_update_elem(struct bpf_map *map, void *key,
-> +				void *value, u64 flags)
-> +{
-> +	struct sock *sk = (struct sock *)value;
-> +	int ret;
-> +
-> +	if (!sock_map_sk_is_suitable(sk))
-> +		return -EOPNOTSUPP;
-> +
-> +	local_bh_disable();
-> +	bh_lock_sock(sk);
+I was thinking that you could have the logic manipulating data (the
+existing context structure we have can be passed directly to the BPF
+state machine) patchable with a BPF program.
 
-How do ensure we are not being called from some context which
-already has the bh_lock_sock() held? It seems we can call map_update_elem()
-from any context, kprobes, tc, xdp, etc.?
+The logic would be executed in ring-0. vDSO would contain part B.
 
-> +	if (!sock_map_sk_state_allowed(sk))
-> +		ret = -EOPNOTSUPP;
-> +	else if (map->map_type == BPF_MAP_TYPE_SOCKMAP)
-> +		ret = sock_map_update_common(map, *(u32 *)key, sk, flags);
-> +	else
-> +		ret = sock_hash_update_common(map, key, sk, flags);
-> +	bh_unlock_sock(sk);
-> +	local_bh_enable();
-> +	return ret;
-> +}
-> +
->  BPF_CALL_4(bpf_sock_map_update, struct bpf_sock_ops_kern *, sops,
->  	   struct bpf_map *, map, void *, key, u64, flags)
->  {
-> @@ -687,6 +709,7 @@ const struct bpf_map_ops sock_map_ops = {
->  	.map_free		= sock_map_free,
->  	.map_get_next_key	= sock_map_get_next_key,
->  	.map_lookup_elem_sys_only = sock_map_lookup_sys,
-> +	.map_update_elem	= sock_map_update_elem,
->  	.map_delete_elem	= sock_map_delete_elem,
->  	.map_lookup_elem	= sock_map_lookup,
->  	.map_release_uref	= sock_map_release_progs,
-> @@ -1180,6 +1203,7 @@ const struct bpf_map_ops sock_hash_ops = {
->  	.map_alloc		= sock_hash_alloc,
->  	.map_free		= sock_hash_free,
->  	.map_get_next_key	= sock_hash_get_next_key,
-> +	.map_update_elem	= sock_map_update_elem,
->  	.map_delete_elem	= sock_hash_delete_elem,
->  	.map_lookup_elem	= sock_hash_lookup,
->  	.map_lookup_elem_sys_only = sock_hash_lookup_sys,
-> -- 
-> 2.25.1
-> 
+It is better to at least make some rational conclusions about this
+because it seems to be the trend [1].
 
+On the other hand the history with callbacks has not been a history
+of victory as far as it comes to all the possible issues with them.
+Like think about signals for example...
 
+[1] https://lwn.net/Articles/813261/
+
+/Jarkko
