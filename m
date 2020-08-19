@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E56C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0084C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D2D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9338420738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mn+ymFH5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gx7mrlJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHSS76 (ORCPT
+        id S1727036AbgHSTAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35810 "EHLO
+        Wed, 19 Aug 2020 15:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgHSS7u (ORCPT
+        with ESMTP id S1726646AbgHSTAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:59:50 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53000C061757;
-        Wed, 19 Aug 2020 11:59:50 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so11269795plr.7;
-        Wed, 19 Aug 2020 11:59:50 -0700 (PDT)
+        Wed, 19 Aug 2020 15:00:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FF9C061383;
+        Wed, 19 Aug 2020 12:00:02 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m71so12157480pfd.1;
+        Wed, 19 Aug 2020 12:00:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7pp7ILrXVpYWERUNp+y3FKEvGmfdJxafp13Cd61iIdo=;
-        b=Mn+ymFH5Tc2xZr4mSSRBUl7CNfTA0DlesWU0Sq0Xu1T+OqneWcVq4ekASysyYI2ETT
-         NOSB7C2Cedt19yXvJ2upXqZodaCRErUqHBJvXJ+y1AG0d1s3aeoXWgX4ydW1wonG1AQJ
-         KyyYcwn0E1nHoVzOPWBujC3D3P2PPODBG13GhGBCib7jUZw+yShRX9TFZfqK5/8JvmIY
-         Q9fAysRWcGK4QLyVjz9u8ryaERCmVOEyPJXSzbd+3ZARafIcqDvcV2dqniZXDul1xz43
-         LQjdek9dXEkDQpvBHd7Ur9Oo/o0EtG2HR0sFPQG850ujw/PavQIQaX7UXDdE6ivpyEku
-         Cp4Q==
+        bh=OQnwLM4dHzJRAnTfJIXhUQMR/ExLuRw9KF4MfB1j53g=;
+        b=gx7mrlJc35T2/ZQi9Ht3XPkUZr4qb95Oiy+82MqtFzf59AJSK64W3nD5D3fcnSWRX0
+         GL0MzqVUQTqzN6QVh20pRmm4cs2nTigUzBtI7lJWyOx8nme6vpWqrvujXYEZP0ZFMVnF
+         5NcmEZTeEZbgtIm5jgRdekRSCAtjU2wN7iBsbqlcB7LRdNasMVRuh7VDUVwfI5vkXqNx
+         9e903tRxOZIZXUTNPbQ+/y1y+Ij8Sj4FGiwjxF10BsepnmkBN5i4x3MMbQD23/v4dWQ4
+         J+comHnnOQiu3+IYsOml/pdcZp4DqO1I2qSDpq8NYQD1Xr+dE8cT/9rqGrrv/Pcgi9Yw
+         nlnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7pp7ILrXVpYWERUNp+y3FKEvGmfdJxafp13Cd61iIdo=;
-        b=rC7Y/zR9e+FGO+JyIgJqTYl6rEXWn+IKkxiUemRWJ8/72/E+AIa4l2syR07oi8fC8+
-         puiim5kxP519PKuKZM/RPlrezWBL7+9uFmRMg2RXczfeZvGj+aEIG74G5infPGHBVyQg
-         HmbtjSD2tMjiNK6yMWsHuNbG/jnZuotzb33QnSULLEnw3wI0GcBdyYJsjLsoEL/+qgZv
-         FR9lsSEGX52aPfPqYUG2P+nzJeG67yDw0mDjYfTzHJcQ2CA50GH7nGcDvnhJUWtztvOf
-         oZIpodX5wwW+lNFKm6i3BLOJXJ8cnru194/eiyPFni1ZRpaISUU5XjVlu+GmwEM1r3KM
-         KX9g==
-X-Gm-Message-State: AOAM531IcJL1s+Ka6SUMpBj47iGOQqalMO45jWZz1LDebg4c2XCclz+M
-        N5BA8tQvhHCpKCUUZPvTzUM=
-X-Google-Smtp-Source: ABdhPJyPQYzgR72iLGG6L45iOOLTCC87J2wjbMAQqVqpLvOesvLqGUTY8VuELv+F5IyITtz4hTGtcA==
-X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr5130955pjh.179.1597863589786;
-        Wed, 19 Aug 2020 11:59:49 -0700 (PDT)
+        bh=OQnwLM4dHzJRAnTfJIXhUQMR/ExLuRw9KF4MfB1j53g=;
+        b=ipNx42dzjpH4IgdMuE9m9XNRhsTYpI7d/341hQPTxlZwMprQY+5VJRGoik6CECG3TO
+         mTJtTUvNZ+2ozG8lnvkYZuCD5zyr2FbG4RmNo6KiF5gF7GKxsP/3d6WWUYdQFt8uEb2M
+         nCsOgZoYoGmCuqBZJhy2cQ3B4bQm3ABTnpZrjeyyD3CHwxYTceGB4BARfuRanhzXUQoN
+         MQ1O+18yhBZulklCQBQ5K4TP94U8pLEJolPKtu4H412JH4myiSUXFgbA+qHj8sfkmBPB
+         ii7TZfv+wEOiCKt6tWGHd5X5FGUmaBYO6PtzI9BS39/KH5nz7Dk4pfKWGEqG1CARgr1R
+         gDNA==
+X-Gm-Message-State: AOAM530prXbEaInInCqMs/xfDBgyveJf4P+qpXVuNA/+FdNckpnfY3gI
+        FB3BxbfojCkJpoBA1D4fF0A=
+X-Google-Smtp-Source: ABdhPJzm11Z34Nqrnp+qvsYMrTkcaR7D2rExSpbg+/9OJiJa4mSJ6ucaTtuHJAAE+GQf5g0kqlgVqg==
+X-Received: by 2002:aa7:92c7:: with SMTP id k7mr19149604pfa.239.1597863602281;
+        Wed, 19 Aug 2020 12:00:02 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id o134sm29149305pfg.200.2020.08.19.11.59.44
+        by smtp.gmail.com with ESMTPSA id o134sm29149305pfg.200.2020.08.19.11.59.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:59:49 -0700 (PDT)
+        Wed, 19 Aug 2020 12:00:01 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v3 08/12] fbdev: cyber2000fb: use generic power management
-Date:   Thu, 20 Aug 2020 00:26:50 +0530
-Message-Id: <20200819185654.151170-9-vaibhavgupta40@gmail.com>
+Subject: [PATCH v3 10/12] fbdev: vt8623fb: use generic power management
+Date:   Thu, 20 Aug 2020 00:26:52 +0530
+Message-Id: <20200819185654.151170-11-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819185654.151170-1-vaibhavgupta40@gmail.com>
 References: <20200819185654.151170-1-vaibhavgupta40@gmail.com>
@@ -90,58 +90,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Drivers should do only device-specific jobs. But in general, drivers using
+legacy PCI PM framework for .suspend()/.resume() have to manage many PCI
+PM-related tasks themselves which can be done by PCI Core itself. This
+brings extra load on the driver and it directly calls PCI helper functions
+to handle them.
+
 Switch to the new generic framework by updating function signatures and
-define a "struct dev_pm_ops" variable to bind PM callbacks. This way we can
-remove the legacy .suspend & .resume bindings from "lxfb_driver".
+define a "struct dev_pm_ops" variable to bind PM callbacks. Also, remove
+unnecessary calls to the PCI Helper functions along with the legacy
+.suspend & .resume bindings.
+
+The vt8623_pci_suspend() is not designed to function in the case of Freeze.
+Thus, the code checked for "if (state.event == PM_EVENT_FREEZE....)". This
+is because, in the legacy framework, this callback was invoked even in the
+event of Freeze. Hence, added the load of unnecessary function-call.
+
+The goal can be achieved by binding the callback with only ".suspend" and
+".poweroff" in the "vt8623_pci_pm_ops" const variable. This also avoids the
+step of checking "state.event == PM_EVENT_FREEZE" every time the callback
+is invoked.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/cyber2000fb.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/video/fbdev/vt8623fb.c | 41 ++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/video/fbdev/cyber2000fb.c b/drivers/video/fbdev/cyber2000fb.c
-index 42d37bed518a..d45355b9a58c 100644
---- a/drivers/video/fbdev/cyber2000fb.c
-+++ b/drivers/video/fbdev/cyber2000fb.c
-@@ -1810,7 +1810,7 @@ static void cyberpro_pci_remove(struct pci_dev *dev)
- 	}
+diff --git a/drivers/video/fbdev/vt8623fb.c b/drivers/video/fbdev/vt8623fb.c
+index 7b3eef1b893f..c488e0117758 100644
+--- a/drivers/video/fbdev/vt8623fb.c
++++ b/drivers/video/fbdev/vt8623fb.c
+@@ -815,12 +815,11 @@ static void vt8623_pci_remove(struct pci_dev *dev)
  }
  
--static int cyberpro_pci_suspend(struct pci_dev *dev, pm_message_t state)
-+static int __maybe_unused cyberpro_pci_suspend(struct device *dev)
+ 
+-#ifdef CONFIG_PM
+ /* PCI suspend */
+ 
+-static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
++static int __maybe_unused vt8623_pci_suspend(struct device *dev)
  {
+-	struct fb_info *info = pci_get_drvdata(dev);
++	struct fb_info *info = dev_get_drvdata(dev);
+ 	struct vt8623fb_info *par = info->par;
+ 
+ 	dev_info(info->device, "suspend\n");
+@@ -828,7 +827,7 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 	console_lock();
+ 	mutex_lock(&(par->open_lock));
+ 
+-	if ((state.event == PM_EVENT_FREEZE) || (par->ref_count == 0)) {
++	if (par->ref_count == 0) {
+ 		mutex_unlock(&(par->open_lock));
+ 		console_unlock();
+ 		return 0;
+@@ -836,10 +835,6 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 
+ 	fb_set_suspend(info, 1);
+ 
+-	pci_save_state(dev);
+-	pci_disable_device(dev);
+-	pci_set_power_state(dev, pci_choose_state(dev, state));
+-
+ 	mutex_unlock(&(par->open_lock));
+ 	console_unlock();
+ 
+@@ -849,9 +844,9 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
+ 
+ /* PCI resume */
+ 
+-static int vt8623_pci_resume(struct pci_dev* dev)
++static int __maybe_unused vt8623_pci_resume(struct device *dev)
+ {
+-	struct fb_info *info = pci_get_drvdata(dev);
++	struct fb_info *info = dev_get_drvdata(dev);
+ 	struct vt8623fb_info *par = info->par;
+ 
+ 	dev_info(info->device, "resume\n");
+@@ -862,14 +857,6 @@ static int vt8623_pci_resume(struct pci_dev* dev)
+ 	if (par->ref_count == 0)
+ 		goto fail;
+ 
+-	pci_set_power_state(dev, PCI_D0);
+-	pci_restore_state(dev);
+-
+-	if (pci_enable_device(dev))
+-		goto fail;
+-
+-	pci_set_master(dev);
+-
+ 	vt8623fb_set_par(info);
+ 	fb_set_suspend(info, 0);
+ 
+@@ -879,10 +866,17 @@ static int vt8623_pci_resume(struct pci_dev* dev)
+ 
  	return 0;
  }
-@@ -1818,9 +1818,9 @@ static int cyberpro_pci_suspend(struct pci_dev *dev, pm_message_t state)
- /*
-  * Re-initialise the CyberPro hardware
-  */
--static int cyberpro_pci_resume(struct pci_dev *dev)
-+static int __maybe_unused cyberpro_pci_resume(struct device *dev)
- {
--	struct cfb_info *cfb = pci_get_drvdata(dev);
-+	struct cfb_info *cfb = dev_get_drvdata(dev);
- 
- 	if (cfb) {
- 		cyberpro_pci_enable_mmio(cfb);
-@@ -1846,12 +1846,15 @@ static struct pci_device_id cyberpro_pci_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, cyberpro_pci_table);
- 
-+static SIMPLE_DEV_PM_OPS(cyberpro_pci_pm_ops,
-+			 cyberpro_pci_suspend,
-+			 cyberpro_pci_resume);
+-#else
+-#define vt8623_pci_suspend NULL
+-#define vt8623_pci_resume NULL
+-#endif /* CONFIG_PM */
 +
- static struct pci_driver cyberpro_driver = {
- 	.name		= "CyberPro",
- 	.probe		= cyberpro_pci_probe,
- 	.remove		= cyberpro_pci_remove,
--	.suspend	= cyberpro_pci_suspend,
--	.resume		= cyberpro_pci_resume,
-+	.driver.pm	= &cyberpro_pci_pm_ops,
- 	.id_table	= cyberpro_pci_table
++static const struct dev_pm_ops vt8623_pci_pm_ops = {
++#ifdef CONFIG_PM_SLEEP
++	.suspend	= vt8623_pci_suspend,
++	.resume		= vt8623_pci_resume,
++	.freeze		= NULL,
++	.thaw		= vt8623_pci_resume,
++	.poweroff	= vt8623_pci_suspend,
++	.restore	= vt8623_pci_resume,
++#endif /* CONFIG_PM_SLEEP */
++};
+ 
+ /* List of boards that we are trying to support */
+ 
+@@ -898,8 +892,7 @@ static struct pci_driver vt8623fb_pci_driver = {
+ 	.id_table	= vt8623_devices,
+ 	.probe		= vt8623_pci_probe,
+ 	.remove		= vt8623_pci_remove,
+-	.suspend	= vt8623_pci_suspend,
+-	.resume		= vt8623_pci_resume,
++	.driver.pm	= &vt8623_pci_pm_ops,
  };
  
+ /* Cleanup */
 -- 
 2.28.0
 
