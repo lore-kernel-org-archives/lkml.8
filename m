@@ -2,109 +2,113 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D722C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FA1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E63F20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iRxnC/nO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9OyR1dn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHSAEd (ORCPT
+        id S1726944AbgHSAIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        Tue, 18 Aug 2020 20:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgHSAEc (ORCPT
+        with ESMTP id S1725554AbgHSAIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:04:32 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B031C061342
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:04:32 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id 77so19180734ilc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:04:32 -0700 (PDT)
+        Tue, 18 Aug 2020 20:08:49 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6915C061389;
+        Tue, 18 Aug 2020 17:08:49 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so10509010pgl.3;
+        Tue, 18 Aug 2020 17:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tSr61lwzUj+xHSrVPasO0EWAim4EWvQCGpCMT13xijE=;
-        b=iRxnC/nOppybcAojsVo0p009Ul4zniX0CYq561gKj8/PGz6vtBky6WbKCJrbe18woB
-         5Gvd5XtTTWz91U/YGzWZbeMIl2nAmOC04oYv1IbPzj9MHxd2KH0zLxsJpbs6p8q6BZre
-         QQaR2gGM+yBASU5DXhq6FjMbneA1G2B1uEYTU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Cqj3JHaqnrJFkMIO2+78Aoe3lTOzW4rxOSItuV6igWQ=;
+        b=M9OyR1dnDAR+aD97hRZvu9dMwj9hmHRrMKkXiLVlByxvP08ZNMf8ojXnSukeCsuC91
+         DS2kmpRhnH1cD29L/8KmzLv7kNxk1DXMt70a3OrAxGm/5HWVwoP/Re5xKx9PxyK4hM8K
+         o+UjRGOyTZjFnnz9N9/IHt22WcSJfAAlup89B+Wap97S8WzVtGdqecESJEtnp978MKiX
+         9GjYvVDe+3vRu3PlzQdtGsyqnkzML7tbB2EwhGfpfgByDlp+xFLd3j7nNRPAxObp6sVn
+         O47N62LHFMn0H5HGI+UOleaU/qhriEkbcouDDObZM0yWQSvbuSAumabIqHgk4n0EMt4S
+         6R/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tSr61lwzUj+xHSrVPasO0EWAim4EWvQCGpCMT13xijE=;
-        b=bxrIOZgDt3SqLgh5/kYZF55MnvcX2fIOgMn67n4f6dSAhd44ynPt7Vmjs7O9tkotnM
-         rjuvIg288MTckpIly09QUyxYnLPFONkFvV2Asqmh8ZrqZ8YroSybH/KT2OnrYFbepCSj
-         rMse4T8SmDuHM0vJqJ4lFfQLQlYwNBGZyjLLmCKAbw0FyvEiVbhdqWDOjOVteURZ02X6
-         I+Ycfe0QmTFTY+ES/b0/nVZFFQ6AS+y+1crDQCXH+/7cchV4cdY6WeG5D1JksSuA1jUY
-         7arpz4/azgmgYRucCpoXqBDKLeEZ7CjlLVKcrWVud3h722eDBPXAQEr4EiDi0BuwyGoV
-         RTxw==
-X-Gm-Message-State: AOAM531kzoRpftqll7jy61zncsA9NUYcBpoetyDN9j+/gzGwFTewxOkQ
-        +yh2Up9AfA4jV4shEIdMWcyErZiXlOIk4NTaOPb4hA==
-X-Google-Smtp-Source: ABdhPJyjicQKK5V/J7U3GZuUT4FkgXC3VrgTQLkpPiyoQZ8ZkEKKjjrWqZbrDqtBGQ5xliwSol1cNNHVoDy1sY6cHN0=
-X-Received: by 2002:a92:660e:: with SMTP id a14mr20285569ilc.262.1597795471360;
- Tue, 18 Aug 2020 17:04:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cqj3JHaqnrJFkMIO2+78Aoe3lTOzW4rxOSItuV6igWQ=;
+        b=Y/I5BZjAVIb3FukuttkB8c4w8IA7ddNhKenWHwqCPmLWIxEoLamMT/5tpuH7EmghdZ
+         r2iRnNz2fzabVZWt2Pjh2D1r9wkhIuMmJI8v75hNkNVWGYge73hkNQKvdqM6fF9ZMF3l
+         euJRlaSR4Aq5ZdMSvniHErOY7mVqQfBqOzasHAyF37mmKrvVtaK1M+VfSMLWiarG1Q59
+         tR0p3rXLxrXkFkE9GM1t0LO18oNHMrjlrWbjN6KrlrRD2byMv4XDS4zRm1fkhaGo+sq2
+         ACMSLQWokeKxyqAESXbSZPNTWqvtBCHIgUfAHKyPQALthKE8VpFlBFW4w5aLSgCegWb5
+         GlHw==
+X-Gm-Message-State: AOAM531mq4lVun2oXN7jU7k6cijqpXtGbW7xSmmJsE5c19moBGWXAj4w
+        NeuljTbfRN5ObuSLolw9oTk=
+X-Google-Smtp-Source: ABdhPJxYkLBotLh6mg1c2biaKWwcwyCLvB4Z15DMunV+250Uxk1nDwdAYtkyf64vINJzrcDNslPZnQ==
+X-Received: by 2002:a63:2546:: with SMTP id l67mr15136826pgl.281.1597795728621;
+        Tue, 18 Aug 2020 17:08:48 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id s8sm924557pju.54.2020.08.18.17.08.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 17:08:47 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 17:08:45 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Furquan Shaikh <furquan@google.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        adurbin@google.com
+Subject: Re: [PATCH] drivers: input: Use single i2c_transfer transaction when
+ using RM_CMD_BANK_SWITCH
+Message-ID: <20200819000845.GW1665100@dtor-ws>
+References: <20200818234215.2255611-1-furquan@google.com>
 MIME-Version: 1.0
-References: <20200814064557.17365-1-qiang.zhang@windriver.com>
- <20200814185124.GA2113@pc636> <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
- <20200818171807.GI27891@paulmck-ThinkPad-P72> <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
- <20200818210355.GM27891@paulmck-ThinkPad-P72> <20200818215511.GA2538@pc636> <20200818220245.GO27891@paulmck-ThinkPad-P72>
-In-Reply-To: <20200818220245.GO27891@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 18 Aug 2020 20:04:20 -0400
-Message-ID: <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
-Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>, qiang.zhang@windriver.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818234215.2255611-1-furquan@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+Hi Furquan,
 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index b8ccd7b5af82..6decb9ad2421 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
-> >  {
-> >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
-> > +       struct kfree_rcu_cpu *krcp;
-> >
-> >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> >                 return 0;
-> >
-> > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
-> > +       krcp = this_cpu_ptr(&krc)
-> > +       schedule_delayed_work(&krcp->monitor_work, 0);
-> > +
-> >
-> > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
-> > Maybe be never.
->
-> Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
-> hard time getting too worried about it.  ;-)
+On Tue, Aug 18, 2020 at 04:42:15PM -0700, Furquan Shaikh wrote:
+> On an AMD chromebook, where the same I2C bus is shared by both Raydium
+> touchscreen and a trackpad device, it is observed that interleaving of
+> I2C messages when raydium_i2c_read_message() is called leads to the
+> Raydium touch IC reporting incorrect information. This is the sequence
+> that was observed to result in the above issue:
+> 
+> * I2C write to Raydium device for RM_CMD_BANK_SWITCH
+> * I2C write to trackpad device
+> * I2C read from trackpad device
+> * I2C write to Raydium device for setting address
+> * I2C read from Raydium device >>>> This provides incorrect
+>   information
+> 
+> This change updates raydium_i2c_read_message and
+> raydium_i2c_send_message to perform all the I2C transfers in the
+> function as part of a single i2c_transfer transaction. This ensures
+> that no transactions are initiated to any other device on the same bus
+> in between and hence the information obtained from the touchscreen
+> device is correct. Verified with the patch across multiple
+> reboots (>100) that the information reported by the Raydium
+> touchscreen device during probe is correct.
 
-Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
-on the cache reaper who's job is to flush the per-cpu caches. So I
-believe during CPU offlining, the per-cpu slab caches are flushed.
+The devices (touchpad and touchscreen) have to have different addresses
+and therefore should be able to operate independently of each other. Are
+you sure that the problem is not in i2c controller implementation that
+mixes up data streams from 2 separate devices?
 
-thanks,
+Thanks.
 
- - Joel
+-- 
+Dmitry
