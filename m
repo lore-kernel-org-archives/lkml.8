@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB24C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60912C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 162EB20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF6520786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SNPoZoJN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KWxezoHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgHSH2B (ORCPT
+        id S1727893AbgHSH2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 19 Aug 2020 03:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40966 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728134AbgHSH0j (ORCPT
+        with ESMTP id S1728177AbgHSH0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:26:39 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AABEC0612F5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 184so1132996wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:39 -0700 (PDT)
+        Wed, 19 Aug 2020 03:26:54 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB619C0612FB
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so20482585wrl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RMRow1FU16at5Rxk8jpAW5P1dc+v6ZWHaxQDTPnHoRc=;
-        b=SNPoZoJNR1nbdefomTlSYIsWbZuQ3Rb9aYVkCnxQ5EKjsw955VlAxn93wnWj6zKA++
-         Z7P/HsmuuTN3e5lw379MJ++Q9oHqHlkKc2xO7lmhC7QUp+3010Y+xu6Wkwy8laR/Kvvj
-         6NzThsBnRydY3/g605qzJcgQPu5ZZ/Fsrs4QhoxwL4bCxRHnvP4VGvxD02PKb+jawEw7
-         LDLbQ1CJ+AcwZEpVWo+SbPaUA1G2oWvsWUygGHGFvFWUXOtPVugY2ciaRSjMvlw/h+Es
-         gTSoOuYp86qhxiL1DUVcgh6xDOI4VUGam+nElnNCQE92OCBa3d708ajuHdfZpDxFJqHK
-         79iQ==
+        bh=MXrVMXxmwgXJ39Y7aWHGNOyRG8RSZHjpquigiIYkasc=;
+        b=KWxezoHUCGlrGQCvXcBhFEgWS2LPvlkk1d5JkmxYWRJuUxk9LWxiqSPTjRP/pTfFO5
+         YBzpDzqKpzJp6+A2t0EEwKVqWgkqbMEzHenmeWSSlbpReQXdWwKrnouVMwytE2aG2ZZB
+         oHNHdCnTb0wZ5N/xZGjlbPcNzyLBkjrMyk03gb/Z9oQSSAKnwjjpQFGQqTvyUyLlYBMF
+         sAvrSW3VPuomjAxIMW66Oy/6ytfWYe9cbITe99uCsdR7IqZqzZV3yNL4JCU88+Kn430F
+         23AN/50+wn6/N0reQ3Ve9Xqkjlr4k4UAIBamybp/mbEgVMJ8wtEONIhTHZ4J3UMD48Qr
+         j6lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RMRow1FU16at5Rxk8jpAW5P1dc+v6ZWHaxQDTPnHoRc=;
-        b=WW676d8JwAIZheH8R3bIRetf46bdCC+IMYJ39QLKTbnarKPMSMnUprp+SAqPqjZXYJ
-         U9IX4+k6ISpqej+AFxq/8Wr/ztnhOChinIfCwpvV2ggdwLB5QnIcnJOfJQgVy8M4Uo3E
-         p9xWvSeHcSHphlo8Owv0hVjGQzujOJrXOlLv0RZ8KxWcY3ZXONZvC1OvPTk+X7dmwdXw
-         0n7oLJb99Esh1IzTjbwJ3nEoND92YC11rdD3Kz3wqfSu1yjmxmOte7k9YNhaigACbPrz
-         HcGu7KXrJsNryltiRhidiCUU7q6DtPfkHfSGULdtXdxkMdR1TIh0ITZhheo7Bj8yYZhd
-         VqSg==
-X-Gm-Message-State: AOAM531hMx/S6NhjP2dQuMQqLBJRl5oa0Ckvkl1AL4kO78J0ZbAl0vSC
-        GxV7aYkXy3+AFuZmrIGa+mVPbw==
-X-Google-Smtp-Source: ABdhPJxOxVsrmr1+wzB7UAUyNoVA3U7c2kWoJmPzX3BBMJXytEyId0jjtlXNg+/jue/OTnEZEesFjA==
-X-Received: by 2002:a1c:6557:: with SMTP id z84mr3441429wmb.19.1597821877989;
-        Wed, 19 Aug 2020 00:24:37 -0700 (PDT)
+        bh=MXrVMXxmwgXJ39Y7aWHGNOyRG8RSZHjpquigiIYkasc=;
+        b=hdADunLtcMwCoX9vRHPNdsdjMDM3ZbZb/86tsFzVjhf0sDnUCGRFR8vyHg1nH7fFKV
+         lZOsuzjYg7QzaqH2o4xej3qFeOLPaDfntru1ckhsPf/RUKmZlQuzyiErBOu0EPHGSVuV
+         dCgTCM4WisKRu1sUvRnQuxf4bgfK8qS+mP7OiR8aCVZaxPjRlQKUMPg0QR07sqWU1xNX
+         wPT5+CLL2UPm6Ee1vvbAGYzp8ea2+zXerQ6oGVbEkCWzGAtINlYhiAhozeBFxyn9bT3/
+         A+5gzRgJdnT42eDd6JB5FSVQiUya10uuqID4KuBxfT1b2D6dgs0ncGGrw+YpF+2xdKEy
+         XCGQ==
+X-Gm-Message-State: AOAM533L/YQqeuVfw1ZKl5OISNchj6bqdm8F7Wrw0i7MziYUaaR13VGZ
+        wS3pq7m4bLIUCXJnSW8BWkp6kw==
+X-Google-Smtp-Source: ABdhPJyIy1C83VytUSZjLTP9jOacbg3bTOc+miIqXPZ3/S7FLn0ZJ/GfyX/76rybwZpj/fQj85EghA==
+X-Received: by 2002:adf:c981:: with SMTP id f1mr23429447wrh.14.1597821880409;
+        Wed, 19 Aug 2020 00:24:40 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.36
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:37 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        libertas-dev@lists.infradead.org
-Subject: [PATCH 26/28] wireless: marvell: libertas: firmware: Fix misnaming for function param 'device'
-Date:   Wed, 19 Aug 2020 08:24:00 +0100
-Message-Id: <20200819072402.3085022-27-lee.jones@linaro.org>
+        Jouni Malinen <j@w1.fi>
+Subject: [PATCH 28/28] wireless: intersil: hostap_ioctl: Remove set but unused variable 'hostscan'
+Date:   Wed, 19 Aug 2020 08:24:02 +0100
+Message-Id: <20200819072402.3085022-29-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,39 +80,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/marvell/libertas/firmware.c:134: warning: Function parameter or member 'device' not described in 'lbs_get_firmware_async'
- drivers/net/wireless/marvell/libertas/firmware.c:134: warning: Excess function parameter 'dev' description in 'lbs_get_firmware_async'
+ drivers/net/wireless/intersil/hostap/hostap_ioctl.c: In function ‘prism2_translate_scan’:
+ drivers/net/wireless/intersil/hostap/hostap_ioctl.c:1958:13: warning: variable ‘hostscan’ set but not used [-Wunused-but-set-variable]
 
+Cc: Jouni Malinen <j@w1.fi>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: libertas-dev@lists.infradead.org
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/marvell/libertas/firmware.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intersil/hostap/hostap_ioctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/firmware.c b/drivers/net/wireless/marvell/libertas/firmware.c
-index 69029c59a2726..f124110944b7e 100644
---- a/drivers/net/wireless/marvell/libertas/firmware.c
-+++ b/drivers/net/wireless/marvell/libertas/firmware.c
-@@ -121,12 +121,12 @@ void lbs_wait_for_firmware_load(struct lbs_private *priv)
-  *  either a helper firmware and a main firmware (2-stage), or just the helper.
-  *
-  *  @priv:      Pointer to lbs_private instance
-- *  @dev:     	A pointer to &device structure
-+ *  @device:   	A pointer to &device structure
-  *  @card_model: Bus-specific card model ID used to filter firmware table
-  *		elements
-  *  @fw_table:	Table of firmware file names and device model numbers
-  *		terminated by an entry with a NULL helper name
-- *	@callback: User callback to invoke when firmware load succeeds or fails.
-+ *  @callback:	User callback to invoke when firmware load succeeds or fails.
-  */
- int lbs_get_firmware_async(struct lbs_private *priv, struct device *device,
- 			    u32 card_model, const struct lbs_fw_table *fw_table,
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ioctl.c b/drivers/net/wireless/intersil/hostap/hostap_ioctl.c
+index 1ca9731d9b14b..514c7b01dbf6f 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ioctl.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ioctl.c
+@@ -1955,7 +1955,7 @@ static inline int prism2_translate_scan(local_info_t *local,
+ 					char *buffer, int buflen)
+ {
+ 	struct hfa384x_hostscan_result *scan;
+-	int entry, hostscan;
++	int entry;
+ 	char *current_ev = buffer;
+ 	char *end_buf = buffer + buflen;
+ 	struct list_head *ptr;
+@@ -1968,7 +1968,6 @@ static inline int prism2_translate_scan(local_info_t *local,
+ 		bss->included = 0;
+ 	}
+ 
+-	hostscan = local->last_scan_type == PRISM2_HOSTSCAN;
+ 	for (entry = 0; entry < local->last_scan_results_count; entry++) {
+ 		int found = 0;
+ 		scan = &local->last_scan_results[entry];
 -- 
 2.25.1
 
