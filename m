@@ -2,160 +2,196 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A360DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6740206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597842710;
-	bh=vxq1i+5+rO8RGMcDRwl1Kl6llTi6GXYX5kfyPA4jblo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tx0Fa7I+ZkG8KFu1UWuyJr1TjvhV+TJd5LKDUPdqU+ly9dJjeqGMK71WubvUTyHE3
-	 vzf78yUlJBTryHlCYASDW6mcXmleyumZWCsCCta7Jd5du0eHsz9GtHLfeajBfHKyun
-	 9MpdEQcyKqQFpcJM32cyHXS9ged2jroWVBQNFmGA=
+	by mail.kernel.org (Postfix) with ESMTP id 6A08620738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Y+D28+Bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHSNLq (ORCPT
+        id S1728577AbgHSNNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbgHSNLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:11:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC432065F;
-        Wed, 19 Aug 2020 13:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597842695;
-        bh=vxq1i+5+rO8RGMcDRwl1Kl6llTi6GXYX5kfyPA4jblo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=skOvnyoi/s8DCceKzmupkt1jYOaWtFdAAqlQ/MFXOrVpqmMQl+hsMEEjs4HBhOLQu
-         0c0ztyi4uXIKad6aYvYHUv3AbWF2jtioPUcwcQoAVMj74KG+/FMhByNjrec9UmAV0D
-         o/Yb0Ae9Hr3NDLzjtRMcTZ4PqnDnfMAucqQAMsmk=
-Date:   Wed, 19 Aug 2020 15:11:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Kees Cook <keescook@chromium.org>, ulf.hansson@linaro.org,
-        linux-atm-general@lists.sourceforge.net, manohar.vanga@gmail.com,
-        airlied@linux.ie, Allen Pais <allen.lkml@gmail.com>,
-        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, anton.ivanov@cambridgegreys.com,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, maximlevitsky@gmail.com,
-        richard@nod.at, deller@gmx.de, jassisinghbrar@gmail.com,
-        3chas3@gmail.com, intel-gfx@lists.freedesktop.org, kuba@kernel.org,
-        mporter@kernel.crashing.org, jdike@addtoit.com, oakad@yahoo.com,
-        s.hauer@pengutronix.de, linux-input@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-block@vger.kernel.org,
-        broonie@kernel.org, openipmi-developer@lists.sourceforge.net,
-        mitch@sfgoth.com, linux-arm-kernel@lists.infradead.org,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        martyn@welchs.me.uk, dmitry.torokhov@gmail.com,
-        linux-mmc@vger.kernel.org, sre@kernel.org,
-        linux-spi@vger.kernel.org, alex.bou9@gmail.com,
-        Allen Pais <allen.cryptic@gmail.com>,
-        stefanr@s5r6.in-berlin.de, daniel@ffwll.ch,
-        linux-ntb@googlegroups.com,
-        Romain Perier <romain.perier@gmail.com>, shawnguo@kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <20200819131158.GA2591006@kroah.com>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com>
- <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook>
- <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
- <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+        Wed, 19 Aug 2020 09:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728393AbgHSNMa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:12:30 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDD1C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:12:29 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d6so26226300ejr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4GEnIifXnUIGCGSPFdr9mfUlgu60edli2IHsMNjCzkI=;
+        b=Y+D28+BjFKTKTkHq2lmTaZTs14vIEPpaC06Q619WMitna1nffYkuH3yen418/0l2aL
+         38fRG7Yu043zi6lFApCGDsQqWPXbW9l5CCqp+n5QZkbzwlduAJ4b0R1z72hp+LgsWoF9
+         YLAcy/hNvE0PIhka7dPsuoEUzrDFH+y2FOjMIocye1+WM7/kqIyOmdxNJQ2u45hxaTuk
+         92aMq68kOesUXxXbSV/MvBo8Jimzq9gDktMioYp9aRs//7PKENQZioBJPCKubqL4PPvK
+         aBPsv/4gSfTXcwsO+f6XGvQh0hRYNkUskUPRFV/pSl9wr7XN7CW8qszEFg08G70YDNYw
+         Dd/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4GEnIifXnUIGCGSPFdr9mfUlgu60edli2IHsMNjCzkI=;
+        b=KoPFGBEJW7WDf6R7JWYjkwqRzR5YRF7FSEmISiqyRIAyw8q4SdKHgYb7H6IlubZOaU
+         YHmLbmSzMd+MJKhCsjQwcXk74JZvTDmRtT0C0DURYLMTmgR0LsIdxO0VT3JIGZW5EuIG
+         YRZgHL/ZTvYVMTcSrk3xPdTxPjLg7BM8jy28JdNOe0+cVa5ab48q1oWm4yt8Ic0hesaF
+         lQ44tzMo5tU5jX5TOjs2ZaPcfgN1+Jr9b7WYgRDvqSwfk+CY0m7fpShuoOtyneBmRyxr
+         A1n7FO5MJN6FTVb9TKvEV7rffwfjc4b2Abk++j4r5gxdj8dHe26dGWqXPs03WHZYq41d
+         Fr6A==
+X-Gm-Message-State: AOAM530Wpk5OcP8ekmZ7fyKtwfx46fP6X4auG3ZQ5B9ifZMsQrwsj6bX
+        lQOCVLD7VEcGwgClxmFUt2h0PhhIYD476actkpJI
+X-Google-Smtp-Source: ABdhPJwtv3QMYwKjqnbdEQba7Eaxc/RwnitCMa3Jv5pCuT9i3PmzHHGB3L0WFYgqwcOtnL97Jer8iJj7gAh6UVEMxLE=
+X-Received: by 2002:a17:906:c1d8:: with SMTP id bw24mr24779757ejb.91.1597842747808;
+ Wed, 19 Aug 2020 06:12:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+ <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
+In-Reply-To: <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 19 Aug 2020 09:12:16 -0400
+Message-ID: <CAHC9VhS-AYYtdGx5Xy1UDoMaeLE3C6bJBXBOuFav-KSGuYXh0A@mail.gmail.com>
+Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
+ interrupt - RIP: 0010:security_port_sid
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
+        Kees Cook <keescook@chromium.org>, casey@schaufler-ca.com,
+        yuehaibing@huawei.com, jeffv@google.com, kent.overstreet@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:00:53AM -0600, Jens Axboe wrote:
-> On 8/18/20 1:00 PM, James Bottomley wrote:
-> > On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
-> >> On 8/17/20 12:48 PM, Kees Cook wrote:
-> >>> On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
-> >>>> On 8/17/20 12:29 PM, Kees Cook wrote:
-> >>>>> On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
-> >>>>>> On 8/17/20 2:15 AM, Allen Pais wrote:
-> >>>>>>> From: Allen Pais <allen.lkml@gmail.com>
-> >>>>>>>
-> >>>>>>> In preparation for unconditionally passing the
-> >>>>>>> struct tasklet_struct pointer to all tasklet
-> >>>>>>> callbacks, switch to using the new tasklet_setup()
-> >>>>>>> and from_tasklet() to pass the tasklet pointer explicitly.
-> >>>>>>
-> >>>>>> Who came up with the idea to add a macro 'from_tasklet' that
-> >>>>>> is just container_of? container_of in the code would be
-> >>>>>> _much_ more readable, and not leave anyone guessing wtf
-> >>>>>> from_tasklet is doing.
-> >>>>>>
-> >>>>>> I'd fix that up now before everything else goes in...
-> >>>>>
-> >>>>> As I mentioned in the other thread, I think this makes things
-> >>>>> much more readable. It's the same thing that the timer_struct
-> >>>>> conversion did (added a container_of wrapper) to avoid the
-> >>>>> ever-repeating use of typeof(), long lines, etc.
-> >>>>
-> >>>> But then it should use a generic name, instead of each sub-system 
-> >>>> using some random name that makes people look up exactly what it
-> >>>> does. I'm not huge fan of the container_of() redundancy, but
-> >>>> adding private variants of this doesn't seem like the best way
-> >>>> forward. Let's have a generic helper that does this, and use it
-> >>>> everywhere.
-> >>>
-> >>> I'm open to suggestions, but as things stand, these kinds of
-> >>> treewide
-> >>
-> >> On naming? Implementation is just as it stands, from_tasklet() is
-> >> totally generic which is why I objected to it. from_member()? Not
-> >> great with naming... But I can see this going further and then we'll
-> >> suddenly have tons of these. It's not good for readability.
-> > 
-> > Since both threads seem to have petered out, let me suggest in
-> > kernel.h:
-> > 
-> > #define cast_out(ptr, container, member) \
-> > 	container_of(ptr, typeof(*container), member)
-> > 
-> > It does what you want, the argument order is the same as container_of
-> > with the only difference being you name the containing structure
-> > instead of having to specify its type.
-> 
-> Not to incessantly bike shed on the naming, but I don't like cast_out,
-> it's not very descriptive. And it has connotations of getting rid of
-> something, which isn't really true.
+On Wed, Aug 19, 2020 at 8:28 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On 8/19/20 6:11 AM, Naresh Kamboju wrote:
+> > Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
+> >
+> >   Kernel panic - not syncing: Fatal exception in interrupt
+> >
+> > metadata:
+> >    git branch: master
+> >    git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >    git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
+> >    git describe: next-20200819
+> >    make_kernelversion: 5.9.0-rc1
+> >    kernel-config:
+> > https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
+> >
+> > crash log:
+> > [    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
+> > [    3.704865] #PF: supervisor read access in kernel mode
+> > [    3.704865] #PF: error_code(0x0000) - not-present page
+> > [    3.704865] PGD 0 P4D 0
+> > [    3.704865] Oops: 0000 [#1] SMP NOPTI
+> > [    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
+> > 5.9.0-rc1-next-20200819 #1
+> > [    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> > BIOS 1.12.0-1 04/01/2014
+> > [    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
+> > [    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+> > 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+> > 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+> > 00 48
+> > [    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+> > [    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+> > [    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+> > [    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+> > [    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+> > [    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+> > [    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+> > knlGS:0000000000000000
+> > [    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+> > [    3.721157] Call Trace:
+> > [    3.721157]  sel_netport_sid+0x120/0x1e0
+> > [    3.721157]  selinux_socket_bind+0x15a/0x250
+> > [    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
+> > [    3.721157]  ? __local_bh_enable_ip+0x46/0x70
+> > [    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
+> > [    3.721157]  security_socket_bind+0x35/0x50
+> > [    3.721157]  __sys_bind+0xcf/0x110
+> > [    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
+> > [    3.730888]  ? do_syscall_64+0x14/0x50
+> > [    3.730888]  ? trace_hardirqs_on+0x38/0xf0
+> > [    3.732120]  __x64_sys_bind+0x1a/0x20
+> > [    3.732120]  do_syscall_64+0x38/0x50
+> > [    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [    3.732120] RIP: 0033:0x7f5ef37f3057
+> > [    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
+> > 02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
+> > 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
+> > 01 48
+> > [    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
+> > 0000000000000031
+> > [    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
+> > [    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
+> > [    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
+> > [    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
+> > [    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
+> > [    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
+> > 000000RIP: 0010:security_port_sid0000000000
+> > [    3.744849] Modules linked in:
+> > [    3.744849] CR2: 00000000000001c8
+> > [    3.744849] ---[ end trace 485eaaecdce54971 ]---
+> > [    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
+> > [    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+> > 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+> > 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+> > 00 48
+> > [    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+> > [    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+> > [    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+> > [    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+> > [    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+> > [    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+> > [    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+> > knlGS:0000000000000000
+> > [    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+> > [    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
+> > Fatal exception in interrupt
+> > [    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
+> > (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> > [    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
+> > interrupt ]---
+> >
+> > full test log link,
+> > https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
+> >
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+>
+> Thank you for the report.  It appears from the log that you are enabling
+> SELinux but not loading any policy?  If that is correct, then I believe
+> I know the underlying cause and can create a patch.
 
-I agree, if we want to bike shed, I don't like this color either.
+Yes, I'm guessing the bind() hook is the culprit.
 
-> FWIW, I like the from_ part of the original naming, as it has some clues
-> as to what is being done here. Why not just from_container()? That
-> should immediately tell people what it does without having to look up
-> the implementation, even before this becomes a part of the accepted
-> coding norm.
+I'm beginning to think we should try forcing a run of the
+selinux-testsuite on a system with SELinux enabled but without a
+loaded policy.  The test suite will fail in spectacular fashion, but
+it will be a good way to shake out some of these corner cases.
 
-Why are people hating on the well-known and used container_of()?
-
-If you really hate to type the type and want a new macro, what about
-'container_from()'?  (noun/verb is nicer to sort symbols by...)
-
-But really, why is this even needed?
-
-thanks,
-
-greg k-h
+-- 
+paul moore
+www.paul-moore.com
