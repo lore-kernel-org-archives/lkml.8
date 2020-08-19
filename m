@@ -2,254 +2,135 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D740C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B85206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB57206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K1/KzMTQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WnqpwVgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHSMd7 (ORCPT
+        id S1728352AbgHSMeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:33:59 -0400
-Received: from auth-smtp.nebula.fi ([217.149.52.145]:44748 "EHLO
-        auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgHSMdD (ORCPT
+        Wed, 19 Aug 2020 08:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgHSMdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:33:03 -0400
-X-Greylist: delayed 651 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 08:32:58 EDT
-Received: from developer-Precision-3630-Tower (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: xipheracom)
-        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id 86AEA4455;
-        Wed, 19 Aug 2020 15:22:07 +0300 (EEST)
-From:   Atte Tommiska <atte.tommiska@xiphera.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Atte Tommiska <atte.tommiska@xiphera.com>
-Subject: [PATCH 3/3] hwrng: xiphera-trng: add support for XIP8001B hwrng
-Date:   Wed, 19 Aug 2020 15:21:35 +0300
-Message-Id: <20200819122135.25316-4-atte.tommiska@xiphera.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819122135.25316-1-atte.tommiska@xiphera.com>
-References: <20200819122135.25316-1-atte.tommiska@xiphera.com>
+        Wed, 19 Aug 2020 08:33:20 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EB3C061343;
+        Wed, 19 Aug 2020 05:33:19 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 12:33:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597840392;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gz8UFoO9G0Yh9/6TrSb8u8gXd0brblx69nGkW5rqEoU=;
+        b=K1/KzMTQL5QedjJaPE1qJurZ3ueisJbFZQm/iFt9B2tMYHzEUALU1DIXZWAyMa7g0Rb3uq
+        sfgmoMyjVK6ooA8U0zwwUw/lEYwj/7/U/oCgI4mBmDiF7gu9qnowBREkUHs2PKABXPBy6L
+        7cxg4xyEIPwEaznrcMt9qibwDb7ZFzvlIHru11tQ6scVwC9e+9hnNU6ff7p9AjiKQ9sT3M
+        WuUKSpR0hACcOMbR4RrC0u+UgXftr6jkxgMPQPgfKqT5CKEnFQ7X7yLwq1/gKwtQxKzjkF
+        BrEGJLMUV8CUsqDsfkHJMGSTPGKvDA89nRaUYWyGNSDLCp1kp4b85vV75hmcfA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597840392;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gz8UFoO9G0Yh9/6TrSb8u8gXd0brblx69nGkW5rqEoU=;
+        b=WnqpwVgbMoH8q+8fa5O9Kx5r5wibtprfQU43ctxpdyGVSTNPS+GfkC+49Anj7qLMwbiEv6
+        /M++KnRQFG+5b4Cw==
+From:   "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cache] x86/resctrl: Use container_of() in delayed_work handlers
+Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200708163929.2783-5-james.morse@arm.com>
+References: <20200708163929.2783-5-james.morse@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159784039176.3192.15237802095890922512.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiphera XIP8001B is an FPGA-based True Random Number Generator
-Intellectual Property (IP) Core which can be instantiated in
-multiple FPGA families. This driver adds Linux support for it through
-the hwrng interface.
+The following commit has been merged into the x86/cache branch of tip:
 
-Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
+Commit-ID:     f995801ba3a0660cb352c8beb794379c82781ca3
+Gitweb:        https://git.kernel.org/tip/f995801ba3a0660cb352c8beb794379c82781ca3
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Wed, 08 Jul 2020 16:39:23 
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 18 Aug 2020 17:05:08 +02:00
+
+x86/resctrl: Use container_of() in delayed_work handlers
+
+mbm_handle_overflow() and cqm_handle_limbo() are both provided with
+the domain's work_struct when called, but use get_domain_from_cpu()
+to find the domain, along with the appropriate error handling.
+
+container_of() saves some list walking and bitmap testing, use that
+instead.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://lkml.kernel.org/r/20200708163929.2783-5-james.morse@arm.com
 ---
- drivers/char/hw_random/Kconfig        |  10 ++
- drivers/char/hw_random/Makefile       |   1 +
- drivers/char/hw_random/xiphera-trng.c | 151 ++++++++++++++++++++++++++
- 3 files changed, 162 insertions(+)
- create mode 100644 drivers/char/hw_random/xiphera-trng.c
+ arch/x86/kernel/cpu/resctrl/monitor.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index f976a49e1fb5..007d765a9253 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -512,6 +512,16 @@ config HW_RANDOM_CCTRNG
- 	  will be called cctrng.
- 	  If unsure, say 'N'.
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index d6b92d7..54dffe5 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -477,19 +477,13 @@ void cqm_handle_limbo(struct work_struct *work)
+ 	mutex_lock(&rdtgroup_mutex);
  
-+config HW_RANDOM_XIPHERA
-+	tristate "Xiphera FPGA based True Random Number Generator support"
-+	depends on HAS_IOMEM
-+	help
-+	  This driver provides kernel-side support for Xiphera True Random
-+	  Number Generator Intellectual Property Core.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called xiphera-trng.
-+
- endif # HW_RANDOM
+ 	r = &rdt_resources_all[RDT_RESOURCE_L3];
+-	d = get_domain_from_cpu(cpu, r);
+-
+-	if (!d) {
+-		pr_warn_once("Failure to get domain for limbo worker\n");
+-		goto out_unlock;
+-	}
++	d = container_of(work, struct rdt_domain, cqm_limbo.work);
  
- config UML_RANDOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 26ae06844f09..dfdcac81e384 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
- obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
- obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
- obj-$(CONFIG_HW_RANDOM_CCTRNG) += cctrng.o
-+obj-$(CONFIG_HW_RANDOM_XIPHERA) += xiphera-trng.o
-diff --git a/drivers/char/hw_random/xiphera-trng.c b/drivers/char/hw_random/xiphera-trng.c
-new file mode 100644
-index 000000000000..2f082eb8e8a5
---- /dev/null
-+++ b/drivers/char/hw_random/xiphera-trng.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2020 Xiphera Ltd. */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/hw_random.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/delay.h>
-+
-+#define CONTROL_REG			0x00000000
-+#define STATUS_REG			0x00000004
-+#define RAND_REG			0x00000000
-+
-+#define HOST_TO_TRNG_RESET		0x00000001
-+#define HOST_TO_TRNG_RELEASE_RESET	0x00000002
-+#define HOST_TO_TRNG_ENABLE		0x80000000
-+#define HOST_TO_TRNG_ZEROIZE		0x80000004
-+#define HOST_TO_TRNG_ACK_ZEROIZE	0x80000008
-+#define HOST_TO_TRNG_READ		0x8000000F
-+
-+/* trng statuses */
-+#define TRNG_ACK_RESET			0x000000AC
-+#define TRNG_SUCCESSFUL_STARTUP		0x00000057
-+#define TRNG_FAILED_STARTUP		0x000000FA
-+#define TRNG_NEW_RAND_AVAILABLE		0x000000ED
-+
-+struct xiphera_trng {
-+	void __iomem *mem;
-+	struct hwrng rng;
-+};
-+
-+static int xiphera_trng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct xiphera_trng *trng = container_of(rng, struct xiphera_trng, rng);
-+	int ret = 0;
-+
-+	while (max >= sizeof(u32)) {
-+		/* check for data */
-+		if (readl(trng->mem + STATUS_REG) == TRNG_NEW_RAND_AVAILABLE) {
-+			*(u32 *)buf = readl(trng->mem + RAND_REG);
-+			/*
-+			 * Inform the trng of the read
-+			 * and re-enable it to produce a new random number
-+			 */
-+			writel(HOST_TO_TRNG_READ, trng->mem + CONTROL_REG);
-+			writel(HOST_TO_TRNG_ENABLE, trng->mem + CONTROL_REG);
-+			ret += sizeof(u32);
-+			buf += sizeof(u32);
-+			max -= sizeof(u32);
-+		} else {
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static int xiphera_trng_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct xiphera_trng *trng;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+
-+	trng = devm_kzalloc(dev, sizeof(*trng), GFP_KERNEL);
-+	if (!trng)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	trng->mem = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(trng->mem))
-+		return PTR_ERR(trng->mem);
-+
-+	/*
-+	 * the trng needs to be reset first which might not happen in time,
-+	 * hence we incorporate a small delay to ensure proper behaviour
-+	 */
-+	writel(HOST_TO_TRNG_RESET, trng->mem + CONTROL_REG);
-+	usleep_range(100, 200);
-+
-+	if (readl(trng->mem + STATUS_REG) != TRNG_ACK_RESET) {
-+		/*
-+		 * there is a small chance the trng is just not ready yet,
-+		 * so we try one more time. If the second time fails, we give up
-+		 */
-+		usleep_range(100, 200);
-+		if (readl(trng->mem + STATUS_REG) != TRNG_ACK_RESET) {
-+			dev_err(dev, "failed to reset the trng ip\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	/*
-+	 * once again, to ensure proper behaviour we sleep
-+	 * for a while after zeroizing the trng
-+	 */
-+	writel(HOST_TO_TRNG_RELEASE_RESET, trng->mem + CONTROL_REG);
-+	writel(HOST_TO_TRNG_ENABLE, trng->mem + CONTROL_REG);
-+	writel(HOST_TO_TRNG_ZEROIZE, trng->mem + CONTROL_REG);
-+	msleep(20);
-+
-+	if (readl(trng->mem + STATUS_REG) != TRNG_SUCCESSFUL_STARTUP) {
-+		/* diagnose the reason for the failure */
-+		if (readl(trng->mem + STATUS_REG) == TRNG_FAILED_STARTUP) {
-+			dev_err(dev, "trng ip startup-tests failed\n");
-+			return -ENODEV;
-+		}
-+		dev_err(dev, "startup-tests yielded no response\n");
-+		return -ENODEV;
-+	}
-+
-+	writel(HOST_TO_TRNG_ACK_ZEROIZE, trng->mem + CONTROL_REG);
-+
-+	trng->rng.name = pdev->name;
-+	trng->rng.read = xiphera_trng_read;
-+	trng->rng.quality = 900;
-+
-+	ret = devm_hwrng_register(dev, &trng->rng);
-+	if (ret) {
-+		dev_err(dev, "failed to register rng device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, trng);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xiphera_trng_of_match[] = {
-+	{ .compatible = "xiphera,xip8001b-trng", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xiphera_trng_of_match);
-+
-+static struct platform_driver xiphera_trng_driver = {
-+	.driver = {
-+		.name = "xiphera-trng",
-+		.owner = THIS_MODULE,
-+		.of_match_table	= xiphera_trng_of_match,
-+	},
-+	.probe = xiphera_trng_probe,
-+};
-+
-+module_platform_driver(xiphera_trng_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Atte Tommiska");
-+MODULE_DESCRIPTION("Xiphera FPGA-based true random number generator driver");
--- 
-2.28.0
-
+ 	__check_limbo(d, false);
+ 
+ 	if (has_busy_rmid(r, d))
+ 		schedule_delayed_work_on(cpu, &d->cqm_limbo, delay);
+ 
+-out_unlock:
+ 	mutex_unlock(&rdtgroup_mutex);
+ }
+ 
+@@ -519,10 +513,7 @@ void mbm_handle_overflow(struct work_struct *work)
+ 		goto out_unlock;
+ 
+ 	r = &rdt_resources_all[RDT_RESOURCE_L3];
+-
+-	d = get_domain_from_cpu(cpu, r);
+-	if (!d)
+-		goto out_unlock;
++	d = container_of(work, struct rdt_domain, mbm_over.work);
+ 
+ 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
+ 		mbm_update(r, d, prgrp->mon.rmid);
