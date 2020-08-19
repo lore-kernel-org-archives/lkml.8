@@ -2,131 +2,168 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9AEC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F542063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7980C2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgHSUhh (ORCPT
+        id S1727013AbgHSUkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:37:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57012 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgHSUhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:37:36 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B99D11A12E4;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABA4E1A04A8;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 93DB320328;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 23:37:34 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Dong Aisheng <dongas86@gmail.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v2 16/17] arm64: dts: imx8mp: Add media_blk_ctrl node
-Message-ID: <20200819203734.zbndyvf534xey5xy@fsr-ub1664-175>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
- <1597406966-13740-17-git-send-email-abel.vesa@nxp.com>
- <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
+        Wed, 19 Aug 2020 16:40:01 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42652 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgHSUkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 16:40:00 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D4190804B9;
+        Wed, 19 Aug 2020 22:39:54 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 22:39:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devel@driverdev.osuosl.org, Nicolas Boichat <drinkcat@google.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v14 0/2] Add initial support for slimport anx7625
+Message-ID: <20200819203953.GA109541@ravnborg.org>
+References: <cover.1594283160.git.xji@analogixsemi.com>
+ <20200810203546.GA421906@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200810203546.GA421906@ravnborg.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=-3hZfeu0XQcix8hqga0A:9
+        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-18 19:34:14, Dong Aisheng wrote:
-> On Fri, Aug 14, 2020 at 8:12 PM Abel Vesa <abel.vesa@nxp.com> wrote:
-> >
-> > Some of the features of the media_ctrl will be used by some
-> > different drivers in a way those drivers will know best, so adding the
-> > syscon compatible we allow those to do just that. Only the resets
-> > and the clocks are registered bit the clk-blk-ctrl driver.
-> >
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > index dede0ae..2d6d213 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > @@ -736,6 +736,22 @@
-> >                         };
-> >                 };
-> >
-> > +               aips4: bus@32c00000 {
-> > +                       compatible = "simple-bus";
-> > +                       reg = <0x32c00000 0x400000>;
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges;
-> > +
-> > +                       media_blk_ctrl: clock-controller@32ec0000 {
-> 
-> For this combo device, maybe we can directly name it as blk-ctrl@32ec0000.
-> Rob, do you think if we can do that?
-> 
+Hi Xin Ji.
 
-I think it was Stephen who suggested we change it to clock-controller in the
-last's version thread.
-
-TBH, I agree with you here, since it makes more sense to be called blk-ctrl
-provided that this is not really just a clock controller.
-
-> > +                               compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
-> > +                               reg = <0x32ec0000 0x10000>;
-> > +
+On Mon, Aug 10, 2020 at 10:35:46PM +0200, Sam Ravnborg wrote:
+> Hi Xin Ji.
 > 
-> Remove unnecessary blank line
+> On Thu, Jul 09, 2020 at 04:31:09PM +0800, Xin Ji wrote:
+> > Hi all,
+> > 
+> > The following series add support for the Slimport ANX7625 transmitter, a
+> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
+> > 
+> > 
+> > This is the v14 version, any mistakes, please let me know, I will fix it in
+> > the next series.
+> > 
+> > Change history:
+> > v14: Fix comments from Sam and Nicolas
+> >  - Check flags at drm_bridge_attach
+> >  - Use panel_bridge instead of drm_panel
+> >  - Fix not correct return value
 > 
+> Sorry for ignoring this for so long time.
+> The patch applies but no longer builds.
+> 
+> I could fix it locally but wanted to know if you have a later version to
+> be applied?
 
-Will do.
+I took a short look at the driver today.
+I noticed following code:
+       if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR))
+                return -EINVAL;
 
-> Otherwise:
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+So if the display driver do not supply the DRM_BRIDGE_ATTACH_NO_CONNECTOR
+then -EINVAL is returned.
+
+But then the anx7625_bridge_attach() continues and creates a connector.
+For a new bridge driver there should be no need for the backward
+compatibility - so no need to create the connector.
+Unless the display driver needs it - but then we should fix the display
+driver and not add backward compatibility code in the bridge driver.
+
+Which display driver do you expect this bridge driver to be used with?
+
+	Sam
+
+
+
+
 > 
-> Regards
-> Aisheng
+> 	Sam
 > 
-> > +                               #clock-cells = <1>;
-> > +                               #reset-cells = <1>;
-> > +                       };
-> > +               };
-> > +
-> >                 aips5: bus@30c00000 {
-> >                         compatible = "fsl,aips-bus", "simple-bus";
-> >                         reg = <0x30c00000 0x400000>;
-> > --
+> 
+> > 
+> > v13: Fix comments from Launrent Pinchart and Rob Herring
+> >  - Picked up Rob's Reviewed-By
+> >  - Add .detect and .get_edid interface in bridge funcs.
+> > 
+> > v12: Fix comments from Hsin-Yi Wang
+> >  - Rebase the code on kernel 5.7, fix DRM interface not match issue.
+> > 
+> > v11: Fix comments from Rob Herring
+> >  - Update commit message.
+> >  - Remove unused label.
+> > 
+> > v10: Fix comments from Rob Herring, Daniel.
+> >  - Fix dt_binding_check warning.
+> >  - Update description.
+> > 
+> > v9: Fix comments from Sam, Nicolas, Daniel
+> >  - Remove extcon interface.
+> >  - Remove DPI support.
+> >  - Fix dt_binding_check complains.
+> >  - Code clean up and update description.
+> > 
+> > v8: Fix comments from Nicolas.
+> >  - Fix several coding format.
+> >  - Update description.
+> > 
+> > v7:
+> >  - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
+> >    enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
+> > 
+> > 
+> > Xin Ji (2):
+> >   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
+> >   drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
+> > 
+> >  .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
+> >  drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
+> >  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
+> >  drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
+> >  drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
+> >  5 files changed, 2435 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+> > 
+> > -- 
 > > 2.7.4
-> >
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
