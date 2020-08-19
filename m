@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC42CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B056C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F1320738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4563E20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHSHQR (ORCPT
+        id S1726935AbgHSHQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:16:17 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31834 "EHLO
+        Wed, 19 Aug 2020 03:16:22 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30200 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726711AbgHSHQL (ORCPT
+        by vger.kernel.org with ESMTP id S1726799AbgHSHQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:16:11 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J7DqbN023277;
-        Wed, 19 Aug 2020 03:15:58 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3304kcmfu5-1
+        Wed, 19 Aug 2020 03:16:09 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J7FDL9002336;
+        Wed, 19 Aug 2020 03:15:54 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3304n5cf7d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 03:15:58 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07J7FuDc031747
+        Wed, 19 Aug 2020 03:15:54 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07J7FrYo059872
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 19 Aug 2020 03:15:57 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 00:15:55 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 00:15:55 -0700
-Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 19 Aug 2020 00:15:55 -0700
+        Wed, 19 Aug 2020 03:15:53 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 19 Aug
+ 2020 03:15:52 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 19 Aug 2020 03:15:52 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07J7Fg90020449;
-        Wed, 19 Aug 2020 03:15:51 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07J7Fg8x020449;
+        Wed, 19 Aug 2020 03:15:48 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
         <ardeleanalex@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 5/5] dmaengine: axi-dmac: add support for reading bus attributes from registers
-Date:   Wed, 19 Aug 2020 10:16:33 +0300
-Message-ID: <20200819071633.76494-5-alexandru.ardelean@analog.com>
+Subject: [PATCH 4/5] dmaengine: axi-dmac: wrap channel parameter adjust into  function
+Date:   Wed, 19 Aug 2020 10:16:32 +0300
+Message-ID: <20200819071633.76494-4-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200819071633.76494-1-alexandru.ardelean@analog.com>
 References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
@@ -62,137 +58,71 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-19_04:2020-08-18,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 suspectscore=25 phishscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190060
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=8 clxscore=1015 phishscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting with core version 4.3.a the DMA bus attributes can (and should) be
-read from the INTERFACE_DESCRIPTION (0x10) register.
+The channel parameters (which are read from the device-tree) are adjusted
+for the DMAEngine framework in the axi_dmac_parse_chan_dt() function, after
+they are read from the device-tree.
 
-For older core versions, this will still need to be provided from the
-device-tree.
-
-The bus-type values are identical to the ones stored in the device-trees,
-so we just need to read them. Bus-width values are stored in log2 values,
-so we just need to use them as shift values to make them equivalent to the
-current format.
+When we want to read these from registers, we will need to use the same
+logic, so this change splits the logic into a separate function.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c | 66 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 63 insertions(+), 3 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 95aea2b423ac..417735b6e97b 100644
+index 473c4a159c89..95aea2b423ac 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -6,6 +6,7 @@
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
+@@ -717,6 +717,20 @@ static const struct regmap_config axi_dmac_regmap_config = {
+ 	.writeable_reg = axi_dmac_regmap_rdwr,
+ };
  
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-@@ -45,6 +46,16 @@
-  * there is no address than can or needs to be configured for the device side.
-  */
- 
-+#define AXI_DMAC_REG_INTERFACE_DESC	0x10
-+#define   AXI_DMAC_DMA_SRC_TYPE_MSK	GENMASK(13, 12)
-+#define   AXI_DMAC_DMA_SRC_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_TYPE_MSK, x)
-+#define   AXI_DMAC_DMA_SRC_WIDTH_MSK	GENMASK(11, 8)
-+#define   AXI_DMAC_DMA_SRC_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_WIDTH_MSK, x)
-+#define   AXI_DMAC_DMA_DST_TYPE_MSK	GENMASK(5, 4)
-+#define   AXI_DMAC_DMA_DST_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_TYPE_MSK, x)
-+#define   AXI_DMAC_DMA_DST_WIDTH_MSK	GENMASK(3, 0)
-+#define   AXI_DMAC_DMA_DST_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_WIDTH_MSK, x)
-+
- #define AXI_DMAC_REG_IRQ_MASK		0x80
- #define AXI_DMAC_REG_IRQ_PENDING	0x84
- #define AXI_DMAC_REG_IRQ_SOURCE		0x88
-@@ -801,6 +812,51 @@ static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
- 	return 0;
- }
- 
-+static int axi_dmac_read_chan_config(struct device *dev, struct axi_dmac *dmac)
++static void axi_dmac_adjust_chan_params(struct axi_dmac_chan *chan)
 +{
-+	struct axi_dmac_chan *chan = &dmac->chan;
-+	unsigned int val, desc;
++	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
 +
-+	desc = axi_dmac_read(dmac, AXI_DMAC_REG_INTERFACE_DESC);
-+	if (desc == 0) {
-+		dev_err(dev, "DMA interface register reads zero\n");
-+		return -EFAULT;
-+	}
-+
-+	val = AXI_DMAC_DMA_SRC_TYPE_GET(desc);
-+	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
-+		dev_err(dev, "Invalid source bus type read: %d\n", val);
-+		return -EINVAL;
-+	}
-+	chan->src_type = val;
-+
-+	val = AXI_DMAC_DMA_DST_TYPE_GET(desc);
-+	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
-+		dev_err(dev, "Invalid destination bus type read: %d\n", val);
-+		return -EINVAL;
-+	}
-+	chan->dest_type = val;
-+
-+	val = AXI_DMAC_DMA_SRC_WIDTH_GET(desc);
-+	if (val == 0) {
-+		dev_err(dev, "Source bus width is zero\n");
-+		return -EINVAL;
-+	}
-+	/* widths are stored in log2 */
-+	chan->src_width = 1 << val;
-+
-+	val = AXI_DMAC_DMA_DST_WIDTH_GET(desc);
-+	if (val == 0) {
-+		dev_err(dev, "Destination bus width is zero\n");
-+		return -EINVAL;
-+	}
-+	chan->dest_width = 1 << val;
-+
-+	axi_dmac_adjust_chan_params(chan);
-+
-+	return 0;
++	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_MEM;
++	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_DEV;
++	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_DEV_TO_MEM;
++	else
++		chan->direction = DMA_DEV_TO_DEV;
 +}
 +
- static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- {
- 	struct axi_dmac_chan *chan = &dmac->chan;
-@@ -882,7 +938,13 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
- 
--	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
-+
-+	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
-+		ret = axi_dmac_read_chan_config(&pdev->dev, dmac);
-+	else
-+		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+
- 	if (ret < 0)
+ /*
+  * The configuration stored in the devicetree matches the configuration
+  * parameters of the peripheral instance and allows the driver to know which
+@@ -760,16 +774,7 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
  		return ret;
+ 	chan->dest_width = val / 8;
  
-@@ -912,8 +974,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	dmac->chan.vchan.desc_free = axi_dmac_desc_free;
- 	vchan_init(&dmac->chan.vchan, dma_dev);
- 
--	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
+-	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
 -
- 	ret = axi_dmac_detect_caps(dmac, version);
- 	if (ret)
- 		goto err_clk_disable;
+-	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_MEM;
+-	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_DEV;
+-	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_DEV_TO_MEM;
+-	else
+-		chan->direction = DMA_DEV_TO_DEV;
++	axi_dmac_adjust_chan_params(chan);
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
