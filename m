@@ -2,111 +2,126 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47F820885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6150420885
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QGiD82cB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHSG7x (ORCPT
+        id S1728022AbgHSG7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:59:53 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35234 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgHSG7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:59:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D0091A02FF;
-        Wed, 19 Aug 2020 08:59:48 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F2EB1A0311;
-        Wed, 19 Aug 2020 08:59:44 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5199F4024E;
-        Wed, 19 Aug 2020 08:59:34 +0200 (CEST)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v4] soc: fsl: enable acpi support in RCPM driver
-Date:   Wed, 19 Aug 2020 14:52:07 +0800
-Message-Id: <20200819065207.43930-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 19 Aug 2020 02:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbgHSG5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:57:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB84C061342;
+        Tue, 18 Aug 2020 23:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=AqKsIDRs27kIZ3qz8X8DimzxTNWdhtouY4ELawYdd20=; b=QGiD82cBnkvzgZSiKZTzQz9zIn
+        xSBHf+C7K68+XJdLDlRisPbeW7e/fs+g/zRU1QnPbRWodLy3lfP1/FLluqbSZbe/9dI/YejsrQu6O
+        nrPFR9LurAMCJrtwP62XqUXFsqR6jT+FopBHoW0oLC8p4iub1fJG2lGUohv6RtUIDi4kHQtkyFWgn
+        Fh+mS5lGRe0XMgmxya6J8eZvNzE4F+1U0c1toIwpqy6DIiYV/7fbtNlnAqtXdbWk1l9XJf5DFSNZQ
+        4qTZJRGTE0WcYGyD5RCcOfuIlgu6DeTh7eddCBGZ6BJoWyvTq/w13wG1XH1W71TFY67uTO9ZBBUOl
+        No4Eu8YQ==;
+Received: from [2001:4bb8:198:f3b2:86b6:2277:f429:37a1] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8I1Z-0008TG-Ct; Wed, 19 Aug 2020 06:56:41 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH 20/28] sgiwd93: convert from dma_cache_sync to dma_sync_single_for_device
+Date:   Wed, 19 Aug 2020 08:55:47 +0200
+Message-Id: <20200819065555.1802761-21-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819065555.1802761-1-hch@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Ma <peng.ma@nxp.com>
+Use the proper modern API to transfer cache ownership for incoherent DMA.
+This also means we can allocate the memory as DMA_TO_DEVICE instead
+of bidirectional.
 
-This patch enables ACPI support in RCPM driver.
-
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
-Change in v4:
- - Make commit subject more accurate
- - Remove unrelated new blank line
+ drivers/scsi/sgiwd93.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Change in v3:
- - Add #ifdef CONFIG_ACPI for acpi_device_id
- - Rename rcpm_acpi_imx_ids to rcpm_acpi_ids
-
-Change in v2:
- - Update acpi_device_id to fix conflict with other driver
-
- drivers/soc/fsl/rcpm.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index a093dbe..b5aa6db 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -2,7 +2,7 @@
- //
- // rcpm.c - Freescale QorIQ RCPM driver
- //
--// Copyright 2019 NXP
-+// Copyright 2019-2020 NXP
- //
- // Author: Ran Wang <ran.wang_1@nxp.com>
- 
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/acpi.h>
- 
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
- 
-@@ -139,10 +140,19 @@ static const struct of_device_id rcpm_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rcpm_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id rcpm_acpi_ids[] = {
-+	{"NXP0015",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, rcpm_acpi_ids);
-+#endif
-+
- static struct platform_driver rcpm_driver = {
- 	.driver = {
- 		.name = "rcpm",
- 		.of_match_table = rcpm_of_match,
-+		.acpi_match_table = ACPI_PTR(rcpm_acpi_ids),
- 		.pm	= &rcpm_pm_ops,
- 	},
- 	.probe = rcpm_probe,
+diff --git a/drivers/scsi/sgiwd93.c b/drivers/scsi/sgiwd93.c
+index 133adcf99e9340..1538f65307f22f 100644
+--- a/drivers/scsi/sgiwd93.c
++++ b/drivers/scsi/sgiwd93.c
+@@ -95,7 +95,7 @@ void fill_hpc_entries(struct ip22_hostdata *hd, struct scsi_cmnd *cmd, int din)
+ 	 */
+ 	hcp->desc.pbuf = 0;
+ 	hcp->desc.cntinfo = HPCDMA_EOX;
+-	dma_cache_sync(hd->dev, hd->cpu,
++	dma_sync_single_for_device(hd->dev, hd->dma,
+ 		       (unsigned long)(hcp + 1) - (unsigned long)hd->cpu,
+ 		       DMA_TO_DEVICE);
+ }
+@@ -235,7 +235,7 @@ static int sgiwd93_probe(struct platform_device *pdev)
+ 	hdata = host_to_hostdata(host);
+ 	hdata->dev = &pdev->dev;
+ 	hdata->cpu = dma_alloc_pages(&pdev->dev, HPC_DMA_SIZE, &hdata->dma,
+-				     DMA_BIDIRECTIONAL, GFP_KERNEL);
++				     DMA_TO_DEVICE, GFP_KERNEL);
+ 	if (!hdata->cpu) {
+ 		printk(KERN_WARNING "sgiwd93: Could not allocate memory for "
+ 		       "host %d buffer.\n", unit);
+@@ -275,7 +275,7 @@ static int sgiwd93_probe(struct platform_device *pdev)
+ 	free_irq(irq, host);
+ out_free:
+ 	dma_free_pages(&pdev->dev, HPC_DMA_SIZE, hdata->cpu, hdata->dma,
+-			DMA_BIDIRECTIONAL);
++			DMA_TO_DEVICE);
+ out_put:
+ 	scsi_host_put(host);
+ out:
+@@ -292,7 +292,7 @@ static int sgiwd93_remove(struct platform_device *pdev)
+ 	scsi_remove_host(host);
+ 	free_irq(pd->irq, host);
+ 	dma_free_pages(&pdev->dev, HPC_DMA_SIZE, hdata->cpu, hdata->dma,
+-			DMA_BIDIRECTIONAL);
++			DMA_TO_DEVICE);
+ 	scsi_host_put(host);
+ 	return 0;
+ }
 -- 
-2.7.4
+2.28.0
 
