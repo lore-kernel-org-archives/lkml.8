@@ -7,35 +7,42 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C6E2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BCC204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgHSNd7 (ORCPT
+        id S1728615AbgHSNfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:33:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:36996 "EHLO foss.arm.com"
+        Wed, 19 Aug 2020 09:35:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:36894 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbgHSNds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:33:48 -0400
+        id S1726794AbgHSNdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:33:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 649E71435;
-        Wed, 19 Aug 2020 06:33:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F260C11B3;
+        Wed, 19 Aug 2020 06:33:32 -0700 (PDT)
 Received: from monolith.localdoman (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E42F63F71F;
-        Wed, 19 Aug 2020 06:33:41 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67BE3F71F;
+        Wed, 19 Aug 2020 06:33:30 -0700 (PDT)
 From:   Alexandru Elisei <alexandru.elisei@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
         catalin.marinas@arm.com, swboyd@chromium.org,
-        sumit.garg@linaro.org, Julien Thierry <julien.thierry@arm.com>,
+        sumit.garg@linaro.org,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v6 7/7] arm_pmu: arm64: Use NMIs for PMU
-Date:   Wed, 19 Aug 2020 14:34:19 +0100
-Message-Id: <20200819133419.526889-8-alexandru.elisei@arm.com>
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>
+Subject: [PATCH v6 2/7] arm64: perf: Avoid PMXEV* indirection
+Date:   Wed, 19 Aug 2020 14:34:14 +0100
+Message-Id: <20200819133419.526889-3-alexandru.elisei@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819133419.526889-1-alexandru.elisei@arm.com>
 References: <20200819133419.526889-1-alexandru.elisei@arm.com>
@@ -46,113 +53,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-Add required PMU interrupt operations for NMIs. Request interrupt lines as
-NMIs when possible, otherwise fall back to normal interrupts.
+Currently we access the counter registers and their respective type
+registers indirectly. This requires us to write to PMSELR, issue an ISB,
+then access the relevant PMXEV* registers.
 
-NMIs are only supported on the arm64 architecture with a GICv3 irqchip.
+This is unfortunate, because:
+
+* Under virtualization, accessing one register requires two traps to
+  the hypervisor, even though we could access the register directly with
+  a single trap.
+
+* We have to issue an ISB which we could otherwise avoid the cost of.
+
+* When we use NMIs, the NMI handler will have to save/restore the select
+  register in case the code it preempted was attempting to access a
+  counter or its type register.
+
+We can avoid these issues by directly accessing the relevant registers.
+This patch adds helpers to do so.
+
+In armv8pmu_enable_event() we still need the ISB to prevent the PE from
+reordering the write to PMINTENSET_EL1 register. If the interrupt is
+enabled before we disable the counter and the new event is configured,
+we might get an interrupt triggered by the previously programmed event
+overflowing, but which we wrongly attribute to the event that we are
+enabling.
+
+In the process, remove the comment that refers to the ARMv7 PMU.
 
 Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+[Julien T.: Don't inline read/write functions to avoid big code-size
+	increase, remove unused read_pmevtypern function,
+	fix counter index issue.]
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-[Added that NMIs only work on arm64 + GICv3]
+[Removed comment, removed trailing semicolons in macros, added ISB]
 Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 ---
- drivers/perf/arm_pmu.c | 62 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/perf_event.c | 99 +++++++++++++++++++++++++++++-----
+ 1 file changed, 85 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 17e5952d21e4..dd9d7f61ee29 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -45,6 +45,17 @@ static const struct pmu_irq_ops pmuirq_ops = {
- 	.free_pmuirq = armpmu_free_pmuirq
- };
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 878e7087be02..ac818abd65b6 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -348,6 +348,73 @@ static inline bool armv8pmu_event_is_chained(struct perf_event *event)
+ #define	ARMV8_IDX_TO_COUNTER(x)	\
+ 	(((x) - ARMV8_IDX_COUNTER0) & ARMV8_PMU_COUNTER_MASK)
  
-+static void armpmu_free_pmunmi(unsigned int irq, int cpu, void __percpu *devid)
++/*
++ * This code is really good
++ */
++
++#define PMEVN_CASE(n, case_macro) \
++	case n: case_macro(n); break
++
++#define PMEVN_SWITCH(x, case_macro)				\
++	do {							\
++		switch (x) {					\
++		PMEVN_CASE(0,  case_macro);			\
++		PMEVN_CASE(1,  case_macro);			\
++		PMEVN_CASE(2,  case_macro);			\
++		PMEVN_CASE(3,  case_macro);			\
++		PMEVN_CASE(4,  case_macro);			\
++		PMEVN_CASE(5,  case_macro);			\
++		PMEVN_CASE(6,  case_macro);			\
++		PMEVN_CASE(7,  case_macro);			\
++		PMEVN_CASE(8,  case_macro);			\
++		PMEVN_CASE(9,  case_macro);			\
++		PMEVN_CASE(10, case_macro);			\
++		PMEVN_CASE(11, case_macro);			\
++		PMEVN_CASE(12, case_macro);			\
++		PMEVN_CASE(13, case_macro);			\
++		PMEVN_CASE(14, case_macro);			\
++		PMEVN_CASE(15, case_macro);			\
++		PMEVN_CASE(16, case_macro);			\
++		PMEVN_CASE(17, case_macro);			\
++		PMEVN_CASE(18, case_macro);			\
++		PMEVN_CASE(19, case_macro);			\
++		PMEVN_CASE(20, case_macro);			\
++		PMEVN_CASE(21, case_macro);			\
++		PMEVN_CASE(22, case_macro);			\
++		PMEVN_CASE(23, case_macro);			\
++		PMEVN_CASE(24, case_macro);			\
++		PMEVN_CASE(25, case_macro);			\
++		PMEVN_CASE(26, case_macro);			\
++		PMEVN_CASE(27, case_macro);			\
++		PMEVN_CASE(28, case_macro);			\
++		PMEVN_CASE(29, case_macro);			\
++		PMEVN_CASE(30, case_macro);			\
++		default: WARN(1, "Invalid PMEV* index\n");	\
++		}						\
++	} while (0)
++
++#define RETURN_READ_PMEVCNTRN(n) \
++	return read_sysreg(pmevcntr##n##_el0)
++static unsigned long read_pmevcntrn(int n)
 +{
-+	free_nmi(irq, per_cpu_ptr(devid, cpu));
++	PMEVN_SWITCH(n, RETURN_READ_PMEVCNTRN);
++	return 0;
 +}
 +
-+static const struct pmu_irq_ops pmunmi_ops = {
-+	.enable_pmuirq = enable_nmi,
-+	.disable_pmuirq = disable_nmi_nosync,
-+	.free_pmuirq = armpmu_free_pmunmi
-+};
++#define WRITE_PMEVCNTRN(n) \
++	write_sysreg(val, pmevcntr##n##_el0)
++static void write_pmevcntrn(int n, unsigned long val)
++{
++	PMEVN_SWITCH(n, WRITE_PMEVCNTRN);
++}
 +
- static void armpmu_enable_percpu_pmuirq(unsigned int irq)
++#define WRITE_PMEVTYPERN(n) \
++	write_sysreg(val, pmevtyper##n##_el0)
++static void write_pmevtypern(int n, unsigned long val)
++{
++	PMEVN_SWITCH(n, WRITE_PMEVTYPERN);
++}
++
+ static inline u32 armv8pmu_pmcr_read(void)
  {
- 	enable_percpu_irq(irq, IRQ_TYPE_NONE);
-@@ -63,6 +74,31 @@ static const struct pmu_irq_ops percpu_pmuirq_ops = {
- 	.free_pmuirq = armpmu_free_percpu_pmuirq
- };
+ 	return read_sysreg(pmcr_el0);
+@@ -376,17 +443,11 @@ static inline int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
+ 	return pmnc & BIT(ARMV8_IDX_TO_COUNTER(idx));
+ }
  
-+static void armpmu_enable_percpu_pmunmi(unsigned int irq)
-+{
-+	if (!prepare_percpu_nmi(irq))
-+		enable_percpu_nmi(irq, IRQ_TYPE_NONE);
-+}
-+
-+static void armpmu_disable_percpu_pmunmi(unsigned int irq)
-+{
-+	disable_percpu_nmi(irq);
-+	teardown_percpu_nmi(irq);
-+}
-+
-+static void armpmu_free_percpu_pmunmi(unsigned int irq, int cpu,
-+				      void __percpu *devid)
-+{
-+	if (armpmu_count_irq_users(irq) == 1)
-+		free_percpu_nmi(irq, devid);
-+}
-+
-+static const struct pmu_irq_ops percpu_pmunmi_ops = {
-+	.enable_pmuirq = armpmu_enable_percpu_pmunmi,
-+	.disable_pmuirq = armpmu_disable_percpu_pmunmi,
-+	.free_pmuirq = armpmu_free_percpu_pmunmi
-+};
-+
- static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
- static DEFINE_PER_CPU(int, cpu_irq);
- static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
-@@ -633,15 +669,29 @@ int armpmu_request_irq(int irq, int cpu)
- 			    IRQF_NO_THREAD;
+-static inline void armv8pmu_select_counter(int idx)
++static inline u32 armv8pmu_read_evcntr(int idx)
+ {
+ 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+-	write_sysreg(counter, pmselr_el0);
+-	isb();
+-}
  
- 		irq_set_status_flags(irq, IRQ_NOAUTOEN);
--		err = request_irq(irq, handler, irq_flags, "arm-pmu",
-+
-+		err = request_nmi(irq, handler, irq_flags, "arm-pmu",
- 				  per_cpu_ptr(&cpu_armpmu, cpu));
+-static inline u64 armv8pmu_read_evcntr(int idx)
+-{
+-	armv8pmu_select_counter(idx);
+-	return read_sysreg(pmxevcntr_el0);
++	return read_pmevcntrn(counter);
+ }
  
--		irq_ops = &pmuirq_ops;
-+		/* If cannot get an NMI, get a normal interrupt */
-+		if (err) {
-+			err = request_irq(irq, handler, irq_flags, "arm-pmu",
-+					  per_cpu_ptr(&cpu_armpmu, cpu));
-+			irq_ops = &pmuirq_ops;
-+		} else {
-+			irq_ops = &pmunmi_ops;
-+		}
- 	} else if (armpmu_count_irq_users(irq) == 0) {
--		err = request_percpu_irq(irq, handler, "arm-pmu",
--					 &cpu_armpmu);
--
--		irq_ops = &percpu_pmuirq_ops;
-+		err = request_percpu_nmi(irq, handler, "arm-pmu", &cpu_armpmu);
+ static inline u64 armv8pmu_read_hw_counter(struct perf_event *event)
+@@ -458,8 +519,9 @@ static u64 armv8pmu_read_counter(struct perf_event *event)
+ 
+ static inline void armv8pmu_write_evcntr(int idx, u64 value)
+ {
+-	armv8pmu_select_counter(idx);
+-	write_sysreg(value, pmxevcntr_el0);
++	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
 +
-+		/* If cannot get an NMI, get a normal interrupt */
-+		if (err) {
-+			err = request_percpu_irq(irq, handler, "arm-pmu",
-+						 &cpu_armpmu);
-+			irq_ops = &percpu_pmuirq_ops;
-+		} else {
-+			irq_ops = &percpu_pmunmi_ops;
-+		}
++	write_pmevcntrn(counter, value);
+ }
+ 
+ static inline void armv8pmu_write_hw_counter(struct perf_event *event,
+@@ -494,9 +556,10 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
+ 
+ static inline void armv8pmu_write_evtype(int idx, u32 val)
+ {
+-	armv8pmu_select_counter(idx);
++	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
++
+ 	val &= ARMV8_PMU_EVTYPE_MASK;
+-	write_sysreg(val, pmxevtyper_el0);
++	write_pmevtypern(counter, val);
+ }
+ 
+ static inline void armv8pmu_write_event_type(struct perf_event *event)
+@@ -516,7 +579,10 @@ static inline void armv8pmu_write_event_type(struct perf_event *event)
+ 		armv8pmu_write_evtype(idx - 1, hwc->config_base);
+ 		armv8pmu_write_evtype(idx, chain_evt);
  	} else {
- 		/* Per cpudevid irq was already requested by another CPU */
- 		irq_ops = armpmu_find_irq_ops(irq);
+-		armv8pmu_write_evtype(idx, hwc->config_base);
++		if (idx == ARMV8_IDX_CYCLE_COUNTER)
++			write_sysreg(hwc->config_base, pmccfiltr_el0);
++		else
++			armv8pmu_write_evtype(idx, hwc->config_base);
+ 	}
+ }
+ 
+@@ -620,9 +686,14 @@ static void armv8pmu_enable_event(struct perf_event *event)
+ 	 * Disable counter
+ 	 */
+ 	armv8pmu_disable_event_counter(event);
++	/*
++	 * Make sure the effects of disabling the counter are visible before we
++	 * start configuring the event.
++	 */
++	isb();
+ 
+ 	/*
+-	 * Set event (if destined for PMNx counters).
++	 * Set event.
+ 	 */
+ 	armv8pmu_write_event_type(event);
+ 
 -- 
 2.28.0
 
