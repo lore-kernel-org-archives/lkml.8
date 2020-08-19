@@ -2,171 +2,173 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2603C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96BB620657
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMzV7C6H"
+	by mail.kernel.org (Postfix) with ESMTP id 7C1D920657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgHSA4x (ORCPT
+        id S1726862AbgHSA6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHSA4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:56:52 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48328C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:56:52 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id j21so10544435pgi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g5lgfj+4RO+TuaNs0nmIhHGQBFQwwG2bIb9G0QE1JCg=;
-        b=HMzV7C6Ht943LwwQUEDfWJuZQuGmOvSnzyFGWv7k5trxoMNvDoWSpF46Q+uQMrF5uL
-         a7aNxZk+lvJMHMG0XXfQvIJxybBglHZY72nGYl2UXj4PVKtzpvizAXPQ2ny89jUVK6IJ
-         2Jjjd+68JyrXVAlhm7i63NEoGSGrshxuRfhOK6PpgrYi/carkpEJAgSoBur9VUAk0ep0
-         DfaSMu/5m965G+E6CgHPNLK3VWm5hUt9aQ6JMvzosFYh8+d64PoFOGVDm/Ik9jEyvmBS
-         eDlmmmW3rAEXCHloRbuvp7u+0FPGeG1BUVYas/lOjq4QA+Od+M8BGhvkW15yQQkQK8Hk
-         x5Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=g5lgfj+4RO+TuaNs0nmIhHGQBFQwwG2bIb9G0QE1JCg=;
-        b=dViItNAcIZ0uUmSN2ZIzVL2fPVYmGoVRyg5nknbtV9KbcCqb1FS5QFaRUt3a7hTx7w
-         k05vsqQV087fBQTU2QpErMM+tLWXIfAQCRe0YJ4jzFr7GFd4X3UaqkWg6M8pWFMRdCEi
-         HuIAl7/TV25Rji8smQPAXlywm6ZdHax1m+EOll526A8Qf8YnFhsjkFobbOqXk+WeIkcN
-         h2dvXuegMdI/7NQwWRp/3yFVpdb73B2tgWcvZYJbfNjDO7D28n7SogDbcvqjP67QBcA2
-         t0gWtvKN2qkw5c9jdaStNX5z8w0ize5gToeDO55nNiv68qxPfvER3PvRvlhO453SEOjs
-         +nZg==
-X-Gm-Message-State: AOAM533l0kYEVJu1LKgTnEsHniE0BdenY7Liv4fssVYF8yIoz4R8vDvB
-        fHabRsB3/QeekqL9y/H4Iqc=
-X-Google-Smtp-Source: ABdhPJyjyC+n/9VImsjd4rETdoVJM4+2BoYtGrIgm+xD4XQbEWMQ67W1uiPuhG2P0nP9vOWaEtLOMQ==
-X-Received: by 2002:a63:6a47:: with SMTP id f68mr14832697pgc.170.1597798611836;
-        Tue, 18 Aug 2020 17:56:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c15sm25617749pfo.115.2020.08.18.17.56.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 17:56:50 -0700 (PDT)
-Subject: Re: [PATCH] Revert "seqlock: lockdep assert non-preemptibility on
- seqcount_t write"
-To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
-        rostedt@goodmis.org, tglx@linutronix.de, will@kernel.org
-References: <20200810085954.GA1591892@kroah.com>
- <20200810095428.2602276-1-a.darwish@linutronix.de>
- <20200810100502.GA2406768@kroah.com>
- <bcf94ea2-05e6-2212-f732-b9a79a142f7e@roeck-us.net>
- <169454.1597791078@turing-police>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <fa442483-00b5-169e-dac2-71fbf8307117@roeck-us.net>
-Date:   Tue, 18 Aug 2020 17:56:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 20:58:30 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24920 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgHSA63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:58:29 -0400
+IronPort-SDR: zL93azRjQxXWuHMBXudIO16Tgu6ukyIDDoTT53Y6BEtcwagTA/dKwfPeFqPC2h0qeGLitp//mg
+ qCAfQub8XRXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="156100347"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="156100347"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 17:58:28 -0700
+IronPort-SDR: wlO/uBnVpHem/P2UcCaELNv/WywFQxBYmZh7Hi8juyQVPQKnNcOUubfirWTqWZWpNXyW6Vbzv9
+ /SqTKGvo7F2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="320290486"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Aug 2020 17:58:28 -0700
+Date:   Tue, 18 Aug 2020 18:00:19 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        x86 <x86@kernel.org>
+Subject: Re: [PATCH] x86/cpu: Fix typos and improve the comments in
+ sync_core()
+Message-ID: <20200819010019.GA7074@ranerica-svr.sc.intel.com>
+References: <20200807032833.17484-1-ricardo.neri-calderon@linux.intel.com>
+ <159767927411.3192.1923111080573965673.tip-bot2@tip-bot2>
+ <20200818053130.GA3161093@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <169454.1597791078@turing-police>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818053130.GA3161093@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 3:51 PM, Valdis Klētnieks wrote:
-> On Mon, 10 Aug 2020 07:10:32 -0700, Guenter Roeck said:
->>> 	ERROR: modpost: "__bad_udelay" [drivers/net/ethernet/aquantia/atlantic/atlantic.ko] undefined!
->>>
->>
->> I don't think that is new. If anything, it is surprising that builds don't fail more
->> widely because of it. AFAICS it was introduced back in 2018 (a hot 50-ms delay loop
->> really isn't such a good idea).
+On Tue, Aug 18, 2020 at 07:31:30AM +0200, Ingo Molnar wrote:
 > 
-> Well...it wasn't broken in next-20200720.  A bit of poking with nm,
-> and building hw_atl/hw_atl_b0.s, it looks like the culprit is this commit:
+> * tip-bot2 for Ricardo Neri <tip-bot2@linutronix.de> wrote:
 > 
-> commit 8dcf2ad39fdb2d183b7bd4307c837713e3150b9a
-> Author: Mark Starovoytov <mstarovoitov@marvell.com>
-> Date:   Mon Jul 20 21:32:44 2020 +0300
+> > --- a/arch/x86/include/asm/sync_core.h
+> > +++ b/arch/x86/include/asm/sync_core.h
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/preempt.h>
+> >  #include <asm/processor.h>
+> >  #include <asm/cpufeature.h>
+> > +#include <asm/special_insns.h>
+> >  
+> >  #ifdef CONFIG_X86_32
+> >  static inline void iret_to_self(void)
+> > @@ -54,14 +55,23 @@ static inline void iret_to_self(void)
+> >  static inline void sync_core(void)
+> >  {
+> >  	/*
+> > +	 * The SERIALIZE instruction is the most straightforward way to
+> > +	 * do this but it not universally available.
+> > +	 */
+> > +	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
+> > +		serialize();
+> > +		return;
+> > +	}
+> > +
+> > +	/*
+> > +	 * For all other processors, there are quite a few ways to do this.
+> > +	 * IRET-to-self is nice because it works on every CPU, at any CPL
+> > +	 * (so it's compatible with paravirtualization), and it never exits
+> > +	 * to a hypervisor. The only down sides are that it's a bit slow
+> > +	 * (it seems to be a bit more than 2x slower than the fastest
+> > +	 * options) and that it unmasks NMIs.  The "push %cs" is needed
+> > +	 * because, in paravirtual environments, __KERNEL_CS may not be a
+> > +	 * valid CS value when we do IRET directly.
 > 
->     net: atlantic: add hwmon getter for MAC temperature
+> So there's two typos in the new comments, there are at least two 
+> misapplied commas, it departs from existing style, and there's a typo 
+> in the existing comments as well.
 > 
-> specifically this chunk around line 1634 of hw_atl/hw_atl_b0.c:
+> Also, before this patch the 'compiler barrier' comment was valid for 
+> the whole function (there was no branching), but after this patch it 
+> reads of it was only valid for the legacy IRET-to-self branch.
 > 
+> Which together broke my detector and triggered a bit of compulsive 
+> bike-shed painting. ;-) See the resulting patch below.
 > 
-> +       err = readx_poll_timeout_atomic(hw_atl_b0_ts_ready_and_latch_high_get,
-> +                                       self, val, val == 1, 10000U, 500000U);
+> Thanks,
 > 
-> And doing a 'git revert' makes the build work....
+> 	Ingo
 > 
+> ================>
+> From: Ingo Molnar <mingo@kernel.org>
+> Date: Tue, 18 Aug 2020 07:24:05 +0200
+> Subject: [PATCH] x86/cpu: Fix typos and improve the comments in sync_core()
+> 
+> - Fix typos.
+> 
+> - Move the compiler barrier comment to the top, because it's valid for the
+>   whole function, not just the legacy branch.
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  arch/x86/include/asm/sync_core.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+> index 4631c0f969d4..0fd4a9dfb29c 100644
+> --- a/arch/x86/include/asm/sync_core.h
+> +++ b/arch/x86/include/asm/sync_core.h
+> @@ -47,16 +47,19 @@ static inline void iret_to_self(void)
+>   *
+>   *  b) Text was modified on a different CPU, may subsequently be
+>   *     executed on this CPU, and you want to make sure the new version
+> - *     gets executed.  This generally means you're calling this in a IPI.
+> + *     gets executed.  This generally means you're calling this in an IPI.
+>   *
+>   * If you're calling this for a different reason, you're probably doing
+>   * it wrong.
+> + *
+> + * Like all of Linux's memory ordering operations, this is a
+> + * compiler barrier as well.
+>   */
+>  static inline void sync_core(void)
+>  {
+>  	/*
+>  	 * The SERIALIZE instruction is the most straightforward way to
+> -	 * do this but it not universally available.
+> +	 * do this, but it is not universally available.
 
-Nice catch. FWIW, there is no obvious reason why this would need to be atomic.
-The calling code does not set a lock, meaning there can be two (or more)
-callers entering this code. Weird, especially since the code looks like it
-would actually need a mutex to work correctly. It might be interesting to
-see what happens if there are, say, half a dozen scripts/processes trying
-to read the hwmon attribute introduced by this patch at the same time.
+Indeed, I missed this grammar error.
 
-Guenter
+>  	 */
+>  	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
+>  		serialize();
+> @@ -67,10 +70,10 @@ static inline void sync_core(void)
+>  	 * For all other processors, there are quite a few ways to do this.
+>  	 * IRET-to-self is nice because it works on every CPU, at any CPL
+>  	 * (so it's compatible with paravirtualization), and it never exits
+> -	 * to a hypervisor. The only down sides are that it's a bit slow
+> +	 * to a hypervisor.  The only downsides are that it's a bit slow
+>  	 * (it seems to be a bit more than 2x slower than the fastest
+> -	 * options) and that it unmasks NMIs.  The "push %cs" is needed
+> -	 * because, in paravirtual environments, __KERNEL_CS may not be a
+> +	 * options) and that it unmasks NMIs.  The "push %cs" is needed,
+> +	 * because in paravirtual environments __KERNEL_CS may not be a
+
+I didn't realize that the double spaces after the period were part of the
+style.
+
+FWIW,
+
+Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
