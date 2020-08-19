@@ -2,93 +2,141 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-25.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B22FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 049AB207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1DD2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hU5/8DJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgHSTRO (ORCPT
+        id S1727021AbgHSTRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgHSTRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:17:05 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B4592078D;
-        Wed, 19 Aug 2020 19:17:03 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 15:17:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <kuba@kernel.org>, <lkft-triage@lists.linaro.org>,
-        LTP List <ltp@lists.linux.it>
-Subject: Re: NETDEV WATCHDOG: WARNING: at net/sched/sch_generic.c:442
- dev_watchdog
-Message-ID: <20200819151701.747769ce@oasis.local.home>
-In-Reply-To: <20200819102909.000016ac@intel.com>
-References: <CA+G9fYtS_nAX=sPV8zTTs-nOdpJ4uxk9sqeHOZNuS4WLvBcPGg@mail.gmail.com>
-        <20200819125732.1c296ce7@oasis.local.home>
-        <20200819102909.000016ac@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Aug 2020 15:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgHSTRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 15:17:10 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758D3C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:17:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d26so26943187yba.20
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=AYTx8OTXrfy1fkjiQ/QJZUTx1nYyS440PAIctrO8h/4=;
+        b=hU5/8DJYdBVIul76iBEmEZ0CUUQxYYOOHdwBe4d4zyPtB5gIZh8vrm6Ccwlw+L7mfG
+         jT4Y2xyv2gvx6x+GF1XuIP6lvuA20HdADAoN96ldTrsTtbKn1/+bcvafV0ipxVGPvx5T
+         OVGD/OW/Rm/RcYoUIfpfQAlOuAUQ5mPdB6lE+Pq/kfD1VWh7KsAWKxXxroLPwLw40+1i
+         kvI45eNE7kkOgbXRICBXBMXLPlBDZYoiRoJLP51z6Bh+cy81LCawEG//TZN3rxPJtz6E
+         aLLhREs3LcMxpShnPm0ZN5pRx9wDMtIvvkd7xgXg9RTXshqTL+GmUQ2DHv1Dd734CK3p
+         ZQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=AYTx8OTXrfy1fkjiQ/QJZUTx1nYyS440PAIctrO8h/4=;
+        b=hjPWQDh3PvJI0CarBgkOPQgdmLnjsijC7IRVhDzCQgVnZze7yjSEDfeH+LMobgbP1N
+         2VLRNKeEUHkMon++bHfHygQTaJptR/9htJBT0hIwuxrctgOUMGV743nKYQJUI+M06LHv
+         IkZx/YpRLZ5NRTQeJmhLnHXSYc8HIryOk4/g/LaqVzYGATA+3/ofyN3qy44v26S8yDsc
+         ErlVitCUVjpznNGi0nGP5BV0gwyr7kp49XTX1V0eWVXduKo/6YZLY3OVwCDhAbY9Cucb
+         l6LMGA9BCtyxMrGZ4F+HM13a/LCcW+cWF78MdCjz6qpysLFLnqNldC9SjtdRD8OTfOFm
+         as4w==
+X-Gm-Message-State: AOAM5339SRgp12vRAgJ4uloSUXVAWZ/G94AwTsLy37u6yPrwQHQ8W0At
+        acVDEFvK4c/tgH5Ab1BJ/4eJCB7NgjWyc7RO1hA=
+X-Google-Smtp-Source: ABdhPJxETf8t+SYq21D8M+YylDYX3q4MAl4M/CU8Tsm+guyliSGVos5yJOYpig0Mf0L2E13QKLQC7j9HxW70uBCx9fg=
+X-Received: by 2002:a5b:c08:: with SMTP id f8mr34030464ybq.198.1597864628624;
+ Wed, 19 Aug 2020 12:17:08 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 12:16:50 -0700
+In-Reply-To: <20200819191654.1130563-1-ndesaulniers@google.com>
+Message-Id: <20200819191654.1130563-2-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200819191654.1130563-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v2 1/5] Makefile: add -fno-builtin-stpcpy
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "=?UTF-8?q?D=C3=A1vid=20Bolvansk=C3=BD?=" <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 10:29:09 -0700
-Jesse Brandeburg <jesse.brandeburg@intel.com> wrote:
+LLVM implemented a recent "libcall optimization" that lowers calls to
+`sprintf(dest, "%s", str)` where the return value is used to
+`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+in parsing format strings. This optimization was introduced into
+clang-12. Because the kernel does not provide an implementation of
+stpcpy, we observe linkage failures for almost all targets when building
+with ToT clang.
 
+The interface is unsafe as it does not perform any bounds checking.
+Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
 
-> What I don't understand in the stack trace is this:
-> > > [  107.654661] Call Trace:
-> > > [  107.657735]  <IRQ>
-> > > [  107.663155]  ? ftrace_graph_caller+0xc0/0xc0
-> > > [  107.667929]  call_timer_fn+0x3b/0x1b0
-> > > [  107.672238]  ? netif_carrier_off+0x70/0x70
-> > > [  107.677771]  ? netif_carrier_off+0x70/0x70
-> > > [  107.682656]  ? ftrace_graph_caller+0xc0/0xc0
-> > > [  107.687379]  run_timer_softirq+0x3e8/0xa10
-> > > [  107.694653]  ? call_timer_fn+0x1b0/0x1b0
-> > > [  107.699382]  ? trace_event_raw_event_softirq+0xdd/0x150
-> > > [  107.706768]  ? ring_buffer_unlock_commit+0xf5/0x210
-> > > [  107.712213]  ? call_timer_fn+0x1b0/0x1b0
-> > > [  107.716625]  ? __do_softirq+0x155/0x467  
-> 
-> 
-> If the carrier was turned off by something, that could cause the stack
-> to timeout since it appears the driver didn't call this itself after
-> finishing all transmits like it normally would have.
-> 
-> Is the trace above correct? Usually the ? indicate unsure backtrace due
-> to missing symbols, right?
+Cc: stable@vger.kernel.org # 4.4
+Link: https://bugs.llvm.org/show_bug.cgi?id=3D47162
+Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+Link: https://reviews.llvm.org/D85963
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: D=C3=A1vid Bolvansk=C3=BD <david.bolvansky@gmail.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-The "?" means that there wasn't a stack frame to confirm that this was
-the true call stack. What happens is that the scan of the stack will
-look for any address in the stack that is for a function. If it finds
-one, it will print it and add a "?" to that address. Basically, those
-functions with the "?" are just addresses found in the stack but was not
-part of a stack frame link.
+diff --git a/Makefile b/Makefile
+index 9cac6fde3479..e523dc8d30e0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -578,6 +578,7 @@ ifneq ($(LLVM_IAS),1)
+ CLANG_FLAGS	+=3D -no-integrated-as
+ endif
+ CLANG_FLAGS	+=3D -Werror=3Dunknown-warning-option
++CLANG_FLAGS	+=3D -fno-builtin-stpcpy
+ KBUILD_CFLAGS	+=3D $(CLANG_FLAGS)
+ KBUILD_AFLAGS	+=3D $(CLANG_FLAGS)
+ export CLANG_FLAGS
+--=20
+2.28.0.297.g1956fa8f8d-goog
 
--- Steve
