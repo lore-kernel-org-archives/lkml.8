@@ -2,89 +2,95 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6207FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6E920639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEB120639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiXoJqDE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qlHcNEPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgHSJ1G (ORCPT
+        id S1727103AbgHSJ1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
+        Wed, 19 Aug 2020 05:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgHSJ1B (ORCPT
+        with ESMTP id S1726835AbgHSJ13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:27:01 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DD5C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:27:00 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id t14so1430041wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:26:59 -0700 (PDT)
+        Wed, 19 Aug 2020 05:27:29 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3955C061757;
+        Wed, 19 Aug 2020 02:27:29 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g15so6634078plj.6;
+        Wed, 19 Aug 2020 02:27:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lVH13tdAzC6mW/dwhV6wM3c3cw0w+EwXAkE9fSxw6kk=;
-        b=LiXoJqDEZa5lyE4ikb0YCl1GOpEyvF7YoJVZ3kOe+9PbwXYwTgsNunyBrTmnHpcwLS
-         AycdLYrvYIpvnEsRb768v0N/KWszt83KWkhoZzXjI3eH1VMUG6mbDoqEFLy1K6QxIMOC
-         1hVDWDu2nR1b+z89w6enM8EpzLNUN4QnBB2IY0SBnjvjtVM2P10D5cIoDVZgXGJh4GaL
-         j5U8omvfmoAHsNIrqNSuho6gPySbtyWgNfmPBHhew2sO50S7vkaRhIOltkVWhPE00LHW
-         0dxpLaSf4HgAo7voQQH0d2vcYfSwwFPXR98OGRdl9b6DxcDSL5Yt1dBGtfj1NMg51NKL
-         49Fg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/x+ioxj0OECDWfuZ/8cLiBt08ZEEJV9C/RwFT59ZAOY=;
+        b=qlHcNEPNB5wNQZEWyxFpsV2++SFSMZh1dkF7Pyba7MLEMg3mkx3NQwLviJdrWE0EPz
+         MbV8sUmZnqEOpclkWErN1k6jtF7+iJnXTNBC5aOFOW5CaxPm+wYWXjGYES/peopTxTvo
+         sT2R9RjdVTa+xAFWGxTFBMxcaXsXOSf2lbbSNs+D/u5zNzZw9Ejozsg+GBNDVerdT+RB
+         6YegFcEtE49I32y9ESkVWu5d5WCvOx+GLXgXA5A1Sg/ULBdPECPUXCpBeDN169pBLUe2
+         MzxCR4DWc7g2pCkJ/D5u5CmuhtV14V82NDmFxKbsiMF/zrME9zPFmf0X1FVLe7/OlIyg
+         YhqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lVH13tdAzC6mW/dwhV6wM3c3cw0w+EwXAkE9fSxw6kk=;
-        b=J+6TSS+ZngdlJFJaWT2bVrK9/ZKBaPAgUwRP8yfPAxHI68k/D8TegszJ+kRCvS2rq9
-         aECzUouQ5BeOt6bBrFG9ugUI9gPftVsUL8XK7SmDyjvts/ETam/XCTAEdHGNmIBlxn1C
-         uS56rN9WKeuStLDVz0o2BeM9NmNfrumqQckzpxAK9CMAloBnjLYBRiGgP26aReOUdQ5n
-         eVsTcW54vrxugSsuDsK2yDnA540d6y1dsdu6Fmy+ZCFtOhfQtB4rhwbPnoiWW/DR5Ypf
-         REku43/9gYWMQdNSDG6TbHxr5Y82zetIFX/49ESoT/HukOF/5IUZHgEmVF3bKCUNaXHd
-         ZH9Q==
-X-Gm-Message-State: AOAM533+ED3LoVPyeWZRsyIbYH3NbYo8tyEQryIZkx+Btj3EXa4YVpyT
-        7550qhclTEzA5orszVu/mTa98xCu+No9XplOfW8=
-X-Google-Smtp-Source: ABdhPJw+vfNm6gcyC15QGjAi/+l7apLAwW4FOchrK0YZEt7izxf65sSx5B4ycnxIWcXGiEbZh+MIcEEgwnJLJgGiw2I=
-X-Received: by 2002:a1c:32c3:: with SMTP id y186mr3986004wmy.15.1597829216005;
- Wed, 19 Aug 2020 02:26:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/x+ioxj0OECDWfuZ/8cLiBt08ZEEJV9C/RwFT59ZAOY=;
+        b=ssFJFvPVjTBkHDkvHdMVvx8EuytEg+Lvrlr9YoaS6lN8HG5oCQ8Zkk2iUVhFFP/uv2
+         n3msHOwQScc5YodSIAZJmyOzu3vqbVhqTjk0uoacQLS2D9/vbogWTzmGwLVkVpwaM7XO
+         hw9l65DHXxQPzvuXYsqIMWXruHZdqQSoEg7zmY6vnn+8Xy9nMkg3lOoOwecKdc9gt9bb
+         /IAnJyPITGoJeK+y5kb17iuSx0gzgN/tpUKlFk+yqzH9dYfnYKfG7zvoIwt/F2RbKFDb
+         BWi9nSv8ZH0payAFrtP+f0rPNGI/4dssnvLTAYlbSDRJZRGHq7go0HRhnuWuZud1f37f
+         AWYg==
+X-Gm-Message-State: AOAM532kiW2CVPooMdoEqoN5xXLgLyJTa5PQPvIWqYjEcm5wb9obOEYQ
+        dLx6V0Ektf2DMXSMr1VdtbM=
+X-Google-Smtp-Source: ABdhPJwoeJen/PV/xW1fP54d8Ex6WgD3SAgVdfzKFi8WkN+xy6V2pQqgMCP8FmW+r9hrzRGiROSg+A==
+X-Received: by 2002:a17:902:5991:: with SMTP id p17mr18666350pli.78.1597829248871;
+        Wed, 19 Aug 2020 02:27:28 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id v1sm1334067pjh.16.2020.08.19.02.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 02:27:28 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 18:27:26 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Raul Rangel <rrangel@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCHv2] serial: 8250: change lock order in
+ serial8250_do_startup()
+Message-ID: <20200819092726.GB3302@jagdpanzerIV.localdomain>
+References: <20200817022646.1484638-1-sergey.senozhatsky@gmail.com>
+ <20200819092106.GA4353@alley>
 MIME-Version: 1.0
-References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053252epcas5p4ee61d64bba5f6a131105e40330984f5e@epcas5p4.samsung.com>
- <20200818052936.10995-2-joshi.k@samsung.com> <20200818071141.GA2544@lst.de>
-In-Reply-To: <20200818071141.GA2544@lst.de>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Wed, 19 Aug 2020 14:56:29 +0530
-Message-ID: <CA+1E3rJg0QOX4YgwWJf8Sm=6C-un4TsRX00E31fbFFPT9LYhXg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] nvme: set io-scheduler requirement for ZNS
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>, sagi@grimberg.me,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819092106.GA4353@alley>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:46 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Tue, Aug 18, 2020 at 10:59:35AM +0530, Kanchan Joshi wrote:
-> > Set elevator feature ELEVATOR_F_ZBD_SEQ_WRITE required for ZNS.
->
-> No, it is not.
+On (20/08/19 11:21), Petr Mladek wrote:
+> 
+> The patch is committed in printk/linux.git, branch for-5.10.
 
-Are you saying MQ-Deadline (write-lock) is not needed for writes on ZNS?
-I see that null-block zoned and SCSI-ZBC both set this requirement. I
-wonder how it became different for NVMe.
+Petr, as far as I can tell, Greg has applied it to gregkh/tty.git
 
--- 
-Kanchan
+	-ss
