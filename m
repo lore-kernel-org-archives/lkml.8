@@ -2,256 +2,72 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA14C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0760C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35D120786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A112820658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="Q8MbWudY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="al84feFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgHSSFe (ORCPT
+        id S1727098AbgHSSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgHSSFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:05:12 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46144C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:12 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 74so12056015pfx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VJOwxZD756f4d3HNd4Hpvhldk4W8KSHk0BSTu8cNd+0=;
-        b=Q8MbWudYBHUtf3I/ngwkAVqIdwWbZXLatG/7b18xipE/k+EE9MX36XB+IV6lIDz+Br
-         /GBMGIUAA4x5lZac1T1K9pRddO6E413r/7jUX2v8dMTPwpE26Ng2CBrBrGYDzSwmwmor
-         0sVjhNbFlZKmDjELnl2QpvUkUvBBEgHpTGUij2FQZF9Veuzx2opfvxfKBkkMm+dcK8gw
-         0dKMMeq+H4gqJS7OEXsyk2g5/2dfmwZeVMXRVU+RE27zG20TChgG+dz2GyFq2QKwoDdQ
-         v/fUp8xgejoa264sKzFzTYoz5vQc+SMmgvMkPFy5SPIYorMT9c+YMsYc3PTckgfPYQQF
-         fDJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VJOwxZD756f4d3HNd4Hpvhldk4W8KSHk0BSTu8cNd+0=;
-        b=Tc3nian1llslkgM66sbcMGqabs8FoGtDtyXW0rRj60v+V4sUNHm6BZ6HnEq25VEX0a
-         C621X2RsszsYGuyhRAHQOJipx9ya9kZrI50eUq30lt3OikK+CNHQ9SqSFBshYe3iXhwb
-         VYVaNRQ4LwfW7ItxBNiY1zwQOzc9q0YJh839saElri2BG6veMNh0qjgZX9S8RoEXwd7v
-         yqcBrZJXcAG1p3avxmKFLUXwrZ6vNv/O08uH9ldlpmvo0LQCmftMcJARek9EF/o32yBI
-         h0bKo5mx44PElKJuiQyLWg3iPMzEjbVcOG9SpqKhZVau2wFHGqCXJaf0E0lNOtJbq1/R
-         KFqg==
-X-Gm-Message-State: AOAM531LzRQ5Htor9o1Pn+YCyZCJAyTJAe1tT86qKZcvqZh+gdRq+CI5
-        u+7+o+88gyXs721MnnGKwOjnKg==
-X-Google-Smtp-Source: ABdhPJzApiHr4zA8SCw8Y5N+Yqufm8PMxKzaoF12gzOBA8/fwujbFHlgOpVoA4yf/K9RAqfrd2W/9Q==
-X-Received: by 2002:a62:cd8f:: with SMTP id o137mr20689091pfg.241.1597860311717;
-        Wed, 19 Aug 2020 11:05:11 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.179])
-        by smtp.gmail.com with ESMTPSA id w16sm29100810pfq.13.2020.08.19.11.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:05:11 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v3 3/9] media: vimc: Add usage count to subdevices
-Date:   Wed, 19 Aug 2020 23:34:36 +0530
-Message-Id: <20200819180442.11630-4-kgupta@es.iitr.ac.in>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
-References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+        Wed, 19 Aug 2020 14:06:16 -0400
+Received: from crapouillou.net ([89.234.176.41]:33286 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgHSSGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:06:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597860368; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=kFohp8eC88p8KWDMpxZDQiAv/OkMPw3loVV19jqtTvA=;
+        b=al84feFAmhSNPEhXIv6AwIHQH41l3AOsy6cO/wJSIKsNR3q0ohDmvwY0I5cswWMd5Aqi6L
+        ThsE8WlKmx8MWN4qo+9lL6w3FXtbJmnHLItfI15BhNj1s6zoDqPeWzLRJgUscysQYnt6ZZ
+        N2ALTiIKQAk/xe/13pOSn/d1akKjHe4=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] irqchip: ingenic: Leave parent IRQ unmasked on suspend
+Date:   Wed, 19 Aug 2020 20:06:02 +0200
+Message-Id: <20200819180602.136969-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+All the wakeup sources we possibly want will go through the interrupt
+controller, so the parent IRQ must not be masked during suspend, or
+there won't be any way to wake up the system.
 
-Prepare for multiple video streams from the same sensor by adding a use
-counter to vimc_ent_device. The counter is increased for every s_stream(1)
-and decremented for every s_stream(0) call.
-
-The subdevice stream is not started or stopped unless the usage count go
-from 0 to 1 (started) or from 1 to 0 (stopped). This allows for multiple
-s_stream() calls to try to either start or stop the device while only
-the first/last call will actually effect the state of the device.
-
-Initialise and increment use_count for capture as well, as use_count
-will be used in subsequent patches for starting process_frame as well.
-
-[Kaaira: moved use_count to vimc entity device instead of declaring it
-for each subdevice, used use_count for capture as well and rebased
-the patch on current HEAD of master to help with the current series]
-
-Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/media/test-drivers/vimc/vimc-capture.c | 3 +++
- drivers/media/test-drivers/vimc/vimc-common.h  | 2 ++
- drivers/media/test-drivers/vimc/vimc-debayer.c | 7 +++++++
- drivers/media/test-drivers/vimc/vimc-scaler.c  | 7 +++++++
- drivers/media/test-drivers/vimc/vimc-sensor.c  | 6 ++++++
- 5 files changed, 25 insertions(+)
+ drivers/irqchip/irq-ingenic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-index a8cbb8e4d5ba..93418cb5a139 100644
---- a/drivers/media/test-drivers/vimc/vimc-capture.c
-+++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-@@ -243,6 +243,7 @@ static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	struct media_entity *entity = &vcap->vdev.entity;
- 	int ret;
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index 9f3da4260ca6..b61a8901ef72 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -125,7 +125,7 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		irq_reg_writel(gc, IRQ_MSK(32), JZ_REG_INTC_SET_MASK);
+ 	}
  
-+	atomic_inc(&vcap->ved.use_count);
- 	vcap->sequence = 0;
- 
- 	/* Start the media pipeline */
-@@ -270,6 +271,7 @@ static void vimc_cap_stop_streaming(struct vb2_queue *vq)
- {
- 	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
- 
-+	atomic_dec(&vcap->ved.use_count);
- 	vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 0);
- 
- 	/* Stop the media pipeline */
-@@ -424,6 +426,7 @@ static struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
- 	vcap->vdev.entity.name = vcfg_name;
- 	vcap->vdev.entity.function = MEDIA_ENT_F_IO_V4L;
- 	vcap->pad.flags = MEDIA_PAD_FL_SINK;
-+	atomic_set(&vcap->ved.use_count, 0);
- 	ret = media_entity_pads_init(&vcap->vdev.entity,
- 				     1, &vcap->pad);
- 	if (ret)
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index 287d66edff49..c214f5ec7818 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -85,6 +85,7 @@ struct vimc_pix_map {
-  *
-  * @dev:		a pointer of the device struct of the driver
-  * @ent:		the pointer to struct media_entity for the node
-+ * @use_count:		a count to show the number of streams entity is part of
-  * @get_frame:		callback that sends a frame processed by the entity
-  * @process_frame:	callback that processes a frame
-  * @vdev_get_format:	callback that returns the current format a pad, used
-@@ -102,6 +103,7 @@ struct vimc_pix_map {
- struct vimc_ent_device {
- 	struct device *dev;
- 	struct media_entity *ent;
-+	atomic_t use_count;
- 	void * (*get_frame)(struct vimc_ent_device *ved);
- 	int (*process_frame)(struct vimc_ent_device *ved);
- 	void (*vdev_get_format)(struct vimc_ent_device *ved,
-diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
-index f61e6e8899ac..60c4c0ec2030 100644
---- a/drivers/media/test-drivers/vimc/vimc-debayer.c
-+++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
-@@ -343,6 +343,9 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		if (atomic_inc_return(&vdeb->ved.use_count) != 1)
-+			return 0;
-+
- 		if (vdeb->src_frame)
- 			return 0;
- 
-@@ -368,6 +371,9 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
- 			return -ENOMEM;
- 
- 	} else {
-+		if (atomic_dec_return(&vdeb->ved.use_count) != 0)
-+			return 0;
-+
- 		if (!vdeb->src_frame)
- 			return 0;
- 
-@@ -608,6 +614,7 @@ static struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
- 	vdeb->ved.get_frame = vimc_deb_get_frame;
- 	vdeb->ved.dev = vimc->mdev.dev;
- 	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
-+	atomic_set(&vdeb->ved.use_count, 0);
- 
- 	/* Initialize the frame format */
- 	vdeb->sink_fmt = sink_fmt_default;
-diff --git a/drivers/media/test-drivers/vimc/vimc-scaler.c b/drivers/media/test-drivers/vimc/vimc-scaler.c
-index 347f9cd4a168..d511e1f2152d 100644
---- a/drivers/media/test-drivers/vimc/vimc-scaler.c
-+++ b/drivers/media/test-drivers/vimc/vimc-scaler.c
-@@ -340,6 +340,9 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		if (atomic_inc_return(&vsca->ved.use_count) != 1)
-+			return 0;
-+
- 		if (vsca->src_frame)
- 			return 0;
- 
-@@ -363,6 +366,9 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
- 			return -ENOMEM;
- 
- 	} else {
-+		if (atomic_dec_return(&vsca->ved.use_count) != 0)
-+			return 0;
-+
- 		if (!vsca->src_frame)
- 			return 0;
- 
-@@ -518,6 +524,7 @@ static struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
- 	vsca->ved.process_frame = vimc_sca_process_frame;
- 	vsca->ved.get_frame = vimc_sca_get_frame;
- 	vsca->ved.dev = vimc->mdev.dev;
-+	atomic_set(&vsca->ved.use_count, 0);
- 
- 	/* Initialize the frame format */
- 	vsca->sink_fmt = sink_fmt_default;
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index 32a2c39de2cd..ced8ef06b01e 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -256,6 +256,9 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		if (atomic_inc_return(&vsen->ved.use_count) != 1)
-+			return 0;
-+
- 		vsen->start_stream_ts = ktime_get_ns();
- 
- 		/* Calculate the frame size */
-@@ -275,6 +278,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		vimc_sen_tpg_s_format(vsen);
- 
- 	} else {
-+		if (atomic_dec_return(&vsen->ved.use_count) != 0)
-+			return 0;
- 
- 		vfree(vsen->frame);
- 		vsen->frame = NULL;
-@@ -437,6 +442,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 	vsen->ved.process_frame = vimc_sen_process_frame;
- 	vsen->ved.get_frame = vimc_sen_get_frame;
- 	vsen->ved.dev = vimc->mdev.dev;
-+	atomic_set(&vsen->ved.use_count, 0);
- 
- 	/* Initialize the frame format */
- 	vsen->mbus_format = fmt_default;
+-	if (request_irq(parent_irq, intc_cascade, 0,
++	if (request_irq(parent_irq, intc_cascade, IRQF_NO_SUSPEND,
+ 			"SoC intc cascade interrupt", NULL))
+ 		pr_err("Failed to register SoC intc cascade interrupt\n");
+ 	return 0;
 -- 
-2.17.1
+2.28.0
 
