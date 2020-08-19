@@ -2,67 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7763AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBEE207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771EA206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sdrnjhxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgHSL27 (ORCPT
+        id S1727827AbgHSLaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:28:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9776 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728106AbgHSL2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:28:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 65B808222144AFFC17C0;
-        Wed, 19 Aug 2020 19:28:32 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 19:28:27 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <linux-sh@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] sh: mach-sh03: remove duplicate include
-Date:   Wed, 19 Aug 2020 19:26:17 +0800
-Message-ID: <20200819112617.6015-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Aug 2020 07:30:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40514 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbgHSL3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:29:52 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07JBTXxs022945;
+        Wed, 19 Aug 2020 06:29:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597836573;
+        bh=uS246ZYUJqNZhzlIuMgrKNWH9MlogOcLDXgYSwY6hDs=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=sdrnjhxyGwBIRLsx9ey1CcGNuzwCbU4h+jQG4q4rSvBX8t3P7A5KsVmZVFkwe9SOU
+         AIEtcV1Aoc80nM3DLjL5tPrnc850kQC8w21CDnpyheTbYZNTkc+TswSYJensvvoE8h
+         x++qF+h4G3sv4WBwOxrlnEcpfFGe/D1uB2aJSIWA=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07JBTXTQ059446;
+        Wed, 19 Aug 2020 06:29:33 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 19
+ Aug 2020 06:29:33 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 19 Aug 2020 06:29:33 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07JBTTcq129102;
+        Wed, 19 Aug 2020 06:29:30 -0500
+Subject: Re: [PATCH] gpio: omap: improve coding style for pin config flags
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+References: <20200722120755.230741-1-drew@beagleboard.org>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <220612cc-8f76-cb7a-a98f-0464b7728e83@ti.com>
+Date:   Wed, 19 Aug 2020 14:29:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200722120755.230741-1-drew@beagleboard.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove linux/rtc.h which is included more than once
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- arch/sh/boards/mach-sh03/rtc.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/sh/boards/mach-sh03/rtc.c b/arch/sh/boards/mach-sh03/rtc.c
-index 8b23ed7c201c..165e2ccaab4d 100644
---- a/arch/sh/boards/mach-sh03/rtc.c
-+++ b/arch/sh/boards/mach-sh03/rtc.c
-@@ -14,7 +14,6 @@
- #include <linux/rtc.h>
- #include <linux/spinlock.h>
- #include <linux/io.h>
--#include <linux/rtc.h>
- #include <linux/platform_device.h>
- 
- #define RTC_BASE	0xb0000000
+On 22/07/2020 15:07, Drew Fustini wrote:
+> Change the handling of pin config flags from if/else to switch
+> statement to make the code more readable and cleaner.
+> 
+> Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>   drivers/gpio/gpio-omap.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index e0eada82178c..7fbe0c9e1fc1 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -899,13 +899,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+>   	u32 debounce;
+>   	int ret = -ENOTSUPP;
+>   
+> -	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
+> -	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
+> -	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
+> +	switch (pinconf_to_config_param(config)) {
+> +	case PIN_CONFIG_BIAS_DISABLE:
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+>   		ret = gpiochip_generic_config(chip, offset, config);
+> -	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
+> +		break;
+> +	case PIN_CONFIG_INPUT_DEBOUNCE:
+>   		debounce = pinconf_to_config_argument(config);
+>   		ret = omap_gpio_debounce(chip, offset, debounce);
+> +		break;
+> +	default:
+> +		break;
+>   	}
+>   
+>   	return ret;
+> 
+
+Thank you.
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
 -- 
-2.17.1
-
+Best regards,
+grygorii
