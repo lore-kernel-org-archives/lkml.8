@@ -7,205 +7,82 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B92C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F28672078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DE02078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IWiUBtUI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ElW0HqjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgHSFRs (ORCPT
+        id S1726531AbgHSFT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 01:17:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:63388 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgHSFRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 01:17:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597814265; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=5+Xq0E9EK519scA6vaX/lUwdzuv3I0cgSK1tWmFZ1y8=; b=IWiUBtUIcLfjFMrnLSVvjd3BqT0qW1VU2HYt9KjmJSPtBUsJmDhfItGqYvZ5FgXIY+Zjv71d
- 05OZ3oPetbxHnuJm2ZohAn39YX2PiPAbhmjJGxvswF62lQnmeS97+YL6S6t3XAPBlbSh/nLr
- Dyx8ildQ7dRinhZOhsIRmcW2h4w=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f3cb5f8d96d28d61eeafaf6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 Aug 2020 05:17:44
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9706CC433CB; Wed, 19 Aug 2020 05:17:44 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 867DAC433CA;
-        Wed, 19 Aug 2020 05:17:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 867DAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH] usb: dwc3: Stop active transfers before halting the controller
-Date:   Tue, 18 Aug 2020 22:17:39 -0700
-Message-Id: <20200819051739.22123-1-wcheng@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 19 Aug 2020 01:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgHSFT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 01:19:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C507C061389;
+        Tue, 18 Aug 2020 22:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=0xtII03aY1sMWDNlNgJtnoIL3vhRsrk36uree1jHzx4=; b=ElW0HqjJ7mt+amGMbev8PXlKvD
+        R/VRen2NGsysJ+N1f6hWPh0lF5skZHdNhgphqwtEJUrFYti1UOGHcKtn2VKTFugFqYwyWv06i5DfA
+        qTROS7b4Wlp5OoXtNUQAuS/ZGZK+mOdqYgMy1y1KLMXsFtO1CAXmkZpFshVME8GfdLQpgiXrWjyLG
+        84NGNCq4x0ZESkm5LkYdhAOTRLjYc8IqTAXLDF/bA+bTL7p9i/v0mWXpBshv8DMcbxEKw+23TaSdx
+        /GW+2xPb8VrirmzOBy+zXh2ydoKX1UAWJa4cBX9LrNPG5pYQGF4GZ+cJP+cc0/GaLibcODjUXonHm
+        lvonc9tQ==;
+Received: from [2001:4bb8:198:f3b2:86b6:2277:f429:37a1] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8GVn-0002aC-4V; Wed, 19 Aug 2020 05:19:47 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     colyli@suse.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: bypass ->sendpage for slab pages
+Date:   Wed, 19 Aug 2020 07:19:45 +0200
+Message-Id: <20200819051945.1797088-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the DWC3 databook, for a device initiated disconnect, the driver is
-required to send dependxfer commands for any pending transfers.
-In addition, before the controller can move to the halted state, the SW
-needs to acknowledge any pending events.  If the controller is not halted
-properly, there is a chance the controller will continue accessing stale or
-freed TRBs and buffers.
+Sending Slab or tail pages into ->sendpage will cause really strange
+delayed oops.  Prevent it right in the networking code instead of
+requiring drivers to guess the exact conditions where sendpage works.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Based on a patch from Coly Li <colyli@suse.de>.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
-Verified fix by adding a check for ETIMEDOUT during the run stop call.
-Shell script writing to the configfs UDC file to trigger disconnect and
-connect.  Batch script to have PC execute data transfers over adb (ie adb
-push)  After a few iterations, we'd run into a scenario where the
-controller wasn't halted.  With the following change, no failed halts after
-many iterations.
----
- drivers/usb/dwc3/ep0.c    |  2 +-
- drivers/usb/dwc3/gadget.c | 59 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 57 insertions(+), 4 deletions(-)
+ net/socket.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
-index 59f2e8c31bd1..456aa87e8778 100644
---- a/drivers/usb/dwc3/ep0.c
-+++ b/drivers/usb/dwc3/ep0.c
-@@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
- 	int				ret;
- 
- 	spin_lock_irqsave(&dwc->lock, flags);
--	if (!dep->endpoint.desc) {
-+	if (!dep->endpoint.desc || !dwc->pullups_connected) {
- 		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
- 				dep->name);
- 		ret = -ESHUTDOWN;
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 3ab6f118c508..1f981942d7f9 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1516,7 +1516,7 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
+diff --git a/net/socket.c b/net/socket.c
+index dbbe8ea7d395da..b4e65688915fe3 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3638,7 +3638,11 @@ EXPORT_SYMBOL(kernel_getpeername);
+ int kernel_sendpage(struct socket *sock, struct page *page, int offset,
+ 		    size_t size, int flags)
  {
- 	struct dwc3		*dwc = dep->dwc;
- 
--	if (!dep->endpoint.desc) {
-+	if (!dep->endpoint.desc || !dwc->pullups_connected) {
- 		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
- 				dep->name);
- 		return -ESHUTDOWN;
-@@ -1926,6 +1926,24 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
- 	return 0;
- }
- 
-+static void dwc3_stop_active_transfers(struct dwc3 *dwc)
-+{
-+	u32 epnum;
-+
-+	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
-+		struct dwc3_ep *dep;
-+
-+		dep = dwc->eps[epnum];
-+		if (!dep)
-+			continue;
-+
-+		if (!(dep->flags & DWC3_EP_ENABLED))
-+			continue;
-+
-+		dwc3_remove_requests(dwc, dep);
-+	}
-+}
-+
- static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
- {
- 	u32			reg;
-@@ -1950,16 +1968,37 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
- 
- 		dwc->pullups_connected = true;
- 	} else {
-+		dwc->pullups_connected = false;
-+
-+		__dwc3_gadget_ep_disable(dwc->eps[0]);
-+		__dwc3_gadget_ep_disable(dwc->eps[1]);
-+
-+		/*
-+		 * The databook explicitly mentions for a device-initiated
-+		 * disconnect sequence, the SW needs to ensure that it ends any
-+		 * active transfers.
-+		 */
-+		dwc3_stop_active_transfers(dwc);
-+
- 		reg &= ~DWC3_DCTL_RUN_STOP;
- 
- 		if (dwc->has_hibernation && !suspend)
- 			reg &= ~DWC3_DCTL_KEEP_CONNECT;
--
--		dwc->pullups_connected = false;
- 	}
- 
- 	dwc3_gadget_dctl_write_safe(dwc, reg);
- 
-+	/* Controller is not halted until pending events are acknowledged */
-+	if (!is_on) {
-+		reg = dwc3_readl(dwc->regs, DWC3_GEVNTCOUNT(0));
-+		reg &= DWC3_GEVNTCOUNT_MASK;
-+		if (reg > 0) {
-+			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), reg);
-+			dwc->ev_buf->lpos = (dwc->ev_buf->lpos + reg) %
-+						dwc->ev_buf->length;
-+		}
-+	}
-+
- 	do {
- 		reg = dwc3_readl(dwc->regs, DWC3_DSTS);
- 		reg &= DWC3_DSTS_DEVCTRLHLT;
-@@ -1994,9 +2033,15 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
- 		}
- 	}
- 
-+	/*
-+	 * Synchronize and disable any further event handling while controller
-+	 * is being enabled/disabled.
+-	if (sock->ops->sendpage)
++	/* sendpage does manipulates the refcount of the sent in page, which
++	 * does not work for Slab pages, or for tails of non-__GFP_COMP
++	 * high order pages.
 +	 */
-+	disable_irq(dwc->irq_gadget);
- 	spin_lock_irqsave(&dwc->lock, flags);
- 	ret = dwc3_gadget_run_stop(dwc, is_on, false);
- 	spin_unlock_irqrestore(&dwc->lock, flags);
-+	enable_irq(dwc->irq_gadget);
++	if (sock->ops->sendpage && !PageSlab(page) && page_count(page) > 0)
+ 		return sock->ops->sendpage(sock, page, offset, size, flags);
  
- 	return ret;
- }
-@@ -3535,6 +3580,14 @@ static irqreturn_t dwc3_check_event_buf(struct dwc3_event_buffer *evt)
- 	if (!count)
- 		return IRQ_NONE;
- 
-+	/* Controller is halted; ignore new/pending events */
-+	if (!dwc->pullups_connected) {
-+		dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), count);
-+		dwc->ev_buf->lpos = (dwc->ev_buf->lpos + count) %
-+					dwc->ev_buf->length;
-+		return IRQ_HANDLED;
-+	}
-+
- 	evt->count = count;
- 	evt->flags |= DWC3_EVENT_PENDING;
- 
+ 	return sock_no_sendpage(sock, page, offset, size, flags);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.28.0
 
