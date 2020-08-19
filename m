@@ -2,110 +2,233 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E253DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B740C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE07220772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUfV5Yv2"
+	by mail.kernel.org (Postfix) with ESMTP id 6A61720772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHSHya (ORCPT
+        id S1726751AbgHSHyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgHSHy3 (ORCPT
+        Wed, 19 Aug 2020 03:54:44 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:55191 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726342AbgHSHye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:54:29 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C06C061389;
-        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id i10so5458426pgk.1;
-        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
-        b=YUfV5Yv2LLHOkYYtkzy81GZYkI754KspfwgvN8IHMM/uLtIrAFaqgi207aSOIRwAkL
-         UX9rSUoMVKZ/K+kv4DE4JrZWd+gLvJFcWnP4VMlRxU8feWyWOOfEF1DhroSkt7ooZdvU
-         DJzaTeJVvVn4dOscNdc/W/2m8WKJWSxfBDNSr6BUlcujKN+ix8ycxeTiCuV5rhejzkbc
-         /HgsIUcoKnJqkUTjDofjwqdwm7uRFrOYI1laVE4zaVMO/kAQ11OPJo9wSdSkECLr5wgF
-         G6VwgMIfoLQ/q20kPpEeSR0yQksqL3mQTlQ/MEUP1zswhMtJ/57zeq6xo4AOt/Xvv7Nm
-         JJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
-        b=ufZVrdWFRNXRdJgMT4Kj96bvSLLGpoBzp38VfOKgl1ecOgahLW/lLb0oDQqGa+v/2s
-         supn+mDuo4vcuElg28nfucZ3EEmX0JSxC3RYro6ibx6bxsERrvuiOq+IFkKrRi2rm9sy
-         v9eWdNJ78Vui0yHhyB8yE1o+VkuoTT0OdnF9pFP50dYoKJIZ1T77BxWSu4omgcb4bzU9
-         jiEyxFTod0zZDb6NO9G8oUmO+Oyxb4CDQkE9G/BC6xqOPRXD71X02Qj4PxLg3fFRFjX/
-         +H3GaIfxDZ7W/g4fbrBz0xNXSoDO+g9U6lgcAoMXvmb3ME+8Q+Id7IGaT2i45RwWEeiS
-         lMPw==
-X-Gm-Message-State: AOAM533+Q7AWGOQbVUXIfwtqw6GIMOyf5cBbCT/rC/LxQ16Vmnb4LpWt
-        Nl8cC8kfvprs5qJoY3PnMji22VM6WErKesI9vOxKjUJZagfvmw==
-X-Google-Smtp-Source: ABdhPJwACp1MR02sLehcTpPFfUhepYG7xdneExOXR2U4CUUcjuPq4pETeCnX+rbhFL6Wk9T8p7vqOqjoS/Kt4hMDTbg=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr17847033pfc.170.1597823668158;
- Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
+        Wed, 19 Aug 2020 03:54:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U6CdRlv_1597823666;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6CdRlv_1597823666)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 19 Aug 2020 15:54:28 +0800
+Subject: Re: [RFC PATCH v2 4/5] mm: Split release_pages work into 3 passes
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
+        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
+References: <20200819041852.23414.95939.stgit@localhost.localdomain>
+ <20200819042730.23414.41309.stgit@localhost.localdomain>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
+Date:   Wed, 19 Aug 2020 15:53:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
- <20200818083852.GC1891694@smile.fi.intel.com> <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
-In-Reply-To: <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 10:54:11 +0300
-Message-ID: <CAHp75VfDq7bRe6YQdUQyv=8jK737-QwpxZjGZ2HxCJ7iaQPwMg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200819042730.23414.41309.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:18 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Andy,
->
-> On 18/8/2020 4:38 pm, Andy Shevchenko wrote:
-> > On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
-> >> Patch 1 adds dt binding document in YAML format.
-> >> Patch 2 add PWM fan controller driver for LGM SoC.
-> >>
-> >> v7:
-> >> - Address code quality related review concerns.
-> >> - Rename fan related property to pwm-*.
-> >> - Fix one make dt_binding_check reported error.
-> > I guess it misses the answer why pwm-fan can't be integrated into the soup?
-> >
->
-> Can you please elaborate more? I could not understand your point clearly.
 
-It's not mine, it's Uwe's. There is an hwmon module called pwm-fan. As
-far as *I* understand this, it can be utilized to control fans via PWM
-APIs. And Uwe asked you if you considered that and why you don't
-integrated  (coupled) it here.
 
--- 
-With Best Regards,
-Andy Shevchenko
+在 2020/8/19 下午12:27, Alexander Duyck 写道:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> The release_pages function has a number of paths that end up with the
+> LRU lock having to be released and reacquired. Such an example would be the
+> freeing of THP pages as it requires releasing the LRU lock so that it can
+> be potentially reacquired by __put_compound_page.
+> 
+> In order to avoid that we can split the work into 3 passes, the first
+> without the LRU lock to go through and sort out those pages that are not in
+> the LRU so they can be freed immediately from those that can't. The second
+> pass will then go through removing those pages from the LRU in batches as
+> large as a pagevec can hold before freeing the LRU lock. Once the pages have
+> been removed from the LRU we can then proceed to free the remaining pages
+> without needing to worry about if they are in the LRU any further.
+> 
+> The general idea is to avoid bouncing the LRU lock between pages and to
+> hopefully aggregate the lock for up to the full page vector worth of pages.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> ---
+>  mm/swap.c |  109 +++++++++++++++++++++++++++++++++++++------------------------
+>  1 file changed, 67 insertions(+), 42 deletions(-)
+> 
+> diff --git a/mm/swap.c b/mm/swap.c
+> index fe53449fa1b8..b405f81b2c60 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -795,6 +795,54 @@ void lru_add_drain_all(void)
+>  }
+>  #endif
+>  
+> +static void __release_page(struct page *page, struct list_head *pages_to_free)
+> +{
+> +	if (PageCompound(page)) {
+> +		__put_compound_page(page);
+> +	} else {
+> +		/* Clear Active bit in case of parallel mark_page_accessed */
+> +		__ClearPageActive(page);
+> +		__ClearPageWaiters(page);
+> +
+> +		list_add(&page->lru, pages_to_free);
+> +	}
+> +}
+> +
+> +static void __release_lru_pages(struct pagevec *pvec,
+> +				struct list_head *pages_to_free)
+> +{
+> +	struct lruvec *lruvec = NULL;
+> +	unsigned long flags = 0;
+> +	int i;
+> +
+> +	/*
+> +	 * The pagevec at this point should contain a set of pages with
+> +	 * their reference count at 0 and the LRU flag set. We will now
+> +	 * need to pull the pages from their LRU lists.
+> +	 *
+> +	 * We walk the list backwards here since that way we are starting at
+> +	 * the pages that should be warmest in the cache.
+> +	 */
+> +	for (i = pagevec_count(pvec); i--;) {
+> +		struct page *page = pvec->pages[i];
+> +
+> +		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+
+the lock bounce is better with the patch, would you like to do further
+like using add_lruvecs to reduce bounce more?
+
+Thanks
+Alex
+
+> +		VM_BUG_ON_PAGE(!PageLRU(page), page);
+> +		__ClearPageLRU(page);
+> +		del_page_from_lru_list(page, lruvec, page_off_lru(page));
+> +	}
+> +
+> +	unlock_page_lruvec_irqrestore(lruvec, flags);
+> +
+> +	/*
+> +	 * A batch of pages are no longer on the LRU list. Go through and
+> +	 * start the final process of returning the deferred pages to their
+> +	 * appropriate freelists.
+> +	 */
+> +	for (i = pagevec_count(pvec); i--;)
+> +		__release_page(pvec->pages[i], pages_to_free);
+> +}
+> +
+>  /**
+>   * release_pages - batched put_page()
+>   * @pages: array of pages to release
+> @@ -806,32 +854,24 @@ void lru_add_drain_all(void)
+>  void release_pages(struct page **pages, int nr)
+>  {
+>  	int i;
+> +	struct pagevec pvec;
+>  	LIST_HEAD(pages_to_free);
+> -	struct lruvec *lruvec = NULL;
+> -	unsigned long flags;
+> -	unsigned int lock_batch;
+>  
+> +	pagevec_init(&pvec);
+> +
+> +	/*
+> +	 * We need to first walk through the list cleaning up the low hanging
+> +	 * fruit and clearing those pages that either cannot be freed or that
+> +	 * are non-LRU. We will store the LRU pages in a pagevec so that we
+> +	 * can get to them in the next pass.
+> +	 */
+>  	for (i = 0; i < nr; i++) {
+>  		struct page *page = pages[i];
+>  
+> -		/*
+> -		 * Make sure the IRQ-safe lock-holding time does not get
+> -		 * excessive with a continuous string of pages from the
+> -		 * same lruvec. The lock is held only if lruvec != NULL.
+> -		 */
+> -		if (lruvec && ++lock_batch == SWAP_CLUSTER_MAX) {
+> -			unlock_page_lruvec_irqrestore(lruvec, flags);
+> -			lruvec = NULL;
+> -		}
+> -
+>  		if (is_huge_zero_page(page))
+>  			continue;
+>  
+>  		if (is_zone_device_page(page)) {
+> -			if (lruvec) {
+> -				unlock_page_lruvec_irqrestore(lruvec, flags);
+> -				lruvec = NULL;
+> -			}
+>  			/*
+>  			 * ZONE_DEVICE pages that return 'false' from
+>  			 * put_devmap_managed_page() do not require special
+> @@ -848,36 +888,21 @@ void release_pages(struct page **pages, int nr)
+>  		if (!put_page_testzero(page))
+>  			continue;
+>  
+> -		if (PageCompound(page)) {
+> -			if (lruvec) {
+> -				unlock_page_lruvec_irqrestore(lruvec, flags);
+> -				lruvec = NULL;
+> -			}
+> -			__put_compound_page(page);
+> +		if (!PageLRU(page)) {
+> +			__release_page(page, &pages_to_free);
+>  			continue;
+>  		}
+>  
+> -		if (PageLRU(page)) {
+> -			struct lruvec *prev_lruvec = lruvec;
+> -
+> -			lruvec = relock_page_lruvec_irqsave(page, lruvec,
+> -									&flags);
+> -			if (prev_lruvec != lruvec)
+> -				lock_batch = 0;
+> -
+> -			VM_BUG_ON_PAGE(!PageLRU(page), page);
+> -			__ClearPageLRU(page);
+> -			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+> +		/* record page so we can get it in the next pass */
+> +		if (!pagevec_add(&pvec, page)) {
+> +			__release_lru_pages(&pvec, &pages_to_free);
+> +			pagevec_reinit(&pvec);
+>  		}
+> -
+> -		/* Clear Active bit in case of parallel mark_page_accessed */
+> -		__ClearPageActive(page);
+> -		__ClearPageWaiters(page);
+> -
+> -		list_add(&page->lru, &pages_to_free);
+>  	}
+> -	if (lruvec)
+> -		unlock_page_lruvec_irqrestore(lruvec, flags);
+> +
+> +	/* flush any remaining LRU pages that need to be processed */
+> +	if (pagevec_count(&pvec))
+> +		__release_lru_pages(&pvec, &pages_to_free);
+>  
+>  	mem_cgroup_uncharge_list(&pages_to_free);
+>  	free_unref_page_list(&pages_to_free);
+> 
