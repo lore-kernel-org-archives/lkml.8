@@ -2,105 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DBEC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6115FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6FD7206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597840761;
-	bh=oU4fUw6vl4UMkNIs900sKrstpOaYw5m2pOKrcC8L/GI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RR1umhFpjD/BUP7s7AaraxtHah/W1ssNvJ/MFFvwVXbklLgvpLAk3PUo5VF3ImVgX
-	 GuUdo8bXaKr69WnxGpGo7JICVyxo7dZCZYQlYuH/l2SjMoM+vNzdRK5KW8Y3+wQJi6
-	 QO0obDcXlEWHtTgbOsCPppOoyoSIy3G6WvNnEVTw=
+	by mail.kernel.org (Postfix) with ESMTP id 259F52072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgHSMjU convert rfc822-to-8bit (ORCPT
+        id S1728073AbgHSMj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:39:20 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38044 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgHSMjT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:39:19 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i6so17955330edy.5;
-        Wed, 19 Aug 2020 05:39:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hTw2sWzwayGISAZUjT4D4j7guwIbk9vIXMLy3pbTGZ8=;
-        b=lwUUs6t0GAIvKdZ8aSPR/6WcaxQNRYvlhvCOvNafzPU3zpszpW09hmZ8Q0fD8qd0Rl
-         /9sUUcl8616Z++DjxKtC+mGUWgw2Y2UI75XxlppAeP2GMKb9i4pVdNpo3eUm/+q30jvW
-         n2DKGYCtdh/AnpbR9UqIH0/pjMWQiCDdvGJfNwVY6hIjdUrUfyZNq9naTiXrmed3me7f
-         szZdaDhuBhrmQc4Uye2/4lnJquh6a8h1Dxr6HTixE/xrcAtBShc6wVn+giiyTML1SUkR
-         7L58aLLpnZjjTx5l72AcBX1rO+dvOZicfreNGvhqEQ15RDkx2lj2BQgC1+NJoVZRm/Fy
-         jRnA==
-X-Gm-Message-State: AOAM5317xYmYajWCnIMAbdncY1qJ8z31iPflB/q5STv525hX69vW9I1B
-        LERnaZVi0YtbLRwQNcQdjePEsdwfDw4maw==
-X-Google-Smtp-Source: ABdhPJxuggSaXMQsbu/dUwHlom1r9VoEEuF9AbVt23Mco9Zgt7BiVixNMa23Yh6PfBFkA+lL78lGtQ==
-X-Received: by 2002:a05:6402:84e:: with SMTP id b14mr23868240edz.115.1597840757786;
-        Wed, 19 Aug 2020 05:39:17 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m13sm17919402edi.89.2020.08.19.05.39.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 05:39:17 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:39:14 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 2/8] spi: spi-s3s64xx: Add S3C64XX_SPI_QUIRK_CS_AUTO for
- Exynos3250
-Message-ID: <20200819123914.GC18122@kozik-lap>
-References: <20200819123208.12337-1-l.stelmach@samsung.com>
- <CGME20200819123226eucas1p2f4be625abd7ddaac2f09bdf94395346b@eucas1p2.samsung.com>
- <20200819123208.12337-3-l.stelmach@samsung.com>
+        Wed, 19 Aug 2020 08:39:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49532 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbgHSMjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:39:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A35C5AF92;
+        Wed, 19 Aug 2020 12:40:07 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 14:39:40 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1 03/11] mm/memory_hotplug: simplify checking if all
+ pages are isolated in offline_pages()
+Message-ID: <20200819123940.GG5422@dhcp22.suse.cz>
+References: <20200819101157.12723-1-david@redhat.com>
+ <20200819101157.12723-4-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200819123208.12337-3-l.stelmach@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200819101157.12723-4-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:32:02PM +0200, Łukasz Stelmach wrote:
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+On Wed 19-08-20 12:11:49, David Hildenbrand wrote:
+> We make sure that we cannot have any memory holes right at the beginning
+> of offline_pages(). We no longer need walk_system_ram_range() and can
+> call test_pages_isolated() directly.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Add a quirk - why? There is here no commit msg, no explanation.
-
-Best regards,
-Krzysztof
-
+Acked-by: Michal Hocko <mhocko@suse.com>
 
 > ---
->  drivers/spi/spi-s3c64xx.c | 1 +
->  1 file changed, 1 insertion(+)
+>  mm/memory_hotplug.c | 16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
 > 
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index fb5e2ba4b6b9..8fe44451d303 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -1372,6 +1372,7 @@ static struct s3c64xx_spi_port_config exynos4_spi_port_config = {
->  	.tx_st_done	= 25,
->  	.high_speed	= true,
->  	.clk_from_cmu	= true,
-> +	.quirks		=  S3C64XX_SPI_QUIRK_CS_AUTO,
->  };
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 6856702af68d9..f64478349148d 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1384,17 +1384,6 @@ offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+>  	return 0;
+>  }
 >  
->  static struct s3c64xx_spi_port_config exynos7_spi_port_config = {
+> -/*
+> - * Check all pages in range, recorded as memory resource, are isolated.
+> - */
+> -static int
+> -check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
+> -			void *data)
+> -{
+> -	return test_pages_isolated(start_pfn, start_pfn + nr_pages,
+> -				   MEMORY_OFFLINE);
+> -}
+> -
+>  static int __init cmdline_parse_movable_node(char *p)
+>  {
+>  	movable_node_enabled = true;
+> @@ -1579,10 +1568,7 @@ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+>  			reason = "failure to dissolve huge pages";
+>  			goto failed_removal_isolated;
+>  		}
+> -		/* check again */
+> -		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> -					    NULL, check_pages_isolated_cb);
+> -	} while (ret);
+> +	} while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
+>  
+>  	/* Ok, all of our target is isolated.
+>  	   We cannot do rollback at this point. */
 > -- 
 > 2.26.2
-> 
+
+-- 
+Michal Hocko
+SUSE Labs
