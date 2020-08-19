@@ -2,104 +2,143 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FDEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9472620866
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01C320888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ER65C1q9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hf88cTNZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZZUocbmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgHSNc4 (ORCPT
+        id S1728519AbgHSNdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:32:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbgHSNcL (ORCPT
+        Wed, 19 Aug 2020 09:33:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39322 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728477AbgHSNdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:32:11 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D7DBC061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:32:10 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so10819016plz.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vMNQ6WK7crIn272Njmors6Hr7L8KSr+wNL70fKp0QVw=;
-        b=ER65C1q9ts0AvzjOkb5ItKsKgaGf+Stame9zTWvpH+W/eE3pfo8xbS5mVPX+ux1tp4
-         NnqiJa1D6gM8lTIj0O0HudUaGnj0E72mbY46MdQo0gUKnYT/X7JR2uBAfGJ6BX73fswg
-         mz+ZnPuT//vA4XteJ1mIJJfslSpiUu/LMXb14SvmTVML0uYnjnbvtvxYQqaHsO+HxWBS
-         IsOX8kKXxfhQyYqVMKMcX58hvz9rTRCncpiIVTpkjkvttRIwOJnxucHhfMfHPPOiYIrs
-         2NppMs6yKeZg/M2sJLG2KbPtsdsP7PKPWqP6giZHx6k1lh8oM+b8D8GrCwmeMnffJjmR
-         2ZTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vMNQ6WK7crIn272Njmors6Hr7L8KSr+wNL70fKp0QVw=;
-        b=C7SxjTxa9oSn85D74YqJan5jK0hha9VzJHkC6PY/mbrC5zd46t6Wxhc1prrB7qOb5N
-         ZQf0SWBA3GaFB6pvTtJuJZw+GKsAgH5zmND4mlsV1Qdbkc8iDau9MfDIEgsI7b5SCoHd
-         6Nl5DOKL6EaLNAZeVNFoOdTwzYbJLcxtfhVLDP2iDI2CaAnnbtc6T6RYS/l+JEk7pHFM
-         SmRx3c9EjMQwdTT+PndLLbloXlfPvkdpWyC//o+Nok9xFMNJ3SH2aSCiA4IlBLvUdeYT
-         8768FvLrAySgee3lyInFuxt+gVs1yURJEpReyFoyw7HeDbcPh2zC5uh9jQtkWobr+fFv
-         4GYw==
-X-Gm-Message-State: AOAM531RSrt/eoIWidDilRf5Gl4tyqhGwiE1fcYA+QT4evzGX1c86oOX
-        1QyZMiJQW50XFhPPXA2cBX1HZ7jrcrXThDas
-X-Google-Smtp-Source: ABdhPJykv40VOJjwPlf0c0xhI2b3f3WFmQQZcnLGRKru6GMjGBGKeeJCa2+T+ArRdO1dlue8HV8LYw==
-X-Received: by 2002:a17:902:6a8b:: with SMTP id n11mr5310699plk.75.1597843929467;
-        Wed, 19 Aug 2020 06:32:09 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id fa14sm2190486pjb.14.2020.08.19.06.32.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 06:32:08 -0700 (PDT)
-Subject: Re: [PATCH] rbd: Convert to use the preferred fallthrough macro
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Miaohe Lin <linmiaohe@huawei.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200819085304.43653-1-linmiaohe@huawei.com>
- <1968d5b6-3543-a213-4118-9c36f9a48343@kernel.dk>
- <CAOi1vP85Jkc51LStsg9Mz0Q0W-s17LcOmvavc=k_X9KF9ML_2A@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <338ecba5-c0ea-bdc0-1bcb-5b739f90cf9f@kernel.dk>
-Date:   Wed, 19 Aug 2020 07:32:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 09:33:24 -0400
+Date:   Wed, 19 Aug 2020 15:33:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597844001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j26P1hmMzhjjiQWadqBC++aWmgqGQBIpscfoookHO7c=;
+        b=hf88cTNZ1SOB3MaTW01c8emUFzoah0YdeFMG/8cV/LEODUBIeo3Qd+vjeBXJGfjyk/Mnx0
+        YnVyb1ms3B8gG1aEGlYvyntvLsIk1LZGaWrx4Ibf8fX/LpyF9PkqHe/gdR8DAMjB9QaVu9
+        kUk7ZSVf8757vmPHfipJZ81z9gVQ4ZDNIBKfGP9RH8SfrWT/MtozhHHzgc+VEWIVDdmg6r
+        Df4Zx4EgWutcPWWZFay/EIeP8K9hd9Lll6HLcNMsSyzcol6maG4F/zCkfGnykgdCOkf8Ze
+        NdqpPtyzyfgjKpMKZ9Di5lCesYXOCK83mPtTnxDOAuvr3erbpBjZHRuROhqKEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597844001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j26P1hmMzhjjiQWadqBC++aWmgqGQBIpscfoookHO7c=;
+        b=ZZUocbmvcwrAvDla1gFf7SNVdsVvxiO2q9egKN5TAEkys7fV0dn7MTVc4cWNIcmkYA86h3
+        nqQo3FccIQ6Cf8Aw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
+ preemption
+Message-ID: <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
+References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
+ <20200819131507.GC2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAOi1vP85Jkc51LStsg9Mz0Q0W-s17LcOmvavc=k_X9KF9ML_2A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200819131507.GC2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 6:31 AM, Ilya Dryomov wrote:
-> On Wed, Aug 19, 2020 at 3:03 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 8/19/20 1:53 AM, Miaohe Lin wrote:
->>> Convert the uses of fallthrough comments to fallthrough macro.
->>
->> Applied, thanks.
-> 
-> Hi Jens,
-> 
-> This has already been folded into another patch in ceph-client.git.
-> Please drop it.
+On 2020-08-19 15:15:07 [+0200], peterz@infradead.org wrote:
 
-Dropped.
+> > -	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+> > +	if (tsk->flags & PF_WQ_WORKER) {
+> >  		preempt_disable();
+> > -		if (tsk->flags & PF_WQ_WORKER)
+> > -			wq_worker_sleeping(tsk);
+> > -		else
+> > -			io_wq_worker_sleeping(tsk);
+> > +		wq_worker_sleeping(tsk);
+> >  		preempt_enable_no_resched();
+> >  	}
+> > =20
+> >  	if (tsk_is_pi_blocked(tsk))
+> >  		return;
+> > =20
+> > +	if (tsk->flags & PF_IO_WORKER)
+> > +		io_wq_worker_sleeping(tsk);
+> > +
+>=20
+> Urgh, so this adds a branch in what is normally considered a fairly hot
+> path.
+>=20
+> I'm thinking that the raw_spinlock_t option would permit leaving that
+> single:
+>=20
+> 	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER))
+>=20
+> branch intact?
 
--- 
-Jens Axboe
+The compiler generates code to test for both flags at once. If none of
+both possible flags are set then there is one branch (get out and bring
+me to tst_is_pi=E2=80=A6).
+And yes, with raw_spinlock_t we could keep that one branch.
 
+If you want to optimize further, we could move PF_IO_WORKER to an lower
+bit. x86 can test for both via
+(gcc-10)
+|         testl   $536870944, 44(%rbp)    #, _11->flags
+|         jne     .L1635  #,
+
+(clang-9)
+|         testl   $536870944, 44(%rbx)    # imm =3D 0x20000020
+|         je      .LBB112_6
+
+
+but ARM can't and does
+|          ldr     r1, [r5, #16]   @ tsk_3->flags, tsk_3->flags
+|         mov     r2, #32 @ tmp157,
+|         movt    r2, 8192        @ tmp157,
+|         tst     r2, r1  @ tmp157, tsk_3->flags
+|         beq     .L998           @,
+
+same ARM64
+|         ldr     w0, [x20, 60]   //, _11->flags
+|         and     w0, w0, 1073741792      // tmp117, _11->flags,
+|         and     w0, w0, -536870849      // tmp117, tmp117,
+|         cbnz    w0, .L453       // tmp117,
+
+using 0x10 for PF_IO_WORKER instead will turn this into:
+|         ldr     w0, [x20, 60]   //, _11->flags
+|         tst     w0, 48  // _11->flags,
+|         bne     .L453           //,
+
+ARM:
+|         ldr     r2, [r5, #16]   @ tsk_3->flags, tsk_3->flags
+|         tst     r2, #48 @ tsk_3->flags,
+|         beq     .L998           @,
+
+Sebastian
