@@ -2,125 +2,97 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D44AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2492FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F74206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093DE206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHSI4S (ORCPT
+        id S1726482AbgHSI40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:56:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:58728 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHSIys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:54:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30EB231B;
-        Wed, 19 Aug 2020 01:54:47 -0700 (PDT)
-Received: from [192.168.1.179] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C32DD3F6CF;
-        Wed, 19 Aug 2020 01:54:45 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/5] KVM: arm64: Add pvtime LPT support
-To:     Marc Zyngier <maz@kernel.org>, Keqian Zhu <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        wanghaibin.wang@huawei.com
-References: <20200817084110.2672-1-zhukeqian1@huawei.com>
- <8308f52e4c906cad710575724f9e3855@kernel.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <f14cfd5b-c103-5d56-82fb-59d0371c6f21@arm.com>
-Date:   Wed, 19 Aug 2020 09:54:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 04:56:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9846 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726931AbgHSIyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:54:25 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 67E7A8AE543F7D26D4D6;
+        Wed, 19 Aug 2020 16:54:17 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 16:54:09 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <idryomov@gmail.com>, <axboe@kernel.dk>,
+        <dongsheng.yang@easystack.cn>
+CC:     <ceph-devel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] rbd: Convert to use the preferred fallthrough macro
+Date:   Wed, 19 Aug 2020 04:53:04 -0400
+Message-ID: <20200819085304.43653-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <8308f52e4c906cad710575724f9e3855@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/08/2020 15:41, Marc Zyngier wrote:
-> On 2020-08-17 09:41, Keqian Zhu wrote:
->> Hi all,
->>
->> This patch series picks up the LPT pvtime feature originally developed
->> by Steven Price: https://patchwork.kernel.org/cover/10726499/
->>
->> Backgroud:
->>
->> There is demand for cross-platform migration, which means we have to
->> solve different CPU features and arch counter frequency between hosts.
->> This patch series can solve the latter problem.
->>
->> About LPT:
->>
->> This implements support for Live Physical Time (LPT) which provides the
->> guest with a method to derive a stable counter of time during which the
->> guest is executing even when the guest is being migrated between hosts
->> with different physical counter frequencies.
->>
->> Changes on Steven Price's work:
->> 1. LPT structure: use symmatical semantics of scale multiplier, and use
->>    fraction bits instead of "shift" to make everything clear.
->> 2. Structure allocation: host kernel does not allocates the LPT 
->> structure,
->>    instead it is allocated by userspace through VM attributes. The 
->> save/restore
->>    functionality can be removed.
->> 3. Since LPT structure just need update once for each guest run, add a 
->> flag to
->>    indicate the update status. This has two benifits: 1) avoid 
->> multiple update
->>    by each vCPUs. 2) If the update flag is not set, then return NOT 
->> SUPPORT for
->>    coressponding guest HVC call.
->> 4. Add VM device attributes interface for userspace configuration.
->> 5. Add a base LPT read/write layer to reduce code.
->> 6. Support ptimer scaling.
->> 7. Support timer event stream translation.
->>
->> Things need concern:
->> 1. https://developer.arm.com/docs/den0057/a needs update.
-> 
-> LPT was explicitly removed from the spec because it doesn't really
-> solve the problem, specially for the firmware: EFI knows
-> nothing about this, for example. How is it going to work?
-> Also, nobody was ever able to explain how this would work for
-> nested virt.
-> 
-> ARMv8.4 and ARMv8.6 have the feature set that is required to solve
-> this problem without adding more PV to the kernel.
+Convert the uses of fallthrough comments to fallthrough macro.
 
-Hi Marc,
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ drivers/block/rbd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-These are good points, however we do still have the situation that CPUs 
-that don't have ARMv8.4/8.6 clearly cannot implement this. I presume the 
-use-case Keqian is looking at predates the necessary support in the CPU 
-- Keqian if you can provide more details on the architecture(s) involved 
-that would be helpful.
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index d9c0e7d154f9..011539039693 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -3293,7 +3293,7 @@ static bool rbd_obj_advance_copyup(struct rbd_obj_request *obj_req, int *result)
+ 	case __RBD_OBJ_COPYUP_OBJECT_MAPS:
+ 		if (!pending_result_dec(&obj_req->pending, result))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case RBD_OBJ_COPYUP_OBJECT_MAPS:
+ 		if (*result) {
+ 			rbd_warn(rbd_dev, "snap object map update failed: %d",
+@@ -3312,7 +3312,7 @@ static bool rbd_obj_advance_copyup(struct rbd_obj_request *obj_req, int *result)
+ 	case __RBD_OBJ_COPYUP_WRITE_OBJECT:
+ 		if (!pending_result_dec(&obj_req->pending, result))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case RBD_OBJ_COPYUP_WRITE_OBJECT:
+ 		return true;
+ 	default:
+@@ -3399,7 +3399,7 @@ static bool rbd_obj_advance_write(struct rbd_obj_request *obj_req, int *result)
+ 	case __RBD_OBJ_WRITE_COPYUP:
+ 		if (!rbd_obj_advance_copyup(obj_req, result))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case RBD_OBJ_WRITE_COPYUP:
+ 		if (*result) {
+ 			rbd_warn(rbd_dev, "copyup failed: %d", *result);
+@@ -3592,7 +3592,7 @@ static bool rbd_img_advance(struct rbd_img_request *img_req, int *result)
+ 	case __RBD_IMG_OBJECT_REQUESTS:
+ 		if (!pending_result_dec(&img_req->pending, result))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case RBD_IMG_OBJECT_REQUESTS:
+ 		return true;
+ 	default:
+-- 
+2.19.1
 
-Nested virt is indeed more of an issue - we did have some ideas around 
-using SDEI that never made it to the spec. However I would argue that 
-the most pragmatic approach would be to not support the combination of 
-nested virt and LPT. Hopefully that can wait until the counter scaling 
-support is available and not require PV.
-
-We are discussing (re-)releasing the spec with the LPT parts added. If 
-you have fundamental objections then please me know.
-
-Thanks,
-
-Steve
