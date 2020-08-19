@@ -2,102 +2,97 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE1BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89414C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43419207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EEC2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KJecqVZ9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkyFs4wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHSVOz (ORCPT
+        id S1727116AbgHSVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
+        Wed, 19 Aug 2020 17:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgHSVOy (ORCPT
+        with ESMTP id S1726646AbgHSVQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:14:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542AAC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:14:54 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g15so9685plj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:14:54 -0700 (PDT)
+        Wed, 19 Aug 2020 17:16:46 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1014CC061757;
+        Wed, 19 Aug 2020 14:16:45 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b30so12806701lfj.12;
+        Wed, 19 Aug 2020 14:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+umGhDcbGIZE1xFjxqU0bxabGlCttQLBQ+Y53ytOqC0=;
-        b=KJecqVZ9hLXEAzJJNx3+s6VztJjf7IdAGVe1xvxkaR3MIOOrRYV+x5q4PkAmG97E47
-         c9AfgbCo5kEgRCZ8hdbUxNjLSW4rUHKYJHgBYeI3No9tx1HVqRlWqvIUn26TUA+AX14V
-         oI6hp4R03d/+IOM+djlJ6fbgWl+wRl5B/Ynr1CRdTtUZSJ7mP1IA3WAWXKZbcoVTHxky
-         HJaON41XS9BzhwFiIwRDESb3MP5Zr4dLmn8S7gctlrq5qeF7GH/LTAl44vjXwKCSwhDZ
-         tdBh+2voGT5VV/9cixVn2JjqYAj65P2LXuMvq6ETnzRPAreAd+K1RuNRDQZm6Ax6r9/r
-         2LUg==
+         :cc:content-transfer-encoding;
+        bh=xg5qNlyjDK4H9Bsa0SxjBV5q9nAUK79Dx84r0nHodF4=;
+        b=DkyFs4wxFzSvzO4KjO65oA/ou2mXckXka5g3fyo0dbU9Vr/+/dDyHO26PGm+ml2ntA
+         GBNoxFHh+7q4p0nEysDmUqICgy1Q7zm/3QuTWU9ehTGesdI0KXYSWGtzprLuJnmtYmpB
+         DjZ9EoGtZtYpThn8JxUG/fLDCNWQcayQp+oHSIwKjFuEaDAIPp8+loSp6wOLwrEVS4zc
+         kKVNHg0dd/TngzHF19ba3/r4vH982TrZSppzaRLw1xPpo9f7XHsxZ0TmrQRijsptKBAu
+         Za9nHvu+NGKsW2ueisNClpaQVTlQIaGb+XdoiygCwYItOje/uT65x7TMmkLGve0982a7
+         yMMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+umGhDcbGIZE1xFjxqU0bxabGlCttQLBQ+Y53ytOqC0=;
-        b=gtCCA2TKHsdwgLuKGPLcgmqWq24LsRyQHbaEQFEVYwReMaVocsgeFECmfe0+MtqUPy
-         j1zoIQRinNe8+IB5RCUfDhRLpGXvIcs/kbnvG87KDTdJx/7yyq27+Xo2ewqozDixiQqK
-         9RlQgYCYVa/p+yMqA8JW9nHCScmwvSUV9tfhpj1cXDWpXcoHZV1coMFtRkOkw4+TuWhf
-         SUl39zz95ypmdkRFYL06P1eujkAt+D1m+zZ5+r8U5A5BAPQCrAWgQPYCnkCoVPSj8Byh
-         FqmEcy7b1GdCt4r1TYvSfhk5x1eiRlo3YcTisaXw9QQyvuK9fFLtUOjfpr2flUqve94V
-         Q5zg==
-X-Gm-Message-State: AOAM532ycjB81T5DM5PbU85tuehNkQ8yGcW/velSD0f6rjc3JrCEBpOJ
-        D27iQQ+33mSdRbOjlvKEQ2F6LOXwiKpaddJ8lQIjhA==
-X-Google-Smtp-Source: ABdhPJxD98fjtFT8GxHwT05Ahp/1ulXZG6efUm0uXvNqB6cqEVXrUsqo9M64hDCvdg13zcl6KOod3fU3jP+YqsQ4JBs=
-X-Received: by 2002:a17:90a:4603:: with SMTP id w3mr1306384pjg.20.1597871693322;
- Wed, 19 Aug 2020 14:14:53 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xg5qNlyjDK4H9Bsa0SxjBV5q9nAUK79Dx84r0nHodF4=;
+        b=QBhsvokYhtUdHMwAwjdR+Gi1Apc1rVE3qIcfMiGxF+OHQdsShwd9qttWuvRqRb+LUm
+         NHnNTd20isYaw6+5YTXwKVDFoAnplQbyJz9xy3dJux2A95iR8w5Dy6JoNA0s+wTQp12L
+         1oVkO3ll4QzSDbHjU6EkqedECZXytKqZ8sc2onhfVPP8JQzfdQhzAJQ2xAY7NDN6rIXB
+         9qG8dgNpvjgDsX6ua1hRE+HzBa0SfN3rmrGHRFJtBuoptrErylQ4TWdMcpHW/w4ZDwI7
+         t4a1/ZWJLWFLehIkoxe/5bbNA7iRtD2Ra/ZZnXiY3BdFegER1mp2NCanhRe1uo6EeOnH
+         899g==
+X-Gm-Message-State: AOAM533E8jE83PKmzTBorVRWPfMdQb8eijBKLw2Pc23GzV4ODobcSz8W
+        NSAzSCBb7vxQAaWwN+Q2pLoerbmNmZvakkoEXFQ=
+X-Google-Smtp-Source: ABdhPJyGmgefAqX2JVKjpv6UI6kte9JS0c2dIxSnfGOXva/YnJe0UhsHDjklh9MQ3Vc9JxT2knWW4DConUyKAXVFI3o=
+X-Received: by 2002:a19:cc3:: with SMTP id 186mr27554lfm.134.1597871802486;
+ Wed, 19 Aug 2020 14:16:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200729192357.477350-1-vitor@massaru.org>
-In-Reply-To: <20200729192357.477350-1-vitor@massaru.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 19 Aug 2020 14:14:42 -0700
-Message-ID: <CAFd5g45rRMDD8=wQOzh+cGHEM4WJ=4vSu44W+4yPCFNFM2SB9A@mail.gmail.com>
-Subject: Re: [PATCH] lib: kunit: add list_sort test conversion to KUnit
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
+References: <20200819020027.4072288-1-zenczykowski@gmail.com>
+In-Reply-To: <20200819020027.4072288-1-zenczykowski@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Aug 2020 14:16:30 -0700
+Message-ID: <CAADnVQLAmaAcEnozc76DykkmbUA4Lc0-hcBAyCgroRzCwevmcg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] net-veth: add type safety to veth_xdp_to_ptr()
+ and veth_ptr_to_xdp()
+To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, elfring@users.sourceforge.net,
-        mhocko@suse.com
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:24 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
+On Tue, Aug 18, 2020 at 7:00 PM Maciej =C5=BBenczykowski
+<zenczykowski@gmail.com> wrote:
 >
-> This adds the conversion of the runtime tests of test_list_sort,
-> from `lib/test_list_sort.c` to KUnit tests.
+> From: Maciej =C5=BBenczykowski <maze@google.com>
 >
-> Please apply this commit first (linux-kselftest/kunit-fixes):
-> 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
+> This reduces likelihood of incorrect use.
 >
-> Code Style Documentation: [0]
->
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Link: [0] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
+> Test: builds
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+I kept this in the commit log though it's a pointless comment.
+Please reconsider for the future.
+If you want to mention how you've tested it, please say so after "---" line=
+.
 
-It would still be good to get some of the original authors/reviewers
-to review this.
+> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
+
+Applied. Thanks.
