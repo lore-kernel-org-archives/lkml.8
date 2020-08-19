@@ -2,114 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A93C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112B3C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36995207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S4cxq+/2"
+	by mail.kernel.org (Postfix) with ESMTP id CB313207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597866675;
+	bh=+9PyUvZ3wybE7lfEpYN+tNohs3uR30FSL8dtdEr777s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HLSoCAA8BpomQXnXMs1FfRX8cVO8l3Jqkc50mLJv71hxgsajO0JtrNpem3B7ix3Tl
+	 0TeLu1tjuM+svVGF+V7Xt4JStUdYCMkmK8ZZ2a3h/lrMYtNf0qIcRLaS01C7spPVQE
+	 LOc55rsGOSdQIiNqO+gQ33bbOV4PQQzAJMlKwFd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgHSTtr (ORCPT
+        id S1726861AbgHSTvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSTto (ORCPT
+        Wed, 19 Aug 2020 15:51:15 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46148 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSTvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:49:44 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75219C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:49:44 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id h2so915272plr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=biruROHiIJoBrFPsYBUZoikKtJ2eCnO2qeHRGaltBcU=;
-        b=S4cxq+/23btjfJqTOIoctnTTrzafOwK+AK0UgBnnQJ8dzI+MER6IOpcF80ATe8N2VM
-         3GTBoqW6wrKt4PxIk6buBrFMN77DpQMMTMzZs5pTNOUYPq4oF3RR+l+eK/oWciHJ2CbD
-         tiCZSm8XQDLGtiHVzWXbaUgOid2o99jKItqIk=
+        Wed, 19 Aug 2020 15:51:14 -0400
+Received: by mail-ed1-f68.google.com with SMTP id t15so19072496edq.13;
+        Wed, 19 Aug 2020 12:51:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=biruROHiIJoBrFPsYBUZoikKtJ2eCnO2qeHRGaltBcU=;
-        b=eJ0bt8SQh4m39yGp2GIx2WtJHgLbDVOX5OLs4T/Xpmmn+hgk1L9sWTyNIG2UoP8t0R
-         XeS+gfdSl1iFgREZUjvBqFYKpsadLl2M0JYpbWleoQvN8Z0O9bxpj5EVkf/xS+Uq8n7W
-         O5hp2nQn5s1FGLjhJeNfQmaW7FkEn08B1B0PTFRrmMUit2CTWUxsV4cq2k+WP2w7PcKn
-         stC1Gk1RZRp/hKvZMq+FrVcJjOoOO1k6szTUz9kbQPWg/wkfVVfQYu3zlizBfVNmuioZ
-         MSB/9UTCyoLC54DVXcx4dtoPAsDFBxvjE8/V7iXWNTuWnvYqDrElPTz8Um4zcEW1JZvG
-         wt6A==
-X-Gm-Message-State: AOAM533vEicQK8oZupNXyFJ6ATOQVg1+ZAxz0HtWCTTYGMUjxzAWTSHv
-        +FzCsQ7dvqwlAS+WxlJDVs0qGA==
-X-Google-Smtp-Source: ABdhPJwurA8GPQepaNU2riEn7gHqyBjnaoiGi8guJwsjtYM8I8F+E56yfB75AYB7nT5y26qpRqUmpw==
-X-Received: by 2002:a17:902:7d94:: with SMTP id a20mr19921995plm.174.1597866584026;
-        Wed, 19 Aug 2020 12:49:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u3sm3009933pjn.29.2020.08.19.12.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 12:49:43 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 12:49:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: mention documentation maintainer entry
- profile
-Message-ID: <202008191248.9C653130F@keescook>
-References: <20200815102658.12236-1-lukas.bulwahn@gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Bb7ExWmhyq/T0GrV/7A/j43KNL60oMDaO5uFv+AFuAg=;
+        b=LQr5YtTtOXyORJOqRO/zYTug6FM7xWhiDxL0qW434xxdJkgMOJC8Fhv491mM2nRiJi
+         mzAxEluLL2oWWCyC3MyfMNahKrmm09Or0JB3N5vqkpizcu3sZMxhkesiKMUxbg397eYA
+         S1Ij9yZdU0S6dWRvaItHeDdT4NwxMZGDYlKReaRpFJKZimh0kSZwEx102G+fjhu2v/aw
+         6bKNd+KyNc5HAyGNVEoSOI3Qr/L1NN6onXsKkMqblM36mSICnNeWLXLVpGdr89VOs2XS
+         h5Cb+5L21xTjDxoq6G+G9VZZHogI1uQUhCv7tHHKuoVa0gsv6dyhfhOV4EUL7TFipLIl
+         9Oqg==
+X-Gm-Message-State: AOAM531IR+YUtubOAPjs9luZ/iHUZZGRO9G3RWwP8AfQCsV9OAIHbBJN
+        NiaedG9218QyKbTowtull0FnFSZFEas=
+X-Google-Smtp-Source: ABdhPJx7j3Lrm4/qFAWyj9HphpiOLZn+rlreZc+t2vrnccL41YTdGaaoZeU2eRxltKfnhqvLZP5zyg==
+X-Received: by 2002:aa7:cdd0:: with SMTP id h16mr26397727edw.116.1597866671520;
+        Wed, 19 Aug 2020 12:51:11 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id c5sm19332234ejb.103.2020.08.19.12.51.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 12:51:10 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 21:51:07 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Andi Shyti <andi@etezian.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 23/41] ARM: s3c24xx: move spi fiq handler into platform
+Message-ID: <20200819195107.GA10594@kozik-lap>
+References: <20200806181932.2253-1-krzk@kernel.org>
+ <20200806182059.2431-23-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200815102658.12236-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200806182059.2431-23-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 15, 2020 at 12:26:58PM +0200, Lukas Bulwahn wrote:
-> Since commit 53b7f3aa411b ("Add a maintainer entry profile for
-> documentation"), the documentation "subsystem" has a maintainer entry
-> profile, and it deserves to be mentioned in MAINTAINERS with a suitable
-> P: entry.
+On Thu, Aug 06, 2020 at 08:20:40PM +0200, Krzysztof Kozlowski wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> The fiq handler needs access to some register definitions that
+> should not be used directly by device drivers.
+> 
+> Since this is closely related to the irqchip driver anyway,
+> move it into the same place.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> [krzk: Add a header guard in include/linux/spi/s3c24xx-fiq.h, fix
+>       SPDX comment style, update maintainer's entry]
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
-> applies cleanly on docs-next, and was checkpatch-ed.
 > 
-> Jonathan, please pick this patch.
-> 
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f520202fa1ef..8aa1369d5926 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5178,6 +5178,7 @@ DOCUMENTATION
->  M:	Jonathan Corbet <corbet@lwn.net>
->  L:	linux-doc@vger.kernel.org
->  S:	Maintained
-> +P:	Documentation/doc-guide/maintainer-profile.rst
->  T:	git git://git.lwn.net/linux.git docs-next
->  F:	Documentation/
->  F:	scripts/documentation-file-ref-check
-> -- 
-> 2.17.1
+> Changes since v1:
+> 1. Add a header guard in include/linux/spi/s3c24xx-fiq.h,
+> 2. Fix SPDX comment style,
+> 3. Update maintainer's entry.
+> ---
+>  MAINTAINERS                                            |  1 +
+>  arch/arm/mach-s3c24xx/Makefile                         |  2 ++
+>  arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c        |  9 +++++++++
+>  .../arm/mach-s3c24xx/irq-s3c24xx-fiq.S                 |  2 +-
+>  drivers/spi/Makefile                                   |  1 -
+>  drivers/spi/spi-s3c24xx.c                              |  7 +------
+>  .../linux/spi/s3c24xx-fiq.h                            | 10 ++++++++++
+>  7 files changed, 24 insertions(+), 8 deletions(-)
+>  create mode 100644 arch/arm/mach-s3c24xx/irq-s3c24xx-fiq-exports.c
+>  rename drivers/spi/spi-s3c24xx-fiq.S => arch/arm/mach-s3c24xx/irq-s3c24xx-fiq.S (98%)
+>  rename drivers/spi/spi-s3c24xx-fiq.h => include/linux/spi/s3c24xx-fiq.h (66%)
 
-Oh excellent! I missed this file going in originally; I need to get
-similar done for seccomp, etc.
+Applied patches 1-23 to samsung-soc.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Best regards,
+Krzysztof
 
--- 
-Kees Cook
