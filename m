@@ -2,132 +2,136 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E391C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251C4207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXxWdcY4"
+	by mail.kernel.org (Postfix) with ESMTP id 9C4992083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHSUP1 (ORCPT
+        id S1726862AbgHSUT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:15:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42301 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725997AbgHSUP0 (ORCPT
+        Wed, 19 Aug 2020 16:19:28 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33664 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSUT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597868124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6wZSRsOZbW0ppoxwbf389BsXiaVqGjFLolCHa9KVfRI=;
-        b=YXxWdcY4HFERidCUvivy2lAFiT9sXrCtM0CK/AmL6kUoEWhaG+fIW4x0YTqvfVAYBzQklc
-        I2Embfj6ifM2Q14ueEhocZGy3f4hZj2HwTUbfF5HcbhHUSrnAzFaKmBv7gLIYJkJg86X52
-        JzjR4gxWQOcdUSJasVNzKl9Tlo6g25I=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-X3vWWMcLNg6XKdITSWTFnQ-1; Wed, 19 Aug 2020 16:15:22 -0400
-X-MC-Unique: X3vWWMcLNg6XKdITSWTFnQ-1
-Received: by mail-pj1-f72.google.com with SMTP id e2so2084101pjm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:15:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6wZSRsOZbW0ppoxwbf389BsXiaVqGjFLolCHa9KVfRI=;
-        b=OqtMZq7aMchOFdiqWlG4fCq+dvdmnJ7VbqOhLDeJar04E1xT+UDHOGzyAbmrKdM/XO
-         pVZhuE+SdwWhpyQhP9U4UNl43pbhJbMIZDWRi3iG3gFQKMqqJPlveChp8vM1GsfhxkbS
-         aWlui3pKW+KncGltfGr/fXYZsDeTKRaOSZ1GKCNEev53hvkbc3L0gB5E1XErrTLuA/5x
-         bvc/Jrq719M73ktGQJ6ZZDFn1VbXTgYufWjimJqYfddSLNi5Q2LDNbjKLgPP8G7Cnou1
-         6LLtI2l+ZH7NyCmBCJ4ZwY7E6OKhEdG/Jg1RqyRxG5VxA3lmZwGphXKIlD9jV/z7DNve
-         UJhQ==
-X-Gm-Message-State: AOAM533V/SzC1OM0YVV/jiyUqg+E+3CqK0yKtG/X6ojffEC4wPxhvMn7
-        v3XZcRYfBSqdv+T3V+ytFuOarSe/adXpRNYplZnLPd3UgHq6uD6/tZs0rIBwt4+/NlSiGsf4H1x
-        3Deuv1N4gIReaua0UXpySpUq1
-X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5515130pjb.129.1597868121452;
-        Wed, 19 Aug 2020 13:15:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxZ6K3xi/zuEXaLDp+AhVXh18fIyTkt9TT32R+RhUbJpOr/tX/cuBKSRunO6DGE9U7OgqK+kw==
-X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5515108pjb.129.1597868121185;
-        Wed, 19 Aug 2020 13:15:21 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id s125sm56651pfc.63.2020.08.19.13.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 13:15:20 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 04:15:09 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Rafael Aquini <aquini@redhat.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by
- mistake
-Message-ID: <20200819201509.GA26216@xiangao.remote.csb>
-References: <20200819195613.24269-1-hsiangkao@redhat.com>
- <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
+        Wed, 19 Aug 2020 16:19:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id C89E11C0BD2; Wed, 19 Aug 2020 22:19:22 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 22:19:22 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
+ mainline
+Message-ID: <20200819201922.GA4223@amd>
+References: <20200817161132.GA4711@amd>
+ <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
+ <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
+ <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Content-Disposition: inline
-In-Reply-To: <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
 
-On Wed, Aug 19, 2020 at 01:05:06PM -0700, Andrew Morton wrote:
-> On Thu, 20 Aug 2020 03:56:13 +0800 Gao Xiang <hsiangkao@redhat.com> wrote:
-> 
-> > SWP_FS doesn't mean the device is file-backed swap device,
-> > which just means each writeback request should go through fs
-> > by DIO. Or it'll just use extents added by .swap_activate(),
-> > but it also works as file-backed swap device.
-> 
-> This is very hard to understand :(
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your reply...
+On Tue 2020-08-18 18:59:27, Linus Torvalds wrote:
+> On Tue, Aug 18, 2020 at 6:13 PM Dave Airlie <airlied@gmail.com> wrote:
+> >
+> > I think there's been some discussion about reverting that change for
+> > other reasons, but it's quite likely the culprit.
+>=20
+> Hmm. It reverts cleanly, but the end result doesn't work, because of
+> other changes.
+>=20
+> Reverting all of
+>=20
+>    763fedd6a216 ("drm/i915: Remove i915_gem_object_get_dirty_page()")
+>    7ac2d2536dfa ("drm/i915/gem: Delete unused code")
+>    9e0f9464e2ab ("drm/i915/gem: Async GPU relocations only")
+>=20
+> seems to at least build.
+>=20
+> Pavel, does doing those three reverts make things work for you?
 
-The related logic is in __swap_writepage() and setup_swap_extents(),
-and also see e.g generic_swapfile_activate() or iomap_swapfile_activate()...
+Ok, so Chris' patches resulted in (less severe?) crash, let me try this.
 
-I will also talk with "Huang, Ying" in person if no response here.
+pavel@amd:/data/l/linux-next-32$ git reset --hard 8eb858df0a5f6bcd371b5d563=
+7255c987278b8c9
+HEAD is now at 8eb858df0a5f Add linux-next specific files for 20200819
+pavel@amd:/data/l/linux-next-32$ git revert 763fedd6a216
+Performing inexact rename detection: 100% (1212316/1212316), done.
+hint: Waiting for your editor to close the file... Editing file: /data/fast=
+/l/linux-next-32/.git/COMMIT_EDITMSG
+/home/pavel/bin/emacsf: line 3: ed: command not found
+[detached HEAD 261cbba627b7] Revert "drm/i915: Remove i915_gem_object_get_d=
+irty_page()"
+ 2 files changed, 18 insertions(+)
+pavel@amd:/data/l/linux-next-32$ git revert 7ac2d2536dfa
+warning: inexact rename detection was skipped due to too many files.
+warning: you may want to set your merge.renamelimit variable to at least 38=
+77 and retry the command.
+hint: Waiting for your editor to close the file... Editing file: /data/fast=
+/l/linux-next-32/.git/COMMIT_EDITMSG
+/home/pavel/bin/emacsf: line 3: ed: command not found
+[detached HEAD 526af90ea811] Revert "drm/i915/gem: Delete unused code"
+ 1 file changed, 19 insertions(+)
+pavel@amd:/data/l/linux-next-32$ git revert 9e0f9464e2ab
+warning: inexact rename detection was skipped due to too many files.
+warning: you may want to set your merge.renamelimit variable to at least 38=
+77 and retry the command.
+hint: Waiting for your editor to close the file... Editing file: /data/fast=
+/l/linux-next-32/.git/COMMIT_EDITMSG
+/home/pavel/bin/emacsf: line 3: ed: command not found
+[detached HEAD 173e46213949] Revert "drm/i915/gem: Async GPU relocations on=
+ly"
+ 2 files changed, 289 insertions(+), 27 deletions(-)
+pavel@amd:/data/l/linux-next-32$=20
 
-> 
-> > So in order to achieve the goal of the original patch,
-> > SWP_BLKDEV should be used instead.
-> > 
-> > FS corruption can be observed with SSD device + XFS +
-> > fragmented swapfile due to CONFIG_THP_SWAP=y.
-> > 
-> > Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
-> > Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
-> 
-> Why do you think it has taken three years to discover this?
+It is now running, it seems unison is the thing that usually triggers
+this (due to memory pressure?). This time it survived unison (but
+without chromium). I'll really know if it works in day or two.
 
-I'm not sure if the Redhat BZ is available for public, it can be reproduced
-since rhel 8
-https://bugzilla.redhat.com/show_bug.cgi?id=1855474
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-It seems hard to believe, but I think just because rare user uses the SSD device +
-THP + file-backed swap device combination... maybe I'm wrong here, but my test
-shows as it is.
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Gao Xiang
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> 
-> 
-> 
+iEYEARECAAYFAl89iUoACgkQMOfwapXb+vInZgCeJwrfwen+1LNTnJws2E90XF7F
+m+cAn1LRDlcRif/9uXoDiuT51fOb++gA
+=fqMj
+-----END PGP SIGNATURE-----
 
+--fUYQa+Pmc3FrFX/N--
