@@ -2,99 +2,80 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC7120772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0BR5IAJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8150520772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgHSH4R (ORCPT
+        id S1726854AbgHSH4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSH4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:56:14 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42903C061389
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:56:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g15so6530654plj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7wXztS79LI0rWMpxUVb3wcZ1sGeK3lVeAu+MbX7v32Q=;
-        b=t0BR5IAJOw2WzO8Nqa0Jmmc8W/3aVWOUlO/PxPBMtLPUAPs7Csuu+yDchyWEG2B+pl
-         lw/d0gaIhkEpQd/0j3QtJyt1jIZ20cARGfF48GYIgPO654a+MSPU3X5yEYEH0yRdzNnC
-         CAgzVjjiRC+TavgNmlK49lVRa5ObNP29oAVqrXNjs5Q89tTewfYH/T5b1CivasjGxkwd
-         2CcWEU+D3KPj3rxop1SdtwSyma+Auwzmi1a38DNCqs6yex5xH/jfpodgWRM7Om7WUQAa
-         GoAGHJcLUjma6gIGpEVGlnTx5EYgcNoYgEvdGMUR9vOVVAVXB7vr87PvBaMM4mvUafYY
-         CTWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7wXztS79LI0rWMpxUVb3wcZ1sGeK3lVeAu+MbX7v32Q=;
-        b=LKmlllkonIuEQcXIx8x82rFM80tVd+dH1CJrLG0FZd4vwNL9WB9D696bfEa0dpkwr3
-         3tnkGVUWKq0MgdxFgASDBkTbm2AoBGwxaTedkcAIuiqwBIf+SB0jWj73goac6n5iRIV/
-         U2NKXr5X+gSQZ/0EOUfQB/3M6sXwQkhoK97AG56vKN+oiJjCQEgdQLz2/kq0VC0fU8p6
-         y5RtxJEI1cE1xF+3cR9FKhVxi3aFG4QTEPiv0B1AuVXeVX4wE9pHOUFDpgaA8Tcb9kE/
-         3QTg3GMFOOTixeZqCH4GU9GQygSX9L4fJYwH2AuGkBjSFBxq2oytC5KiKxrQRwp97bd4
-         tSbA==
-X-Gm-Message-State: AOAM5334PI0WXPm4xw8IBfKFho+nhjydY/K5/Y5X+tbCtHtdvdeB0N1J
-        FJQ+fNLnZlg+Oa0hNo12G62dCC10uzFxcRqLfS5MBY+xtq53yQ==
-X-Google-Smtp-Source: ABdhPJw9D5WNAFW6OPQ8/ni4rhOuEfMkBmqLb602Ph09WmYIYmKaz2aC6lE/zYBMXieO6Y2GiAQRcGllyCQG2itJJqI=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr3016829pjv.181.1597823773763;
- Wed, 19 Aug 2020 00:56:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818065727.50520-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200818084044.GD1891694@smile.fi.intel.com> <69e13a74-8b8d-cbc0-915d-ce289e7d4a70@linux.intel.com>
-In-Reply-To: <69e13a74-8b8d-cbc0-915d-ce289e7d4a70@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 10:55:57 +0300
-Message-ID: <CAHp75VfwBnDgR6WR_On1nh+dX4meWrX1Q-CiUKqkV39=o2m5Hg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] extcon: extcon-ptn5150: Add the USB external
- connector support
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, thomas.langer@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Aug 2020 03:56:52 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:20542 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbgHSH4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:56:52 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app3 (Coremail) with SMTP id cC_KCgBnS9wy2zxfb4rfAg--.28925S4;
+        Wed, 19 Aug 2020 15:56:38 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/rxe: Fix memleak in rxe_mem_init_user
+Date:   Wed, 19 Aug 2020 15:56:32 +0800
+Message-Id: <20200819075632.22285-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgBnS9wy2zxfb4rfAg--.28925S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr1rtw4kGw48CFy7Jr1rtFb_yoWxtrc_Ar
+        48trZ7XFWFkrnaka17GFnxWry2yws0qr1kX3WqqFyfA34a93Z5Ca4SvFnxCw4UWr4F9FZ8
+        ArZrWw4xCFW5CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUbhiSPUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowAcsR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 8:38 AM Ramuthevar, Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> On 18/8/2020 4:40 pm, Andy Shevchenko wrote:
-> > On Tue, Aug 18, 2020 at 02:57:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> >> USB external connector chip PTN5150 used on the Intel LGM SoC
-> >> boards to detect the USB type and connection.
-> > Internally I meant you can send cleanups, but couple of patches here are the
-> > features and were still under discussion... But here we are.
->
-> you mean asking us to implement the Heikki suggested as below..
->
-> Heikki Krogerus: register the port and the partner attached to it with
-> the USB Type-C connector class in the driver. Is my understaanding
-> right? if not, please explain it. Thanks!
+When page_address() fails, umem should be freed just
+like when rxe_mem_alloc() fails.
 
-When you mention somebody, don't forget to Cc them (now done by me).
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/infiniband/sw/rxe/rxe_mr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
+index cdd811a45120..ce24144de16a 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -205,6 +205,7 @@ int rxe_mem_init_user(struct rxe_pd *pd, u64 start,
+ 			vaddr = page_address(sg_page_iter_page(&sg_iter));
+ 			if (!vaddr) {
+ 				pr_warn("null vaddr\n");
++				ib_umem_release(umem);
+ 				err = -ENOMEM;
+ 				goto err1;
+ 			}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
