@@ -2,171 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A91C20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Rfhvso3N"
+	by mail.kernel.org (Postfix) with ESMTP id 39AB120786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597829963;
+	bh=d7CAHzMkhCKaeq8rlFlp7wg1NwDvh0hOZ9bhTr6TmcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BGGbYJr8/QNXTH/nmEX7mIfeujaBKhc1kGxPfJYOxNfVnyJ85R7ACbfvFtmRssViO
+	 A5QHtrmGpF/CYiIWXwTDUyf6KCYMA/F/8hswtikmk1NMrc8F3n4hdaVGN8BU+o1qPl
+	 QEJR0BJ/aw7xUixOYjmo1Ofxd4LPdOm1q7cAMJj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgHSJit (ORCPT
+        id S1727931AbgHSJjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgHSJh4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:37:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C673C061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:37:53 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t14so1459909wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ue3HR4wod0zNE7CrQUQ6Ehp/OR8t+fJlFQGIBrnJpsQ=;
-        b=Rfhvso3NOUQY38ai/WyXwxP2YDeNCMIDRXmyKlgbLBMHkJMlOQqpezKRmyPSc8yE5l
-         AByj7j2lupGigIB1Sbv2NCH5gmhw9szstkADVs3B8XOOH4xvAL/1WJbu6Y1Q492zCM3C
-         Kga7QxNepaIpc5TzhWJpd+NO3oPe+g4sBseQo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ue3HR4wod0zNE7CrQUQ6Ehp/OR8t+fJlFQGIBrnJpsQ=;
-        b=ZjZJ6BjVlbcp+upjiDCiprV/rjDmF8Y7nGqhaxJiQu+zGmbN8a+u5zmTJwXCLhEQo4
-         EJb4YhjuULrNsxo9sZBYsRCPzwzweFfRisxKxGln0p5mWS+U0dVn8/RBt+AiuAn+1o69
-         B8mdwV8ERYP3AhyJkdAC1Nh5wUt4aq6V70qVmM91O7WyaGMVPBTn8He6CpMhCI4iQL/c
-         lDFjbxMIEveoQgu2CifuAGpt/iXBi1vzftIkLljVJBZmbWCAVFFO9fdw+bVUzQS5Hj9C
-         oXSZURtHWH1DbAM4dhPDQAqDncLrPwv8XGIeM2eIFrAlp5HcG4wEtWr2UIMnbTnScGg7
-         9Z+A==
-X-Gm-Message-State: AOAM532ya0m99e6m6Tvio5ew5od62i/mxmNB/3yjJDGxtS1IMsfd95BC
-        b0LqjCrRnYB+vbvKzZgVLjxOLg==
-X-Google-Smtp-Source: ABdhPJyfOTr3NfoG4pa7vgJMAO71CXb8trGz1d/9B8xOJxYcpPa2cnYahVhVGBZH7ZVo9P+QPxqnTA==
-X-Received: by 2002:a1c:4e10:: with SMTP id g16mr3787777wmh.146.1597829872125;
-        Wed, 19 Aug 2020 02:37:52 -0700 (PDT)
-Received: from antares.lan (c.d.0.4.4.2.3.3.e.9.1.6.6.d.0.6.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:60d6:619e:3324:40dc])
-        by smtp.gmail.com with ESMTPSA id 3sm4204565wms.36.2020.08.19.02.37.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 02:37:51 -0700 (PDT)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     jakub@cloudflare.com, john.fastabend@gmail.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 5/6] bpf: sockmap: allow update from BPF
-Date:   Wed, 19 Aug 2020 10:24:35 +0100
-Message-Id: <20200819092436.58232-6-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200819092436.58232-1-lmb@cloudflare.com>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
+        Wed, 19 Aug 2020 05:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727098AbgHSJjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:39:21 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207BC206FA;
+        Wed, 19 Aug 2020 09:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597829960;
+        bh=d7CAHzMkhCKaeq8rlFlp7wg1NwDvh0hOZ9bhTr6TmcY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=andgOrj8J+vk/dN/u7ftpicQ7SuTdBbxr8Dz570YEX8B2ucDaeepqAOkhR+FPKwZc
+         7oKlfkPA336PxiDdtlbX9uQDvAQOZcUNke3zeu/DY0tjW7Dc+ni7J8yuJpeOn4oeoE
+         kKmscL88f0OyhC1vmHfEl/jmhSCto+Lywio/XPRk=
+Date:   Wed, 19 Aug 2020 12:39:17 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jinbum Park <jinb.park7@gmail.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Fix missing function declaration
+Message-ID: <20200819093917.GS7555@unreal>
+References: <20200819080026.918134-1-leon@kernel.org>
+ <65caa520-c7de-2703-f528-b2b1714ade65@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65caa520-c7de-2703-f528-b2b1714ade65@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow calling bpf_map_update_elem on sockmap and sockhash from a BPF
-context. The synchronization required for this is a bit fiddly: we
-need to prevent the socket from changing it's state while we add it
-to the sockmap, since we rely on getting a callback via
-sk_prot->unhash. However, we can't just lock_sock like in
-sock_map_sk_acquire because that might sleep. So instead we disable
-softirq processing and use bh_lock_sock to prevent further
-modification.
+On Wed, Aug 19, 2020 at 02:16:39PM +0530, Anshuman Khandual wrote:
+>
+>
+> On 08/19/2020 01:30 PM, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> >
+> > The compilation with CONFIG_DEBUG_RODATA_TEST set produces the following
+> > warning due to the missing include.
+> >
+> >  mm/rodata_test.c:15:6: warning: no previous prototype for 'rodata_test' [-Wmissing-prototypes]
+> >     15 | void rodata_test(void)
+> >       |      ^~~~~~~~~~~
+> >
+> > Fixes: 2959a5f726f6 ("mm: add arch-independent testcases for RODATA")
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+>
+> This build failure appears only with W=1 and gets fixed with this.
 
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
----
- kernel/bpf/verifier.c |  6 ++++--
- net/core/sock_map.c   | 24 ++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+It is our default compilation level for Mellanox RDMA submissions.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 47f9b94bb9d4..421fccf18dea 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -4254,7 +4254,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
- 		    func_id != BPF_FUNC_map_delete_elem &&
- 		    func_id != BPF_FUNC_msg_redirect_map &&
- 		    func_id != BPF_FUNC_sk_select_reuseport &&
--		    func_id != BPF_FUNC_map_lookup_elem)
-+		    func_id != BPF_FUNC_map_lookup_elem &&
-+		    func_id != BPF_FUNC_map_update_elem)
- 			goto error;
- 		break;
- 	case BPF_MAP_TYPE_SOCKHASH:
-@@ -4263,7 +4264,8 @@ static int check_map_func_compatibility(struct bpf_verifier_env *env,
- 		    func_id != BPF_FUNC_map_delete_elem &&
- 		    func_id != BPF_FUNC_msg_redirect_hash &&
- 		    func_id != BPF_FUNC_sk_select_reuseport &&
--		    func_id != BPF_FUNC_map_lookup_elem)
-+		    func_id != BPF_FUNC_map_lookup_elem &&
-+		    func_id != BPF_FUNC_map_update_elem)
- 			goto error;
- 		break;
- 	case BPF_MAP_TYPE_REUSEPORT_SOCKARRAY:
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 018367fb889f..b2c886c34566 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -603,6 +603,28 @@ int sock_map_update_elem_sys(struct bpf_map *map, void *key,
- 	return ret;
- }
- 
-+static int sock_map_update_elem(struct bpf_map *map, void *key,
-+				void *value, u64 flags)
-+{
-+	struct sock *sk = (struct sock *)value;
-+	int ret;
-+
-+	if (!sock_map_sk_is_suitable(sk))
-+		return -EOPNOTSUPP;
-+
-+	local_bh_disable();
-+	bh_lock_sock(sk);
-+	if (!sock_map_sk_state_allowed(sk))
-+		ret = -EOPNOTSUPP;
-+	else if (map->map_type == BPF_MAP_TYPE_SOCKMAP)
-+		ret = sock_map_update_common(map, *(u32 *)key, sk, flags);
-+	else
-+		ret = sock_hash_update_common(map, key, sk, flags);
-+	bh_unlock_sock(sk);
-+	local_bh_enable();
-+	return ret;
-+}
-+
- BPF_CALL_4(bpf_sock_map_update, struct bpf_sock_ops_kern *, sops,
- 	   struct bpf_map *, map, void *, key, u64, flags)
- {
-@@ -687,6 +709,7 @@ const struct bpf_map_ops sock_map_ops = {
- 	.map_free		= sock_map_free,
- 	.map_get_next_key	= sock_map_get_next_key,
- 	.map_lookup_elem_sys_only = sock_map_lookup_sys,
-+	.map_update_elem	= sock_map_update_elem,
- 	.map_delete_elem	= sock_map_delete_elem,
- 	.map_lookup_elem	= sock_map_lookup,
- 	.map_release_uref	= sock_map_release_progs,
-@@ -1180,6 +1203,7 @@ const struct bpf_map_ops sock_hash_ops = {
- 	.map_alloc		= sock_hash_alloc,
- 	.map_free		= sock_hash_free,
- 	.map_get_next_key	= sock_hash_get_next_key,
-+	.map_update_elem	= sock_map_update_elem,
- 	.map_delete_elem	= sock_hash_delete_elem,
- 	.map_lookup_elem	= sock_hash_lookup,
- 	.map_lookup_elem_sys_only = sock_hash_lookup_sys,
--- 
-2.25.1
+>
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
+Thanks
+
+>
+> > ---
+> >  mm/rodata_test.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/mm/rodata_test.c b/mm/rodata_test.c
+> > index 2a99df7beeb3..2613371945b7 100644
+> > --- a/mm/rodata_test.c
+> > +++ b/mm/rodata_test.c
+> > @@ -7,6 +7,7 @@
+> >   */
+> >  #define pr_fmt(fmt) "rodata_test: " fmt
+> >
+> > +#include <linux/rodata_test.h>
+> >  #include <linux/uaccess.h>
+> >  #include <asm/sections.h>
+> >
+> > --
+> > 2.26.2
+> >
+> >
+> >
