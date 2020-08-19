@@ -2,120 +2,141 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C915C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7143BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139D72083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434BE208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HlZ9h/mQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Do1SU13c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgHSQYg (ORCPT
+        id S1727772AbgHSQZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        Wed, 19 Aug 2020 12:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgHSQYL (ORCPT
+        with ESMTP id S1726893AbgHSQY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:24:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62D5C061343;
-        Wed, 19 Aug 2020 09:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0qj0NgMXE9N5E+k0q9ljNMUsiRWKFkmPnIi16FDMGEc=; b=HlZ9h/mQIGWHSczZdWzzLw8l+9
-        Jb7IErUxYlL78RPZ71SMSGS/HV3yVvuUiIK/YrwfyvTC10O8KcRT6VMnYVL0aU6CO/PcKoxUKjbEg
-        FMPh3GoEkEasFRBXmnoogUTGVM8X1nLXrNJ16FeiPqu6ZKF55STetGuo6F7oJDkb7OFe+PK4ovJbA
-        LbxobzPdOK8V+J3D2xXSgj1M/Gi/FLJ8k0qHIh30NkHE5oScUHkA9+e2lUTAXyQG8c7I3ipBoYqQG
-        U0zEH7NCWDF7DOH+DTnpfm8m7ACzQHtRlw8IFMlAy1bIPMlB4/FKC98szZaxVo3aceR5NEss3m70T
-        PvKLLcqw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8Qsd-0004c3-7w; Wed, 19 Aug 2020 16:24:03 +0000
-Date:   Wed, 19 Aug 2020 17:24:03 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "uclinux-h8-devel@lists.sourceforge.jp" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "kgdb-bugreport@lists.sourceforge.net" 
-        <kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Message-ID: <20200819162403.GF17456@casper.infradead.org>
-References: <20200818174447.GV17456@casper.infradead.org>
- <20200819074340.GW2674@hirez.programming.kicks-ass.net>
- <20200819084556.im5zfpm2iquzvzws@wittgenstein>
- <20200819111851.GY17456@casper.infradead.org>
- <87a6yq222c.fsf@x220.int.ebiederm.org>
- <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
- <87mu2qznlv.fsf@x220.int.ebiederm.org>
- <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
- <20200819154521.GE17456@casper.infradead.org>
- <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
+        Wed, 19 Aug 2020 12:24:29 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E4EC061757;
+        Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id l84so21487263oig.10;
+        Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HU4eQwextT3u0Vy8pHWyNShnAd/EOsS2z1U17KkaX1w=;
+        b=Do1SU13c8m0ev7rC+aSlATz3YC7HLEYtrWvOJM3hlYx5tibAn4nY6QBTQ6sL63+y1B
+         MMICOhoWO2QuUo7XJXcNmi2U+jZFkCQmxwKcysxTB45P8s8hyGWMfAV/b9TWZwGMUstf
+         eQNrTEk4Md6ORX7QTkn+vE+7QuV40o6StptyB5lbRYfwqel6HisdptT26ZHXxM5fvMgf
+         Hrtd8Cg5JcovJzKRBu4i1OQaNFicedwyX0Gjkgy9VMM/toVIToznUVdAB9xldZ2UK6eB
+         IrMKr2f8qBsOPZBeTcYzlGRInoJUjiFOhM2YCLXROPBSSoWa8KVaeHXHoJOeD+LqB0Ea
+         LpeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HU4eQwextT3u0Vy8pHWyNShnAd/EOsS2z1U17KkaX1w=;
+        b=Vk673JvG3FZvcqkET+q2dOfCV7tl0Vmnb6uqn32Q7mfoynIxDQNrotRIuB0iFOuvz8
+         jTAA9q6UJqA7DhTejMSPx1WPwIOmhuPBLBSuFg8qVQK6Q/DcVN7M7ko9EYt8ZgOBws/X
+         Tbfzp+8kSW1sQVPxjNGd//eItr5KpGE1TXdF7ueZDCxU7JlEK6KOXeDKf4Athd/slow/
+         v4We4EgpiD5V2xfmMq1dXwtIp/PxjikTt1tHqyZSXftELbBzWOGQPi7qjIE1YAB/uYWJ
+         L7ErTqeucMhRgMF6rQ3/LkYoKJ9g/bNU0A+CFMfPOIYYy9w+Xg3cjd/GWCx04ezJdG3D
+         CK8Q==
+X-Gm-Message-State: AOAM531ricpAw54r+NTkoo/oWSgaetltSXb+f/QRh6z0UGGi9WG3cQjF
+        08xyzVxR3jmJ2kS7BEFWG01hSrDzKtbN8nPUfjA=
+X-Google-Smtp-Source: ABdhPJzpfHTlGoLujvQ5GY5n5H9BSvs/wYOUntKm/P0xrLOUSJQWGq951RNy2Mt1jRO58Yz8dbZ6uoLPp4/f2bRhLs0=
+X-Received: by 2002:a05:6808:4c5:: with SMTP id a5mr3863067oie.175.1597854268104;
+ Wed, 19 Aug 2020 09:24:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com> <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+ <1597849185.3875.7.camel@HansenPartnership.com>
+In-Reply-To: <1597849185.3875.7.camel@HansenPartnership.com>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Wed, 19 Aug 2020 21:54:16 +0530
+Message-ID: <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
+        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:55:47PM +0000, David Laight wrote:
-> From: Matthew Wilcox
-> > Sent: 19 August 2020 16:45
-> > 
-> > On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
-> > > Does linux have an O(1) (or do I mean o(1)) pid allocator?
-> > > Or does it have to do a linear scan to find a gap??
-> > 
-> > O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
-> > number of PIDs currently allocated, and it's log_64 rather than log_2
-> > (which makes no difference to O() but does make a bit of a difference
-> > to performance)
-> 
-> Still worse that O(1) - when that is just replacing a variable
-> with a value read out of an array.
-> Made pid lookup a trivial O(1) as well.
+> [...]
+> > > Since both threads seem to have petered out, let me suggest in
+> > > kernel.h:
+> > >
+> > > #define cast_out(ptr, container, member) \
+> > >     container_of(ptr, typeof(*container), member)
+> > >
+> > > It does what you want, the argument order is the same as
+> > > container_of with the only difference being you name the containing
+> > > structure instead of having to specify its type.
+> >
+> > Not to incessantly bike shed on the naming, but I don't like
+> > cast_out, it's not very descriptive. And it has connotations of
+> > getting rid of something, which isn't really true.
+>
+> Um, I thought it was exactly descriptive: you're casting to the outer
+> container.  I thought about following the C++ dynamic casting style, so
+> out_cast(), but that seemed a bit pejorative.  What about outer_cast()?
+>
+> > FWIW, I like the from_ part of the original naming, as it has some
+> > clues as to what is being done here. Why not just from_container()?
+> > That should immediately tell people what it does without having to
+> > look up the implementation, even before this becomes a part of the
+> > accepted coding norm.
+>
+> I'm not opposed to container_from() but it seems a little less
+> descriptive than outer_cast() but I don't really care.  I always have
+> to look up container_of() when I'm using it so this would just be
+> another macro of that type ...
+>
 
-You'd be surprised.  We replaced the custom PID allocator with the
-generic IDR allocator a few years ago and got a pretty decent speedup.
+ So far we have a few which have been suggested as replacement
+for from_tasklet()
 
-If you think you can do better, then submit patches.  You have to support
-all the existing use cases, of course.
+- out_cast() or outer_cast()
+- from_member().
+- container_from() or from_container()
+
+from_container() sounds fine, would trimming it a bit work? like from_cont().
+
+-- 
+       - Allen
