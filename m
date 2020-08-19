@@ -2,113 +2,109 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FE420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69FC207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="A08HzhhP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q6s7YHpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHSBO6 (ORCPT
+        id S1727106AbgHSBSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:14:58 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58780 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726923AbgHSBO5 (ORCPT
+        Tue, 18 Aug 2020 21:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgHSBST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:14:57 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J1DW85018300
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:14:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=/uUFrz2pplyNeuzwjVTtdWHekCwyi/O0CKqPnUBAh2Y=;
- b=A08HzhhPElIP8ar1HUd6SO3WoFR2zWYS304bUD3/iGH7tq16rHT9X+6i+bNksEqKJLBo
- tPJNPbLzpcBnIor4xYyEYi7riZWFWYvmcvYY3NG7BEl+DYk4GgNICA273F6w3AuMIU+L
- 3tXb3CcQoiPSbZxSgxn7eetJn3yu2L3kzDc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3304kpp0ep-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:14:56 -0700
-Received: from intmgw002.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 18 Aug 2020 18:14:54 -0700
-Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
-        id 4079D207458; Tue, 18 Aug 2020 18:14:50 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Udip Pant <udippant@fb.com>
-Smtp-Origin-Hostname: devbig218.frc2.facebook.com
-To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Smtp-Origin-Cluster: frc2c02
-Subject: [PATCH bpf] bpf: verifier: check for packet data access based on target prog
-Date:   Tue, 18 Aug 2020 18:12:44 -0700
-Message-ID: <20200819011244.2027725-1-udippant@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 18 Aug 2020 21:18:19 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFEDC061389;
+        Tue, 18 Aug 2020 18:18:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWVK45Dnwz9sPC;
+        Wed, 19 Aug 2020 11:18:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597799896;
+        bh=BGnSY/L4rMFN5hiyzbjFlIJn0xwu8rLrp6CJ/B4x3AQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q6s7YHpM/W668cHWycbiCClnmIxZl4KePadfIg9NtojfV1u8lUmWLccNheOU0LWhY
+         E7tmFcWjlw6a1n280c9tHum+aGnLg5buoCQUfuuJZhuoMBlLSV6eIa0SR6/twYOTJN
+         ThDNnydSH+uCRxV0+5OyVtXYrF/CRFUjZ07U/sxO49ROVkX8RX2KuEsgKK1/qNA3zb
+         xy3jQKHvyR6FLhcyD+mxBiMuDYSD4p7bYuQu68J6H6V0YuTyd4qJN0IkNP15RFBQYa
+         PABoqXUmqe7UNq7+RCC9A0t8YGDu6BLyJk5G2eEjSQgKr1gfbyENHN13NLb3Uu79DA
+         8taK0kwInYXGA==
+Date:   Wed, 19 Aug 2020 11:18:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the wireless-drivers-next tree with the
+ kspp-gustavo tree
+Message-ID: <20200819111815.73cae4b0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_16:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=896
- lowpriorityscore=0 suspectscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190010
-X-FB-Internal: deliver
+Content-Type: multipart/signed; boundary="Sig_/nxgxjrDrkGSnjgFgdc=dvp8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While using dynamic program extension (of type BPF_PROG_TYPE_EXT), we
-need to check the program type of the target program to grant the read /
-write access to the packet data.
+--Sig_/nxgxjrDrkGSnjgFgdc=dvp8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
-and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
-placeholder for those, we need this extended check for those target
-programs to actually work while using this option.
+Hi all,
 
-Tested this with a freplace xdp program. Without this patch, the
-verifier fails with error 'cannot write into packet'.
+Today's linux-next merge of the wireless-drivers-next tree got a
+conflict in:
 
-Signed-off-by: Udip Pant <udippant@fb.com>
----
- kernel/bpf/verifier.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+  drivers/net/wireless/ath/ath11k/dp_rx.c
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ef938f17b944..4d7604430994 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2629,7 +2629,11 @@ static bool may_access_direct_pkt_data(struct bpf_=
-verifier_env *env,
- 				       const struct bpf_call_arg_meta *meta,
- 				       enum bpf_access_type t)
- {
--	switch (env->prog->type) {
-+	struct bpf_prog *prog =3D env->prog;
-+	enum bpf_prog_type prog_type =3D prog->aux->linked_prog ?
-+	      prog->aux->linked_prog->type : prog->type;
-+
-+	switch (prog_type) {
- 	/* Program types only with direct read access go here! */
- 	case BPF_PROG_TYPE_LWT_IN:
- 	case BPF_PROG_TYPE_LWT_OUT:
+between commit:
+
+  58e813cceabd ("treewide: Use fallthrough pseudo-keyword")
+
+from the kspp-gustavo tree and commit:
+
+  0b294aebb6a0 ("ath11k: Use fallthrough pseudo-keyword")
+
+from the wireless-drivers-next tree.
+
+I fixed it up (the latter removed an extra blank line) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
 --=20
-2.24.1
+Cheers,
+Stephen Rothwell
 
+--Sig_/nxgxjrDrkGSnjgFgdc=dvp8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88fdgACgkQAVBC80lX
+0Gxf6Af/QMgm4AGX0eG6/lRUViMK6SMA2QA2IrHVozhaxbGUvFx/MuQv8ayeBenI
+H6HmfvkNP84BkLlQTGGHzUmEKeWrTjjQ+7arG/XIAOn+hzr8xjetyyQeK74tlfqX
+3zbreNAuflWQpVuFBiPmAXI8uG0vj1Dl2nMy3lDWWuze8mmy32VNIKhM+KiHeSBc
+/zc+tvcBDAoK7xHR/5VoEcq8/YbUFp1SAcCZ54WQhPxiqEdadr0qw0HE1Xd1I1Lg
+UWeJPyXoRjX5cVHfSLIiz8GpPHg5sp1FjACjHZPOGny1PfbMVFfyr93s3sfW0+NJ
+vTaiPAfVLJ9ftteav61sWU1Bay0QdA==
+=upik
+-----END PGP SIGNATURE-----
+
+--Sig_/nxgxjrDrkGSnjgFgdc=dvp8--
