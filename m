@@ -2,72 +2,73 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB436C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5197DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C401920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE1E20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NcS4Udy+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZPoMu5Mn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgHSH0z (ORCPT
+        id S1728212AbgHSH1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40926 "EHLO
+        Wed, 19 Aug 2020 03:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgHSHZc (ORCPT
+        with ESMTP id S1727903AbgHSH0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:25:32 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C19C061379
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:31 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id p14so1086468wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:31 -0700 (PDT)
+        Wed, 19 Aug 2020 03:26:11 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A72C0612ED
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:35 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k8so1129861wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k4LfX+eIfhn84bRaVRDxoln04YUE9cE/pEH4N9WzhVc=;
-        b=NcS4Udy+0QfOJQwXZnRDrZJmvaN2ZwNGPq6ZoO600fVBkw9RPWxmkzVYF1VN+3IA4S
-         vMwso+oG3++JIQGteREEqHxFeavfGuaPBkGdKGHhrmaIxTJwua3GJDfmuZMwif2kTi09
-         AiM5ckOi4lS9Ocz6Z2uP6eVaGKqeyTwpsE2Ash7GQd8jLSb6tiJ2NFRulVjestOWaUWj
-         1ct0Djil1qFzn67t0Xh/KhWykwTVKv/iYmie6x2ADQVzHuOACqNGGi6aHqiwzqE+NGCO
-         47XiO2WlfQspdYZ9nT8Q/o+X8+gubw0CtquMiFJThj3pyWM503+X4wwgIwSHqbXJRnul
-         mRLw==
+        bh=bBzEfUvbe/jRxzO40K//jsXnpXNEErVa5XTqzMamXvQ=;
+        b=ZPoMu5Mnjwjb2haLK/vWqa5/tiSHCy/nDwn5iNOZzCWhgKIwRtvzNmPbfgsLA9mSCg
+         zRsT6Dl3A9atOt/5phe5ubnK5JMjdzGrA9GilbM4MIWx0166QKyIhojxdypPKC0V5VDK
+         ZnHPLtq4hiYgQpqPWykjq7DJjbaoLzs6L0cejAK7tQXF8sxNxm0iuYv7Nd5EYpxeEDOw
+         RUaCF1WLEKZeRwSl8QLaQmUP5olDYJQF4zxPVdACZYfdP6T2oZBQsW3yHRvpA7zVcJGA
+         Z+xgsDSv/moQJLnT66JMqJgQB0tQMC3JT8GO+kBXgvwGJ4Ol5gE7zRGJOHjC5RGCSU6z
+         qE8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k4LfX+eIfhn84bRaVRDxoln04YUE9cE/pEH4N9WzhVc=;
-        b=lzJ3DxCpX0pn6cazD83/kA7OvIRy63ndydAPW/y5UgCzwzValQ/x4HlCMSP3ZKNsfc
-         +xkmoApuFzKmjn1IVHzUtt/ZDBH0+NG+U0EcMOluZoy0MyvgBmhdxRtZM/ClilvPL+ca
-         wQDfNYv+/eXwkcJtA/oVw9TDuHJJqDWhITStukuy/+s/n7orqcNE3vp3lGANqbwKPEoO
-         XPWdWnErfUnq05jMZGlJhG55aJGR+1X4zppabs/2UCEELI5wTte3FCj5nNFrK1QYWulR
-         0TXIEzDJGtpU8T4lbYCQ5eEA0rPlT+c+6zNAqnlNEqDC04KzHOEmwdoSZEuzNnaTIOIM
-         vdNw==
-X-Gm-Message-State: AOAM5319VYfh1/m86aYDl0ZFe8CUhAZdNgfbTRJfHaxL/lxSRu8lsf+S
-        zcdL2ZMitFcJNwyR3S3TQt8uwg==
-X-Google-Smtp-Source: ABdhPJz5JRvSNntryjeJKBrQf1j82+qhnh0KHjwJL0WiJkTm9GoN/DXGc4rUsjvdHE+Uo0MZO9FpPg==
-X-Received: by 2002:a1c:4104:: with SMTP id o4mr3513338wma.101.1597821870048;
-        Wed, 19 Aug 2020 00:24:30 -0700 (PDT)
+        bh=bBzEfUvbe/jRxzO40K//jsXnpXNEErVa5XTqzMamXvQ=;
+        b=LhHi7g5UdVh8uT7bGx5pRPxH8mUPxivQwnL9xBxFgXZL3Q5IKPfDPE+bVfPL4CPb7g
+         mhzvG6HUIjImw3zPyTc5tOBIgQeNU8MOQwiA3qVhBN6hAkuWa0EkFSTSoC1e4hpxzR/W
+         cZQ8nW7cNy7hmEHL4CgdjMS1KecqwQ1Bft72mXNamDMSlUdWat0BdqDQsSmRlkGAwU/S
+         uqeuoA4IsbFHV7lgwTZQitNutzmZpWGwYpm8VMd9yGEVT7dhGjhUxDM6Pgj1s6CUSkWE
+         fMzjz5lnKo7Cb1ApqECbMdei/zDQBjiJtXagWEmb4sPMcweHF1HMY6XyHGj/aAlLf7CS
+         Y1VQ==
+X-Gm-Message-State: AOAM532ZQ7smROuu7eXcXjueVrSh6UTre69wOQHOJuo+MfFMv+KIbx5N
+        rvhoU7Vz7VpZnhaAGFSLISmpaQ==
+X-Google-Smtp-Source: ABdhPJzJQETs3WOG9GwjxbvsGTLFleTEdZEW9PtH52FjwBnrRIrjVmDc7IjdsZMb1v2iOUU/ZscM1w==
+X-Received: by 2002:a7b:cf08:: with SMTP id l8mr3322744wmg.183.1597821874070;
+        Wed, 19 Aug 2020 00:24:34 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.28
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:29 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:33 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Amitkumar Karwar <amitkarwar@gmail.com>,
         Siva Rebbagondla <siva8118@gmail.com>
-Subject: [PATCH 20/28] wireless: rsi: rsi_91x_mgmt: Fix a myriad of documentation issues
-Date:   Wed, 19 Aug 2020 08:23:54 +0100
-Message-Id: <20200819072402.3085022-21-lee.jones@linaro.org>
+Subject: [PATCH 23/28] wireless: rsi: rsi_91x_hal: File header comments should not be kernel-doc
+Date:   Wed, 19 Aug 2020 08:23:57 +0100
+Message-Id: <20200819072402.3085022-24-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
@@ -78,37 +79,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Too many, not enough, misnamed and formatting problems, all resolved.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:24: warning: cannot understand function prototype: 'struct bootup_params boot_params_20 = '
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:487: warning: Excess function parameter 'type' description in 'rsi_mgmt_pkt_to_core'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:538: warning: Function parameter or member 'sta_id' not described in 'rsi_hal_send_sta_notify_frame'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:538: warning: Function parameter or member 'vif' not described in 'rsi_hal_send_sta_notify_frame'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:615: warning: Function parameter or member 'sta_id' not described in 'rsi_send_aggregation_params_frame'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:711: warning: Function parameter or member 'mode' not described in 'rsi_set_vap_capabilities'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:711: warning: Function parameter or member 'mac_addr' not described in 'rsi_set_vap_capabilities'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:711: warning: Function parameter or member 'vap_id' not described in 'rsi_set_vap_capabilities'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:711: warning: Function parameter or member 'vap_status' not described in 'rsi_set_vap_capabilities'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:711: warning: Excess function parameter 'opmode' description in 'rsi_set_vap_capabilities'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:794: warning: Function parameter or member 'sta_id' not described in 'rsi_hal_load_key'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:794: warning: Function parameter or member 'vif' not described in 'rsi_hal_load_key'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1053: warning: Function parameter or member 'curchan' not described in 'rsi_band_check'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1173: warning: Excess function parameter 'channel' description in 'rsi_send_radio_params_update'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1299: warning: Function parameter or member 'sta' not described in 'rsi_send_auto_rate_request'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1299: warning: Function parameter or member 'sta_id' not described in 'rsi_send_auto_rate_request'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1299: warning: Function parameter or member 'vif' not described in 'rsi_send_auto_rate_request'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'opmode' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'addr' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'sta' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'sta_id' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'assoc_cap' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Function parameter or member 'vif' not described in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1459: warning: Excess function parameter 'bssid' description in 'rsi_inform_bss_status'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1543: warning: Function parameter or member 'common' not described in 'rsi_send_block_unblock_frame'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1543: warning: Function parameter or member 'block_event' not described in 'rsi_send_block_unblock_frame'
- drivers/net/wireless/rsi/rsi_91x_mgmt.c:1587: warning: Excess function parameter 'Return' description in 'rsi_send_rx_filter_frame'
+ drivers/net/wireless/rsi/rsi_91x_hal.c:25: warning: cannot understand function prototype: 'struct ta_metadata metadata_flash_content[] = '
 
 Cc: Amitkumar Karwar <amitkarwar@gmail.com>
 Cc: Siva Rebbagondla <siva8118@gmail.com>
@@ -119,127 +92,19 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/rsi/rsi_91x_mgmt.c | 30 +++++++++++++++++--------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_hal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_mgmt.c b/drivers/net/wireless/rsi/rsi_91x_mgmt.c
-index 9cc8a335d519d..c331084bdc170 100644
---- a/drivers/net/wireless/rsi/rsi_91x_mgmt.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mgmt.c
+diff --git a/drivers/net/wireless/rsi/rsi_91x_hal.c b/drivers/net/wireless/rsi/rsi_91x_hal.c
+index 6f8d5f9a9f7e6..3f7e3cfb6f00d 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_hal.c
++++ b/drivers/net/wireless/rsi/rsi_91x_hal.c
 @@ -1,4 +1,4 @@
 -/**
 +/*
   * Copyright (c) 2014 Redpine Signals Inc.
   *
   * Permission to use, copy, modify, and/or distribute this software for any
-@@ -477,7 +477,6 @@ static int rsi_load_radio_caps(struct rsi_common *common)
-  * @common: Pointer to the driver private structure.
-  * @msg: Pointer to received packet.
-  * @msg_len: Length of the received packet.
-- * @type: Type of received packet.
-  *
-  * Return: 0 on success, -1 on failure.
-  */
-@@ -528,6 +527,8 @@ static int rsi_mgmt_pkt_to_core(struct rsi_common *common,
-  * @bssid: bssid.
-  * @qos_enable: Qos is enabled.
-  * @aid: Aid (unique for all STA).
-+ * @sta_id: station id.
-+ * @vif: Pointer to the ieee80211_vif structure.
-  *
-  * Return: status: 0 on success, corresponding negative error code on failure.
-  */
-@@ -603,6 +604,7 @@ int rsi_hal_send_sta_notify_frame(struct rsi_common *common, enum opmode opmode,
-  * @ssn: ssn.
-  * @buf_size: buffer size.
-  * @event: notification about station connection.
-+ * @sta_id: station id.
-  *
-  * Return: 0 on success, corresponding negative error code on failure.
-  */
-@@ -699,7 +701,7 @@ static int rsi_program_bb_rf(struct rsi_common *common)
- /**
-  * rsi_set_vap_capabilities() - This function send vap capability to firmware.
-  * @common: Pointer to the driver private structure.
-- * @opmode: Operating mode of device.
-+ * @mode: Operating mode of device.
-  *
-  * Return: 0 on success, corresponding negative error code on failure.
-  */
-@@ -780,6 +782,8 @@ int rsi_set_vap_capabilities(struct rsi_common *common,
-  * @key_type: Type of key: GROUP/PAIRWISE.
-  * @key_id: Key index.
-  * @cipher: Type of cipher used.
-+ * @sta_id: Station id.
-+ * @vif: Pointer to the ieee80211_vif structure.
-  *
-  * Return: 0 on success, -1 on failure.
-  */
-@@ -1045,6 +1049,7 @@ static int rsi_send_reset_mac(struct rsi_common *common)
- /**
-  * rsi_band_check() - This function programs the band
-  * @common: Pointer to the driver private structure.
-+ * @curchan: Pointer to the current channel structure.
-  *
-  * Return: 0 on success, corresponding error code on failure.
-  */
-@@ -1165,7 +1170,6 @@ int rsi_set_channel(struct rsi_common *common,
-  * rsi_send_radio_params_update() - This function sends the radio
-  *				parameters update to device
-  * @common: Pointer to the driver private structure.
-- * @channel: Channel value to be set.
-  *
-  * Return: 0 on success, corresponding error code on failure.
-  */
-@@ -1289,6 +1293,9 @@ static bool rsi_map_rates(u16 rate, int *offset)
-  * rsi_send_auto_rate_request() - This function is to set rates for connection
-  *				  and send autorate request to firmware.
-  * @common: Pointer to the driver private structure.
-+ * @sta: mac80211 station.
-+ * @sta_id: station id.
-+ * @vif: Pointer to the ieee80211_vif structure.
-  *
-  * Return: 0 on success, corresponding error code on failure.
-  */
-@@ -1439,10 +1446,15 @@ static int rsi_send_auto_rate_request(struct rsi_common *common,
-  *			     help of sta notify params by sending an internal
-  *			     management frame to firmware.
-  * @common: Pointer to the driver private structure.
-+ * @opmode: Operating mode of device.
-  * @status: Bss status type.
-- * @bssid: Bssid.
-+ * @addr: Address of the register.
-  * @qos_enable: Qos is enabled.
-  * @aid: Aid (unique for all STAs).
-+ * @sta: mac80211 station.
-+ * @sta_id: station id.
-+ * @assoc_cap: capabilities.
-+ * @vif: Pointer to the ieee80211_vif structure.
-  *
-  * Return: None.
-  */
-@@ -1535,9 +1547,9 @@ static int rsi_eeprom_read(struct rsi_common *common)
-  * This function sends a frame to block/unblock
-  * data queues in the firmware
-  *
-- * @param common Pointer to the driver private structure.
-- * @param block event - block if true, unblock if false
-- * @return 0 on success, -1 on failure.
-+ * @common: Pointer to the driver private structure.
-+ * @block_event: Event block if true, unblock if false
-+ * returns 0 on success, -1 on failure.
-  */
- int rsi_send_block_unblock_frame(struct rsi_common *common, bool block_event)
- {
-@@ -1581,7 +1593,7 @@ int rsi_send_block_unblock_frame(struct rsi_common *common, bool block_event)
-  * @common: Pointer to the driver private structure.
-  * @rx_filter_word: Flags of filter packets
-  *
-- * @Return: 0 on success, -1 on failure.
-+ * Returns 0 on success, -1 on failure.
-  */
- int rsi_send_rx_filter_frame(struct rsi_common *common, u16 rx_filter_word)
- {
 -- 
 2.25.1
 
