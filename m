@@ -2,211 +2,150 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD6EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E69B207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00F1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAN8xc5Y"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gl70EDnX";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="DPoRfyWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgHSPiw (ORCPT
+        id S1728818AbgHSPjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728785AbgHSPif (ORCPT
+        Wed, 19 Aug 2020 11:39:36 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51266 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726887AbgHSPje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:38:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7BEC061757;
-        Wed, 19 Aug 2020 08:38:36 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f5so10988348plr.9;
-        Wed, 19 Aug 2020 08:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7YpHXP3RsOsEs2NNSzxj7OsDtEy2/tnBSwsHzFmLLBU=;
-        b=rAN8xc5YJmSf7fwJzTUXAIiWqSE14pjCSFkJbZGm7T/E1CPlpDnO5hddUlEDU5w0Ti
-         6bmaI+tkQir5ps+SLQRx0lBAYZHN5m72sNvJf45kHikHbxAB+hIJSBf5X7JsI0y63LjK
-         Nh1pd3d+y6SOtS7s5UpenJlPtRU6+oPdIWrlZKA2jM4LgArixGltKVYPex3HbfbIh36j
-         Aa3LrxpcYxslCDuSvgdt/BtI32/epBWHJBBVPxnD0tz1HD5N99P5SyC/NPQvM9lAb3Zh
-         UflO5vGWBq7euR+cpx7btx+3C9StBdIgxlCyCylq7oJCyjamU5GZwfQVdR0A9XWNViYN
-         sSYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7YpHXP3RsOsEs2NNSzxj7OsDtEy2/tnBSwsHzFmLLBU=;
-        b=uWKbV2e9ClKWcNd8aLKzIC59fceie5tJxsww07Ua7OPxFppU9XWhZXa656Ye0BbI04
-         We8855CPVusA4eN8Ky8kUm0XBHgUFNndcpB1PJG/mCb4x9YrxZOwNQcD7lSmU4+92QLT
-         jQSFDwg8O/i+z93tj9DLfQQFqM8/Q7oZNldCprvVvOdaL44+aYcg15U07SAK5iJxORMH
-         rBA9ExYs+BYryqkPHi9zazGFPwC9lQup3QjCblALBWs/IgujRhP8WqV7QeKROjauAF7+
-         w4SfXAnKURoe+qQHj57kG8kpiUvZHdIswcBc20DYuls2Dlt9dyB1HCcPz5pNrRBBS6iK
-         Tg5w==
-X-Gm-Message-State: AOAM533cvrBxjOaYWmb0Cyhpy/GfxuhW3yPY+BvvGge4PKLeZPJdCZFv
-        cEd2oAgQ+ygt5xnCz+VSn8058wt7aO4aZdIHYpQzZGtk2ZBuRJHp
-X-Google-Smtp-Source: ABdhPJzgbJjr2iVKDjtuwEZHTMPNRxNCwBAygscnCrMSLBSuPKDq2pa7d/8VSt5LkTnt1UJJzwFGqLjDOtuO0PdaHRU=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr4375002pjv.181.1597851515372;
- Wed, 19 Aug 2020 08:38:35 -0700 (PDT)
+        Wed, 19 Aug 2020 11:39:34 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JFV8ic012816;
+        Wed, 19 Aug 2020 08:38:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=W8JyWnNa9962r0brFiR3N7Z5pK214GSI6DV1viwAYeE=;
+ b=gl70EDnX9t7DetVZbWEGFwrvBmPBH20NxMys6d1phGCADtW7ruN3tFH96N3TE0FjN2zB
+ TDgzp8RdHdiZVGrJtCZP1RC2Chq0/tIRULjD9nfi9jdr2323T19r4EYEtu3nWGjYG39v
+ 2fANGGZv3p+Kq9ZlUXxsMMUIQsup4/MYbPg= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 3304p3h4bm-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 19 Aug 2020 08:38:35 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 19 Aug 2020 08:38:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RFfEj80buTguk7NWDlMIhw0wQiPU/cJfl4wrU30Z7NQrfcJe0dX+JggtZ/w6rGe4eAKTTSkL0g9inrEJ5/WKfWc7utZBsG+wjm5Cwf/J+UbY/M8GpRilpVVNUeTqTs4xgT1tQygre8uWGfdmuzOgME6qxgSmpivJUyVGVPp2O5n3wfDoZlKj9jQ7JSqWGHkcGaHQWE7Imkz+WwP97yK+B5NSMGYLb7BQz6YEFp3OYZM5UW3QaBbyLN3x5J9R06xjOUr8ne96YfcxBVjSALLMT1dAql/G7g0QbLUGw3eMf2Cg4wOF39Z2qVWtBiK4wrvboE2YqGBU+gzuuA+79GA3cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W8JyWnNa9962r0brFiR3N7Z5pK214GSI6DV1viwAYeE=;
+ b=ghdbHYVI/IzXHngEbdZ8OINw4hBXEjoNkG94uYZnJskPadVtVSiXrGnn7FTptZk8a7QcoHMzzxTCauLSHEsa7UlT+IU+P4bo/lFIHM5MxVcWG4udJGl0KQqkCVln/Q2KSKNF0X2Pkr+PT4oyyNTs9CRxxNlgn8Hqapxqsof62gGlR8AY/iJT8nU95MLMS4/zXOBRr6y4Uj7SmcsVBYs+Tkmjsir5mHC82m3kiGUf55oHXewlDcsWWGFwwM1yZl6BrhVFLmYteD4RXmHy6fKYn/5uHYzs84m8BDwzf0YRMWtc+hORlTGu/YmoQL6cEk2vdIWdl7dR3kuQcjG/fRYYxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W8JyWnNa9962r0brFiR3N7Z5pK214GSI6DV1viwAYeE=;
+ b=DPoRfyWzzXAEsx8tLw282+BtboMOnmPxX8ZiOxQy0M7YPqe0qV94yDmpSwgDct9fMz42n9z4Af03dFSBWN1Cyoz8WenMaO+Zt+sfzZtM/k1GtujveL31KQdncuKOW3CvC0rdv5rOzqWGEI21hUeX74zNSCkRNFNm5I5l90C/UsI=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BY5PR15MB3665.namprd15.prod.outlook.com (2603:10b6:a03:1f7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Wed, 19 Aug
+ 2020 15:38:31 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::119c:968d:fb22:66e]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::119c:968d:fb22:66e%4]) with mapi id 15.20.3283.020; Wed, 19 Aug 2020
+ 15:38:31 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Wei Li <liwei391@huawei.com>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf record: Correct the help info of option
+ "--no-bpf-event"
+Thread-Topic: [PATCH] perf record: Correct the help info of option
+ "--no-bpf-event"
+Thread-Index: AQHWdde6ERx1KvYqZ0qqpeKxpiFINKk/keEA
+Date:   Wed, 19 Aug 2020 15:38:30 +0000
+Message-ID: <C77EA4D3-4AC9-4CED-8995-CA99285198BA@fb.com>
+References: <20200819031947.12115-1-liwei391@huawei.com>
+In-Reply-To: <20200819031947.12115-1-liwei391@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:91bd]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2bd1038e-fb4f-436e-91a5-08d84455ecea
+x-ms-traffictypediagnostic: BY5PR15MB3665:
+x-microsoft-antispam-prvs: <BY5PR15MB366551DC05AF8B1856AF2A77B35D0@BY5PR15MB3665.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Jrxy+mpzxiChnOdvT7ZtqjGhhWtE2HQEevX+5sICW8urennQoe3fcyGDhsOLxCVTILQ6z4/O+d0wsXH/k0W/rNv/BXkETPUBum732nTWEVMoDa5+ht6VuNLN8wWBM5IguqM4Z39+tqQC+/qvIvWK/KmKSTtmvrukXHEAEkAaW21CE7Qesv8Mel1T1RsC3sRrh8eHpbSGdLRS3b3LxYcajuOIPcZgCDP9sKcaoUBXeMhsLRMBvrE/pGcE/84/jw1Ogpw73fE7S9Fm40an+9jtEMYUIMpOUSqUyh9bmirQyqvj/ueCjSZXpVVLC+WELgOB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6916009)(5660300002)(6486002)(8936002)(66476007)(6512007)(66556008)(66946007)(558084003)(76116006)(53546011)(4326008)(64756008)(66446008)(6506007)(186003)(2906002)(8676002)(86362001)(498600001)(54906003)(33656002)(36756003)(71200400001)(2616005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MyaGIicjMbL76zhdLWhnz+L3RlIU15sWEICVxetpVyGdTh9MRPozJFL6hJxk9+2lIBG0+jXBtEctXaAJt+xqeGefNqIBWQczOKiAS6kZnhSxP36FIlUMhvUDog0Ut9b4op4JMf3GhkZrKv1w5+NFyFw9cOH2rx9kXic2B55dNYFaRq29mh4E7wlJQT0F6d16fgtJ0Bgdb9SJHgk1H6oa6jmJWLDc6GtU8TjVlcGfSQqnjZtRNdQ+/9K6DnS2gAxPVF7kxI8wlroO6FzRlGCl1Uc3l4TMnAxbdpdkB/txZaohtZC3gRIHoHUG0LSCjjLi+W5swxJxAVuqQXDu4QCY+bOKD0erDocUqrmK2m3Aj4ln7pRsXOpAuh00NMQXQNBcEWSatxgvn4C4UFPlyu9zW66J3NbizdaLQQkzOb0d2wvp2re12dzfr4KmOWSsg9pjlFWl7aK/bVaJnqGw3aMl0eFBh2Nxu5FgV1qZJPwLsZYTvq9vIozP0UT1thziXLI+qtO8wYScIVYdVijeSLMbZEU0HhiGBVnlKX+hm9t+W9PRe7Y1YDV6rYlsofMDDlVSTBIGh55ftARnFVe/HL2tIWmAYiBo9GMXuHLokmgsyhDOawJMi+msiSI2r/8u5IvSu/foZLKt2eJ5BY4D/wB5vk3P+/Mqdlz8/+L+R03Qkh+KIvarPihpYlntPGbuVMnj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0FBFFE7022A921409DCD33971898CD18@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
- <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com> <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
- <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
-In-Reply-To: <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 18:38:19 +0300
-Message-ID: <CAHp75Veq9ym73zU1h92+CWk0CgNUVNz4zEE=xj1ZuCBdEQ_QFA@mail.gmail.com>
-Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
- interrupt - RIP: 0010:security_port_sid
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        paul@paul-moore.com, Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, omosnace@redhat.com,
-        rgb@redhat.com, Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
-        Kent Overstreet <kent.overstreet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bd1038e-fb4f-436e-91a5-08d84455ecea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 15:38:30.8561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nOTKxbmndpgcON8YbXMMOPOorMziya84lQNSTkEgB1nUJyyj4tY4ZMxM+eBgPJJuHps708skRzg/fIvWvImo/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3665
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_09:2020-08-19,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=940
+ spamscore=0 mlxscore=0 clxscore=1011 suspectscore=0 adultscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190133
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 6:12 PM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On 8/19/20 11:06 AM, Andy Shevchenko wrote:
->
-> > On Wed, Aug 19, 2020 at 3:30 PM Stephen Smalley
-> > <stephen.smalley.work@gmail.com> wrote:
-> >> On 8/19/20 6:11 AM, Naresh Kamboju wrote:
-> >>
-> >>> Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
-> >>>
-> >>>    Kernel panic - not syncing: Fatal exception in interrupt
-> >>>
-> >>> metadata:
-> >>>     git branch: master
-> >>>     git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> >>>     git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
-> >>>     git describe: next-20200819
-> >>>     make_kernelversion: 5.9.0-rc1
-> >>>     kernel-config:
-> >>> https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
-> >>>
-> >>> crash log:
-> >>> [    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
-> >>> [    3.704865] #PF: supervisor read access in kernel mode
-> >>> [    3.704865] #PF: error_code(0x0000) - not-present page
-> >>> [    3.704865] PGD 0 P4D 0
-> >>> [    3.704865] Oops: 0000 [#1] SMP NOPTI
-> >>> [    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
-> >>> 5.9.0-rc1-next-20200819 #1
-> >>> [    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> >>> BIOS 1.12.0-1 04/01/2014
-> >>> [    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
-> >>> [    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
-> >>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
-> >>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
-> >>> 00 48
-> >>> [    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
-> >>> [    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
-> >>> [    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
-> >>> [    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
-> >>> [    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
-> >>> [    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
-> >>> [    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
-> >>> knlGS:0000000000000000
-> >>> [    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> [    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
-> >>> [    3.721157] Call Trace:
-> >>> [    3.721157]  sel_netport_sid+0x120/0x1e0
-> >>> [    3.721157]  selinux_socket_bind+0x15a/0x250
-> >>> [    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
-> >>> [    3.721157]  ? __local_bh_enable_ip+0x46/0x70
-> >>> [    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
-> >>> [    3.721157]  security_socket_bind+0x35/0x50
-> >>> [    3.721157]  __sys_bind+0xcf/0x110
-> >>> [    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
-> >>> [    3.730888]  ? do_syscall_64+0x14/0x50
-> >>> [    3.730888]  ? trace_hardirqs_on+0x38/0xf0
-> >>> [    3.732120]  __x64_sys_bind+0x1a/0x20
-> >>> [    3.732120]  do_syscall_64+0x38/0x50
-> >>> [    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >>> [    3.732120] RIP: 0033:0x7f5ef37f3057
-> >>> [    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
-> >>> 02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
-> >>> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
-> >>> 01 48
-> >>> [    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
-> >>> 0000000000000031
-> >>> [    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
-> >>> [    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
-> >>> [    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
-> >>> [    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
-> >>> [    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
-> >>> [    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
-> >>> 000000RIP: 0010:security_port_sid0000000000
-> >>> [    3.744849] Modules linked in:
-> >>> [    3.744849] CR2: 00000000000001c8
-> >>> [    3.744849] ---[ end trace 485eaaecdce54971 ]---
-> >>> [    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
-> >>> [    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
-> >>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
-> >>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
-> >>> 00 48
-> >>> [    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
-> >>> [    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
-> >>> [    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
-> >>> [    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
-> >>> [    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
-> >>> [    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
-> >>> [    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
-> >>> knlGS:0000000000000000
-> >>> [    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>> [    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
-> >>> [    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
-> >>> Fatal exception in interrupt
-> >>> [    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
-> >>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> >>> [    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
-> >>> interrupt ]---
-> >>>
-> >>> full test log link,
-> >>> https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
-> >>>
-> >>> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > +1.
-> > Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> >> Thank you for the report.  It appears from the log that you are enabling
-> >> SELinux but not loading any policy?  If that is correct, then I believe
-> >> I know the underlying cause and can create a patch.
-> > I guess it's too far with assumptions that people are using some
-> > monster Linux distribution or so. I have simple kernel configuration
-> > with minimal Buildroot (busybox + uclibc) and I have got this
-> > inconvenience.
-> > Please, fix this. And would be nice if you may tell what commit I can
-> > revert without wasting time on bisect to unblock my main work.
-> >
-> Fix can be found at:https://patchwork.kernel.org/patch/11724203/
-> <https://patchwork.kernel.org/patch/11724203/>
 
-Thanks, feel free to add
-Tested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> On Aug 18, 2020, at 8:19 PM, Wei Li <liwei391@huawei.com> wrote:
+>=20
+> The help info of option "--no-bpf-event" is wrongly described as
+> "record bpf events", correct it.
+>=20
+> Fixes: 71184c6ab7e6 ("perf record: Replace option --bpf-event with --no-b=
+pf-event")
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+
+Thanks for the fix!
+
+Acked-by: Song Liu <songliubraving@fb.com>
+
+
