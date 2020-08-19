@@ -2,154 +2,192 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D28DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1182083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:53:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skCBsF03"
+	by mail.kernel.org (Postfix) with ESMTP id 629BB207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgHSSxJ (ORCPT
+        id S1726749AbgHSSy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
+        Wed, 19 Aug 2020 14:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSSxH (ORCPT
+        with ESMTP id S1726211AbgHSSyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:53:07 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82680C061757;
-        Wed, 19 Aug 2020 11:53:07 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g15so7364816plj.6;
-        Wed, 19 Aug 2020 11:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ojo0vVfxMF4kGimsv0YT84fT9cZgWR2PgPBwNlWXlnI=;
-        b=skCBsF03o+nKy1/X62nQs3ZlUExK97yXVDTlRaA8GO72wwa24H1C7qm2MuhrUyaALi
-         mpZzXM9DozoVnhGuFMyeGT4y/xG3sviD5GzhhEOku6+iKvJK4t3So16vPlCDSBVw1Y6E
-         vjyslNPnU+Ku+7fni24xc9moG9pHb+l08VL1GcDp6yualyjc5WbW86Z2cQQ1FYvroIo/
-         0o0CG8HvML5rh5X5QEYPitjvapemHzuaNan08+aYY8bdP+uzd3ROmHemiDph51bwCjl1
-         q2yzBJcwp9rpY6gC++vSo4O3mJqFqAYF6o8JaTp7NuP3hY7sEZs06cKm1I+D/ivrvMTT
-         YNRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ojo0vVfxMF4kGimsv0YT84fT9cZgWR2PgPBwNlWXlnI=;
-        b=DjHSs7YCNcMY4VkW81fefWhTA0JkxpfHejLYBRSGnSh/DzR/126NkNy2DwyCwaX5ec
-         d6SYQZGto6xOEOyzedEgwYVoQ3GoR589S381CNJYPjSvOvdcFPj4a597UksEa7TU8x2K
-         x9sAbzhxNdJIyuc8PqW6mp697imbwQK9PaVXrReYxFeazH+Ii+EteHaOuxrBD37sb2Ol
-         ebOKxoujR52LLATM+0RKro7XQaAUcYLW/Dp9pc8a9RRfHaS/2TG3uq3yMyChsSIY8ChF
-         PPAKTD6xKHn6xr0N6m7HZJI8xyEDsyGz9tst8L66IWw9U3OgyYNKcerv11mIwBlmQVvD
-         qLiQ==
-X-Gm-Message-State: AOAM533t4ZHp5T+YLlHSoTDDkSb7ay+5IBColmh7EOTAz/rOYRARFp7E
-        f00j7uGQ9sK1l1d/uLIzZWE=
-X-Google-Smtp-Source: ABdhPJz8qgSUSMAh8sRZsex9BAVPb7wEOcm30G8p5x+PLRkaNGEKbLX19pSFlFe30lZkVGjNFsyTWw==
-X-Received: by 2002:a17:902:968d:: with SMTP id n13mr10893239plp.260.1597863186960;
-        Wed, 19 Aug 2020 11:53:06 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id x6sm25815940pge.61.2020.08.19.11.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:53:06 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 00:21:08 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Javier Martinez Canillas <javier@osg.samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-ide@vger.kernel.org,
+        Wed, 19 Aug 2020 14:54:18 -0400
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [IPv6:2001:1600:3:17::42af])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71633C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:54:17 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BWxlD0kK1zlhQGJ;
+        Wed, 19 Aug 2020 20:54:00 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BWxlB6m3Xzlh8TC;
+        Wed, 19 Aug 2020 20:53:58 +0200 (CEST)
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Mark Rutland <mark.rutland@arm.com>,
+        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v3] ata: use generic power management
-Message-ID: <20200819184738.GA108131@gmail.com>
-References: <20200817092245.10478-1-vaibhavgupta40@gmail.com>
- <20200817092511.GA10566@gmail.com>
- <11190a0b-1009-caf8-9cbe-6cf296b614bf@kernel.dk>
- <20200818130329.GA39194@gmail.com>
- <a1937b38-055f-0fc7-0d08-16af7c42660b@kernel.dk>
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200731180955.GC67415@C02TD0UTHF1T.local>
+ <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
+ <20200804143018.GB7440@C02TD0UTHF1T.local>
+ <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+ <20200812100650.GB28154@C02TD0UTHF1T.local>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
+Date:   Wed, 19 Aug 2020 20:53:42 +0200
+User-Agent: 
 MIME-Version: 1.0
+In-Reply-To: <20200812100650.GB28154@C02TD0UTHF1T.local>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a1937b38-055f-0fc7-0d08-16af7c42660b@kernel.dk>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:40:20PM -0600, Jens Axboe wrote:
-> On 8/18/20 6:03 AM, Vaibhav Gupta wrote:
-> > On Mon, Aug 17, 2020 at 07:06:03AM -0700, Jens Axboe wrote:
-> >> On 8/17/20 2:25 AM, Vaibhav Gupta wrote:
-> >>> Hello,
-> >>>
-> >>> I am working to upgrade power management framework support for PCI drivers, as
-> >>> my project under the Linux Kernel Mentorship Program.
-> >>>
-> >>> The ultimate goal is to completely remove the legacy framework. And for this we
-> >>> need to remove ".suspend" and ".resume" pointers from "struct pci_driver".
-> >>>
-> >>> The patch is doing the change for the same. The actual suspend() and
-> >>> resume() callbacks are defined in drivers/ata/libata-core.c and are exported.
-> >>> Which are then used by other files.
-> >>>
-> >>> Thus removing those pointers, included 54 files in this patch. Although, the
-> >>> actual changes are done in few files only. The changes should work fine as I
-> >>> have done similar changes for other drivers too which made their way into the
-> >>> kernel. Still, tests on few ata devices are necessary.
-> >>
-> >> Didn't we agree to split this up into separate patches??
-> >>
-> >>> I tried but unfortunately, I couldn't find or arrange devices to test upon. I
-> >>> have added the authors of the previous commit(s) for respective drivers as
-> >>> recipients. It would be very helpful if someone can test it on a device.
-> >>
-> >> Does qemu support any of the affected drivers?
-> >>
-> > Hello Jens,
-> > Yes we discussed about splitting it and I will surely do it. I just thought that
-> > still it has not got tested and in that case keeping check on patch-series with
-> > 55+ patches may become somewhat messy. Moreover, to test any driver one will
-> > have to apply the patch for libata-core and then that of the driver.
-> > So, I sent this v3 in order to get some help for the testing purpose. Once it
-> > goes successful, I can split it and send it for the submission.
-> > 
-> > I am not sure about qemu, I haven't checked for it. Qemu will be appropriate
-> > for testing power management for .suspend() and .resume() callbacks?
-> 
-> Well, that's your homework then, it seems pretty ideal for testing that
-> kind of thing and way easier than getting your hands on hardware. It
-> won't have support for everything, but so far you are at 0 things
-> tested, so any piix and ahci testing would be a win as far as I'm
-> concerned.
-> 
-Okay. Thanks for hinting about qemu. I will get started with it then.
 
-Vaibhav Gupta
-> -- 
-> Jens Axboe
+On 12/08/2020 12:06, Mark Rutland wrote:
+> On Thu, Aug 06, 2020 at 12:26:02PM -0500, Madhavan T. Venkataraman wrote:
+>> Thanks for the lively discussion. I have tried to answer some of the
+>> comments below.
+>>
+>> On 8/4/20 9:30 AM, Mark Rutland wrote:
+>>>
+>>>> So, the context is - if security settings in a system disallow a page to have
+>>>> both write and execute permissions, how do you allow the execution of
+>>>> genuine trampolines that are runtime generated and placed in a data
+>>>> page or a stack page?
+>>> There are options today, e.g.
+>>>
+>>> a) If the restriction is only per-alias, you can have distinct aliases
+>>>    where one is writable and another is executable, and you can make it
+>>>    hard to find the relationship between the two.
+>>>
+>>> b) If the restriction is only temporal, you can write instructions into
+>>>    an RW- buffer, transition the buffer to R--, verify the buffer
+>>>    contents, then transition it to --X.
+>>>
+>>> c) You can have two processes A and B where A generates instrucitons into
+>>>    a buffer that (only) B can execute (where B may be restricted from
+>>>    making syscalls like write, mprotect, etc).
+>>
+>> The general principle of the mitigation is W^X. I would argue that
+>> the above options are violations of the W^X principle. If they are
+>> allowed today, they must be fixed. And they will be. So, we cannot
+>> rely on them.
+> 
+> Hold on.
+> 
+> Contemporary W^X means that a given virtual alias cannot be writeable
+> and executeable simultaneously, permitting (a) and (b). If you read the
+> references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
+> release notes and related presentation make this clear, and further they
+> expect (b) to occur with JITS flipping W/X with mprotect().
+
+W^X (with "permanent" mprotect restrictions [1]) goes back to 2000 with
+PaX [2] (which predates partial OpenBSD implementation from 2003).
+
+[1] https://pax.grsecurity.net/docs/mprotect.txt
+[2] https://undeadly.org/cgi?action=article;sid=20030417082752
+
+> 
+> Please don't conflate your assumed stronger semantics with the general
+> principle. It not matching you expectations does not necessarily mean
+> that it is wrong.
+> 
+> If you want a stronger W^X semantics, please refer to this specifically
+> with a distinct name.
+> 
+>> a) This requires a remap operation. Two mappings point to the same
+>>      physical page. One mapping has W and the other one has X. This
+>>      is a violation of W^X.
+>>
+>> b) This is again a violation. The kernel should refuse to give execute
+>>      permission to a page that was writeable in the past and refuse to
+>>      give write permission to a page that was executable in the past.
+>>
+>> c) This is just a variation of (a).
+> 
+> As above, this is not true.
+> 
+> If you have a rationale for why this is desirable or necessary, please
+> justify that before using this as justification for additional features.
+> 
+>> In general, the problem with user-level methods to map and execute
+>> dynamic code is that the kernel cannot tell if a genuine application is
+>> using them or an attacker is using them or piggy-backing on them.
+> 
+> Yes, and as I pointed out the same is true for trampfd unless you can
+> somehow authenticate the calls are legitimate (in both callsite and the
+> set of arguments), and I don't see any reasonable way of doing that.
+> 
+> If you relax your threat model to an attacker not being able to make
+> arbitrary syscalls, then your suggestion that userspace can perorm
+> chceks between syscalls may be sufficient, but as I pointed out that's
+> equally true for a sealed memfd or similar.
+> 
+>> Off the top of my head, I have tried to identify some examples
+>> where we can have more trust on dynamic code and have the kernel
+>> permit its execution.
+>>
+>> 1. If the kernel can do the job, then that is one safe way. Here, the kernel
+>>     is the code. There is no code generation involved. This is what I
+>>     have presented in the patch series as the first cut.
+> 
+> This is sleight-of-hand; it doesn't matter where the logic is performed
+> if the power is identical. Practically speaking this is equivalent to
+> some dynamic code generation.
+> 
+> I think that it's misleading to say that because the kernel emulates
+> something it is safe when the provenance of the syscall arguments cannot
+> be verified.
+> 
+> [...]
+> 
+>> Anyway, these are just examples. The principle is - if we can identify
+>> dynamic code that has a certain measure of trust, can the kernel
+>> permit their execution?
+> 
+> My point generally is that the kernel cannot identify this, and if
+> usrspace code is trusted to dynamically generate trampfd arguments it
+> can equally be trusted to dyncamilly generate code.
+> 
+> [...]
+> 
+>> As I have mentioned above, I intend to have the kernel generate code
+>> only if the code generation is simple enough. For more complicated cases,
+>> I plan to use a user-level code generator that is for exclusive kernel use.
+>> I have yet to work out the details on how this would work. Need time.
+> 
+> This reads to me like trampfd is only dealing with a few special cases
+> and we know that we need a more general solution.
+> 
+> I hope I am mistaken, but I get the strong impression that you're trying
+> to justify your existing solution rather than trying to understand the
+> problem space.
+> 
+> To be clear, my strong opinion is that we should not be trying to do
+> this sort of emulation or code generation within the kernel. I do think
+> it's worthwhile to look at mechanisms to make it harder to subvert
+> dynamic userspace code generation, but I think the code generation
+> itself needs to live in userspace (e.g. for ABI reasons I previously
+> mentioned).
+> 
+> Mark.
 > 
