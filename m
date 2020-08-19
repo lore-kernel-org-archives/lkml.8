@@ -2,95 +2,89 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB408C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8852076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B540D2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597841110;
-	bh=6rLq2GEJmt4Ob1rHN/I7tzdkg8m4AVjM7i9gXSubYo4=;
+	s=default; t=1597841126;
+	bh=BeUgOrTnW9NK2R8b/9EQhHCscCxFNy7F61ov4iMYPIU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qGIwNVS1x5nx2GOYtzHT3+va4jfwaXBWM3GROtydh1xE5+G+lrV1X3MRMxFtR6twp
-	 acMaayVTZZuHyAQTsrnCyXoaEDC6QqUPbyJKew3SKHLgSscWiOHfZwqR3UGbUYqQ0z
-	 5ESGQXTAkV021xM3QUWu4H/FqETfbBo+oSwXUkTc=
+	b=tWuPmgXFmy2fRbu9LFTD+om6UEdnJcMa0+BuMfcwxy2iQBk77UAQ8cATTeZYJYx2W
+	 UKPBqKb7MqeKnUBFi0YeYOP2hh+wcTbDbfa/bgQK31wEq74zgRvM32zl0r91sxf6TJ
+	 M9FToWGoGPVIpWYkQWe7/dPSB3ZWHXFjoKapmX8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgHSMoz (ORCPT
+        id S1728539AbgHSMpZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:44:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgHSMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:44:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B56206B5;
-        Wed, 19 Aug 2020 12:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597841043;
-        bh=6rLq2GEJmt4Ob1rHN/I7tzdkg8m4AVjM7i9gXSubYo4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bHRFVboNCn2DcIda6HFf5UZZsvIHY0ETlTwvYEaQxl4qc6ni0QdFCDVTHPicrwnsu
-         94V3tm8+YbsaiV3v42p4Nrd6ACBgXvzzBSuvpuSXSIRaAcGLQAY1KBLZ0PV/JlPID0
-         K/96P4YWrT3Km0ezNutqb8aUoQeUD8VJX91R/5Lg=
-Date:   Wed, 19 Aug 2020 14:44:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?5b2t5rWp?= <penghao@uniontech.com>
-Cc:     jikos <jikos@kernel.org>,
-        "benjamin.tissoires " <benjamin.tissoires@redhat.com>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] USB HID: Add disabled wakeup from s3 by touchpad on
- bydzhaoxin notebook
-Message-ID: <20200819124425.GA1469922@kroah.com>
-References: <20200819115101.22532-1-penghao@uniontech.com>
- <20200819120856.GA931936@kroah.com>
- <285385314.979590.1597840631436.JavaMail.xmail@bj-wm-cp-2>
+        Wed, 19 Aug 2020 08:45:25 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:41142 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgHSMoo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:44:44 -0400
+Received: by mail-ej1-f65.google.com with SMTP id t10so26112313ejs.8;
+        Wed, 19 Aug 2020 05:44:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=aPPgbu/rd3EiFTTjtdudAYmisDZ+EmrGZ1/2YVbuiwA=;
+        b=jaxhdW3yvClC/pygDWYKIYnWwqTxgR6BAxsqctCQP5F5tko3d0qUc6wjZkDJMVNUve
+         4pW+TvSSQh0JXlLK1lgYdYlP0EpTnkAn/d+VLAH3IEfjZmv/S9f8NkP/A8UtOOQSRfYt
+         aDO2Ae+jtvqBTU4BMLVprosSjHb4MBXLq1GmjQ05ByGW8kYXsVwuxMvOTQwbwVMxisDW
+         /8XAUvDo1sEVAhhBFGX86WYrqp/EkjPpJiCYFuCotNpRDr79sFbYhyid5zIZGAj4qJQu
+         F5b04YzN3k4l29aybeM1sztBQDC44w3fDWiYkSld83k6KEIYlEBmwRQQ4Yt+htOo0htm
+         P8FA==
+X-Gm-Message-State: AOAM531ILu+E2WySSoF5hKZswwzL5TpGl3bTbAAixIH2sLgfDzqn5lka
+        nMOtYzmdWXH+YJWs43Vf7qk=
+X-Google-Smtp-Source: ABdhPJxKj5N6s/QhQ3Vc+HVbX0Y3A5UqWe+HM72lOucq+88giukbuy1VOTuhlK3IzB3Lu4HfALHkqw==
+X-Received: by 2002:a17:906:e58:: with SMTP id q24mr19262893eji.516.1597841082137;
+        Wed, 19 Aug 2020 05:44:42 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id ch24sm18820225ejb.7.2020.08.19.05.44.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 05:44:41 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 14:44:39 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 4/8] spi: spi-s3c64xx: Rename S3C64XX_SPI_SLAVE_* to
+ S3C64XX_SPI_CS_*
+Message-ID: <20200819124439.GE18122@kozik-lap>
+References: <20200819123208.12337-1-l.stelmach@samsung.com>
+ <CGME20200819123227eucas1p1f56cc06dc6c368abf2d3952ba04f37e2@eucas1p1.samsung.com>
+ <20200819123208.12337-5-l.stelmach@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <285385314.979590.1597840631436.JavaMail.xmail@bj-wm-cp-2>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200819123208.12337-5-l.stelmach@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 08:37:11PM +0800, 彭浩 wrote:
-> Thank you for your guidance, can you tell me how to improve ?
+On Wed, Aug 19, 2020 at 02:32:04PM +0200, Łukasz Stelmach wrote:
+> Rename S3C64XX_SPI_SLAVE_* to S3C64XX_SPI_CS_* to match documentation.
 > 
-> 
-> thanks,   
-> penghao
-> 
-> 
-> 统信软件技术有限公司
-> 
-> UnionTech Software Technology Co., Ltd. 　
-> 
-> 官网：www.uniontech.com　　
-> 
-> 
-> 此电子邮件消息仅供预期收件人使用，其中可能包含保密或特权使用信息。如果您不是预
-> 期收件人，请勿使用、传播、分发或复制此电子邮件或信赖此邮件采取任何行动。如果您
-> 误收了此邮件，请立即回复邮件通知统信软件技术有限公司发件人，并删除误收电子邮件
-> 及其相关附件。感谢配合！  
-> 
->  
-> This email message is intended only for the use of the individual or entity who
-> /which is the intended recipient and may contain information that is privileged
-> or confidential. If you are not the intended recipient, you are hereby notified
-> that any use, dissemination, distribution or copying of, or taking any action
-> in reliance on, this e-mail is strictly prohibited. If you have received this
-> email in error, please notify UnionTech Software Technology  immediately by
-> replying to this e-mail and immediately delete and discard all copies of the
-> e-mail and the attachment thereto (if any). Thank you.  
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  drivers/spi/spi-s3c64xx.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
 
-Footers like this mean I have to delete it and can not respond as it is
-not compatible with Linux kernel development, sorry :(
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Best regards,
+Krzysztof
