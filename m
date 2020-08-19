@@ -2,150 +2,101 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D538C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5EC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAlnLFGs"
+	by mail.kernel.org (Postfix) with ESMTP id 318A1206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHSKsr (ORCPT
+        id S1728114AbgHSKtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgHSKs3 (ORCPT
+        Wed, 19 Aug 2020 06:49:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54028 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgHSKrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:48:29 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910FCC061757;
-        Wed, 19 Aug 2020 03:48:28 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id h22so18666179otq.11;
-        Wed, 19 Aug 2020 03:48:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JFCS1wWCaky01GdCrS5KhBNLCXiKvx8eu/9Q1CWY57o=;
-        b=SAlnLFGsaJJ2xUQvXdp6/REunLAQzaLpmNpCPkhdMyKVNOL4zXoJc+uTpvFb1PLXQe
-         nN8aQpwx9KlR0QpjA0U0Eq9qCAcvJ1BkG1Pmvfae+wF16AUCkU8W0GDQheD/o4B1VrUX
-         PelVL5WwDQloIppGpod8O4LcRauK/SLT0vBKv+BhPM4L1DU+6rZBrJ0Dt0oV8Ce4u200
-         wfYajuI8k/buRZ/KOQgJS9xFj6qU+vsS6Mi/Pic5cr7hyqCbNaPaM64dCQ32B92C7zpm
-         twdkgIcY8FJxVqqD5N4bDX/Yu8aavznJiTYE5JD98MkyaozlEe8FkOVjNVcv9NBfu1pV
-         5Fgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JFCS1wWCaky01GdCrS5KhBNLCXiKvx8eu/9Q1CWY57o=;
-        b=uV1mk1B8VaF8tL03zX+JPDnTfyoDnCNxK3gH+iz+/rwHDaDH4hm566X1iC7oIitBQH
-         76P+QolpXTnIPEpqoQakVKdpGCMLf9musvyF1ESa7fTgxLvxsLlpc9mPgIglJ6Kdla24
-         N8C0ll+EATzolfkBKVJR3Th4rTUbCZNC/XglL/+byfkSD3y7hRaxWENgiDBdmfdfIh7U
-         Y8u1VPbZ6UuIL0gQsEiUx/i0BCYo7UPKLblql0q/72bOZsBHTbT7d2E3QZ0r9u5OlQ0m
-         V+td2rohBLQWIW0bo8naZ0z3+W9oIiIEvVpYQg8JLKwoORrOSoCIb7L0Ar3cWHzKVTZN
-         wXTA==
-X-Gm-Message-State: AOAM532ZQXvxDI/UlAajImfHfGl6AguDlbcNSDwj79tVy7i26jUl5ncm
-        IzmhgbQKiBsqdofNGeV5Bj3KUQ6wrj+EC22/IMQ=
-X-Google-Smtp-Source: ABdhPJwYTK+IRxToH0hqhLtJ7NIIqDs8lKmtEJkzNzElCKB5MQaF3rOwIOaAYWCB8rMlfnOVuvrNcqGFlbqr+yW4gKM=
-X-Received: by 2002:a9d:128c:: with SMTP id g12mr17527086otg.242.1597834108000;
- Wed, 19 Aug 2020 03:48:28 -0700 (PDT)
+        Wed, 19 Aug 2020 06:47:41 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k8Ld4-0006IE-OF; Wed, 19 Aug 2020 10:47:38 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hewllig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 11/11] sched: remove _do_fork()
+Date:   Wed, 19 Aug 2020 12:46:55 +0200
+Message-Id: <20200819104655.436656-12-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com> <202008181309.FD3940A2D5@keescook>
-In-Reply-To: <202008181309.FD3940A2D5@keescook>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Wed, 19 Aug 2020 16:18:16 +0530
-Message-ID: <CAOMdWSLi-aUeKDN8Xn-X2uW_LmWsp2n=NL3dPGiUbQKm_MxcAg@mail.gmail.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
-        sre@kernel.org, kys@microsoft.com, deller@gmx.de,
-        dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > > > > >
-> > > > > > > > In preparation for unconditionally passing the
-> > > > > > > > struct tasklet_struct pointer to all tasklet
-> > > > > > > > callbacks, switch to using the new tasklet_setup()
-> > > > > > > > and from_tasklet() to pass the tasklet pointer explicitly.
-> > > > > > >
-> > > > > > > Who came up with the idea to add a macro 'from_tasklet' that
-> > > > > > > is just container_of? container_of in the code would be
-> > > > > > > _much_ more readable, and not leave anyone guessing wtf
-> > > > > > > from_tasklet is doing.
-> > > > > > >
-> > > > > > > I'd fix that up now before everything else goes in...
-> > > > > >
-> > > > > > As I mentioned in the other thread, I think this makes things
-> > > > > > much more readable. It's the same thing that the timer_struct
-> > > > > > conversion did (added a container_of wrapper) to avoid the
-> > > > > > ever-repeating use of typeof(), long lines, etc.
-> > > > >
-> > > > > But then it should use a generic name, instead of each sub-system
-> > > > > using some random name that makes people look up exactly what it
-> > > > > does. I'm not huge fan of the container_of() redundancy, but
-> > > > > adding private variants of this doesn't seem like the best way
-> > > > > forward. Let's have a generic helper that does this, and use it
-> > > > > everywhere.
-> > > >
-> > > > I'm open to suggestions, but as things stand, these kinds of
-> > > > treewide
-> > >
-> > > On naming? Implementation is just as it stands, from_tasklet() is
-> > > totally generic which is why I objected to it. from_member()? Not
-> > > great with naming... But I can see this going further and then we'll
-> > > suddenly have tons of these. It's not good for readability.
-> >
-> > Since both threads seem to have petered out, let me suggest in
-> > kernel.h:
-> >
-> > #define cast_out(ptr, container, member) \
-> >       container_of(ptr, typeof(*container), member)
-> >
-> > It does what you want, the argument order is the same as container_of
-> > with the only difference being you name the containing structure
-> > instead of having to specify its type.
->
-> I like this! Shall I send this to Linus to see if this can land in -rc2
-> for use going forward?
->
+Now that all callers of _do_fork() have been switched to kernel_clone() remove
+the _do_fork() helper.
 
-Cool, I shall wait for it to be accepted and then spin out V2 with cast_out()
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
+---
+ include/linux/sched/task.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index d4428039c3c1..85fb2f34c59b 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -84,10 +84,6 @@ extern void exit_files(struct task_struct *);
+ extern void exit_itimers(struct signal_struct *);
+ 
+ extern pid_t kernel_clone(struct kernel_clone_args *kargs);
+-static inline long _do_fork(struct kernel_clone_args *kargs)
+-{
+-	return kernel_clone(kargs);
+-}
+ struct task_struct *fork_idle(int);
+ struct mm_struct *copy_init_mm(void);
+ extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
 -- 
-       - Allen
+2.28.0
+
