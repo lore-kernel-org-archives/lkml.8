@@ -2,200 +2,204 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48F7206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689862076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERogb2s4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgHSKue (ORCPT
+        id S1728057AbgHSKuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:50:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53971 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgHSKra (ORCPT
+        Wed, 19 Aug 2020 06:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbgHSKum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:47:30 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8Lcq-0006IE-KO; Wed, 19 Aug 2020 10:47:24 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Wed, 19 Aug 2020 06:50:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53048C061344
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:50:41 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so21013301wrm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4RmXTztNi9GECVJ0aExOfbDAQwAs/L9NUvmPr5zTDmQ=;
+        b=ERogb2s4FfcGN+xlF7eyTokoRdK3yXUkX5DCmxcs6ryf2cnndWX8BXtWptZQGoegaG
+         h2xyVy0cL20IGeE7Cewi+jv2xtYQwOD/NsxENYOaSSe7I/GzWmSLn/Sj8sx9oYcclOJy
+         ufVFHG5/68JQLEcpPPGaoHC/g5m33RFk5eTtCnmNL7F71equk8cU4pEi27jCme1qd92Y
+         XXUt7mBjyq7yNNxCbiQUVRGH9IYdJTsEK9/yJN4092pCX6c46GIQ1luYsJUKlHkJ/6pz
+         BdyK/zwxkymS2DbgmINneTd8rPFgyjniVsUz3QJEl9oPmrsjn1PXqqnCIso8yEfBMW7K
+         0r+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4RmXTztNi9GECVJ0aExOfbDAQwAs/L9NUvmPr5zTDmQ=;
+        b=ucOnaSO7g8+c3YGO4Lepa9kBL//6Yg6G51ye6ab9Li6mZedKYVhCBIHjb7tVfEyb1K
+         jzgL47jsWjDqTfQsjUq4juXhGuPPL7nhbmaTMxQRkCCP6u59cFZj1xEw7pr6AvQD5p0l
+         /tQYZLqrqHRSHga/0RfpUsGi5xfWY6+fIycLaZnFbjiheMhpMtAWyOv9xABahDuwnO92
+         0+egAe14Yzgr+Jvkc6vrtSWtNht457crAn2ZFs7uqTtywR5vrGIpZi2iTFO/0ivX02cR
+         drEHmOgtFGaOtkWUu8mVtQjxAR37HoAD37e5Z34BuD2R7Fp5zjfFj8Y4t8TexDR/QtnG
+         l7Kw==
+X-Gm-Message-State: AOAM530rPkNlcbFr0n89Z7v9Yl/Tu/7dnGIngow6VwEabm78wJoLVfm7
+        AtwH9P5vL6wvvvROaTr5AsZi/w==
+X-Google-Smtp-Source: ABdhPJza8zEikaAPOOg7a9HyT7lA1V+4By8Z2PwqI0jCPWrX/9vBtS3FYNySJ64ShjNUv4gCE8rU5A==
+X-Received: by 2002:a05:6000:181:: with SMTP id p1mr24140484wrx.310.1597834239664;
+        Wed, 19 Aug 2020 03:50:39 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id i7sm41641170wrs.25.2020.08.19.03.50.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 03:50:39 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:50:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 01/11] fork: introduce kernel_clone()
-Date:   Wed, 19 Aug 2020 12:46:45 +0200
-Message-Id: <20200819104655.436656-2-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819104655.436656-1-christian.brauner@ubuntu.com>
-References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v8 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200819105029.GH4354@dell>
+References: <20200813124832.17349-1-michael@walle.cc>
+ <20200813124832.17349-2-michael@walle.cc>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200813124832.17349-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old _do_fork() helper doesn't follow naming conventions of in-kernel
-helpers for syscalls. The process creation cleanup in [1] didn't change the
-name to something more reasonable mainly because _do_fork() was used in quite a
-few places. So sending this as a separate series seemed the better strategy.
+On Thu, 13 Aug 2020, Michael Walle wrote:
 
-This commit does two things:
-1. renames _do_fork() to kernel_clone() but keeps _do_fork() as a simple static
-   inline wrapper around kernel_clone().
-2. Changes the return type from long to pid_t. This aligns kernel_thread() and
-   kernel_clone(). Also, the return value from kernel_clone that is surfaced in
-   fork(), vfork(), clone(), and clone3() is taken from pid_vrn() which returns
-   a pid_t too.
+> There are I2C devices which contain several different functions but
+> doesn't require any special access functions. For these kind of drivers
+> an I2C regmap should be enough.
+> 
+> Create an I2C driver which creates an I2C regmap and enumerates its
+> children. If a device wants to use this as its MFD core driver, it has
+> to add an individual compatible string. It may provide its own regmap
+> configuration.
+> 
+> Subdevices can use dev_get_regmap() on the parent to get their regmap
+> instance.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes since v7:
+>  - none
+> 
+> Changes since v6:
+>  - added SIMPLE_MFD_I2C help text
+>  - revised description in module header
+> 
+> Changes since v5:
+>  - removed "select MFD_CORE" in Kconfig
+>  - removed help text in Kconfig, we assume that the users of this
+>    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+>    a small description to the driver itself.
+>  - removed "struct simple_mfd_i2c_config" and use regmap_config
+>    directly
+>  - changed builtin_i2c_driver() to module_i2c_driver(), added
+>    MODULE_ boilerplate
+>  - cleaned up the included files
+> 
+> Changes since v4:
+>  - new patch. Lee, please bear with me. I didn't want to delay the
+>    new version (where a lot of remarks on the other patches were
+>    addressed) even more, just because we haven't figured out how
+>    to deal with the MFD part. So for now, I've included this one.
+> 
+>  drivers/mfd/Kconfig          | 12 ++++++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/simple-mfd-i2c.c | 56 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 69 insertions(+)
+>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 33df0837ab41..6e1a38944d28 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1162,6 +1162,18 @@ config MFD_SI476X_CORE
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called si476x-core.
+>  
+> +config MFD_SIMPLE_MFD_I2C
+> +	tristate
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  This driver creates a single register map with the intention for it
+> +	  to be shared by all sub-devices.
+> +
+> +	  Once the register map has been successfully initialised, any
+> +	  sub-devices represented by child nodes in Device Tree will be
+> +	  subsequently registered.
+> +
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index a60e5f835283..78d24a3e7c9e 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+> diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+> new file mode 100644
+> index 000000000000..09b40ebfdf07
+> --- /dev/null
+> +++ b/drivers/mfd/simple-mfd-i2c.c
+> @@ -0,0 +1,56 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Simple MFD - I2C
+> + *
+> + * This driver creates a single register map with the intention for it to be
+> + * shared by all sub-devices.  Children can use their parent's device structure
+> + * (dev.parent) in order reference it.
 
-Follow-up patches will switch each caller of _do_fork() and each place where it
-is referenced over to kernel_clone(). After all these changes are done, we can
-remove _do_fork() completely and will only be left with kernel_clone().
+Nit: "in order *to* reference it"
 
-[1]: 9ba27414f2ec ("Merge tag 'fork-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux")
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- Matthew Wilcox (Oracle) <willy@infradead.org>:
-  - make kernel_clone() return pid_t
----
- include/linux/sched/task.h |  6 +++++-
- kernel/fork.c              | 16 ++++++++--------
- 2 files changed, 13 insertions(+), 9 deletions(-)
+Once fixed, please add my:
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index a98965007eef..d4428039c3c1 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -83,7 +83,11 @@ extern void do_group_exit(int);
- extern void exit_files(struct task_struct *);
- extern void exit_itimers(struct signal_struct *);
- 
--extern long _do_fork(struct kernel_clone_args *kargs);
-+extern pid_t kernel_clone(struct kernel_clone_args *kargs);
-+static inline long _do_fork(struct kernel_clone_args *kargs)
-+{
-+	return kernel_clone(kargs);
-+}
- struct task_struct *fork_idle(int);
- struct mm_struct *copy_init_mm(void);
- extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4d32190861bd..d822c7a4b9c4 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2384,14 +2384,14 @@ struct mm_struct *copy_init_mm(void)
-  *
-  * args->exit_signal is expected to be checked for sanity by the caller.
-  */
--long _do_fork(struct kernel_clone_args *args)
-+pid_t kernel_clone(struct kernel_clone_args *args)
- {
- 	u64 clone_flags = args->flags;
- 	struct completion vfork;
- 	struct pid *pid;
- 	struct task_struct *p;
- 	int trace = 0;
--	long nr;
-+	pid_t nr;
- 
- 	/*
- 	 * For legacy clone() calls, CLONE_PIDFD uses the parent_tid argument
-@@ -2477,7 +2477,7 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
- 		.stack_size	= (unsigned long)arg,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- 
- #ifdef __ARCH_WANT_SYS_FORK
-@@ -2488,7 +2488,7 @@ SYSCALL_DEFINE0(fork)
- 		.exit_signal = SIGCHLD,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- #else
- 	/* can not support in nommu mode */
- 	return -EINVAL;
-@@ -2504,7 +2504,7 @@ SYSCALL_DEFINE0(vfork)
- 		.exit_signal	= SIGCHLD,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- #endif
- 
-@@ -2542,7 +2542,7 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- 		.tls		= tls,
- 	};
- 
--	return _do_fork(&args);
-+	return kernel_clone(&args);
- }
- #endif
- 
-@@ -2700,7 +2700,7 @@ SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
- 	if (!clone3_args_valid(&kargs))
- 		return -EINVAL;
- 
--	return _do_fork(&kargs);
-+	return kernel_clone(&kargs);
- }
- #endif
- 
-@@ -2863,7 +2863,7 @@ int unshare_fd(unsigned long unshare_flags, unsigned int max_fds,
- /*
-  * unshare allows a process to 'unshare' part of the process
-  * context which was originally shared using clone.  copy_*
-- * functions used by _do_fork() cannot be used here directly
-+ * functions used by kernel_clone() cannot be used here directly
-  * because they modify an inactive task_struct that is being
-  * constructed. Here we are modifying the current, active,
-  * task_struct.
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.28.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
