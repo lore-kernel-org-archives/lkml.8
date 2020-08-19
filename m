@@ -2,110 +2,120 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B19CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F210C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742B520758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B0820758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5E+REp7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mtqG2R5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHSSrU (ORCPT
+        id S1726863AbgHSStK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:47:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41948 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726578AbgHSSrR (ORCPT
+        Wed, 19 Aug 2020 14:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgHSStF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:47:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597862836;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=n1r99O9sF3KmCtBpBDuUEdXHcIRahMGRsJ4wLhKM7X4=;
-        b=P5E+REp7gRU3eJF6KCLNr5qmrvKi4g+HZL3CqDBoDpLIvK/fVGdNwjtwqbeeGdLro++uqL
-        KXXpMWh+n+NUlqOOIgsLLHB326BvN8fEaGJru5Lj+o5semlbLGMDa2eV0bjCbujbrgKWy/
-        cxAqc66L1zPJWuQkBsXcATmeXu9X5CQ=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-ZO-WHR5lMhmP7f-a6deGHg-1; Wed, 19 Aug 2020 14:47:13 -0400
-X-MC-Unique: ZO-WHR5lMhmP7f-a6deGHg-1
-Received: by mail-qt1-f200.google.com with SMTP id m88so17346059qtd.15
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:47:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n1r99O9sF3KmCtBpBDuUEdXHcIRahMGRsJ4wLhKM7X4=;
-        b=XnpfB4At09b2phdoMgfs/nRf6hN7gvNrutd4u84slSXeiiZipHzKHJY0z2l7QD+blD
-         JMrShzeNlQTgNAqW9trRkOF/wlNICKXInXiKaA5dAjaUv5Zlbyi/JxZ7J9EyzOPd6QzA
-         Iie295ukYuNamvTS78N/rTeafcqZ6ZF6f+8VR1WNmguWPnuCnuBRiLJMrCBXoT1KYzEP
-         Isf/KCYepbBXY4pK13yl0mG8GUxMN3ECO0KG0rFg3Q0AuSp4FkCEkiu3oYAenP0nWG88
-         s/0ripuzvCqWeWHvAiMieSqT9u/y6rlGOZbVgzv+IkeE40NKEKYBVMcHxrBNX9mL9lzs
-         oI8w==
-X-Gm-Message-State: AOAM532kNKSzQxQU0BN+PJzGC95r54hFxkwRfFmG2DDINphLVWqVEio9
-        bVLm8N0n82Om6pikNh06D+DyDjh1A4AQZu0W+pqkr0HMVKRvea7yfIHxEGNJa4nI8phBg5K9t2s
-        +8TdYnq/P0xX+0HWGlYr+bPOV
-X-Received: by 2002:ac8:568a:: with SMTP id h10mr23862123qta.239.1597862832926;
-        Wed, 19 Aug 2020 11:47:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxzBbFyRJFyOM+0EEV33sP7wXkBj/aJZVelGHRYuIOT/f/OlA76miUUwSBAv7jlSbeVETUZcw==
-X-Received: by 2002:ac8:568a:: with SMTP id h10mr23862108qta.239.1597862832688;
-        Wed, 19 Aug 2020 11:47:12 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id 20sm29006673qtp.53.2020.08.19.11.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:47:12 -0700 (PDT)
-From:   trix@redhat.com
-To:     agross@kernel.org, bjorn.andersson@linaro.org, sibis@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] soc: qcom: initialize local variable
-Date:   Wed, 19 Aug 2020 11:46:37 -0700
-Message-Id: <20200819184637.15648-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Wed, 19 Aug 2020 14:49:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE68CC061757;
+        Wed, 19 Aug 2020 11:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=yHlibx9T0xrkfaCUzHO6K9mta5VlhggyQEWPghnljAs=; b=mtqG2R5K+Yx4dE8Kn6VbN3423G
+        kIyD7iHdEs9//9zn4d+MqCrVYAzK+wcoAiner0u6ns9sOmIc5tfRAgo27IXLWgMP6nwGY0e6y6pmA
+        3HyU19g7ZHaw31ZJ8zxxv6IAybbAuxOaFrkQK2spsvcHh6QuyTpP2yNUbuYLJtWlcWRvqXSIlF0jI
+        9Vy40hmXVmrp6grQd7r+oJ7KtTvTI521d9fNWtfKyyqTvGJ4P+MhRWJZc+95qtI0mQz6V/ZnZbfe4
+        Kgct1GcrVAvfxOQF0Ag9wTk4R925hXyZsT3fcWZRlbRDSahohQn09B2qh4/GBAkF9CnxwnjMmjRTs
+        EKPHJUnA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8T8n-0006T8-TC; Wed, 19 Aug 2020 18:48:53 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/8] mm: Optimise madvise WILLNEED
+Date:   Wed, 19 Aug 2020 19:48:45 +0100
+Message-Id: <20200819184850.24779-4-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200819184850.24779-1-willy@infradead.org>
+References: <20200819184850.24779-1-willy@infradead.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+Instead of calling find_get_entry() for every page index, use an XArray
+iterator to skip over NULL entries, and avoid calling get_page(),
+because we only want the swap entries.
 
-clang static analysis reports this problem
-
-pdr_interface.c:596:6: warning: Branch condition evaluates
-  to a garbage value
-        if (!req.service_path[0])
-            ^~~~~~~~~~~~~~~~~~~~
-
-This check that req.service_path was set in an earlier loop.
-However req is a stack variable and its initial value
-is undefined.
-
-So initialize req to 0.
-
-Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- drivers/soc/qcom/pdr_interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/madvise.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-index 088dc99f77f3..f63135c09667 100644
---- a/drivers/soc/qcom/pdr_interface.c
-+++ b/drivers/soc/qcom/pdr_interface.c
-@@ -569,7 +569,7 @@ EXPORT_SYMBOL(pdr_add_lookup);
- int pdr_restart_pd(struct pdr_handle *pdr, struct pdr_service *pds)
+diff --git a/mm/madvise.c b/mm/madvise.c
+index dd1d43cf026d..96189acd6969 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -224,25 +224,28 @@ static void force_shm_swapin_readahead(struct vm_area_struct *vma,
+ 		unsigned long start, unsigned long end,
+ 		struct address_space *mapping)
  {
- 	struct servreg_restart_pd_resp resp;
--	struct servreg_restart_pd_req req;
-+	struct servreg_restart_pd_req req = { 0 };
- 	struct sockaddr_qrtr addr;
- 	struct pdr_service *tmp;
- 	struct qmi_txn txn;
+-	pgoff_t index;
++	XA_STATE(xas, &mapping->i_pages, linear_page_index(vma, start));
++	pgoff_t end_index = end / PAGE_SIZE;
+ 	struct page *page;
+-	swp_entry_t swap;
+ 
+-	for (; start < end; start += PAGE_SIZE) {
+-		index = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
++	rcu_read_lock();
++	xas_for_each(&xas, page, end_index) {
++		swp_entry_t swap;
+ 
+-		page = find_get_entry(mapping, index);
+-		if (!xa_is_value(page)) {
+-			if (page)
+-				put_page(page);
++		if (!xa_is_value(page))
+ 			continue;
+-		}
++		rcu_read_unlock();
++
+ 		swap = radix_to_swp_entry(page);
+ 		page = read_swap_cache_async(swap, GFP_HIGHUSER_MOVABLE,
+ 							NULL, 0, false);
+ 		if (page)
+ 			put_page(page);
++
++		rcu_read_lock();
++		xas_reset(&xas);
+ 	}
++	rcu_read_unlock();
+ 
+ 	lru_add_drain();	/* Push any new pages onto the LRU now */
+ }
 -- 
-2.18.1
+2.28.0
 
