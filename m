@@ -2,172 +2,90 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B71C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BDBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530E1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399A320738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7yU/9er"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4OABwUf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgHSGPT (ORCPT
+        id S1726685AbgHSGTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        Wed, 19 Aug 2020 02:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbgHSGPR (ORCPT
+        with ESMTP id S1726435AbgHSGTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:15:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE79AC061389;
-        Tue, 18 Aug 2020 23:15:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g8so939308wmk.3;
-        Tue, 18 Aug 2020 23:15:16 -0700 (PDT)
+        Wed, 19 Aug 2020 02:19:19 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD6FC061389;
+        Tue, 18 Aug 2020 23:19:19 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id o22so16991912qtt.13;
+        Tue, 18 Aug 2020 23:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XqRsyRcI4JizYSBgfDQ1/ZtsmI6N1f3+iRKY5gBn554=;
-        b=c7yU/9erjCdq+iHxp9rCjXLehhXneoO0lsw/AO5h7M65mqESgPnanyqBBJl5mBa//T
-         ZgVjBkByuDCr0I7hAtydSR2Xdv0G08UUrqG5lUpjeJqXwwTJn0ZZyAPHKvE9mIxE23O7
-         JcwiePYhJXP2eOyWHo/IPZb/SAOwXykGmHyCicU1A/WqvjXxJQTShGPgD2/eSBg50e6w
-         1qcGjAXT5/FosXXB3nZO9PAMTztGiEBYycky4GPXhmh2DZeC2W8k24FF7/X2nIJ5StlL
-         zIwO+6l5zlavXXTjKFxPVm5b8MIHthImCyOnwchhhQJGne2L8jz1AL2suSLmJsKJ7jcy
-         WNFQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NTOKvcFNffgh/XzBfPa7Smu/OsUcNaV4MrEtw+PeKw8=;
+        b=U4OABwUfl5r0xz0P3olTASnqrUy1QbOG4JPZtgzSWmplzqvHjUUHzAvuJHaPlXgKFW
+         uDW4xSarAGEbm9ep3R0GxXfTBGWdF9awWNrnhkpLPVSHSunFJcAnYCOQJu+u+QzJXu1v
+         e/BKCu80yrGIQUxXLwjt+cL2dZcuNSUbyY82e0Wn668miC51pZg4OYGpwBsMViXaRFAW
+         GYZuvOcbW5kD8flgBne5MhA7BFivUqrjP1SgLYP+Gu2BAqYyAJOujIDhPNc4dtjfxpNP
+         VD8Yqvsg0HgYNcjZGtnS4+RKJXHSAkWaaUPJ7AXR4WvZ0iV2gesZY5WOPi0j+W44FfZM
+         KgSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XqRsyRcI4JizYSBgfDQ1/ZtsmI6N1f3+iRKY5gBn554=;
-        b=YxMaTsC1rymilduTRynKLQ7KkG/ZkaZM3CWmjQw3NImiK34qjoYycKE3+UmMwSK/Ay
-         2Janwgi0oRW/vXza6UPzf5lpqMyJrlfUMrZcEY1NCHTWahMlheHnFUHp/M5pV76ckXqb
-         BYSoxRkZ4AXYpmQBCV+Y6dC0jY/+EGma0r6RlHRgG41EZXqOdmNgmsHm+tz9odGDvmaH
-         42Dn2xpj/doxnigTIN3tqsHK87wm7OUfOuqJaLGjMZJOqeG6/J/FqWzXPfaXahN7bDZw
-         WzW9gd7XnT6F7Dxq8o2MKnJT/KPMDAPgFlNi+UhnXJS49pTOjCahAkT2C6PuZ+5ryvLg
-         WsTw==
-X-Gm-Message-State: AOAM533n2Xaae+Hb/xp2mb2goZo3yVr8ImajSEyUqoAJ4LoVVCZ4F4gQ
-        eRdR3nno6pVpIqqG/uA4HJ74UZNsOtPk7A==
-X-Google-Smtp-Source: ABdhPJyfWLFMBgE3nkRKJ4ipvtWCILiGRvHPLtREGRgPlFJ3JohUrFII0y8H54azDF5bepO2S12GwA==
-X-Received: by 2002:a7b:c306:: with SMTP id k6mr3375410wmj.86.1597817713640;
-        Tue, 18 Aug 2020 23:15:13 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:855a:ccf2:be1a:9037? (p200300ea8f235700855accf2be1a9037.dip0.t-ipconnect.de. [2003:ea:8f23:5700:855a:ccf2:be1a:9037])
-        by smtp.googlemail.com with ESMTPSA id b8sm38346115wrv.4.2020.08.18.23.15.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 23:15:13 -0700 (PDT)
-Subject: Re: fsl_espi errors on v5.7.15
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "tiago.brusamarello@datacom.ind.br" 
-        <tiago.brusamarello@datacom.ind.br>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
- <c43a23bd-33ec-4ef2-2ca5-730342248db3@gmail.com>
- <3c72eec1-41ba-7389-eceb-3de80065555a@alliedtelesis.co.nz>
- <1bbb3726-b0a4-6eb9-9076-706b06dfb90f@alliedtelesis.co.nz>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <61bb9800-9f90-9cd4-3b17-c14a7f83d792@gmail.com>
-Date:   Wed, 19 Aug 2020 08:15:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NTOKvcFNffgh/XzBfPa7Smu/OsUcNaV4MrEtw+PeKw8=;
+        b=MZ8h9UOeERcuqi1YvlG8c23Tef1LiE2tQLYe69NlLbyIiwcrxd74c4jXelXblxEDlX
+         8C4yuKEAgw22Acv9ADdik+LloJWvF6wpodx5X/15LcYsTOY+rJGSYudUxsj6wGbXm8kb
+         p9B3YTiZo3oN7cJyV4rSf8Xh6l3BYxub+TgYbpZpGUCjD9s+rWV3eVckQy1IFF6J7XIu
+         Qi4MS4OFRn5ABnAWPHmv+ybkxcahaNI18BT/GLKJcEE3D0zZzfSn/emuPMdojqrtYMKn
+         8sRFvhXL/A1NAjKXojr9C/DyGPWPnX4sQQrPb8PcjV7K3EZ+uOTHN+ihE98X8DQQgQ2/
+         Q+AQ==
+X-Gm-Message-State: AOAM533ih4RtjW3jxqKBGP50lA5LHu8DijYzkCYP7aOMlOmNDmzr3FQi
+        5mwfztFBM1QMkFaHKpRgc56oXLEAq6kc02cgfM0=
+X-Google-Smtp-Source: ABdhPJxqpOhvykIzgNwcc1NKVNmWwbtm0b1WkwrbYXj+e9AS1W+FFMjjvPTr6GC4iA8bcJfzkRJbQH7RVCJjBsh+Qhs=
+X-Received: by 2002:ac8:6c55:: with SMTP id z21mr20944550qtu.68.1597817958514;
+ Tue, 18 Aug 2020 23:19:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1bbb3726-b0a4-6eb9-9076-706b06dfb90f@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200817070009.4631-1-krzk@kernel.org>
+In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
+From:   vijai kumar <vijaikumar.kanagarajan@gmail.com>
+Date:   Wed, 19 Aug 2020 11:49:07 +0530
+Message-ID: <CALLGG_JH1Stak6-V3bFQMOqeg6oKWqqDNy8ZKEF5ARKdac+jzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.08.2020 00:44, Chris Packham wrote:
-> Hi Again,
-> 
-> On 17/08/20 9:09 am, Chris Packham wrote:
-> 
->>
->> On 14/08/20 6:19 pm, Heiner Kallweit wrote:
->>> On 14.08.2020 04:48, Chris Packham wrote:
->>>> Hi,
->>>>
->>>> I'm seeing a problem with accessing spi-nor after upgrading a T2081
->>>> based system to linux v5.7.15
->>>>
->>>> For this board u-boot and the u-boot environment live on spi-nor.
->>>>
->>>> When I use fw_setenv from userspace I get the following kernel logs
->>>>
->>>> # fw_setenv foo=1
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>> ...
->>>>
->>> This error reporting doesn't exist yet in 4.4. So you may have an issue
->>> under 4.4 too, it's just not reported.
->>> Did you verify that under 4.4 fw_setenv actually has an effect?
->> Just double checked and yes under 4.4 the setting does get saved.
->>>> If I run fw_printenv (before getting it into a bad state) it is able to
->>>> display the content of the boards u-boot environment.
->>>>
->>> This might indicate an issue with spi being locked. I've seen related
->>> questions, just use the search engine of your choice and check for
->>> fw_setenv and locked.
->> I'm running a version of fw_setenv which includes 
->> https://gitlab.denx.de/u-boot/u-boot/-/commit/db820159 so it shouldn't 
->> be locking things unnecessarily.
->>>> If been unsuccessful in producing a setup for bisecting the issue. I do
->>>> know the issue doesn't occur on the old 4.4.x based kernel but that's
->>>> probably not much help.
->>>>
->>>> Any pointers on what the issue (and/or solution) might be.
-> 
-> I finally managed to get our board running with a vanilla kernel. With 
-> corenet64_smp_defconfig I occasionally see
-> 
->    fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> 
-> other than the message things seem to be working.
-> 
-> With a custom defconfig I see
-> 
->    fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->    fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->    fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->    ...
-> 
-> and access to the spi-nor does not work until the board is reset.
-> 
-> I'll try and pick apart the differences between the two defconfigs.
-> 
-Also relevant may be:
-- Which dts are you using?
-- What's the spi-nor type, and at which frequency are you operating it?
-- Does the issue still happen if you lower the frequency?
+I no longer have the setup for testing. The changes look good to me.
+
+Reviewed-by: Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
+
+Thanks,
+Vijai Kumar K
+
+On Mon, Aug 17, 2020 at 12:30 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Hi,
+>
+> Changes since v1:
+> 1. Mutex unlock fix in patch 8/13.
+>
+> Best regards,
+> Krzysztof
