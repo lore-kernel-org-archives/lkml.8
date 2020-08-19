@@ -2,167 +2,342 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76133C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76E1C20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4928320897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DkaTRXXg"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="KPnpdewW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgHSP1p (ORCPT
+        id S1728312AbgHSP3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59522 "EHLO
+        Wed, 19 Aug 2020 11:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbgHSP1k (ORCPT
+        with ESMTP id S1726815AbgHSP3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:27:40 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB91C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:27:40 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so11831051pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:27:40 -0700 (PDT)
+        Wed, 19 Aug 2020 11:29:17 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF57C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:29:17 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id j10so11407768qvo.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GbZAIltrnM0W892A2YesXVvpE1k1bqYDVw/4ubYRqGc=;
-        b=DkaTRXXgWwG3uZd9a0IRe/RV2vXYNROwGHlVvK8AdBBwvOrA1vM+RIPv/TpRoRcTUt
-         4+7BQOnVsmOx0zh/VLyPG47qosUjBEO+BQA38o7pPz2t0hYEt0jRDekjmfYbwI2S9CGi
-         WIeJu+ZOOazK+x/CC/RK67ZznBcECU98bRv7o=
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JQQjyzH42+NC39XApcYZGEZ0FS1brQBGuBw1l1VaGpE=;
+        b=KPnpdewWWrntfbDkrHQKlIaN6Vfj3yI6Zv02G0Jjm64j2CHKKic3s84zf6tiWndCUi
+         0tb7s6BxUHR/bnQq1JRTUz/f19bY3/1qNWV4CnTKzSBmFq3eAuraxG1IEAqrPfAYVC+X
+         bX/TaH3KXEpuZMB3zIOawc9eVN1uCl85igrlzmaP1TG9bvonWz5s4nEQuTX+8NA06faU
+         cKmOvYZc8ox385XhWJCcV1yxjdKwvYJvl4RFuljLgikgoP2dSD5jn5xLa3GkdkWxMI8w
+         16U2fwhvcca2rc7T5LAhu+VUqWQqUy5DcMloIgt9XQoVUBsUQGmpkSLhW7/oAoHEFVDu
+         W6lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GbZAIltrnM0W892A2YesXVvpE1k1bqYDVw/4ubYRqGc=;
-        b=nRg6Q2L3I/7Fnm09kucMFJb/GKRb6ukE/G7ct7DHhcZNgV7hVYh23qL68YKGVtOqPZ
-         z1Fp3+wDOIpnelJ8C0qfNYubbmxoGcwV6V/LEKBmhcYTHxdFuem4s+PNKtX/OlNzJjnN
-         bVR274EEx1Y8SMU2pnpAkkwjSnmE3pn2QQQESDYWJQTvD2C6O1la4hp8Lhq4WqdK6DCt
-         L7wDf/wbM6X5ErMHhVSUQz1/AmPwCNoWO52MPQzzeV1tn0vpDPBqI0l2AbgH/iexPCK6
-         NYV+7gexFDR9VCgQOqCPGBxAhfOlIbt458ZujTZImZzRwQ/tSEN+1D9Iu6yatqWJiPFp
-         R1NQ==
-X-Gm-Message-State: AOAM531e7vOXyg2WLTnkAn32zeEYcznCHJrEKSo6DP4YZySebU3z14ty
-        dc+TxpxKmJqPYX3GAv1RxpwrhSmoWoTa0xGwwQTO6Vf5HVOU+tdLo/eNntNoyXKx+XaxBvyOiPA
-        o/kIFLEkeGZD8edHY30qna6fZ1DGzSgL5gTVDFNrVKYRPOMbuKgS2rg4ufX1lhuDfrphCtk3GgP
-        Uq5iE=
-X-Google-Smtp-Source: ABdhPJyl+ktBglnyLwWowddUPxmmPk6qJLOP97Bs6pa01a9/8ygvmLy0Ulsn7uhbiOR2Xy/Rl943ig==
-X-Received: by 2002:a63:af47:: with SMTP id s7mr17692321pgo.335.1597850859651;
-        Wed, 19 Aug 2020 08:27:39 -0700 (PDT)
-Received: from [10.136.8.253] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id s6sm3377091pjn.48.2020.08.19.08.27.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 08:27:39 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200819042308.19043-1-f.fainelli@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <fd39660a-4797-9db4-acc9-85c2fa98beff@broadcom.com>
-Date:   Wed, 19 Aug 2020 08:27:36 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JQQjyzH42+NC39XApcYZGEZ0FS1brQBGuBw1l1VaGpE=;
+        b=nUjFx0JJadszA7gypuGWQ2ha7/m6NfGZiQQ2nY5DEF/NjNrL78hHTzIZXNtMeS0DXb
+         /dcpAtg0FL4nctk6DHHujNtL3irgApxW1nYaKkFXNLg6gvAb428X9grWDhQxNILljAhK
+         mlLteSA08/U5Aa1YKFKUZlamEeUFznezxjZ0f74+ljX6IaYU/KUpl5LGmU0LV0ObP607
+         qNEBm7wFZ5hIaqnDzmsIKA3kr1+Z7BNa0vm+Z9M3OV2mQqs5CKnPzgdNDJ9UO9HH5ZWI
+         +C/O4MvUv2uq2c1uKE0RnB7c+dxNgiLB4z8nw+kNNGm3Vmvh2rJuzTdCV1xDk3sGEUqN
+         VylQ==
+X-Gm-Message-State: AOAM533kVgDJ/HyFe8lg0CQbNx1i2g64iRvT2HcLlR1iKziWgR3rCMd3
+        25fZcxt/jZGdUf9OROzTbvJdrg==
+X-Google-Smtp-Source: ABdhPJyUflRKSbZVkflpzoIR4wWnDkDCoAJZOvFOqoqGLwo5VzXLHUtEJBP/fHO9V7UW/6DcjpKnsg==
+X-Received: by 2002:a0c:d981:: with SMTP id y1mr24864637qvj.124.1597850956436;
+        Wed, 19 Aug 2020 08:29:16 -0700 (PDT)
+Received: from localhost (mobile-166-177-185-175.mycingular.net. [166.177.185.175])
+        by smtp.gmail.com with ESMTPSA id o25sm23855350qkm.42.2020.08.19.08.29.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 08:29:15 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:29:14 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, Animesh Manna <animesh.manna@intel.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Subject: Re: [RFC 19/20] drm/i915/dp: Extract drm_dp_read_dpcd_caps()
+Message-ID: <20200819152914.GE46474@art_vandelay>
+References: <20200811200457.134743-1-lyude@redhat.com>
+ <20200811200457.134743-20-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200819042308.19043-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200811200457.134743-20-lyude@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/18/2020 9:23 PM, Florian Fainelli wrote:
-> The pin controller resources start at 0xc0 from the CRU base which is at
-> 0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
-> are currently off by 0x100. The resource size of the CRU is also
-> incorrect and should end at 0x248 bytes from 0x100 which is the start
-> address. Finally, the compatibility strings defined for the
-> pin-controller node should reflect the SoC being used.
+On Tue, Aug 11, 2020 at 04:04:56PM -0400, Lyude Paul wrote:
+> Since DP 1.3, it's been possible for DP receivers to specify an
+> additional set of DPCD capabilities, which can take precedence over the
+> capabilities reported at DP_DPCD_REV.
 > 
-> Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux controller")
-> Reported-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Basically any device supporting DP is going to need to read these in an
+> identical manner, in particular nouveau, so let's go ahead and just move
+> this code out of i915 into a shared DRM DP helper that we can use in
+> other drivers.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 > ---
-> Christian, can you test this as a preliminary patch for your Cisco
-> Meraki MR32 series? Thanks!
+>  drivers/gpu/drm/drm_dp_helper.c             | 76 +++++++++++++++++++++
+>  drivers/gpu/drm/i915/display/intel_dp.c     | 60 +---------------
+>  drivers/gpu/drm/i915/display/intel_dp.h     |  1 -
+>  drivers/gpu/drm/i915/display/intel_lspcon.c |  2 +-
+>  include/drm/drm_dp_helper.h                 |  3 +
+>  5 files changed, 82 insertions(+), 60 deletions(-)
 > 
->  arch/arm/boot/dts/bcm4708.dtsi  | 4 ++++
->  arch/arm/boot/dts/bcm4709.dtsi  | 4 ++++
->  arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++----
->  3 files changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-> index 1a19e97a987d..5064fe51e402 100644
-> --- a/arch/arm/boot/dts/bcm4708.dtsi
-> +++ b/arch/arm/boot/dts/bcm4708.dtsi
-> @@ -43,6 +43,10 @@ cpu@1 {
+> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+> index 0ff2959c8f8e8..f9445915c6c26 100644
+> --- a/drivers/gpu/drm/drm_dp_helper.c
+> +++ b/drivers/gpu/drm/drm_dp_helper.c
+> @@ -423,6 +423,82 @@ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
+>  }
+>  EXPORT_SYMBOL(drm_dp_send_real_edid_checksum);
 >  
->  };
->  
-> +&pinctrl {
-> +	compatible = "brcm,bcm4708-pinmux";
-> +};
+> +static int drm_dp_read_extended_dpcd_caps(struct drm_dp_aux *aux,
+> +					  u8 dpcd[DP_RECEIVER_CAP_SIZE])
+> +{
+> +	u8 dpcd_ext[6];
+> +	int ret;
 > +
->  &uart0 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
-> index e1bb8661955f..7417c275ea9d 100644
-> --- a/arch/arm/boot/dts/bcm4709.dtsi
-> +++ b/arch/arm/boot/dts/bcm4709.dtsi
-> @@ -5,6 +5,10 @@
->  
->  #include "bcm4708.dtsi"
->  
-> +&pinctrl {
-> +	compatible = "brcm,bcm4709-pinmux";
-> +};
+> +	/*
+> +	 * Prior to DP1.3 the bit represented by
+> +	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
+> +	 * If it is set DP_DPCD_REV at 0000h could be at a value less than
+> +	 * the true capability of the panel. The only way to check is to
+> +	 * then compare 0000h and 2200h.
+> +	 */
+> +	if (!(dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
+> +	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
+> +		return 0;
 > +
->  &uart0 {
->  	clock-frequency = <125000000>;
->  	status = "okay";
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 2d9b4dd05830..bf49943f504a 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -402,14 +402,14 @@ dmu@1800c000 {
->  
->  		cru@100 {
->  			compatible = "simple-bus";
-> -			reg = <0x100 0x1a4>;
-> +			reg = <0x100 0x248>;
->  			ranges;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  
-> -			pin-controller@1c0 {
-> -				compatible = "brcm,bcm4708-pinmux";
-> -				reg = <0x1c0 0x24>;
-> +			pinctrl: pin-controller@c0 {
-> +				compatible = "brcm,bcm53012-pinmux";
-> +				reg = <0xc0 0x24>;
->  				reg-names = "cru_gpio_control";
->  
->  				spi-pins {
-> 
+> +	ret = drm_dp_dpcd_read(aux, DP_DP13_DPCD_REV, &dpcd_ext,
+> +			       sizeof(dpcd_ext));
+> +	if (ret != sizeof(dpcd_ext))
+> +		return -EIO;
+> +
+> +	if (dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
+> +		DRM_DEBUG_KMS("%s: Extended DPCD rev less than base DPCD rev (%d > %d)\n",
+> +			      aux->name, dpcd[DP_DPCD_REV],
+> +			      dpcd_ext[DP_DPCD_REV]);
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Might be a good opportunity to convert all of these to drm_dbg_dp()?
+
+> +		return 0;
+> +	}
+> +
+> +	if (!memcmp(dpcd, dpcd_ext, sizeof(dpcd_ext)))
+> +		return 0;
+> +
+> +	DRM_DEBUG_KMS("%s: Base DPCD: %*ph\n",
+> +		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
+> +
+> +	memcpy(dpcd, dpcd_ext, sizeof(dpcd_ext));
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * drm_dp_read_dpcd_caps() - read DPCD caps and extended DPCD caps if
+> + * available
+> + * @aux: DisplayPort AUX channel
+> + * @dpcd: Buffer to store the resulting DPCD in
+> + *
+> + * Attempts to read the base DPCD caps for @aux. Additionally, this function
+> + * checks for and reads the extended DPRX caps (%DP_DP13_DPCD_REV) if
+> + * present.
+> + *
+> + * Returns: %0 if the DPCD was read successfully, negative error code
+> + * otherwise.
+> + */
+> +int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
+> +			  u8 dpcd[DP_RECEIVER_CAP_SIZE])
+> +{
+> +	int ret;
+> +
+> +	ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
+> +	if (ret != DP_RECEIVER_CAP_SIZE || dpcd[DP_DPCD_REV] == 0)
+> +		return -EIO;
+> +
+> +	ret = drm_dp_read_extended_dpcd_caps(aux, dpcd);
+> +	if (ret < 0)
+> +		return ret;
+
+I wonder if we should just go with the "regular" dpcd caps we just read in this
+case?
+
+Regardless of my nits,
+
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+> +
+> +	DRM_DEBUG_KMS("%s: DPCD: %*ph\n",
+> +		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
+> +
+> +	if (dpcd[DP_DPCD_REV] == 0)
+> +		ret = -EIO;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(drm_dp_read_dpcd_caps);
+> +
+>  /**
+>   * drm_dp_downstream_read_info() - read DPCD downstream port info if available
+>   * @aux: DisplayPort AUX channel
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index e343965a483df..230aa0360dc61 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -4449,62 +4449,6 @@ intel_dp_link_down(struct intel_encoder *encoder,
+>  	}
+>  }
+>  
+> -static void
+> -intel_dp_extended_receiver_capabilities(struct intel_dp *intel_dp)
+> -{
+> -	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+> -	u8 dpcd_ext[6];
+> -
+> -	/*
+> -	 * Prior to DP1.3 the bit represented by
+> -	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
+> -	 * if it is set DP_DPCD_REV at 0000h could be at a value less than
+> -	 * the true capability of the panel. The only way to check is to
+> -	 * then compare 0000h and 2200h.
+> -	 */
+> -	if (!(intel_dp->dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
+> -	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
+> -		return;
+> -
+> -	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DP13_DPCD_REV,
+> -			     &dpcd_ext, sizeof(dpcd_ext)) != sizeof(dpcd_ext)) {
+> -		drm_err(&i915->drm,
+> -			"DPCD failed read at extended capabilities\n");
+> -		return;
+> -	}
+> -
+> -	if (intel_dp->dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
+> -		drm_dbg_kms(&i915->drm,
+> -			    "DPCD extended DPCD rev less than base DPCD rev\n");
+> -		return;
+> -	}
+> -
+> -	if (!memcmp(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext)))
+> -		return;
+> -
+> -	drm_dbg_kms(&i915->drm, "Base DPCD: %*ph\n",
+> -		    (int)sizeof(intel_dp->dpcd), intel_dp->dpcd);
+> -
+> -	memcpy(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext));
+> -}
+> -
+> -bool
+> -intel_dp_read_dpcd(struct intel_dp *intel_dp)
+> -{
+> -	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+> -
+> -	if (drm_dp_dpcd_read(&intel_dp->aux, 0x000, intel_dp->dpcd,
+> -			     sizeof(intel_dp->dpcd)) < 0)
+> -		return false; /* aux transfer failed */
+> -
+> -	intel_dp_extended_receiver_capabilities(intel_dp);
+> -
+> -	drm_dbg_kms(&i915->drm, "DPCD: %*ph\n", (int)sizeof(intel_dp->dpcd),
+> -		    intel_dp->dpcd);
+> -
+> -	return intel_dp->dpcd[DP_DPCD_REV] != 0;
+> -}
+> -
+>  bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp)
+>  {
+>  	u8 dprx = 0;
+> @@ -4563,7 +4507,7 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
+>  	/* this function is meant to be called only once */
+>  	drm_WARN_ON(&dev_priv->drm, intel_dp->dpcd[DP_DPCD_REV] != 0);
+>  
+> -	if (!intel_dp_read_dpcd(intel_dp))
+> +	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd) != 0)
+>  		return false;
+>  
+>  	drm_dp_read_desc(&intel_dp->aux, &intel_dp->desc,
+> @@ -4650,7 +4594,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+>  {
+>  	int ret;
+>  
+> -	if (!intel_dp_read_dpcd(intel_dp))
+> +	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd))
+>  		return false;
+>  
+>  	/*
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
+> index b901ab850cbd9..0a3af3410d52e 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.h
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.h
+> @@ -99,7 +99,6 @@ bool intel_dp_source_supports_hbr3(struct intel_dp *intel_dp);
+>  bool
+>  intel_dp_get_link_status(struct intel_dp *intel_dp, u8 *link_status);
+>  
+> -bool intel_dp_read_dpcd(struct intel_dp *intel_dp);
+>  bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp);
+>  int intel_dp_link_required(int pixel_clock, int bpp);
+>  int intel_dp_max_data_rate(int max_link_clock, int max_lanes);
+> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> index b781bf4696443..dc1b35559afdf 100644
+> --- a/drivers/gpu/drm/i915/display/intel_lspcon.c
+> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> @@ -571,7 +571,7 @@ bool lspcon_init(struct intel_digital_port *dig_port)
+>  		return false;
+>  	}
+>  
+> -	if (!intel_dp_read_dpcd(dp)) {
+> +	if (drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd) != 0) {
+>  		DRM_ERROR("LSPCON DPCD read failed\n");
+>  		return false;
+>  	}
+> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> index 0c141fc81aaa8..11649e93e5bb6 100644
+> --- a/include/drm/drm_dp_helper.h
+> +++ b/include/drm/drm_dp_helper.h
+> @@ -1607,6 +1607,9 @@ static inline ssize_t drm_dp_dpcd_writeb(struct drm_dp_aux *aux,
+>  	return drm_dp_dpcd_write(aux, offset, &value, 1);
+>  }
+>  
+> +int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
+> +			  u8 dpcd[DP_RECEIVER_CAP_SIZE]);
+> +
+>  int drm_dp_dpcd_read_link_status(struct drm_dp_aux *aux,
+>  				 u8 status[DP_LINK_STATUS_SIZE]);
+>  
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
