@@ -2,133 +2,130 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 491B7204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A716E204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ccDKimB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgHSN6A (ORCPT
+        id S1728426AbgHSN6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:58:00 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41283 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgHSN54 (ORCPT
+        Wed, 19 Aug 2020 09:58:19 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:40685 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728124AbgHSN6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:57:56 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b22so21048880oic.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:57:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=al08jUEqFwt9M7OkbrnS0G74Qrog69pfPQf3Hwue8+Y=;
-        b=jnYxyDqPONPhXqQQhl8Eaf01jr0/iK3gQE9lJST9OENzpvWHcGH70ndcKsC7iGK1+R
-         tUybkVvVsKVexQJZHEKg8Er39VFYrEMvhW5XAQ6l34lvedElQwVl6jSQI8oCPGDrTXPU
-         r3Y3Il1PzUzNU+Bm9WSB5r1LYVYxHLgntrfU3H5TK+FFXpdMhuzwcrhv47gz0QVpxyop
-         ImR8dDJkFGjd6IItGHLJUvxSK0pdrqm6HKbZQEWYr0T9QwNGyAPvU7y8lhV4z9+coksD
-         JQeqQw3NeqOuld1nD4wi9OY/QIE62OFnmL4oGX0/2s7TFIArju3Xiy4M1l9EPfr8sAvL
-         d8zw==
-X-Gm-Message-State: AOAM531VRaj6RKWwri4Jh8acvaMY/qqn4abVXfTUbnzsAl/Xdy1qAClK
-        MIQaS19UHwnBOC9vN5TVaiHAScJTVM/1ePyFYQw=
-X-Google-Smtp-Source: ABdhPJyxR3WKbqrzw4/BjnttVQj5Kr25SVKjW3H5Y5lxL/WbotgrpXKrwLa7txGeZxI+MWOi6hGMj4jUdkqVMjU90mI=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr3280379oia.54.1597845476368;
- Wed, 19 Aug 2020 06:57:56 -0700 (PDT)
+        Wed, 19 Aug 2020 09:58:13 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8ObRkd9mWuuXO8ObSkhPNe; Wed, 19 Aug 2020 15:58:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597845490; bh=Uuz/6jIZhRnBQON+pYw05hF4KeeuyR1OEYEF2gwxc9w=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ccDKimB72qe9cU6OtkwG9nhN1BLfqjjUBfY8rsETMomk4Xo7eOmVP3P12K+wM49Hk
+         xcmvDkKvLfS/5dHBlRCCypY+N1PT/8oJir2VCovMndsavLn3kjvLqJ7Kx7vGuTsTYd
+         2aWqd03W5gcf4wZrRdDO+VOOjYsFp+p9eaqbpG4oro8Yoj5gQsU6pDpm0HlIq0+Yr7
+         nVWOBcemGRsPQMvQ6drIWXLGfL2/XciM+7QfcxB72E007rXqpFnGxN439+QVJm778X
+         Y+Tu2tTezxdeboEI/uieNVMmC1WL9VGtovJtwr0oOYETlNE51fiVxeYrVMx7bp3OIz
+         Y4tw+v7nfL7dg==
+Subject: Re: [PATCH 2/2] media: stm32-dcmi: fix probe error path & module
+ remove
+To:     Alain Volmat <alain.volmat@st.com>, hugues.fruchet@st.com,
+        mchehab@kernel.org
+Cc:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        yannick.fertre@st.com, hans.verkuil@cisco.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1595918278-9724-1-git-send-email-alain.volmat@st.com>
+ <1595918278-9724-3-git-send-email-alain.volmat@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <aa93abb9-964a-a9d8-770f-5673142d0d72@xs4all.nl>
+Date:   Wed, 19 Aug 2020 15:58:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200817163152.13468-1-liambeguin@gmail.com>
-In-Reply-To: <20200817163152.13468-1-liambeguin@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 19 Aug 2020 15:57:34 +0200
-Message-ID: <CAMuHMdUGu+pqZs5YoiBnZ2j7Yx86VDU9oKr4C15c1Jc9GjQuNA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] phy: tusb1210: use bitmasks to set VENDOR_SPECIFIC2
-To:     Liam Beguin <liambeguin@gmail.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>, Vinod <vkoul@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595918278-9724-3-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNKjxnVk0gRgu+dHVYskSGtcoIzBVImXGMRrMHCIOlPRrP8TwY2wj7R3lxN+EqyNoefJDNqC+Qme8Q13W9+dzxHkQCE3fuhcKJF88aQqRtE173Tc2GPJ
+ 90bfUxuThq2XAPbugKSous4RLWereIy6H6Ken8cn++TUEcoio9C97VoAIFCnWkbK1fieFE1O07abUk6ZO/ehqaT5kjeVtQ/bRwaLpJ4+eEVO1JRz7Njvy/tv
+ o8CxQBeUTTg+UuvQW+jELWvW2abjnDQfXsgr42aGaz5PFOHUVU5DHZ9DwmmXKCFRQUMD9tJr3fp+lhH/aNVXTAutTInKUIJ/pZuzMB9hbQX2zslmE9sDY3qM
+ UAbVrpcb3R83Qt8SZhFjZI+Kfg3W/zS4Su7TqbNvJEQKrqS5rNbde8qy0CeX+hFmNO/3rcuxKX6bqAvRg4643f90lulFVMoHlbT00dGnUbJ8q8Op4x1S7RDp
+ 330DfX4mKnpYqPXYY5BJI0tXby5VgdJofKg0zRHy7/Ot07/qBnYUnQVyOv9db/TencJVS/W5P9NG3RJrrxlhLKu47unDj+18LqzcVpyiH48xsMsTcJYBbIjd
+ /z7Y8gWezj5F21QHJbTzmoWU93MXOpdUH6poZrUINRpyKnXm4rUIqK9RRyzeveqAQ7lkIYme0d9ZpSbaKMJJ3PRY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Liam,
+On 28/07/2020 08:37, Alain Volmat wrote:
+> This commit add missing vb2_queue_release calls with the
+> probe error path and module remove.
 
+No, vb2_queue_release() should not be called.
 
-On Mon, Aug 17, 2020 at 7:38 PM Liam Beguin <liambeguin@gmail.com> wrote:
-> From: Liam Beguin <lvb@xiphos.com>
->
-> Start by reading the content of the VENDOR_SPECIFIC2 register and update
-> each bit field based on device properties when defined.
->
-> The use of bit masks prevents fields from overriding each other and
-> enables users to clear bits which are set by default, like datapolarity
-> in this instance.
->
-> Signed-off-by: Liam Beguin <lvb@xiphos.com>
+See this series for more information:
+
+https://patchwork.linuxtv.org/project/linux-media/cover/20200713113048.1150542-1-hverkuil-cisco@xs4all.nl/
+
+I'm made a PR for that patch series, so hopefully it will be merged soon.
+
+From what I can tell you don't need this patch at all for this driver.
+
+Regards,
+
+	Hans
+
+> Missing v4l2_async_notifier_unregister is also added within
+> the probe error path
+> 
+> Fixes: 37404f91ef8b ("[media] stm32-dcmi: STM32 DCMI camera interface driver")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
-> Changes since v1:
-> - use set_mask_bits
->
-> Changes since v2:
-> - fix missing bit shift dropped in v2
-> - rebase on 5.9-rc1
->
->  drivers/phy/ti/phy-tusb1210.c | 27 +++++++++++++++++----------
->  1 file changed, 17 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
-> index d8d0cc11d187..358842b5790f 100644
-> --- a/drivers/phy/ti/phy-tusb1210.c
-> +++ b/drivers/phy/ti/phy-tusb1210.c
-> @@ -14,8 +14,11 @@
->
->  #define TUSB1210_VENDOR_SPECIFIC2              0x80
->  #define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT  0
-> +#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK   GENMASK(3, 0)
->  #define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT 4
-> +#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK  GENMASK(5, 4)
->  #define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT     6
-> +#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK      BIT(6)
->
->  struct tusb1210 {
->         struct ulpi *ulpi;
-> @@ -118,23 +121,27 @@ static int tusb1210_probe(struct ulpi *ulpi)
->          * diagram optimization and DP/DM swap.
->          */
->
-> +       reg = ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
-> +
->         /* High speed output drive strength configuration */
-> -       device_property_read_u8(&ulpi->dev, "ihstx", &val);
-> -       reg = val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
-> +       if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
-> +               reg = set_mask_bits(&reg, TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK,
-> +                                   val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT);
+>  drivers/media/platform/stm32/stm32-dcmi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index 5e60d4c6eeeb..57830ee691be 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -2004,7 +2004,7 @@ static int dcmi_probe(struct platform_device *pdev)
+>  
+>  	ret = dcmi_graph_init(dcmi);
+>  	if (ret < 0)
+> -		goto err_media_entity_cleanup;
+> +		goto err_vb2_queue_release;
+>  
+>  	/* Reset device */
+>  	ret = reset_control_assert(dcmi->rstc);
+> @@ -2030,7 +2030,10 @@ static int dcmi_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_cleanup:
+> +	v4l2_async_notifier_unregister(&dcmi->notifier);
+>  	v4l2_async_notifier_cleanup(&dcmi->notifier);
+> +err_vb2_queue_release:
+> +	vb2_queue_release(q);
+>  err_media_entity_cleanup:
+>  	media_entity_cleanup(&dcmi->vdev->entity);
+>  err_device_release:
+> @@ -2052,6 +2055,7 @@ static int dcmi_remove(struct platform_device *pdev)
+>  
+>  	v4l2_async_notifier_unregister(&dcmi->notifier);
+>  	v4l2_async_notifier_cleanup(&dcmi->notifier);
+> +	vb2_queue_release(&dcmi->queue);
+>  	media_entity_cleanup(&dcmi->vdev->entity);
+>  	v4l2_device_unregister(&dcmi->v4l2_dev);
+>  	media_device_cleanup(&dcmi->mdev);
+> 
 
-Triggered by your patches to add support for cmpxchg on u8 pointers to
-various architectures (which is a valuable goal in itself ;-), I decided
-to have a look at the underlying problem you were facing.
-
-IMHO, using set_mask_bits() is overkill here.  That helper is meant to
-update individual bits in a variable that may be accessed concurrently,
-hence its use of cmpxchg().
-
-In this driver, you just want to modify a local variable, by clearing a
-field, and setting some bits. No concurrency is involved.
-Perhaps using FIELD_PREP() from include/linux/bitfield.h is more
-appropriate?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
