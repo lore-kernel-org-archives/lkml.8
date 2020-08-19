@@ -2,126 +2,164 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B86C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5A4207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B6C20882
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sew6Y1J2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XsGUJB1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgHSQ4F (ORCPT
+        id S1727005AbgHSQ4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
+        Wed, 19 Aug 2020 12:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgHSQ4D (ORCPT
+        with ESMTP id S1726876AbgHSQ4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:56:03 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824E8C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:01 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id x6so11669869pgx.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:01 -0700 (PDT)
+        Wed, 19 Aug 2020 12:56:24 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8E6C061348
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y6so11118035plt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fw18yt5oodIRRiawAuh3iFJI1I/EC1h04v5SNRebUsg=;
-        b=Sew6Y1J2+dlN3Uy+W3XUFS6PgjkaKPbXMVxa7xBZ+gCv4djz6NyGAIbaXCwueFoTYe
-         iyIbA4f1MeJTnuO0RwXLrXDPus/ZPDbPZXDHXtMKSMpAUGVNWilkA0q4h1eIvPjo4odh
-         p6rpR7pBpdtWyCiQG1pVi+2EuCslEn/Udct8hfSa5tixiLe8SEDiE18ryRA7sWYR0Fdr
-         V/S2FWeeU1PwzxAEVGFDIvGK+v1o+lPEvoPeJfodr9WOqy0Vks2G83dG6esuDiYeMRC+
-         lL05EcmyMvEnWLTlZqU9oRYLn0ySCUDnqtMGYOMWgvR6uvNpSg6cDwRLeuA4GPlFvHpe
-         xjIA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DyPe34DueaqLfEcDqZqm300kn/odPwqy1uJt22bP0Z8=;
+        b=XsGUJB1Hdc8az/rXuro1bWhBsdgGdQHjYKQpuunAo8x0WekUdWBNsmSDFJj67GVWVG
+         5hPdTKlI6scfsCliWtIOLtIYsVj1YwZaDB5Moe7+6/awpbvAiGHWPGqlMMiQH755AjTS
+         vfPiJNDbB+aPu6VjtibhyAOy9LSk3+Tr2jZ+44/eXBtbf+XOZ8K+VQwL9BGEgF8JGQKK
+         5KG7zpuu/Xea1f/72jgUaeUpmt4D/ORaIe5NpGI/tYWzxvMEzO/L884n90j+BH7HiH1m
+         QMIIcf8a02yI8nCtJ4GjS4kGwrIFsNa8Q8Tri7Y3/f7lv1J5QYlIRrGUMNjHynb2RGMA
+         GacA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fw18yt5oodIRRiawAuh3iFJI1I/EC1h04v5SNRebUsg=;
-        b=aQkwXDpnqGq1kO2yHLeGAchyMcgDCTuMzi5LNQpD+MX9x3KhrPJHiwvqJKsoWEkWEp
-         a+SR2WLuMWrEcvw3czAzCYCh1MYALWIJVtCflnfiXXttzm74GIDYK5HJpb28RqrDxEIc
-         dspk9ClkKyav5MuxMeOXe3yzLdpBriHD+gncw8+oePH2mnYqnfPDUMVKXJ2w0QKSqx0u
-         DnUlMefcbsQv8r94uBfdjkMbYAi4MQQa29gS7Bwvf/hcJT3bN/DLg418IsOpZg431bui
-         94zm822rivamxDw57amlC1tqgIgjMqyMoGeN7vxZV7SEJbG5rsQ01g/L+GzY48afKOGj
-         8YFw==
-X-Gm-Message-State: AOAM531b3TYC/1oxx3Cc4KzUJj34X8W/CeSJQYaNK7QgvQlpmk3EC6HO
-        1bQOg//p8lkR3xSwdq8uYhjBerFlZJoB/8h1lgWE9A==
-X-Google-Smtp-Source: ABdhPJzOWbQWvNJq8r8P1UhTJyhu2WyFpFjSVInsNFgdbZK2Da66wr9Md6WMUOHmlaNm9oKe0eLSigHu+DmV7vDjPMw=
-X-Received: by 2002:aa7:96e5:: with SMTP id i5mr16953870pfq.108.1597856160632;
- Wed, 19 Aug 2020 09:56:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DyPe34DueaqLfEcDqZqm300kn/odPwqy1uJt22bP0Z8=;
+        b=tMFMXVpyCd28VwEun5g/qTZt1w0OmCrXrFAz15Pwp772QQ04bBjcKyei/udoYGzdHQ
+         RQxjcnsjkIBf9dTGApf3kMXz0tE33piNG7CsqqOvUOibwrEqdfViHBPYxegYGn3Z+wiK
+         l8dXU83sJqJ2eNNQ0xDnJsMrYkLVELDUFEwNW8VC9n1aEc7aYWbV4TRetWCwi62wXMGt
+         qJbqrG3QsBD/7J8vInzplsR5nq4THO2nSZQamhJmU/Z168cHek6Xkp/jahf8YHvOwwsB
+         2WDpEPg/8OjtopmjhPjzwDmpoxW3yRT78eCxrebjuoaM9CXA78uczWwZF0JvfejO6GrV
+         s/VQ==
+X-Gm-Message-State: AOAM531yw8uoZpzcnU7iGCB6eetwLtdi+CP1A6Svnxg51RdZgwMpgA9z
+        WmSjOURmP3D294HnmUgv6PSdMA==
+X-Google-Smtp-Source: ABdhPJwmU9GVpeA/a5GSwGnni05DgMGKqd87OvDU6WClq1X+wlrKxKnBzQboSPP7uq4T48DrxExHZQ==
+X-Received: by 2002:a17:90a:f2c7:: with SMTP id gt7mr4669042pjb.204.1597856175023;
+        Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id w23sm25765910pgj.5.2020.08.19.09.56.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 09:56:14 -0700 (PDT)
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     Allen <allen.lkml@gmail.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Romain Perier <romain.perier@gmail.com>
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com>
+ <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook>
+ <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook>
+ <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com>
+ <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+ <1597849185.3875.7.camel@HansenPartnership.com>
+ <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2b1a5987-9b54-d63e-b3da-d3024505776c@kernel.dk>
+Date:   Wed, 19 Aug 2020 10:56:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200819094437.GE1891694@smile.fi.intel.com> <CAK7LNATQ1oAQm19-mzCKdMQsiQsYT9BRH5H7zukpFSzJw5WZZQ@mail.gmail.com>
- <CAHp75VcKpkZQ78xygzWTQhNsy8aLBzKzqVJTtzygzTYnWeqmyQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcKpkZQ78xygzWTQhNsy8aLBzKzqVJTtzygzTYnWeqmyQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 19 Aug 2020 09:55:49 -0700
-Message-ID: <CAKwvOdnuSyExtcddmcnS-08Mj6oNyZfqax4JQJSLBVFkD8S+JA@mail.gmail.com>
-Subject: Re: -Werror for `make W=0`
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>, X86 ML <x86@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 4:50 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Aug 19, 2020 at 1:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > On Wed, Aug 19, 2020 at 6:44 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > Hi!
-> > >
-> > > Maybe silly idea, but would it make sense to enable -Werror for default warning
-> > > level, let's say W=0, at some point?
-> > >
-> >
-> > Every GCC release adds new warning options.
-> >
-> > Enabling -Werror by default means
-> > the kernel build is suddenly broken
-> > with new compilers, correct?
->
-> Probably, and at the same time we keep our hand on the pulse of the
-> changes, right?
-> Adding those warnings to W=1, 2, ... block might be not the bad idea after all.
->
-> Maybe some flag CONFIG_DEBUG_WERROR ? Then CIs or other early stage
-> users can enable by default and be informed.
+On 8/19/20 9:24 AM, Allen wrote:
+>> [...]
+>>>> Since both threads seem to have petered out, let me suggest in
+>>>> kernel.h:
+>>>>
+>>>> #define cast_out(ptr, container, member) \
+>>>>     container_of(ptr, typeof(*container), member)
+>>>>
+>>>> It does what you want, the argument order is the same as
+>>>> container_of with the only difference being you name the containing
+>>>> structure instead of having to specify its type.
+>>>
+>>> Not to incessantly bike shed on the naming, but I don't like
+>>> cast_out, it's not very descriptive. And it has connotations of
+>>> getting rid of something, which isn't really true.
+>>
+>> Um, I thought it was exactly descriptive: you're casting to the outer
+>> container.  I thought about following the C++ dynamic casting style, so
+>> out_cast(), but that seemed a bit pejorative.  What about outer_cast()?
+>>
+>>> FWIW, I like the from_ part of the original naming, as it has some
+>>> clues as to what is being done here. Why not just from_container()?
+>>> That should immediately tell people what it does without having to
+>>> look up the implementation, even before this becomes a part of the
+>>> accepted coding norm.
+>>
+>> I'm not opposed to container_from() but it seems a little less
+>> descriptive than outer_cast() but I don't really care.  I always have
+>> to look up container_of() when I'm using it so this would just be
+>> another macro of that type ...
+>>
+> 
+>  So far we have a few which have been suggested as replacement
+> for from_tasklet()
+> 
+> - out_cast() or outer_cast()
+> - from_member().
+> - container_from() or from_container()
+> 
+> from_container() sounds fine, would trimming it a bit work? like from_cont().
 
-Google's pixel kernel team carries an out of tree patch creating
-exactly such a config.  It helps them keep their kernels building
-warning free.
+I like container_from() the most, since it's the closest to contain_of()
+which is a well known idiom for years. The lines will already be shorter
+without the need to specify the struct, so don't like the idea of
+squeezing container into cont for any of them. For most people, cont is
+usually short for continue, not container.
 
-Flip side is that if a build isn't warning free, it can be difficult
-to get there; you need to at least disable the config to see how many
-warnings you have, and identify which are lower hanging fruit.  It
-also makes compiler upgrades excessively difficult.  In my experience
-on Android, if folks are too busy to address compiler warnings, then
-new warnings added by a new compiler version just get turned off and
-never addressed.  My experience with the kernel has been that fixes
-for different warnings also take varying amounts of time to get
-accepted and work their way through mainline, meanwhile builds are
-broken.
-
-I agree that it's ideal to have no warnings, but from my perspective
--Werror is a major impediment to upgrading the tools. Wouldn't
-recommend.
 -- 
-Thanks,
-~Nick Desaulniers
+Jens Axboe
+
