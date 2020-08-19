@@ -2,93 +2,140 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09394C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E705C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C40207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2EE2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgHSGsO (ORCPT
+        id S1727108AbgHSGse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:48:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36213 "EHLO mga02.intel.com"
+        Wed, 19 Aug 2020 02:48:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6791 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbgHSGsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:48:13 -0400
-IronPort-SDR: i2uTZaEYLaMByq88Y30RnKMvbB2lX2AcUOTcjmfikVyJl41cfNtJwGDgDxUF8xP8sKLFy11sYN
- /ad45cu6hYzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142873217"
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="142873217"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 23:47:39 -0700
-IronPort-SDR: jyeQKbVFufKsoF2C405qrPn5HWNKSQcANzh/kgsgfWA0lDp4UZTQJYEy1GStJeVtCeqXIBwI+k
- uasgY8qZOiTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="310679324"
-Received: from lxy-dell.sh.intel.com ([10.239.159.21])
-  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2020 23:47:36 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v10 8/9] x86/split_lock: Set cpu_model_supports_sld to true after the existence of split lock detection is verified BSP
-Date:   Wed, 19 Aug 2020 14:47:06 +0800
-Message-Id: <20200819064707.1033569-9-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200819064707.1033569-1-xiaoyao.li@intel.com>
-References: <20200819064707.1033569-1-xiaoyao.li@intel.com>
+        id S1727807AbgHSGsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:48:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BWddn6Dxpz9tx2t;
+        Wed, 19 Aug 2020 08:48:13 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id sLh0Bt0UnGdV; Wed, 19 Aug 2020 08:48:13 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BWddn5CFsz9tx2s;
+        Wed, 19 Aug 2020 08:48:13 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B40318B7F3;
+        Wed, 19 Aug 2020 08:48:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qM2bDxTqw8S9; Wed, 19 Aug 2020 08:48:14 +0200 (CEST)
+Received: from [172.25.230.104] (po15451.idsi0.si.c-s.fr [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 86F238B767;
+        Wed, 19 Aug 2020 08:48:14 +0200 (CEST)
+Subject: Re: [PATCH v3] soc: fsl: enable acpi support
+To:     Ran Wang <ran.wang_1@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     Peng Ma <peng.ma@nxp.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200819040031.40204-1-ran.wang_1@nxp.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <02fa05ad-6d39-e16d-ad02-7472d28b6627@csgroup.eu>
+Date:   Wed, 19 Aug 2020 08:48:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200819040031.40204-1-ran.wang_1@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It should be more resonable to set cpu_model_supports_sld to true after
-BSP is verified to have feature split lock detection.
 
-It also avoids externing the cpu_model_supports_sld when enumerate the
-split lock detection in a guest via PV interface in a future patch.
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/kernel/cpu/intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Le 19/08/2020 à 06:00, Ran Wang a écrit :
+> From: Peng Ma <peng.ma@nxp.com>
+> 
+> This patch enables ACPI support in RCPM driver.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 5f44e0de04b9..b16f3dd9b9c2 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1052,6 +1052,7 @@ static void __init split_lock_setup(void)
- 		return;
- 	}
- 
-+	cpu_model_supports_sld = true;
- 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
- 	if (state == sld_fatal)
- 		setup_force_cpu_cap(X86_FEATURE_SLD_FATAL);
-@@ -1203,6 +1204,5 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
- 		return;
- 	}
- 
--	cpu_model_supports_sld = true;
- 	split_lock_setup();
- }
--- 
-2.18.4
+Can you change the subject to "soc: fsl: enable acpi support in RCPM 
+driver" ?
 
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v3:
+>   - Add #ifdef CONFIG_ACPI for acpi_device_id
+>   - Rename rcpm_acpi_imx_ids to rcpm_acpi_ids
+> 
+> Change in v2:
+>   - Update acpi_device_id to fix conflict with other driver
+> 
+>   drivers/soc/fsl/rcpm.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+> index a093dbe..55d1d73 100644
+> --- a/drivers/soc/fsl/rcpm.c
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -2,7 +2,7 @@
+>   //
+>   // rcpm.c - Freescale QorIQ RCPM driver
+>   //
+> -// Copyright 2019 NXP
+> +// Copyright 2019-2020 NXP
+>   //
+>   // Author: Ran Wang <ran.wang_1@nxp.com>
+>   
+> @@ -13,6 +13,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/suspend.h>
+>   #include <linux/kernel.h>
+> +#include <linux/acpi.h>
+>   
+>   #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+>   
+> @@ -125,6 +126,7 @@ static int rcpm_probe(struct platform_device *pdev)
+>   
+>   	ret = device_property_read_u32(&pdev->dev,
+>   			"#fsl,rcpm-wakeup-cells", &rcpm->wakeup_cells);
+> +
+
+This blank line addition is unrelated to the patch and shouldn't be there.
+
+Christophe
+
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -139,10 +141,19 @@ static const struct of_device_id rcpm_of_match[] = {
+>   };
+>   MODULE_DEVICE_TABLE(of, rcpm_of_match);
+>   
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id rcpm_acpi_ids[] = {
+> +	{"NXP0015",},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, rcpm_acpi_ids);
+> +#endif
+> +
+>   static struct platform_driver rcpm_driver = {
+>   	.driver = {
+>   		.name = "rcpm",
+>   		.of_match_table = rcpm_of_match,
+> +		.acpi_match_table = ACPI_PTR(rcpm_acpi_ids),
+>   		.pm	= &rcpm_pm_ops,
+>   	},
+>   	.probe = rcpm_probe,
+> 
