@@ -2,120 +2,90 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06616C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1EE9206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4D2206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="MWp6hmrR"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="symRFg/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgHSMq6 (ORCPT
+        id S1728538AbgHSMrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgHSMqW (ORCPT
+        Wed, 19 Aug 2020 08:47:40 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:25570 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726609AbgHSMm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:46:22 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67F3C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:46:21 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so21420232wrl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2BzCE5QyyYKQU931AlGPMu5HZVvIvHxha+lrY7tCRes=;
-        b=MWp6hmrRJhUbzUdF0FdnrfONYMpFUd7Iyj63uekk/ZvngRnKZkjWtl//71SJLcWmdu
-         XFUVVPM5DhNUB+kFlpvn2H79VSVE/mu0dkJlU/2cRRbMEbOuTZl+G2ySd2dDqSD8Jl0C
-         7KB6HizxZ4KpnotaU49Km7jTyTF7+JT+9KOjGe5xT9SRDe7B7vVArfjeybaJ2Qhlvv4E
-         vL24tKCcoRsntKQRVwuTg/OilunaMOvnibVxD81nI8FmZmccTaqxCtUH9A3dwDVLs5oR
-         sn9ycaDgMUjsxb7S260D69JFYBS2CDc7wQnKQLs3IfqyVfDDoqGPpd2KA2O13byN4smx
-         RwrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2BzCE5QyyYKQU931AlGPMu5HZVvIvHxha+lrY7tCRes=;
-        b=VBlqOAdtsRC71niMpHPhRq8WL4O/mzSKXw9DmpVb3+M+0pIT/syybCSTr/rzYJj5CC
-         ILEwxGaeCdcCcQPohcjvIzoBSKiUK8FqQkoiNhqDm09gM7kSiYEQ9YllpZXUfP+tp886
-         ttEsSeZUvSgjfAZGzffIvoa1cOw0Z+ltqx2hgzHUeGdZmA9AVseKCspfW6YyCs9vl5lq
-         1y0ZifzZ08w5MWxIUeXuBh3eKbFG6+8/0z1/hYPAooAeWlq1g62fqHVd2UNEqdy14Dx0
-         6gV0k1giRuiJkswbbM9uAeO+1htWnlFKHEv6TLSP8OLTiZJ3kHBn6+EKMcaSdnveslEq
-         l8Rg==
-X-Gm-Message-State: AOAM533HXOI4GpIETNtN8tBpliGuVfelRL263oEWIVdOT0j48iRp+cc8
-        eBZ/N+oDvnC0VQLl9a8HniYeOA==
-X-Google-Smtp-Source: ABdhPJymzCY2LUtVitxv8O8Xw0EyPf38KeeNj79RfMFFgL6iJSYyu+7mD2ngPcz9zyP9N4dirVJKaQ==
-X-Received: by 2002:adf:e550:: with SMTP id z16mr24865865wrm.329.1597841180601;
-        Wed, 19 Aug 2020 05:46:20 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id j24sm44099589wrb.49.2020.08.19.05.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 05:46:19 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:46:16 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@nvidia.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
- to devlink reload command
-Message-ID: <20200819124616.GA2314@nanopsycho.orion>
-References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
- <1597657072-3130-2-git-send-email-moshe@mellanox.com>
- <20200817163612.GA2627@nanopsycho>
- <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
- <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <cd0e3d7e-4746-d26d-dd0c-eb36c9c8a10f@nvidia.com>
+        Wed, 19 Aug 2020 08:42:59 -0400
+X-UUID: 79ff25f0d61c4b9883b1d62e2c45dbe1-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=gbEvkNvLGl7XkhJbIl8Am9oqDys+ugPHHJ4cNwALPbg=;
+        b=symRFg/pIqoSot9Y2muUGLgHLRU5BFlxhtrrtLlDiRT0puX2QLaDnYPRIZ5IOedhljC+9Yavplcf/8fh6m3N/L+Wnmlm+GVDQ0R99JXCXtlZ8YN6vzQnjGyCsz/JOCPLRi9Fc1opUf1WVuUa2lWoVEKcUFYRWTIg3qLEoEFWJOM=;
+X-UUID: 79ff25f0d61c4b9883b1d62e2c45dbe1-20200819
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 719342549; Wed, 19 Aug 2020 20:42:46 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 20:42:44 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 20:42:43 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH 02/10] usb: early: ehci-dbgp: convert to readl_poll_timeout_atomic()
+Date:   Wed, 19 Aug 2020 20:40:57 +0800
+Message-ID: <1597840865-26631-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1597840865-26631-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1597840865-26631-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd0e3d7e-4746-d26d-dd0c-eb36c9c8a10f@nvidia.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 65E32546313909D0757CC1C22E12E8B6E09145F4B7102037ADFB3A642D9C03412000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Aug 19, 2020 at 02:18:22PM CEST, moshe@nvidia.com wrote:
->
->On 8/19/2020 3:10 AM, Jakub Kicinski wrote:
->> 
->> On Tue, 18 Aug 2020 12:10:36 +0300 Moshe Shemesh wrote:
->> > On 8/17/2020 7:36 PM, Jiri Pirko wrote:
->> > > Mon, Aug 17, 2020 at 11:37:40AM CEST, moshe@mellanox.com wrote:
->> > > > Add devlink reload action to allow the user to request a specific reload
->> > > > action. The action parameter is optional, if not specified then devlink
->> > > > driver re-init action is used (backward compatible).
->> > > > Note that when required to do firmware activation some drivers may need
->> > > > to reload the driver. On the other hand some drivers may need to reset
->> > > Sounds reasonable. I think it would be good to indicate that though. Not
->> > > sure how...
->> > Maybe counters on the actions done ? Actually such counters can be
->> > useful on debug, knowing what reloads we had since driver was up.
->> Wouldn't we need to know all types of reset of drivers may do?
->
->
->Right, we can't tell all reset types driver may have, but we can tell which
->reload actions were done.
->
->> I think documenting this clearly should be sufficient.
->> 
->> A reset counter for the _requested_ reset type (fully maintained by
->> core), however - that may be useful. The question "why did this NIC
->> reset itself / why did the link just flap" comes up repeatedly.
->
->
->I will add counters on which reload were done. reload_down()/up() can return
->which actions were actually done and devlink will show counters.
+VXNlIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSB0byBzaW1wbGlmeSBjb2RlDQoNCkNjOiAi
+RXJpYyBXLiBCaWVkZXJtYW4iIDxlYmllZGVybUB4bWlzc2lvbi5jb20+DQpDYzogUGV0ciBNbGFk
+ZWsgPHBtbGFkZWtAc3VzZS5jb20+DQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5m
+ZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3VzYi9lYXJseS9laGNpLWRiZ3Au
+YyB8IDE1ICsrKysrLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyks
+IDEwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZWFybHkvZWhjaS1k
+YmdwLmMgYi9kcml2ZXJzL3VzYi9lYXJseS9laGNpLWRiZ3AuYw0KaW5kZXggYjA3NWRiZi4uNDVi
+NDJkOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdXNiL2Vhcmx5L2VoY2ktZGJncC5jDQorKysgYi9k
+cml2ZXJzL3VzYi9lYXJseS9laGNpLWRiZ3AuYw0KQEAgLTE1LDYgKzE1LDcgQEANCiAjaW5jbHVk
+ZSA8bGludXgvY29uc29sZS5oPg0KICNpbmNsdWRlIDxsaW51eC9lcnJuby5oPg0KICNpbmNsdWRl
+IDxsaW51eC9pbml0Lmg+DQorI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KICNpbmNsdWRlIDxs
+aW51eC9wY2lfcmVncy5oPg0KICNpbmNsdWRlIDxsaW51eC9wY2lfaWRzLmg+DQogI2luY2x1ZGUg
+PGxpbnV4L3VzYi9jaDkuaD4NCkBAIC0xNjEsMTcgKzE2MiwxMSBAQCBzdGF0aWMgaW5saW5lIHUz
+MiBkYmdwX3BpZF9yZWFkX3VwZGF0ZSh1MzIgeCwgdTMyIHRvaykNCiBzdGF0aWMgaW50IGRiZ3Bf
+d2FpdF91bnRpbF9jb21wbGV0ZSh2b2lkKQ0KIHsNCiAJdTMyIGN0cmw7DQotCWludCBsb29wID0g
+REJHUF9USU1FT1VUOw0KLQ0KLQlkbyB7DQotCQljdHJsID0gcmVhZGwoJmVoY2lfZGVidWctPmNv
+bnRyb2wpOw0KLQkJLyogU3RvcCB3aGVuIHRoZSB0cmFuc2FjdGlvbiBpcyBmaW5pc2hlZCAqLw0K
+LQkJaWYgKGN0cmwgJiBEQkdQX0RPTkUpDQotCQkJYnJlYWs7DQotCQl1ZGVsYXkoMSk7DQotCX0g
+d2hpbGUgKC0tbG9vcCA+IDApOw0KKwlpbnQgcmV0Ow0KIA0KLQlpZiAoIWxvb3ApDQorCXJldCA9
+IHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoJmVoY2lfZGVidWctPmNvbnRyb2wsIGN0cmwsDQor
+CQkJCShjdHJsICYgREJHUF9ET05FKSwgMSwgREJHUF9USU1FT1VUKTsNCisJaWYgKHJldCkNCiAJ
+CXJldHVybiAtREJHUF9USU1FT1VUOw0KIA0KIAkvKg0KLS0gDQoxLjkuMQ0K
 
-Why a counter? Just return what was done over netlink reply.
-
->
