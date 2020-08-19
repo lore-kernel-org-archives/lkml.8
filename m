@@ -2,187 +2,171 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243F0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2603C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0C020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BB620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FIggxJUw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMzV7C6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgHSAvg (ORCPT
+        id S1726642AbgHSA4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:51:36 -0400
-Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:64838
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726717AbgHSAvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:51:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nufgd2TCLbpdqqNBEsZIxO4QNB8xd6pOy4ZEDHjKqS9O/9fIDhuSaGaqCTzhO36Ex/JLSKsx7vrnDnj/UYCb2Q/uYsDWXxjPP+WHnPdR2b9ilGA4xJ+UjPSaO6sHnuBAVHaj7NFNWhpoNhHTVTPnNgP0+452A0zobPazRtRWUo8cWsVpqt1y9UqVsA6OIG/JgbxuevsTu+H9S2LXzGNKsBxtzt+kLCvcq/vjJdidFUnr8qsKK3AzMTfRXWfEXJOP9mLHQJsEyMA/GG3xDqysrO/nSy7XwxCV640HzHTl/P8l64Laj+wtcQCNos+r8dtlliY1vWRtHlKbCCQsKqe/sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CfREFvQLp8qODB6gtrGaxzvYE8LUDJz6QxDiqgDR2Ec=;
- b=NenlgQxY5ndm9XvJsQoAnBkl3kBvWSWrL005EMYY1BLRWTKItu2IBqujKPa22p8+YSOzz15hNfpHwbwBUKrPy7WvdtkqNdujRX7eiZ1iZybbRtmtC35LK+lbQBNmHTp3RlwA8evVgZM/XaciQ5iXi/QMMvhpiF0UxCxP1MyBV/FsUwkAwjx07FEtZnYe7BFnMsW+xUrsshPE1kn2oZwKC0gjR5j41tRMoB3/16JWO9zbQW1oiM+Sgm1QpotR5aJNhusiLrVulZ/K0eNP0jyQf68KiB9M0ScYI0XX46Wk3pxwMU4usV6ambVDnW+iuc+O2veWtWWVEucbFA0cH5IvTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CfREFvQLp8qODB6gtrGaxzvYE8LUDJz6QxDiqgDR2Ec=;
- b=FIggxJUwcpSIFNOS1734ksJdY6WFGZk6nn272nTIP6r8vbYm6kO/y8qs5TWsMX627zkuK9QB/O9NRzcojEdzSGkDuTne8ieiEtT2mjPd9wKp9P8v3069w8rElrccFOB/Y05LtHJzJA4M42Sc+66g5NFi0sTeKKvRHvx/iBNzxVY=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB7PR04MB5466.eurprd04.prod.outlook.com (2603:10a6:10:8a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 19 Aug
- 2020 00:51:27 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3283.027; Wed, 19 Aug
- 2020 00:51:27 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
-Thread-Topic: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
-Thread-Index: AQHWYY4pPqmFoZ4ZzEWHmcUWZM64s6k+jjUAgAAzq9A=
-Date:   Wed, 19 Aug 2020 00:51:27 +0000
-Message-ID: <DB6PR0402MB276017AA0C124172D9BC3483885D0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-5-peng.fan@nxp.com> <20200818214350.GA3822080@xps15>
-In-Reply-To: <20200818214350.GA3822080@xps15>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bfc45e1a-7f7c-41ad-34ef-08d843da0147
-x-ms-traffictypediagnostic: DB7PR04MB5466:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB546685AFBB97AFAB96C926C9885D0@DB7PR04MB5466.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pLfydgKMQyctdjeJMuvEGkmMHCM6Ffu4tBUXlxXoSAJdiInh9i/YGfUa99BuNtuxwjlstijsDgSAao78tqQcVPrI1GzAEq+Ld6BPSiLxBrzcC07fWtA2XDYsXYimrsZXp7+LmVCWsQSDWnTysgPnobngj/6M08WTJCmGxrwOPf2ClDFpP/Y+2stbzN24ZNXK6u/3Ht+ZyAqmcVz++zYSwb9jqI5A5b6/4B6hrbzPnY+9Sde1B46DBqYm8T4huBgjjF6Vfp38qNDC7J+ditsMCxhqx69l6I0FXNFaRg5NH+1Va2o/174jWm50J6jQu6XeLEhB5gpXeHp3eee6tpqDrQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(54906003)(86362001)(6506007)(5660300002)(6916009)(33656002)(186003)(8936002)(44832011)(52536014)(83380400001)(26005)(64756008)(66556008)(478600001)(66946007)(66476007)(55016002)(316002)(2906002)(8676002)(4326008)(9686003)(66446008)(7696005)(76116006)(71200400001)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: j71cyJg/clua9299jNKsgZiSaLDD1rOluljqhQShhORS9wOMGXHGEf1iBwrAxjetizelO2tiNqRiCVM6fGc4q88e/B1MbcTODSTI4TaWPcK2FksFsYbyx5WdVt52PpV9TX8QgJUTg4PF645R2odfpwEArgRdr3mwpx2DKCkoDPW349tm1L9PBPAN5DzrOvPsd21j8XhSrE17fjUkfCLqyBjI7fSRuFO/k81wAoD7IqmtBzeCSnZ4z344nh3gGOm1qOUyOgZoZDyO15O7WcQXwX0If/VSGsVra0e2+KbaTXqq1SqxlK9htVOPyw06KhHzEKcuQqaoxulFtFeJS9dr+c6BQ/E5CiE70dvfJy3Og4JvxZ7Mw7ll+kZL05SJpABdhRc2qM5GCLmfR+i5nRFm0SGjFKlw4uaSy1TnQ7wrKgZ8ZOf7kjVXPthT348g/1QmhlY66FPINpBetsJJxtPANujcMZe/5mcdikEU/TS+LZv6uf4D3HebZJb0IMy02qdKLr7pFO98VuLFx+56l58V2BlrG0xw9xUl5PqNX8kHb3BbGG3k9zcOzs9D3ayMHWwR/M0PofHSnkIXnejRC3HVyUGMGCSUrvD/LjzQUrxnsHOtPjEKXmRcoSexQ4/wiGcnboF2s7e730jbuCs+G92Zdw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 20:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgHSA4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:56:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48328C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:56:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j21so10544435pgi.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g5lgfj+4RO+TuaNs0nmIhHGQBFQwwG2bIb9G0QE1JCg=;
+        b=HMzV7C6Ht943LwwQUEDfWJuZQuGmOvSnzyFGWv7k5trxoMNvDoWSpF46Q+uQMrF5uL
+         a7aNxZk+lvJMHMG0XXfQvIJxybBglHZY72nGYl2UXj4PVKtzpvizAXPQ2ny89jUVK6IJ
+         2Jjjd+68JyrXVAlhm7i63NEoGSGrshxuRfhOK6PpgrYi/carkpEJAgSoBur9VUAk0ep0
+         DfaSMu/5m965G+E6CgHPNLK3VWm5hUt9aQ6JMvzosFYh8+d64PoFOGVDm/Ik9jEyvmBS
+         eDlmmmW3rAEXCHloRbuvp7u+0FPGeG1BUVYas/lOjq4QA+Od+M8BGhvkW15yQQkQK8Hk
+         x5Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=g5lgfj+4RO+TuaNs0nmIhHGQBFQwwG2bIb9G0QE1JCg=;
+        b=dViItNAcIZ0uUmSN2ZIzVL2fPVYmGoVRyg5nknbtV9KbcCqb1FS5QFaRUt3a7hTx7w
+         k05vsqQV087fBQTU2QpErMM+tLWXIfAQCRe0YJ4jzFr7GFd4X3UaqkWg6M8pWFMRdCEi
+         HuIAl7/TV25Rji8smQPAXlywm6ZdHax1m+EOll526A8Qf8YnFhsjkFobbOqXk+WeIkcN
+         h2dvXuegMdI/7NQwWRp/3yFVpdb73B2tgWcvZYJbfNjDO7D28n7SogDbcvqjP67QBcA2
+         t0gWtvKN2qkw5c9jdaStNX5z8w0ize5gToeDO55nNiv68qxPfvER3PvRvlhO453SEOjs
+         +nZg==
+X-Gm-Message-State: AOAM533l0kYEVJu1LKgTnEsHniE0BdenY7Liv4fssVYF8yIoz4R8vDvB
+        fHabRsB3/QeekqL9y/H4Iqc=
+X-Google-Smtp-Source: ABdhPJyjyC+n/9VImsjd4rETdoVJM4+2BoYtGrIgm+xD4XQbEWMQ67W1uiPuhG2P0nP9vOWaEtLOMQ==
+X-Received: by 2002:a63:6a47:: with SMTP id f68mr14832697pgc.170.1597798611836;
+        Tue, 18 Aug 2020 17:56:51 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c15sm25617749pfo.115.2020.08.18.17.56.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2020 17:56:50 -0700 (PDT)
+Subject: Re: [PATCH] Revert "seqlock: lockdep assert non-preemptibility on
+ seqcount_t write"
+To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Mark Starovoytov <mstarovoitov@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
+        rostedt@goodmis.org, tglx@linutronix.de, will@kernel.org
+References: <20200810085954.GA1591892@kroah.com>
+ <20200810095428.2602276-1-a.darwish@linutronix.de>
+ <20200810100502.GA2406768@kroah.com>
+ <bcf94ea2-05e6-2212-f732-b9a79a142f7e@roeck-us.net>
+ <169454.1597791078@turing-police>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <fa442483-00b5-169e-dac2-71fbf8307117@roeck-us.net>
+Date:   Tue, 18 Aug 2020 17:56:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfc45e1a-7f7c-41ad-34ef-08d843da0147
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 00:51:27.5301
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tEHNfVO/C2Km77aAhqrFR018fucGqZw+TXIh4HP4oONsYYMfG60+7VYzfunmeeoXZ65aIB/qhoBwmJaVyjhwJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5466
+In-Reply-To: <169454.1597791078@turing-police>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
->=20
-> Hi Peng,
->=20
-> On Fri, Jul 24, 2020 at 04:08:07PM +0800, Peng Fan wrote:
-> > Make syscon optional, since i.MX8QM/QXP/7ULP not have SRC to control
-> M4.
-> > But currently i.MX8QM/QXP/7ULP not added, so still check regmap when
-> > start/stop to avoid unhappy things.
->=20
-> On the i.MX8QM/QXP/7ULP processors, the remote processors are not
-> handled by the remoteproc cores, as implemented in this patch.  In such a
-> scenario how does the remoteproc core know the remote processor has
-> crashed and how does it recover from such a condition?
+On 8/18/20 3:51 PM, Valdis Klētnieks wrote:
+> On Mon, 10 Aug 2020 07:10:32 -0700, Guenter Roeck said:
+>>> 	ERROR: modpost: "__bad_udelay" [drivers/net/ethernet/aquantia/atlantic/atlantic.ko] undefined!
+>>>
+>>
+>> I don't think that is new. If anything, it is surprising that builds don't fail more
+>> widely because of it. AFAICS it was introduced back in 2018 (a hot 50-ms delay loop
+>> really isn't such a good idea).
+> 
+> Well...it wasn't broken in next-20200720.  A bit of poking with nm,
+> and building hw_atl/hw_atl_b0.s, it looks like the culprit is this commit:
+> 
+> commit 8dcf2ad39fdb2d183b7bd4307c837713e3150b9a
+> Author: Mark Starovoytov <mstarovoitov@marvell.com>
+> Date:   Mon Jul 20 21:32:44 2020 +0300
+> 
+>     net: atlantic: add hwmon getter for MAC temperature
+> 
+> specifically this chunk around line 1634 of hw_atl/hw_atl_b0.c:
+> 
+> 
+> +       err = readx_poll_timeout_atomic(hw_atl_b0_ts_ready_and_latch_high_get,
+> +                                       self, val, val == 1, 10000U, 500000U);
+> 
+> And doing a 'git revert' makes the build work....
+> 
 
-For 7ULP dual boot case, A7 is under control of M4, so if m4 crash, I suppo=
-se
-A7 would not work properly.
+Nice catch. FWIW, there is no obvious reason why this would need to be atomic.
+The calling code does not set a lock, meaning there can be two (or more)
+callers entering this code. Weird, especially since the code looks like it
+would actually need a mutex to work correctly. It might be interesting to
+see what happens if there are, say, half a dozen scripts/processes trying
+to read the hwmon attribute introduced by this patch at the same time.
 
-For 8QM/QXP partition case, M4 is in a standalone partition, if M4 crash or
-reboot, the system controller unit will restart M4 and notify Acore that M4
-restart.
-
-Thanks,
-Peng.
-
->=20
-> Thanks,
-> Mathieu
->=20
-> >
-> > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/remoteproc/imx_rproc.c
-> > b/drivers/remoteproc/imx_rproc.c index 82594a800a1b..4fad5c0b1c05
-> > 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -162,6 +162,9 @@ static int imx_rproc_start(struct rproc *rproc)
-> >  	struct device *dev =3D priv->dev;
-> >  	int ret;
-> >
-> > +	if (!priv->regmap)
-> > +		return -EOPNOTSUPP;
-> > +
-> >  	ret =3D regmap_update_bits(priv->regmap, dcfg->src_reg,
-> >  				 dcfg->src_mask, dcfg->src_start);
-> >  	if (ret)
-> > @@ -177,6 +180,9 @@ static int imx_rproc_stop(struct rproc *rproc)
-> >  	struct device *dev =3D priv->dev;
-> >  	int ret;
-> >
-> > +	if (!priv->regmap)
-> > +		return -EOPNOTSUPP;
-> > +
-> >  	ret =3D regmap_update_bits(priv->regmap, dcfg->src_reg,
-> >  				 dcfg->src_mask, dcfg->src_stop);
-> >  	if (ret)
-> > @@ -325,9 +331,10 @@ static int imx_rproc_probe(struct platform_device
-> *pdev)
-> >  	regmap =3D syscon_regmap_lookup_by_phandle(np, "syscon");
-> >  	if (IS_ERR(regmap)) {
-> >  		dev_err(dev, "failed to find syscon\n");
-> > -		return PTR_ERR(regmap);
-> > +		regmap =3D NULL;
-> > +	} else {
-> > +		regmap_attach_dev(dev, regmap, &config);
-> >  	}
-> > -	regmap_attach_dev(dev, regmap, &config);
-> >
-> >  	/* set some other name then imx */
-> >  	rproc =3D rproc_alloc(dev, "imx-rproc", &imx_rproc_ops,
-> > --
-> > 2.16.4
-> >
+Guenter
