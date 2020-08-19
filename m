@@ -2,94 +2,100 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A13AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 649DF206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3WFT+H6"
+	by mail.kernel.org (Postfix) with ESMTP id D8DC0205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHSNYc (ORCPT
+        id S1728301AbgHSNZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbgHSNQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:16:33 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E96C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:16:30 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id o22so17653535qtt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ukIFFNEkmWu6RobJHPqTePGGEQuwENadcCDhgJtfzhU=;
-        b=j3WFT+H6DJHS7Om7raw3H42KBCXviTCmnvdRJkrbff7AwxiK4dOo8ZsHPWI1xzVbMW
-         z4pnhgnMnJ8YISRBqVhlm6Fk/wjcTedAZUUHsJFLFumXcuCued1IwTvcCU6nAa+KkInI
-         whgvYFJ4LFbKrI8TvpI6x/FTQ2bRQCeQXVO9YNlfAnTuywtuKTj93pJwvcX9pxlFiOCG
-         ymS1/Wl7cjV5j1YrneNJRRE6vRc5sJU77xvKYDZcUvXUjXuALbXkMtk38meji6XYlCl2
-         MrkbPGeyOBqRP2fAZzk3zv9RpLrqnui89nc8EL6Kj/fKEZw43VrfGnFVh3V7lcuw5QXP
-         wqFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ukIFFNEkmWu6RobJHPqTePGGEQuwENadcCDhgJtfzhU=;
-        b=hN204Q4QsIwsb2mALHgwMyl+swkp51QD/NgbO/8JK1FW3+XORX8uEhZkmMu5ILO9X4
-         OVoXKuN8EBX6VyaigUX1QM+uh9LcxaZUf9dfx/ZGIsgLGICrSjUqXC86mASgobWvB9s5
-         aVCB5QIVDHcSXincCEt6H7nPMHfBILPrV64mX2Zo32p1eK87uIVIjbnqq/Sk9CXkljfK
-         nFlzppVavDaL5NcD5zNJWoblywYY7Ipo57CZRx7MRiV5kZmNfOlMprLnCDF0se7ji75W
-         Hrc7zTJidSinilDjw6nkdcNl04U2ephnxfQhkTfl9NIAfMJrQ5Y9JLhTWg4UyOopFT8w
-         1iyw==
-X-Gm-Message-State: AOAM532Zm6bFqp7H3gq6wydfAysF6gJFoc36T7ZttKkvPIfq+hhOQPK8
-        krbFIjqzs1N27ENjbbefHjA=
-X-Google-Smtp-Source: ABdhPJxjAVDucLlpJsFcN9VMNE8c4qYhCLipaYCs/n2o9ck1xUXg7Cd/tCNJ8HnylqqhsKF36TgRKg==
-X-Received: by 2002:aed:3728:: with SMTP id i37mr22703331qtb.347.1597842989944;
-        Wed, 19 Aug 2020 06:16:29 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 3sm24856186qkm.117.2020.08.19.06.16.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 06:16:29 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 19 Aug 2020 09:16:27 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Wed, 19 Aug 2020 09:25:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50516 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728212AbgHSNQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:16:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 43FAAAB9F;
+        Wed, 19 Aug 2020 13:16:43 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 15:16:15 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] lib/string.c: Disable tree-loop-distribute-patterns
-Message-ID: <20200819131627.GA3779903@rani.riverdale.lan>
-References: <20200818234307.3382306-1-nivedita@alum.mit.edu>
- <CAHk-=wik-oXnUpfZ6Hw37uLykc-_P0Apyn2XuX-odh-3Nzop8w@mail.gmail.com>
- <20200819030442.GA3396810@rani.riverdale.lan>
- <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Charan Teja Reddy <charante@codeaurora.org>
+Subject: Re: [PATCH v1 11/11] mm/memory_hotplug: mark pageblocks
+ MIGRATE_ISOLATE while onlining memory
+Message-ID: <20200819131615.GP5422@dhcp22.suse.cz>
+References: <20200819101157.12723-1-david@redhat.com>
+ <20200819101157.12723-12-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
+In-Reply-To: <20200819101157.12723-12-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 08:32:58PM -0700, Linus Torvalds wrote:
-> On Tue, Aug 18, 2020 at 8:04 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Wed 19-08-20 12:11:57, David Hildenbrand wrote:
+> Currently, it can happen that pages are allocated (and freed) via the buddy
+> before we finished basic memory onlining.
 > 
-> > Might be worth optimizing strnlen etc with the word-at-a-time thing though.
+> For example, pages are exposed to the buddy and can be allocated before
+> we actually mark the sections online. Allocated pages could suddenly
+> fail pfn_to_online_page() checks. We had similar issues with pcp
+> handling, when pages are allocated+freed before we reach
+> zone_pcp_update() in online_pages() [1].
 > 
-> Yeah, possibly. Except the kernel almost never uses strnlen for
-> anything bigger. At least I haven't seen it very much in the profiles.
+> Instead, mark all pageblocks MIGRATE_ISOLATE, such that allocations are
+> impossible. Once done with the heavy lifting, use
+> undo_isolate_page_range() to move the pages to the MIGRATE_MOVABLE
+> freelist, marking them ready for allocation. Similar to offline_pages(),
+> we have to manually adjust zone->nr_isolate_pageblock.
+> 
+> [1] https://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Charan Teja Reddy <charante@codeaurora.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-strscpy could be implemented as strnlen+memcpy. I'd think that wouldn't
-be much slower, especially if strnlen is optimized and the arch has a
-good implementation of memcpy?
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Yes this looks very sensible and we should have done that from the
+beginning. I just have one minor comment below
+> @@ -816,6 +816,14 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+>  	if (ret)
+>  		goto failed_addition;
+>  
+> +	/*
+> +	 * Fixup the number of isolated pageblocks before marking the sections
+> +	 * onlining, such that undo_isolate_page_range() works correctly.
+> +	 */
+> +	spin_lock_irqsave(&zone->lock, flags);
+> +	zone->nr_isolate_pageblock += nr_pages / pageblock_nr_pages;
+> +	spin_unlock_irqrestore(&zone->lock, flags);
+> +
+
+I am not entirely happy about this. I am wondering whether it would make
+more sense to keep the counter in sync already in memmap_init_zone. Sure
+we add a branch to the boot time initialization - and it always fails
+there - but the code would be cleaner and we wouldn't have to do tricks
+like this in caller(s).
+-- 
+Michal Hocko
+SUSE Labs
