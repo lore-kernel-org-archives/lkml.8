@@ -2,100 +2,58 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A987FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6007D207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8C7207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgHSIqI (ORCPT
+        id S1726978AbgHSIqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:46:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49453 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgHSIqF (ORCPT
+        Wed, 19 Aug 2020 04:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgHSIqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:46:05 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8JjK-00021u-5E; Wed, 19 Aug 2020 08:45:58 +0000
-Date:   Wed, 19 Aug 2020 10:45:56 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     peterz@infradead.org
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Message-ID: <20200819084556.im5zfpm2iquzvzws@wittgenstein>
-References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
- <20200818174447.GV17456@casper.infradead.org>
- <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+        Wed, 19 Aug 2020 04:46:46 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CBAC061757;
+        Wed, 19 Aug 2020 01:46:45 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1k8Jjx-006jl5-TI; Wed, 19 Aug 2020 10:46:38 +0200
+Message-ID: <2893e041597524c19f45fa7e58cf92d8234893e7.camel@sipsolutions.net>
+Subject: Re: [PATCH] cfg80211: switch from WARN() to pr_warn() in
+ is_user_regdom_saved()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Rustam Kovhaev <rkovhaev@gmail.com>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 19 Aug 2020 10:46:34 +0200
+In-Reply-To: <20200804210546.319249-1-rkovhaev@gmail.com> (sfid-20200804_230749_046801_76E2A4D8)
+References: <20200804210546.319249-1-rkovhaev@gmail.com>
+         (sfid-20200804_230749_046801_76E2A4D8)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:43:40AM +0200, peterz@infradead.org wrote:
-> On Tue, Aug 18, 2020 at 06:44:47PM +0100, Matthew Wilcox wrote:
-> > On Tue, Aug 18, 2020 at 07:34:00PM +0200, Christian Brauner wrote:
-> > > The only remaining function callable outside of kernel/fork.c is
-> > > _do_fork(). It doesn't really follow the naming of kernel-internal
-> > > syscall helpers as Christoph righly pointed out. Switch all callers and
-> > > references to kernel_clone() and remove _do_fork() once and for all.
-> > 
-> > My only concern is around return type.  long, int, pid_t ... can we
-> > choose one and stick to it?  pid_t is probably the right return type
-> > within the kernel, despite the return type of clone3().  It'll save us
-> > some work if we ever go through the hassle of growing pid_t beyond 31-bit.
-> 
-> We have at least the futex ABI restricting PID space to 30 bits.
+On Tue, 2020-08-04 at 14:05 -0700, Rustam Kovhaev wrote:
+> this warning can be triggered by userspace, so it should not cause a
+> panic if panic_on_warn is set
 
-Ok, looking into kernel/futex.c I see 
+This is incorrect, it just addresses a particular symptom. I'll make a
+proper fix.
 
-pid_t pid = uval & FUTEX_TID_MASK;
+johannes
 
-which is probably what this referes to and /proc/sys/kernel/threads-max
-is restricted to FUTEX_TID_MASK.
-
-Afaict, that doesn't block switching kernel_clone() to return pid_t. It
-can't create anything > FUTEX_TID_MASK anyway without yelling EAGAIN at
-userspace. But it means that _if_ we were to change the size of pid_t
-we'd likely need a new futex API. 
-
-Christian
