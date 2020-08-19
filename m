@@ -2,130 +2,129 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0027C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C40C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A878C20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A2220772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czQqdKt7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LtJ+6uDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHSAU6 (ORCPT
+        id S1726718AbgHSA2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgHSAU5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:20:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246BAC061389;
-        Tue, 18 Aug 2020 17:20:57 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id p25so20159810qkp.2;
-        Tue, 18 Aug 2020 17:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7YNr0/jQBoOjMJ1GJxHc4XuPsYwYYSpKoFcUKAuCANQ=;
-        b=czQqdKt7Ca9NxyEtTkZJKnoqff5S2PCADfuwPj54uAEzngcgpvq2sEK0//1InPOnun
-         6csXn+aZtRq81zUu7dEhrTqTSsYS0ApQtZGsRRG06A+90t8P4d6DmR+6pN0qRpqS/Ngp
-         uiWqojUedgWVouv+216Z3jWhDdl0EjUCp1ZWSJJJYoljM+nNRR5oTyzWVrrq4YUzxQVP
-         +1lTKMiL/QBddxKqDQtlksBF+LmRqSOZb2R4ijdvgQnVaWEtRkmPCKkCF1uZUhWm4xhr
-         yD99SKjUDq6YwmQvK/o8xspQ/xISBL0rVPKZNfmBScbOmF6VRW2iDaF2/0Bw9U6gtGXi
-         LS3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=7YNr0/jQBoOjMJ1GJxHc4XuPsYwYYSpKoFcUKAuCANQ=;
-        b=FkzC2dJdFEGLVWuu8uTzht+4EMRlJVrUI3883xvK47Q7BM5mw+W0DCy1LJE/p7SLHK
-         GVg613vCnIEDGBiJCUQrshCij3XsuzRaqIVMetIR9Rb1xA2wAMxZlGHBxThAQpeldvoJ
-         cGSq1EN5bSmBMg3KKf0WGD97FBlbsUTBBl7XiKXvbADuK229BFYtW4wFTbpX4pLzqN6H
-         hKiDj441NGYSTztYgGtfz3OvKuun7aOdgF39fGTpbM1+60vo/6tHUhRl8qp74DuZRAt/
-         pMPbhY5STMOwZKtP4TjjytQwjF6gamk9G/7ppBMTpOX+eaPknNEpVXt8TmDt2AvBYLYP
-         ZTJA==
-X-Gm-Message-State: AOAM531XiuW6d0aMnvUPTPK978BaykqYGTVe22OMzjOYX9j6tRoRqSng
-        A4sgfp2mSqwUEg58I3jA25M=
-X-Google-Smtp-Source: ABdhPJxGWqcfe5RiBveI6ga7nnllhDQGBRudEemfUBLCJQnu4+nLDHKaZMXMVuHsjKW+7EtPKiaC6Q==
-X-Received: by 2002:a37:397:: with SMTP id 145mr20144568qkd.258.1597796455589;
-        Tue, 18 Aug 2020 17:20:55 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id j72sm22657625qke.20.2020.08.18.17.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 17:20:54 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 18 Aug 2020 20:20:52 -0400
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-Message-ID: <20200819002052.GA3397377@rani.riverdale.lan>
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <20200818222542.GA3254379@rani.riverdale.lan>
- <CAKwvOdmfiD1TNqRvFuX07BqonYzh1eKFE9mFmOpaSyrbR0d5Lw@mail.gmail.com>
+        Tue, 18 Aug 2020 20:28:25 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44833 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgHSA2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 20:28:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWTCV15wmz9sPC;
+        Wed, 19 Aug 2020 10:28:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597796903;
+        bh=3Td9YjzRiF4H4tu4TurIrcOy3zbpa0CpuzrgWfU0w+U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LtJ+6uDj8SSLB2o7dkuACoFCD3UvbKqbi2+TA6cd9LXahNOWPxq99Ylc7zZnVt5h9
+         IyGmGBXvE8YlGNY1zX/3D4xt/nHEiyiQ//mgo0oUZC9oir1+SBYtMg3mpZKKFpdeud
+         zqzK7t/+frCEoS71x8jAr2KvE2q/lSSo5o1vpNZ/8f9mzySe4BegsdPolpl95nHWSZ
+         Dc8j3AzfU+rSi3ukWyUAPisw118w2NgEcirzdrX42KdSvkfCExPY2I+djB3XT3Mv4U
+         a7zGl2ygaTeojHhcmwBhwK/PGAHCDhwWto42PTugEnt0Ge7ykoy3wYon9C0v3p3Nu5
+         NZaVQboSv8OTw==
+Date:   Wed, 19 Aug 2020 10:28:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: linux-next: manual merge of the reset tree with the kspp-gustavo
+ tree
+Message-ID: <20200819102819.63c9aa50@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmfiD1TNqRvFuX07BqonYzh1eKFE9mFmOpaSyrbR0d5Lw@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/b/KufgxO5Sk9nRQvijoUG/8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 03:59:45PM -0700, Nick Desaulniers wrote:
-> On Tue, Aug 18, 2020 at 3:25 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Another thing that needs to be fixed is that at least lib/string.c needs
-> > to be compiled with -ffreestanding.
-> >
-> > gcc-10 optimizes the generic memset implementation in there into a call
-> > to memset. Now that's on x86 which doesn't use the generic
-> > implementation, but this is just waiting to bite us.
-> >
-> > https://godbolt.org/z/6EhG15
-> 
-> Admittedly, we've had the same shenanigans with memcpy implemented in
-> terms of calls to __builtin_memcpy being lowered to infinitely
-> recursive calls...which feels like the same kind of bug.  ("You wanted
-> infinite recursion in the kexec purgatory image, right?" "No,
-> compiler, I did not.")  example: https://godbolt.org/z/MzrTaM
-> (probably should fix this in both implementations; at the least I feel
-> like Clang's -Winfinite-recursion should try to help us out here).
-> 
+--Sig_/b/KufgxO5Sk9nRQvijoUG/8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-What's the other implementation we need to worry about? purgatory (at
-least on x86) has freestanding already.
+Hi all,
+
+Today's linux-next merge of the reset tree got a conflict in:
+
+  drivers/reset/reset-imx7.c
+
+between commit:
+
+  58e813cceabd ("treewide: Use fallthrough pseudo-keyword")
+
+from the kspp-gustavo tree and commit:
+
+  2983e2385ff6 ("reset: imx7: add the cm4 reset for i.MX8MQ")
+
+from the reset tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/reset/reset-imx7.c
+index e8aa8691deb2,b60534a1e0ef..000000000000
+--- a/drivers/reset/reset-imx7.c
++++ b/drivers/reset/reset-imx7.c
+@@@ -232,12 -235,13 +235,13 @@@ static int imx8mq_reset_set(struct rese
+  		break;
+ =20
+  	case IMX8MQ_RESET_PCIE_CTRL_APPS_EN:
+ -	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:	/* fallthrough */
+ -	case IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N:	/* fallthrough */
+ -	case IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N:	/* fallthrough */
+ -	case IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N:	/* fallthrough */
+ -	case IMX8MQ_RESET_MIPI_DSI_RESET_N:	/* fallthrough */
+ -	case IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N:	/* fallthrough */
+ +	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:
+ +	case IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N:
+ +	case IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N:
+ +	case IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N:
+ +	case IMX8MQ_RESET_MIPI_DSI_RESET_N:
+ +	case IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N:
++ 	case IMX8MQ_RESET_M4_ENABLE:
+  		value =3D assert ? 0 : bit;
+  		break;
+  	}
+
+--Sig_/b/KufgxO5Sk9nRQvijoUG/8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88ciMACgkQAVBC80lX
+0GzlUAf7BcxfyA5OtemSfOyrmppvSZJs1RHaZYKQM5MDq11cOd2sig54rcxemn4Z
+PVjcy5d5Sj7bfh16dKDDWyphfx9ckjpeoWo5xT0ZXV6w8GQEKqw6GsGCUuNTpxL3
+12c/Qrrdv/LHSkqFwG6zJp2Exf6vb6DNShjF1mZ3R9xrTc8NGwT7yfSxuyyIWvCa
+ZjZJsGz4+eQtdJPVfLlo0yeHg/byvo1LV9JQqmYBf1BsM6nmxOWQBAQim4qJHMRZ
+ZsrDCRPon6fAvhfORqKhhsI7PiJEY+NpYGbuE6GN1OK9VKgOLZmgt20flYYhgT/b
+qiocTgBZ3c6xlzqjUKfmYMSxQCHo/A==
+=pref
+-----END PGP SIGNATURE-----
+
+--Sig_/b/KufgxO5Sk9nRQvijoUG/8--
