@@ -2,188 +2,211 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00FC220885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E69B207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eQRXa4Wx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAN8xc5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgHSPik (ORCPT
+        id S1728808AbgHSPiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:38:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12590 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728705AbgHSPia (ORCPT
+        Wed, 19 Aug 2020 11:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728785AbgHSPif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:38:30 -0400
-X-UUID: 4fdb3c351832422ea2a235b44158e9fb-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=4qgCAZXCXYXN1cuDSbZSsrcYsE9h1N890w3ZzYe0Wzk=;
-        b=eQRXa4WxyRPiBfC0JntkAen3t6CpwvYdZboE8ofJbNdnyBpCalfyLfkUDIgX2BNsj+rOpBbktKwdeY14KL5M0GJX6kOK1gEIKh7BfDQOFbyM93ml1ZbrPQu9zEdlsynovhCA+LReBzSjr9u+baZQvt0jQXIRW1BRkbXjfjIwVqk=;
-X-UUID: 4fdb3c351832422ea2a235b44158e9fb-20200819
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 441858192; Wed, 19 Aug 2020 23:38:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 23:38:17 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 23:38:17 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>
-CC:     <mark-pk.tsai@mediatek.com>, <alix.wu@mediatek.com>,
-        <daniel@0x0f.com>, <devicetree@vger.kernel.org>,
-        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 19 Aug 2020 23:37:57 +0800
-Message-ID: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
+        Wed, 19 Aug 2020 11:38:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7BEC061757;
+        Wed, 19 Aug 2020 08:38:36 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f5so10988348plr.9;
+        Wed, 19 Aug 2020 08:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7YpHXP3RsOsEs2NNSzxj7OsDtEy2/tnBSwsHzFmLLBU=;
+        b=rAN8xc5YJmSf7fwJzTUXAIiWqSE14pjCSFkJbZGm7T/E1CPlpDnO5hddUlEDU5w0Ti
+         6bmaI+tkQir5ps+SLQRx0lBAYZHN5m72sNvJf45kHikHbxAB+hIJSBf5X7JsI0y63LjK
+         Nh1pd3d+y6SOtS7s5UpenJlPtRU6+oPdIWrlZKA2jM4LgArixGltKVYPex3HbfbIh36j
+         Aa3LrxpcYxslCDuSvgdt/BtI32/epBWHJBBVPxnD0tz1HD5N99P5SyC/NPQvM9lAb3Zh
+         UflO5vGWBq7euR+cpx7btx+3C9StBdIgxlCyCylq7oJCyjamU5GZwfQVdR0A9XWNViYN
+         sSYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7YpHXP3RsOsEs2NNSzxj7OsDtEy2/tnBSwsHzFmLLBU=;
+        b=uWKbV2e9ClKWcNd8aLKzIC59fceie5tJxsww07Ua7OPxFppU9XWhZXa656Ye0BbI04
+         We8855CPVusA4eN8Ky8kUm0XBHgUFNndcpB1PJG/mCb4x9YrxZOwNQcD7lSmU4+92QLT
+         jQSFDwg8O/i+z93tj9DLfQQFqM8/Q7oZNldCprvVvOdaL44+aYcg15U07SAK5iJxORMH
+         rBA9ExYs+BYryqkPHi9zazGFPwC9lQup3QjCblALBWs/IgujRhP8WqV7QeKROjauAF7+
+         w4SfXAnKURoe+qQHj57kG8kpiUvZHdIswcBc20DYuls2Dlt9dyB1HCcPz5pNrRBBS6iK
+         Tg5w==
+X-Gm-Message-State: AOAM533cvrBxjOaYWmb0Cyhpy/GfxuhW3yPY+BvvGge4PKLeZPJdCZFv
+        cEd2oAgQ+ygt5xnCz+VSn8058wt7aO4aZdIHYpQzZGtk2ZBuRJHp
+X-Google-Smtp-Source: ABdhPJzgbJjr2iVKDjtuwEZHTMPNRxNCwBAygscnCrMSLBSuPKDq2pa7d/8VSt5LkTnt1UJJzwFGqLjDOtuO0PdaHRU=
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr4375002pjv.181.1597851515372;
+ Wed, 19 Aug 2020 08:38:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+ <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com> <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
+ <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
+In-Reply-To: <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 18:38:19 +0300
+Message-ID: <CAHp75Veq9ym73zU1h92+CWk0CgNUVNz4zEE=xj1ZuCBdEQ_QFA@mail.gmail.com>
+Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
+ interrupt - RIP: 0010:security_port_sid
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        paul@paul-moore.com, Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, omosnace@redhat.com,
+        rgb@redhat.com, Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIE1TdGFyIGludGVycnVwdCBjb250cm9sbGVyIHN1cHBvcnQgdXNpbmcgaGllcmFyY2h5IGly
-cQ0KZG9tYWluLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBt
-ZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2lycWNoaXAvS2NvbmZpZyAgICAgICAgfCAgIDgg
-KysNCiBkcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaXJx
-Y2hpcC9pcnEtbXN0LWludGMuYyB8IDE5OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCiAzIGZpbGVzIGNoYW5nZWQsIDIwOCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXN0LWludGMuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9pcnFjaGlwL0tjb25maWcgYi9kcml2ZXJzL2lycWNoaXAvS2NvbmZpZw0KaW5kZXggYmI3MGI3
-MTc3Zjk0Li4wYjVhZTVmYTBkM2MgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2lycWNoaXAvS2NvbmZp
-Zw0KKysrIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCkBAIC01NzEsNCArNTcxLDEyIEBAIGNv
-bmZpZyBMT09OR1NPTl9QQ0hfTVNJDQogCWhlbHANCiAJICBTdXBwb3J0IGZvciB0aGUgTG9vbmdz
-b24gUENIIE1TSSBDb250cm9sbGVyLg0KIA0KK2NvbmZpZyBNU1RfSVJRDQorCWJvb2wgIk1TdGFy
-IEludGVycnVwdCBDb250cm9sbGVyIg0KKwlkZWZhdWx0IEFSQ0hfTUVESUFURUsNCisJc2VsZWN0
-IElSUV9ET01BSU4NCisJc2VsZWN0IElSUV9ET01BSU5fSElFUkFSQ0hZDQorCWhlbHANCisJICBT
-dXBwb3J0IE1TdGFyIEludGVycnVwdCBDb250cm9sbGVyLg0KKw0KIGVuZG1lbnUNCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgYi9kcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUN
-CmluZGV4IDEzM2Y5YzQ1NzQ0YS4uZTI2ODhhNjI0MDNlIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9p
-cnFjaGlwL01ha2VmaWxlDQorKysgYi9kcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUNCkBAIC0xMTEs
-MyArMTExLDQgQEAgb2JqLSQoQ09ORklHX0xPT05HU09OX0hUUElDKQkJKz0gaXJxLWxvb25nc29u
-LWh0cGljLm8NCiBvYmotJChDT05GSUdfTE9PTkdTT05fSFRWRUMpCQkrPSBpcnEtbG9vbmdzb24t
-aHR2ZWMubw0KIG9iai0kKENPTkZJR19MT09OR1NPTl9QQ0hfUElDKQkJKz0gaXJxLWxvb25nc29u
-LXBjaC1waWMubw0KIG9iai0kKENPTkZJR19MT09OR1NPTl9QQ0hfTVNJKQkJKz0gaXJxLWxvb25n
-c29uLXBjaC1tc2kubw0KK29iai0kKENPTkZJR19NU1RfSVJRKQkJCSs9IGlycS1tc3QtaW50Yy5v
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2lycS1tc3QtaW50Yy5jIGIvZHJpdmVycy9p
-cnFjaGlwL2lycS1tc3QtaW50Yy5jDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAw
-MDAwMDAwLi40YmUwNzc1OTE4OTgNCi0tLSAvZGV2L251bGwNCisrKyBiL2RyaXZlcnMvaXJxY2hp
-cC9pcnEtbXN0LWludGMuYw0KQEAgLTAsMCArMSwxOTkgQEANCisvLyBTUERYLUxpY2Vuc2UtSWRl
-bnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTMtQ2xhdXNlKQ0KKy8qDQorICogQ29weXJpZ2h0IChj
-KSAyMDIwIE1lZGlhVGVrIEluYy4NCisgKiBBdXRob3IgTWFyay1QSyBUc2FpIDxtYXJrLXBrLnRz
-YWlAbWVkaWF0ZWsuY29tPg0KKyAqLw0KKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCisj
-aW5jbHVkZSA8bGludXgvaW8uaD4NCisjaW5jbHVkZSA8bGludXgvaXJxLmg+DQorI2luY2x1ZGUg
-PGxpbnV4L2lycWNoaXAuaD4NCisjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+DQorI2luY2x1
-ZGUgPGxpbnV4L29mLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCisjaW5jbHVk
-ZSA8bGludXgvb2ZfaXJxLmg+DQorI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCisjaW5jbHVkZSA8
-bGludXgvc3BpbmxvY2suaD4NCisNCisjZGVmaW5lIElOVENfTUFTSwkweDANCisjZGVmaW5lIElO
-VENfRU9JCTB4MjANCisNCitzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhIHsNCisJcmF3X3NwaW5s
-b2NrX3QJbG9jazsNCisJdW5zaWduZWQgaW50CWlycV9zdGFydCwgbnJfaXJxczsNCisJdm9pZCBf
-X2lvbWVtCSpiYXNlOw0KKwlib29sCQlub19lb2k7DQorfTsNCisNCitzdGF0aWMgdm9pZCBtc3Rf
-c2V0X2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQsIHUzMiBvZmZzZXQpDQorew0KKwlpcnFfaHdfbnVt
-YmVyX3QgaHdpcnEgPSBpcnFkX3RvX2h3aXJxKGQpOw0KKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9k
-YXRhICpjZCA9IGlycV9kYXRhX2dldF9pcnFfY2hpcF9kYXRhKGQpOw0KKwl1MTYgdmFsLCBtYXNr
-Ow0KKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KKw0KKwltYXNrID0gMSA8PCAoaHdpcnEgJSAxNik7
-DQorCW9mZnNldCArPSAoaHdpcnEgLyAxNikgKiA0Ow0KKw0KKwlyYXdfc3Bpbl9sb2NrX2lycXNh
-dmUoJmNkLT5sb2NrLCBmbGFncyk7DQorCXZhbCA9IHJlYWR3X3JlbGF4ZWQoY2QtPmJhc2UgKyBv
-ZmZzZXQpIHwgbWFzazsNCisJd3JpdGV3X3JlbGF4ZWQodmFsLCBjZC0+YmFzZSArIG9mZnNldCk7
-DQorCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZjZC0+bG9jaywgZmxhZ3MpOw0KK30NCisN
-CitzdGF0aWMgdm9pZCBtc3RfY2xlYXJfaXJxKHN0cnVjdCBpcnFfZGF0YSAqZCwgdTMyIG9mZnNl
-dCkNCit7DQorCWlycV9od19udW1iZXJfdCBod2lycSA9IGlycWRfdG9faHdpcnEoZCk7DQorCXN0
-cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNkID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEo
-ZCk7DQorCXUxNiB2YWwsIG1hc2s7DQorCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQorDQorCW1hc2sg
-PSAxIDw8IChod2lycSAlIDE2KTsNCisJb2Zmc2V0ICs9IChod2lycSAvIDE2KSAqIDQ7DQorDQor
-CXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmY2QtPmxvY2ssIGZsYWdzKTsNCisJdmFsID0gcmVhZHdf
-cmVsYXhlZChjZC0+YmFzZSArIG9mZnNldCkgJiB+bWFzazsNCisJd3JpdGV3X3JlbGF4ZWQodmFs
-LCBjZC0+YmFzZSArIG9mZnNldCk7DQorCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZjZC0+
-bG9jaywgZmxhZ3MpOw0KK30NCisNCitzdGF0aWMgdm9pZCBtc3RfaW50Y19tYXNrX2lycShzdHJ1
-Y3QgaXJxX2RhdGEgKmQpDQorew0KKwltc3Rfc2V0X2lycShkLCBJTlRDX01BU0spOw0KKwlpcnFf
-Y2hpcF9tYXNrX3BhcmVudChkKTsNCit9DQorDQorc3RhdGljIHZvaWQgbXN0X2ludGNfdW5tYXNr
-X2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQpDQorew0KKwltc3RfY2xlYXJfaXJxKGQsIElOVENfTUFT
-Syk7DQorCWlycV9jaGlwX3VubWFza19wYXJlbnQoZCk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG1z
-dF9pbnRjX2VvaV9pcnEoc3RydWN0IGlycV9kYXRhICpkKQ0KK3sNCisJc3RydWN0IG1zdF9pbnRj
-X2NoaXBfZGF0YSAqY2QgPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsNCisNCisJaWYg
-KCFjZC0+bm9fZW9pKQ0KKwkJbXN0X3NldF9pcnEoZCwgSU5UQ19FT0kpOw0KKw0KKwlpcnFfY2hp
-cF9lb2lfcGFyZW50KGQpOw0KK30NCisNCitzdGF0aWMgc3RydWN0IGlycV9jaGlwIG1zdF9pbnRj
-X2NoaXAgPSB7DQorCS5uYW1lCQkJPSAibXN0LWludGMiLA0KKwkuaXJxX21hc2sJCT0gbXN0X2lu
-dGNfbWFza19pcnEsDQorCS5pcnFfdW5tYXNrCQk9IG1zdF9pbnRjX3VubWFza19pcnEsDQorCS5p
-cnFfZW9pCQk9IG1zdF9pbnRjX2VvaV9pcnEsDQorCS5pcnFfZ2V0X2lycWNoaXBfc3RhdGUJPSBp
-cnFfY2hpcF9nZXRfcGFyZW50X3N0YXRlLA0KKwkuaXJxX3NldF9pcnFjaGlwX3N0YXRlCT0gaXJx
-X2NoaXBfc2V0X3BhcmVudF9zdGF0ZSwNCisJLmlycV9zZXRfYWZmaW5pdHkJPSBpcnFfY2hpcF9z
-ZXRfYWZmaW5pdHlfcGFyZW50LA0KKwkuaXJxX3NldF92Y3B1X2FmZmluaXR5CT0gaXJxX2NoaXBf
-c2V0X3ZjcHVfYWZmaW5pdHlfcGFyZW50LA0KKwkuaXJxX3NldF90eXBlCQk9IGlycV9jaGlwX3Nl
-dF90eXBlX3BhcmVudCwNCisJLmlycV9yZXRyaWdnZXIJCT0gaXJxX2NoaXBfcmV0cmlnZ2VyX2hp
-ZXJhcmNoeSwNCisJLmZsYWdzCQkJPSBJUlFDSElQX1NFVF9UWVBFX01BU0tFRCB8DQorCQkJCSAg
-SVJRQ0hJUF9TS0lQX1NFVF9XQUtFIHwNCisJCQkJICBJUlFDSElQX01BU0tfT05fU1VTUEVORCwN
-Cit9Ow0KKw0KK3N0YXRpYyBpbnQgbXN0X2ludGNfZG9tYWluX3RyYW5zbGF0ZShzdHJ1Y3QgaXJx
-X2RvbWFpbiAqZCwNCisJCQkJICAgICBzdHJ1Y3QgaXJxX2Z3c3BlYyAqZndzcGVjLA0KKwkJCQkg
-ICAgIHVuc2lnbmVkIGxvbmcgKmh3aXJxLA0KKwkJCQkgICAgIHVuc2lnbmVkIGludCAqdHlwZSkN
-Cit7DQorCXN0cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNkID0gZC0+aG9zdF9kYXRhOw0KKw0K
-KwlpZiAoaXNfb2Zfbm9kZShmd3NwZWMtPmZ3bm9kZSkpIHsNCisJCWlmIChmd3NwZWMtPnBhcmFt
-X2NvdW50ICE9IDMpDQorCQkJcmV0dXJuIC1FSU5WQUw7DQorDQorCQkvKiBObyBQUEkgc2hvdWxk
-IHBvaW50IHRvIHRoaXMgZG9tYWluICovDQorCQlpZiAoZndzcGVjLT5wYXJhbVswXSAhPSAwKQ0K
-KwkJCXJldHVybiAtRUlOVkFMOw0KKw0KKwkJaWYgKGZ3c3BlYy0+cGFyYW1bMV0gPj0gY2QtPm5y
-X2lycXMpDQorCQkJcmV0dXJuIC1FSU5WQUw7DQorDQorCQkqaHdpcnEgPSBmd3NwZWMtPnBhcmFt
-WzFdOw0KKwkJKnR5cGUgPSBmd3NwZWMtPnBhcmFtWzJdICYgSVJRX1RZUEVfU0VOU0VfTUFTSzsN
-CisJCXJldHVybiAwOw0KKwl9DQorDQorCXJldHVybiAtRUlOVkFMOw0KK30NCisNCitzdGF0aWMg
-aW50IG1zdF9pbnRjX2RvbWFpbl9hbGxvYyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCB1bnNp
-Z25lZCBpbnQgdmlycSwNCisJCQkJIHVuc2lnbmVkIGludCBucl9pcnFzLCB2b2lkICpkYXRhKQ0K
-K3sNCisJaW50IGk7DQorCWlycV9od19udW1iZXJfdCBod2lycTsNCisJc3RydWN0IGlycV9md3Nw
-ZWMgcGFyZW50X2Z3c3BlYywgKmZ3c3BlYyA9IGRhdGE7DQorCXN0cnVjdCBtc3RfaW50Y19jaGlw
-X2RhdGEgKmNkID0gZG9tYWluLT5ob3N0X2RhdGE7DQorDQorCS8qIE5vdCBHSUMgY29tcGxpYW50
-ICovDQorCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQorCQlyZXR1cm4gLUVJTlZBTDsN
-CisNCisJLyogTm8gUFBJIHNob3VsZCBwb2ludCB0byB0aGlzIGRvbWFpbiAqLw0KKwlpZiAoZndz
-cGVjLT5wYXJhbVswXSkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlod2lycSA9IGZ3c3BlYy0+
-cGFyYW1bMV07DQorCWZvciAoaSA9IDA7IGkgPCBucl9pcnFzOyBpKyspDQorCQlpcnFfZG9tYWlu
-X3NldF9od2lycV9hbmRfY2hpcChkb21haW4sIHZpcnEgKyBpLCBod2lycSArIGksDQorCQkJCQkg
-ICAgICAmbXN0X2ludGNfY2hpcCwNCisJCQkJCSAgICAgIGRvbWFpbi0+aG9zdF9kYXRhKTsNCisN
-CisJcGFyZW50X2Z3c3BlYyA9ICpmd3NwZWM7DQorCXBhcmVudF9md3NwZWMuZndub2RlID0gZG9t
-YWluLT5wYXJlbnQtPmZ3bm9kZTsNCisJcGFyZW50X2Z3c3BlYy5wYXJhbVsxXSA9IGNkLT5pcnFf
-c3RhcnQgKyBod2lycTsNCisJcmV0dXJuIGlycV9kb21haW5fYWxsb2NfaXJxc19wYXJlbnQoZG9t
-YWluLCB2aXJxLCBucl9pcnFzLCAmcGFyZW50X2Z3c3BlYyk7DQorfQ0KKw0KK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgaXJxX2RvbWFpbl9vcHMgbXN0X2ludGNfZG9tYWluX29wcyA9IHsNCisJLnRyYW5z
-bGF0ZQk9IG1zdF9pbnRjX2RvbWFpbl90cmFuc2xhdGUsDQorCS5hbGxvYwkJPSBtc3RfaW50Y19k
-b21haW5fYWxsb2MsDQorCS5mcmVlCQk9IGlycV9kb21haW5fZnJlZV9pcnFzX2NvbW1vbiwNCit9
-Ow0KKw0KK2ludCBfX2luaXQNCittc3RfaW50Y19vZl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAq
-ZG4sIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50KQ0KK3sNCisJc3RydWN0IGlycV9kb21haW4g
-KmRvbWFpbiwgKmRvbWFpbl9wYXJlbnQ7DQorCXN0cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNk
-Ow0KKwl1MzIgaXJxX3N0YXJ0LCBpcnFfZW5kOw0KKw0KKwlkb21haW5fcGFyZW50ID0gaXJxX2Zp
-bmRfaG9zdChwYXJlbnQpOw0KKwlpZiAoIWRvbWFpbl9wYXJlbnQpIHsNCisJCXByX2VycigibXN0
-LWludGM6IGludGVycnVwdC1wYXJlbnQgbm90IGZvdW5kXG4iKTsNCisJCXJldHVybiAtRUlOVkFM
-Ow0KKwl9DQorDQorCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleChkbiwgIm1zdGFyLGly
-cXMtbWFwLXJhbmdlIiwgMCwgJmlycV9zdGFydCkgfHwNCisJICAgIG9mX3Byb3BlcnR5X3JlYWRf
-dTMyX2luZGV4KGRuLCAibXN0YXIsaXJxcy1tYXAtcmFuZ2UiLCAxLCAmaXJxX2VuZCkpDQorCQly
-ZXR1cm4gLUVJTlZBTDsNCisNCisJY2QgPSBremFsbG9jKHNpemVvZigqY2QpLCBHRlBfS0VSTkVM
-KTsNCisJaWYgKCFjZCkNCisJCXJldHVybiAtRU5PTUVNOw0KKw0KKwljZC0+YmFzZSA9IG9mX2lv
-bWFwKGRuLCAwKTsNCisJaWYgKCFjZC0+YmFzZSkgew0KKwkJa2ZyZWUoY2QpOw0KKwkJcmV0dXJu
-IC1FTk9NRU07DQorCX0NCisNCisJY2QtPm5vX2VvaSA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChk
-biwgIm1zdGFyLGludGMtbm8tZW9pIik7DQorCXJhd19zcGluX2xvY2tfaW5pdCgmY2QtPmxvY2sp
-Ow0KKwljZC0+aXJxX3N0YXJ0ID0gaXJxX3N0YXJ0Ow0KKwljZC0+bnJfaXJxcyA9IGlycV9lbmQg
-LSBpcnFfc3RhcnQgKyAxOw0KKwlkb21haW4gPSBpcnFfZG9tYWluX2FkZF9oaWVyYXJjaHkoZG9t
-YWluX3BhcmVudCwgMCwgY2QtPm5yX2lycXMsIGRuLA0KKwkJCQkJICAmbXN0X2ludGNfZG9tYWlu
-X29wcywgY2QpOw0KKwlpZiAoIWRvbWFpbikgew0KKwkJaW91bm1hcChjZC0+YmFzZSk7DQorCQlr
-ZnJlZShjZCk7DQorCQlyZXR1cm4gLUVOT01FTTsNCisJfQ0KKw0KKwlyZXR1cm4gMDsNCit9DQor
-DQorSVJRQ0hJUF9ERUNMQVJFKG1zdF9pbnRjLCAibXN0YXIsbXN0LWludGMiLCBtc3RfaW50Y19v
-Zl9pbml0KTsNCi0tIA0KMi4xOC4wDQo=
+On Wed, Aug 19, 2020 at 6:12 PM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On 8/19/20 11:06 AM, Andy Shevchenko wrote:
+>
+> > On Wed, Aug 19, 2020 at 3:30 PM Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> >> On 8/19/20 6:11 AM, Naresh Kamboju wrote:
+> >>
+> >>> Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
+> >>>
+> >>>    Kernel panic - not syncing: Fatal exception in interrupt
+> >>>
+> >>> metadata:
+> >>>     git branch: master
+> >>>     git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >>>     git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
+> >>>     git describe: next-20200819
+> >>>     make_kernelversion: 5.9.0-rc1
+> >>>     kernel-config:
+> >>> https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
+> >>>
+> >>> crash log:
+> >>> [    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
+> >>> [    3.704865] #PF: supervisor read access in kernel mode
+> >>> [    3.704865] #PF: error_code(0x0000) - not-present page
+> >>> [    3.704865] PGD 0 P4D 0
+> >>> [    3.704865] Oops: 0000 [#1] SMP NOPTI
+> >>> [    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
+> >>> 5.9.0-rc1-next-20200819 #1
+> >>> [    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> >>> BIOS 1.12.0-1 04/01/2014
+> >>> [    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
+> >>> [    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+> >>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+> >>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+> >>> 00 48
+> >>> [    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+> >>> [    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+> >>> [    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+> >>> [    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+> >>> [    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+> >>> [    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+> >>> [    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+> >>> knlGS:0000000000000000
+> >>> [    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>> [    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+> >>> [    3.721157] Call Trace:
+> >>> [    3.721157]  sel_netport_sid+0x120/0x1e0
+> >>> [    3.721157]  selinux_socket_bind+0x15a/0x250
+> >>> [    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
+> >>> [    3.721157]  ? __local_bh_enable_ip+0x46/0x70
+> >>> [    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
+> >>> [    3.721157]  security_socket_bind+0x35/0x50
+> >>> [    3.721157]  __sys_bind+0xcf/0x110
+> >>> [    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
+> >>> [    3.730888]  ? do_syscall_64+0x14/0x50
+> >>> [    3.730888]  ? trace_hardirqs_on+0x38/0xf0
+> >>> [    3.732120]  __x64_sys_bind+0x1a/0x20
+> >>> [    3.732120]  do_syscall_64+0x38/0x50
+> >>> [    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >>> [    3.732120] RIP: 0033:0x7f5ef37f3057
+> >>> [    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
+> >>> 02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
+> >>> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
+> >>> 01 48
+> >>> [    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
+> >>> 0000000000000031
+> >>> [    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
+> >>> [    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
+> >>> [    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
+> >>> [    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
+> >>> [    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
+> >>> [    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
+> >>> 000000RIP: 0010:security_port_sid0000000000
+> >>> [    3.744849] Modules linked in:
+> >>> [    3.744849] CR2: 00000000000001c8
+> >>> [    3.744849] ---[ end trace 485eaaecdce54971 ]---
+> >>> [    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
+> >>> [    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
+> >>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
+> >>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
+> >>> 00 48
+> >>> [    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
+> >>> [    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
+> >>> [    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
+> >>> [    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
+> >>> [    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
+> >>> [    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
+> >>> [    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
+> >>> knlGS:0000000000000000
+> >>> [    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>> [    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
+> >>> [    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
+> >>> Fatal exception in interrupt
+> >>> [    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
+> >>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> >>> [    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
+> >>> interrupt ]---
+> >>>
+> >>> full test log link,
+> >>> https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
+> >>>
+> >>> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > +1.
+> > Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
+> >> Thank you for the report.  It appears from the log that you are enabling
+> >> SELinux but not loading any policy?  If that is correct, then I believe
+> >> I know the underlying cause and can create a patch.
+> > I guess it's too far with assumptions that people are using some
+> > monster Linux distribution or so. I have simple kernel configuration
+> > with minimal Buildroot (busybox + uclibc) and I have got this
+> > inconvenience.
+> > Please, fix this. And would be nice if you may tell what commit I can
+> > revert without wasting time on bisect to unblock my main work.
+> >
+> Fix can be found at:https://patchwork.kernel.org/patch/11724203/
+> <https://patchwork.kernel.org/patch/11724203/>
 
+Thanks, feel free to add
+Tested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
