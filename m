@@ -2,236 +2,183 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF91C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 616A1204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B026204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="FxHIhTfl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bjJ8VjOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHSOBZ (ORCPT
+        id S1726763AbgHSOCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:01:25 -0400
-Received: from mail-dm6nam11on2123.outbound.protection.outlook.com ([40.107.223.123]:9921
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726209AbgHSOBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:01:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Or4jSZaWPAefCmC6N6ZtbUvguVlTGGNtS3DYVWVFQV1O8UHfa50EyCs5Y0I4J4KHR7/r0cr6Ub7m71b1yJCymbgC0joeRNs5n3oldCIX9FBohztwc8Ka2MF1dahTCtueTj1CT1+uBLuAMyiIdKp64gTxFAK9g/jWe+vOVD+5/k5nz8pjgA8R0NGwDWlupK6mjND+lPADnxGo0lhWe1Fvbrf3d/eNdYQgHvrpnUXBbHzaW3C2oXcD6OqZik1/e2ENApvb49mXQnTcj+Kk2ptPUiXlK4TJ2P1i2IjqWBbojW5IUMZcET6ybGegsz0LN0lVAOzB2e2qhJdYllH+VClyAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vC2nhcbUlAsGoLz4Mgml1mT+zwBB3gH/lJlmcJfUL8g=;
- b=Y09zfdpcqxnYuCU6WN+xqdmNxMDPsw9F7ztGOd/vCAmwuK/2a8i+06lyh2rd3iBNFyjpigTpCYdficpU/sETW8dl5ldqnSWDky/kcMMbsN/5mfMwKYXUr7LkBy6AC1X+4TOedN53h0kKw6QoFAa+lvTQ+F1cpDai/QPXQ7QH6Lr6yztB7m8UzqovNFRZxY/WcPqC8Kdq+8DP8dAVb5ScG9YIc6Qb0nBqbPdw5i7FsOetO0XN36nCxIIk1VVfbLXljRjcBml81slQEzBb9DPA4IxILhfJQsQFdh6mMFscbrB1Wy9kQmumtksvv+3Vnb/m7eYG2/CZCNFW6DBUkN6WiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vC2nhcbUlAsGoLz4Mgml1mT+zwBB3gH/lJlmcJfUL8g=;
- b=FxHIhTflKNY6rxteD6n5LWX+weiL73cVuJXQ7Xkd5cWCIoJL+4Is5Vh8vHfpkM0Q1dgiU/XBxoULWSIVlA9D68MpV/mYEdczbehAKTeEXsD+AeZTRitxreL03+koKcGl4G2r0fj2V6MlHE9mBvyNN9iGWRqRoBv4cmROPYNV1sw=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fortanix.com;
-Received: from BY5PR11MB4260.namprd11.prod.outlook.com (2603:10b6:a03:1ba::30)
- by BYAPR11MB3302.namprd11.prod.outlook.com (2603:10b6:a03:7b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Wed, 19 Aug
- 2020 14:01:08 +0000
-Received: from BY5PR11MB4260.namprd11.prod.outlook.com
- ([fe80::11b2:63eb:a7db:80c5]) by BY5PR11MB4260.namprd11.prod.outlook.com
- ([fe80::11b2:63eb:a7db:80c5%6]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 14:01:07 +0000
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
- <20200810222317.GG14724@linux.intel.com>
- <20200818145234.GC132200@linux.intel.com>
- <20200818150627.GD132200@linux.intel.com>
- <CAOASepNxu0YtSPjXynLaVgyt-S0uSad8HVrNgMNWf+Z7iamPvQ@mail.gmail.com>
- <20200818164353.GH137138@linux.intel.com>
- <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
-From:   Jethro Beekman <jethro@fortanix.com>
-Message-ID: <030542d9-4fb1-15c1-0146-d27bac08024a@fortanix.com>
-Date:   Wed, 19 Aug 2020 16:00:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms090108030804060303050605"
-X-ClientProxiedBy: LO2P265CA0284.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::32) To BY5PR11MB4260.namprd11.prod.outlook.com
- (2603:10b6:a03:1ba::30)
+        Wed, 19 Aug 2020 10:02:34 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42411 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgHSOCG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:02:06 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819140204euoutp028baea15cb77b1dc6def845f97a00055d~ssDiAIKDh0917409174euoutp02F;
+        Wed, 19 Aug 2020 14:02:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819140204euoutp028baea15cb77b1dc6def845f97a00055d~ssDiAIKDh0917409174euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597845724;
+        bh=G0KaFBK2CZOU69zOLC6mp4OXLhcPCTgcVzd+ZtgbOV8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bjJ8VjOA7GgPeoDJDyJxwIJdKROX7S/2VKhAgICUY43w1mp80dLR0wcMnqsmv+P46
+         i5cnP7v7qPkotbBpNUbAGO/otIRiIR4WI/aeYgIfqc+dgOJbC+IXJrjOxJbGPVXON+
+         W33kmeultdlrvuEr1dSUpdaUD5jd43c8w5PyVoGc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200819140204eucas1p1bf05e0c76107014d05c384237c65c654~ssDhuGFOF3126731267eucas1p1q;
+        Wed, 19 Aug 2020 14:02:04 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 27.0A.06456.CD03D3F5; Wed, 19
+        Aug 2020 15:02:04 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200819140203eucas1p2818858289f2394b32f3c647e47705cd2~ssDhUV4h00344603446eucas1p2E;
+        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200819140203eusmtrp2a760cde922a7e1fcb7bf52db161217e1~ssDhTmUHu1908919089eusmtrp2X;
+        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-4c-5f3d30dc2339
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D7.71.06017.BD03D3F5; Wed, 19
+        Aug 2020 15:02:03 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819140203eusmtip27e08d854e0e7ea177b3ee2ff5a345014~ssDhK20we2707227072eusmtip27;
+        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 1/8] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
+ s3c64xx_enable_datapath()
+Date:   Wed, 19 Aug 2020 16:01:52 +0200
+In-Reply-To: <20200819131635.GD5441@sirena.org.uk> (Mark Brown's message of
+        "Wed, 19 Aug 2020 14:16:35 +0100")
+Message-ID: <dleftj4koy20q7.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.195.0.246] (212.61.132.179) by LO2P265CA0284.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a1::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Wed, 19 Aug 2020 14:01:02 +0000
-X-Originating-IP: [212.61.132.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ba64b3cb-b394-4081-1140-08d8444851a3
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3302:
-X-Microsoft-Antispam-PRVS: <BYAPR11MB3302ABD479C5482BA9CA4CEFAA5D0@BYAPR11MB3302.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4JEYw0GtYdNeHtSHVOxJhe9RUcKVnI/SNOl3y0ldsHp9WTIqPN+C5O42cXtqTHYfHIvVx/wTX8fPKC3n0i49WPsgSuE0hLneOvhy+8iXgKyyiJLwp+nkaNXrf4W6U4CbRwjA1Rw3A6/fEEHtjIT6JZQkwVGlijSkliTznJmEctq4flNIYSmMyQzrVtQXHGjSg2yFTvjWVoz7VtMVJ/pHvrdUKKb0/iTOHjF3uPguBVRVCsZe3Lisxt3RxVg2SSjCTbwNyKPUDePCs98Kmf8e6EgW6dVCmOqUDAO0bysWBFWvyTNFVrewXYKvNK6krw2/xjvcBjmOn+u6qelg1N+XCWUbW3ucDdg2sE8TiPfy2KPxQ8VmG241HRNpcJmlR5NU
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4260.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(346002)(39840400004)(396003)(366004)(26005)(54906003)(8936002)(316002)(66946007)(66556008)(36756003)(31696002)(66476007)(235185007)(53546011)(6486002)(52116002)(110136005)(5660300002)(186003)(16576012)(8676002)(2906002)(16526019)(4326008)(33964004)(7416002)(31686004)(86362001)(2616005)(956004)(478600001)(6666004)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: cGdAGx1hpXVplBn7VWZiXs4wvMdATIATgA/d/O5ajkcfuYi3IAagpnG/gLYQylX+qTHrMaAOkpGI/hhSh0c/BUyHiH0eXIzVj5fkmXYA+LFmiU5miqCYP2A/rfYWj24haexJViSvSqp0plCrN/re2npCptdz42pyUW60JLvpJtiAyxqe4J6yIrvMspVcP3EccM/1gD4fyxtpN18k9oit3qO5fNQQkdqIJhP7LCDucUBoBbgXHXqo7HOwktnyZ8oo3fvt9PxXWwW6voYt1X9ECgugf97fimapJzWLZS8VhRfRr/31D8ZnvUyHkhMAM1ry7eXEp/NkfFjOo+atsXsQ6V7pDhXEVEUDNo8DlewTdJ6l6TJ/9mc0NphqEj33LZOIsB1svbtbvCbjtigw6wrvVMtbDfSg3t5BxUNJUtAxLlhKpWztc0mTWqqd0HHcVmQ4hUykGDUBtFqqYV9vTXtSdQCTsTZEIAM1yifGd3Wl73eUfH7kCYycAkvUe5vJY2m43sP0eBWWiUnXwuYUSkshMk6ZDzFV9ymAKABiH6wCdx6QUcZpqutr/9LFgqeTumHGPBEkNOj2Ufl1xM0q5CgxgjPZAX3bKSotmkS+KBPsbOLNgyZp7dYMZJ6lZd348U6Bjsfjt3hXlYbnEZKx9rYzVw==
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba64b3cb-b394-4081-1140-08d8444851a3
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4260.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 14:01:07.6877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: B5/BCiIh2wmEnL1jYPBo/6ZRDitdaMqfefOvZKKKMhKwPXOgGloU4v8xtK3n+1JVAGV034s6SLBLAFCpexIU3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3302
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUhTURzlvo/tuZpdp+EPk7BpgUWaZvmsDAuV9UHYH1EEtVZ7TMlN2VP7
+        gMigxMxlauXXxI/EZDm1pVaiQipaWc5KK8soU1jOPigTl2XmfAr9d+4553fu+V0uQ8qe0V5M
+        nC6J0+tU8XKRhGrs/NWzdnBduHKdOc+FveGwEezt/FqavTY0ImKzhsdI1mqtE7OW4Zc0+6LJ
+        KGLzra0Ee+77gJg1d7wTR0gUryp+kAqL6aJIcafirOJyvQkpxi3LY+iDki1qLj4uhdMHbj0i
+        iS1Kf4ASv7qfrMkZJlJRF85ALgzgEGjsb6EzkISR4SoEd6sNSDj8RGDPtc8fxhHkXrKIFkYy
+        yx8SgnATQcXUZ9IpyLANgaOWzUAMI8IBYDYfcNIe2Bf6J1sop5/E1QQUDZmRU3DHahhryiSc
+        mMIr4XfD9bkcF5wIpbbWOSzFoZD6vngOL8VhUP/pvVjg3eBRwQjlxCTWQoH181xTwG/E0D1Y
+        TgtNI6H9avN8a3ewd9WLBewNM/dLCGdRwGchN2ejMJuJoNHooATPZhjsmZqf3QaOsQlK8LvC
+        6y9uwr2ukNOYRwq0FNLTZILbD2qymudTvMBgr0ICVkBR5y1SeLcLCEbSXtJXkE/hf+sU/rdO
+        4Wwsif2htilQoNdAZdkYKeBwqKn5RpUi2oQ8uWReq+H4IB13IoBXaflknSbgWILWgmY/V/ff
+        rh/30MTzo20IM0i+WBojD1fKaFUKf0rbhvxmkz7W3epFXpQuQcfJPaTbn3YflknVqlOnOX2C
+        Up8cz/FtaBlDyT2l68tHD8mwRpXEHee4RE6/oBKMi1cqWu6I31QV0cuNtoeUvTOu/tLX2bRz
+        z9dQzfnbFQ0mkzLbc0Xn6aG3XWqtzche2D/eCwMNGUv3Pota6xZX/sDecWY68ciaEH/N3ukA
+        nH3Pu98neNdMc1CfYdL6ZGL9wJ9Cw4eSqMW+kTt2b6iTxlTui/adLH48GR22KlhlWPSwZ0k/
+        llN8rCpoNannVf8A0tOAvGQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsVy+t/xe7q3DWzjDXon6Vks/vGcyWLjjPWs
+        FlMfPmGz6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gsGj/eZLdYe+QuuwOXx/Uln5g9Nq3q
+        ZPPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
+        7WxSUnMyy1KL9O0S9DJmdxxkLHgnXLFu0mOmBsbjAl2MnBwSAiYSPYtOMHUxcnEICSxllJg1
+        4zmQwwGUkJJYOTcdokZY4s+1LjaImqeMEkvbzrKD1LAJ6EmsXRsBUiMioCxx9fteFhCbWWAp
+        k8T7u64gtrBAksSlA5fA4kIChhJ35l9nBrFZBFQlfm+dBmZzChRILHi+D8zmFTCXaLg/F8wW
+        FbCU2PLiPjtEXFDi5MwnUPOzJb6ufs48gVFgFpLULCSpWUDXMQtoSqzfpQ8R1pZYtvA1M4Rt
+        K7Fu3XuWBYysqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQJjbtuxn1t2MHa9Cz7EKMDBqMTD
+        G6BkGy/EmlhWXJl7iFEFaMyjDasvMEqx5OXnpSqJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU
+        6M+JzFKiyfnANJFXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHR
+        +7/wN+FloaraCtOyjuy4sXiffrzvRrGT/YeKGaLCbnM4d52ZcXVSlIO9fOMjk8aj0Z6HPxw/
+        vWDHt3UL3feGfFI8tm1vtKj0vMqQlZG/tG9+WzSrovhc5ixG1pDCsLTsNUo72XNfdLsvfVZQ
+        /1aHK+eS64UTHyfw8O5UOaphY+Jxz2RpqMYOJZbijERDLeai4kQARSYUcNsCAAA=
+X-CMS-MailID: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
+X-Msg-Generator: CA
+X-RootMTR: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
+References: <20200819131635.GD5441@sirena.org.uk>
+        <CGME20200819140203eucas1p2818858289f2394b32f3c647e47705cd2@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------ms090108030804060303050605
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 2020-08-19 15:33, Nathaniel McCallum wrote:
-> On Tue, Aug 18, 2020 at 12:44 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
->>
->> On Tue, Aug 18, 2020 at 11:15:32AM -0400, Nathaniel McCallum wrote:
->>> That seems like overkill to me. I'm just asking for one additional mo=
-v
->>> instruction. :)
->>
->> I started to consider eBPF since the complexity and constraints of the=
+It was <2020-08-19 =C5=9Bro 14:16>, when Mark Brown wrote:
+> On Wed, Aug 19, 2020 at 02:58:22PM +0200, Krzysztof Kozlowski wrote:
+>> On Wed, Aug 19, 2020 at 02:51:27PM +0200, Lukasz Stelmach wrote:
+>
+>> > Honestly, I don't know and I couldn't find out why. It makes stuff
+>> > work. There has been a commit like this before
+>
+>> >     0f5a751ace25 spi/s3c64xx: Enable GPIO /CS prior to starting hardwa=
+re
+>
+>> > Apparently, it was lost in
+>
+>> >     0732a9d2a155 spi/s3c64xx: Use core message handling
+>
+>> Then describe at least this... maybe Mark knows why he brough back old
+>> code after refactoring?
+>
+> I'm not sure what's being referred to as being lost in the second commit
+> TBH.
 
->> callback look like an overkill and without doubt will be a burden to
->> maintain.
->=20
-> That feels to me like more complexity just to move the existing
-> complexity from one place to another.
->=20
+Order of enable_cs() and enable_datapath(). The order 0f5a sets makes
+(for a reaseon I don't know) my devices work. In the latter commit,
+which rewrites "everything", enable_datapath() is called before what
+later (in aa4964c4eb3e) became s3c64xx_spi_set_cs().
 
-Agreed that BPF doesn't make things better.
+> The first commit is simple code motion rather than a correctness
+> thing, and more related to the handling of GPIO controlled chip
+> selects according to the description (which people should be using
+> with that controller anyway where possible IIRC, the native chip
+> select has too many assumptions about what it's doing).
 
---
-Jethro Beekman | Fortanix
+Funny, but without the automatic CS control (see the next patch in this
+series) my stuff does not work.
 
+> I don't know that I ever actually used a system that used the native
+> chip select as the actual chip select.  Perhaps some quirk was
+> introduced where the chip select signal does something?
+>
+> The commit is also lacking a description of what the issues that are
+> being fixed are.
 
---------------ms090108030804060303050605
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+On Exynos3250 DMA transfers from SPI longer than 512 fail.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C54wggVPMIIEN6ADAgECAhAFFr+cC0ZYZTtbKgQCBwyyMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA5MTYwOTQ3MDlaFw0yMDA5MTYwOTQ3MDlaMB4x
-HDAaBgNVBAMME2pldGhyb0Bmb3J0YW5peC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDHWEhcRGkEl1ZnImSqBt/OXNJ4AyDZ86CejuWI9jYpWbtf/gXBQO6iaaEKBDlj
-Vffk2QxH9wcifkYsvCYfxFgD15dU9TABO7YOwvHa8NtxanWr1xomufu/P1ApI336+S7ZXfSe
-qMnookNJUMHuF3Nxw2lI69LXqZLCdcVXquM4DY1lVSV+DXIwpTMtB+pMyqOWrsgmrISMZYFw
-EUJOqVDvtU8KewhpuGAYXAQSDVLcAl2nZg7C2Mex8vT8stBoslPTkRXxAgMbslDNDUiKhy8d
-E3I78P+stNHlFAgALgoYLBiVVLZkVBUPvgr2yUApR63yosztqp+jFhqfeHbjTRlLAgMBAAGj
-ggIiMIICHjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH5g/Phspz09166ToXkCj7N0KTv1
-MEsGCCsGAQUFBwEBBD8wPTA7BggrBgEFBQcwAoYvaHR0cDovL2NhY2VydC5hY3RhbGlzLml0
-L2NlcnRzL2FjdGFsaXMtYXV0Y2xpZzEwHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNv
-bTBHBgNVHSAEQDA+MDwGBiuBHwEYATAyMDAGCCsGAQUFBwIBFiRodHRwczovL3d3dy5hY3Rh
-bGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIHo
-BgNVHR8EgeAwgd0wgZuggZiggZWGgZJsZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RB
-Y3RhbGlzJTIwQ2xpZW50JTIwQXV0aGVudGljYXRpb24lMjBDQSUyMEcxLG8lM2RBY3RhbGlz
-JTIwUy5wLkEuLzAzMzU4NTIwOTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0
-O2JpbmFyeTA9oDugOYY3aHR0cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRI
-Q0wtRzEvZ2V0TGFzdENSTDAdBgNVHQ4EFgQUAXkM7yNq6pH6j+IC/7IsDPSTMnowDgYDVR0P
-AQH/BAQDAgWgMA0GCSqGSIb3DQEBCwUAA4IBAQC8z+2tLUwep0OhTQBgMaybrxTHCxRZ4/en
-XB0zGVrry94pItE4ro4To/t86Kfcic41ZsaX8/SFVUW2NNHjEodJu94UhYqPMDUVjO6Y14s2
-jznFHyKQdXMrhIBU5lzYqyh97w6s82Z/qoMy3OuLek+8rXirwju9ATSNLsFTzt2CEoyCSRtl
-yOmR7Z9wgSvD7C7XoBdGEFVdGCXwCy1t9AT7UCIHKssnguVaMGN9vWqLPVKOVTwc4g3RAQC7
-J1Aoo6U5d6wCIX4MxEZhICxnUgAKHULxsWMGjBfQAo3QGXjJ4wDEu7O/5KCyUfn6lyhRYa+t
-YgyFAX0ZU9Upovd+aOw0MIIGRzCCBC+gAwIBAgIILNSK07EeD4kwDQYJKoZIhvcNAQELBQAw
-azELMAkGA1UEBhMCSVQxDjAMBgNVBAcMBU1pbGFuMSMwIQYDVQQKDBpBY3RhbGlzIFMucC5B
-Li8wMzM1ODUyMDk2NzEnMCUGA1UEAwweQWN0YWxpcyBBdXRoZW50aWNhdGlvbiBSb290IENB
-MB4XDTE1MDUxNDA3MTQxNVoXDTMwMDUxNDA3MTQxNVowgYIxCzAJBgNVBAYTAklUMQ8wDQYD
-VQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENB
-IEcxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwPzBiVbZiOL0BGW/zQk1qygp
-MP4MyvcnqxwR7oY9XeT1bES2DFczlZfeiIqNLanbkyqTxydXZ+kxoS9071qWsZ6zS+pxSqXL
-s+RTvndEaWx5hdHZcKNWGzhy5FiO4GZvGlFInFEiaY+dOEpjjWvSeXpvcDpnYw6M9AXuHo4J
-hjC3P/OK//5QFXnztTa4iU66RpLteOTgCtiRCwZNKx8EFeqqfTpYvfEb4H91E7n+Y61jm0d2
-E8fJ2wGTaSSwjc8nTI2ApXujoczukb2kHqwaGP3q5UuedWcnRZc65XUhK/Z6K32KvrQuNP32
-F/5MxkvEDnJpUnnt9iMExvEzn31zDQIDAQABo4IB1TCCAdEwQQYIKwYBBQUHAQEENTAzMDEG
-CCsGAQUFBzABhiVodHRwOi8vb2NzcDA1LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMB0GA1Ud
-DgQWBBR+YPz4bKc9Pdeuk6F5Ao+zdCk79TAPBgNVHRMBAf8EBTADAQH/MB8GA1UdIwQYMBaA
-FFLYiDrIn3hm7YnzezhwlMkCAjbQMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUFBwIB
-FiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwgeMGA1UdHwSB2zCB2DCB
-lqCBk6CBkIaBjWxkYXA6Ly9sZGFwMDUuYWN0YWxpcy5pdC9jbiUzZEFjdGFsaXMlMjBBdXRo
-ZW50aWNhdGlvbiUyMFJvb3QlMjBDQSxvJTNkQWN0YWxpcyUyMFMucC5BLiUyZjAzMzU4NTIw
-OTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0O2JpbmFyeTA9oDugOYY3aHR0
-cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRILVJPT1QvZ2V0TGFzdENSTDAO
-BgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQELBQADggIBAE2TztUkvkEbShZYc19lifLZej5Y
-jLzLxA/lWxZnssFLpDPySfzMmndz3F06S51ltwDe+blTwcpdzUl3M2alKH3bOr855ku9Rr6u
-edya+HGQUT0OhqDo2K2CAE9nBcfANxifjfT8XzCoC3ctf9ux3og1WuE8WTcLZKgCMuNRBmJt
-e9C4Ug0w3iXqPzq8KuRRobNKqddPjk3EiK+QA+EFCCka1xOLh/7cPGTJMNta1/0u5oLiXaOA
-HeALt/nqeZ2kZ+lizK8oTv4in5avIf3ela3oL6vrwpTca7TZxTX90e805dZQN4qRVPdPbrBl
-WtNozH7SdLeLrcoN8l2EXO6190GAJYdynTc2E6EyrLVGcDKUX91VmCSRrqEppZ7W05TbWRLi
-6+wPjAzmTq2XSmKfajq7juTKgkkw7FFJByixa0NdSZosdQb3VkLqG8EOYOamZLqH+v7ua0+u
-lg7FOviFbeZ7YR9eRO81O8FC1uLgutlyGD2+GLjgQnsvneDsbNAWfkory+qqAxvVzX5PSaQp
-2pJ52AaIH1MN1i2/geRSP83TRMrFkwuIMzDhXxKFQvpspNc19vcTryzjtwP4xq0WNS4YWPS4
-U+9mW+U0Cgnsgx9fMiJNbLflf5qSb53j3AGHnjK/qJzPa39wFTXLXB648F3w1Qf9R7eZeTRJ
-fCQY/fJUMYID9jCCA/ICAQEwgZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8x
-DzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5Njcx
-LDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZY
-ZTtbKgQCBwyyMA0GCWCGSAFlAwQCAQUAoIICLzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMDA4MTkxNDAwNTVaMC8GCSqGSIb3DQEJBDEiBCAVhgPhoXtm
-5++lE0s6JZ8YjQOYzLjnyEU59it7GU2p3DBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQB
-KjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMC
-AgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGoBgkrBgEEAYI3EAQxgZowgZcwgYIxCzAJ
-BgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwa
-QWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1
-dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZYZTtbKgQCBwyyMIGqBgsqhkiG9w0BCRACCzGB
-mqCBlzCBgjELMAkGA1UEBhMCSVQxDzANBgNVBAgMBk1pbGFubzEPMA0GA1UEBwwGTWlsYW5v
-MSMwIQYDVQQKDBpBY3RhbGlzIFMucC5BLi8wMzM1ODUyMDk2NzEsMCoGA1UEAwwjQWN0YWxp
-cyBDbGllbnQgQXV0aGVudGljYXRpb24gQ0EgRzECEAUWv5wLRlhlO1sqBAIHDLIwDQYJKoZI
-hvcNAQEBBQAEggEAF5kyGmPh3nfhbA+A6iHsaohlBXk2WZq85u0HiuiT9QmuDT4JPRU/Cfco
-XKRegGnLJ3pvoBMeJDBP1Tmo+TDE24KlynadPJa+LG6IgfU9Yga8K/DR70IupTNuuFZsUpjk
-p2iaBz5CUt/dKKpEm274+r2e4/tqDcYXN8J+CljsHEsigoi7RZN+JsBpJ3lGYoIqyIZnGmpd
-awdcKxekTRZdoz/7IPWlUrPnZWRCpOqkOENSSY3wnBsBbzi5CeTZtcRibcm4kGXfbceVZApv
-Bj+t2PEXO5MNUEbwUz6/AMqjiI5ppMHHbq4iBpbHqCdHaDqS0uHSglz2ZMPTuf6BQXI7awAA
-AAAAAA==
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
---------------ms090108030804060303050605--
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl89MNAACgkQsK4enJil
+gBBcTwf8DWZyT4x0kvjwQlAAh0rUJ1GbGposDAteYzB8RPbEbM2FM4VIu1KDKnLY
+iJbyrxEKE+R2dTx1ckWHqDnQdXNXoYiKdWfo4v0FqSwdyNdHN4kqNTaVtfMMmGwA
+HEIJBdTImd20d8CZV0Qmb41+s3Po8YvEKIFpFALqcXvBSN8fi8PJRX8hYzbr0kck
+2KKMARpA/n+uYjINC2wABjCybdwURL/a0bSdYRDNC3TJDZQyJKzHFjQNRcF28VYS
+3UCnsVgJdJGjzvRh0wdFqkU+2GsU5/2phTX9wkgh8o6x5jSgCKj1ivvcK2TL1yj3
+8ldjR9PmxxV5GaBOPlgTZTUJPiJ/GA==
+=KAWn
+-----END PGP SIGNATURE-----
+--=-=-=--
