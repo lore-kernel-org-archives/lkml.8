@@ -2,168 +2,105 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C13C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF93C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA6EA204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Twg4BMrx"
+	by mail.kernel.org (Postfix) with ESMTP id 73F2F204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgHSOIG (ORCPT
+        id S1728518AbgHSOI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:08:06 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59279 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726858AbgHSOIF (ORCPT
+        Wed, 19 Aug 2020 10:08:28 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43153 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgHSOIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:08:05 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 8OkzkdEsDuuXO8Ol0khT7h; Wed, 19 Aug 2020 16:08:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1597846082; bh=hy+V1NOblWLH8aYZMPbFZNBcgkQSkIN5hhnQlljKF24=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Twg4BMrxADBXFtJZpbwDlD1J8A7G2iPxKI9JBL5mMd36JD5lztdyR//Cv8EAV0ROC
-         VoPmYKnWOnorAdA20G6bEc4bTcPwEQ79lRuuOt5NrGXLfplAJM6SnQDbaGIsSYk7Qn
-         MtNt86yYVWEvIQpWj+MxO3+808sb/v1WEXRulaOCh3A22HuIIICgX1mIqVBFYcVR4W
-         ++TN8Drb6HuumaFKgL9viNBchlF7Pt1Bj/qPFPUvLkEaumHKL98wi3rzurkVLap1ne
-         CDeOTOv6+x+w4bDeVlYTZ78DnRsA/VzGFNvWAI0R/vDBZqo6shIbrUzQnwavtxSpA7
-         +VvFcfE1AcsHA==
-Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
- every s_fmt call
-To:     Niklas <niklas.soderlund@ragnatech.se>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200801090456.GB1379367@oden.dyn.berto.se>
- <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
- <20200803192108.GB2297236@oden.dyn.berto.se>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6d659e56-1e1f-c9c7-2e66-4ddc4e7fad15@xs4all.nl>
-Date:   Wed, 19 Aug 2020 16:08:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 10:08:20 -0400
+Received: by mail-qv1-f66.google.com with SMTP id l13so11265696qvt.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:08:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RV6pBQZ9MRlDByHN1h5rkzmXbG7Gch7l2dQUZjdYLUM=;
+        b=Ov5HisfNHCKHGzrQbjy3GkCQdMRAXFSCnIhK643itZsU6MV6I5S/YvTQmaJeP+fSxR
+         ZqraXO6DLID8+dDGqNjApVaGEP+DJ0PN4FlVc9dn4JwkZhAiBpumc+hyUFeYDTAwwCp8
+         IHaQeE+UIDcySa1yt3z+GE2ykOveCDBCa4XXxvY1fyIwTOrjheUPh5nJaCh2K0un34bt
+         3xR4LQ4UtbjjVzeFc/Hsd9MbgoaA51FW5Vdd93d8N+7E5zcZUNEkpx4tLtKEYOMCyEfZ
+         paI5JprgTPUJ+ixcsgpMPcyvV8MbqoUHlKkaZn6DydB+sni5KebH/Gj1v/O39IJAaA98
+         cEoA==
+X-Gm-Message-State: AOAM5324NI5MajSg8367Yy5NHZaQCasY7Droj7R0mZBkkoUgY3h6n0iV
+        2iwlaOxt2vpFddF32cIqqRs=
+X-Google-Smtp-Source: ABdhPJwuBxYUl/K6eoTWOrOwwpZw5p7Taymb/kYOVf3CCRNOP+SeWm5c+/06++FLVgAIcPfjJr389w==
+X-Received: by 2002:ad4:4984:: with SMTP id t4mr24046002qvx.110.1597846098109;
+        Wed, 19 Aug 2020 07:08:18 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id v2sm26975641qte.25.2020.08.19.07.08.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 07:08:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH v2] lib/string.c: Use freestanding environment
+Date:   Wed, 19 Aug 2020 10:08:16 -0400
+Message-Id: <20200819140816.3807604-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
+References: <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200803192108.GB2297236@oden.dyn.berto.se>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfD66bE590ro+1a2VaasmDx/4aw7E5J1jWU11L5dOfQH30XSzIS3D9iCxmkaatuqhUNKm5YWPBQ0NPpwqNg2qx1SI7so47rsszk6QFcb3dvFgEaCxtShy
- SE/P9VEBaKT/+AJD4b/vNQ8aaGq1QGnNn9iQ5faaME4WH6csqsFg05afHkkyOHELawwTXKCiWijZnPoN1XhfrEQJgnNIYsYiTUhyeQKMa4njRfrtqvy8Uixh
- RvVC0MUqStiyrr8KuQRadAH6Denkl8HVXrjJkt51RbSNDdmQOIKrRkQUdidEMopyyNgq+/0fxNAAYXXpgoW3WEAMUT2xzFyJLCHCrs40vWus3tsDQKEdaG1+
- XHosV4IcAoLOA59vnLWx26sP8Lr5YrsVafJA8QN9HCtvFRtuVSfq1pr/0Bsh0r5I2wg0so8D3q96F71iGwJaz+bFRnmDWNw9c8X85S6tgqDfzzA2ZGqs1Daz
- l9AqdLPt56JjpU2V1bJu4ZnIVjtt3wMdNSd/RN/TxjyFO062S7ICsgSg+HhIFPp8K0p8Z7Z3+MgGT6e/eUkWo8S9pIbh3lQAGWsdHN40K8lU+dC1n/k/Un4P
- g/eWmH+YNgM/JyUT/pt8sCMaDYOIg6Upj5OhhccwnxQ9lGqnVFizGi/6ib5s8Tc6cwAgpuQiyuamgpuDgxjzVkyOjv1posvd6zOxr7GVsn/euQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/08/2020 21:21, Niklas wrote:
-> Hi Lad, Hans,
-> 
-> On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
->> Hi Hans,
->>
->> On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
->>>
->>> Hi Lad,
->>>
->>> Thanks for your work.
->>>
->>> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
->>>> The crop and compose settings for VIN in non mc mode werent updated
->>>> in s_fmt call this resulted in captured images being clipped.
->>>>
->>>> With the below sequence on the third capture where size is set to
->>>> 640x480 resulted in clipped image of size 320x240.
->>>>
->>>> high(640x480) -> low (320x240) -> high (640x480)
->>>>
->>>> This patch makes sure the VIN crop and compose settings are updated.
->>>
->>> This is clearly an inconsistency in the VIN driver that should be fixed.
->>> But I think the none-mc mode implements the correct behavior. That is
->>> that S_FMT should not modify the crop/compose rectangles other then make
->>> sure they don't go out of bounds. This is an area we tried to clarify in
->>> the past but I'm still not sure what the correct answer to.
->>>
->> What should be the exact behaviour of the bridge driver  for s_fmt
->> call. Should the crop/compose settings be updated for every s_fmt
->> callback or should they be only updated on s_selection callback.
->> Currently the non-mc rcar-vin doesnt update the crop/compose setting
->> in s_fmt callback due to which I see the above issue as mentioned.
-> 
-> This is not entirely correct. It does update the crop and compose 
-> rectangles on s_fmt, it makes sure they are not out-of-bounds for the 
-> new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls 
-> in the snippet bellow.
+gcc can transform the loop in a naive implementation of memset/memcpy
+etc into a call to the function itself. This optimization is enabled by
+-ftree-loop-distribute-patterns.
 
-For non-mc mode s_fmt must update any crop/compose rectangles to ensure that
-they are not out-of-bounds. But for mc mode the validation is done when you
-start streaming, so I think s_fmt won't make any changes in that mode.
+This has been the case for a while (see eg [0]), but gcc-10.x enables
+this option at -O2 rather than -O3 as in previous versions.
 
-Double-check that with Laurent, though...
+Add -ffreestanding, which implicitly disables this optimization with
+gcc. It is unclear whether clang performs such optimizations, but
+hopefully it will also not do so in a freestanding environment.
 
-Regards,
+[0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56888
 
-	Hans
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ lib/Makefile | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> 
-> That being said there is a difference how this is handled in the VIN 
-> driver between it's MC and non-MC modes and I would love to learn the 
-> correct mode of operation and seeing VIN being updated to doing it 
-> correct in both cases. Thanks Lad for dealing with this!
-> 
->>
->> Cheers,
->> Prabhakar
->>
->>>>
->>>> Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose rectangles in s_fmt")
->>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
->>>> ---
->>>>  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
->>>> index f421e25..a9b13d9 100644
->>>> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
->>>> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
->>>> @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, void *priv,
->>>>       fmt_rect.width = vin->format.width;
->>>>       fmt_rect.height = vin->format.height;
->>>>
->>>> +     vin->crop.top = 0;
->>>> +     vin->crop.left = 0;
->>>> +     vin->crop.width = vin->format.width;
->>>> +     vin->crop.height = vin->format.height;
->>>> +     vin->compose = vin->crop;
->>>> +
->>>>       v4l2_rect_map_inside(&vin->crop, &src_rect);
->>>>       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
->>>>       vin->src_rect = src_rect;
->>>> --
->>>> 2.7.4
->>>>
->>>
->>> --
->>> Regards,
->>> Niklas Söderlund
-> 
+diff --git a/lib/Makefile b/lib/Makefile
+index e290fc5707ea..a4a4c6864f51 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -15,11 +15,16 @@ KCOV_INSTRUMENT_debugobjects.o := n
+ KCOV_INSTRUMENT_dynamic_debug.o := n
+ KCOV_INSTRUMENT_fault-inject.o := n
+ 
++# string.o implements standard library functions like memset/memcpy etc.
++# Use -ffreestanding to ensure that the compiler does not try to "optimize"
++# them into calls to themselves.
++CFLAGS_string.o := -ffreestanding
++
+ # Early boot use of cmdline, don't instrument it
+ ifdef CONFIG_AMD_MEM_ENCRYPT
+ KASAN_SANITIZE_string.o := n
+ 
+-CFLAGS_string.o := -fno-stack-protector
++CFLAGS_string.o += -fno-stack-protector
+ endif
+ 
+ # Used by KCSAN while enabled, avoid recursion.
+-- 
+2.26.2
 
