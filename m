@@ -2,137 +2,165 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4106EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA75C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3A320882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D0F20FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g4TujdAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHSNeW (ORCPT
+        id S1728115AbgHSNen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:34:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:36962 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgHSNdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:33:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6A71396;
-        Wed, 19 Aug 2020 06:33:39 -0700 (PDT)
-Received: from monolith.localdoman (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D647C3F71F;
-        Wed, 19 Aug 2020 06:33:37 -0700 (PDT)
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
-        catalin.marinas@arm.com, swboyd@chromium.org,
-        sumit.garg@linaro.org, Julien Thierry <julien.thierry@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH v6 5/7] KVM: arm64: pmu: Make overflow handler NMI safe
-Date:   Wed, 19 Aug 2020 14:34:17 +0100
-Message-Id: <20200819133419.526889-6-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819133419.526889-1-alexandru.elisei@arm.com>
-References: <20200819133419.526889-1-alexandru.elisei@arm.com>
+        Wed, 19 Aug 2020 09:34:43 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59211 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728511AbgHSNdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:33:37 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819133334euoutp020352fc292c3a0a4b7842c4ce98e59e21~srqpyMS4g2309023090euoutp02f;
+        Wed, 19 Aug 2020 13:33:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819133334euoutp020352fc292c3a0a4b7842c4ce98e59e21~srqpyMS4g2309023090euoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597844014;
+        bh=zMUXHTYnB1hgtZY2XvkgLJVtoSLdRUf02CsOMq63azA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g4TujdAtKT1hJBUUldquFdcXVAuB1/TPrjijPQS1inPxRSYdTLabRE2xEFoHCj26h
+         XRtNcfVzNCP2SWrIxNWYGfD2nY3QCjKu8u0DzLonFODKTI3TMV1EG5NbBEikAwX+n+
+         j8VBsnDHMzo8pXNfnyTc71CwzoFYBAC0mUQHJoAs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200819133334eucas1p2bec685af8a447f39e5d4dce3ebd8a7a7~srqpafQAP0913009130eucas1p2k;
+        Wed, 19 Aug 2020 13:33:34 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 19.4E.06318.E2A2D3F5; Wed, 19
+        Aug 2020 14:33:34 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200819133334eucas1p2080182850c7ba84829e3304a1172afff~srqpD9EQX2464024640eucas1p24;
+        Wed, 19 Aug 2020 13:33:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200819133334eusmtrp139a84cc966efd7a9c8916ba67936c34c~srqpDR8M42440924409eusmtrp1n;
+        Wed, 19 Aug 2020 13:33:34 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-1e-5f3d2a2ead1b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 78.A9.06314.D2A2D3F5; Wed, 19
+        Aug 2020 14:33:34 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819133333eusmtip17fe7df747953e9d82e146ca09dafa358~srqo3fPiz0082100821eusmtip1d;
+        Wed, 19 Aug 2020 13:33:33 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 8/8] spi: spi-s3c64xx: Turn on interrupts upon resume
+Date:   Wed, 19 Aug 2020 15:33:33 +0200
+In-Reply-To: <20200819125301.GI18122@kozik-lap> (Krzysztof Kozlowski's
+        message of "Wed, 19 Aug 2020 14:53:01 +0200")
+Message-ID: <dleftjft8i221e.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7djPc7p6WrbxBnOmy1gs/vGcyWLjjPWs
+        FlMfPmGz6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gsGj/eZLdYe+QuuwOXx/Uln5g9Nq3q
+        ZPPYvKTeo2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDImvz3PVHCSt6JvUgtrA+Mb7i5GTg4J
+        AROJX2eWMnUxcnEICaxglPizazMLSEJI4AujxKrGIIjEZ0aJey9escN0zL04kREisZxRou/j
+        MWYI5zmjxO+974GqODjYBPQk1q6NAGkQEdCUuP73OytIDbPAciaJpbcbGUESwgKeEi0z1rKC
+        2CwCqhL7n5wBszkFyiS2ft4FZvMKmEu0zl0FdpKogKXElhf32SHighInZz4BizML5ErMPP8G
+        7CIJgVvsEttaV0Gd6iJx7scvRghbWOLV8S1QcRmJ05N7WEAOlRCol5g8yQyit4dRYtucHywQ
+        NdYSd879YoOwHSV+X53HDFHPJ3HjrSDEXj6JSdumQ4V5JTrahCCqVSTW9e+BmiIl0ftqBdQF
+        HhJXj2xgh4RVEzCs5i5mm8CoMAvJO7OQvDMLaCwzMOzW79KHCGtLLFv4mhnCtpVYt+49ywJG
+        1lWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBiev0v+NfdzDu+5N0iFGAg1GJhzdAyTZe
+        iDWxrLgy9xCjCtCkRxtWX2CUYsnLz0tVEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCjNAeLkjiv
+        8aKXsUIC6YklqdmpqQWpRTBZJg5OqQbG66/jfnVp/lh3emt5oajRebcT/Zn+i9jTzzNq+e+6
+        GCG/RqroeMB57kCfJS2mkSf+GTB/+3h1tmn27fX1YdY/ZnbVyq8Jmayov+ABUwKb8ZMnofNX
+        mVusljLUPVh9WDNcve7hXrntM9b+frb9p7e1p1rzXuPZkcksd+zKr/jkKd1OOyfCG/VKiaU4
+        I9FQi7moOBEANZ0ISGQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7p6WrbxBjMWMFks/vGcyWLjjPWs
+        FlMfPmGz6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gsGj/eZLdYe+QuuwOXx/Uln5g9Nq3q
+        ZPPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
+        7WxSUnMyy1KL9O0S9DImvz3PVHCSt6JvUgtrA+Mb7i5GTg4JAROJuRcnMnYxcnEICSxllHj1
+        /AV7FyMHUEJKYuXcdIgaYYk/17rYQGwhgaeMEm0fPEBK2AT0JNaujQAJiwhoSlz/+50VxGYW
+        mM8k8fuXB4gtLOAp0TJjLStEq57E7wu3mUBsFgFVif1PzrCCjOEUKJP4tcYEJMwrYC7ROncV
+        C4gtKmApseXFfXaIuKDEyZlPWCDGZ0t8Xf2ceQKjwCwkqVlIUrOApjIDXbR+lz5EWFti2cLX
+        zBC2rcS6de9ZFjCyrmIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiMt23Hfm7ewXhpY/AhRgEO
+        RiUe3gAl23gh1sSy4srcQ4wqQGMebVh9gVGKJS8/L1VJhNfp7Ok4Id6UxMqq1KL8+KLSnNTi
+        Q4ymQG9OZJYSTc4Hpoi8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TByc
+        Ug2MKhJGpk5S50R7VFZLnTx8fbuE9NlYw/yUtvbPIXfLWNv2JvFtPeZXPFMuOfEpH/PpSX7L
+        F2lMDjvu1TD/h9FPKSvXbXk+m3ne1h7KDejpSg1VFp7WcDlRIcUpXbHa+5RB0ZdUxUfXA1r2
+        hU55dalGUYehr2TWtuDeD6mt8Xyu3r1F1kIpLUosxRmJhlrMRcWJAK9wU9nZAgAA
+X-CMS-MailID: 20200819133334eucas1p2080182850c7ba84829e3304a1172afff
+X-Msg-Generator: CA
+X-RootMTR: 20200819133334eucas1p2080182850c7ba84829e3304a1172afff
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200819133334eucas1p2080182850c7ba84829e3304a1172afff
+References: <20200819125301.GI18122@kozik-lap>
+        <CGME20200819133334eucas1p2080182850c7ba84829e3304a1172afff@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-kvm_vcpu_kick() is not NMI safe. When the overflow handler is called from
-NMI context, defer waking the vcpu to an irq_work queue.
+It was <2020-08-19 =C5=9Bro 14:53>, when Krzysztof Kozlowski wrote:
+> On Wed, Aug 19, 2020 at 02:32:08PM +0200, =C5=81ukasz Stelmach wrote:
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  drivers/spi/spi-s3c64xx.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>=20
+>> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> index 27db1e0f6f32..5dcad43fb847 100644
+>> --- a/drivers/spi/spi-s3c64xx.c
+>> +++ b/drivers/spi/spi-s3c64xx.c
+>> @@ -1356,6 +1356,10 @@ static int s3c64xx_spi_runtime_resume(struct devi=
+ce *dev)
+>>=20=20
+>>  	s3c64xx_spi_hwinit(sdd);
+>>=20=20
+>> +	writel(S3C64XX_SPI_INT_RX_OVERRUN_EN | S3C64XX_SPI_INT_RX_UNDERRUN_EN |
+>> +	       S3C64XX_SPI_INT_TX_OVERRUN_EN | S3C64XX_SPI_INT_TX_UNDERRUN_EN,
+>> +	       sdd->regs + S3C64XX_SPI_INT_EN);
+>> +
+>
+> Makes sense but you should explain in the commit msg what happens
+> without this (or why they are not enabled).
 
-Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Pouloze <suzuki.poulose@arm.com>
-Cc: kvm@vger.kernel.org
-Cc: kvmarm@lists.cs.columbia.edu
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
----
- arch/arm64/kvm/pmu-emul.c | 25 ++++++++++++++++++++++++-
- include/kvm/arm_pmu.h     |  1 +
- 2 files changed, 25 insertions(+), 1 deletion(-)
+Done, thanks.
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index f0d0312c0a55..30268397ed06 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -433,6 +433,22 @@ void kvm_pmu_sync_hwstate(struct kvm_vcpu *vcpu)
- 	kvm_pmu_update_state(vcpu);
- }
- 
-+/**
-+ * When perf interrupt is an NMI, we cannot safely notify the vcpu corresponding
-+ * to the event.
-+ * This is why we need a callback to do it once outside of the NMI context.
-+ */
-+static void kvm_pmu_perf_overflow_notify_vcpu(struct irq_work *work)
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_pmu *pmu;
-+
-+	pmu = container_of(work, struct kvm_pmu, overflow_work);
-+	vcpu = kvm_pmc_to_vcpu(&pmu->pmc[0]);
-+
-+	kvm_vcpu_kick(vcpu);
-+}
-+
- /**
-  * When the perf event overflows, set the overflow status and inform the vcpu.
-  */
-@@ -465,7 +481,11 @@ static void kvm_pmu_perf_overflow(struct perf_event *perf_event,
- 
- 	if (kvm_pmu_overflow_status(vcpu)) {
- 		kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
--		kvm_vcpu_kick(vcpu);
-+
-+		if (!in_nmi())
-+			kvm_vcpu_kick(vcpu);
-+		else
-+			irq_work_queue(&vcpu->arch.pmu.overflow_work);
- 	}
- 
- 	cpu_pmu->pmu.start(perf_event, PERF_EF_RELOAD);
-@@ -764,6 +784,9 @@ static int kvm_arm_pmu_v3_init(struct kvm_vcpu *vcpu)
- 			return ret;
- 	}
- 
-+	init_irq_work(&vcpu->arch.pmu.overflow_work,
-+		      kvm_pmu_perf_overflow_notify_vcpu);
-+
- 	vcpu->arch.pmu.created = true;
- 	return 0;
- }
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 6db030439e29..dbf4f08d42e5 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -27,6 +27,7 @@ struct kvm_pmu {
- 	bool ready;
- 	bool created;
- 	bool irq_level;
-+	struct irq_work overflow_work;
- };
- 
- #define kvm_arm_pmu_v3_ready(v)		((v)->arch.pmu.ready)
--- 
-2.28.0
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl89Ki0ACgkQsK4enJil
+gBBkUQgAqFQPlbvtADVT26WER/P36D2GP9WOAK7ktgcjfzcGS36/m+SConShb6V/
+5HcENMhHWwTMXzFHYmMiUVtv0+nuzsDKKNbeTsb5qI5CX3fGa8DFueJA7WpBXBrl
+IGR7wkYTYY+KhPmea67VhHaW8a2+e3RhJ6g+VZ59ucpl/Cz7mQ5Yebxsys2fXnVY
+5tTMFJ2tCzWn9hryxDY3elEIPyWB+1ST/GVRRyjDgbuzhkK3K9zl12wIiE/kXIqN
+voCk9xJz53nKW4rXZ6IYvF9Rz9X2XDCexBlJuX3681ClAxFpmLyUqENA0dxDps2z
+QchFYMvRLXdlNdO3WJ+w9LeEL8lHtw==
+=Lvij
+-----END PGP SIGNATURE-----
+--=-=-=--
