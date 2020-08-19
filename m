@@ -2,342 +2,249 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76133C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A998C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4928320897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B749207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="KPnpdewW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="OycrMALr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgHSP3S (ORCPT
+        id S1728494AbgHSPap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgHSP3R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:29:17 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF57C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:29:17 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id j10so11407768qvo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JQQjyzH42+NC39XApcYZGEZ0FS1brQBGuBw1l1VaGpE=;
-        b=KPnpdewWWrntfbDkrHQKlIaN6Vfj3yI6Zv02G0Jjm64j2CHKKic3s84zf6tiWndCUi
-         0tb7s6BxUHR/bnQq1JRTUz/f19bY3/1qNWV4CnTKzSBmFq3eAuraxG1IEAqrPfAYVC+X
-         bX/TaH3KXEpuZMB3zIOawc9eVN1uCl85igrlzmaP1TG9bvonWz5s4nEQuTX+8NA06faU
-         cKmOvYZc8ox385XhWJCcV1yxjdKwvYJvl4RFuljLgikgoP2dSD5jn5xLa3GkdkWxMI8w
-         16U2fwhvcca2rc7T5LAhu+VUqWQqUy5DcMloIgt9XQoVUBsUQGmpkSLhW7/oAoHEFVDu
-         W6lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JQQjyzH42+NC39XApcYZGEZ0FS1brQBGuBw1l1VaGpE=;
-        b=nUjFx0JJadszA7gypuGWQ2ha7/m6NfGZiQQ2nY5DEF/NjNrL78hHTzIZXNtMeS0DXb
-         /dcpAtg0FL4nctk6DHHujNtL3irgApxW1nYaKkFXNLg6gvAb428X9grWDhQxNILljAhK
-         mlLteSA08/U5Aa1YKFKUZlamEeUFznezxjZ0f74+ljX6IaYU/KUpl5LGmU0LV0ObP607
-         qNEBm7wFZ5hIaqnDzmsIKA3kr1+Z7BNa0vm+Z9M3OV2mQqs5CKnPzgdNDJ9UO9HH5ZWI
-         +C/O4MvUv2uq2c1uKE0RnB7c+dxNgiLB4z8nw+kNNGm3Vmvh2rJuzTdCV1xDk3sGEUqN
-         VylQ==
-X-Gm-Message-State: AOAM533kVgDJ/HyFe8lg0CQbNx1i2g64iRvT2HcLlR1iKziWgR3rCMd3
-        25fZcxt/jZGdUf9OROzTbvJdrg==
-X-Google-Smtp-Source: ABdhPJyUflRKSbZVkflpzoIR4wWnDkDCoAJZOvFOqoqGLwo5VzXLHUtEJBP/fHO9V7UW/6DcjpKnsg==
-X-Received: by 2002:a0c:d981:: with SMTP id y1mr24864637qvj.124.1597850956436;
-        Wed, 19 Aug 2020 08:29:16 -0700 (PDT)
-Received: from localhost (mobile-166-177-185-175.mycingular.net. [166.177.185.175])
-        by smtp.gmail.com with ESMTPSA id o25sm23855350qkm.42.2020.08.19.08.29.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 08:29:15 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:29:14 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Animesh Manna <animesh.manna@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>
-Subject: Re: [RFC 19/20] drm/i915/dp: Extract drm_dp_read_dpcd_caps()
-Message-ID: <20200819152914.GE46474@art_vandelay>
-References: <20200811200457.134743-1-lyude@redhat.com>
- <20200811200457.134743-20-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811200457.134743-20-lyude@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 19 Aug 2020 11:30:45 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:50250 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726570AbgHSPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:30:44 -0400
+IronPort-SDR: oFZJ1H6ZcItnLIZshHTl77Xx9dkifph+pmlUEKxjSYWtI35Yn2Nm06TwYsgPgysmD8AMpABAuy
+ b8j0cMrnPTaRGE0ncDb4yr9O+mVqgc7lFQ51WPUU5kbFXpVWUdQ92bxPlRg/bKzty9aXF/VyQd
+ JfUs/sP89W2G6kgqgGG8ms6Q01SmiNazlNjO9cfTGHTAzhM08YX8jdOp+RXU5VqFcTq0WXmtxK
+ E+2OoRMNM//JY3evYc1awThvT1+QokX43yCWUb70MA7qjivltq7xECgTo9MFBX6Pa558tkb84z
+ A1I=
+X-IronPort-AV: E=Sophos;i="5.76,331,1592863200"; 
+   d="scan'208";a="13527450"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 19 Aug 2020 17:30:39 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 19 Aug 2020 17:30:39 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 19 Aug 2020 17:30:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1597851039; x=1629387039;
+  h=from:to:cc:subject:date:message-id;
+  bh=vBqZ0zGw5NluF+dYthXe4dg6vcsvfsa5wcIWZoz69is=;
+  b=OycrMALrHBymYxz/YdXqBUuphGQf5lbpfgjJ+7V1uIpUqJTTK4jtE4cE
+   0AtxSuKdHlzTScKdKz67bDG5Gcb0IOVhGw3r9N4pu4enElE+GePn+Y7m6
+   vN19NHnsRVCFj4E05nghzHe3E+ViuQOOGt+gSiyjoPy1o8+nc7+UU+feY
+   ikmYB9zTG/mvbUIVhejRYHVvix6jJtTKTU9JOijdoSP6mdNPV5M7T7RJj
+   saujycP3rhpUcLXMi77eEOmqAx0Aw9FWl0mmf5VCqrWYEHjUZGPWR0gEm
+   VylbkyQWJJPy11Jiq9EMy8GQaJQHpLqWgsPqIrZCHHI5sOSy7zW4so7rG
+   w==;
+IronPort-SDR: v9eY0hlrS9CrFgkikDigBx9/f4cfFpnPzeCNKgdroeUAnaXggSgHVCM1B3X92CqbX+VIjdiyt+
+ yDUhYmJSIPORRfTMbvvyk8J8c1nUABzGOL+1o7m8pAw4Kg6SaPsfU0j+J7TLXNolgBJ6TTNRSl
+ fESZxdyKOsUdbUYyWz+10V6cEsx1yI37sRzJYAXHZjJd1Yyu0C6RmcLI5XuAngwMb3G0kZlcWv
+ K12TrZEIAJMu3e8STNPTPfWbRynzN+LaMkZPOsAafJGaoGsUMJy3vISQnWrfAu96a75vwviUQU
+ vPE=
+X-IronPort-AV: E=Sophos;i="5.76,331,1592863200"; 
+   d="scan'208";a="13527449"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 19 Aug 2020 17:30:39 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 373AC280065;
+        Wed, 19 Aug 2020 17:30:39 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH mmc-next] mmc: allow setting slot index via device tree alias
+Date:   Wed, 19 Aug 2020 17:30:28 +0200
+Message-Id: <20200819153028.29721-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:04:56PM -0400, Lyude Paul wrote:
-> Since DP 1.3, it's been possible for DP receivers to specify an
-> additional set of DPCD capabilities, which can take precedence over the
-> capabilities reported at DP_DPCD_REV.
-> 
-> Basically any device supporting DP is going to need to read these in an
-> identical manner, in particular nouveau, so let's go ahead and just move
-> this code out of i915 into a shared DRM DP helper that we can use in
-> other drivers.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_helper.c             | 76 +++++++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_dp.c     | 60 +---------------
->  drivers/gpu/drm/i915/display/intel_dp.h     |  1 -
->  drivers/gpu/drm/i915/display/intel_lspcon.c |  2 +-
->  include/drm/drm_dp_helper.h                 |  3 +
->  5 files changed, 82 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> index 0ff2959c8f8e8..f9445915c6c26 100644
-> --- a/drivers/gpu/drm/drm_dp_helper.c
-> +++ b/drivers/gpu/drm/drm_dp_helper.c
-> @@ -423,6 +423,82 @@ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
->  }
->  EXPORT_SYMBOL(drm_dp_send_real_edid_checksum);
->  
-> +static int drm_dp_read_extended_dpcd_caps(struct drm_dp_aux *aux,
-> +					  u8 dpcd[DP_RECEIVER_CAP_SIZE])
-> +{
-> +	u8 dpcd_ext[6];
-> +	int ret;
-> +
-> +	/*
-> +	 * Prior to DP1.3 the bit represented by
-> +	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
-> +	 * If it is set DP_DPCD_REV at 0000h could be at a value less than
-> +	 * the true capability of the panel. The only way to check is to
-> +	 * then compare 0000h and 2200h.
-> +	 */
-> +	if (!(dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
-> +	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
-> +		return 0;
-> +
-> +	ret = drm_dp_dpcd_read(aux, DP_DP13_DPCD_REV, &dpcd_ext,
-> +			       sizeof(dpcd_ext));
-> +	if (ret != sizeof(dpcd_ext))
-> +		return -EIO;
-> +
-> +	if (dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
-> +		DRM_DEBUG_KMS("%s: Extended DPCD rev less than base DPCD rev (%d > %d)\n",
-> +			      aux->name, dpcd[DP_DPCD_REV],
-> +			      dpcd_ext[DP_DPCD_REV]);
+As with GPIO, UART and others, allow specifying the device index via the
+aliases node in the device tree.
 
-Might be a good opportunity to convert all of these to drm_dbg_dp()?
+On embedded devices, there is often a combination of removable (e.g.
+SD card) and non-removable MMC devices (e.g. eMMC).
+Therefore the index might change depending on
 
-> +		return 0;
-> +	}
-> +
-> +	if (!memcmp(dpcd, dpcd_ext, sizeof(dpcd_ext)))
-> +		return 0;
-> +
-> +	DRM_DEBUG_KMS("%s: Base DPCD: %*ph\n",
-> +		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
-> +
-> +	memcpy(dpcd, dpcd_ext, sizeof(dpcd_ext));
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * drm_dp_read_dpcd_caps() - read DPCD caps and extended DPCD caps if
-> + * available
-> + * @aux: DisplayPort AUX channel
-> + * @dpcd: Buffer to store the resulting DPCD in
-> + *
-> + * Attempts to read the base DPCD caps for @aux. Additionally, this function
-> + * checks for and reads the extended DPRX caps (%DP_DP13_DPCD_REV) if
-> + * present.
-> + *
-> + * Returns: %0 if the DPCD was read successfully, negative error code
-> + * otherwise.
-> + */
-> +int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
-> +			  u8 dpcd[DP_RECEIVER_CAP_SIZE])
-> +{
-> +	int ret;
-> +
-> +	ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
-> +	if (ret != DP_RECEIVER_CAP_SIZE || dpcd[DP_DPCD_REV] == 0)
-> +		return -EIO;
-> +
-> +	ret = drm_dp_read_extended_dpcd_caps(aux, dpcd);
-> +	if (ret < 0)
-> +		return ret;
+* host of removable device
+* removable card present or not
 
-I wonder if we should just go with the "regular" dpcd caps we just read in this
-case?
+This makes it difficult to hardcode the root device, if it is on the
+non-removable device. E.g. if SD card is present eMMC will be mmcblk1,
+if SD card is not present at boot, eMMC will be mmcblk0.
 
-Regardless of my nits,
+All indices defined in the aliases node will be reserved for use by the
+respective MMC device, moving the indices of devices that don't have an
+alias up into the non-reserved range. If the aliases node is not found,
+the driver will act as before.
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+This is a rebased and slightly cleaned up version of
+https://www.spinics.net/lists/linux-mmc/msg26588.html .
 
-> +
-> +	DRM_DEBUG_KMS("%s: DPCD: %*ph\n",
-> +		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
-> +
-> +	if (dpcd[DP_DPCD_REV] == 0)
-> +		ret = -EIO;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(drm_dp_read_dpcd_caps);
-> +
->  /**
->   * drm_dp_downstream_read_info() - read DPCD downstream port info if available
->   * @aux: DisplayPort AUX channel
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index e343965a483df..230aa0360dc61 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4449,62 +4449,6 @@ intel_dp_link_down(struct intel_encoder *encoder,
->  	}
->  }
->  
-> -static void
-> -intel_dp_extended_receiver_capabilities(struct intel_dp *intel_dp)
-> -{
-> -	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
-> -	u8 dpcd_ext[6];
-> -
-> -	/*
-> -	 * Prior to DP1.3 the bit represented by
-> -	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
-> -	 * if it is set DP_DPCD_REV at 0000h could be at a value less than
-> -	 * the true capability of the panel. The only way to check is to
-> -	 * then compare 0000h and 2200h.
-> -	 */
-> -	if (!(intel_dp->dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
-> -	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
-> -		return;
-> -
-> -	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DP13_DPCD_REV,
-> -			     &dpcd_ext, sizeof(dpcd_ext)) != sizeof(dpcd_ext)) {
-> -		drm_err(&i915->drm,
-> -			"DPCD failed read at extended capabilities\n");
-> -		return;
-> -	}
-> -
-> -	if (intel_dp->dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
-> -		drm_dbg_kms(&i915->drm,
-> -			    "DPCD extended DPCD rev less than base DPCD rev\n");
-> -		return;
-> -	}
-> -
-> -	if (!memcmp(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext)))
-> -		return;
-> -
-> -	drm_dbg_kms(&i915->drm, "Base DPCD: %*ph\n",
-> -		    (int)sizeof(intel_dp->dpcd), intel_dp->dpcd);
-> -
-> -	memcpy(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext));
-> -}
-> -
-> -bool
-> -intel_dp_read_dpcd(struct intel_dp *intel_dp)
-> -{
-> -	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
-> -
-> -	if (drm_dp_dpcd_read(&intel_dp->aux, 0x000, intel_dp->dpcd,
-> -			     sizeof(intel_dp->dpcd)) < 0)
-> -		return false; /* aux transfer failed */
-> -
-> -	intel_dp_extended_receiver_capabilities(intel_dp);
-> -
-> -	drm_dbg_kms(&i915->drm, "DPCD: %*ph\n", (int)sizeof(intel_dp->dpcd),
-> -		    intel_dp->dpcd);
-> -
-> -	return intel_dp->dpcd[DP_DPCD_REV] != 0;
-> -}
-> -
->  bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp)
->  {
->  	u8 dprx = 0;
-> @@ -4563,7 +4507,7 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
->  	/* this function is meant to be called only once */
->  	drm_WARN_ON(&dev_priv->drm, intel_dp->dpcd[DP_DPCD_REV] != 0);
->  
-> -	if (!intel_dp_read_dpcd(intel_dp))
-> +	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd) != 0)
->  		return false;
->  
->  	drm_dp_read_desc(&intel_dp->aux, &intel_dp->desc,
-> @@ -4650,7 +4594,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  {
->  	int ret;
->  
-> -	if (!intel_dp_read_dpcd(intel_dp))
-> +	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd))
->  		return false;
->  
->  	/*
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
-> index b901ab850cbd9..0a3af3410d52e 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.h
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.h
-> @@ -99,7 +99,6 @@ bool intel_dp_source_supports_hbr3(struct intel_dp *intel_dp);
->  bool
->  intel_dp_get_link_status(struct intel_dp *intel_dp, u8 *link_status);
->  
-> -bool intel_dp_read_dpcd(struct intel_dp *intel_dp);
->  bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp);
->  int intel_dp_link_required(int pixel_clock, int bpp);
->  int intel_dp_max_data_rate(int max_link_clock, int max_lanes);
-> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
-> index b781bf4696443..dc1b35559afdf 100644
-> --- a/drivers/gpu/drm/i915/display/intel_lspcon.c
-> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
-> @@ -571,7 +571,7 @@ bool lspcon_init(struct intel_digital_port *dig_port)
->  		return false;
->  	}
->  
-> -	if (!intel_dp_read_dpcd(dp)) {
-> +	if (drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd) != 0) {
->  		DRM_ERROR("LSPCON DPCD read failed\n");
->  		return false;
->  	}
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index 0c141fc81aaa8..11649e93e5bb6 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1607,6 +1607,9 @@ static inline ssize_t drm_dp_dpcd_writeb(struct drm_dp_aux *aux,
->  	return drm_dp_dpcd_write(aux, offset, &value, 1);
->  }
->  
-> +int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
-> +			  u8 dpcd[DP_RECEIVER_CAP_SIZE]);
-> +
->  int drm_dp_dpcd_read_link_status(struct drm_dp_aux *aux,
->  				 u8 status[DP_LINK_STATUS_SIZE]);
->  
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Based-on-patch-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Link: https://lkml.org/lkml/2020/8/5/194
+---
+ drivers/mmc/core/block.c | 13 +++++++++++--
+ drivers/mmc/core/core.c  | 38 ++++++++++++++++++++++++++++++++++++++
+ drivers/mmc/core/core.h  |  3 +++
+ drivers/mmc/core/host.c  | 15 +++++++++++++--
+ 4 files changed, 65 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 7896952de1ac..4620afaf0e50 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -38,6 +38,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/idr.h>
+ #include <linux/debugfs.h>
++#include <linux/of.h>
+ 
+ #include <linux/mmc/ioctl.h>
+ #include <linux/mmc/card.h>
+@@ -2260,9 +2261,17 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+ 					      int area_type)
+ {
+ 	struct mmc_blk_data *md;
+-	int devidx, ret;
++	int rsvidx, devidx = -1, ret;
++
++	rsvidx = mmc_get_reserved_index(card->host);
++	if (rsvidx >= 0)
++		devidx = ida_simple_get(&mmc_blk_ida, rsvidx, rsvidx + 1,
++					GFP_KERNEL);
++	if (devidx < 0)
++		devidx = ida_simple_get(&mmc_blk_ida,
++					mmc_first_nonreserved_index(),
++					max_devices, GFP_KERNEL);
+ 
+-	devidx = ida_simple_get(&mmc_blk_ida, 0, max_devices, GFP_KERNEL);
+ 	if (devidx < 0) {
+ 		/*
+ 		 * We get -ENOSPC because there are no more any available
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index 8ccae6452b9c..39aca8adacd1 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -2419,10 +2419,48 @@ void mmc_unregister_pm_notifier(struct mmc_host *host)
+ }
+ #endif
+ 
++static int mmc_max_reserved_idx = -1;
++
++/**
++ * mmc_first_nonreserved_index() - get the first index that is not reserved
++ */
++int mmc_first_nonreserved_index(void)
++{
++	return mmc_max_reserved_idx + 1;
++}
++
++/**
++ * mmc_get_reserved_index() - get the index reserved for this MMC host
++ *
++ * Returns:
++ *   The index reserved for this host on success,
++ *   negative error if no index is reserved for this host
++ */
++int mmc_get_reserved_index(struct mmc_host *host)
++{
++	return of_alias_get_id(host->parent->of_node, "mmc");
++}
++
++static void __init mmc_of_reserve_idx(void)
++{
++	int max;
++
++	max = of_alias_get_highest_id("mmc");
++	if (max < 0)
++		return;
++
++	mmc_max_reserved_idx = max;
++
++	pr_debug("MMC: reserving %d slots for OF aliases\n",
++		 mmc_max_reserved_idx + 1);
++}
++
+ static int __init mmc_init(void)
+ {
+ 	int ret;
+ 
++	mmc_of_reserve_idx();
++
+ 	ret = mmc_register_bus();
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
+index 575ac0257af2..6aef6cf4e90f 100644
+--- a/drivers/mmc/core/core.h
++++ b/drivers/mmc/core/core.h
+@@ -79,6 +79,9 @@ int mmc_attach_mmc(struct mmc_host *host);
+ int mmc_attach_sd(struct mmc_host *host);
+ int mmc_attach_sdio(struct mmc_host *host);
+ 
++int mmc_first_nonreserved_index(void);
++int mmc_get_reserved_index(struct mmc_host *host);
++
+ /* Module parameters */
+ extern bool use_spi_crc;
+ 
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index ce43f7573d80..386e15afde83 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -387,6 +387,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
+ {
+ 	int err;
+ 	struct mmc_host *host;
++	int alias_id, min_idx, max_idx;
+ 
+ 	host = kzalloc(sizeof(struct mmc_host) + extra, GFP_KERNEL);
+ 	if (!host)
+@@ -395,7 +396,18 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
+ 	/* scanning will be enabled when we're ready */
+ 	host->rescan_disable = 1;
+ 
+-	err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
++	host->parent = dev;
++
++	alias_id = mmc_get_reserved_index(host);
++	if (alias_id >= 0) {
++		min_idx = alias_id;
++		max_idx = alias_id + 1;
++	} else {
++		min_idx = mmc_first_nonreserved_index();
++		max_idx = 0;
++	}
++
++	err = ida_simple_get(&mmc_host_ida, min_idx, max_idx, GFP_KERNEL);
+ 	if (err < 0) {
+ 		kfree(host);
+ 		return NULL;
+@@ -406,7 +418,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
+ 	dev_set_name(&host->class_dev, "mmc%d", host->index);
+ 	host->ws = wakeup_source_register(NULL, dev_name(&host->class_dev));
+ 
+-	host->parent = dev;
+ 	host->class_dev.parent = dev;
+ 	host->class_dev.class = &mmc_host_class;
+ 	device_initialize(&host->class_dev);
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.17.1
+
