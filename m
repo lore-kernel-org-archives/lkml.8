@@ -2,124 +2,106 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED479C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94CD82076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="m6RLBJut"
+	by mail.kernel.org (Postfix) with ESMTP id C968F207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597876237;
+	bh=107X92WlWILbgg3oOEW9J2/g9CbOmsCMKO5aA8rXW+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HDV1L1B9iQdTR+0K5jAU8JPQX741S1j1bsgUFlFHjX5xQnYVcsrYMuaiCwHpJ9nRU
+	 OJtGD0/5lS6jqiHYMColNFTz+ht5RxN3kHwD07Gxxu/ID+PAxiBk8V04tF5eX8a9Lc
+	 eokVgC45QD2kYgNXcO2INoavb4XSdoRrZ07IF/9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgHSWZW (ORCPT
+        id S1726698AbgHSWag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:25:22 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:16026 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgHSWYz (ORCPT
+        Wed, 19 Aug 2020 18:30:36 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39611 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgHSWaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:24:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597875895; x=1629411895;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Bk2Gh/XGM+blmye1lG7fqQWiRAnoRdaJAzm3HH3f+As=;
-  b=m6RLBJutwZv54DvbEE0zT5tPbEJhpZVsXJD85n9UPOzmfcyBqiYzHlni
-   l2f78LZJvOLZn7laTe3K19d+PCD7kRbfhhzm05a3hqbGaIIZUbA0SHaJM
-   hB0j2I56cewWycEGn92Z8f20SILUTIv/1ONCgpnmWzrRATPfsHys4WsWx
-   E3FMFPkvFuq7s5CUN0S7QAwSnQ5PuEijJkr3sJVWkW4WVxenNvMZgswEy
-   zVkFG+oADJrgB0qIHkA2ATM4kFLJkmV6RP5j08oL/hywyixdVfvEM/akR
-   85Xhw+MpqRJpA7rR0aHz7sc6E1zSxN2RdrhVYgqykz7/kdGrW80nDOazM
-   g==;
-IronPort-SDR: 3CRM/tM5AjXvHmV9le7gdpeTFzUTPM77OuEaWnEokYZNDzsK3x2AQ8F5jeN0sU56UIXL90uWka
- vXk9xXRLt3+4ODnmHRCH3MnCo2SQLYgIvlfTnBQ+Nwi+UzRORpx0Vx+mJ8QxS6PU6c9pxBVeeP
- vW2MX8sqR3R7Oe9CIWrnGvimcJjLmFaqnB+CfxXXBhfbVUBdK0QeEnFvhW7euAvl11BaiK8Dwi
- D8l0c6lLsr0mdxAQLsNl2cY0FJuEPSuaHKfFYIlNBykYj5rlF6dmZsw6cANo8iLI6P92QqfJzq
- +hA=
-X-IronPort-AV: E=Sophos;i="5.76,332,1592841600"; 
-   d="scan'208";a="145373616"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Aug 2020 06:24:38 +0800
-IronPort-SDR: m3lKB1A+CFjYqv/UgMUyjoNV5hgSh0I2AuTFxC211ekcM1t0W2D5UkOzzmJabXc1S17t1bDQCs
- Tu7AJVPAw2Ow==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 15:12:20 -0700
-IronPort-SDR: mR5GQ++tJdfzFRFihTJaMucU1XgxcuUoLxd/gRMkE1wzAwfBUDzf6fR7PnP8j1c4pLfeMm+J6o
- LVUXXgAWTJVA==
-WDCIronportException: Internal
-Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.59.62])
-  by uls-op-cesaip01.wdc.com with ESMTP; 19 Aug 2020 15:24:37 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Steven Price <steven.price@arm.com>,
-        Waiman Long <longman@redhat.com>, Zong Li <zong.li@sifive.com>,
-        Daniel Schaefer <daniel.schaefer@hpe.com>,
-        "abner.chang@hpe.com" <abner.chang@hpe.com>
-Subject: [PATCH v6 7/9] efi: Rename arm-init to efi-init common for all arch
-Date:   Wed, 19 Aug 2020 15:24:23 -0700
-Message-Id: <20200819222425.30721-8-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200819222425.30721-1-atish.patra@wdc.com>
-References: <20200819222425.30721-1-atish.patra@wdc.com>
+        Wed, 19 Aug 2020 18:30:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id z6so375913iow.6;
+        Wed, 19 Aug 2020 15:30:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TPAgoF6CS6LHb79mBEQMdU6QynqQNT4ADYnbP9+wi74=;
+        b=Iy3eq/WA8d3tP56uIU8z31H/+gJFoshRuzJlQVlwM8uC7l+yminCpJO5C1lxhPdqJr
+         HExhMNpxUSYz1AwLaICvNTZp8ixGXIVH6DEntjlHJnM9qgOUhW+yRTe7AK6xPEYo54YY
+         CwhIJwr/cjaZS4wIJs0K0Hz3JB5YOG1gKo5pFgHBSKScx0OWwJuBWAfrXFcDEk8/oumR
+         JaB1O8ryX0Q8L/TuSfv6P78a9J/1HS3XGLeMjM5Sl1Hb9iWDG24/z6D15E+Yc9/1IYwx
+         IcTf2o2SnahMKS8tyg4UeqY4C9+fnRJVpBQAOcAeZhN4Wn3V9z2FkzVWMfYr9RuLqTeh
+         RFVQ==
+X-Gm-Message-State: AOAM531qUo+t6ZuP5PJ3Judh1M/u0Q35r0iGZUaiSS7h5YIEpajSKrWf
+        PGNRrjZ9bZJx75dDHX/GPA==
+X-Google-Smtp-Source: ABdhPJzOVbOE3td6fQsaX3GtZOf+rgr1VvqINzVc5EPIlkHCXVE0LtV3YFDHep9Apf5exI1W+VesoQ==
+X-Received: by 2002:a02:8806:: with SMTP id r6mr533184jai.88.1597876234835;
+        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id z26sm243083ilf.60.2020.08.19.15.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
+Received: (nullmailer pid 2077672 invoked by uid 1000);
+        Wed, 19 Aug 2020 22:30:32 -0000
+Date:   Wed, 19 Aug 2020 16:30:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>, kernel-team@android.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] of: address: Work around missing device_type property
+ in pcie nodes
+Message-ID: <20200819223031.GA2077542@bogus>
+References: <20200819094255.474565-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819094255.474565-1-maz@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm-init is responsible for setting up efi runtime and doesn't actually
-do any ARM specific stuff. RISC-V can use the same source code as it is.
+On Wed, 19 Aug 2020 10:42:55 +0100, Marc Zyngier wrote:
+> Recent changes to the DT PCI bus parsing made it mandatory for
+> device tree nodes describing a PCI controller to have the
+> 'device_type = "pci"' property for the node to be matched.
+> 
+> Although this follows the letter of the specification, it
+> breaks existing device-trees that have been working fine
+> for years.  Rockchip rk3399-based systems are a prime example
+> of such collateral damage, and have stopped discovering their
+> PCI bus.
+> 
+> In order to paper over it, let's add a workaround to the code
+> matching the device type, and accept as PCI any node that is
+> named "pcie",
+> 
+> A warning will hopefully nudge the user into updating their
+> DT to a fixed version if they can, but the incentive is
+> obviously pretty small.
+> 
+> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/of/address.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
 
-Rename it to efi-init so that RISC-V can use it.
-
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/Makefile                   | 2 +-
- drivers/firmware/efi/{arm-init.c => efi-init.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
-
-diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-index 7a216984552b..61fd1e8b26fb 100644
---- a/drivers/firmware/efi/Makefile
-+++ b/drivers/firmware/efi/Makefile
-@@ -32,7 +32,7 @@ obj-$(CONFIG_EFI_EMBEDDED_FIRMWARE)	+= embedded-firmware.o
- fake_map-y				+= fake_mem.o
- fake_map-$(CONFIG_X86)			+= x86_fake_mem.o
- 
--arm-obj-$(CONFIG_EFI)			:= arm-init.o arm-runtime.o
-+arm-obj-$(CONFIG_EFI)			:= efi-init.o arm-runtime.o
- obj-$(CONFIG_ARM)			+= $(arm-obj-y)
- obj-$(CONFIG_ARM64)			+= $(arm-obj-y)
- obj-$(CONFIG_EFI_CAPSULE_LOADER)	+= capsule-loader.o
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/efi-init.c
-similarity index 100%
-rename from drivers/firmware/efi/arm-init.c
-rename to drivers/firmware/efi/efi-init.c
--- 
-2.24.0
-
+Applied, thanks!
