@@ -2,96 +2,108 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49035C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F384206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="V9IvKWCI"
+	by mail.kernel.org (Postfix) with ESMTP id 15F0C206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgHSMxZ (ORCPT
+        id S1728409AbgHSMxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgHSMxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:53:20 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A677EC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:53:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y10so9214728plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zJN7mPc4emxLWdlN8p4SOLwoWeu8g9Q4yzK4x1mAeUc=;
-        b=V9IvKWCIvVv6RHOH9FmZD2dEZhykl4heM9C4QqgM6ZX/rhStZvwtXIE6311sDZIgTj
-         zav4sMApHPARygYP7q+vkk8tA5Nsk/+wApyQCU8PKpYZ1SyE7u9hbKCWX1ncaP4ethsk
-         OqjveJ/lTH797kTI0bHbD9wUwhYg2MgwUnfbwkYeXwbmQVjmNXrOTqeEB0TD5yG0qcZi
-         LxyCmJhx0B1ACnnnFNq50/aA9+nsUNlpkzcazjwVKtQpzVNRistFgmBf1wL2QnL1wFH9
-         fSQyrI1vQC4ZcGXtF2ZMPIIDmb/BkFXVAMrqn3hSlEf/3z7e4A3Ww4Tf6l4a4bKVfkHI
-         Gd4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zJN7mPc4emxLWdlN8p4SOLwoWeu8g9Q4yzK4x1mAeUc=;
-        b=dvmNtCGyMRyv6bTnOxlvZiAA2sH1rIBDXKJwl4Pwk2p+NSNauROacNcnrrFaQsJhdY
-         SPHKpxICD27xUZPM6ydg3F6gYgtZ4Fmyc0qbscglD21JYClCoZYu/yqpvzX4dRsWNNdd
-         J8k7/l6Y0IvvQjxBmXl6QraqpbmN63YRNc/u+LFPE/mg2ehtE4UWVSW5mFKXOCaVWMm5
-         YoM2qDI657qAEPScnBg45AMb6feyxw0ApiQQ++2wRIKIRkHVZbvkCFUuJRddNPZrm0Ag
-         WTB5gvm0SIoUppaYhhVRIv35aVuO5oQr8RA2q5NHM7TuIgjA7wYgTz3/Vi7nsaOzmEQM
-         2Faw==
-X-Gm-Message-State: AOAM53024+oR7yA/5Lpb1sTRapLhrUBtW2XclcMqvQE15aZiohhhZ3GE
-        Zdg/62hCwR6yNYxxeHFfRXu11UddNSBsDBK/
-X-Google-Smtp-Source: ABdhPJwWxtJ56gpX/eys9lAeJkNGXd7Lh/mpNFyHUZnF8rMPQuRnhrAZSY17fn+dbhx0FWeDG4KhvA==
-X-Received: by 2002:a17:90a:ea13:: with SMTP id w19mr4215260pjy.18.1597841599971;
-        Wed, 19 Aug 2020 05:53:19 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id z3sm23839823pgk.49.2020.08.19.05.53.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 05:53:19 -0700 (PDT)
-Subject: Re: [PATCH] raw: deprecate the raw driver
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200819073533.1808361-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b2b65ace-be51-6094-f9a6-5d72677c2b64@kernel.dk>
-Date:   Wed, 19 Aug 2020 06:53:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 08:53:54 -0400
+Received: from muru.com ([72.249.23.125]:41134 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbgHSMxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:53:52 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6B952807A;
+        Wed, 19 Aug 2020 12:53:49 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 15:54:17 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power
+ management
+Message-ID: <20200819125417.GG2994@atomide.com>
+References: <20200818154633.5421-1-aford173@gmail.com>
+ <20200819045914.GS2994@atomide.com>
+ <CAHCN7xKBzRfByvdYBPS=uWF2QvECAOf5zGZE0-pxjJ6A2-d95g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200819073533.1808361-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7xKBzRfByvdYBPS=uWF2QvECAOf5zGZE0-pxjJ6A2-d95g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 12:35 AM, Christoph Hellwig wrote:
-> The raw driver has been replaced by O_DIRECT support on the block device
-> in 2002.  Deprecate it to prepare for removal in a few kernel releases.
+* Adam Ford <aford173@gmail.com> [200819 12:21]:
+> On Tue, Aug 18, 2020 at 11:58 PM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > * Adam Ford <aford173@gmail.com> [200818 15:46]:
+> > > @@ -1153,6 +1166,38 @@ static int ti_bandgap_suspend(struct device *dev)
+> > >       return err;
+> > >  }
+> > >
+> > > +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
+> > > +                               unsigned long cmd, void *v)
+> > > +{
+> > > +     struct ti_bandgap *bgp;
+> > > +
+> > > +     bgp = container_of(nb, struct ti_bandgap, nb);
+> > > +
+> > > +     spin_lock(&bgp->lock);
+> > > +     switch (cmd) {
+> > > +     case CPU_CLUSTER_PM_ENTER:
+> > > +             if (bgp->is_suspended)
+> > > +                     break;
+> > > +             ti_bandgap_save_ctxt(bgp);
+> > > +             ti_bandgap_power(bgp, false);
+> > > +             if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> > > +                     clk_disable(bgp->fclock);
+> > > +             break;
+> > > +     case CPU_CLUSTER_PM_ENTER_FAILED:
+> > > +     case CPU_CLUSTER_PM_EXIT:
+> > > +             if (bgp->is_suspended)
+> > > +                     break;
+> > > +             if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> > > +                     clk_enable(bgp->fclock);
+> > > +             ti_bandgap_power(bgp, true);
+> > > +             ti_bandgap_restore_ctxt(bgp);
+> > > +             break;
+> > > +     }
+> > > +     spin_unlock(&bgp->lock);
+> > > +
+> > > +     return NOTIFY_OK;
+> > > +}
+> >
+> > Hmm to me it looks like is_suspended is not used right now?
+> > I guess you want to set it in ti_bandgap_suspend() and clear
+> > it in ti_bandgap_resume()?
+> >
+> > Otherwise looks good to me, I can't test the power consumption
+> > right now though so you may want to check it to make sure
+> > device still hits off mode during idle.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
-> 
-> Jens, I wonder if we can sneak this into 5.9 to have a longer deprecation
-> period?
+> I have a V2.  Do you want me to re-post 2/2 with V2 as no change, or
+> should I just submit this patch alone?
 
-Wow, hadn't thought about this one in forever. Yeah let's see if we can
-get this into 5.9. I can't imagine anyone using this thing, well, ever.
+Up to you, might make it easier for other folks to follow if the
+whole series is reposted.
 
--- 
-Jens Axboe
+Regards,
 
+Tony
