@@ -2,72 +2,109 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B866C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BEEC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308C220772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267D920772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j95hiToE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgHSBIG (ORCPT
+        id S1727797AbgHSBJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:08:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9838 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726486AbgHSBIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:08:05 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 55D2713F051FD3159F59;
-        Wed, 19 Aug 2020 09:08:01 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 09:07:59 +0800
-Subject: Re: [PATCH 1/3] libnvdimm: Fix memory leaks in of_pmem.c
-To:     Markus Elfring <Markus.Elfring@web.de>, <linux-nvdimm@lists.01.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-References: <5ca9f6e3-38d7-fc65-5010-22c992ecf851@web.de>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <fdbd9d2d-2e5d-8190-5d7c-eec5c4cdadbb@huawei.com>
-Date:   Wed, 19 Aug 2020 09:07:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Aug 2020 21:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgHSBJY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 21:09:24 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB53C061389;
+        Tue, 18 Aug 2020 18:09:23 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BWV6m2Zsvz9sPC;
+        Wed, 19 Aug 2020 11:09:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597799360;
+        bh=PZ4f53VeW+am97M+os2kN5bTE89KqaSC9EwrF9k3KBU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=j95hiToEKFsL0BphmgilDDXrzZyUj/guPGnrsc0NyvYWAekP3Fc/8I9io8yEFko1t
+         /ztJl4Viyy8XOITgLCUX7GtcPSXQx4P6KG/Nwwq3T9OFhc1BlKemCfLNrNsW31k5ts
+         KSAdWQD4pF2/QM+ALwmNhY61zPpefLtvaHNpvF2wH/lzEnWdoLstlRJzUMI4mDviKB
+         mhrOZdojm8/euvz35xXg8QPc3By9SolpC8xBYMfY6MjnE2Zb0b0vqqaWXSjjMqwrqj
+         gnALmInD3UB/rNU2MdRmxAE5fkcCRkuUK50NAnU/tvPOmBFvc6kebwrMIPolAC9tD0
+         HZWZRtgmzzmIQ==
+Date:   Wed, 19 Aug 2020 11:09:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: linux-next: manual merge of the net-next tree with the kspp-gustavo
+ tree
+Message-ID: <20200819110918.43a7397d@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <5ca9f6e3-38d7-fc65-5010-22c992ecf851@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/LzT7RpsEKCeHL6WWia16gBO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/LzT7RpsEKCeHL6WWia16gBO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 8/19/2020 3:00 AM, Markus Elfring wrote:
->> The memory priv->bus_desc.provider_name allocated by kstrdup() should be
->> freed.
-> 
-> * Would an imperative wording be preferred for the change description?
-> 
-> * I propose to add the tag “Fixes” to the commit message.
-Thanks for your suggestion, I will add it in v2.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Fixes: 49bddc73d15c ("libnvdimm/of_pmem: Provide a unique name for bus provider")
+  lib/nlattr.c
 
+between commit:
 
-> 
-> Regards,
-> Markus
-> 
-> 
+  58e813cceabd ("treewide: Use fallthrough pseudo-keyword")
 
+from the kspp-gustavo tree and commit:
+
+  8aa26c575fb3 ("netlink: make NLA_BINARY validation more flexible")
+
+from the net-next tree.
+
+I fixed it up (the latter removed some of the code updated by the former)
+and can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LzT7RpsEKCeHL6WWia16gBO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl88e74ACgkQAVBC80lX
+0GwzEAf/cmJ58ZsosxZvX25OxpXOzuUPtkOtCilLc9vtKYKk0eZpP5F80LPhuTPO
+fluq9y4BpfeCMj2D3WnRwE+Fj7e5oG7aOziMU0L1X097eM8gn4afWhoEcr11BwyP
+y4G+Q1zOhsyB38K7Oo2RhEByc2p9fDtNk8x+kTKSFSzX4OxFWrcN8bZcVoolCYoW
+mSa2Z4mzFKZehDC2hjFa6+OutLuwOMoq0IvJwibpWLXeQzP2lS4waRGxRGFsQD42
+VcZFCsPjFdZkqTHXipXI8sF3mtebnzFCAIqqUGBoWwi+E4EdHUTZwAGeH74eyLBi
+/iz0GK8gJ4+D8yTyPWRz1rOwOzoMAQ==
+=0c+y
+-----END PGP SIGNATURE-----
+
+--Sig_/LzT7RpsEKCeHL6WWia16gBO--
