@@ -2,128 +2,126 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16667206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB40206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="msumWpjb"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Oh6qt6ED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgHSN0U (ORCPT
+        id S1728325AbgHSN0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:26:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgHSNZu (ORCPT
+        Wed, 19 Aug 2020 09:26:39 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:58707 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727996AbgHSN0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:25:50 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7BFC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:25:49 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e5so17693881qth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Oub4DT+nxeyPZAIUHhbv2Qd15f55cLS7blrm9y7LqSs=;
-        b=msumWpjbrhePPIDAQHg1nPaSE6QdJ/aagtAu8huGWKROwE7Lm5xEcnwQEk+fEcE3mT
-         2wNeytscDzHCfUzb8oqpmWCUrFsI+JPLDn9OjfXVxKjdW8u9BvFNGEsQ7Z8TIa0heSlQ
-         wHRS1ejxR8mCzVMfuWJ2dkU9a2To2cXLqzYPk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Oub4DT+nxeyPZAIUHhbv2Qd15f55cLS7blrm9y7LqSs=;
-        b=tuWfuq+KbjaCgbnv69SqAXH7vDcZ1XteoYKaOKGJwjlhIiGk9aaXOq2Ia2zb9w7oao
-         HcxCcxBGAWDFQxF5fZWKadJ80m2ykU2KrBFjlMCgYA9lHGAvVMj+J9+G1j1098/tVcX+
-         VU79VXPBp1GPTtTQ5PnJeLtF1gBZxliVvcFvrxhyDFkSGNmttlpZVmMmYzSFZcUGDpUy
-         OK7tAWT/Wj8MvnAPaBFD+dW1QSOOazjYFDFBeFnBCPnEzGiXzA+hpfKFJhRW2u5KcDKB
-         IhaQEqFlsxjysE2cAdJO5SBrh5wOUuKYrEnbAQUFb1FfWT0Wi3bAZEpxxRoz+3zlcwCr
-         5ZwA==
-X-Gm-Message-State: AOAM530/drlq2/j4IhiQkFRIo0P3LMKEIVB7XceSe2LWgUisg/IsZUnf
-        oAxa9rnEXdkpQ77gGBblTIv6dA==
-X-Google-Smtp-Source: ABdhPJz5vi0T0gUjoJrUvVQETHNZvLci7q8Qs7ZwHUh1LP4fyY8aJVk5SiwojcZd2bCP4rmEHGFnQQ==
-X-Received: by 2002:ac8:6052:: with SMTP id k18mr22205327qtm.60.1597843548673;
-        Wed, 19 Aug 2020 06:25:48 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id d8sm27287911qtr.12.2020.08.19.06.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 06:25:47 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 09:25:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, qiang.zhang@windriver.com,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
-Message-ID: <20200819132547.GA3875610@google.com>
-References: <20200814064557.17365-1-qiang.zhang@windriver.com>
- <20200814185124.GA2113@pc636>
- <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
- <20200818171807.GI27891@paulmck-ThinkPad-P72>
- <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
- <20200818210355.GM27891@paulmck-ThinkPad-P72>
- <20200818215511.GA2538@pc636>
- <20200818220245.GO27891@paulmck-ThinkPad-P72>
- <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
- <20200819112225.GA6177@pc636>
+        Wed, 19 Aug 2020 09:26:22 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8O6dkcvKSuuXO8O6ekhGDC; Wed, 19 Aug 2020 15:26:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597843580; bh=k4CyG5Qq54vxXk/1xGJbjzzlnEo+v6cUalGVdZ9UNHI=;
+        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Oh6qt6EDQ/N1K0Nf0Lvo6MlJRK64on3esya29Q4qiPt8H+JwY7+T/gyqTquq1Lzf6
+         xsTVu8s5zg3BM7PonezxwJjkwji2siPgUgl0cqroCCwrXs9JLxBARiAIsyKXEb0HJs
+         KRrN7O5ThVEuiEAhyMlpPsYiyXcgLaLm0mW0R4AVsNNmF2ilHugsrsQ6viAA4EcJHo
+         YYauw7sCYo3Kq/EL0aLj++Pn0v1XqfOkvLS6z/UhYUdszTRxtO7JUo2x9Ose4BwvjB
+         BPYSZOeBv5Co1vCN0i//3eIkVWsg7zAZ6mgtrEl0Qgt1ss/4psW9q0WV6tmw9hy29O
+         O3E9BetpehQ7g==
+Subject: Re: [PATCH 1/2] media: Revert "media: exynos4-is: Add missed check
+ for pinctrl_lookup_state()"
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-media@vger.kernel.org
+Cc:     hslester96@gmail.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+References: <CGME20200810153301eucas1p2684476145e627ba124ba4740ef204712@eucas1p2.samsung.com>
+ <20200810153240.23827-1-s.nawrocki@samsung.com>
+ <bdcb0a29-8c7e-3736-9936-2b25460f9aef@xs4all.nl>
+Message-ID: <9b240ddb-0d03-5d51-386d-fce100a70aed@xs4all.nl>
+Date:   Wed, 19 Aug 2020 15:26:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819112225.GA6177@pc636>
+In-Reply-To: <bdcb0a29-8c7e-3736-9936-2b25460f9aef@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfM486MN3QSCAdJcP+Ut+D2oHitKpGHNGxmepL3N9f831HuqqJHNdoXtsQmci8D4T/woHOUOj/Y4tEkXWTThbCrveCo/4lwcmgdXXOtI11Djn9LwQrGnc
+ bdg3COFSRvNHRlormPsU1tWbtFA5m8CLqgzkLxnhKp5TRDSPQmPQ+1JuRJZtOnhFiKA4lvMQ4aCL1mi/ZZv64d2x1zKaXY3kThs007JYEE20zlCTXSdKH6k2
+ xqMGmUsM1Fbs06fSSjhmkY/wjMIyI+cCOUlJM+dBu8nNxMaPjHCwvShkAdz2bnKZGU2cSPSTmlgr4u+Wc1EWjuU5RHYQ3iaf38h79RnUhbuu/um967hHE1jX
+ fw3VlqP/8w4O/V/kFEw6pwq1bZqyRq+wFJt0CF2/FH6tp9Ag7hxyTAMryBEJ8yJxMEriLXYim5Wo3hwwcY28qkWuS0Tq9ZpU6WDvlrWa6VN0N814eY8f6oum
+ KD/DFSV6+YeLQFRsHvsYOnk94XjhplQ5w0mOG4K0yZ8vbKXOScm9aNvdJ6vbALhwNms8VhBsFk4diM4iTDvT3125IjBI+SpF/ZLfSDLqbL2JaCmg+0hoNU9m
+ 0dE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 01:22:25PM +0200, Uladzislau Rezki wrote:
-> On Tue, Aug 18, 2020 at 08:04:20PM -0400, Joel Fernandes wrote:
-> > On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > index b8ccd7b5af82..6decb9ad2421 100644
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
-> > > >  {
-> > > >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
-> > > > +       struct kfree_rcu_cpu *krcp;
-> > > >
-> > > >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> > > >                 return 0;
-> > > >
-> > > > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
-> > > > +       krcp = this_cpu_ptr(&krc)
-> > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
-> > > > +
-> > > >
-> > > > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
-> > > > Maybe be never.
-> > >
-> > > Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
-> > > hard time getting too worried about it.  ;-)
-> > 
-> > Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
-> > on the cache reaper who's job is to flush the per-cpu caches. So I
-> > believe during CPU offlining, the per-cpu slab caches are flushed.
-> > 
-> SLAB does it for sure, same as page allocator. There are special CPU-offline
-> callbacks for both cases to perform cleanup when CPU dies.
+On 19/08/2020 15:15, Hans Verkuil wrote:
+> Hi Sylwester,
+> 
+> Can you rebase this patch series on top of the media_tree master?
+> 
+> This series didn't apply anymore.
 
-Got it, thanks for confirming, makes sense.
+Never mind, it was a conflict between this patch and this one:
 
-thanks,
+https://patchwork.linuxtv.org/project/linux-media/patch/20200807083548.204360-2-dwlsalmeida@gmail.com/
 
- - Joel
+I'll fix this up myself.
+
+Regards,
+
+	Hans
+
+> 
+> Thanks!
+> 
+> 	Hans
+> 
+> On 10/08/2020 17:32, Sylwester Nawrocki wrote:
+>> The "idle" pinctrl state is optional as documented in the DT binding.
+>> The change introduced by the commit being reverted makes that pinctrl state
+>> mandatory and breaks initialization of the whole media driver, since the
+>> "idle" state is not specified in any mainline dts.
+>>
+>> This reverts commit 18ffec750578f7447c288647d7282c7d12b1d969 to fix
+>> the regression.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  drivers/media/platform/exynos4-is/media-dev.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+>> index 16dd660..9a57523 100644
+>> --- a/drivers/media/platform/exynos4-is/media-dev.c
+>> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+>> @@ -1268,11 +1268,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+>>  	if (IS_ERR(pctl->state_default))
+>>  		return PTR_ERR(pctl->state_default);
+>>  
+>> +	/* PINCTRL_STATE_IDLE is optional */
+>>  	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+>>  					PINCTRL_STATE_IDLE);
+>> -	if (IS_ERR(pctl->state_idle))
+>> -		return PTR_ERR(pctl->state_idle);
+>> -
+>>  	return 0;
+>>  }
+>>  
+>>
+> 
 
