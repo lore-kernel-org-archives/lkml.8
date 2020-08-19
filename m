@@ -2,73 +2,84 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC251C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC722078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985F52083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597867509;
+	bh=nHvO1R7E8eeOWRO2eO6KSxIkz2fBZXkK0YHHMyZRSqg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cDZ/F27Bv95WMgbirM9r/yarTg+IqhdPhCp7l1gaZLaAtnYQRIt8XmKhLbYfd1v2B
+	 i1BIflBmpfmdPkTjo/vOvsZVWCGJT5n6X8y0tvTV8tDGeilpzMRksN5O2kclrsmK8R
+	 Gsz+SS+zcSWMro0BeDTLmbtX0qfl9ukP3OlmK+xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHSUCa (ORCPT
+        id S1726919AbgHSUFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgHSUC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:02:27 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8337CC061757;
-        Wed, 19 Aug 2020 13:02:26 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 32B9F11E45763;
-        Wed, 19 Aug 2020 12:45:37 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 13:02:22 -0700 (PDT)
-Message-Id: <20200819.130222.1915954815957844234.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, ysato@users.sourceforge.jp, tony.luck@intel.com,
-        fenghua.yu@intel.com, geert@linux-m68k.org, ley.foon.tan@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        arnd@arndb.de, rostedt@goodmis.org, shorne@gmail.com,
-        peterz@infradead.org, jongk@linux-m68k.org, keescook@chromium.org,
-        green.hu@gmail.com, ebiederm@xmission.com,
-        mchehab+huawei@kernel.org, alexandre.chartre@oracle.com,
-        mhiramat@kernel.org, zanussi@kernel.org, yangx.jy@cn.fujitsu.com,
-        linux-doc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        sparclinux@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org, torvalds@linux-foundation.org,
-        hch@infradead.org, willy@infradead.org
-Subject: Re: [PATCH v2 06/11] sparc: switch to kernel_clone()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200819104655.436656-7-christian.brauner@ubuntu.com>
-References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
-        <20200819104655.436656-7-christian.brauner@ubuntu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
+        Wed, 19 Aug 2020 16:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgHSUFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 16:05:08 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C8ED2078D;
+        Wed, 19 Aug 2020 20:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597867507;
+        bh=nHvO1R7E8eeOWRO2eO6KSxIkz2fBZXkK0YHHMyZRSqg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Jl7umYqyumTDMpKdpoG92h4Mf6HK5k7wSr58hk2CAQAkROWv674x3zbTl44cuiiU2
+         kiuo+rWzm3cSdrH4mF5JCzQu5aOtfNX38MJUSEaKszfk7OTdVdZAY2vEbq9hFLJghq
+         e0Yvii9cPFQyhO+kGRr2qsnps2HDIjJsg+kUlAHQ=
+Date:   Wed, 19 Aug 2020 13:05:06 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Rafael Aquini <aquini@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-Id: <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
+In-Reply-To: <20200819195613.24269-1-hsiangkao@redhat.com>
+References: <20200819195613.24269-1-hsiangkao@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Aug 2020 12:45:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Wed, 19 Aug 2020 12:46:50 +0200
+On Thu, 20 Aug 2020 03:56:13 +0800 Gao Xiang <hsiangkao@redhat.com> wrote:
 
-> The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
-> The latter adheres to naming conventions for kernel internal syscall helpers.
+> SWP_FS doesn't mean the device is file-backed swap device,
+> which just means each writeback request should go through fs
+> by DIO. Or it'll just use extents added by .swap_activate(),
+> but it also works as file-backed swap device.
+
+This is very hard to understand :(
+
+> So in order to achieve the goal of the original patch,
+> SWP_BLKDEV should be used instead.
 > 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: sparclinux@vger.kernel.org
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> FS corruption can be observed with SSD device + XFS +
+> fragmented swapfile due to CONFIG_THP_SWAP=y.
+> 
+> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Why do you think it has taken three years to discover this?
+
+
