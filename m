@@ -2,661 +2,128 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2982FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1CBD20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597830760;
-	bh=5GS0RTIKrmx37wIM0DKdGb8tbjBjS+1xmPyQ42ARTpk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nh82oMTlH5zCrgHTSH3TD1U8VGGW4TAUdQXEXVowKqx39xCnWut16aCrGhhLlmjos
-	 gsC9OgVFfl7/hELLfChNuWv/fp+snv4r9EagWrlHJEruUU2JDKNOWcg+3+Vsxg+XQ2
-	 RpC+7ajZEH4brL+v61dbjMlvFJu1JkrY+/iHbaNk=
+	by mail.kernel.org (Postfix) with ESMTP id B405D20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YimcZxgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgHSJwi (ORCPT
+        id S1727829AbgHSJxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgHSJwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:52:19 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC6F20658;
-        Wed, 19 Aug 2020 09:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597830738;
-        bh=5GS0RTIKrmx37wIM0DKdGb8tbjBjS+1xmPyQ42ARTpk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgbjAHC4hB5YTIqg2LpbEhr2xUPaIarJz+Fu/vXXJYzZ7qTaRsKx0Mn9sALJfynaM
-         UhnE5+z8Y/Q7x/muTAO1aYMVOOBRA87UQhTfbjGj6WasWlsCvps4xvbrc7T+i4pEgH
-         pzl6+tG15NgvXLysKnHpDv/7O8EfU3VVfg/OrNUY=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k8KlT-00Eqpb-8n; Wed, 19 Aug 2020 11:52:15 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dts: hikey970-pinctrl.dtsi: add missing pinctrl settings
-Date:   Wed, 19 Aug 2020 11:52:14 +0200
-Message-Id: <7e0450b87df8862852669d179eb9579b64fcf815.1597830623.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597830623.git.mchehab+huawei@kernel.org>
-References: <cover.1597830623.git.mchehab+huawei@kernel.org>
+        Wed, 19 Aug 2020 05:53:20 -0400
+Received: from mailgw01.mediatek.com ([216.200.240.184]:41900 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgHSJxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:53:19 -0400
+X-UUID: 3d9f66e13b7e40ffa8561b343d60f52a-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kQXoKdKVpI5uaXNaEF7rubWxdg60fBjIip1atnVNx4w=;
+        b=YimcZxgGzFRVHMuCF/1++lAbAs6pvMpBzF+FP/5HaxoW8aRy22AvuDuJtdfkRtssyteU6W7g0oGHGy4cum6VcyXxyvq8TH49+SEocIl6Cc8ktX7mwNSz8exXyCCMzI9j16bcAtuvtEHfxQ2RWURmw/PefF6gWBvpaGwfdBg5XfQ=;
+X-UUID: 3d9f66e13b7e40ffa8561b343d60f52a-20200819
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1431888830; Wed, 19 Aug 2020 01:53:15 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 02:44:08 -0700
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 17:44:06 +0800
+Message-ID: <1597830248.31846.78.camel@mtksdccf07>
+Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
+ MT7531 switch
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>,
+        "dqfext@gmail.com" <dqfext@gmail.com>
+Date:   Wed, 19 Aug 2020 17:44:08 +0800
+In-Reply-To: <20200818160901.GF2330298@lunn.ch>
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+         <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+         <20200818160901.GF2330298@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several pinctrl settings that are missing at this
-DT file.
-
-Also, the entries are out of order.
-
-Add the missing bits, as they'll be required by the DRM driver - and
-probably by other drivers not upstreamed yet.
-
-Reorder the entres, adding the missing bits.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 548 +++++++++++++++++-
- 1 file changed, 537 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-index d456b0aa6f58..75723a1ad5ab 100644
---- a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-@@ -61,6 +61,153 @@ uart6_pmx_func: uart6_pmx_func {
- 					0x060 MUX_M1 /* UART6_TXD */
- 				>;
- 			};
-+
-+			i2c3_pmx_func: i2c3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x010 MUX_M1 /* I2C3_SCL */
-+					0x014 MUX_M1 /* I2C3_SDA */
-+				>;
-+			};
-+
-+			i2c4_pmx_func: i2c4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x03c MUX_M1 /* I2C4_SCL */
-+					0x040 MUX_M1 /* I2C4_SDA */
-+				>;
-+			};
-+
-+			cam0_rst_pmx_func: cam0_rst_pmx_func {
-+				pinctrl-single,pins = <
-+					0x714 MUX_M0 /* CAM0_RST */
-+				>;
-+			};
-+
-+			cam1_rst_pmx_func: cam1_rst_pmx_func {
-+				pinctrl-single,pins = <
-+					0x048 MUX_M0 /* CAM1_RST */
-+				>;
-+			};
-+
-+			cam0_pwd_n_pmx_func: cam0_pwd_n_pmx_func {
-+				pinctrl-single,pins = <
-+					0x098 MUX_M0 /* CAM0_PWD_N */
-+				>;
-+			};
-+
-+			cam1_pwd_n_pmx_func: cam1_pwd_n_pmx_func {
-+				pinctrl-single,pins = <
-+					0x044 MUX_M0 /* CAM1_PWD_N */
-+				>;
-+			};
-+
-+			isp0_pmx_func: isp0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x018 MUX_M1 /* ISP_CLK0 */
-+					0x024 MUX_M1 /* ISP_SCL0 */
-+					0x028 MUX_M1 /* ISP_SDA0 */
-+				>;
-+			};
-+
-+			isp1_pmx_func: isp1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x01c MUX_M1 /* ISP_CLK1 */
-+					0x02c MUX_M1 /* ISP_SCL1 */
-+					0x030 MUX_M1 /* ISP_SDA1 */
-+				>;
-+			};
-+		};
-+
-+		pmx1: pinmux@fff11000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xfff11000 0x0 0x73c>;
-+			#gpio-range-cells = <0x3>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 46 0>;
-+
-+			pwr_key_pmx_func: pwr_key_pmx_func {
-+				pinctrl-single,pins = <
-+					0x064 MUX_M0 /* GPIO_203 */
-+				>;
-+			};
-+
-+			pd_pmx_func: pd_pmx_func{
-+				pinctrl-single,pins = <
-+					0x080 MUX_M0 /* GPIO_221 */
-+				>;
-+			};
-+
-+			i2s2_pmx_func: i2s2_pmx_func {
-+			    pinctrl-single,pins = <
-+					0x050 MUX_M1 /* I2S2_DI */
-+					0x054 MUX_M1 /* I2S2_DO */
-+					0x058 MUX_M1 /* I2S2_XCLK */
-+					0x05c MUX_M1 /* I2S2_XFS */
-+			    >;
-+			};
-+
-+			spi0_pmx_func: spi0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x094 MUX_M1 /* SPI0_CLK */
-+					0x098 MUX_M1 /* SPI0_DI */
-+					0x09c MUX_M1 /* SPI0_DO */
-+					0x0a0 MUX_M1 /* SPI0_CS0_N */
-+				>;
-+			};
-+
-+			spi2_pmx_func: spi2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x710 MUX_M1 /* SPI2_CLK */
-+					0x714 MUX_M1 /* SPI2_DI */
-+					0x718 MUX_M1 /* SPI2_DO */
-+					0x71c MUX_M1 /* SPI2_CS0_N */
-+				>;
-+			};
-+
-+			spi3_pmx_func: spi3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x72c MUX_M1 /* SPI3_CLK */
-+					0x730 MUX_M1 /* SPI3_DI */
-+					0x734 MUX_M1 /* SPI3_DO */
-+					0x738 MUX_M1 /* SPI3_CS0_N */
-+				>;
-+			};
-+
-+			i2c0_pmx_func: i2c0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x020 MUX_M1 /* I2C0_SCL */
-+					0x024 MUX_M1 /* I2C0_SDA */
-+				>;
-+			};
-+
-+			i2c1_pmx_func: i2c1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x028 MUX_M1 /* I2C1_SCL */
-+					0x02c MUX_M1 /* I2C1_SDA */
-+				>;
-+			};
-+			i2c2_pmx_func: i2c2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x030 MUX_M1 /* I2C2_SCL */
-+					0x034 MUX_M1 /* I2C2_SDA */
-+				>;
-+			};
-+
-+			pcie_clkreq_pmx_func: pcie_clkreq_pmx_func {
-+				pinctrl-single,pins = <
-+					0x084 MUX_M1 /* PCIE0_CLKREQ_N */
-+				>;
-+			};
-+
-+			gpio185_pmx_func: gpio185_pmx_func {
-+				pinctrl-single,pins = <0x01C    0x1>;
-+			};
-+
-+			gpio185_pmx_idle: gpio185_pmx_idle {
-+				pinctrl-single,pins = <0x01C    0x0>;
-+			};
- 		};
- 
- 		pmx2: pinmux@e896c800 {
-@@ -184,6 +331,108 @@ PULL_UP
- 					DRIVE7_02MA DRIVE6_MASK
- 				>;
- 			};
-+
-+			i2c3_cfg_func: i2c3_cfg_func {
-+				pinctrl-single,pins = <
-+					0x014 0x0 /* I2C3_SCL */
-+					0x018 0x0 /* I2C3_SDA */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_04MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			i2c4_cfg_func: i2c4_cfg_func {
-+				pinctrl-single,pins = <
-+					0x040 0x0 /* I2C4_SCL */
-+					0x044 0x0 /* I2C4_SDA */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_04MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			cam0_rst_cfg_func: cam0_rst_cfg_func {
-+				pinctrl-single,pins = <
-+					0x714 0x0 /* CAM0_RST */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
-+
-+			cam1_rst_cfg_func: cam1_rst_cfg_func {
-+				pinctrl-single,pins = <
-+					0x04C 0x0 /* CAM1_RST */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
-+
-+			cam0_pwd_n_cfg_func: cam0_pwd_n_cfg_func {
-+				pinctrl-single,pins = <
-+					0x09C 0x0 /* CAM0_PWD_N */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
-+
-+			cam1_pwd_n_cfg_func: cam1_pwd_n_cfg_func {
-+				pinctrl-single,pins = <
-+					0x048 0x0 /* CAM1_PWD_N */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
-+
-+			isp0_cfg_func: isp0_cfg_func {
-+				pinctrl-single,pins = <
-+					0x01C 0x0 /* ISP_CLK0 */
-+					0x028 0x0 /* ISP_SCL0 */
-+					0x02C 0x0 /* ISP_SDA0 */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
-+
-+			isp1_cfg_func: isp1_cfg_func {
-+				pinctrl-single,pins = <
-+					0x020 0x0 /* ISP_CLK1 */
-+					0x030 0x0 /* ISP_SCL1 */
-+					0x034 0x0 /* ISP_SDA1 */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_04MA DRIVE6_MASK>;
-+			};
- 		};
- 
- 		pmx5: pinmux@fc182000 {
-@@ -338,22 +587,299 @@ DRIVE6_MASK
- 			};
- 		};
- 
--		pmx1: pinmux@fff11000 {
--			compatible = "pinctrl-single";
--			reg = <0x0 0xfff11000 0x0 0x73c>;
--			#gpio-range-cells = <0x3>;
--			#pinctrl-cells = <1>;
--			pinctrl-single,register-width = <0x20>;
--			pinctrl-single,function-mask = <0x7>;
--			/* pin base, nr pins & gpio function */
--			pinctrl-single,gpio-range = <&range 0 46 0>;
--		};
--
- 		pmx16: pinmux@fff11800 {
- 			compatible = "pinconf-single";
- 			reg = <0x0 0xfff11800 0x0 0x73c>;
- 			#pinctrl-cells = <1>;
- 			pinctrl-single,register-width = <0x20>;
-+
-+			pwr_key_cfg_func: pwr_key_cfg_func {
-+				pinctrl-single,pins = <
-+					0x090 0x0 /* GPIO_203 */
-+				>;
-+				pinctrl-single,bias-pulldown  = <PULL_DIS PULL_DOWN PULL_DIS  PULL_DOWN>;
-+				pinctrl-single,bias-pullup    = <PULL_UP  PULL_UP   PULL_DIS  PULL_UP>;
-+				pinctrl-single,drive-strength = <DRIVE7_02MA DRIVE6_MASK>;
-+			};
-+
-+			usb_cfg_func: usb_cfg_func {
-+				pinctrl-single,pins = <
-+					0x0AC 0x0 /* GPIO_221 */
-+				>;
-+				pinctrl-single,bias-pulldown  = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup    = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_02MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi0_cfg_func: spi0_cfg_func {
-+				pinctrl-single,pins = <
-+					0x0c8 0x0 /* SPI0_DI */
-+					0x0cc 0x0 /* SPI0_DO */
-+					0x0d0 0x0 /* SPI0_CS0_N */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_06MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi2_cfg_func: spi2_cfg_func {
-+				pinctrl-single,pins = <
-+					0x714 0x0 /* SPI2_DI */
-+					0x718 0x0 /* SPI2_DO */
-+					0x71c 0x0 /* SPI2_CS0_N */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_06MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi3_cfg_func: spi3_cfg_func {
-+				pinctrl-single,pins = <
-+					0x730 0x0 /* SPI3_DI */
-+					0x734 0x0 /* SPI3_DO */
-+					0x738 0x0 /* SPI3_CS0_N */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_06MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi0_clk_cfg_func: spi0_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x0c4 0x0 /* SPI0_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_10MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi2_clk_cfg_func: spi2_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x710 0x0 /* SPI2_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_10MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			spi3_clk_cfg_func: spi3_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x72c 0x0 /* SPI3_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_10MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			i2c0_cfg_func: i2c0_cfg_func {
-+				pinctrl-single,pins = <
-+					0x04c 0x0 /* I2C0_SCL */
-+					0x050 0x0 /* I2C0_SDA */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_04MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			i2c1_cfg_func: i2c1_cfg_func {
-+				pinctrl-single,pins = <
-+					0x054 0x0 /* I2C1_SCL */
-+					0x058 0x0 /* I2C1_SDA */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_04MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			i2c2_cfg_func: i2c2_cfg_func {
-+				pinctrl-single,pins = <
-+					0x05c 0x0 /* I2C2_SCL */
-+					0x060 0x0 /* I2C2_SDA */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_04MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			pcie_clkreq_cfg_func: pcie_clkreq_cfg_func {
-+				pinctrl-single,pins = <
-+					0x0b0 0x0
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_06MA DRIVE6_MASK
-+				>;
-+			};
-+			i2s2_cfg_func: i2s2_cfg_func {
-+				pinctrl-single,pins = <
-+					0x07c 0x0 /* I2S2_DI */
-+					0x080 0x0 /* I2S2_DO */
-+					0x084 0x0 /* I2S2_XCLK */
-+					0x088 0x0 /* I2S2_XFS */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE7_02MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			gpio185_cfg_func: gpio185_cfg_func {
-+				pinctrl-single,pins = <0x048  0>;
-+				pinctrl-single,bias-pulldown = <0 2 0 2>;
-+				pinctrl-single,bias-pullup = <0 1 0 1>;
-+				pinctrl-single,drive-strength = <0x00 0x70>;
-+				pinctrl-single,slew-rate = <0x0 0x80>;
-+			};
-+
-+			gpio185_cfg_idle: gpio185_cfg_idle {
-+				pinctrl-single,pins = <0x048  0>;
-+				pinctrl-single,bias-pulldown = <2 2 0 2>;
-+				pinctrl-single,bias-pullup = <0 1 0 1>;
-+				pinctrl-single,drive-strength = <0x00 0x70>;
-+				pinctrl-single,slew-rate = <0x0 0x80>;
-+			};
- 		};
- 	};
- };
--- 
-2.26.2
+T24gV2VkLCAyMDIwLTA4LTE5IGF0IDAwOjA5ICswODAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+T24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMDM6MTQ6MTBQTSArMDgwMCwgTGFuZGVuIENoYW8gd3Jv
+dGU6DQo+ID4gQWRkIG5ldyBzdXBwb3J0IGZvciBNVDc1MzE6DQo+ID4gDQo+ID4gTVQ3NTMxIGlz
+IHRoZSBuZXh0IGdlbmVyYXRpb24gb2YgTVQ3NTMwLiBJdCBpcyBhbHNvIGEgNy1wb3J0cyBzd2l0
+Y2ggd2l0aA0KPiA+IDUgZ2lnYSBlbWJlZGRlZCBwaHlzLCAyIGNwdSBwb3J0cywgYW5kIHRoZSBz
+YW1lIE1BQyBsb2dpYyBvZiBNVDc1MzAuIENwdQ0KPiA+IHBvcnQgNiBvbmx5IHN1cHBvcnRzIFNH
+TUlJIGludGVyZmFjZS4gQ3B1IHBvcnQgNSBzdXBwb3J0cyBlaXRoZXIgUkdNSUkNCj4gPiBvciBT
+R01JSSBpbiBkaWZmZXJlbnQgSFcgc2t1LiBEdWUgdG8gU0dNSUkgaW50ZXJmYWNlIHN1cHBvcnQs
+IHBsbCwgYW5kDQo+ID4gcGFkIHNldHRpbmcgYXJlIGRpZmZlcmVudCBmcm9tIE1UNzUzMC4gVGhp
+cyBwYXRjaCBhZGRzIGRpZmZlcmVudCBpbml0aWFsDQo+ID4gc2V0dGluZywgYW5kIFNHTUlJIHBo
+eWxpbmsgaGFuZGxlcnMgb2YgTVQ3NTMxLg0KPiA+IA0KPiA+IE1UNzUzMSBTR01JSSBpbnRlcmZh
+Y2UgY2FuIGJlIGNvbmZpZ3VyZWQgaW4gZm9sbG93aW5nIG1vZGU6DQo+ID4gLSAnU0dNSUkgQU4g
+bW9kZScgd2l0aCBpbi1iYW5kIG5lZ290aWF0aW9uIGNhcGFiaWxpdHkNCj4gPiAgICAgd2hpY2gg
+aXMgY29tcGF0aWJsZSB3aXRoIFBIWV9JTlRFUkZBQ0VfTU9ERV9TR01JSS4NCj4gPiAtICdTR01J
+SSBmb3JjZSBtb2RlJyB3aXRob3V0IGluLWJuYWQgbmVnb3RpYXRpb24NCj4gDQo+IGJhbmQNClNv
+cnJ5LCBJJ2xsIGZpeCBpdC4NCj4gDQo+ID4gICAgIHdoaWNoIGlzIGNvbXBhdGlibGUgd2l0aCAx
+MEIvOEIgZW5jb2Rpbmcgb2YNCj4gPiAgICAgUEhZX0lOVEVSRkFDRV9NT0RFXzEwMDBCQVNFWCB3
+aXRoIGZpeGVkIGZ1bGwtZHVwbGV4IGFuZCBmaXhlZCBwYXVzZS4NCj4gPiAtIDIuNSB0aW1lcyBm
+YXN0ZXIgY2xvY2tlZCAnU0dNSUkgZm9yY2UgbW9kZScgd2l0aG91dCBpbi1ibmFkIG5lZ290aWF0
+aW9uDQo+IA0KPiBiYW5kDQpTb3JyeSwgSSdsbCBmaXggaXQuDQo+IA0KPiA+ICtzdGF0aWMgaW50
+IG10NzUzMV9yZ21paV9zZXR1cChzdHJ1Y3QgbXQ3NTMwX3ByaXYgKnByaXYsIHUzMiBwb3J0LA0K
+PiA+ICsJCQkgICAgICBwaHlfaW50ZXJmYWNlX3QgaW50ZXJmYWNlKQ0KPiA+ICt7DQo+ID4gKwl1
+MzIgdmFsOw0KPiA+ICsNCj4gPiArCWlmICghbXQ3NTMxX2lzX3JnbWlpX3BvcnQocHJpdiwgcG9y
+dCkpIHsNCj4gPiArCQlkZXZfZXJyKHByaXYtPmRldiwgIlJHTUlJIG1vZGUgaXMgbm90IGF2YWls
+YWJsZSBmb3IgcG9ydCAlZFxuIiwNCj4gPiArCQkJcG9ydCk7DQo+ID4gKwkJcmV0dXJuIC1FSU5W
+QUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJdmFsID0gbXQ3NTMwX3JlYWQocHJpdiwgTVQ3NTMx
+X0NMS0dFTl9DVFJMKTsNCj4gPiArCXZhbCB8PSBHUF9DTEtfRU47DQo+ID4gKwl2YWwgJj0gfkdQ
+X01PREVfTUFTSzsNCj4gPiArCXZhbCB8PSBHUF9NT0RFKE1UNzUzMV9HUF9NT0RFX1JHTUlJKTsN
+Cj4gPiArCXZhbCAmPSB+KFRYQ0xLX05PX1JFVkVSU0UgfCBSWENMS19OT19ERUxBWSk7DQo+ID4g
+Kwlzd2l0Y2ggKGludGVyZmFjZSkgew0KPiA+ICsJY2FzZSBQSFlfSU5URVJGQUNFX01PREVfUkdN
+SUk6DQo+ID4gKwkJdmFsIHw9IFRYQ0xLX05PX1JFVkVSU0U7DQo+ID4gKwkJdmFsIHw9IFJYQ0xL
+X05PX0RFTEFZOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBQSFlfSU5URVJGQUNFX01PREVf
+UkdNSUlfUlhJRDoNCj4gPiArCQl2YWwgfD0gVFhDTEtfTk9fUkVWRVJTRTsNCj4gPiArCQlicmVh
+azsNCj4gPiArCWNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJX1RYSUQ6DQo+ID4gKwkJdmFs
+IHw9IFJYQ0xLX05PX0RFTEFZOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBQSFlfSU5URVJG
+QUNFX01PREVfUkdNSUlfSUQ6DQo+ID4gKwkJYnJlYWs7DQo+ID4gKwlkZWZhdWx0Og0KPiA+ICsJ
+CXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiANCj4gWW91IG5lZWQgdG8gYmUgY2FyZWZ1bCBo
+ZXJlLiBJZiB0aGUgTUFDIGlzIGRvaW5nIHRoZSBSR01JSSBkZWxheXMsIHlvdQ0KPiBuZWVkIHRv
+IGVuc3VyZSB0aGUgUEhZIGlzIG5vdC4gV2hhdCBpbnRlcmZhY2UgbW9kZSBpcyBwYXNzZWQgdG8g
+dGhlDQo+IFBIWT8NCkhpIEFuZHJldywNCg0KbXQ3NTMxIFJHTUlJIHBvcnQgaXMgYSBNQUMtb25s
+eSBwb3J0LCBpdCBjYW4gYmUgY29ubmVjdGVkIHRvIENQVSBNQUMgb3INCmV4dGVybmFsIHBoeS4g
+SW4gYnBpLXI2NCBib2FyZCwgbXQ3NTMxIFJHTUlJIGlzIGNvbm5lY3RlZCB0byBDUFUgTUFDLCBz
+bw0KSSB0ZW5kIHRvIGltcGxlbWVudCBSR01JSSBsb2dpYyBmb3IgdXNlIGNhc2Ugb2YgYnBpLXI2
+NC4NCg0KSW4gZ2VuZXJhbCwgYWNjb3JkaW5nIHRvIHBoeS5yc3QsIFJHTUlJIGRlbGF5IHNob3Vs
+ZCBiZSBkb25lIGJ5IHBoeSwgYnV0DQpzb21lIE1vQ0EgcHJvZHVjdCBuZWVkIFJHTUlJIGRlbGF5
+IGluIE1BQy4gVGhlc2UgdHdvIHJlcXVpcmVtZW50cw0KY29uZmxpY3QuIElzIHRoZXJlIGFueSBz
+dWdnZXN0aW9uIHRvIHNvbHZlIHRoZSBjb25mbGljdD8NCg0KSWYgbXQ3NTMxIFJHTUlJIGltcGxl
+bWVudGF0aW9uIG5lZWRzIHRvIHNhdGlzZnkgZWl0aGVyIHBoeS5yc3Qgb3INCnNwZWNpYWwgTW9D
+QSBwcm9kdWN0LCBJIHdvdWxkIGxpa2UgdG8gc2F0aXNmeSBwaHkucnN0IGFuZCByZW1vdmUgTUFD
+DQpSR01JSSBkZWxheSBpbiB2My4gRm9yIHNwZWNpYWwgcHJvZHVjdCBuZWVkcyBNQUMgUkdNSUkg
+ZGVsYXksIHRoaXMgcGF0Y2gNCmNhbiBiZSB1c2VkIGluIGl0cyBsb2NhbCBjb2RlYmFzZS4NCg0K
+TGFuZGVuDQo+IA0KPiAJQW5kcmV3DQoNCg==
 
