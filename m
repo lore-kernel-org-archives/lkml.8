@@ -2,231 +2,57 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF66C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4582DC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E80C206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269C72076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgHSKtL (ORCPT
+        id S1728033AbgHSKtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:49:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54011 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgHSKrk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:47:40 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8Ld1-0006IE-W5; Wed, 19 Aug 2020 10:47:36 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>
-Subject: [PATCH v2 09/11] kgdbts: switch to kernel_clone()
-Date:   Wed, 19 Aug 2020 12:46:53 +0200
-Message-Id: <20200819104655.436656-10-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819104655.436656-1-christian.brauner@ubuntu.com>
-References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+        Wed, 19 Aug 2020 06:49:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:37194 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727019AbgHSKtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:49:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2F14E68BEB; Wed, 19 Aug 2020 12:49:16 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 12:49:15 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Javier Gonzalez <javier@javigon.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Kanchan Joshi <joshi.k@samsung.com>, kbusch@kernel.org,
+        Damien.LeMoal@wdc.com, axboe@kernel.dk, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        johannes.thumshirn@wdc.com, Nitesh Shetty <nj.shetty@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+Message-ID: <20200819104915.GA3153@lst.de>
+References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com> <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de> <20200818095033.h6ybdwiq3ljagl5a@mpHalley.local> <20200818155004.GA26688@lst.de> <20200818180428.obipue6adpqqpwjj@MacBook-Pro.localdomain> <20200819074035.GA21991@lst.de> <20200819083353.rwblagiesocfcq7i@mpHalley.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819083353.rwblagiesocfcq7i@mpHalley.local>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
-The latter adheres to naming conventions for kernel internal syscall helpers.
+On Wed, Aug 19, 2020 at 10:33:53AM +0200, Javier Gonzalez wrote:
+> I would ask you to reconsider this position. I have a hard time
+> understanding how zone append emulation is a good idea in SCSI and not
+> in NVMe, when there is no performance penalty.
 
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jason Wessel <jason.wessel@windriver.com>
-Cc: kgdb-bugreport@lists.sourceforge.net
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-unchanged
----
- drivers/misc/kgdbts.c | 48 +++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index d5d2af4d10e6..945701bce553 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -33,16 +33,16 @@
-  * You can also specify optional tests:
-  * N## = Go to sleep with interrupts of for ## seconds
-  *       to test the HW NMI watchdog
-- * F## = Break at do_fork for ## iterations
-+ * F## = Break at kernel_clone for ## iterations
-  * S## = Break at sys_open for ## iterations
-  * I## = Run the single step test ## iterations
-  *
-- * NOTE: that the do_fork and sys_open tests are mutually exclusive.
-+ * NOTE: that the kernel_clone and sys_open tests are mutually exclusive.
-  *
-  * To invoke the kgdb test suite from boot you use a kernel start
-  * argument as follows:
-  * 	kgdbts=V1 kgdbwait
-- * Or if you wanted to perform the NMI test for 6 seconds and do_fork
-+ * Or if you wanted to perform the NMI test for 6 seconds and kernel_clone
-  * test for 100 forks, you could use:
-  * 	kgdbts=V1N6F100 kgdbwait
-  *
-@@ -74,7 +74,7 @@
-  * echo kgdbts=V1S10000 > /sys/module/kgdbts/parameters/kgdbts
-  * fg # and hit control-c
-  * fg # and hit control-c
-- * ## This tests break points on do_fork
-+ * ## This tests break points on kernel_clone
-  * while [ 1 ] ; do date > /dev/null ; done &
-  * while [ 1 ] ; do date > /dev/null ; done &
-  * echo kgdbts=V1F1000 > /sys/module/kgdbts/parameters/kgdbts
-@@ -209,8 +209,8 @@ static unsigned long lookup_addr(char *arg)
- 		addr = (unsigned long)kgdbts_break_test;
- 	else if (!strcmp(arg, "sys_open"))
- 		addr = (unsigned long)do_sys_open;
--	else if (!strcmp(arg, "do_fork"))
--		addr = (unsigned long)_do_fork;
-+	else if (!strcmp(arg, "kernel_clone"))
-+		addr = (unsigned long)kernel_clone;
- 	else if (!strcmp(arg, "hw_break_val"))
- 		addr = (unsigned long)&hw_break_val;
- 	addr = (unsigned long) dereference_function_descriptor((void *)addr);
-@@ -310,7 +310,7 @@ static int check_and_rewind_pc(char *put_str, char *arg)
- 
- 	if (arch_needs_sstep_emulation && sstep_addr &&
- 	    ip + offset == sstep_addr &&
--	    ((!strcmp(arg, "sys_open") || !strcmp(arg, "do_fork")))) {
-+	    ((!strcmp(arg, "sys_open") || !strcmp(arg, "kernel_clone")))) {
- 		/* This is special case for emulated single step */
- 		v2printk("Emul: rewind hit single step bp\n");
- 		restart_from_top_after_write = 1;
-@@ -596,19 +596,19 @@ static struct test_struct singlestep_break_test[] = {
- };
- 
- /*
-- * Test for hitting a breakpoint at do_fork for what ever the number
-+ * Test for hitting a breakpoint at kernel_clone for what ever the number
-  * of iterations required by the variable repeat_test.
-  */
--static struct test_struct do_fork_test[] = {
-+static struct test_struct do_kernel_clone_test[] = {
- 	{ "?", "S0*" }, /* Clear break points */
--	{ "do_fork", "OK", sw_break, }, /* set sw breakpoint */
-+	{ "kernel_clone", "OK", sw_break, }, /* set sw breakpoint */
- 	{ "c", "T0*", NULL, get_thread_id_continue }, /* Continue */
--	{ "do_fork", "OK", sw_rem_break }, /*remove breakpoint */
--	{ "g", "do_fork", NULL, check_and_rewind_pc }, /* check location */
-+	{ "kernel_clone", "OK", sw_rem_break }, /*remove breakpoint */
-+	{ "g", "kernel_clone", NULL, check_and_rewind_pc }, /* check location */
- 	{ "write", "OK", write_regs, emul_reset }, /* Write registers */
- 	{ "s", "T0*", emul_sstep_get, emul_sstep_put }, /* Single step */
--	{ "g", "do_fork", NULL, check_single_step },
--	{ "do_fork", "OK", sw_break, }, /* set sw breakpoint */
-+	{ "g", "kernel_clone", NULL, check_single_step },
-+	{ "kernel_clone", "OK", sw_break, }, /* set sw breakpoint */
- 	{ "7", "T0*", skip_back_repeat_test }, /* Loop based on repeat_test */
- 	{ "D", "OK", NULL, final_ack_set }, /* detach and unregister I/O */
- 	{ "", "", get_cont_catch, put_cont_catch },
-@@ -935,11 +935,11 @@ static void run_bad_read_test(void)
- 	kgdb_breakpoint();
- }
- 
--static void run_do_fork_test(void)
-+static void run_kernel_clone_test(void)
- {
- 	init_simple_test();
--	ts.tst = do_fork_test;
--	ts.name = "do_fork_test";
-+	ts.tst = do_kernel_clone_test;
-+	ts.name = "do_kernel_clone_test";
- 	/* Activate test with initial breakpoint */
- 	kgdb_breakpoint();
- }
-@@ -967,7 +967,7 @@ static void run_singlestep_break_test(void)
- static void kgdbts_run_tests(void)
- {
- 	char *ptr;
--	int fork_test = 0;
-+	int clone_test = 0;
- 	int do_sys_open_test = 0;
- 	int sstep_test = 1000;
- 	int nmi_sleep = 0;
-@@ -981,7 +981,7 @@ static void kgdbts_run_tests(void)
- 
- 	ptr = strchr(config, 'F');
- 	if (ptr)
--		fork_test = simple_strtol(ptr + 1, NULL, 10);
-+		clone_test = simple_strtol(ptr + 1, NULL, 10);
- 	ptr = strchr(config, 'S');
- 	if (ptr)
- 		do_sys_open_test = simple_strtol(ptr + 1, NULL, 10);
-@@ -1025,16 +1025,16 @@ static void kgdbts_run_tests(void)
- 		run_nmi_sleep_test(nmi_sleep);
- 	}
- 
--	/* If the do_fork test is run it will be the last test that is
-+	/* If the kernel_clone test is run it will be the last test that is
- 	 * executed because a kernel thread will be spawned at the very
- 	 * end to unregister the debug hooks.
- 	 */
--	if (fork_test) {
--		repeat_test = fork_test;
--		printk(KERN_INFO "kgdbts:RUN do_fork for %i breakpoints\n",
-+	if (clone_test) {
-+		repeat_test = clone_test;
-+		printk(KERN_INFO "kgdbts:RUN kernel_clone for %i breakpoints\n",
- 			repeat_test);
- 		kthread_run(kgdbts_unreg_thread, NULL, "kgdbts_unreg");
--		run_do_fork_test();
-+		run_kernel_clone_test();
- 		return;
- 	}
- 
--- 
-2.28.0
+Per the numbers on btrfs and zonefs numbers zone append emulation is
+faster than using serialized writes, but also way slower than native
+zone append.  Zone append emulation for SCSI is the way to bring
+support for pre-existing standards into the brave new world.  Not
+requiring Zone Append in a standard designed around it because of
+bowing down to last minute political interventions in the standards
+committee is shooting ourselves in the foot.
 
