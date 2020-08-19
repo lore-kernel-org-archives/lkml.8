@@ -2,116 +2,216 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA15C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F372C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CFE20639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EAC20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BUM4YlZD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwoQKU4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgHSOWA (ORCPT
+        id S1728146AbgHSOWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
+        Wed, 19 Aug 2020 10:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgHSOV6 (ORCPT
+        with ESMTP id S1726560AbgHSOWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:21:58 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A798C061757;
-        Wed, 19 Aug 2020 07:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OM9WQWb562JnQ8J9qmB6TNE93wwhfVi68/R72R/S3h0=; b=BUM4YlZD5Yzmb8kaTUCuZ6lBKL
-        sDkrBxK8WowYEFSqfVTPPZMnOn8zTD2mLHohwdxCiIDp92t/Gs0Da+jg9LgTXbCOXXmH5vXocflo3
-        4cQrotNxKJ994S1WlTq8sVi+GhSNXq9fBNY0FmxCEw/pqL6a02cINpbs3s9kGcVAJugcl4u0QfvcG
-        Jzp0W4//UkQV81HYqI5VCVAaQc7hnJRt72wcDM+htFYNRFfwXOWkFmcGaVlBcHM9+1sL+w1xc/G8r
-        xEIBJQ+DOcVJUNPf5PqDb405kHSlQ8HXtH8busyTSb3Uk68tXQwhMgVzlZRwNY44I5zS0U+tvFsrZ
-        kFnJgdlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8Oy9-0004od-0T; Wed, 19 Aug 2020 14:21:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C297F3003E1;
-        Wed, 19 Aug 2020 16:21:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB49F20D805B3; Wed, 19 Aug 2020 16:21:34 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 16:21:34 +0200
-From:   peterz@infradead.org
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
- preemption
-Message-ID: <20200819142134.GD2674@hirez.programming.kicks-ass.net>
-References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
- <20200819131507.GC2674@hirez.programming.kicks-ass.net>
- <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
+        Wed, 19 Aug 2020 10:22:49 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25A2C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:22:48 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i6so18252202edy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uEY7dk9y/9x4HcaWjwFAfwvm+T0doGz7atsT11F+few=;
+        b=MwoQKU4RRVGBwswghQT2kEA4PWtzNJ9PP0GlvGH+VtAzrSvBnEW2dUpr0fs6tqB36t
+         NEatNz3nTo9Srl8JZAX9oVp9pc5TQLgcK+vTRNeNePaaHI1s5H4G84GiGqxdAJ9X51ZU
+         9RjLZl32ILMLyADH9W9JtyN4rfe/+nXKgJFvs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uEY7dk9y/9x4HcaWjwFAfwvm+T0doGz7atsT11F+few=;
+        b=nxJmMAHa+GLc27m1S6crodUJx27tB0Sz9i5xj9mttS1FRz4stLwi+7bDhDPp7TNx3W
+         ewWAOQXGU/xV63S6pyiWM3q6jtYlWnuoC3Yqz/4P6xrZZKLum/SdPzIZ2TFqRcZLUlPj
+         P1k0xfV6Qr10FTRWiBkLvzNo8c06EIvdRv1GA7fLrHnBJpzEvDTgxN35V3VzsM/wuy1J
+         I8bP1sLzrztqmQzv/8rD6zehqZp8P1k+NaeqWtqKZYn+uJ/2iMsLl7VGdq/jY7sJ/NDp
+         KVpsRMp+q9h25EUArki7kiIha75t44Qtth7LEDzyOswFROx/uGGu6EbVDe6r+vXtvtob
+         bNCA==
+X-Gm-Message-State: AOAM532oGO7vPyeL75ZbpYZzpouSnXtlHzFf5pmnhGDK3UUKaYJKBfp2
+        uW1gKsYOb3xqJdx3gwZJL8l1xRAsn+wb8w==
+X-Google-Smtp-Source: ABdhPJzAz0HujvBRY3edLElbhCUcGX8Je6zS+Xra1cm8VzJH92uTLmHxdvcdqLfT0dlNns64AT44MQ==
+X-Received: by 2002:a05:6402:1457:: with SMTP id d23mr24894960edx.149.1597846967511;
+        Wed, 19 Aug 2020 07:22:47 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id i5sm18700973ejg.121.2020.08.19.07.22.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 07:22:47 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id r4so21690368wrx.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:22:46 -0700 (PDT)
+X-Received: by 2002:adf:ec45:: with SMTP id w5mr25495420wrn.415.1597846966201;
+ Wed, 19 Aug 2020 07:22:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de>
+ <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
+ <62e4f4fc-c8a5-3ee8-c576-fe7178cb4356@arm.com> <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com>
+ <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
+In-Reply-To: <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 19 Aug 2020 16:22:29 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5DrEq7UVi_aH=-DO4xYC3SbjJ3m1aQSbt=8THL-W+orMQ@mail.gmail.com>
+Message-ID: <CAAFQd5DrEq7UVi_aH=-DO4xYC3SbjJ3m1aQSbt=8THL-W+orMQ@mail.gmail.com>
+Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
+        linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org, Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:33:20PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-08-19 15:15:07 [+0200], peterz@infradead.org wrote:
+On Wed, Aug 19, 2020 at 4:07 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-08-19 13:49, Tomasz Figa wrote:
+> > On Wed, Aug 19, 2020 at 1:51 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> >>
+> >> Hi Tomasz,
+> >>
+> >> On 2020-08-19 12:16, Tomasz Figa wrote:
+> >>> Hi Christoph,
+> >>>
+> >>> On Wed, Aug 19, 2020 at 8:56 AM Christoph Hellwig <hch@lst.de> wrote:
+> >>>>
+> >>>> The V4L2-FLAG-MEMORY-NON-CONSISTENT flag is entirely unused,
+> >>>
+> >>> Could you explain what makes you think it's unused? It's a feature of
+> >>> the UAPI generally supported by the videobuf2 framework and relied on
+> >>> by Chromium OS to get any kind of reasonable performance when
+> >>> accessing V4L2 buffers in the userspace.
+> >>>
+> >>>> and causes
+> >>>> weird gymanstics with the DMA_ATTR_NON_CONSISTENT flag, which is
+> >>>> unimplemented except on PARISC and some MIPS configs, and about to be
+> >>>> removed.
+> >>>
+> >>> It is implemented by the generic DMA mapping layer [1], which is used
+> >>> by a number of architectures including ARM64 and supposed to be used
+> >>> by new architectures going forward.
+> >>
+> >> AFAICS all that V4L2_FLAG_MEMORY_NON_CONSISTENT does is end up
+> >> controling whether DMA_ATTR_NON_CONSISTENT is added to vb2_queue::dma_attrs.
+> >>
+> >> Please can you point to where DMA_ATTR_NON_CONSISTENT does anything at
+> >> all on arm64?
+> >>
+> >
+> > With the default config it doesn't, but with
+> > CONFIG_DMA_NONCOHERENT_CACHE_SYNC enabled it makes dma_pgprot() keep
+> > the pgprot value as is, without enforcing coherence attributes.
+>
+> How active are the PA-RISC and MIPS ports of Chromium OS?
 
-> If you want to optimize further, we could move PF_IO_WORKER to an lower
-> bit. x86 can test for both via
-> (gcc-10)
-> |         testl   $536870944, 44(%rbp)    #, _11->flags
-> |         jne     .L1635  #,
-> 
-> (clang-9)
-> |         testl   $536870944, 44(%rbx)    # imm = 0x20000020
-> |         je      .LBB112_6
-> 
-> 
-> but ARM can't and does
-> |          ldr     r1, [r5, #16]   @ tsk_3->flags, tsk_3->flags
-> |         mov     r2, #32 @ tmp157,
-> |         movt    r2, 8192        @ tmp157,
-> |         tst     r2, r1  @ tmp157, tsk_3->flags
-> |         beq     .L998           @,
-> 
-> same ARM64
-> |         ldr     w0, [x20, 60]   //, _11->flags
-> |         and     w0, w0, 1073741792      // tmp117, _11->flags,
-> |         and     w0, w0, -536870849      // tmp117, tmp117,
-> |         cbnz    w0, .L453       // tmp117,
-> 
-> using 0x10 for PF_IO_WORKER instead will turn this into:
-> |         ldr     w0, [x20, 60]   //, _11->flags
-> |         tst     w0, 48  // _11->flags,
-> |         bne     .L453           //,
-> 
-> ARM:
-> |         ldr     r2, [r5, #16]   @ tsk_3->flags, tsk_3->flags
-> |         tst     r2, #48 @ tsk_3->flags,
-> |         beq     .L998           @,
+Not active. We enable CONFIG_DMA_NONCOHERENT_CACHE_SYNC for ARM64,
+given the directions received back in April when discussing the
+noncoherent memory functionality on the mailing list in the thread I
+pointed out in my previous message and no clarification on why it is
+disabled for ARM64 in upstream, despite making several attempts to get
+some.
 
-Good point, AFAICT there's a number of low bits still open (and we can
-shuffle if we have to), so sure put a patch in to that effect while
-you're at it.
+>
+> Hacking CONFIG_DMA_NONCOHERENT_CACHE_SYNC into an architecture that
+> doesn't provide dma_cache_sync() is wrong, since at worst it may break
+> other drivers. If downstream is wildly misusing an API then so be it,
+> but it's hardly a strong basis for an upstream argument.
 
+I guess it means that we're wildly misusing the API, but it still does
+work. Could you explain how it could break other drivers?
 
+>
+> >> Also, I posit that videobuf2 is not actually relying on
+> >> DMA_ATTR_NON_CONSISTENT anyway, since it's clearly not using it properly:
+> >>
+> >> "By using this API, you are guaranteeing to the platform
+> >> that you have all the correct and necessary sync points for this memory
+> >> in the driver should it choose to return non-consistent memory."
+> >>
+> >> $ git grep dma_cache_sync drivers/media
+> >> $
+> >
+> > AFAIK dma_cache_sync() isn't the only way to perform the cache
+> > synchronization. The earlier patch series that I reviewed relied on
+> > dma_get_sgtable() and then dma_sync_sg_*() (which existed in the
+> > vb2-dc since forever [1]). However, it looks like with the final code
+> > the sgtable isn't acquired and the synchronization isn't happening, so
+> > you have a point.
+>
+> Using the streaming sync calls on coherent allocations has also always
+> been wrong per the API, regardless of the bodies of code that have
+> happened to get away with it for so long.
+>
+> > FWIW, I asked back in time what the plan is for non-coherent
+> > allocations and it seemed like DMA_ATTR_NON_CONSISTENT and
+> > dma_sync_*() was supposed to be the right thing to go with. [2] The
+> > same thread also explains why dma_alloc_pages() isn't suitable for the
+> > users of dma_alloc_attrs() and DMA_ATTR_NON_CONSISTENT.
+>
+> AFAICS even back then Christoph was implying getting rid of
+> NON_CONSISTENT and *replacing* it with something streaming-API-based -
+
+That's not how I read his reply from the thread I pointed to, but that
+might of course be my misunderstanding.
+
+> i.e. this series - not encouraging mixing the existing APIs. It doesn't
+> seem impossible to implement a remapping version of this new
+> dma_alloc_pages() for IOMMU-backed ops if it's really warranted
+> (although at that point it seems like "non-coherent" vb2-dc starts to
+> have significant conceptual overlap with vb2-sg).
+
+No, there is no overlap between vb2-dc and vb2-sg. They differ on
+another level - the former is to be used by devices without
+scatter-gather or internal mapping capabilities and gives the driver a
+single DMA address for the whole buffer, regardless of whether it's
+IOVA-contiguous (for devices behind an IOMMU) or physically contiguous
+(for the others), while the latter gives the driver an sgtable, which
+of course may be DMA-contiguous internally, but doesn't have to and
+usually isn't. This model makes it possible to hide the SoC
+implementation details from particular drivers, since those are very
+often reused on many SoCs which differ in the availability of IOMMU,
+DMA addressing restrictions and so on.
+
+Best regards,
+Tomasz
