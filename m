@@ -2,88 +2,67 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA1BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BBCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABAD20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2552920657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHSDDK convert rfc822-to-8bit (ORCPT
+        id S1727096AbgHSDEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:03:10 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:59579 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726605AbgHSDDJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:03:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U6BcqGk_1597806184;
-Received: from 30.27.116.4(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0U6BcqGk_1597806184)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 19 Aug 2020 11:03:05 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 0/3] Build ORC fast lookup table in scripts/sorttable
- tool
-From:   changhuaixin <changhuaixin@linux.alibaba.com>
-In-Reply-To: <20200807041802.18639-1-changhuaixin@linux.alibaba.com>
-Date:   Wed, 19 Aug 2020 11:03:04 +0800
-Cc:     bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
-        yamada.masahiro@socionext.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C2FA85AC-12FD-4FC3-A955-31F0441D81CC@linux.alibaba.com>
-References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
- <20200807041802.18639-1-changhuaixin@linux.alibaba.com>
-To:     Ingo Molnar <mingo@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 18 Aug 2020 23:04:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9842 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726605AbgHSDD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 23:03:59 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 45DD7575E8C06477F0A8;
+        Wed, 19 Aug 2020 11:03:58 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 11:03:56 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] drm/nouveau/svm: remove duplicate include
+Date:   Wed, 19 Aug 2020 11:01:48 +0800
+Message-ID: <20200819030148.27411-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi，Ingo
+Remove nvif/if000c.h which is included more than once
 
-This patchset reverts the hacks from patchset v1. Also it includes some other fixes upon v1 as suggested.
-Will you please have a look at this?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The previous links are:
-https://lore.kernel.org/lkml/20200724135531.GB648324@gmail.com/
-
-Thanks,
-huaixin
-
-> On Aug 7, 2020, at 12:17 PM, Huaixin Chang <changhuaixin@linux.alibaba.com> wrote:
-> 
-> Move building of fast lookup table from boot to sorttable tool. This saves us
-> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores. It
-> adds a little more than 7ms to boot time when testing on the same CPU.
-> 
-> Changelog v2:
-> 1. Write .orc_lookup section header via objtool
-> 2. Move two ORC lookup table macro from orc_lookup.h into orc_types.h
-> 3. Spell 'ORC' in capitalized fashion
-> 
-> Huaixin Chang (3):
->  objtool: Write .orc_lookup section header
->  scripts/sorttable: Build ORC fast lookup table via sorttable tool
->  x86/unwind/orc: Simplify unwind_init() for x86 boot
-> 
-> arch/x86/include/asm/orc_lookup.h      | 16 ------
-> arch/x86/include/asm/orc_types.h       | 16 ++++++
-> arch/x86/kernel/unwind_orc.c           | 41 +--------------
-> arch/x86/kernel/vmlinux.lds.S          |  2 +-
-> scripts/sorttable.h                    | 96 +++++++++++++++++++++++++++++++---
-> tools/arch/x86/include/asm/orc_types.h | 16 ++++++
-> tools/objtool/orc_gen.c                |  4 ++
-> 7 files changed, 128 insertions(+), 63 deletions(-)
-> 
-> -- 
-> 2.14.4.44.g2045bb6
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index 4e8112fde3e6..897b2dbee84e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -33,7 +33,6 @@
+ #include <nvif/if000c.h>
+ #include <nvif/if500b.h>
+ #include <nvif/if900b.h>
+-#include <nvif/if000c.h>
+ 
+ #include <nvhw/class/cla0b5.h>
+ 
+-- 
+2.17.1
 
