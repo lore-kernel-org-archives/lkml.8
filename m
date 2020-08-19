@@ -2,123 +2,138 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A615C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF31C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5338F20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF6C20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtAam1Yr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VpZvoGgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgHSWVT (ORCPT
+        id S1726948AbgHSWVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:21:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42171 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727872AbgHSWVG (ORCPT
+        Wed, 19 Aug 2020 18:21:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30154 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727040AbgHSWVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:21:06 -0400
+        Wed, 19 Aug 2020 18:21:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597875665;
+        s=mimecast20190719; t=1597875667;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=a8Fv9LTgyRB5SSl/Lk6ZNgWdBq14YjztlZgeO1B398g=;
-        b=CtAam1YraxNUtA3TOgNJ+SEJK9vauir6MiVP5zSG+doiXtVdjP38Bh1XdMXN48my/K12EK
-        pOMgTHbWuopW9cDBQrbT70Exyrux6iMVG9HYnP/IIzDeJv/WY3Xe9pSkbPhs6akmjjovFc
-        oZ32hf8sWeISKhHhBZTh+yejZBxU/oI=
+        bh=zV4eGv1HmKEw4dEdYXRQk1b4dOpAiZN4WqAP4p4F6ZQ=;
+        b=VpZvoGgb6vGgOFSoPIGh9slZmVOSWEZgV8PmmmwOsxCARvekSTsLM1xWIxY4x//Pguwdiy
+        bpQyMRH9xzvy+4zxhx/lG7Dxd1Xb0a2+0eLwgFy4mg8GGX3zQOOTf8eDwCMKZ29++/57Eh
+        1HTyaGm2yBHgjiGfWGs24FriO1groT8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-473-gPsvGkkkNICwda23EDgoVg-1; Wed, 19 Aug 2020 18:21:03 -0400
-X-MC-Unique: gPsvGkkkNICwda23EDgoVg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-558-ol9Li3MSNCuugzCmQy-YSw-1; Wed, 19 Aug 2020 18:21:02 -0400
+X-MC-Unique: ol9Li3MSNCuugzCmQy-YSw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 276FD425D2;
-        Wed, 19 Aug 2020 22:21:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E74B2425CC;
+        Wed, 19 Aug 2020 22:21:00 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-115-197.rdu2.redhat.com [10.10.115.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 04FDC7E303;
-        Wed, 19 Aug 2020 22:21:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F50C5C896;
+        Wed, 19 Aug 2020 22:20:54 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 2B19C2256ED; Wed, 19 Aug 2020 18:20:54 -0400 (EDT)
+        id D2A592255A0; Wed, 19 Aug 2020 18:20:53 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org, virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, dan.j.williams@intel.com
-Subject: [PATCH v3 15/18] fuse,virtiofs: Define dax address space operations
-Date:   Wed, 19 Aug 2020 18:19:53 -0400
-Message-Id: <20200819221956.845195-16-vgoyal@redhat.com>
+        dgilbert@redhat.com, dan.j.williams@intel.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 03/18] virtio: Add get_shm_region method
+Date:   Wed, 19 Aug 2020 18:19:41 -0400
+Message-Id: <20200819221956.845195-4-vgoyal@redhat.com>
 In-Reply-To: <20200819221956.845195-1-vgoyal@redhat.com>
 References: <20200819221956.845195-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is done along the lines of ext4 and xfs. I primarily wanted ->writepages
-hook at this time so that I could call into dax_writeback_mapping_range().
-This in turn will decide which pfns need to be written back.
+From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Virtio defines 'shared memory regions' that provide a continuously
+shared region between the host and guest.
+
+Provide a method to find a particular region on a device.
+
+Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Cc: kvm@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
 ---
- fs/fuse/file.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ include/linux/virtio_config.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index f1ad8b95b546..0eecb4097c14 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2669,6 +2669,16 @@ static int fuse_writepages_fill(struct page *page,
- 	return err;
- }
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index 8fe857e27ef3..4b8e38c5c4d8 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -11,6 +11,11 @@
  
-+static int fuse_dax_writepages(struct address_space *mapping,
-+				struct writeback_control *wbc)
-+{
-+
-+	struct inode *inode = mapping->host;
-+	struct fuse_conn *fc = get_fuse_conn(inode);
-+
-+	return dax_writeback_mapping_range(mapping, fc->dax_dev, wbc);
-+}
-+
- static int fuse_writepages(struct address_space *mapping,
- 			   struct writeback_control *wbc)
- {
-@@ -4021,6 +4031,13 @@ static const struct address_space_operations fuse_file_aops  = {
- 	.write_end	= fuse_write_end,
- };
+ struct irq_affinity;
  
-+static const struct address_space_operations fuse_dax_file_aops  = {
-+	.writepages	= fuse_dax_writepages,
-+	.direct_IO	= noop_direct_IO,
-+	.set_page_dirty	= noop_set_page_dirty,
-+	.invalidatepage	= noop_invalidatepage,
++struct virtio_shm_region {
++	u64 addr;
++	u64 len;
 +};
 +
- void fuse_init_file_inode(struct inode *inode)
- {
- 	struct fuse_inode *fi = get_fuse_inode(inode);
-@@ -4036,6 +4053,8 @@ void fuse_init_file_inode(struct inode *inode)
- 	fi->writepages = RB_ROOT;
- 	fi->dmap_tree = RB_ROOT_CACHED;
+ /**
+  * virtio_config_ops - operations for configuring a virtio device
+  * Note: Do not assume that a transport implements all of the operations
+@@ -66,6 +71,7 @@ struct irq_affinity;
+  *      the caller can then copy.
+  * @set_vq_affinity: set the affinity for a virtqueue (optional).
+  * @get_vq_affinity: get the affinity for a virtqueue (optional).
++ * @get_shm_region: get a shared memory region based on the index.
+  */
+ typedef void vq_callback_t(struct virtqueue *);
+ struct virtio_config_ops {
+@@ -89,6 +95,8 @@ struct virtio_config_ops {
+ 			       const struct cpumask *cpu_mask);
+ 	const struct cpumask *(*get_vq_affinity)(struct virtio_device *vdev,
+ 			int index);
++	bool (*get_shm_region)(struct virtio_device *vdev,
++			       struct virtio_shm_region *region, u8 id);
+ };
  
--	if (fc->dax_dev)
-+	if (fc->dax_dev) {
- 		inode->i_flags |= S_DAX;
-+		inode->i_data.a_ops = &fuse_dax_file_aops;
-+	}
+ /* If driver didn't advertise the feature, it will never appear. */
+@@ -251,6 +259,15 @@ int virtqueue_set_affinity(struct virtqueue *vq, const struct cpumask *cpu_mask)
+ 	return 0;
  }
+ 
++static inline
++bool virtio_get_shm_region(struct virtio_device *vdev,
++			   struct virtio_shm_region *region, u8 id)
++{
++	if (!vdev->config->get_shm_region)
++		return false;
++	return vdev->config->get_shm_region(vdev, region, id);
++}
++
+ static inline bool virtio_is_little_endian(struct virtio_device *vdev)
+ {
+ 	return virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
 -- 
 2.25.4
 
