@@ -2,129 +2,177 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44732067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559AF2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iyYZ/UQd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZDJ0ZjKL";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iCCbBwu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHSRCl (ORCPT
+        id S1726702AbgHSRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:02:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25293 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725804AbgHSRCi (ORCPT
+        Wed, 19 Aug 2020 13:02:50 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37204 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726703AbgHSRCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:02:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597856557;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cHu72fh1fFkkjp/hOIC1Y0NnDw8ZT+1uUdQ3/2I1wFY=;
-        b=iyYZ/UQdDjPSUnaA2pwumpmuLdEGFU0JeGYEcJcXDKnA5wG0cx3fFRarvA+fR+kMjHJRNv
-        FWvQzVJIhI8gSbRHCtn9BUem+AgkkYWJKZE+F7jW7eF+1D73DW3n+EhnCCrBifzceuV1WV
-        YHK+wT3LZXIosoM5N5ZjlPhj+4Y226s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-576-BzVCQt0pN7qIorN9J_YkMw-1; Wed, 19 Aug 2020 13:02:33 -0400
-X-MC-Unique: BzVCQt0pN7qIorN9J_YkMw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8084910054FF;
-        Wed, 19 Aug 2020 17:02:31 +0000 (UTC)
-Received: from treble (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C39F5D9E8;
-        Wed, 19 Aug 2020 17:02:25 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 12:02:23 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200819170223.nmv7dekvpc5yk4rm@treble>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
- <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com>
-MIME-Version: 1.0
+        Wed, 19 Aug 2020 13:02:45 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JGxhRT014140;
+        Wed, 19 Aug 2020 10:02:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=facebook;
+ bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
+ b=ZDJ0ZjKL74Iy+uQLPRC0iv16AjfqVSa4zvy3V1UJ2SM/DqINQXI0RpAuYTKEJdTPrRE2
+ o4NfCnv9XKcC7G0PxVkJ4GA04pLFXINAP/A1CCn+L70IZBNuOFpbesQZQ+7s54h+eYPl
+ T8UK79wttqUzVhWpr/53uwITAkXHYH7SsSA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3304p81reh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 19 Aug 2020 10:02:22 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 19 Aug 2020 10:02:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D3OyvA2OgyAUvbo4os7uBU1fY/0UKyg/t1/22xWK66IlSJhsJpq4Ix4R98yohSoKAdaPz+ri86LvFJtKKF60Hjaa/vjDLW9l3XA5LN8MdXVE1CijqBMjxwjdK0TVZ/euThhsD0UH1eJJ3ffLAToILJHkA8WTnK3OdSboQvyfIB1GojRHW6mbag+1+IfirNudPjukr9q5kMPUnYoM1TmfF+kD3UhtTgRVGv8qa7Qc7HaHO3bCtBeBQDMpM7L5oNDYRiWIwIWT2scNe/3mlQPzkk4lI2ia7w1VhmNngTK8lgu84XHaGDKQoKtJc8pIQieuVxTpKlTyYK5zWIsMgFmu8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
+ b=mtoBA5h/eksNSKE+UlOUm6LkacuWTwCfQHSiHcQ3VT8bTjPXXSGHlnf/UEy8LMkpBd5xrWMtmhK2jN9QNmdOzx6vvqtLbcbqlt7yJyCT3G01GHikkxk+veritB7Y7Dkq1xByDnqQJWt3cVX8YoDy4ChQYuy/Z0dssM1vmy1Fs4bx81Bx+hCp1WpHDqVD4sj/1F96bzthV0TNqPDF66OX2Y7ab+dDBtgaGpK/T7NSkuaO8yAgv7nbu72DYltnvYpeWqX+8/JNvC9h4PipgS60VLoCm4oWy53AGwiCnFu0omR0VuDqPlAFwMP1hrgcLSr8STe7PB6ceM4pA+TmDsrpjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZcFOSzU6RUdfSJBC5hlVZ/GUeek/NMMrBPm1OAI6qso=;
+ b=iCCbBwu7q1fwb8yMChQsNNcqlidUidW34Go2/c67gevB14p+uyXtiUN+2bVvaEubXCutmhE9gCTasSDN94IMJUTJomXRGE91kjm3FaXtk6CXUsxHF3BZaNxOSmOnzQQmdjDmm5re4K7im4ME25lNYb/EUDj+X4iREyT6UlvpC9E=
+Authentication-Results: vivo.com; dkim=none (message not signed)
+ header.d=none;vivo.com; dmarc=none action=none header.from=fb.com;
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32)
+ by BYAPR15MB3191.namprd15.prod.outlook.com (2603:10b6:a03:107::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 19 Aug
+ 2020 17:02:19 +0000
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::d489:8f7f:614e:1b99]) by BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::d489:8f7f:614e:1b99%7]) with mapi id 15.20.3283.018; Wed, 19 Aug 2020
+ 17:02:19 +0000
+Date:   Wed, 19 Aug 2020 10:02:13 -0700
+From:   Martin KaFai Lau <kafai@fb.com>
+To:     =?utf-8?B?5rGf56a5?= <jyu.jiang@vivo.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        zhanglin <zhang.lin16@zte.com.cn>,
+        Kees Cook <keescook@chromium.org>,
+        Andrey Ignatov <rdna@fb.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <opensource.kernel@vivo.com>
+Subject: Re: [PATCH] bpf: Add bpf_skb_get_sock_comm() helper
+Message-ID: <20200819170213.ji7a4bwpeiei24i6@kafai-mbp.dhcp.thefacebook.com>
+References: <20200810175529.qdsbziyoo6myw2dr@kafai-mbp.dhcp.thefacebook.com>
+ <AFoAPQBqDUaFCjrcrhfZkKrn.3.1597817456174.Hmail.jyu.jiang@vivo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AFoAPQBqDUaFCjrcrhfZkKrn.3.1597817456174.Hmail.jyu.jiang@vivo.com>
+X-ClientProxiedBy: BY5PR20CA0002.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::15) To BY5PR15MB3571.namprd15.prod.outlook.com
+ (2603:10b6:a03:1f6::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:400::5:af4e) by BY5PR20CA0002.namprd20.prod.outlook.com (2603:10b6:a03:1f4::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 17:02:18 +0000
+X-Originating-IP: [2620:10d:c090:400::5:af4e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 88292ce6-0662-4e96-a863-08d84461a1ce
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3191:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB31912095D0C9C0B445F73692D55D0@BYAPR15MB3191.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8PYG0BtLBNSEtbGsojLMo+OsZlKMip16iumb8fYMQZcZS07Ekcs8KTJAyUz5Gsuvm27+NtMtiMwg2tJ62C/gx4RoclyxJuaRzC8cEBJkUxUH0h2RMeYt+syfJXxf33AsA11sR9T27SVN5Nj4iEcE9zYFUf9vnMoMKBAm2QGxNIUFix1G4HtHRQ2e6UraHFEsPNfuFUsb07bg/rF7wya1vwJMgczXidTRNjcMwKaQnm+PMAr2owBpVYyjvIgFy+Vv98Nu6o8OMpnJuTyc2bWUkUSA4z3db3UN9qcYurf2qPNG1qWYTojG3+RKLjsARMHS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3571.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(39860400002)(346002)(376002)(396003)(55016002)(52116002)(2906002)(4326008)(83380400001)(6666004)(478600001)(7696005)(9686003)(66476007)(1076003)(8936002)(8676002)(66946007)(5660300002)(316002)(186003)(66556008)(54906003)(6916009)(16526019)(7416002)(6506007)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: NvH47Q97WK2s+BxE7eZd72bL/hcQ37BYzc2gLiIa2oefYVuYw+1hHLltaZkwUDygHZBrUplD9rt2y6wUF39NpWcvMgMssDnOusjNMgoB9epgr+04jZkRwqA0VBcCzPdC2aSUMsDMQreSfSRUr+1KGQHUYQoyyDnElZEcady+KgOVgB/BU9vBbOAuICNxorFLiVJjdW+Npaf07COw2GkenPuEDnjlbhvuYt2lnESmhTSPHuIkyiVlWEpfVt7olAw/gaW850QFkFHAso6MD6lzsAxK3sAD3goK/OSm3a297qnJMq+DxqVyBvFzh4pbKbad46ZKfW51zzArpqbvgUOVLufk4N6/aKZc/+SbQ0bWd8yexR6X/b6hLtsgOSi/BBfp1ge2jek8epZezYxAwat4fRa6KxggIKEzKVvRKW2F28bD+RpYpZAIMY9FwVjrcboaKLUv62EtIvdMc0Yro2sDUbjCKVJdLVTBOik+QBpMek+1w9haxBF0WFpEkqDUH0coJOkpYGoy0/YIg8ogJcFe5+uoGykUJr2/r/IDdnetOrYcBt621Ody1QVJ0bf+jJ5IQtWcK7rXkraKHjopH7R1Gn0IAJSll1Ijk6qnGDMtEW27dQFtxipdm6KW6sQovrlp7DeVx44JCUqRosxQJvs7/qAbM4csmxUO1LHBTEc9SaM=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88292ce6-0662-4e96-a863-08d84461a1ce
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3571.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 17:02:19.4484
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D9g/opFVvHgGhwXoxkFFvQyYDJn2pfWZ+8Yx2N+jVVqjY1nl7wBPhCO1QqGZrXQv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3191
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_10:2020-08-19,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
+ adultscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ clxscore=1015 spamscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008190142
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:39:10AM -0700, Andy Lutomirski wrote:
-> On Wed, Aug 19, 2020 at 7:50 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > +/*
-> > + * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
-> > + * user pointer.  This blocks speculative dereferences of user-controlled
-> > + * pointers.
-> > + */
-> > +#define uaccess_mask_ptr(ptr) \
-> > +       (__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
-> > +
+On Wed, Aug 19, 2020 at 02:10:56PM +0800, 江禹 wrote:
+> Dear Martin,
 > 
-> If I dug through all the macros correctly, this is generating a fairly
-> complex pile of math to account for the fact that user_addr_max() is
-> variable and that it's a nasty number.
-
-The math is actually pretty simple.  It's identical to what getuser.S is
-doing:
-
-	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-	sbb %_ASM_DX, %_ASM_DX
-	and %_ASM_DX, %_ASM_AX
-
-> But I don't think there's any particular need to use the real maximum
-> user address here.  Allowing a mis-speculated user access to a
-> non-canonical address or to the top guard page of the lower canonical
-> region is harmless.  With current kernels, a sequence like:
 > 
-> if (likely((long)addr > 0) {
->   masked_addr = addr & 0x7FFFFFFFFFFFFFFFUL;
-> } else {
->   if (kernel fs) {
->     masked_addr = addr;
->   } else {
->     EFAULT;
->   }
-> }
-
-The masking has to be done without conditional branches, otherwise it
-defeats the point.
-
-> could plausibly be better.  But Christoph's series fixes this whole
-> mess, and I think that this should be:
+> > One possibility is to use the "sk_bpf_storage" member immediately above
+> > instead of adding "sk_task_com[]".
+> > 
+> > It is an extensible sk storage for bpf.  There are examples in selftests,
+> > e.g tools/testing/selftests/bpf/progs/udp_limits.c which creates sk storage
+> > at socket creation time.  Another hook point option could be "connect()"
+> > for tcp, i.e. "cgroup/connect[46]".
+> > 
+> > Search "BPF_MAP_TYPE_SK_STORAGE" under the selftests/bpf for other examples.
+> > 
+> > It seems there is already a "bpf_get_current_comm()" helper which
+> > could be used to initialize the task comm string in the bpf sk storage.
+> > 
+> > btw, bpf-next is still closed.
 > 
-> #define uaccess_mask_ptr(ptr) ((__typeof___(ptr)) (__force unsigned
-> long)ptr & USER_ADDR_MASK))
 > 
-> where USER_ADDR_MASK is the appropriate value for 32-bit or 64-bit.
+> I have rewrite my code according to your suggestion.  In general,it works as designed.
+> 
+> 
+> But the task comm string got from "bpf_get_current_comm()" helper is belong to specific thread.
+> It is not a obvious label for skb tracing. More reasonable tracing key is the task comm of process
+> which this skb belongs.
+>  
+> It seems a new bpf helper is still needed.
+May be.  It is not clear to me whether it is better to account this skb
+to its process or to its thread.  I think this depends on the
+use-case/assumption.
 
-Yeah, we could do that.  Though in the meantime, the simple merge
-conflict resolution with Christoph's patches would be
-s/user_addr_max/TASK_SIZE_MAX/ in my uaccess_mask_ptr() macro.
+If bpf_get_current_comm() does not get what you need,
+then another helper may be added to get the process comm.
+This new helper may be useful for other use cases also.
 
--- 
-Josh
-
+btw, Have your thought about tracing at the sendmsg time?
+e.g. tcp_sendmsg()?
