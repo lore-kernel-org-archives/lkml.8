@@ -2,221 +2,141 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9580DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664CA20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CmFRV9MF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A38320882
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgHSPE1 (ORCPT
+        id S1728549AbgHSPEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbgHSPEQ (ORCPT
+        Wed, 19 Aug 2020 11:04:50 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47160 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgHSPE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:04:16 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90A9C061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:15 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id p24so26647457ejf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gblnYCzc62i56nCc5LRWss+Qf5wc+kIzyZ60hUww65Y=;
-        b=CmFRV9MF78Io9lyU3ZTHQoxCUWL8rgrVpgpqOj4nEXWpRTCd1+KGSochi2kuoVhtFt
-         PQJJembCFDIORAph3WzrpDoRd2cIGJpwf9VAtP5a9ydpphhRkHDHcmKRPuhZGWASaGfl
-         y6rPrnsIqK2MPfXnYUVbYzJtuDwuiigpqdGRc=
+        Wed, 19 Aug 2020 11:04:26 -0400
+Received: by mail-il1-f199.google.com with SMTP id e12so16933432ile.14
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gblnYCzc62i56nCc5LRWss+Qf5wc+kIzyZ60hUww65Y=;
-        b=oLInK0r2KSGJ4f9WH3snSBVxp7hoNixbBx62ApPlZ4gitj5KFtWW9Lzt2DKemeswO2
-         uimvcnHEQoIG0jHSp4lCRiXXa+bcdQtPMuCVue2kniUO6R1DTCUmEPIobqeOAa4fKAdx
-         9Utj/1ZllLJ1X1kn1n7b26JHvXipAh1d50FleJsole/nzQynpoGtsT8h2XlA5Yy6DtcI
-         SenJHrtXEhJJWu8WMuc3Lzn/aBBycFQ7ctGuwYw0qzU5h0kdJRLtw8D+g6Gm78Setiru
-         VjPkAokzyY1oE7eQDO/Ju9H7JxvxOZZLDrEhVucWdv6CWjYCGSsC12tLEwzLmWOu83Yv
-         Uifg==
-X-Gm-Message-State: AOAM533wxy1JQk5tOfp9a0DnR03aPDDsIcTfd0Ndx8MWkStJ+Q58llL0
-        5BBdh9PJJi2tu777fjY+TGouBMJQQ6Pvxw==
-X-Google-Smtp-Source: ABdhPJwETSKlo/1E5E9C7Oyg4Ri06Qvry4OnTkj5JNGyNy47IjA70+1B8dgxoomUkwkMJA0SdEY0SA==
-X-Received: by 2002:a17:906:b110:: with SMTP id u16mr25016112ejy.483.1597849453621;
-        Wed, 19 Aug 2020 08:04:13 -0700 (PDT)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
-        by smtp.gmail.com with ESMTPSA id x16sm17648202edr.25.2020.08.19.08.04.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 08:04:11 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id 3so2540298wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:04:10 -0700 (PDT)
-X-Received: by 2002:a1c:4d12:: with SMTP id o18mr5316483wmh.55.1597849448826;
- Wed, 19 Aug 2020 08:04:08 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VDNiVmoVHM/EAgrPMdZuxSNbn4Cv7QjczVTKlAQSEmk=;
+        b=IdOd40v5Ve+GKnakE4vk6pMpMXaXzLB2oWSNMBOCbtK2xpN68C0ADXERlQeZ+l1Mpc
+         /zZwZDlnCbWHQwVzhE4lR58Mx5p/+kCSQLnBG8IEddqPnkTUGAZpeEB2fSp0AqS/68vc
+         ZxRC/7M988TjEn1eFpnDEXCtLftl6tnZSDhAI6cDVrZXDcwK7HzgAEczpIwKO5u0xGij
+         dHmMCQs0sWZOXK+13mewaoxt8itqshfy4CeO9r00uWdLr4WbeklkDt2IHxceNIUsbrQb
+         19b8ONmzqgnFXIKRPz68/DjIl+ug8M0D7JggJI8mOrWCZO7gm24fu+me8j0NyP1M9Ibp
+         dWBA==
+X-Gm-Message-State: AOAM533UXJucs29ncwunTYKu+Cf6Gpmyv0ittjyNkBmLDd0Szoqn8hKH
+        qTo6hqXYfEqR5uVc3J37CYTVwduHlaxaZ+1XT11K6UQvlfG1
+X-Google-Smtp-Source: ABdhPJzeo74koGhSSSorznRH6H8AtESLASRNC7zQ8Md7nTE1JsONxbQConiM86dPAk4WOiflAjYv1YIace83+WiDrjid6uQT0mQE
 MIME-Version: 1.0
-References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-20-hch@lst.de>
-In-Reply-To: <20200819065555.1802761-20-hch@lst.de>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 19 Aug 2020 17:03:52 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Bbp-eAVKS1MKS8xtrT4ZoOmBPfZyw9mys=eOmDb6r8Lw@mail.gmail.com>
-Message-ID: <CAAFQd5Bbp-eAVKS1MKS8xtrT4ZoOmBPfZyw9mys=eOmDb6r8Lw@mail.gmail.com>
-Subject: Re: [PATCH 19/28] dma-mapping: replace DMA_ATTR_NON_CONSISTENT with
- dma_{alloc, free}_pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        alsa-devel@alsa-project.org,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        nouveau@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
+X-Received: by 2002:a05:6638:1614:: with SMTP id x20mr23864466jas.92.1597849465083;
+ Wed, 19 Aug 2020 08:04:25 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 08:04:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c560bd05ad3c5187@google.com>
+Subject: WARNING in rtnl_dellink
+From:   syzbot <syzbot+b3b5c64f4880403edd36@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
+        hawk@kernel.org, jiri@mellanox.com, john.fastabend@gmail.com,
+        kafai@fb.com, kpsingh@chromium.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        roopa@cumulusnetworks.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hello,
 
-On Wed, Aug 19, 2020 at 8:57 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Add a new API to allocate and free pages that are guaranteed to be
-> addressable by a device, but otherwise behave like pages allocated by
-> alloc_pages.  The intended APIs to sync them for use with the device
-> and cpu are dma_sync_single_for_{device,cpu} that are also used for
-> streaming mappings.
->
-> Switch all drivers over to this new API, but keep the usage of the
-> crufty dma_cache_sync API for now, which will be cleaned up on a driver
-> by driver basis.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  Documentation/core-api/dma-api.rst        | 68 +++++++++++------------
->  Documentation/core-api/dma-attributes.rst |  8 ---
->  arch/alpha/kernel/pci_iommu.c             |  2 +
->  arch/arm/mm/dma-mapping-nommu.c           |  2 +
->  arch/arm/mm/dma-mapping.c                 |  4 ++
->  arch/ia64/hp/common/sba_iommu.c           |  2 +
->  arch/mips/jazz/jazzdma.c                  |  7 +--
->  arch/powerpc/kernel/dma-iommu.c           |  2 +
->  arch/powerpc/platforms/ps3/system-bus.c   |  4 ++
->  arch/powerpc/platforms/pseries/vio.c      |  2 +
->  arch/s390/pci/pci_dma.c                   |  2 +
->  arch/x86/kernel/amd_gart_64.c             |  2 +
->  drivers/iommu/dma-iommu.c                 |  2 +
->  drivers/iommu/intel/iommu.c               |  4 ++
->  drivers/net/ethernet/i825xx/lasi_82596.c  | 13 ++---
->  drivers/net/ethernet/seeq/sgiseeq.c       | 12 ++--
->  drivers/parisc/ccio-dma.c                 |  2 +
->  drivers/parisc/sba_iommu.c                |  2 +
->  drivers/scsi/53c700.c                     |  8 +--
->  drivers/scsi/sgiwd93.c                    | 12 ++--
->  drivers/xen/swiotlb-xen.c                 |  2 +
->  include/linux/dma-direct.h                |  5 ++
->  include/linux/dma-mapping.h               | 29 ++++++++--
->  include/linux/dma-noncoherent.h           |  3 -
->  kernel/dma/direct.c                       | 51 ++++++++++++++++-
->  kernel/dma/mapping.c                      | 43 +++++++++++++-
->  kernel/dma/ops_helpers.c                  | 35 ++++++++++++
->  kernel/dma/virt.c                         |  2 +
->  sound/mips/hal2.c                         | 20 +++----
->  29 files changed, 254 insertions(+), 96 deletions(-)
->
+syzbot found the following issue on:
 
-Thanks for the patch. The general design looks quite nice, but please
-see my comments inline.
+HEAD commit:    4ca0d9ac bonding: show saner speed for broadcast mode
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c21516900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9c89856ae5fc8b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=b3b5c64f4880403edd36
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119f99f6900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10fe8fbe900000
+
+Bisection is inconclusive: the issue happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11516872900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13516872900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15516872900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b3b5c64f4880403edd36@syzkaller.appspotmail.com
+
+bond1 (unregistering): Released all slaves
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7280 at net/core/dev.c:9304 rollback_registered_many+0xecd/0x1210 net/core/dev.c:9304
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7280 Comm: syz-executor543 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:rollback_registered_many+0xecd/0x1210 net/core/dev.c:9304
+Code: 0a 1b 00 00 48 c7 c6 40 d7 fe 88 48 c7 c7 80 d7 fe 88 c6 05 b6 e1 71 04 01 e8 71 18 0a fb 0f 0b e9 13 fc ff ff e8 d3 14 39 fb <0f> 0b e9 ea fb ff ff e8 c7 14 39 fb 0f 0b e9 29 fc ff ff e8 3b 25
+RSP: 0018:ffffc90002df7290 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 00000000a650bd01 RCX: ffffffff863b3396
+RDX: ffff8880874fc540 RSI: ffffffff863b37ad RDI: 0000000000000001
+RBP: ffff8880a5edef80 R08: 0000000000000000 R09: ffffffff8a7e4067
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+R13: ffff8880925b0000 R14: dffffc0000000000 R15: ffff8880a5edef80
+ unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10426
+ unregister_netdevice_many+0x36/0x50 net/core/dev.c:10425
+ rtnl_delete_link net/core/rtnetlink.c:3055 [inline]
+ rtnl_dellink+0x34a/0xa60 net/core/rtnetlink.c:3107
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2353
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2407
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2440
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x44b1a9
+Code: e8 9c 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 4b 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8155c28d98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006e7a58 RCX: 000000000044b1a9
+RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 0000000000000009
+RBP: 00000000006e7a50 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e7a5c
+R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-> index 90239348b30f6f..047fcfffa0e5cf 100644
-> --- a/Documentation/core-api/dma-api.rst
-> +++ b/Documentation/core-api/dma-api.rst
-> @@ -516,48 +516,53 @@ routines, e.g.:::
->         }
->
->
-> -Part II - Advanced dma usage
-> -----------------------------
-> +Part II - Non-coherent DMA allocations
-> +--------------------------------------
->
-> -Warning: These pieces of the DMA API should not be used in the
-> -majority of cases, since they cater for unlikely corner cases that
-> -don't belong in usual drivers.
-> +These APIs allow to allocate pages that can be used like normal pages
-> +in the kernel direct mapping, but are guaranteed to be DMA addressable.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Could we elaborate a bit more on what "like normal pages in kernel
-direct mapping" mean from the driver perspective?
-
->
->  If you don't understand how cache line coherency works between a
->  processor and an I/O device, you should not be using this part of the
-> -API at all.
-> +API.
->
->  ::
->
->         void *
-> -       dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
-> -                       gfp_t flag, unsigned long attrs)
-> +       dma_alloc_pages(struct device *dev, size_t size, dma_addr_t *dma_handle,
-> +                       enum dma_data_direction dir, gfp_t gfp)
-> +
-> +This routine allocates a region of <size> bytes of consistent memory.  It
-> +returns a pointer to the allocated region (in the processor's virtual address
-> +space) or NULL if the allocation failed. The returned memory is guanteed to
-> +behave like memory allocated using alloc_pages.
-
-There is one aspect that the existing dma_alloc_attrs() handles, but
-this new function doesn't: IOMMU support. The function will always
-allocate a physically-contiguous block memory, which is a costly
-operation and not even guaranteed to succeed, even if enough free
-memory is available.
-
-Modern SoCs employ IOMMUs to avoid the need to allocate
-physically-contiguous memory and those happen to be also the devices
-that could benefit from non-coherent allocations a lot. One of the
-tasks of the DMA API was making it possible to allocate suitable
-memory for a given device, without having the driver know about the
-SoC integration details, such as the presence of an IOMMU.
-
-Today, dma_alloc_attrs() uses the .alloc callback of the dma_ops
-struct and the IOMMU-aware implementations, like the dma-iommu helpers
-[1], would allocate discontiguous pages. Therefore, while I see the
-DMA-aware page allocation functionality as a useful functionality on
-its own for scatter-gather-capable hardware, I believe it is not a
-complete replacement for dma_alloc_attrs() with the
-DMA_ATTR_NON_CONSISTENT attribute.
-
-[1] https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/iommu/dma-iommu.c#L510
-
-Best regards,
-Tomasz
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
