@@ -2,134 +2,146 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB654C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B887E207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7774A207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ddg2juEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHSS4u (ORCPT
+        id S1726702AbgHSS7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:56:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18338 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgHSS4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:56:48 -0400
-IronPort-SDR: BQ9FFDg6XTENZ1GN/KESNAsUtHSgr9gbOn2yfcqcuLa8zSTbSOJEULwlvgjHYUvIXLxxPMj3k7
- BxyjmcBC9qfw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="154444203"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="154444203"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 11:56:47 -0700
-IronPort-SDR: Jh+fFVgJecRZAvuuktI5nBGJaCuSb4PnfP7ICJ74i9f5Sq5miochaRVz2c0UQPtq1A+Tg2ur7g
- xpt0k0wt54ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="337053160"
-Received: from lkp-server01.sh.intel.com (HELO 4cedd236b688) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 19 Aug 2020 11:56:45 -0700
-Received: from kbuild by 4cedd236b688 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8TGP-0000Tm-2j; Wed, 19 Aug 2020 18:56:45 +0000
-Date:   Thu, 20 Aug 2020 02:56:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: drivers/media/i2c/adv748x/adv748x-core.c:132:10: warning: Identical
- inner 'return' condition is always true.
-Message-ID: <202008200212.kvDyjmew%lkp@intel.com>
+        Wed, 19 Aug 2020 14:59:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgHSS67 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:58:59 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BBFBC061757;
+        Wed, 19 Aug 2020 11:58:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q93so166510pjq.0;
+        Wed, 19 Aug 2020 11:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=teSA+VF9m0g0fiG8uR8fbDhA8YjsqGp+oSZrp5d7n9U=;
+        b=Ddg2juEOoCmHUuQArhnsFSay6iY0S9DecklI+21FdyRNq5jSHiDoGK2hZWZBN6dXxf
+         uSJdgdBW2SbPPdcGEqOMILtPKUxDod5d+CniKZp2b9MMNxkLNIZ9CK9XHrf9XlMwFH9O
+         BeXKAXjBjqp0U9QnBE5dElE/lfDh3muuiVY6RpzO/DhO6iUxwXPd5OAYGwEccOmKeUok
+         AvH+PzbcQtdlJZ5v7PYUomw2GhVLghruNZsxqBFTdfvF4HpNxBpH79FXQtn/7ZQ+Sj7r
+         hymuwHpjetoojCk3aJJ83r3Okn2hZlhsU7kOFsAeMPrODkHd/n01iMWK8C4/fxGbXpjO
+         +Psg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=teSA+VF9m0g0fiG8uR8fbDhA8YjsqGp+oSZrp5d7n9U=;
+        b=GUQF0HCOYaP+HoWoNwTmU2LkEgW/MswrM5dd4/KY6SYWE4IoG4CAhWZG/MYQkQpyFt
+         bxFjym0qBJo/DIVgpSq2wUqZvxP66cG81eJo1wO0oz26vkHntWZdg/VlCYhySGFbyfui
+         pd1e6oOspJqOEuDTjsnCLE/iVeeChqEVoQzbILgt7slHU8DqvhT+NUD8HitVLtNP2g9/
+         tgU+DaK/fOXb3hDBEUidsUd2mPS3RRcy7H6IyUBfMB2rup2fh0lRk7BKObdlKLhdeiM4
+         g70xiT/Jh5eM3xiyHR2bqTxoHzWeujS8Bf52IuwryBCLop8tCfQYsiJN8SC/+hqy2Tqf
+         +E5A==
+X-Gm-Message-State: AOAM532PcQO5jF0H4BeHfp3rVIumRJO5keKOlVIv1zeN40bPnvrqKTw4
+        sR+dBRqPcum/Ana2jSuEX8w=
+X-Google-Smtp-Source: ABdhPJwNFdqnCDQRO/tySZxGOWZIe3t9mcFk7yheydz6bXCndpt/TagKm0lrSk7e+WHEmyBWkUYYHQ==
+X-Received: by 2002:a17:90b:4c0c:: with SMTP id na12mr4980552pjb.24.1597863538514;
+        Wed, 19 Aug 2020 11:58:58 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id o134sm29149305pfg.200.2020.08.19.11.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 11:58:58 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andres Salomon <dilinger@queued.net>,
+        Antonino Daplas <adaplas@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v3 00/12] video: fbdev: use generic power management
+Date:   Thu, 20 Aug 2020 00:26:42 +0530
+Message-Id: <20200819185654.151170-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   18445bf405cb331117bc98427b1ba6f12418ad17
-commit: 32a363d0b0b142f35512848dc646ee53e0926723 media: Kconfig files: use select for V4L2 subdevs and MC
-date:   4 months ago
-compiler: h8300-linux-gcc (GCC) 9.3.0
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+The purpose of this patch series is to upgrade power management in video fbdev
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-cppcheck warnings: (new ones prefixed by >>)
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
->> drivers/media/i2c/adv748x/adv748x-core.c:132:10: warning: Identical inner 'return' condition is always true. [identicalInnerCondition]
-     return *error;
-            ^
-   drivers/media/i2c/adv748x/adv748x-core.c:131:6: note: outer condition: *error
-    if (*error)
-        ^
-   drivers/media/i2c/adv748x/adv748x-core.c:132:10: note: identical inner condition: *error
-     return *error;
-            ^
->> drivers/media/i2c/tda1997x.c:2108:6: warning: Variable 'reg' is reassigned a value before the old one has been used. [redundantAssignment]
-    reg = io_read(sd, REG_CMTP_REG10);
-        ^
-   drivers/media/i2c/tda1997x.c:2106:6: note: Variable 'reg' is reassigned a value before the old one has been used.
-    reg = io_read(sd, REG_VERSION);
-        ^
-   drivers/media/i2c/tda1997x.c:2108:6: note: Variable 'reg' is reassigned a value before the old one has been used.
-    reg = io_read(sd, REG_CMTP_REG10);
-        ^
-   drivers/media/i2c/tda1997x.c:2176:6: warning: Variable 'reg' is reassigned a value before the old one has been used. [redundantAssignment]
-    reg = HDMI_CTRL_MUTE_AUTO << HDMI_CTRL_MUTE_SHIFT;
-        ^
-   drivers/media/i2c/tda1997x.c:2108:6: note: Variable 'reg' is reassigned a value before the old one has been used.
-    reg = io_read(sd, REG_CMTP_REG10);
-        ^
-   drivers/media/i2c/tda1997x.c:2176:6: note: Variable 'reg' is reassigned a value before the old one has been used.
-    reg = HDMI_CTRL_MUTE_AUTO << HDMI_CTRL_MUTE_SHIFT;
-        ^
->> drivers/media/i2c/tda1997x.c:2539:34: warning: Local variable pdata shadows outer variable [shadowVar]
-     struct tda1997x_platform_data *pdata =
-                                    ^
-   drivers/media/i2c/tda1997x.c:2508:33: note: Shadowed declaration
-    struct tda1997x_platform_data *pdata;
-                                   ^
-   drivers/media/i2c/tda1997x.c:2539:34: note: Shadow variable
-     struct tda1997x_platform_data *pdata =
-                                    ^
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
 
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=32a363d0b0b142f35512848dc646ee53e0926723
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git fetch --no-tags linus master
-git checkout 32a363d0b0b142f35512848dc646ee53e0926723
-vim +/return +132 drivers/media/i2c/adv748x/adv748x-core.c
+All patches are compile-tested only.
 
-3e89586a64dfd2 Kieran Bingham   2017-07-06  127  
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  128  static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  129  			       u8 value, int *error)
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  130  {
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  131  	if (*error)
-0ad5b80cff5093 Niklas Söderlund 2018-11-28 @132  		return *error;
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  133  
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  134  	*error = adv748x_write(state, page, reg, value);
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  135  	return *error;
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  136  }
-0ad5b80cff5093 Niklas Söderlund 2018-11-28  137  
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
 
-:::::: The code at line 132 was first introduced by commit
-:::::: 0ad5b80cff509360ef9953ac7ce5a56964210c30 media: i2c: adv748x: configure number of lanes used for TXA CSI-2 transmitter
+Vaibhav Gupta (12):
+  fbdev: gxfb: use generic power management
+  fbdev: lxfb: use generic power management
+  fbdev: via-core: use generic power management
+  fbdev: aty: use generic power management
+  fbdev: aty128fb: use generic power management
+  fbdev: nvidia: use generic power management
+  fbdev: savagefb: use generic power management
+  fbdev: cyber2000fb: use generic power management
+  fbdev: i740fb: use generic power management
+  fbdev: vt8623fb: use generic power management
+  fbdev: s3fb: use generic power management
+  fbdev: arkfb: use generic power management
 
-:::::: TO: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-:::::: CC: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+ drivers/video/fbdev/arkfb.c                  | 41 ++++++-------
+ drivers/video/fbdev/aty/aty128fb.c           | 51 ++++++++++------
+ drivers/video/fbdev/aty/atyfb_base.c         | 50 ++++++++++-----
+ drivers/video/fbdev/cyber2000fb.c            | 13 ++--
+ drivers/video/fbdev/geode/gxfb.h             |  5 --
+ drivers/video/fbdev/geode/gxfb_core.c        | 36 ++++++-----
+ drivers/video/fbdev/geode/lxfb.h             |  5 --
+ drivers/video/fbdev/geode/lxfb_core.c        | 37 +++++------
+ drivers/video/fbdev/geode/lxfb_ops.c         |  4 --
+ drivers/video/fbdev/geode/suspend_gx.c       |  4 --
+ drivers/video/fbdev/i740fb.c                 | 40 +++++-------
+ drivers/video/fbdev/nvidia/nvidia.c          | 64 +++++++++++---------
+ drivers/video/fbdev/s3fb.c                   | 39 +++++-------
+ drivers/video/fbdev/savage/savagefb_driver.c | 52 ++++++++++------
+ drivers/video/fbdev/via/via-core.c           | 39 +++++-------
+ drivers/video/fbdev/vt8623fb.c               | 41 ++++++-------
+ include/linux/via-core.h                     |  2 -
+ 17 files changed, 267 insertions(+), 256 deletions(-)
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+2.28.0
+
