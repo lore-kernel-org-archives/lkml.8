@@ -2,119 +2,121 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67912063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930FB2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597872325;
+	bh=29gaIAhdf/a0EPBadbMUPY0OWcKjqoIog1Z9TAi24LA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C6pU+tuS8fkZLLmnyZ06bJVo7rvnVF1moLBWcZLu3R9MNGqCrao0qkelLUMNzCEJ7
+	 ToyCkOhHk9Xz5uZrxLv/3ofgqAKMet97M60FiwfebnQBV/maboPYOEkpC2ubmkxpHP
+	 30GclCv49EKLqDxcZyQGj+pI+2aqKocVO+0f9Dgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgHSVXX (ORCPT
+        id S1726974AbgHSVZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:23:23 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30684 "EHLO mga12.intel.com"
+        Wed, 19 Aug 2020 17:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgHSVXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:23:22 -0400
-IronPort-SDR: nHWf+TfeVtnLZhsJUORWFQDEj1a6OBGVM6JnHdOdQc2l1epUlNCO93tlU8ndpU15P3ZSLVCgE7
- BmUCgRetv4HA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="134719952"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="134719952"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:23:14 -0700
-IronPort-SDR: tRb8EujjyCF0q4Yu824iRPVt9sZdfq6cyYnW7g0yXcljMbzu3dvfpJL0L5Cm6fwDUYNkV/9e0T
- sBw2f1edk84A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="400947509"
-Received: from abojanow-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.52.107])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Aug 2020 14:23:08 -0700
-Date:   Thu, 20 Aug 2020 00:23:07 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200819212307.GG9942@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
- <20200810222317.GG14724@linux.intel.com>
- <20200818145234.GC132200@linux.intel.com>
- <20200818150627.GD132200@linux.intel.com>
- <CAOASepNxu0YtSPjXynLaVgyt-S0uSad8HVrNgMNWf+Z7iamPvQ@mail.gmail.com>
- <20200818164353.GH137138@linux.intel.com>
- <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
+        id S1726646AbgHSVZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:25:23 -0400
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55EED21741
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 21:25:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597872322;
+        bh=29gaIAhdf/a0EPBadbMUPY0OWcKjqoIog1Z9TAi24LA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a5F+qyGspdHjnA7RLj9YFPAbKT7iI5iRUROOn/LYb/LPypw9i7gVlCFZhyZ8CVlah
+         LE3StroBw4g62DbjBgbPm1tm12TE5ay1GoGIpD87bklMX1ttYq3zGnhuagcMwXsGX/
+         I23v//6oXnbrBFmHQdq5l2+5eHCmoLnpD8yEq+Yw=
+Received: by mail-wr1-f47.google.com with SMTP id z18so86380wrm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:25:22 -0700 (PDT)
+X-Gm-Message-State: AOAM533vOWOP03eiWUOs7IWw7RETZu9a8Qh5H/1HRaQvQcFOjX0//vYF
+        R/qdApKGDPjCfE5SbO6G6+OkTIVm64FvpM/TL925zQ==
+X-Google-Smtp-Source: ABdhPJyHaKQhiHnkv3oGELqfZw8n3z40U3pQE6soc72225O943zJWakFsu1/QNWo47zGQfG6NL+LHC+ki6lIkikAe3M=
+X-Received: by 2002:adf:e90f:: with SMTP id f15mr23603wrm.18.1597872320735;
+ Wed, 19 Aug 2020 14:25:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOASepMABkAxMRY7fJr4bAqadYyVrhZkb0BmB8cTcXUL_VmwQw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <39d57e4d-5db4-f536-6f5e-6b0414c0dccc@amd.com> <7dedb0ab-56a6-5d96-577b-21ab1ecdad24@amd.com>
+In-Reply-To: <7dedb0ab-56a6-5d96-577b-21ab1ecdad24@amd.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 19 Aug 2020 14:25:09 -0700
+X-Gmail-Original-Message-ID: <CALCETrUArZ04UqJjp2mEheuMpZyPwLeEgGM7mdDdmWxmx=GN4Q@mail.gmail.com>
+Message-ID: <CALCETrUArZ04UqJjp2mEheuMpZyPwLeEgGM7mdDdmWxmx=GN4Q@mail.gmail.com>
+Subject: Re: FSGSBASE causing panic on 5.9-rc1
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:33:45AM -0400, Nathaniel McCallum wrote:
-> On Tue, Aug 18, 2020 at 12:44 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
+On Wed, Aug 19, 2020 at 11:19 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 8/19/20 1:07 PM, Tom Lendacky wrote:
+> > It looks like the FSGSBASE support is crashing my second generation EPYC
+> > system. I was able to bisect it to:
 > >
-> > On Tue, Aug 18, 2020 at 11:15:32AM -0400, Nathaniel McCallum wrote:
-> > > That seems like overkill to me. I'm just asking for one additional mov
-> > > instruction. :)
+> > b745cfba44c1 ("x86/cpu: Enable FSGSBASE on 64bit by default and add a chicken bit")
 > >
-> > I started to consider eBPF since the complexity and constraints of the
-> > callback look like an overkill and without doubt will be a burden to
-> > maintain.
-> 
-> That feels to me like more complexity just to move the existing
-> complexity from one place to another.
+> > The panic only happens when using KVM. Doing kernel builds or stress
+> > on bare-metal appears fine. But if I fire up, in this case, a 64-vCPU
+> > guest and do a kernel build within the guest, I get the following:
+>
+> I should clarify that this panic is on the bare-metal system, not in the
+> guest. And that specifying nofsgsbase on the bare-metal command line fixes
+> the issue.
 
-My thinking was that there is like two parts on AEX handler:
+I certainly see some oddities:
 
-A. You have a set of data and some application dependent logic.
-   Right now this part is written in assembly most of the time.
-B. You have code that decide how to continue based on that logic.
+We have this code:
 
-I was thinking that you could have the logic manipulating data (the
-existing context structure we have can be passed directly to the BPF
-state machine) patchable with a BPF program.
+static void svm_vcpu_put(struct kvm_vcpu *vcpu)
+{
+        struct vcpu_svm *svm = to_svm(vcpu);
+        int i;
 
-The logic would be executed in ring-0. vDSO would contain part B.
+        avic_vcpu_put(vcpu);
 
-It is better to at least make some rational conclusions about this
-because it seems to be the trend [1].
+        ++vcpu->stat.host_state_reload;
+        kvm_load_ldt(svm->host.ldt);
+#ifdef CONFIG_X86_64
+        loadsegment(fs, svm->host.fs);
+        wrmsrl(MSR_KERNEL_GS_BASE, current->thread.gsbase);
+        load_gs_index(svm->host.gs);
 
-On the other hand the history with callbacks has not been a history
-of victory as far as it comes to all the possible issues with them.
-Like think about signals for example...
+Surely that should do load_gs_index() *before* wrmsrl().  But that's
+not the problem at hand.
 
-[1] https://lwn.net/Articles/813261/
+There are also some open-coded rdmsr and wrmsrs of MSR_GS_BASE --
+surely these should be x86_gsbase_read_cpu() and
+x86_gsbase_write_cpu().  (Those functions don't actually exist, but
+the fsbase equivalents do, and we should add them.)  But that's also
+not the problem at hand.
 
-/Jarkko
+I haven't actually spotted the bug yet...
+
+--Andy
