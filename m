@@ -2,168 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95194C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7980C2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613672063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1TSVA+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHSUkB (ORCPT
+        id S1726964AbgHSUoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:40:01 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:42652 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgHSUkA (ORCPT
+        Wed, 19 Aug 2020 16:44:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33037 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726729AbgHSUoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:40:00 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Aug 2020 16:44:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597869861;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7OkDYQ96IKkBn1skd4NdLteik3rTLwITzQe2j/YDT2U=;
+        b=g1TSVA+CK1/b2E/E63GHG31u92GF1YVCThiZeuNViYGU0nRZwAitoyCY17Pw0ITOz5N6o5
+        n6CYKuij+GTFW/tTmnfojI1iJipq7W+RFzA7IPC20rDNB8vLcqVta8fwiKatgwllBNzadm
+        5T8TrRglcLF+5QPSzuchvXw0sFNxATg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-HXE_-mByMEmpw9K4m0mpYQ-1; Wed, 19 Aug 2020 16:44:17 -0400
+X-MC-Unique: HXE_-mByMEmpw9K4m0mpYQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id D4190804B9;
-        Wed, 19 Aug 2020 22:39:54 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 22:39:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     devel@driverdev.osuosl.org, Nicolas Boichat <drinkcat@google.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v14 0/2] Add initial support for slimport anx7625
-Message-ID: <20200819203953.GA109541@ravnborg.org>
-References: <cover.1594283160.git.xji@analogixsemi.com>
- <20200810203546.GA421906@ravnborg.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67D91425E1;
+        Wed, 19 Aug 2020 20:44:16 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA7AB747B0;
+        Wed, 19 Aug 2020 20:44:08 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 16:44:05 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Gao Xiang <hsiangkao@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200819204405.GB2096425@optiplex-lnx>
+References: <20200819195613.24269-1-hsiangkao@redhat.com>
+ <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810203546.GA421906@ravnborg.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=-3hZfeu0XQcix8hqga0A:9
-        a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xin Ji.
-
-On Mon, Aug 10, 2020 at 10:35:46PM +0200, Sam Ravnborg wrote:
-> Hi Xin Ji.
+On Wed, Aug 19, 2020 at 01:05:06PM -0700, Andrew Morton wrote:
+> On Thu, 20 Aug 2020 03:56:13 +0800 Gao Xiang <hsiangkao@redhat.com> wrote:
 > 
-> On Thu, Jul 09, 2020 at 04:31:09PM +0800, Xin Ji wrote:
-> > Hi all,
-> > 
-> > The following series add support for the Slimport ANX7625 transmitter, a
-> > ultra-low power Full-HD 4K MIPI to DP transmitter designed for portable device.
-> > 
-> > 
-> > This is the v14 version, any mistakes, please let me know, I will fix it in
-> > the next series.
-> > 
-> > Change history:
-> > v14: Fix comments from Sam and Nicolas
-> >  - Check flags at drm_bridge_attach
-> >  - Use panel_bridge instead of drm_panel
-> >  - Fix not correct return value
+> > SWP_FS doesn't mean the device is file-backed swap device,
+> > which just means each writeback request should go through fs
+> > by DIO. Or it'll just use extents added by .swap_activate(),
+> > but it also works as file-backed swap device.
 > 
-> Sorry for ignoring this for so long time.
-> The patch applies but no longer builds.
+> This is very hard to understand :(
 > 
-> I could fix it locally but wanted to know if you have a later version to
-> be applied?
 
-I took a short look at the driver today.
-I noticed following code:
-       if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR))
-                return -EINVAL;
-
-So if the display driver do not supply the DRM_BRIDGE_ATTACH_NO_CONNECTOR
-then -EINVAL is returned.
-
-But then the anx7625_bridge_attach() continues and creates a connector.
-For a new bridge driver there should be no need for the backward
-compatibility - so no need to create the connector.
-Unless the display driver needs it - but then we should fix the display
-driver and not add backward compatibility code in the bridge driver.
-
-Which display driver do you expect this bridge driver to be used with?
-
-	Sam
+I'll work with Gao to rephrase that message. Sorry!
 
 
-
-
+> > So in order to achieve the goal of the original patch,
+> > SWP_BLKDEV should be used instead.
+> > 
+> > FS corruption can be observed with SSD device + XFS +
+> > fragmented swapfile due to CONFIG_THP_SWAP=y.
+> > 
+> > Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> > Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
 > 
-> 	Sam
-> 
-> 
-> > 
-> > v13: Fix comments from Launrent Pinchart and Rob Herring
-> >  - Picked up Rob's Reviewed-By
-> >  - Add .detect and .get_edid interface in bridge funcs.
-> > 
-> > v12: Fix comments from Hsin-Yi Wang
-> >  - Rebase the code on kernel 5.7, fix DRM interface not match issue.
-> > 
-> > v11: Fix comments from Rob Herring
-> >  - Update commit message.
-> >  - Remove unused label.
-> > 
-> > v10: Fix comments from Rob Herring, Daniel.
-> >  - Fix dt_binding_check warning.
-> >  - Update description.
-> > 
-> > v9: Fix comments from Sam, Nicolas, Daniel
-> >  - Remove extcon interface.
-> >  - Remove DPI support.
-> >  - Fix dt_binding_check complains.
-> >  - Code clean up and update description.
-> > 
-> > v8: Fix comments from Nicolas.
-> >  - Fix several coding format.
-> >  - Update description.
-> > 
-> > v7:
-> >  - Fix critical timing(eg:odd hfp/hbp) in "mode_fixup" interface,
-> >    enhance MIPI RX tolerance by setting register MIPI_DIGITAL_ADJ_1 to 0x3D.
-> > 
-> > 
-> > Xin Ji (2):
-> >   dt-bindings: drm/bridge: anx7625: MIPI to DP transmitter DT schema
-> >   drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to DP
-> > 
-> >  .../bindings/display/bridge/analogix,anx7625.yaml  |   95 +
-> >  drivers/gpu/drm/bridge/analogix/Kconfig            |    9 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c          | 1939 ++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h          |  391 ++++
-> >  5 files changed, 2435 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> > 
-> > -- 
-> > 2.7.4
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Why do you think it has taken three years to discover this?
+>
+
+My bet here is that it's rare to go for a swapfile on non-rotational
+devices, and even rarer to create the swapfile when the filesystem is
+already fragmented. 
+ 
+RHEL-8, v4.18-based, is starting to see more adpters among Red Hat's
+customer base, thus the report now. We are also working on a secondary 
+issue related to CONFIG_THP_SWAP, as well, where the deferred THP split
+registered shriker goes for a NULL pointer dereference in case the
+swap device is backed by a rotational drive.
+
+-- Rafael
+
