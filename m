@@ -2,127 +2,175 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD8E207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88531207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqfYIi+H"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kDV3mrfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgHSIs2 (ORCPT
+        id S1726870AbgHSIuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgHSIs0 (ORCPT
+        Wed, 19 Aug 2020 04:50:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38336 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgHSIug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:48:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9240DC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id j13so787951pjd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yFi8zTtrImZDILchnlZzIR1IxDR1uqiy2tgSbT1x9s8=;
-        b=OqfYIi+HkhrNDJaXoxGNw9xfIPQWaGQbceAbY/S48XEG94k3Imgo6Hg4slYsNTHK9K
-         0LEXROlE6/nW7Nb6voPpSBVnaS1rIBBgsgz2QUNH2Mx/XCE2Ro7aG1lABGqAIxYKEL6b
-         zsMxhkj/uz45O7VtOvSYZtAA+C4DdCu3QyOF4W+jWK86J5IJyVTVKBcrJ04Q/1M0pzGN
-         mHsKp/LlUtNLllvRy55f3EMeXPCGLD/S1iH17joZJ8WE750GuyHkFICKI2GrHTlTKGNG
-         B8jDLrhPhXTVqQ45EM1fw24MhpOrc/LicvB5y7Qp1sXQZaUaK/wG7//6nw1q0QQ/k7gf
-         XVtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yFi8zTtrImZDILchnlZzIR1IxDR1uqiy2tgSbT1x9s8=;
-        b=po6uNIBBF0j+FkQhXacPBdvINXmL1M2Da1NFgdsjlrEI6IB7tN3f6Z2FZqazqG+mU6
-         OvadRw9ZWCwCeDi4yLPruCdvLqrIi0f3xNmd7SwUmZnq4c5VxdKkIaWWpZcJeWdQRQUI
-         xgsU5QwvT/Mu6BTL4H4XmFNMBKBAEuhS3i+vCbMHEWDWd98B3Dtfv1amwjhu6BfGF8WY
-         JHzVg6kteEJetrasJJNdRneNHoGrLkRbY5SayeONE8Tk13iD5QQcll8SyY5YtLGUpL6t
-         zvVfAdK9rE3GJnE0jip4PIcO3Flt2Z/xxaMmmo6xGWNeMKX0Wpc9qCoq3lhYvR4Tpfvq
-         pLow==
-X-Gm-Message-State: AOAM530JhAuIQ7gsfL5BrBBRExqvXAsowcCgOYcKiC9WSlBJXdQNHpTS
-        9BGKLFbkCUs0KjVDKfwrODtwqw==
-X-Google-Smtp-Source: ABdhPJwWbnU935IzaGsltr+HTXM80XTYPnZrgfrNRJD2kJjhKoPlGyc+WMVx87B7iNrVY/YI89PEbA==
-X-Received: by 2002:a17:90a:ee8d:: with SMTP id i13mr3368081pjz.19.1597826906130;
-        Wed, 19 Aug 2020 01:48:26 -0700 (PDT)
-Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id z25sm28153492pfg.150.2020.08.19.01.48.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 01:48:25 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Al Grant <al.grant@arm.com>, Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 2/2] perf intel-pt: Fix corrupt data after perf inject from
-Date:   Wed, 19 Aug 2020 16:47:51 +0800
-Message-Id: <20200819084751.17686-2-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819084751.17686-1-leo.yan@linaro.org>
-References: <20200819084751.17686-1-leo.yan@linaro.org>
+        Wed, 19 Aug 2020 04:50:36 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J8nMXV137573;
+        Wed, 19 Aug 2020 04:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=xAYeKHW/+Z92JV4H3sNpKkOnm0wWuGsKoCdnJ1LtkJM=;
+ b=kDV3mrfBjpXFkq1WaCdvTSEYM8HFBYOZAJAMIm78jSuKtftX0BU/UBPU+45XGpvmcPOP
+ p27FnFW9gbLqX++YGh/siRKUfRs6LIBs9BCOWMYFiQhPLOKggyHnknL7iDgXWVnl5VMu
+ chFLkVoDAnWmetQNKCGwsKmJ05TTzPgHSpTl5DKWlXGgBqM4hsYvEVpOPG44lUHoD9Dz
+ WkVyXhJzW5Y6JdF0DDd2OKnk0C3CITAwRcmT4tFU/NzAi9syRL4HB16gxiJAcCixGBnU
+ K34TzTn6/xe2P2QThbpPtwCO5XZcctXNxAVBlNYY/cLjbS2+QS9k3aZ+eTYJ8x2Mt3R6 HA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304r447d9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 04:50:26 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07J8nsmS139800;
+        Wed, 19 Aug 2020 04:50:25 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304r447c9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 04:50:25 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07J8nGOj023704;
+        Wed, 19 Aug 2020 08:50:22 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 3304um1mkc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 08:50:22 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07J8oJsc31850946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Aug 2020 08:50:19 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D14211C04C;
+        Wed, 19 Aug 2020 08:50:19 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D94111C04A;
+        Wed, 19 Aug 2020 08:50:19 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.33.131])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Aug 2020 08:50:18 +0000 (GMT)
+Subject: Re: [PATCH v8 1/2] virtio: let arch validate VIRTIO features
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <1597762711-3550-1-git-send-email-pmorel@linux.ibm.com>
+ <1597762711-3550-2-git-send-email-pmorel@linux.ibm.com>
+ <20200818191910.1fc300f2.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <64acd55a-8a22-4b84-0f9e-e13196c1520d@linux.ibm.com>
+Date:   Wed, 19 Aug 2020 10:50:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200818191910.1fc300f2.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_04:2020-08-19,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Grant <al.grant@arm.com>
 
-Commit 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
-changed the format of branch stacks in perf samples. When samples use
-this new format, a flag must be set in the corresponding event.
-Synthesized branch stacks generated from Intel PT were using the new
-format, but not setting the event attribute, leading to consumers
-seeing corrupt data. This patch fixes the issue by setting the event
-attribute to indicate use of the new format.
 
-Fixes: 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
-Signed-off-by: Al Grant <al.grant@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/intel-pt.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+On 2020-08-18 19:19, Cornelia Huck wrote:
+> On Tue, 18 Aug 2020 16:58:30 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+...
+>> +config ARCH_HAS_RESTRICTED_MEMORY_ACCESS
+>> +	bool
+>> +	help
+>> +	  This option is selected by any architecture enforcing
+>> +	  VIRTIO_F_IOMMU_PLATFORM
+> 
+> This option is only for a very specific case of "restricted memory
+> access", namely the kind that requires IOMMU_PLATFORM for virtio
+> devices. ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS? Or is this intended
+> to cover cases outside of virtio as well?
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 2a8d245351e7..0af4e81c46e2 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -3017,8 +3017,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
- 
- 	if (pt->synth_opts.callchain)
- 		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
--	if (pt->synth_opts.last_branch)
-+	if (pt->synth_opts.last_branch) {
- 		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-+		/*
-+		 * We don't use the hardware index, but the sample generation
-+		 * code uses the new format branch_stack with this field,
-+		 * so the event attributes must indicate that it's present.
-+		 */
-+		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
-+	}
- 
- 	if (pt->synth_opts.instructions) {
- 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+AFAIK we did not identify other restrictions so adding VIRTIO in the 
+name should be the best thing to do.
+
+If new restrictions appear they also may be orthogonal.
+
+I will change to ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS if no one 
+complains.
+
+> 
+>> +
+>>   menuconfig VIRTIO_MENU
+>>   	bool "Virtio drivers"
+>>   	default y
+>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+>> index a977e32a88f2..1471db7d6510 100644
+>> --- a/drivers/virtio/virtio.c
+>> +++ b/drivers/virtio/virtio.c
+>> @@ -176,6 +176,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> +	ret = arch_has_restricted_memory_access(dev);
+>> +	if (ret)
+>> +		return ret;
+> 
+> Hm, I'd rather have expected something like
+> 
+> if (arch_has_restricted_memory_access(dev)) {
+
+may be also change the callback name to
+arch_has_restricted_virtio_memory_access() ?
+
+> 	// enforce VERSION_1 and IOMMU_PLATFORM
+> }
+> 
+> Otherwise, you're duplicating the checks in the individual architecture
+> callbacks again.
+
+Yes, I agree and go back this way.
+
+> 
+> [Not sure whether the device argument would be needed here; are there
+> architectures where we'd only require IOMMU_PLATFORM for a subset of
+> virtio devices?]
+
+I don't think so and since we do the checks locally, we do not need the 
+device argument anymore.
+
+
+Thanks,
+Pierre
+
 -- 
-2.17.1
-
+Pierre Morel
+IBM Lab Boeblingen
