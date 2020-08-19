@@ -2,290 +2,126 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1345F207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816B4207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hKpJhA2c"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="tjXqKCiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHSPS4 (ORCPT
+        id S1728787AbgHSPS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:18:56 -0400
-Received: from mail-bn7nam10on2070.outbound.protection.outlook.com ([40.107.92.70]:43520
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726899AbgHSPSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:18:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c98hZ5t/E0/7Ty2ow6uPCljrFqsD1iDN+MzkAQ+/FsqND+MZIdvuOeZA60G8eNSaBB1qRnIPbooZ1I7PawvASpI2AgUJ7HSDNe/47gJ2u7TIyxa1jw/JxEFY7rSz6A8c00kmP4q+b6MeyYvd0tojvAgUADDrN4tD8yyS21nmhqDB637zdOkxterwLJAltGMg+UkIcx7gFUw9lawIPW93xkhLFfZsShKnPWSpmd0ru7lqFxpj943H25+oVqCHpxDXgt31Dc6O14dyBbe6JUlZRib6O9tdMS3PITEIyKwn3UAl26m01RneU+2PTZ4stXvzrZqFzHt8EkJLaMni4JVXLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rru6mtAXlN5E8gXsyipj4kkroTm6SYVGUkafE46L2y8=;
- b=WW+jQrhZjwkG2nHIeAWZrQ344bsIWZnuYQWScic4jIrdt6Uu2EEeSBELqtR6ovBDOzZFuc1Tqz1K5131OPpsP8WKvr0LHwghxc84R3oBR27n3Wh6gFRL630EY/5zEO+722AvkXXLK45LUPeDB62C37IWFbITZrWFeF4tc/pknSj96EjEZaBnHAR4Jtnfly+OtjZ5GTm+3Phc/OQqtsfEj9TngguOmL+4Vh02A5E2ekpYjjMd7PySZemfTBXLgBtj50poVg9Fwvd1tOrk6Hf2Gi+2/pSTcv4xc1b9/aEUx3kNQ/Xkxi/vFKzdm3kR9RCVxiS/1vgoANzgKm/h004mLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 19 Aug 2020 11:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728751AbgHSPSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:18:18 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3534CC061343
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:18:18 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o21so98854wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rru6mtAXlN5E8gXsyipj4kkroTm6SYVGUkafE46L2y8=;
- b=hKpJhA2cVT80aZLe/JPxY6n+LS1wmAiR2ebsL+afhTkgDwLpY4Ts72g4vmJ3eeYePI/Z+yhOMCrGC/7sFtpcE4bV/xKRfHyFi67p3DZPbvvRM9khaSYe5d61kmlDTLesPQNxF2UyUi32RONydyadxJPaBKNsWJX6BZ0fP9rHdDU=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1307.namprd12.prod.outlook.com (2603:10b6:3:79::21) by
- DM6PR12MB3227.namprd12.prod.outlook.com (2603:10b6:5:18d::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.24; Wed, 19 Aug 2020 15:17:01 +0000
-Received: from DM5PR12MB1307.namprd12.prod.outlook.com
- ([fe80::15d7:c2da:d92a:2162]) by DM5PR12MB1307.namprd12.prod.outlook.com
- ([fe80::15d7:c2da:d92a:2162%11]) with mapi id 15.20.3283.028; Wed, 19 Aug
- 2020 15:17:01 +0000
-From:   eric van tassell <Eric.VanTassell@amd.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, hpa@zytor.com,
-        mingo@redhat.com, jmattson@google.com, joro@8bytes.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org, rientjes@google.com, junaids@google.com,
-        evantass@amd.com
-Subject: [Patch v2 4/4] KVM:SVM: Remove struct enc_region and associated pinned page tracking.
-Date:   Wed, 19 Aug 2020 10:17:42 -0500
-Message-Id: <20200819151742.7892-5-Eric.VanTassell@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819151742.7892-1-Eric.VanTassell@amd.com>
-References: <20200819151742.7892-1-Eric.VanTassell@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR19CA0045.namprd19.prod.outlook.com
- (2603:10b6:3:9a::31) To DM5PR12MB1307.namprd12.prod.outlook.com
- (2603:10b6:3:79::21)
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SxMh9e6mbIAsZJ0A31frMOmg3gZvSFe2o4lw2DcDccI=;
+        b=tjXqKCiWyEz1/E8V0+0SvbrgpGkhEZV+J4WcpM+FKGV2NoIR05VBQtd1AgB1xdvXaN
+         QZHOMP6mpfg0121lwLJ5IGNPqHzD5LYY9cFOkTXRSLm01YQRAJQQOfkkuwhhiGg/b3Va
+         TtX4ko0YbgN92D71/FgkeazzxCSklfKv5dBcTA9Ht5X1V2APTkXDdMo+EZgSySGfgt9X
+         tjJG7dK0lAgV2UM+KxF0+mzftee7kaFYzWzrzeLy17UfYn7eB8XQzZSr+JSFOCajK5mF
+         My7EL6gyX5sBZT258FUk4iH6kZIkR8Vb1TO+y5nYroZwU9xMNnBU6VtAZEwrztj6IbBy
+         Rptw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SxMh9e6mbIAsZJ0A31frMOmg3gZvSFe2o4lw2DcDccI=;
+        b=Paj4DeOTHJJq2TSg3MHfaRXdfg18LniHJ5JLQvd23zBIDAYFHmd20UlRfASZxJ4PeX
+         6auCDdxBaoj0DCRizViNVYN8KuUi7jn70np01m0TtGycyV6yHmjxrJ5TZ89EQ20+Kmuo
+         LFp1sECTfYxuOEYIqi4O5nLYh9tKcfMH3CRD93IvAJ2JsRlMuXFHtq/odvvb9uqy5JvJ
+         LP2p99FFopC9tMR/sk/UIbKIOGMalYRnZ7zoF8KiVlYmpP41bOPE6qfbZjt8CbfLuoDL
+         jtN8ea6X8q9AMPTIaPjNoS0lOQpx26z2i2BIJNTW1fjJ6qO4ow1xlSl3ZqKPS8C2oIUx
+         VD1A==
+X-Gm-Message-State: AOAM530jlqZn3u1cUZ+kIFsSYEeTMB3GOczOyXs14CtD/aQeu88vuFAK
+        rgvsCss9caqwycZEmLU60zOT7sAJwsBDI/Bx
+X-Google-Smtp-Source: ABdhPJxRmTZCdsJ36j9dI46sigvM3dovKBVuhYWw2XssKMM6VAIq/F/SfEu9/L1Ww91/o5I9Q7CMLA==
+X-Received: by 2002:a7b:c15a:: with SMTP id z26mr87263wmi.35.1597850296887;
+        Wed, 19 Aug 2020 08:18:16 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id l11sm5674200wme.11.2020.08.19.08.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 08:18:16 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 17:18:15 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Moshe Shemesh <moshe@nvidia.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
+ to devlink reload command
+Message-ID: <20200819151815.GA2575@nanopsycho.orion>
+References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+ <1597657072-3130-2-git-send-email-moshe@mellanox.com>
+ <20200817163612.GA2627@nanopsycho>
+ <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
+ <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <cd0e3d7e-4746-d26d-dd0c-eb36c9c8a10f@nvidia.com>
+ <20200819124616.GA2314@nanopsycho.orion>
+ <fc0d7c2f-afb5-c2e7-e44b-2ab5d21d8465@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from evt-speedway-83bc.amd.com (165.204.78.2) by DM5PR19CA0045.namprd19.prod.outlook.com (2603:10b6:3:9a::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 15:17:00 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0fa65ef9-2ee5-4f31-08d4-08d84452ec36
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3227:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3227D3A455C3C2420847BDFBE75D0@DM6PR12MB3227.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Po+u5wpRRRHZQv4NTKs/khatu4hjcRFF683QnsERsGBw5XX+2+aeT69ooqRsuiC/Nkmvsu6J2JMI6WgJRv66eGwhx2CVbQNVBfkGWSus3r6QFDOPjCjSpbH2g7QI/YPhyJkIUALrR3ejRefaz1Z4POpJg4XgpJWxDvd1c88fY/kXjIMpWfozdc6sRChMssR7e7Fu5zjoXdK4MRXf6oTpwG8kOmK0bR7evlhjxxUbafwvh4VR6JB8nBuTJh4WRhG17CFM+qGNaalIiXtNht3WucK/rGrJFsn6VlopcGWhd/HssCm0dDfDBS0V3GOpvhhxF8saA8j46oYfbjXdoyXOiA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1307.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(66556008)(66476007)(8676002)(66946007)(26005)(86362001)(1076003)(5660300002)(478600001)(6486002)(36756003)(316002)(83380400001)(6666004)(7416002)(2906002)(8936002)(6916009)(4326008)(2616005)(7696005)(16526019)(52116002)(186003)(956004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: sCaN32J7itaeTySZkdVZXuD/v82Uq2nlIRuwQu6kvELKAr5xGmshp4JjxZOonuWhpr3oSK6mIDOgavZ52fO7KvSVbPQ1LKr8+1U4IHmkmnjT8OELTlyuMYoPfExhQIh+UZFpRq7V2u58JjU3g5izlBr4pkMDY24bf2/lPAvc41+F4dVGng0eXY4WfML7HyE+hEHI01q76PD+NpTsdADQsyG8Vt+KL2Vk/Ch5y2NGvT7NieXGJFRQ1UtUKYPnnOOlWPz09PrBFRvSA0Bimo3d6vr4qbppRayFUenGSuRl4LxtqnwKKvjFHuikDQ9WsnA7PTrag3nx/x1a6Q9dMVjPEKJwaRXfkOOvW6vc+YhXQuvnG3Sr1yyXSy38H6fNGzJzzEfHYaxGLONP2iCNnKRzeNWHekV43tO0w3udjAE5efwDIWlm2N65XZF8wki0IWZw3Kqt7zgAd8Hxc8duOwYQs5zm8KSsCuTswmfLqNIn0RxLN/rAcoLha+gRS5c9ldLV81qkYpUjV5jy8A7hp2tb5ePiIOZMJeCYTRsD5BeoUPn7C8JXjuaBVDgBYs/LTBkawLVjHiYIx73nL95Mwq9SDXqgn/8U5nFCZsl8ojj9z99/ZiY6Zf74Pi6nHKIL/wi9D0jSTSTAR78Wlb+/WhEYoA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fa65ef9-2ee5-4f31-08d4-08d84452ec36
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1307.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 15:17:01.7774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a7oGajuq7FdJ1aAGUMZuN6NwZ1+orhESBNSJPNTZrxognrLyzriRGD8i7mGQ4/Vxf5IX+zrE4PLQD4zoYvEqPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3227
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc0d7c2f-afb5-c2e7-e44b-2ab5d21d8465@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the enc_region structure definition and the code which maintained
-it, as they are no longer needed in view of the xarray support we added in
-the previous patch.
+Wed, Aug 19, 2020 at 04:23:25PM CEST, moshe@nvidia.com wrote:
+>
+>On 8/19/2020 3:46 PM, Jiri Pirko wrote:
+>> Wed, Aug 19, 2020 at 02:18:22PM CEST, moshe@nvidia.com wrote:
+>> > On 8/19/2020 3:10 AM, Jakub Kicinski wrote:
+>> > > On Tue, 18 Aug 2020 12:10:36 +0300 Moshe Shemesh wrote:
+>> > > > On 8/17/2020 7:36 PM, Jiri Pirko wrote:
+>> > > > > Mon, Aug 17, 2020 at 11:37:40AM CEST, moshe@mellanox.com wrote:
+>> > > > > > Add devlink reload action to allow the user to request a specific reload
+>> > > > > > action. The action parameter is optional, if not specified then devlink
+>> > > > > > driver re-init action is used (backward compatible).
+>> > > > > > Note that when required to do firmware activation some drivers may need
+>> > > > > > to reload the driver. On the other hand some drivers may need to reset
+>> > > > > Sounds reasonable. I think it would be good to indicate that though. Not
+>> > > > > sure how...
+>> > > > Maybe counters on the actions done ? Actually such counters can be
+>> > > > useful on debug, knowing what reloads we had since driver was up.
+>> > > Wouldn't we need to know all types of reset of drivers may do?
+>> > 
+>> > Right, we can't tell all reset types driver may have, but we can tell which
+>> > reload actions were done.
+>> > 
+>> > > I think documenting this clearly should be sufficient.
+>> > > 
+>> > > A reset counter for the _requested_ reset type (fully maintained by
+>> > > core), however - that may be useful. The question "why did this NIC
+>> > > reset itself / why did the link just flap" comes up repeatedly.
+>> > 
+>> > I will add counters on which reload were done. reload_down()/up() can return
+>> > which actions were actually done and devlink will show counters.
+>> Why a counter? Just return what was done over netlink reply.
+>
+>
+>Such counters can be useful for debugging, telling which reload actions were
+>done on this dev from the point it was up.
 
-Leave svm_register_enc_region() and svm_unregister_enc_region() as stubs
-since the ioctl is used by qemu and qemu will crash if they do not
-return 0.
+Not sure why this is any different from other commands...
 
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: eric van tassell <Eric.VanTassell@amd.com>
----
- arch/x86/kvm/svm/sev.c | 117 +----------------------------------------
- arch/x86/kvm/svm/svm.h |   1 -
- 2 files changed, 1 insertion(+), 117 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 4a0157254fef..635e15f01edb 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -27,14 +27,6 @@ static unsigned long *sev_asid_bitmap;
- static unsigned long *sev_reclaim_asid_bitmap;
- #define __sme_page_pa(x) __sme_set(page_to_pfn(x) << PAGE_SHIFT)
- 
--struct enc_region {
--	struct list_head list;
--	unsigned long npages;
--	struct page **pages;
--	unsigned long uaddr;
--	unsigned long size;
--};
--
- static int sev_flush_asids(void)
- {
- 	int ret, error = 0;
-@@ -182,7 +174,6 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 
- 	sev->active = true;
- 	sev->asid = asid;
--	INIT_LIST_HEAD(&sev->regions_list);
- 
- 	xa_init(&sev->pages_xarray);
- 
-@@ -1074,113 +1065,18 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- int svm_register_enc_region(struct kvm *kvm,
- 			    struct kvm_enc_region *range)
- {
--	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
--	struct enc_region *region;
--	int ret = 0;
--
--	if (!sev_guest(kvm))
--		return -ENOTTY;
--
--	if (range->addr > ULONG_MAX || range->size > ULONG_MAX)
--		return -EINVAL;
--
--	region = kzalloc(sizeof(*region), GFP_KERNEL_ACCOUNT);
--	if (!region)
--		return -ENOMEM;
--
--	region->pages = sev_pin_memory(kvm, range->addr, range->size, &region->npages, 1);
--	if (IS_ERR(region->pages)) {
--		ret = PTR_ERR(region->pages);
--		goto e_free;
--	}
--
--	/*
--	 * The guest may change the memory encryption attribute from C=0 -> C=1
--	 * or vice versa for this memory range. Lets make sure caches are
--	 * flushed to ensure that guest data gets written into memory with
--	 * correct C-bit.
--	 */
--	sev_clflush_pages(region->pages, region->npages);
--
--	region->uaddr = range->addr;
--	region->size = range->size;
--
--	mutex_lock(&kvm->lock);
--	list_add_tail(&region->list, &sev->regions_list);
--	mutex_unlock(&kvm->lock);
--
--	return ret;
--
--e_free:
--	kfree(region);
--	return ret;
--}
--
--static struct enc_region *
--find_enc_region(struct kvm *kvm, struct kvm_enc_region *range)
--{
--	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
--	struct list_head *head = &sev->regions_list;
--	struct enc_region *i;
--
--	list_for_each_entry(i, head, list) {
--		if (i->uaddr == range->addr &&
--		    i->size == range->size)
--			return i;
--	}
--
--	return NULL;
--}
--
--static void __unregister_enc_region_locked(struct kvm *kvm,
--					   struct enc_region *region)
--{
--	sev_unpin_memory(kvm, region->pages, region->npages);
--	list_del(&region->list);
--	kfree(region);
-+	return 0;
- }
- 
- int svm_unregister_enc_region(struct kvm *kvm,
- 			      struct kvm_enc_region *range)
- {
--	struct enc_region *region;
--	int ret;
--
--	mutex_lock(&kvm->lock);
--
--	if (!sev_guest(kvm)) {
--		ret = -ENOTTY;
--		goto failed;
--	}
--
--	region = find_enc_region(kvm, range);
--	if (!region) {
--		ret = -EINVAL;
--		goto failed;
--	}
--
--	/*
--	 * Ensure that all guest tagged cache entries are flushed before
--	 * releasing the pages back to the system for use. CLFLUSH will
--	 * not do this, so issue a WBINVD.
--	 */
--	wbinvd_on_all_cpus();
--
--	__unregister_enc_region_locked(kvm, region);
--
--	mutex_unlock(&kvm->lock);
- 	return 0;
--
--failed:
--	mutex_unlock(&kvm->lock);
--	return ret;
- }
- 
- void sev_vm_destroy(struct kvm *kvm)
- {
- 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
--	struct list_head *head = &sev->regions_list;
--	struct list_head *pos, *q;
- 	XA_STATE(xas, &sev->pages_xarray, 0);
- 	struct page *xa_page;
- 
-@@ -1196,17 +1092,6 @@ void sev_vm_destroy(struct kvm *kvm)
- 	 */
- 	wbinvd_on_all_cpus();
- 
--	/*
--	 * if userspace was terminated before unregistering the memory regions
--	 * then lets unpin all the registered memory.
--	 */
--	if (!list_empty(head)) {
--		list_for_each_safe(pos, q, head) {
--			__unregister_enc_region_locked(kvm,
--				list_entry(pos, struct enc_region, list));
--		}
--	}
--
- 	/* Release each pinned page that SEV tracked in sev->pages_xarray. */
- 	xas_for_each(&xas, xa_page, ULONG_MAX) {
- 		put_page(xa_page);
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 278c46bc52aa..98d3d7b299cb 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -64,7 +64,6 @@ struct kvm_sev_info {
- 	unsigned int handle;	/* SEV firmware handle */
- 	int fd;			/* SEV device fd */
- 	unsigned long pages_locked; /* Number of pages locked */
--	struct list_head regions_list;  /* List of registered regions */
- 	struct xarray pages_xarray; /* List of PFN locked */
- };
- 
--- 
-2.17.1
-
+>
