@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F210C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E5CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B0820758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299F1207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mtqG2R5K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fHiweH4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgHSStK (ORCPT
+        id S1726897AbgHSStR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
+        Wed, 19 Aug 2020 14:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgHSStF (ORCPT
+        with ESMTP id S1726837AbgHSStH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:49:05 -0400
+        Wed, 19 Aug 2020 14:49:07 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE68CC061757;
-        Wed, 19 Aug 2020 11:49:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A89EC061757;
+        Wed, 19 Aug 2020 11:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=yHlibx9T0xrkfaCUzHO6K9mta5VlhggyQEWPghnljAs=; b=mtqG2R5K+Yx4dE8Kn6VbN3423G
-        kIyD7iHdEs9//9zn4d+MqCrVYAzK+wcoAiner0u6ns9sOmIc5tfRAgo27IXLWgMP6nwGY0e6y6pmA
-        3HyU19g7ZHaw31ZJ8zxxv6IAybbAuxOaFrkQK2spsvcHh6QuyTpP2yNUbuYLJtWlcWRvqXSIlF0jI
-        9Vy40hmXVmrp6grQd7r+oJ7KtTvTI521d9fNWtfKyyqTvGJ4P+MhRWJZc+95qtI0mQz6V/ZnZbfe4
-        Kgct1GcrVAvfxOQF0Ag9wTk4R925hXyZsT3fcWZRlbRDSahohQn09B2qh4/GBAkF9CnxwnjMmjRTs
-        EKPHJUnA==;
+        bh=SFuii2T6WPhgcSR/n6o4MUthReftxuKz6bFegDk7V6Y=; b=fHiweH4xvcHxBZBo/Hs4Zh/x8q
+        IOR/lnZgsQ40NMoRAkmTBSFUeWvZ+BhxiVYwvmJ6/Pq6aCH0ZcHkN4WQpVwHrbcFgnTPrMOR5ZG+2
+        sb+yfADxrEVowOqFCkiUp4DXUwwrI2Aoz5w+0Ps1J3NhxsPfFcad6NmL7IL38er0SZfwH6JR7ji29
+        hGF/hfcvukAn8t3r6FgFgVC4LRBRJHcWoDjO9oczio+FTlp8gZq5Lyn6eyhG8b1Bik8v4IiSoW96m
+        g4sKNy+aJq94mEab3qR1Xgw19wyvZ83QaPb2dmDmI8OXMdf9Fl7fauESRq9u9FzhI8WObi5xkFtEh
+        ACKe314Q==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8T8n-0006T8-TC; Wed, 19 Aug 2020 18:48:53 +0000
+        id 1k8T8p-0006Tz-Hr; Wed, 19 Aug 2020 18:48:55 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -52,9 +52,9 @@ Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Huang Ying <ying.huang@intel.com>,
         intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] mm: Optimise madvise WILLNEED
-Date:   Wed, 19 Aug 2020 19:48:45 +0100
-Message-Id: <20200819184850.24779-4-willy@infradead.org>
+Subject: [PATCH 6/8] mm: Convert find_get_entry to return the head page
+Date:   Wed, 19 Aug 2020 19:48:48 +0100
+Message-Id: <20200819184850.24779-7-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200819184850.24779-1-willy@infradead.org>
 References: <20200819184850.24779-1-willy@infradead.org>
@@ -65,57 +65,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of calling find_get_entry() for every page index, use an XArray
-iterator to skip over NULL entries, and avoid calling get_page(),
-because we only want the swap entries.
+There are only three callers remaining of find_get_entry().
+find_get_swap_page() is happy to get the head page instead of the subpage.
+Add find_subpage() calls to find_lock_entry() and pagecache_get_page()
+to avoid auditing all their callers.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/madvise.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ include/linux/pagemap.h |  4 ++--
+ mm/filemap.c            | 13 +++++++------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index dd1d43cf026d..96189acd6969 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -224,25 +224,28 @@ static void force_shm_swapin_readahead(struct vm_area_struct *vma,
- 		unsigned long start, unsigned long end,
- 		struct address_space *mapping)
- {
--	pgoff_t index;
-+	XA_STATE(xas, &mapping->i_pages, linear_page_index(vma, start));
-+	pgoff_t end_index = end / PAGE_SIZE;
- 	struct page *page;
--	swp_entry_t swap;
- 
--	for (; start < end; start += PAGE_SIZE) {
--		index = ((start - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
-+	rcu_read_lock();
-+	xas_for_each(&xas, page, end_index) {
-+		swp_entry_t swap;
- 
--		page = find_get_entry(mapping, index);
--		if (!xa_is_value(page)) {
--			if (page)
--				put_page(page);
-+		if (!xa_is_value(page))
- 			continue;
--		}
-+		rcu_read_unlock();
-+
- 		swap = radix_to_swp_entry(page);
- 		page = read_swap_cache_async(swap, GFP_HIGHUSER_MOVABLE,
- 							NULL, 0, false);
- 		if (page)
- 			put_page(page);
-+
-+		rcu_read_lock();
-+		xas_reset(&xas);
- 	}
-+	rcu_read_unlock();
- 
- 	lru_add_drain();	/* Push any new pages onto the LRU now */
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 7de11dcd534d..8261c64f592d 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -384,8 +384,8 @@ static inline struct page *find_subpage(struct page *head, pgoff_t index)
+ 	return head + (index & (thp_nr_pages(head) - 1));
  }
+ 
+-struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
+-struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset);
++struct page *find_get_entry(struct address_space *mapping, pgoff_t index);
++struct page *find_lock_entry(struct address_space *mapping, pgoff_t index);
+ unsigned find_get_entries(struct address_space *mapping, pgoff_t start,
+ 			  unsigned int nr_entries, struct page **entries,
+ 			  pgoff_t *indices);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 36067cf7f8c5..5a87e1bdddd6 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1547,19 +1547,19 @@ EXPORT_SYMBOL(page_cache_prev_miss);
+ /**
+  * find_get_entry - find and get a page cache entry
+  * @mapping: the address_space to search
+- * @offset: the page cache index
++ * @index: The page cache index.
+  *
+  * Looks up the page cache slot at @mapping & @offset.  If there is a
+- * page cache page, it is returned with an increased refcount.
++ * page cache page, the head page is returned with an increased refcount.
+  *
+  * If the slot holds a shadow entry of a previously evicted page, or a
+  * swap entry from shmem/tmpfs, it is returned.
+  *
+- * Return: the found page or shadow entry, %NULL if nothing is found.
++ * Return: The head page or shadow entry, %NULL if nothing is found.
+  */
+-struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
++struct page *find_get_entry(struct address_space *mapping, pgoff_t index)
+ {
+-	XA_STATE(xas, &mapping->i_pages, offset);
++	XA_STATE(xas, &mapping->i_pages, index);
+ 	struct page *page;
+ 
+ 	rcu_read_lock();
+@@ -1587,7 +1587,6 @@ struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
+ 		put_page(page);
+ 		goto repeat;
+ 	}
+-	page = find_subpage(page, offset);
+ out:
+ 	rcu_read_unlock();
+ 
+@@ -1624,6 +1623,7 @@ struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset)
+ 			put_page(page);
+ 			goto repeat;
+ 		}
++		page = find_subpage(page, offset);
+ 		VM_BUG_ON_PAGE(page_to_pgoff(page) != offset, page);
+ 	}
+ 	return page;
+@@ -1670,6 +1670,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t index,
+ 		page = NULL;
+ 	if (!page)
+ 		goto no_page;
++	page = find_subpage(page, index);
+ 
+ 	if (fgp_flags & FGP_LOCK) {
+ 		if (fgp_flags & FGP_NOWAIT) {
 -- 
 2.28.0
 
