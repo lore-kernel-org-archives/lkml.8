@@ -2,122 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E506C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD22B20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597861402;
-	bh=OwGoJNs0Ttl+Vu54pF8Ud5u5yVWd5WGKYMwDSRyuwTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U0tzcsCAk65lgM5EstWEiRUcULnlngelSC/+oc9F1dpqFw9KkooyHyL7BEDzD7kCB
-	 1b5oymdIL8w8n/Lflr6HDgS8YRqCH42O5x2JYlt+UdrsWN7AkY0vwDumcC4XNHIn/8
-	 81UlYaIpak8/xnL5hgBgbiypSED+hXCEnajn6UI8=
+	by mail.kernel.org (Postfix) with ESMTP id 3B74320758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHSSXV (ORCPT
+        id S1726676AbgHSSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47334 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 14:24:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44006 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSSXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:23:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F95F20758;
-        Wed, 19 Aug 2020 18:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597861397;
-        bh=OwGoJNs0Ttl+Vu54pF8Ud5u5yVWd5WGKYMwDSRyuwTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wrfIdnAXHGlNYHqh2Mi5K5gD2GKzsLOxlqCgyVHYlblCLjdAn13+HE4CT0pYSLPZE
-         /zc9qEl+GdLHveh5rW6KYUX/IOhxrH+UxdhJZYhcELYHIS+x5JDujMPidSZh0yCtoW
-         6of3mL2pEIaat/HNp3aljTR+hSQtWYIAreXJXh1A=
-Date:   Wed, 19 Aug 2020 19:22:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: core: add of_match_full_name boolean flag
-Message-ID: <20200819182245.GE5441@sirena.org.uk>
-References: <20200819140448.51373-1-cristian.marussi@arm.com>
+        id S1725804AbgHSSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 14:24:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CF93BAC85;
+        Wed, 19 Aug 2020 18:25:12 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     f.fainelli@gmail.com, hch@lst.de,
+        linux-rpi-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RFC] arm64: mm: Do not use both DMA zones when 30-bit address space unavailable
+Date:   Wed, 19 Aug 2020 20:24:33 +0200
+Message-Id: <20200819182434.28196-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lkTb+7nhmha7W+c3"
-Content-Disposition: inline
-In-Reply-To: <20200819140448.51373-1-cristian.marussi@arm.com>
-X-Cookie: I wish you were a Scotch on the rocks.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no benefit in splitting the 32-bit address space into two
+distinct DMA zones when the 30-bit address space isn't even available on
+a device. If that is the case, default to one big ZONE_DMA spanning the
+whole 32-bit address space.
 
---lkTb+7nhmha7W+c3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This will help reduce some of the issues we've seen with big crash
+kernel allocations.
 
-On Wed, Aug 19, 2020 at 03:04:48PM +0100, Cristian Marussi wrote:
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-> Property 'regulator-compatible' is now deprecated (even if still widely
-> used in the code base), and the node-name fallback works fine only as long
+Whith this patch, on a 8GB RPi4 the setup looks like this:
 
-I'm seeing a very small number of DTs using it, the majority of which
-are pretty old - the arm64 ones are just mistakes on the part of
-reviewers.
+	DMA      [mem 0x0000000000000000-0x000000003fffffff]
+	DMA32    [mem 0x0000000040000000-0x00000000ffffffff]
+	Normal   [mem 0x0000000100000000-0x00000001ffffffff]
 
-> as the nodes are named in an unique way; if it makes sense to use a common
-> name and identifying them using an index through a 'reg' property the
-> standard advices to use a naming in the form <common-name>@<unit>.
+And stock 8GB virtme/qemu:
 
-> In this case the above matching mechanism based on the simple (common) name
-> will fail and the only viable alternative would be to properly define the
-> deprecrated 'regulator-compatible' property equal to the full name
-> <common-name>@<unit>.
+	DMA      [mem 0x0000000040000000-0x00000000ffffffff]
+	DMA32    empty
+	Normal   [mem 0x0000000100000000-0x000000023fffffff]
 
-This seems like a massive jump.  You appear to be saying that the reg
-property is unusable which doesn't seem right to me?
+ arch/arm64/mm/init.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-> In order to address this case without using such deprecated property,
-> define a new boolean flag .of_match_full_name in struct regulator_desc to
-> force the core to match against the node full-name instead.
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index b6881d61b818..857a62611d7a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -183,13 +183,20 @@ static void __init reserve_elfcorehdr(void)
+ 
+ /*
+  * Return the maximum physical address for a zone with a given address size
+- * limit. It currently assumes that for memory starting above 4G, 32-bit
+- * devices will use a DMA offset.
++ * limit or zero if memory starts from an address higher than the zone targeted.
++ * It currently assumes that for memory starting above 4G, 32-bit devices will
++ * use a DMA offset.
+  */
+ static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
+ {
+-	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, zone_bits);
+-	return min(offset + (1ULL << zone_bits), memblock_end_of_DRAM());
++	phys_addr_t base = memblock_start_of_DRAM();
++	phys_addr_t offset = base & GENMASK_ULL(63, 32);
++	s64 zone_size = (1ULL << zone_bits) - (base & DMA_BIT_MASK(32));
++
++	if (zone_size <= 0)
++		return 0;
++
++	return min(base + zone_size + offset, memblock_end_of_DRAM());
+ }
+ 
+ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+@@ -390,6 +397,20 @@ void __init arm64_memblock_init(void)
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+ 		zone_dma_bits = ARM64_ZONE_DMA_BITS;
+ 		arm64_dma_phys_limit = max_zone_phys(ARM64_ZONE_DMA_BITS);
++
++		/*
++		 * We don't want to split the 32 bit address space into two DMA
++		 * zones when the target lower physical address range doesn't
++		 * exist. For example, if memory starts at 0x80000000 it's
++		 * pointless to create a ZONE_DMA distinct of ZONE_DMA32 as
++		 * there's no way to access the 30-bit address space. If that's
++		 * the case just expand ZONE_DMA to cover the whole 32-bit
++		 * address space.
++		 */
++		if (!arm64_dma_phys_limit) {
++			zone_dma_bits = 32;
++			arm64_dma_phys_limit = max_zone_phys(32);
++		}
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-- 
+2.28.0
 
-I can't tell from this description what this change is intended to do,
-and I suspect it'd be difficult for anyone trying to figure out if they
-should use this or not.  What is a full name and what should people put
-in there?  What would one look like for example?  I have to look at the
-code to see that this is changing to compare against the full_name field
-in the node and there's no kerneldoc for struct device_node.
-
-I'm also wondering why we can't just add this to the list of fallbacks
-rather than requiring some custom per driver thing?
-
-> -			name = child->name;
-> +			name = !desc->of_match_full_name ?
-> +				child->name : child->full_name;
-
-Please write normal conditional statements for the benefits of people
-who have to read this code, the extra ! in there isn't adding anything
-here either.
-
---lkTb+7nhmha7W+c3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl89bfQACgkQJNaLcl1U
-h9AuFgf9Hj7Oa33NEHJ3sPvuG8dP1aQ/1zqafnOMv54X3YZOtl2D34g0B3qPU8TX
-pbvvRhVRiH7nPzp/bz24inYXVKITjDVkEpy2n2+szyj8TeqgSEkLKxAmCsbkwkYT
-MmlgYN0HnyUhV83R96tZEzIJjmWrcmn0hZ8dxXBsSTJ2wtMIsrz44xkPW6YSDzG+
-jbmbWPAuCHD7sXVLnogIsTpE/h9ZjoCAkaFZHpTeUVy69zEIaqSPNb8TQPxWpu3a
-uv6c+ybD4StLq7+x4N1+qoya2u+DuJ9wMJSJTQah2OPGJgvIno1uOy77G8D0m54y
-PFiOoPl9rEKlgzxtIJqrOMcIlTgbrQ==
-=yaji
------END PGP SIGNATURE-----
-
---lkTb+7nhmha7W+c3--
