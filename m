@@ -2,147 +2,92 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95230C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 628D5206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597837404;
-	bh=oRLqxLOhAk2wnqABtg3LIfVpl96FyLYFzASr1U/ua+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lixgbSqIYC3hQpDYrLGsAumvdm6RYtS7+ZE9ob1D4KLJvz0P8zIzWYEB/WPXfacgj
-	 BnWI7P0xBiEtuKm26ylLhtix5FNYcMHlptHab0kHeb5G7HbYWxmKo4RyjHvwLmBV5f
-	 hz0W9ccWorvW9A72w4kR14kizEFJ07UJNZMjuwDo=
+	by mail.kernel.org (Postfix) with ESMTP id 1E65C207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RXOzKbrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgHSLnU (ORCPT
+        id S1728013AbgHSLnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgHSLm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:42:57 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB23E206FA;
-        Wed, 19 Aug 2020 11:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597837376;
-        bh=oRLqxLOhAk2wnqABtg3LIfVpl96FyLYFzASr1U/ua+Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2Z9IophMNzk8pDJ8BdCg/mK2k2gQuqV8UM0qQAmx+Sn6zj919AK6cSjrUfOGKNQT4
-         FgdC+v6CR36y9JK0bGfz3O20UZlSub/rKj1DDNqRtiGiQklQFxbD8gym7lAVbdhBXm
-         bYUybp6KP1/X0bvM8WCYlmLMym+12jW5T0ZamYZo=
-Date:   Wed, 19 Aug 2020 14:42:44 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v4 0/6] mm: introduce memfd_secret system call to create
- "secret" memory areas
-Message-ID: <20200819114244.GT752365@kernel.org>
-References: <20200818141554.13945-1-rppt@kernel.org>
- <e82ca20e-a88e-d7ff-e99b-4189aac54f3a@redhat.com>
+        Wed, 19 Aug 2020 07:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgHSLnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:43:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF20C061757;
+        Wed, 19 Aug 2020 04:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ak4zJfL3jaSZH9A144fE0Ks6867bEAtu2NTkcDH4RvU=; b=RXOzKbrxZsfW3t1Wc6xtkyc7lT
+        I+02t0IG7W47hbjx6qsg4QiL6EcBfdWn2aBpC7gmY52ux5erb1OYdpDwQu58mJ9ZG4hmTgVFgDIMb
+        CKVgKq/EMapYfJeCEq7+sPv9fSjNFOr1z7bYFj6ovfyc3jt7+Gpy0dV/1c6OSRwXnmYUu9ayo7G9H
+        acNNDxZjmcEBy/nqgab4XdpN5SnxJPNEca2H4ALpDZ/QhF6XGF/hKvoViSs2EYF4g1sUHQMErIgKf
+        EqDgis9otkTiDaVkk0eQYqWc/Bxf9X8D3dXkNa/TV+XSz6A0hxRiY7AUM3ESI0ctl2xdYmsUfjk+Y
+        R2hAdK3Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8MUn-0002W6-IT; Wed, 19 Aug 2020 11:43:09 +0000
+Date:   Wed, 19 Aug 2020 12:43:09 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     alex.shi@linux.alibaba.com, yang.shi@linux.alibaba.com,
+        lkp@intel.com, rong.a.chen@intel.com, khlebnikov@yandex-team.ru,
+        kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
+        linux-mm@kvack.org, shakeelb@google.com, hannes@cmpxchg.org,
+        tj@kernel.org, cgroups@vger.kernel.org, akpm@linux-foundation.org,
+        richard.weiyang@gmail.com, mgorman@techsingularity.net,
+        iamjoonsoo.kim@lge.com
+Subject: Re: [RFC PATCH v2 1/5] mm: Identify compound pages sooner in
+ isolate_migratepages_block
+Message-ID: <20200819114309.GB17456@casper.infradead.org>
+References: <20200819041852.23414.95939.stgit@localhost.localdomain>
+ <20200819042705.23414.84098.stgit@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e82ca20e-a88e-d7ff-e99b-4189aac54f3a@redhat.com>
+In-Reply-To: <20200819042705.23414.84098.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:47:54PM +0200, David Hildenbrand wrote:
-> On 18.08.20 16:15, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Hi,
-> > 
-> > This is an implementation of "secret" mappings backed by a file descriptor. 
-> > 
-> > v4 changes:
-> > * rebase on v5.9-rc1
-> > * Do not redefine PMD_PAGE_ORDER in fs/dax.c, thanks Kirill
-> > * Make secret mappings exclusive by default and only require flags to
-> >   memfd_secret() system call for uncached mappings, thanks again Kirill :)
-> > 
-> > v3 changes:
-> > * Squash kernel-parameters.txt update into the commit that added the
-> >   command line option.
-> > * Make uncached mode explicitly selectable by architectures. For now enable
-> >   it only on x86.
-> > 
-> > v2 changes:
-> > * Follow Michael's suggestion and name the new system call 'memfd_secret'
-> > * Add kernel-parameters documentation about the boot option
-> > * Fix i386-tinyconfig regression reported by the kbuild bot.
-> >   CONFIG_SECRETMEM now depends on !EMBEDDED to disable it on small systems
-> >   from one side and still make it available unconditionally on
-> >   architectures that support SET_DIRECT_MAP.
-> > 
-> > 
-> > The file descriptor backing secret memory mappings is created using a
-> > dedicated memfd_secret system call The desired protection mode for the
-> > memory is configured using flags parameter of the system call. The mmap()
-> > of the file descriptor created with memfd_secret() will create a "secret"
-> > memory mapping. The pages in that mapping will be marked as not present in
-> > the direct map and will have desired protection bits set in the user page
-> > table. For instance, current implementation allows uncached mappings.
-> > 
-> > Although normally Linux userspace mappings are protected from other users, 
-> > such secret mappings are useful for environments where a hostile tenant is
-> > trying to trick the kernel into giving them access to other tenants
-> > mappings.
-> > 
-> > Additionally, the secret mappings may be used as a mean to protect guest
-> > memory in a virtual machine host.
-> > 
-> 
-> Just a general question. I assume such pages (where the direct mapping
-> was changed) cannot get migrated - I can spot a simple alloc_page(). So
-> essentially a process can just allocate a whole bunch of memory that is
-> unmovable, correct? Is there any limit? Is it properly accounted towards
-> the process (memctl) ?
+On Tue, Aug 18, 2020 at 09:27:05PM -0700, Alexander Duyck wrote:
+> +		/*
+> +		 * Page is compound. We know the order before we know if it is
+> +		 * on the LRU so we cannot assume it is THP. However since the
+> +		 * page will have the LRU validated shortly we can use the value
+> +		 * to skip over this page for now or validate the LRU is set and
+> +		 * then isolate the entire compound page if we are isolating to
+> +		 * generate a CMA page.
+> +		 */
+> +		if (PageCompound(page)) {
+> +			const unsigned int order = compound_order(page);
+> +
+> +			if (likely(order < MAX_ORDER))
+> +				low_pfn += (1UL << order) - 1;
 
-The memory as accounted in the same way like with mlock(), so normal
-user won't be able to allocate more than RLIMIT_MEMLOCK.
+Hmm.  You're checking for PageCompound but then skipping 1UL << order.
+That only works if PageHead.  If instead this is PageCompound because
+it's PageTail, you need to do something like:
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+				low_pfn |= (1UL << order) - 1;
 
--- 
-Sincerely yours,
-Mike.
+which will move you to the end of the page you're in the middle of.
+
+If PageTail can't actually happen here, then it's better to check for
+PageHead explicitly and WARN_ON if you get a PageTail (eg a page was
+combined into a compound page after you processed the earlier head page).
+
+Is it possible the page you've found is hugetlbfs?  Those can have orders
+larger than MAX_ORDER.
