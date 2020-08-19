@@ -2,91 +2,91 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B65C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191F0207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4F520888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sI/pA/bx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgHSVJc (ORCPT
+        id S1727849AbgHSVJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:09:32 -0400
-Received: from mga14.intel.com ([192.55.52.115]:30132 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbgHSVJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:09:30 -0400
-IronPort-SDR: sAGR8TTRwhVSeCwFOpz4X1iNgpNghWkk7bwytvltvMsH4CMNNHGqMaj35QLXkkVcBwPPtewcWT
- jQAYhT9Ot+5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="154460928"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="154460928"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:09:30 -0700
-IronPort-SDR: 5cndTTZ4xWxk+PWXpH3ISKClr+XpZCZ8FvZ0yYib9YUt7SijssSWQhjDU7bAbvZdWB0or30SXt
- NAhYutfpCumg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="320622515"
-Received: from abojanow-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.52.107])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 14:09:27 -0700
-Date:   Thu, 20 Aug 2020 00:09:27 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial
- device
-Message-ID: <20200819210927.GF9942@linux.intel.com>
-References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
- <20200728031433.3370-3-masahisa.kojima@linaro.org>
- <20200817211440.GB44714@linux.intel.com>
- <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
+        Wed, 19 Aug 2020 17:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgHSVJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:09:37 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914C2C061757;
+        Wed, 19 Aug 2020 14:09:36 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m22so26931265ljj.5;
+        Wed, 19 Aug 2020 14:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iTxH8aQ6zdRm7CatyJufQkitwuTyzjTdgxjetIf5JZ8=;
+        b=sI/pA/bxWU4QpNbI8BhohFwPtxLNq/X17X+NHN6XjzDv0pq1QIFr74WK24nXvUJB4E
+         Oi/CCeVhd3MlnH2xcTSn5DoISr6FL0THs1RYwWKvl/kbJMY0hCRXxsJakAQG/44Fuas9
+         r+tXhztbHu745vKRkuSx8ovGtUmkhJ+79Ea1slRc6ySdeAjDwBKLxT8d+Mh70gR08JDn
+         nAKduEozJiqyaxuIcg/KeYPY3/AjaxpRDUM2a/xcfnZfX6ID0w1Sum+olnGWx4WdkaVX
+         D4BbQGGkjFHnmmoSItz8LmhW529pmRmFmiVF5FtZaYJwkLLnF6XySpSTX2c6/zHNbvFb
+         hWtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iTxH8aQ6zdRm7CatyJufQkitwuTyzjTdgxjetIf5JZ8=;
+        b=cggPFOWlBKXE5m6aQA32riQSAZpni4CzHlUD5gyr2Yg06Xgw+oH9Wm+XK5hiD2LzLi
+         RKYxOl5qIX9N0kJXW1QYa2p25q9STsxx5qZZLTnnEP9gnzGPoq9DLk2DhOA5JPQe7dsJ
+         sR7h0oN+34DlKio6+2RroYTzCieGFzQqIttffuyTxD+xww5TuJc6bvhnQw/tQrcSd0rp
+         /7UPFoGqS5NvDCRPeDer0i/2DuBixKp45AuRks869YCPxp7nIYhZ8M5kQTu1c4ne+pHy
+         GhN+4ds2hLeBSee8SKk9vbTaQZjbAnQmtb6JfOBAuRU0fK5cpjyZmfiMFvdWa728nZPC
+         oqVQ==
+X-Gm-Message-State: AOAM530o6IonKhxtzHc4oD+IFnIXlEt+UXsVjLkHbZN14XljQwPsZbH6
+        b4jEsifM7RbB3emhXxgHoZkgFvJd5bDWe/+IE1vnB4uH
+X-Google-Smtp-Source: ABdhPJwm28CPyFoUofLweCmXclD88RUEi+py1iz7v9ic57LNXyY5FVMIKRU84Hu4zvVHjdV/OQGSSRxDuTtrq424zzo=
+X-Received: by 2002:a2e:a489:: with SMTP id h9mr49271lji.121.1597871375006;
+ Wed, 19 Aug 2020 14:09:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200819010710.3959310-1-zenczykowski@gmail.com>
+In-Reply-To: <20200819010710.3959310-1-zenczykowski@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Aug 2020 14:09:23 -0700
+Message-ID: <CAADnVQLJBAgb=kg8WigZU5OBoOzvyuDGeT8bFN5j_e0MydfWfg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] net-tun: add type safety to tun_xdp_to_ptr()
+ and tun_ptr_to_xdp()
+To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:22:52PM +0200, Ard Biesheuvel wrote:
-> On Mon, 17 Aug 2020 at 23:14, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Tue, Jul 28, 2020 at 12:14:32PM +0900, Masahisa Kojima wrote:
-> > > Add a compatible string for the SynQuacer TPM to the binding for a
-> > > TPM exposed via a memory mapped TIS frame. The MMIO window behaves
-> > > slightly differently on this hardware, so it requires its own
-> > > identifier.
-> > >
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-> >
-> > I applied these patches:
-> >
-> > http://git.infradead.org/users/jjs/linux-tpmdd.git/log/refs/heads/master
-> >
-> 
-> Thanks Jarkko
+On Tue, Aug 18, 2020 at 6:07 PM Maciej =C5=BBenczykowski
+<zenczykowski@gmail.com> wrote:
+>
+> From: Maciej =C5=BBenczykowski <maze@google.com>
+>
+> This reduces likelihood of incorrect use.
+>
+> Test: builds
+> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
 
-Yeah, sorry for taking this long. I was on vacation for couple of weeks.
-
-/Jarkko
+Applied. Thanks
