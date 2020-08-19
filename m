@@ -2,143 +2,178 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DCFC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3469020FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597858443;
-	bh=1Kuiv8iGgm6SalVVkZfBiL4OHWxQAxShozxNk+zBolU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YbIqLDQqw/VqAZUYTyQzVmIZPPoZ+urLU8H2+2HGV4+FHXTM0GSB+0dMNxxrZHkBX
-	 a8hFbCuWBQlp7hqC078LAHipk99xbkam9PTtTWNIhf0wWgc1kFkoD7HUjkpT61ksQH
-	 o1fBAXUqu5XEJGRLrVTr/oBzqmsNyLiTJnD1q7jI=
+	by mail.kernel.org (Postfix) with ESMTP id 1626D207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4Yn43JU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHSReB (ORCPT
+        id S1726609AbgHSRgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgHSReA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:34:00 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E536206FA;
-        Wed, 19 Aug 2020 17:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597858440;
-        bh=1Kuiv8iGgm6SalVVkZfBiL4OHWxQAxShozxNk+zBolU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PfCq2RYoBnpI+rRZ0w6qSWuewp0KRf89Aalz44HYo9TFEhrDUQICW5QIJCrh8Ca0K
-         uLAW8PYxM/i8eVvlbksIuqNR9MKaOckhfOZhXePVk3EU37CkhLrBof1KFmHs22XZC0
-         sszvftR/cJX4BhW1GWf6wauiWhaZ3R/1Xv2rD11Y=
-Date:   Wed, 19 Aug 2020 20:33:47 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
- boot
-Message-ID: <20200819173347.GW752365@kernel.org>
-References: <20200818141554.13945-1-rppt@kernel.org>
- <20200818141554.13945-7-rppt@kernel.org>
- <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
- <20200819115335.GU752365@kernel.org>
- <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
+        Wed, 19 Aug 2020 13:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgHSRgv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:36:51 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DF0C061757;
+        Wed, 19 Aug 2020 10:36:51 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so22306159wrm.12;
+        Wed, 19 Aug 2020 10:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+bhGv6x9d7Md61hsuFNIkfPq3bcxtQviu/6k9haxoN4=;
+        b=Y4Yn43JUJRrnzNlVJ+qfW7bTGDlgp2KtAFgWc1ZC9OPN4PtPcF9CK1XSQ8U3PFJ1Tu
+         Bsm+r/sys5RMoWP28GmgJYpsd37KV1EcicLfj3QOLnX3TPMxtYJJVk1yCM3Y0w3kIfhY
+         EmQpu3G85KwwwpgqHDimPq1NhbMCE0REYYYcDYMlfiMBhnyGJSOPmgpqKDb6bTqvXRAm
+         VcjvxvQwfzAM+GBK2aL091eP/ab/HYq1kim9ftBGy5zXWJLGTve5gyYsJ6xOvtaphH+n
+         k6y63OsFV5RRYbksUcCsack5Rbaa1ukiRgAA0dZwr3rmhwOi/ViiIumPfhNQjS0qK2jj
+         mTXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+bhGv6x9d7Md61hsuFNIkfPq3bcxtQviu/6k9haxoN4=;
+        b=cy+VuMKoK461oslcLqi7nfRIXENYL4U4p3j96s0fek8ItSJhmlADzLh8zAv63+M05T
+         92g8apjq9+koiB6IdtPP8dcmluUrsGOBSg0TlaA6O5NQFsQi5AhTfmdHcyi81Fkbtyqz
+         XeLfZ5Zcfvfw3KSnJLkpu9sdXcGpLRNb8rfWtcykTRdBaHS4xcGOU0NYgOPR1NY3huUf
+         cz8PQaIhpy6R1Abxv2ChEridV5DVBVnCI/1orH/9DAf9Tc4Di7LNY/vrfsRPeMQEhqFt
+         uKwMBVz87m8PmnSTCyG1Jx+lUOjhD7w1bVdGmRlJcDbQzaYu6ujlAPLkrL4LChddNfdq
+         BohQ==
+X-Gm-Message-State: AOAM5305918VcDsvnv6RPD0H8DT9jhdC88F/GUBq7koSnXo4xXCitrff
+        ph26w1JSVaZJkOBFmaXl/w2gUDAOD3XVyoGJu7w=
+X-Google-Smtp-Source: ABdhPJzglAj2zEcuSTfR/ApGNCwL58mvFBlYw3kwcRHOHl7jcRz0JgVZV5GKXtIiD8j0Ohle/G/9WooWDkBOpUVFHgw=
+X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr4835046wrq.327.1597858609658;
+ Wed, 19 Aug 2020 10:36:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
+References: <20200817220238.603465-1-robdclark@gmail.com> <20200817220238.603465-11-robdclark@gmail.com>
+ <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+In-Reply-To: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 19 Aug 2020 10:36:38 -0700
+Message-ID: <CAF6AEGt=tGe3WQfyF_NuvJVXRbMH1=fnNK63MLpz0zxjZ9cwgQ@mail.gmail.com>
+Subject: Re: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for
+ Adreno GPU SMMU
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:10:43PM +0200, David Hildenbrand wrote:
-> On 19.08.20 13:53, Mike Rapoport wrote:
-> > On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
-> >> On 18.08.20 16:15, Mike Rapoport wrote:
-> >>> From: Mike Rapoport <rppt@linux.ibm.com>
-> >>>
-> >>> Taking pages out from the direct map and bringing them back may create
-> >>> undesired fragmentation and usage of the smaller pages in the direct
-> >>> mapping of the physical memory.
-> >>>
-> >>> This can be avoided if a significantly large area of the physical memory
-> >>> would be reserved for secretmem purposes at boot time.
-> >>>
-> >>> Add ability to reserve physical memory for secretmem at boot time using
-> >>> "secretmem" kernel parameter and then use that reserved memory as a global
-> >>> pool for secret memory needs.
-> >>
-> >> Wouldn't something like CMA be the better fit? Just wondering. Then, the
-> >> memory can actually be reused for something else while not needed.
-> > 
-> > The memory allocated as secret is removed from the direct map and the
-> > boot time reservation is intended to reduce direct map fragmentatioan
-> > and to avoid splitting 1G pages there. So with CMA I'd still need to
-> > allocate 1G chunks for this and once 1G page is dropped from the direct
-> > map it still cannot be reused for anything else until it is freed.
-> > 
-> > I could use CMA to do the boot time reservation, but doing the
-> > reservesion directly seemed simpler and more explicit to me.
-> 
-> Well, using CMA would give you the possibility to let the memory be used
-> for other purposes until you decide it's the right time to take it +
-> remove the direct mapping etc.
+On Wed, Aug 19, 2020 at 10:03 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Aug 17, 2020 at 3:03 PM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Jordan Crouse <jcrouse@codeaurora.org>
+> >
+> > Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+> > devices depend on unique features such as split pagetables,
+> > different stall/halt requirements and other settings. Identify them
+> > with a compatible string so that they can be identified in the
+> > arm-smmu implementation specific code.
+> >
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > index 503160a7b9a0..5ec5d0d691f6 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > @@ -40,6 +40,10 @@ properties:
+> >                - qcom,sm8150-smmu-500
+> >                - qcom,sm8250-smmu-500
+> >            - const: arm,mmu-500
+> > +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+> > +        items:
+> > +          - const: qcom,adreno-smmu
+> > +          - const: qcom,smmu-v2
+>
+> I know I'm kinda late to the game, but this seems weird to me,
+> especially given the later patches in the series like:
+>
+> https://lore.kernel.org/r/20200817220238.603465-19-robdclark@gmail.com
+>
+> Specifically in that patch you can see that this IOMMU already had a
+> compatible string and we're changing it and throwing away the
+> model-specific string?  I'm guessing that you're just trying to make
+> it easier for code to identify the adreno iommu, but it seems like a
+> better way would have been to just add the adreno compatible in the
+> middle, like:
+>
+>       - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+>         items:
+>           - enum:
+>               - qcom,msm8996-smmu-v2
+>               - qcom,msm8998-smmu-v2
+>               - qcom,sc7180-smmu-v2
+>               - qcom,sdm845-smmu-v2
+>         - const: qcom,adreno-smmu
+>         - const: qcom,smmu-v2
+>
+> Then we still have the SoC-specific compatible string in case we need
+> it but we also have the generic one?  It also means that we're not
+> deleting the old compatible string...
 
-I still can't say I follow you here. If I reseve a CMA area as a pool
-for secret memory 1G pages, it is still reserved and it still cannot be
-used for other purposes, right?
+I did bring up the thing about removing the compat string in an
+earlier revision of the series.. but then we realized that
+qcom,sc7180-smmu-v2 was never actually used anywhere.
 
-> I wonder if a sane approach would be to require to allocate a pool
-> during boot and only take pages ever from that pool. That would avoid
-> spilling many unmovable pages all over the place, locally limiting them
-> to your area here.
+But I guess we could:  compatible = "qcom,sc7180-smmu-v2",
+"qcom,adreno-smmu", "qcom,smmu-v2";
 
-That's what I tried to implement. The pool reserved at boot time is in a
-way similar to booting with mem=X and then splitting the remaining
-memory between the VMs.
-In this case, the memory reserved at boot is never in the direct map and
-allocations from such pool will not cause fragmentation.
+BR,
+-R
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
 
--- 
-Sincerely yours,
-Mike.
+
+
+>
+> -Doug
+>
+>
+> >        - description: Marvell SoCs implementing "arm,mmu-500"
+> >          items:
+> >            - const: marvell,ap806-smmu-500
+> > --
+> > 2.26.2
+> >
