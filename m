@@ -2,184 +2,204 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1228C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D23204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D50204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rXnENMlo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FA4/UU2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHSDm5 (ORCPT
+        id S1726718AbgHSDoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:42:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23967 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726782AbgHSDmy (ORCPT
+        Tue, 18 Aug 2020 23:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgHSDoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:42:54 -0400
-X-UUID: 182a3dc4ab7b4156b7ae08abb837b7fd-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=5pHz7TXNqAJCVq/McfmJ1XJ61fWrhwh4713bOScvi3M=;
-        b=rXnENMlogiXTewcZ1ZF4iYbKvWMTZlU5zkcXZ4qrCHXlLkFgGEAdjCCKftRj0WELoqZIHJkEJvoEY8jIu68WlDinRYpofaC+CHERnxoPLYs7bGWMPPJdIjz4q3GDPZMJuJDA2L2i9H8gY3AtCOmZOj6Zwj6rIRTYxYJBl1e4iW0=;
-X-UUID: 182a3dc4ab7b4156b7ae08abb837b7fd-20200819
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1064480434; Wed, 19 Aug 2020 11:42:44 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 11:42:43 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 11:42:39 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <mark-pk.tsai@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <yj.chiang@mediatek.com>,
-        <alix.wu@mediatek.com>, <daniel@0x0f.com>
-Subject: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 19 Aug 2020 11:42:30 +0800
-Message-ID: <20200819034231.20726-2-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
+        Tue, 18 Aug 2020 23:44:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E41C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 20:43:58 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i92so566446pje.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 20:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=LM6WEk9ZkbFt6Qg2UpRFNU3bLjYzPUz6PTE3Cs+whU4=;
+        b=FA4/UU2gVgjS/rjFwfGsWgyT+dH+LvVeCqbFb0OUeI/gWzIGoXU3gQBgpbuyKlQv1S
+         vY0apjSOiH5Lmx9d0Sdve7ESWLk1aZ9Odq7o4p8SeYfjhXQE+rqoEw212IS1yE/nbqH5
+         nb+EQqH1uyhEGYhD4HnH/3sBRgbmW9+WeJlLA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=LM6WEk9ZkbFt6Qg2UpRFNU3bLjYzPUz6PTE3Cs+whU4=;
+        b=aG6r+m3oJs2ZA/pelLeKdPuIqfXAFPlin9Y4GrEskVM1cClRkK8GsBbyhi2RYuBuBa
+         insSVp9nzB7H6ICXlkTttde3dDy1PHnWGuX6vJ7/YMq405KydkykDdkD19xa0dQ4lgNZ
+         aCCyXcUvVHJDrLOPI9u9eDif021n9EEbxqez9DeIh8bntm7JzRwHHEZXSIM2uJjx911C
+         b6e4beMz68YPHZ91h7yX/QxEgYmip2M75HlBjWDArhI5AJ2d49CMkEPIcgOBTvfNEGVN
+         M9fdpKnidAUF/KpD38RxY9J7mDDTOOuUKF5lOP7mzrSK40oR3ds7EcLQ1GEmp5ZeK8fY
+         38AA==
+X-Gm-Message-State: AOAM531H0RG/a6EZzP+/Rx4wSnZAL4DsdQcxGPQiJik3gB2w5FvmSyNu
+        oSl9EmZskz9b+yGRxtcKT5to6A==
+X-Google-Smtp-Source: ABdhPJw1IsJubYX++BUAswOcW/LVMXJ7mvqrysqRZbiBHWRN6AL/0ifU2M3IpMSDGi5didlOHQuO3w==
+X-Received: by 2002:a17:90a:c593:: with SMTP id l19mr2507622pjt.20.1597808638416;
+        Tue, 18 Aug 2020 20:43:58 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id o14sm255147pjw.11.2020.08.18.20.43.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 20:43:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200814095540.32115-3-rojay@codeaurora.org>
+References: <20200814095540.32115-1-rojay@codeaurora.org> <20200814095540.32115-3-rojay@codeaurora.org>
+Subject: Re: [PATCH 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     dianders@chromium.org, saiprakash.ranjan@codeaurora.org,
+        gregkh@linuxfoundation.org, mka@chromium.org,
+        akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
+        skakit@codeaurora.org, rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>, wsa@kernel.org
+Date:   Tue, 18 Aug 2020 20:43:56 -0700
+Message-ID: <159780863669.334488.18038785498966010175@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIE1TdGFyIGludGVycnVwdCBjb250cm9sbGVyIHN1cHBvcnQgdXNpbmcgaGllcmFyY2h5IGly
-cQ0KZG9tYWluLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBt
-ZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2lycWNoaXAvS2NvbmZpZyAgICAgICAgfCAgIDcg
-KysNCiBkcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaXJx
-Y2hpcC9pcnEtbXN0LWludGMuYyB8IDE5NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCiAzIGZpbGVzIGNoYW5nZWQsIDIwMyBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXN0LWludGMuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9pcnFjaGlwL0tjb25maWcgYi9kcml2ZXJzL2lycWNoaXAvS2NvbmZpZw0KaW5kZXggYmI3MGI3
-MTc3Zjk0Li5jM2E5ZDg4MGE0ZWEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2lycWNoaXAvS2NvbmZp
-Zw0KKysrIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCkBAIC01NzEsNCArNTcxLDExIEBAIGNv
-bmZpZyBMT09OR1NPTl9QQ0hfTVNJDQogCWhlbHANCiAJICBTdXBwb3J0IGZvciB0aGUgTG9vbmdz
-b24gUENIIE1TSSBDb250cm9sbGVyLg0KIA0KK2NvbmZpZyBNU1RfSVJRDQorCWJvb2wgIk1TdGFy
-IEludGVycnVwdCBDb250cm9sbGVyIg0KKwlzZWxlY3QgSVJRX0RPTUFJTg0KKwlzZWxlY3QgSVJR
-X0RPTUFJTl9ISUVSQVJDSFkNCisJaGVscA0KKwkgIFN1cHBvcnQgTVN0YXIgSW50ZXJydXB0IENv
-bnRyb2xsZXIuDQorDQogZW5kbWVudQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9NYWtl
-ZmlsZSBiL2RyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZQ0KaW5kZXggMTMzZjljNDU3NDRhLi5lMjY4
-OGE2MjQwM2UgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUNCisrKyBiL2Ry
-aXZlcnMvaXJxY2hpcC9NYWtlZmlsZQ0KQEAgLTExMSwzICsxMTEsNCBAQCBvYmotJChDT05GSUdf
-TE9PTkdTT05fSFRQSUMpCQkrPSBpcnEtbG9vbmdzb24taHRwaWMubw0KIG9iai0kKENPTkZJR19M
-T09OR1NPTl9IVFZFQykJCSs9IGlycS1sb29uZ3Nvbi1odHZlYy5vDQogb2JqLSQoQ09ORklHX0xP
-T05HU09OX1BDSF9QSUMpCQkrPSBpcnEtbG9vbmdzb24tcGNoLXBpYy5vDQogb2JqLSQoQ09ORklH
-X0xPT05HU09OX1BDSF9NU0kpCQkrPSBpcnEtbG9vbmdzb24tcGNoLW1zaS5vDQorb2JqLSQoQ09O
-RklHX01TVF9JUlEpCQkJKz0gaXJxLW1zdC1pbnRjLm8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL2ly
-cWNoaXAvaXJxLW1zdC1pbnRjLmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLW1zdC1pbnRjLmMNCm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjM4ZDU2Nzc0MTg2MA0KLS0t
-IC9kZXYvbnVsbA0KKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tc3QtaW50Yy5jDQpAQCAtMCww
-ICsxLDE5NSBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0Qt
-My1DbGF1c2UpDQorLyoNCisgKiBDb3B5cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0KKyAq
-IEF1dGhvciBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBtZWRpYXRlay5jb20+DQorICovDQor
-I2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KKyNp
-bmNsdWRlIDxsaW51eC9pcnEuaD4NCisjaW5jbHVkZSA8bGludXgvaXJxY2hpcC5oPg0KKyNpbmNs
-dWRlIDxsaW51eC9pcnFkb21haW4uaD4NCisjaW5jbHVkZSA8bGludXgvb2YuaD4NCisjaW5jbHVk
-ZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCisjaW5j
-bHVkZSA8bGludXgvc2xhYi5oPg0KKyNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPg0KKw0KKyNk
-ZWZpbmUgSU5UQ19NQVNLCTB4MA0KKyNkZWZpbmUgSU5UQ19FT0kJMHgyMA0KKw0KK3N0cnVjdCBt
-c3RfaW50Y19jaGlwX2RhdGEgew0KKwlyYXdfc3BpbmxvY2tfdCBsb2NrOw0KKwl1bnNpZ25lZCBp
-bnQgaXJxX3N0YXJ0LCBucl9pcnFzOw0KKwl2b2lkIF9faW9tZW0gKmJhc2U7DQorCWJvb2wgbm9f
-ZW9pOw0KK307DQorDQorc3RhdGljIHZvaWQgbXN0X3Bva2VfaXJxKHN0cnVjdCBpcnFfZGF0YSAq
-ZCwgdTMyIG9mZnNldCkNCit7DQorCWlycV9od19udW1iZXJfdCBod2lycSA9IGlycWRfdG9faHdp
-cnEoZCk7DQorCXN0cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNkID0gaXJxX2RhdGFfZ2V0X2ly
-cV9jaGlwX2RhdGEoZCk7DQorCXUxNiB2YWwsIG1hc2s7DQorDQorCW1hc2sgPSAxIDw8IChod2ly
-cSAlIDE2KTsNCisJb2Zmc2V0ICs9IChod2lycSAvIDE2KSAqIDQ7DQorDQorCXJhd19zcGluX2xv
-Y2soJmNkLT5sb2NrKTsNCisJdmFsID0gcmVhZHdfcmVsYXhlZChjZC0+YmFzZSArIG9mZnNldCkg
-fCBtYXNrOw0KKwl3cml0ZXdfcmVsYXhlZCh2YWwsIGNkLT5iYXNlICsgb2Zmc2V0KTsNCisJcmF3
-X3NwaW5fdW5sb2NrKCZjZC0+bG9jayk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG1zdF9jbGVhcl9p
-cnEoc3RydWN0IGlycV9kYXRhICpkLCB1MzIgb2Zmc2V0KQ0KK3sNCisJaXJxX2h3X251bWJlcl90
-IGh3aXJxID0gaXJxZF90b19od2lycShkKTsNCisJc3RydWN0IG1zdF9pbnRjX2NoaXBfZGF0YSAq
-Y2QgPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsNCisJdTE2IHZhbCwgbWFzazsNCisN
-CisJbWFzayA9IDEgPDwgKGh3aXJxICUgMTYpOw0KKwlvZmZzZXQgKz0gKGh3aXJxIC8gMTYpICog
-NDsNCisNCisJcmF3X3NwaW5fbG9jaygmY2QtPmxvY2spOw0KKwl2YWwgPSByZWFkd19yZWxheGVk
-KGNkLT5iYXNlICsgb2Zmc2V0KSAmIH5tYXNrOw0KKwl3cml0ZXdfcmVsYXhlZCh2YWwsIGNkLT5i
-YXNlICsgb2Zmc2V0KTsNCisJcmF3X3NwaW5fdW5sb2NrKCZjZC0+bG9jayk7DQorfQ0KKw0KK3N0
-YXRpYyB2b2lkIG1zdF9pbnRjX21hc2tfaXJxKHN0cnVjdCBpcnFfZGF0YSAqZCkNCit7DQorCW1z
-dF9wb2tlX2lycShkLCBJTlRDX01BU0spOw0KKwlpcnFfY2hpcF9tYXNrX3BhcmVudChkKTsNCit9
-DQorDQorc3RhdGljIHZvaWQgbXN0X2ludGNfdW5tYXNrX2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQp
-DQorew0KKwltc3RfY2xlYXJfaXJxKGQsIElOVENfTUFTSyk7DQorCWlycV9jaGlwX3VubWFza19w
-YXJlbnQoZCk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG1zdF9pbnRjX2VvaV9pcnEoc3RydWN0IGly
-cV9kYXRhICpkKQ0KK3sNCisJc3RydWN0IG1zdF9pbnRjX2NoaXBfZGF0YSAqY2QgPSBpcnFfZGF0
-YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsNCisNCisJaWYgKCFjZC0+bm9fZW9pKQ0KKwkJbXN0X3Bv
-a2VfaXJxKGQsIElOVENfRU9JKTsNCisNCisJaXJxX2NoaXBfZW9pX3BhcmVudChkKTsNCit9DQor
-DQorc3RhdGljIHN0cnVjdCBpcnFfY2hpcCBtc3RfaW50Y19jaGlwID0gew0KKwkubmFtZQkJCT0g
-Im1zdC1pbnRjIiwNCisJLmlycV9tYXNrCQk9IG1zdF9pbnRjX21hc2tfaXJxLA0KKwkuaXJxX3Vu
-bWFzawkJPSBtc3RfaW50Y191bm1hc2tfaXJxLA0KKwkuaXJxX2VvaQkJPSBtc3RfaW50Y19lb2lf
-aXJxLA0KKwkuaXJxX2dldF9pcnFjaGlwX3N0YXRlCT0gaXJxX2NoaXBfZ2V0X3BhcmVudF9zdGF0
-ZSwNCisJLmlycV9zZXRfaXJxY2hpcF9zdGF0ZQk9IGlycV9jaGlwX3NldF9wYXJlbnRfc3RhdGUs
-DQorCS5pcnFfc2V0X2FmZmluaXR5CT0gaXJxX2NoaXBfc2V0X2FmZmluaXR5X3BhcmVudCwNCisJ
-LmlycV9zZXRfdmNwdV9hZmZpbml0eQk9IGlycV9jaGlwX3NldF92Y3B1X2FmZmluaXR5X3BhcmVu
-dCwNCisJLmlycV9zZXRfdHlwZQkJPSBpcnFfY2hpcF9zZXRfdHlwZV9wYXJlbnQsDQorCS5pcnFf
-cmV0cmlnZ2VyCQk9IGlycV9jaGlwX3JldHJpZ2dlcl9oaWVyYXJjaHksDQorCS5mbGFncwkJCT0g
-SVJRQ0hJUF9TRVRfVFlQRV9NQVNLRUQgfA0KKwkJCQkgIElSUUNISVBfU0tJUF9TRVRfV0FLRSB8
-DQorCQkJCSAgSVJRQ0hJUF9NQVNLX09OX1NVU1BFTkQsDQorfTsNCisNCitzdGF0aWMgaW50IG1z
-dF9pbnRjX2RvbWFpbl90cmFuc2xhdGUoc3RydWN0IGlycV9kb21haW4gKmQsDQorCQkJCSAgICAg
-c3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywNCisJCQkJICAgICB1bnNpZ25lZCBsb25nICpod2ly
-cSwNCisJCQkJICAgICB1bnNpZ25lZCBpbnQgKnR5cGUpDQorew0KKwlpZiAoaXNfb2Zfbm9kZShm
-d3NwZWMtPmZ3bm9kZSkpIHsNCisJCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQorCQkJ
-cmV0dXJuIC1FSU5WQUw7DQorDQorCQkvKiBObyBQUEkgc2hvdWxkIHBvaW50IHRvIHRoaXMgZG9t
-YWluICovDQorCQlpZiAoZndzcGVjLT5wYXJhbVswXSAhPSAwKQ0KKwkJCXJldHVybiAtRUlOVkFM
-Ow0KKw0KKwkJKmh3aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCisJCSp0eXBlID0gZndzcGVjLT5w
-YXJhbVsyXSAmIElSUV9UWVBFX1NFTlNFX01BU0s7DQorCQlyZXR1cm4gMDsNCisJfQ0KKw0KKwly
-ZXR1cm4gLUVJTlZBTDsNCit9DQorDQorc3RhdGljIGludCBtc3RfaW50Y19kb21haW5fYWxsb2Mo
-c3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwgdW5zaWduZWQgaW50IHZpcnEsDQorCQkJCSB1bnNp
-Z25lZCBpbnQgbnJfaXJxcywgdm9pZCAqZGF0YSkNCit7DQorCWludCBpOw0KKwlpcnFfaHdfbnVt
-YmVyX3QgaHdpcnE7DQorCXN0cnVjdCBpcnFfZndzcGVjIHBhcmVudF9md3NwZWMsICpmd3NwZWMg
-PSBkYXRhOw0KKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXN0X2lu
-dGNfY2hpcF9kYXRhICopZG9tYWluLT5ob3N0X2RhdGE7DQorDQorCS8qIE5vdCBHSUMgY29tcGxp
-YW50ICovDQorCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQorCQlyZXR1cm4gLUVJTlZB
-TDsNCisNCisJLyogTm8gUFBJIHNob3VsZCBwb2ludCB0byB0aGlzIGRvbWFpbiAqLw0KKwlpZiAo
-ZndzcGVjLT5wYXJhbVswXSkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoZndzcGVjLT5w
-YXJhbVsxXSA+PSBjZC0+bnJfaXJxcykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlod2lycSA9
-IGZ3c3BlYy0+cGFyYW1bMV07DQorCWZvciAoaSA9IDA7IGkgPCBucl9pcnFzOyBpKyspDQorCQlp
-cnFfZG9tYWluX3NldF9od2lycV9hbmRfY2hpcChkb21haW4sIHZpcnEgKyBpLCBod2lycSArIGks
-DQorCQkJCQkgICAgICAmbXN0X2ludGNfY2hpcCwNCisJCQkJCSAgICAgIGRvbWFpbi0+aG9zdF9k
-YXRhKTsNCisNCisJcGFyZW50X2Z3c3BlYyA9ICpmd3NwZWM7DQorCXBhcmVudF9md3NwZWMuZndu
-b2RlID0gZG9tYWluLT5wYXJlbnQtPmZ3bm9kZTsNCisJcGFyZW50X2Z3c3BlYy5wYXJhbVsxXSA9
-IGNkLT5pcnFfc3RhcnQgKyBod2lycTsNCisJcmV0dXJuIGlycV9kb21haW5fYWxsb2NfaXJxc19w
-YXJlbnQoZG9tYWluLCB2aXJxLCBucl9pcnFzLCAmcGFyZW50X2Z3c3BlYyk7DQorfQ0KKw0KK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgaXJxX2RvbWFpbl9vcHMgbXN0X2ludGNfZG9tYWluX29wcyA9IHsN
-CisJLnRyYW5zbGF0ZQk9IG1zdF9pbnRjX2RvbWFpbl90cmFuc2xhdGUsDQorCS5hbGxvYwkJPSBt
-c3RfaW50Y19kb21haW5fYWxsb2MsDQorCS5mcmVlCQk9IGlycV9kb21haW5fZnJlZV9pcnFzX2Nv
-bW1vbiwNCit9Ow0KKw0KK2ludCBfX2luaXQNCittc3RfaW50Y19vZl9pbml0KHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqZG4sIHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50KQ0KK3sNCisJc3RydWN0IGly
-cV9kb21haW4gKmRvbWFpbiwgKmRvbWFpbl9wYXJlbnQ7DQorCXN0cnVjdCBtc3RfaW50Y19jaGlw
-X2RhdGEgKmNkOw0KKwl1bnNpZ25lZCBpbnQgaXJxX3N0YXJ0LCBpcnFfZW5kOw0KKw0KKwlkb21h
-aW5fcGFyZW50ID0gaXJxX2ZpbmRfaG9zdChwYXJlbnQpOw0KKwlpZiAoIWRvbWFpbl9wYXJlbnQp
-IHsNCisJCXByX2VycigibXN0LWludGM6IGludGVycnVwdC1wYXJlbnQgbm90IGZvdW5kXG4iKTsN
-CisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQorCWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMl9p
-bmRleChkbiwgIm1zdGFyLGlycXMtbWFwLXJhbmdlIiwgMCwgJmlycV9zdGFydCkgfHwNCisJICAg
-IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2luZGV4KGRuLCAibXN0YXIsaXJxcy1tYXAtcmFuZ2UiLCAx
-LCAmaXJxX2VuZCkpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJY2QgPSBremFsbG9jKHNpemVv
-ZigqY2QpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFjZCkNCisJCXJldHVybiAtRU5PTUVNOw0KKw0K
-KwljZC0+YmFzZSA9IG9mX2lvbWFwKGRuLCAwKTsNCisJaWYgKCFjZC0+YmFzZSkgew0KKwkJa2Zy
-ZWUoY2QpOw0KKwkJcmV0dXJuIC1FTk9NRU07DQorCX0NCisNCisJY2QtPm5vX2VvaSA9IG9mX3By
-b3BlcnR5X3JlYWRfYm9vbChkbiwgIm1zdGFyLGludGMtbm8tZW9pIik7DQorCXJhd19zcGluX2xv
-Y2tfaW5pdCgmY2QtPmxvY2spOw0KKwljZC0+aXJxX3N0YXJ0ID0gaXJxX3N0YXJ0Ow0KKwljZC0+
-bnJfaXJxcyA9IGlycV9lbmQgLSBpcnFfc3RhcnQgKyAxOw0KKwlkb21haW4gPSBpcnFfZG9tYWlu
-X2FkZF9oaWVyYXJjaHkoZG9tYWluX3BhcmVudCwgMCwgY2QtPm5yX2lycXMsIGRuLA0KKwkJCQkJ
-ICAmbXN0X2ludGNfZG9tYWluX29wcywgY2QpOw0KKwlpZiAoIWRvbWFpbikgew0KKwkJaW91bm1h
-cChjZC0+YmFzZSk7DQorCQlrZnJlZShjZCk7DQorCQlyZXR1cm4gLUVOT01FTTsNCisJfQ0KKw0K
-KwlyZXR1cm4gMDsNCit9DQorDQorSVJRQ0hJUF9ERUNMQVJFKG1zdF9pbnRjLCAibXN0YXIsbXN0
-LWludGMiLCBtc3RfaW50Y19vZl9pbml0KTsNCi0tIA0KMi4xOC4wDQo=
+Quoting Roja Rani Yarubandi (2020-08-14 02:55:40)
+> If the hardware is still accessing memory after SMMU translation
+> is disabled(as part of smmu shutdown callback), then the
 
+Put a space before (
+
+> IOVAs(I/O virtual address) which it was using will go on the bus
+
+Put a space before (
+
+> as the physical addresses which will result in unknown crashes
+> like NoC/interconnect errors.
+>=20
+> So, adding shutdown callback to i2c driver to unmap DMA mappings
+> during system "reboot" or "shutdown".
+>=20
+
+Deserves a Fixes: tag if it's fixing a problem, which it looks like it
+is.
+
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 36 ++++++++++++++++++++++++++++++
+>  include/linux/qcom-geni-se.h       |  5 +++++
+
+I'd prefer this is squashed with the previous patch. The first patch
+doesn't really stand on its own anyway.
+
+>  2 files changed, 41 insertions(+)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
+qcom-geni.c
+> index 53ca41f76080..749c225f95c4 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -613,6 +613,41 @@ static int geni_i2c_remove(struct platform_device *p=
+dev)
+>         return 0;
+>  }
+> =20
+> +static void geni_i2c_shutdown(struct platform_device *pdev)
+> +{
+> +       int ret;
+> +       struct geni_i2c_dev *gi2c =3D platform_get_drvdata(pdev);
+> +       struct geni_se *se =3D &gi2c->se;
+> +       u32 dma;
+> +       u32 dma_dbg_reg;
+
+Typically this is just called 'val'.
+
+> +
+> +       ret =3D pm_runtime_get_sync(gi2c->se.dev);
+> +       if (ret < 0) {
+> +               dev_err(gi2c->se.dev, "Failed to resume device:%d\n", ret=
+);
+
+Maybe just write: "Failed to resume device\n"? Not sure anyone cares
+what the error code is. And if they did, it would be connected to the
+colon so it will be hard to read. Add a space after colon if you want to
+keep the return value please.
+
+> +               return;
+> +       }
+> +
+> +       dma =3D readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
+> +       if (dma) {
+> +               dma_dbg_reg =3D readl_relaxed(gi2c->se.base + SE_DMA_DEBU=
+G_REG0);
+> +               if (dma_dbg_reg & DMA_TX_ACTIVE) {
+> +                       geni_i2c_abort_xfer(gi2c);
+> +                       gi2c->cur_wr =3D 0;
+> +                       if (gi2c->err)
+> +                               geni_i2c_tx_fsm_rst(gi2c);
+> +                       geni_se_tx_dma_unprep(se, gi2c->tx_dma, gi2c->xfe=
+r_len);
+> +               }
+> +               if (dma_dbg_reg & DMA_RX_ACTIVE) {
+> +                       geni_i2c_abort_xfer(gi2c);
+> +                       gi2c->cur_rd =3D 0;
+> +                       if (gi2c->err)
+> +                               geni_i2c_rx_fsm_rst(gi2c);
+> +                       geni_se_rx_dma_unprep(se, gi2c->rx_dma, gi2c->xfe=
+r_len);
+> +               }
+
+Can this be a function? It sort of seems like we should be doing the
+same sort of stuff if we're canceling a DMA transaction in flight.
+
+> +       }
+> +       pm_runtime_put_sync_suspend(gi2c->se.dev);
+> +}
+> +
+>  static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
+>  {
+>         int ret;
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd464943f717..acad69be747d 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -77,6 +77,7 @@ struct geni_se {
+>  #define SE_DMA_RX_FSM_RST              0xd58
+>  #define SE_HW_PARAM_0                  0xe24
+>  #define SE_HW_PARAM_1                  0xe28
+> +#define SE_DMA_DEBUG_REG0              0xe40
+> =20
+>  /* GENI_FORCE_DEFAULT_REG fields */
+>  #define FORCE_DEFAULT  BIT(0)
+> @@ -207,6 +208,10 @@ struct geni_se {
+>  #define RX_GENI_CANCEL_IRQ             BIT(11)
+>  #define RX_GENI_GP_IRQ_EXT             GENMASK(13, 12)
+> =20
+> +/* DMA DEBUG Register fields */
+
+Please follow other style, ie. SE_DMA_DEBUG_REG0 fields
+
+> +#define DMA_TX_ACTIVE                  BIT(0)
+> +#define DMA_RX_ACTIVE                  BIT(1)
+> +
+>  /* SE_HW_PARAM_0 fields */
+>  #define TX_FIFO_WIDTH_MSK              GENMASK(29, 24)
+>  #define TX_FIFO_WIDTH_SHFT             24
