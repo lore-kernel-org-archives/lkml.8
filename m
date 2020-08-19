@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830ADC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 607EF2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B920208C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597837660;
-	bh=27YoqCzmydSp3olHMeOrDUwXFIPAGPfc/YzDgqMVKcg=;
+	s=default; t=1597837670;
+	bh=O4vgNwTHiXZS7BW6/Yll/k5o8U1mTh8w04hTRoj11Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPKlF5fuBTAO+mDrtjVYUVrZDrBR019UKFsjz641Jq7Mh/Xpj883Rl8uCv82WnhB3
-	 RT3aqjN1yGRt/Uq/PFDHE1oY30KM3NwpqAHvC4I4wHTAZJTOzpt8QEFoLGje6JfxGS
-	 vJzO9SUwelZFijaWZfUSXSfhnN2aBxQPT9fFhAK0=
+	b=ezbmnnEj/eV2NZpqSSu+wtV9H43wuliD5/ibypsy27c7ZGX6OMVy5mhTq9hjoFaiu
+	 6X4NOh3xbTzVmXBp+ciNoUFoeIGMVLz5oamHu/HbqqKM/izPhs+HwQCSpEZS4uhHIh
+	 9XJP9g/0KyAJa5LnHAek4Ne+Q7I2uGB2lOPlvT/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgHSLrQ (ORCPT
+        id S1727830AbgHSLrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46514 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbgHSLqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728070AbgHSLqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 07:46:31 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F43208DB;
+        by mail.kernel.org (Postfix) with ESMTPSA id D2120214F1;
         Wed, 19 Aug 2020 11:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597837581;
-        bh=27YoqCzmydSp3olHMeOrDUwXFIPAGPfc/YzDgqMVKcg=;
+        s=default; t=1597837582;
+        bh=O4vgNwTHiXZS7BW6/Yll/k5o8U1mTh8w04hTRoj11Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZR0vqHwSatPDbmsultS+4AMQG13FkHDGbAJ4B0IKKNzKTW2AMYZT6TPEhBErPajF+
-         hqAx06gxT6fGMrrsa0HT9BrFRm5dyCcTICuhRAXxHAGNoBElaXw90oUKz4YC4Q+VUT
-         Gl6G7kjglDW1Q98z/8Z1b360HcUuhYasx+bIPNMM=
+        b=eDL3E2nDEAeo4qo4yLkxmGZyWDf//57rJI44KuYGZ1N7FbeelvAAINu0jG0VE4Bqn
+         thndG0aLa+okPvdbGCCorhre2sBNKpqQGnPGHCdFEIM+/Obkpn8xpMYawiT3pBKHs3
+         Ep6U3sFAJDOAkfguVjobKjV+63PiuWdZhU9zaI0A=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k8MXr-00EuaH-LM; Wed, 19 Aug 2020 13:46:19 +0200
+        id 1k8MXr-00EuaM-NY; Wed, 19 Aug 2020 13:46:19 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -51,19 +51,18 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Manivannan Sadhasivam <mani@kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
         Andrzej Hajda <a.hajda@samsung.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
         Rob Clark <robdclark@chromium.org>,
-        Liuyao An <anliuyao@huawei.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/49] staging: hikey9xx/gpu: Support MIPI DSI 3 lanes for hikey970.
-Date:   Wed, 19 Aug 2020 13:45:36 +0200
-Message-Id: <11d875c4d945febe2dceb7f7ca991003551b57b1.1597833138.git.mchehab+huawei@kernel.org>
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 10/49] staging: hikey9xx/gpu: add debug prints for this driver
+Date:   Wed, 19 Aug 2020 13:45:38 +0200
+Message-Id: <71e74aa8ff84a2f0b879c46a63d5f51f6d808348.1597833138.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
 References: <cover.1597833138.git.mchehab+huawei@kernel.org>
@@ -76,121 +75,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiubin Zhang <zhangxiubin1@huawei.com>
 
-Modfiy mipi dsi lanes to improve HDMI compatibility.
+Add some debug prints on adv7535 and kirin_drm_drv.
 
 Signed-off-by: Xiubin Zhang <zhangxiubin1@huawei.com>
-Signed-off-by: Liuyao An <anliuyao@huawei.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/hikey9xx/gpu/dw_drm_dsi.c     | 24 ++++++++++++-------
- drivers/staging/hikey9xx/gpu/hdmi/adv7535.c   |  4 ----
- .../staging/hikey9xx/gpu/kirin970_dpe_reg.h   |  1 +
- 3 files changed, 16 insertions(+), 13 deletions(-)
+ drivers/staging/hikey9xx/gpu/hdmi/adv7535.c  | 40 ++++++++++++++++++--
+ drivers/staging/hikey9xx/gpu/kirin_drm_drv.c |  2 +-
+ 2 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c b/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
-index e87363ab7373..2ba94fa15d0f 100644
---- a/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
-+++ b/drivers/staging/hikey9xx/gpu/dw_drm_dsi.c
-@@ -359,7 +359,10 @@ static void get_dsi_dphy_ctrl(struct dw_dsi *dsi,
- 	if (bpp < 0)
- 		return;
- 
--	dsi->client[id].lanes = 4;
-+	if (mode->clock > 80000)
-+	    dsi->client[id].lanes = 4;
-+	else
-+	    dsi->client[id].lanes = 3;
- 
- 	if (dsi->client[id].phy_clock)
- 		dphy_req_kHz = dsi->client[id].phy_clock;
-@@ -935,8 +938,7 @@ static void mipi_config_dphy_spec1v2_parameter(struct dw_dsi *dsi, char __iomem
- 	u32 lanes;
- 
- 	lanes =  dsi->client[dsi->cur_client].lanes - 1;
--
--	for (i = 0; i <= (lanes+1); i++) {
-+	for (i = 0; i <= (lanes + 1); i++) {
- 		//Lane Transmission Property
- 		addr = MIPIDSI_PHY_TST_LANE_TRANSMISSION_PROPERTY + (i << 5);
- 		dsi_phy_tst_set(mipi_dsi_base, addr, 0x43);
-@@ -960,10 +962,12 @@ static void mipi_config_dphy_spec1v2_parameter(struct dw_dsi *dsi, char __iomem
- 	//clock lane timing ctrl - t_hs_trial
- 	dsi_phy_tst_set(mipi_dsi_base, MIPIDSI_PHY_TST_CLK_TRAIL, DSS_REDUCE(dsi->phy.clk_t_hs_trial));
- 
--	for (i = 0; i <= (lanes + 1); i++) {
--		if (i == 2) {
-+	for (i = 0; i <= 4; i++) {
-+		if (lanes == 2 && i == 1) /*init mipi dsi 3 lanes shoud skip lane3*/
-+			i++;
-+
-+		if (i == 2) /* skip clock lane*/
- 			i++;  //addr: lane0:0x60; lane1:0x80; lane2:0xC0; lane3:0xE0
--		}
- 
- 		//data lane pre_delay
- 		addr = MIPIDSI_PHY_TST_DATA_PRE_DELAY + (i << 5);
-@@ -1019,6 +1023,9 @@ static void dsi_mipi_init(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
- 	dss_rect_t rect;
- 	u32 cmp_stopstate_val = 0;
- 	u32 lanes;
-+#if !defined (CONFIG_HISI_FB_970)
-+	int i = 0;
-+#endif
- 
- 	WARN_ON(!dsi);
- 	WARN_ON(!mipi_dsi_base);
-@@ -1132,7 +1139,7 @@ static void dsi_mipi_init(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
- 	/* clock lane timing ctrl - t_hs_trial*/
- 	dsi_phy_tst_set(mipi_dsi_base, 0x25, dsi->phy.clk_t_hs_trial);
- 
--	for (int i = 0; i <= lanes; i++) {
-+	for (i = 0; i <= lanes; i++) {
- 		/* data lane pre_delay*/
- 		tmp = 0x30 + (i << 4);
- 		dsi_phy_tst_set(mipi_dsi_base, tmp, DSS_REDUCE(dsi->phy.data_pre_delay));
-@@ -1361,10 +1368,9 @@ static int mipi_dsi_on_sub1(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
- 
- static int mipi_dsi_on_sub2(struct dw_dsi *dsi, char __iomem *mipi_dsi_base)
- {
-+	u64 pctrl_dphytx_stopcnt = 0;
- 	WARN_ON(!mipi_dsi_base);
--	u64 pctrl_dphytx_stopcnt;
- 
--	pctrl_dphytx_stopcnt = 0;
- 	/* switch to video mode */
- 	set_reg(mipi_dsi_base + MIPIDSI_MODE_CFG_OFFSET, 0x0, 1, 0);
- 
 diff --git a/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c b/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
-index 0343b2cd4c45..a21a8f8b917e 100644
+index a21a8f8b917e..04c1e7b9ca8e 100644
 --- a/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
 +++ b/drivers/staging/hikey9xx/gpu/hdmi/adv7535.c
-@@ -939,14 +939,10 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 		struct mipi_dsi_device *dsi = adv7511->dsi;
- 		int lanes, ret;
+@@ -28,7 +28,8 @@
  
--#if defined(CONFIG_HISI_FB_970)
--		lanes = 4;
--#else
- 		if (adj_mode->clock > 80000)
- 			lanes = 4;
- 		else
- 			lanes = 3;
--#endif
+ #include "adv7535.h"
  
- 		if (lanes != dsi->lanes) {
- 			mipi_dsi_detach(dsi);
-diff --git a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
-index 867266073bc0..5c2ddcf01b26 100644
---- a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
-+++ b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
-@@ -449,6 +449,7 @@ enum dss_chn_module {
- 	MODULE_SCL_LUT,
- 	MODULE_ARSR2P,
- 	MODULE_ARSR2P_LUT,
-+	MODULE_POST_CLIP_ES,
- 	MODULE_POST_CLIP,
- 	MODULE_PCSC,
- 	MODULE_CSC,
+-#define HPD_ENABLE	1
++//#define HPD_ENABLE	1
++#define HPD_ENABLE	0
+ //#define TEST_COLORBAR_DISPLAY
+ #ifdef CONFIG_HDMI_ADV7511_AUDIO
+ extern int adv7511_audio_init(struct device *dev);
+@@ -785,19 +786,25 @@ adv7511_detect(struct adv7511 *adv7511,
+ {
+ 	enum drm_connector_status status;
+ 	unsigned int val;
++	unsigned int time = 0;
+ #if HPD_ENABLE
+ 	bool hpd;
+ #endif
+ 	int ret;
+ 
+ 	ret = regmap_read(adv7511->regmap, ADV7511_REG_STATUS, &val);
+-	if (ret < 0)
++	if (ret < 0) {
++		DRM_ERROR("regmap_read fail, ret = %d \n", ret);
+ 		return connector_status_disconnected;
++	}
+ 
+-	if (val & ADV7511_STATUS_HPD)
++	if (val & ADV7511_STATUS_HPD) {
++		DRM_INFO("connected : regmap_read val = 0x%x \n", val);
+ 		status = connector_status_connected;
+-	else
++	} else {
++		DRM_INFO("disconnected : regmap_read val = 0x%x \n", val);
+ 		status = connector_status_disconnected;
++	}
+ 
+ #if HPD_ENABLE
+ 	hpd = adv7511_hpd(adv7511);
+@@ -820,7 +827,32 @@ adv7511_detect(struct adv7511 *adv7511,
+ 	}
+ #endif
+ 
++	if (status == connector_status_disconnected) {
++		do {
++			ret = regmap_read(adv7511->regmap, ADV7511_REG_STATUS, &val);
++			if (ret < 0) {
++				DRM_ERROR("regmap_read fail, ret = %d \n", ret);
++				return connector_status_disconnected;
++			}
++
++			if (val & ADV7511_STATUS_HPD) {
++				DRM_INFO("connected : regmap_read val = 0x%x \n", val);
++				status = connector_status_connected;
++			} else {
++				DRM_INFO("disconnected : regmap_read val = 0x%x \n", val);
++				status = connector_status_disconnected;
++			}
++			time ++;
++			mdelay(20);
++		} while (status == connector_status_disconnected && time < 10);
++	}
++
++	if (time >= 10)
++		DRM_ERROR("Read connector status timout, time = %d \n", time);
++
+ 	adv7511->status = status;
++
++	DRM_INFO("hdmi connector status = %d \n", status);
+ 	return status;
+ }
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
+index 958aafa1a09c..ec1f668f2d21 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
++++ b/drivers/staging/hikey9xx/gpu/kirin_drm_drv.c
+@@ -144,7 +144,7 @@ static int kirin_drm_kms_init(struct drm_device *dev)
+ 	/* init kms poll for handling hpd */
+ 	drm_kms_helper_poll_init(dev);
+ 
+-#if 0
++#if 1
+ 	/* force detection after connectors init */
+ 	(void)drm_helper_hpd_irq_event(dev);
+ #endif
 -- 
 2.26.2
 
