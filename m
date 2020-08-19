@@ -2,498 +2,162 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D302C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06955C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 146FA20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69B0207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="bHMrvzcd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="FOdigWJF";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="JtAY3f9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgHSISq (ORCPT
+        id S1726950AbgHSITN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgHSISH (ORCPT
+        Wed, 19 Aug 2020 04:19:13 -0400
+Received: from relay3.mymailcheap.com ([217.182.66.161]:57046 "EHLO
+        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgHSITL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:18:07 -0400
-Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611C4C061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:18:06 -0700 (PDT)
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout3.routing.net (Postfix) with ESMTP id 0477F604E7;
-        Wed, 19 Aug 2020 08:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1597825085;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W3o1FZBLZAbABnpopO+j+qFeIdb+A4jyLTzWb/dtdMM=;
-        b=bHMrvzcdU8R4atDOpja4f7qlfcX0w1xKasRrwU3q3PdGmCzdcdcpls93NpcFs7alOp1P+W
-        xW1hWugtl12W65thJE1NhMwQ1KaJowcsF3jz+6DBnzH/b/xfnr6tjSF5ybViu1XuIpMVp2
-        ZxzEFLltJAE3CBlb699kQ2N5zk5004E=
-Received: from localhost.localdomain (fttx-pool-185.76.97.101.bambit.de [185.76.97.101])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 2780B10007C;
-        Wed, 19 Aug 2020 08:18:04 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v5 7/7] arm: dts: mt7623: add display subsystem related device nodes
-Date:   Wed, 19 Aug 2020 10:17:52 +0200
-Message-Id: <20200819081752.4805-8-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200819081752.4805-1-linux@fw-web.de>
-References: <20200819081752.4805-1-linux@fw-web.de>
+        Wed, 19 Aug 2020 04:19:11 -0400
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 3DFDB3F15F;
+        Wed, 19 Aug 2020 10:19:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id 208BD2A51B;
+        Wed, 19 Aug 2020 10:19:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1597825142;
+        bh=02CPVV5u+adQWdduGIzzC9teWV2zrSCiBOhEyqwvl2s=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=FOdigWJF3zNOydYEzEUphq0zxb1f9hVZBVMd36regPQS3L83nWyNsNzsHVg6aVFtu
+         tMnldaZ+eVY3l698+v6p101Yd8HIVUkxyyDqxRyroN5z+qfg1ZOhOlfFsuRhqvMqm0
+         yvN7ZlBgOFbskn8vJR0ZFzPPwkj2fXpqd2+U0lAw=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fXVo7zClVh5P; Wed, 19 Aug 2020 10:19:00 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Wed, 19 Aug 2020 10:19:00 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 7AD804119C;
+        Wed, 19 Aug 2020 08:18:59 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="JtAY3f9X";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.160.120])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id AFA914119C;
+        Wed, 19 Aug 2020 08:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+        t=1597824967; bh=02CPVV5u+adQWdduGIzzC9teWV2zrSCiBOhEyqwvl2s=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=JtAY3f9XdbTXM+9aC8nnBoQs8oGdR2cmVuiO4jwcCKMFPrC3Gj6arvz7R9+7H8PEI
+         /M3p4AUq20UVBJgtZEOZqqkeHZvAb8wfBBpL2OySedQI9Klp5SI3BIFVIuWo/NRXQA
+         u/GokGFh4tJxPMMPMQVKUIjCCQEnirskERmWU7b0=
+Message-ID: <3b0ba1c95efa2ac465d9b6312b8e0e2c8fb461b5.camel@aosc.io>
+Subject: Re: [PATCH] mfd: core: Fix handle of OF disabled MFD cells
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 19 Aug 2020 16:16:01 +0800
+In-Reply-To: <20200819081122.GB4354@dell>
+References: <20200801070130.3323112-1-icenowy@aosc.io>
+         <20200819081122.GB4354@dell>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 7AD804119C
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+         RECEIVED_SPAMHAUS_PBL(0.00)[59.41.160.120:received];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DMARC_NA(0.00)[aosc.io];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[aosc.io:+];
+         RCPT_COUNT_TWO(0.00)[2];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+在 2020-08-19星期三的 09:11 +0100，Lee Jones写道：
+> On Sat, 01 Aug 2020, Icenowy Zheng wrote:
+> 
+> > When rewriting the OF match code of MFD core, addition of cells
+> > disabled
+> > in OF will result in a failure with error -ENODEV. This is an
+> > unexpected
+> > behavior, as the previous behavior is silently ignore the cell. On
+> > SBCs with AXP20x PMICs, this leads to boot failure if AXP20x PMIC
+> > support is built-in and some cells (especially power supply ones)
+> > are
+> > disabled.
+> 
+> Thanks for reporting this.
+> 
+> Do you mind if I fix this another way?  I plan to reinstate the old
+> code that was removed as part of the offending patch.  I will of
+> course add your Reported-by tag.
 
-Add display subsystem related device nodes for MT7623.
+I think it's okay.
 
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
----
-changed
-v4->v5:
-  add nodes to new mt7623n.dtsi to avoid conflict with mt7623a
-v3->v4:
-  drop display_components which is duplicate of existing mmsys
-v2->v3:
-  drop bls to dpi routing
----
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
- arch/arm/boot/dts/mt7623n.dtsi                | 171 ++++++++++++++++++
- 3 files changed, 315 insertions(+)
+I will test it once it's out.
 
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 344f8c65c4aa..f41f221e56ca 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -21,6 +21,19 @@ chosen {
- 		stdout-path = "serial2:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "d";
-+		ddc-i2c-bus = <&hdmiddc0>;
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi0_out>;
-+			};
-+		};
-+	};
-+
- 	cpus {
- 		cpu@0 {
- 			proc-supply = <&mt6323_vproc_reg>;
-@@ -114,10 +127,18 @@ memory@80000000 {
- 	};
- };
- 
-+&bls {
-+	status = "okay";
-+};
-+
- &btif {
- 	status = "okay";
- };
- 
-+&cec {
-+	status = "okay";
-+};
-+
- &cir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cir_pins_a>;
-@@ -128,6 +149,21 @@ &crypto {
- 	status = "okay";
- };
- 
-+&dpi0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			dpi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_in>;
-+			};
-+		};
-+	};
-+};
-+
- &eth {
- 	status = "okay";
- 
-@@ -199,6 +235,42 @@ fixed-link {
- 	};
- };
- 
-+&hdmi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_pins_a>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			hdmi0_in: endpoint {
-+				remote-endpoint = <&dpi0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmiddc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ddc_pins_a>;
-+	status = "okay";
-+};
-+
-+&hdmi_phy {
-+	mediatek,ibias = <0xa>;
-+	mediatek,ibias_up = <0x1c>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-index f8efcc364bc3..1b9b9a8145a7 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -24,6 +24,19 @@ chosen {
- 		stdout-path = "serial2:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "d";
-+		ddc-i2c-bus = <&hdmiddc0>;
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi0_out>;
-+			};
-+		};
-+	};
-+
- 	cpus {
- 		cpu@0 {
- 			proc-supply = <&mt6323_vproc_reg>;
-@@ -106,10 +119,18 @@ sound {
- 	};
- };
- 
-+&bls {
-+	status = "okay";
-+};
-+
- &btif {
- 	status = "okay";
- };
- 
-+&cec {
-+	status = "okay";
-+};
-+
- &cir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cir_pins_a>;
-@@ -120,6 +141,21 @@ &crypto {
- 	status = "okay";
- };
- 
-+&dpi0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			dpi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_in>;
-+			};
-+		};
-+	};
-+};
-+
- &eth {
- 	status = "okay";
- 
-@@ -203,6 +239,42 @@ fixed-link {
- 	};
- };
- 
-+&hdmi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_pins_a>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			hdmi0_in: endpoint {
-+				remote-endpoint = <&dpi0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmiddc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ddc_pins_a>;
-+	status = "okay";
-+};
-+
-+&hdmi_phy {
-+	mediatek,ibias = <0xa>;
-+	mediatek,ibias_up = <0x1c>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
-index a47e82468895..61545fc541c4 100644
---- a/arch/arm/boot/dts/mt7623n.dtsi
-+++ b/arch/arm/boot/dts/mt7623n.dtsi
-@@ -10,6 +10,10 @@
- #include <dt-bindings/memory/mt2701-larb-port.h>
- 
- / {
-+	aliases {
-+		rdma0 = &rdma0;
-+		rdma1 = &rdma1;
-+	};
- 	g3dsys: syscon@13000000 {
- 		compatible = "mediatek,mt7623-g3dsys",
- 			     "mediatek,mt2701-g3dsys",
-@@ -131,4 +135,171 @@ smi_common: smi@1000c000 {
- 		clock-names = "apb", "smi", "async";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
- 	};
-+
-+	ovl: ovl@14007000 {
-+		compatible = "mediatek,mt7623-disp-ovl",
-+			     "mediatek,mt2701-disp-ovl";
-+		reg = <0 0x14007000 0 0x1000>;
-+		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_OVL>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	rdma0: rdma@14008000 {
-+		compatible = "mediatek,mt7623-disp-rdma",
-+			     "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14008000 0 0x1000>;
-+		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	wdma@14009000 {
-+		compatible = "mediatek,mt7623-disp-wdma",
-+			     "mediatek,mt2701-disp-wdma";
-+		reg = <0 0x14009000 0 0x1000>;
-+		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	bls: pwm@1400a000 {
-+		compatible = "mediatek,mt7623-disp-pwm",
-+			     "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
-+			 <&mmsys CLK_MM_DISP_BLS>;
-+		clock-names = "main", "mm";
-+		status = "disabled";
-+	};
-+
-+	color: color@1400b000 {
-+		compatible = "mediatek,mt7623-disp-color",
-+			     "mediatek,mt2701-disp-color";
-+		reg = <0 0x1400b000 0 0x1000>;
-+		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-+	};
-+
-+	dsi: dsi@1400c000 {
-+		compatible = "mediatek,mt7623-dsi",
-+			     "mediatek,mt2701-dsi";
-+		reg = <0 0x1400c000 0 0x1000>;
-+		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
-+			 <&mmsys CLK_MM_DSI_DIG>,
-+			 <&mipi_tx0>;
-+		clock-names = "engine", "digital", "hs";
-+		phys = <&mipi_tx0>;
-+		phy-names = "dphy";
-+		status = "disabled";
-+	};
-+
-+	mutex: mutex@1400e000 {
-+		compatible = "mediatek,mt7623-disp-mutex",
-+			     "mediatek,mt2701-disp-mutex";
-+		reg = <0 0x1400e000 0 0x1000>;
-+		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-+	};
-+
-+	rdma1: rdma@14012000 {
-+		compatible = "mediatek,mt7623-disp-rdma",
-+			     "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14012000 0 0x1000>;
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	dpi0: dpi@14014000 {
-+		compatible = "mediatek,mt7623-dpi",
-+			     "mediatek,mt2701-dpi";
-+		reg = <0 0x14014000 0 0x1000>;
-+		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
-+			 <&mmsys CLK_MM_DPI1_ENGINE>,
-+			 <&apmixedsys CLK_APMIXED_TVDPLL>;
-+		clock-names = "pixel", "engine", "pll";
-+		status = "disabled";
-+	};
-+
-+	hdmi0: hdmi@14015000 {
-+		compatible = "mediatek,mt7623-hdmi",
-+			     "mediatek,mt8173-hdmi";
-+		reg = <0 0x14015000 0 0x400>;
-+		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
-+			 <&mmsys CLK_MM_HDMI_PLL>,
-+			 <&mmsys CLK_MM_HDMI_AUDIO>,
-+			 <&mmsys CLK_MM_HDMI_SPDIF>;
-+		clock-names = "pixel", "pll", "bclk", "spdif";
-+		phys = <&hdmi_phy>;
-+		phy-names = "hdmi";
-+		mediatek,syscon-hdmi = <&mmsys 0x900>;
-+		cec = <&cec>;
-+		status = "disabled";
-+	};
-+
-+	mipi_tx0: mipi-dphy@10010000 {
-+		compatible = "mediatek,mt7623-mipi-tx",
-+			     "mediatek,mt2701-mipi-tx";
-+		reg = <0 0x10010000 0 0x90>;
-+		clocks = <&clk26m>;
-+		clock-output-names = "mipi_tx0_pll";
-+		#clock-cells = <0>;
-+		#phy-cells = <0>;
-+	};
-+
-+	cec: cec@10012000 {
-+		compatible = "mediatek,mt7623-cec",
-+			     "mediatek,mt8173-cec";
-+		reg = <0 0x10012000 0 0xbc>;
-+		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_CEC>;
-+		status = "disabled";
-+	};
-+
-+	hdmi_phy: phy@10209100 {
-+		compatible = "mediatek,mt7623-hdmi-phy",
-+			     "mediatek,mt2701-hdmi-phy";
-+		reg = <0 0x10209100 0 0x24>;
-+		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
-+		clock-names = "pll_ref";
-+		clock-output-names = "hdmitx_dig_cts";
-+		#clock-cells = <0>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	hdmiddc0: i2c@11013000 {
-+		compatible = "mediatek,mt7623-hdmi-ddc",
-+			     "mediatek,mt8173-hdmi-ddc";
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0 0x11013000 0 0x1C>;
-+		clocks = <&pericfg CLK_PERI_I2C3>;
-+		clock-names = "ddc-i2c";
-+		status = "disabled";
-+	};
-+};
-+
-+&pio {
-+	hdmi_pins_a: hdmi-default {
-+		pins-hdmi {
-+			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
-+			input-enable;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	hdmi_ddc_pins_a: hdmi_ddc-default {
-+		pins-hdmi-ddc {
-+			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
-+				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
-+		};
-+	};
- };
--- 
-2.25.1
-
+> 
+> > Silently ignore the cell when -ENODEV occurs.
+> > 
+> > Fixes: e49aa9a9bd22 ("mfd: core: Make a best effort attempt to
+> > match devices with the correct of_nodes")
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> >  drivers/mfd/mfd-core.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> > index c3ef58a802bee..31b363c64f4b4 100644
+> > --- a/drivers/mfd/mfd-core.c
+> > +++ b/drivers/mfd/mfd-core.c
+> > @@ -215,8 +215,13 @@ static int mfd_add_device(struct device
+> > *parent, int id,
+> >  				ret = mfd_match_of_node_to_dev(pdev,
+> > np, cell);
+> >  				if (ret == -EAGAIN)
+> >  					continue;
+> > -				if (ret)
+> > +				if (ret) {
+> > +					if (ret == -ENODEV) {
+> > +						/* Ignore disabled
+> > devices error free */
+> > +						ret = 0;
+> > +					}
+> >  					goto fail_alias;
+> > +				}
+> >  
+> >  				break;
+> >  			}
