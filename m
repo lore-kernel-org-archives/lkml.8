@@ -2,107 +2,94 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0553AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB34C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F7D20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E872067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NyjiFBib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgHSMyp (ORCPT
+        id S1728532AbgHSM5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:54:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59652 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgHSMyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:54:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 53506ADC4;
-        Wed, 19 Aug 2020 12:54:53 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 14:54:25 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 02/11] mm/memory_hotplug: enforce section granularity
- when onlining/offlining
-Message-ID: <20200819125425.GJ5422@dhcp22.suse.cz>
-References: <20200819101157.12723-1-david@redhat.com>
- <20200819101157.12723-3-david@redhat.com>
- <20200819123743.GF5422@dhcp22.suse.cz>
- <d9e82d2e-0786-ebfd-acc3-7dcc5ec6ad9b@redhat.com>
+        Wed, 19 Aug 2020 08:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgHSMz2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:55:28 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F6CC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:55:24 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id c10so1134680pjn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rrbpQDX15p//tPT7UvuN4uevRSDzI+hoTHUn4a3y+a0=;
+        b=NyjiFBib4jG9+dEWoEnnDri1nWuFNmYsX63rP2x/bSpFDl3/E6+Fsey3gIejp1KEl/
+         Zt6SapvAvbK+PGznoa9rvJsaQyrV7llkBKEAbb7QOVpy11/haGw0E1rjga4lLhOK0T3B
+         n1yVM6QnrxYRbd0N+Jt6pZLHvycn/ysJVrHlVIhFSTUQqZQWGogi3CuaV/C7tao2jHcV
+         ZG1V3RDNOQT2b/4Q2xqki4U7M2HHirSA5SONgufGeBgmeI+AAPNi4CjVp1a4T0bn7EHe
+         8iEeDt/VxVc3GT62278Iw8Dr8R69qJZplrKNnbrbs1wqzr/zDu3RcURLPkusNnYLrbQE
+         7qYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rrbpQDX15p//tPT7UvuN4uevRSDzI+hoTHUn4a3y+a0=;
+        b=qb9hMxuIt7Rt1TD2fbJ3irCJKRA86xmUkOF9XML336PmCHJCsdY/z3xz0vibPK7m+c
+         naopJlJvXI/a+I4nLpHnjrOcpeuipbxv59htaqVZTcMHoNqp7iUER9gAEPJrDQR3oLLY
+         QWvNpY6KWPcr8sE7MNJrlH8cLJATOfdXuVnccFG6lYqgYQTyTfR3Wl8+llk1VLKJI3bg
+         KcXUjTlz3B07atU9JrLS357zdFsbK3f7aLbIeGPp2zyG9sGqafBIkA5QC1MCuL5aivdp
+         Kl3m7epMbFCijUK6VQgyiRZ0hzvB6krOWNehAZfNdDxG0ePQpzVujE/Nx96uWPX6U+Tb
+         R5uA==
+X-Gm-Message-State: AOAM532Do1hCzebpma6SF7KUuDK55jLKKLecBK/q/TPpNzgwJFs+bjbH
+        NMyihoejiHBBk//aCrdUHkTHIIkAw7N1aC5u
+X-Google-Smtp-Source: ABdhPJwt+h/eu259u72qGri6DEmcqEOTbSywiag9NYdAcHMjkxwqLjx5ajBORusqvqeZVyqqzP290Q==
+X-Received: by 2002:a17:90b:4a4e:: with SMTP id lb14mr4061190pjb.228.1597841722879;
+        Wed, 19 Aug 2020 05:55:22 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id w3sm28975674pff.56.2020.08.19.05.55.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 05:55:22 -0700 (PDT)
+Subject: Re: [PATCH v3] block: Make request_queue.rpm_status an enum
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200819123403.19136-1-geert+renesas@glider.be>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <54e9ec37-00f1-b3a9-ab80-f4be77382aae@kernel.dk>
+Date:   Wed, 19 Aug 2020 06:55:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9e82d2e-0786-ebfd-acc3-7dcc5ec6ad9b@redhat.com>
+In-Reply-To: <20200819123403.19136-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 14:43:28, David Hildenbrand wrote:
-> On 19.08.20 14:37, Michal Hocko wrote:
-> > On Wed 19-08-20 12:11:48, David Hildenbrand wrote:
-> >> Already two people (including me) tried to offline subsections, because
-> >> the function looks like it can deal with it. But we really can only
-> >> online/offline full sections (e.g., we can only mark full sections
-> >> online/offline via SECTION_IS_ONLINE).
-> >>
-> >> Add a simple safety net that to document the restriction now. Current users
-> >> (core and powernv/memtrace) respect these restrictions.
-> > 
-> > I do agree with the warning because it clarifies our expectations
-> > indeed. Se below for more questions.
-> > 
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >> Cc: Baoquan He <bhe@redhat.com>
-> >> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> >> Cc: Oscar Salvador <osalvador@suse.de>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >> ---
-> >>  mm/memory_hotplug.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> index c781d386d87f9..6856702af68d9 100644
-> >> --- a/mm/memory_hotplug.c
-> >> +++ b/mm/memory_hotplug.c
-> >> @@ -801,6 +801,11 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
-> >>  	int ret;
-> >>  	struct memory_notify arg;
-> >>  
-> >> +	/* We can only online full sections (e.g., SECTION_IS_ONLINE) */
-> >> +	if (WARN_ON_ONCE(!nr_pages ||
-> >> +			 !IS_ALIGNED(pfn | nr_pages, PAGES_PER_SECTION)))
-> >> +		return -EINVAL;
-> > 
-> > This looks looks unnecessarily cryptic to me. Do you want to catch full
-> > section operation that doesn't start at the usual section boundary? If
-> > yes the above doesn't work work unless I am missing something.
-> > 
-> > Why don't you simply WARN_ON_ONCE(nr_pages % PAGES_PER_SECTION).
-> > !nr_pages doesn't sound like something interesting to care about or why
-> > do we care?
-> > 
+On 8/19/20 5:34 AM, Geert Uytterhoeven wrote:
+> request_queue.rpm_status is assigned values of the rpm_status enum only,
+> so reflect that in its type.
 > 
-> Also the start pfn has to be section aligned, so we always cover fully
-> aligned sections (e.g., not two partial ones).
+> Note that including <linux/pm.h> is (currently) a no-op, as it is
+> already included through <linux/genhd.h> and <linux/device.h>, but it is
+> better to play it safe.
 
-OK, I've misread your intention. I thought that we check for the start
-pfn prior to this warning but we only do that after.
+Applied, thanks.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
 -- 
-Michal Hocko
-SUSE Labs
+Jens Axboe
+
