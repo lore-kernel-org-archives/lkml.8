@@ -2,120 +2,157 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEE0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE214C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6435820772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE6720772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvjKs12h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHSEWU (ORCPT
+        id S1726640AbgHSEXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:22:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44916 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgHSEWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:22:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2DEBAB7E7;
-        Wed, 19 Aug 2020 04:22:41 +0000 (UTC)
-Subject: Re: [PATCH v7 1/6] net: introduce helper sendpage_ok() in
- include/linux/net.h
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        netdev@vger.kernel.org, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Hannes Reinecke <hare@suse.de>, Jan Kara <jack@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Mikhail Skorzhinskii <mskorzhinskiy@solarflare.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Vlastimil Babka <vbabka@suse.com>, stable@vger.kernel.org
-References: <20200818131227.37020-1-colyli@suse.de>
- <20200818131227.37020-2-colyli@suse.de> <20200818162404.GA27196@lst.de>
- <217ec0ec-3c5a-a8ed-27d9-c634f0b9a045@suse.de>
- <20200818194930.GA31966@lst.de>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- mQINBFYX6S8BEAC9VSamb2aiMTQREFXK4K/W7nGnAinca7MRuFUD4JqWMJ9FakNRd/E0v30F
- qvZ2YWpidPjaIxHwu3u9tmLKqS+2vnP0k7PRHXBYbtZEMpy3kCzseNfdrNqwJ54A430BHf2S
- GMVRVENiScsnh4SnaYjFVvB8SrlhTsgVEXEBBma5Ktgq9YSoy5miatWmZvHLFTQgFMabCz/P
- j5/xzykrF6yHo0rHZtwzQzF8rriOplAFCECp/t05+OeHHxjSqSI0P/G79Ll+AJYLRRm9til/
- K6yz/1hX5xMToIkYrshDJDrUc8DjEpISQQPhG19PzaUf3vFpmnSVYprcWfJWsa2wZyyjRFkf
- J51S82WfclafNC6N7eRXedpRpG6udUAYOA1YdtlyQRZa84EJvMzW96iSL1Gf+ZGtRuM3k49H
- 1wiWOjlANiJYSIWyzJjxAd/7Xtiy/s3PRKL9u9y25ftMLFa1IljiDG+mdY7LyAGfvdtIkanr
- iBpX4gWXd7lNQFLDJMfShfu+CTMCdRzCAQ9hIHPmBeZDJxKq721CyBiGAhRxDN+TYiaG/UWT
- 7IB7LL4zJrIe/xQ8HhRO+2NvT89o0LxEFKBGg39yjTMIrjbl2ZxY488+56UV4FclubrG+t16
- r2KrandM7P5RjR+cuHhkKseim50Qsw0B+Eu33Hjry7YCihmGswARAQABtBhDb2x5IExpIDxj
- b2x5bGlAc3VzZS5kZT6JAlYEEwEIAEACGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYh
- BOo+RS/0+Uhgjej60Mc5B5Nrffj8BQJcR84dBQkY++fuAAoJEMc5B5Nrffj8ixcP/3KAKg1X
- EcoW4u/0z+Ton5rCyb/NpAww8MuRjNW82UBUac7yCi1y3OW7NtLjuBLw5SaVG5AArb7IF3U0
- qTOobqfl5XHsT0o5wFHZaKUrnHb6y7V3SplsJWfkP3JmOooJsQB3z3K96ZTkFelsNb0ZaBRu
- gV+LA4MomhQ+D3BCDR1it1OX/tpvm2uaDF6s/8uFtcDEM9eQeqATN/QAJ49nvU/I8zDSY9rc
- 0x9mP0x+gH4RccbnoPu/rUG6Fm1ZpLrbb6NpaYBBJ/V1BC4lIOjnd24bsoQrQmnJn9dSr60X
- 1MY60XDszIyzRw7vbJcUn6ZzPNFDxFFT9diIb+wBp+DD8ZlD/hnVpl4f921ZbvfOSsXAJrKB
- 1hGY17FPwelp1sPcK2mDT+pfHEMV+OQdZzD2OCKtza/5IYismJJm3oVUYMogb5vDNAw9X2aP
- XgwUuG+FDEFPamFMUwIfzYHcePfqf0mMsaeSgtA/xTxzx/0MLjUJHl46Bc0uKDhv7QUyGz0j
- Ywgr2mHTvG+NWQ/mDeHNGkcnsnp3IY7koDHnN2xMFXzY4bn9m8ctqKo2roqjCzoxD/njoAhf
- KBzdybLHATqJG/yiZSbCxDA1n/J4FzPyZ0rNHUAJ/QndmmVspE9syFpFCKigvvyrzm016+k+
- FJ59Q6RG4MSy/+J565Xj+DNY3/dCuQINBFYX6S8BEADZP+2cl4DRFaSaBms08W8/smc5T2CO
- YhAoygZn71rB7Djml2ZdvrLRjR8Qbn0Q/2L2gGUVc63pJnbrjlXSx2LfAFE0SlfYIJ11aFdF
- 9w7RvqWByQjDJor3Z0fWvPExplNgMvxpD0U0QrVT5dIGTx9hadejCl/ug09Lr6MPQn+a4+qs
- aRWwgCSHaIuDkH3zI1MJXiqXXFKUzJ/Fyx6R72rqiMPHH2nfwmMu6wOXAXb7+sXjZz5Po9GJ
- g2OcEc+rpUtKUJGyeQsnCDxUcqJXZDBi/GnhPCcraQuqiQ7EGWuJfjk51vaI/rW4bZkA9yEP
- B9rBYngbz7cQymUsfxuTT8OSlhxjP3l4ZIZFKIhDaQeZMj8pumBfEVUyiF6KVSfgfNQ/5PpM
- R4/pmGbRqrAAElhrRPbKQnCkGWDr8zG+AjN1KF6rHaFgAIO7TtZ+F28jq4reLkur0N5tQFww
- wFwxzROdeLHuZjL7eEtcnNnzSkXHczLkV4kQ3+vr/7Gm65mQfnVpg6JpwpVrbDYQeOFlxZ8+
- GERY5Dag4KgKa/4cSZX2x/5+KkQx9wHwackw5gDCvAdZ+Q81nm6tRxEYBBiVDQZYqO73stgT
- ZyrkxykUbQIy8PI+g7XMDCMnPiDncQqgf96KR3cvw4wN8QrgA6xRo8xOc2C3X7jTMQUytCz9
- 0MyV1QARAQABiQI8BBgBCAAmAhsMFiEE6j5FL/T5SGCN6PrQxzkHk2t9+PwFAlxHziAFCRj7
- 5/EACgkQxzkHk2t9+PxgfA//cH5R1DvpJPwraTAl24SUcG9EWe+NXyqveApe05nk15zEuxxd
- e4zFEjo+xYZilSveLqYHrm/amvQhsQ6JLU+8N60DZHVcXbw1Eb8CEjM5oXdbcJpXh1/1BEwl
- 4phsQMkxOTns51bGDhTQkv4lsZKvNByB9NiiMkT43EOx14rjkhHw3rnqoI7ogu8OO7XWfKcL
- CbchjJ8t3c2XK1MUe056yPpNAT2XPNF2EEBPG2Y2F4vLgEbPv1EtpGUS1+JvmK3APxjXUl5z
- 6xrxCQDWM5AAtGfM/IswVjbZYSJYyH4BQKrShzMb0rWUjkpXvvjsjt8rEXpZEYJgX9jvCoxt
- oqjCKiVLpwje9WkEe9O9VxljmPvxAhVqJjX62S+TGp93iD+mvpCoHo3+CcvyRcilz+Ko8lfO
- hS9tYT0HDUiDLvpUyH1AR2xW9RGDevGfwGTpF0K6cLouqyZNdhlmNciX48tFUGjakRFsxRmX
- K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
- 9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
- +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
-Message-ID: <04408ff6-f765-8f3e-ead9-aec55043e469@suse.de>
-Date:   Wed, 19 Aug 2020 12:22:05 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Wed, 19 Aug 2020 00:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSEXP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 00:23:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDDCC061389;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so10753793pgm.7;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
+        b=UvjKs12h9DQKYGQRS1toiyg8jpbgB/8nWdastjYJyhssofp6FGxo18MSWkuH0QDrwd
+         siZVLO/1UJDEU+s5+LyT+g+t2VLvL6JqUBYARntwh3hZjzJCWz5Mv8W6XwAaJWpSvcik
+         YR/+H8WC0WYRgp9Y4rSD+qEicdkVKDxxu6DuYVI2zpuV5p+qHoe11O7UBoU6hhGE8izQ
+         Z3mkaCnpA592d3lX2Vgv+5K4fbKsIpF7asJwTh7yhxfe8n4AqQ5hgxwEdf9c/Y9y5rxQ
+         7jW3s013pIaxCiW46KfTfmRSc74jNDwlIGMBQ4ATLFIgKuktPHekhV5ctVel0WL5w4nu
+         MVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
+        b=iVUOL9Vsft+WU9JIalL1FL/g+tyYgNQTtnC5O0hyx36xXHWeedk79VETcYv2fyJy0S
+         xgCLmm0Z0dgzqCB+V2y1NlnckL8H75d6cuKXwWpBrTVJQ/URBfn+vkej9eJkK+h94OD0
+         5O82AUPFzKruLJRdGyW3tQYlV5HosffYy78aRnaOa8hTfHrUVdwF6cZT1nyUvNJitrH3
+         0t530xVPUUAAwbMukvakv+JbXqB28ntp7IHAnCoxhwDtg1eDsiGcSYMNCvkkqd5cDx1E
+         8XDYYXWUdXzi78N85Uh5b1nO9PQhmnW8YBvHcHyxnx7xIC9BDM1yJAb7QVL7yy6U2bjF
+         5GbQ==
+X-Gm-Message-State: AOAM531EJ1tYkd7Lzg/Ny7HG+Bh3aN/UPtPic6+31GLsCENhwULhuJOX
+        47LkpjoWRAzZ99Kwp4cPhQA=
+X-Google-Smtp-Source: ABdhPJz9/1ooO+46V/DifjOQSnAS8Pt2MsME2bhXJp+E69XSJuk0FgwL2E0diO6Usx/r2k+Hg2D1rw==
+X-Received: by 2002:a63:5515:: with SMTP id j21mr15011312pgb.31.1597810994235;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x11sm10723336pgl.65.2020.08.18.21.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 21:23:13 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM5301X ARM
+        ARCHITECTURE), Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
+Date:   Tue, 18 Aug 2020 21:23:07 -0700
+Message-Id: <20200819042308.19043-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200818194930.GA31966@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/19 03:49, Christoph Hellwig wrote:
-> On Wed, Aug 19, 2020 at 12:33:37AM +0800, Coly Li wrote:
->> On 2020/8/19 00:24, Christoph Hellwig wrote:
->>> I think we should go for something simple like this instead:
->>
->> This idea is fine to me. Should a warning message be through here? IMHO
->> the driver still sends an improper page in, fix it in silence is too
->> kind or over nice to the buggy driver(s).
-> 
-> I don't think a warning is a good idea.  An API that does the right
-> thing underneath and doesn't require boiler plate code in most callers
-> is the right API.
-> 
+The pin controller resources start at 0xc0 from the CRU base which is at
+0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
+are currently off by 0x100. The resource size of the CRU is also
+incorrect and should end at 0x248 bytes from 0x100 which is the start
+address. Finally, the compatibility strings defined for the
+pin-controller node should reflect the SoC being used.
 
-Then I don't have more comment.
+Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux controller")
+Reported-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Christian, can you test this as a preliminary patch for your Cisco
+Meraki MR32 series? Thanks!
 
-Thanks.
+ arch/arm/boot/dts/bcm4708.dtsi  | 4 ++++
+ arch/arm/boot/dts/bcm4709.dtsi  | 4 ++++
+ arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++----
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
-Coly Li
+diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+index 1a19e97a987d..5064fe51e402 100644
+--- a/arch/arm/boot/dts/bcm4708.dtsi
++++ b/arch/arm/boot/dts/bcm4708.dtsi
+@@ -43,6 +43,10 @@ cpu@1 {
+ 
+ };
+ 
++&pinctrl {
++	compatible = "brcm,bcm4708-pinmux";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
+index e1bb8661955f..7417c275ea9d 100644
+--- a/arch/arm/boot/dts/bcm4709.dtsi
++++ b/arch/arm/boot/dts/bcm4709.dtsi
+@@ -5,6 +5,10 @@
+ 
+ #include "bcm4708.dtsi"
+ 
++&pinctrl {
++	compatible = "brcm,bcm4709-pinmux";
++};
++
+ &uart0 {
+ 	clock-frequency = <125000000>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 2d9b4dd05830..bf49943f504a 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -402,14 +402,14 @@ dmu@1800c000 {
+ 
+ 		cru@100 {
+ 			compatible = "simple-bus";
+-			reg = <0x100 0x1a4>;
++			reg = <0x100 0x248>;
+ 			ranges;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			pin-controller@1c0 {
+-				compatible = "brcm,bcm4708-pinmux";
+-				reg = <0x1c0 0x24>;
++			pinctrl: pin-controller@c0 {
++				compatible = "brcm,bcm53012-pinmux";
++				reg = <0xc0 0x24>;
+ 				reg-names = "cru_gpio_control";
+ 
+ 				spi-pins {
+-- 
+2.25.1
+
