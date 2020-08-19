@@ -2,135 +2,116 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558652063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD51204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="jrIs1fMh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hMHSF8yf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHSDkT (ORCPT
+        id S1726738AbgHSDkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:40:19 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:59215 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725903AbgHSDkR (ORCPT
+        Tue, 18 Aug 2020 23:40:43 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:49895 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726476AbgHSDkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:40:17 -0400
-X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Aug 2020 23:39:03 EDT
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 19 Aug
- 2020 11:23:53 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 19 Aug
- 2020 11:23:52 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416]) by
- zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416%16]) with mapi id
- 15.01.1979.003; Wed, 19 Aug 2020 11:23:52 +0800
-From:   TimGuo-oc <TimGuo-oc@zhaoxin.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "hslester96@gmail.com" <hslester96@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
-        "efremov@linux.com" <efremov@linux.com>,
-        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
-        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
-        "wwt8723@163.com" <wwt8723@163.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBVU0I6Rml4IGtlcm5lbCBOVUxMIHBvaW50ZXIgd2hl?=
- =?gb2312?Q?n_unbind_UHCI_form_vfio-pci?=
-Thread-Topic: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
- vfio-pci
-Thread-Index: AQHWYQdPpMijr9jMqE2P97wKJvHDmakU0WGAgAAF3oCAKhJ/4A==
-Date:   Wed, 19 Aug 2020 03:23:52 +0000
-Message-ID: <b796fcc26f0b4ce4bc454fee090ad47e@zhaoxin.com>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
- <20200722124414.GA3153105@kroah.com>
- <20200722145913.GB1310843@rowland.harvard.edu>
- <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
- <20200722221817.542971a2@x1.home>
- <20200723153821.GC1352396@rowland.harvard.edu>
- <20200723101735.3222c289@w520.home>
- <20200723163835.GA1357775@rowland.harvard.edu>
-In-Reply-To: <20200723163835.GA1357775@rowland.harvard.edu>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.29.8.26]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 18 Aug 2020 23:40:43 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 820C65C0160;
+        Tue, 18 Aug 2020 23:40:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 18 Aug 2020 23:40:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=cFbQAyHKdEjiz
+        x/TGUVffQEsSKzIcSYC8XWfKh++Cms=; b=jrIs1fMhRS3ANrl/84y7S+6R6bhbw
+        EHONtY51mC79KBKGz1wFzDqdDfM++CT8Nf9KYxoX7GwCyAofeOSQLuMsyRT+BfWQ
+        ma88WnbHspl6ulxSfF57jswtlVamWakiCA/TwUoVPNJVviwz5e5A10cG3+QVKqZy
+        e8og9AUl2B01aI4oD4mhuIy2RHU/0fcLxM7hLXzdJdlbpU2beZOcGqIuTeyn9WH1
+        zF3iiLHsV9LOqRt8nr7FLFVK2xdtPm8q5hJc3ZFX9q+tOJh6EXcLfcPEvl6YHMxX
+        uFqPkS4pOijwwu6/QZBOPXkxMXjm/qsNnI7YTVmB1SLhywm4tKZC7qwzw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=cFbQAyHKdEjizx/TGUVffQEsSKzIcSYC8XWfKh++Cms=; b=hMHSF8yf
+        MWNa4Y86naet22fSCbSu6bmtjUK+kr1pUOhg3i2nDPRAHQaToVIoXQLT5VDe+TRA
+        MQcBq8+qqmelqnQOZlz59FKtNMTjqYkSlsmsoCaZ8urLdIMMZAjB1F21vqtvLWyx
+        ZyrNH5OOip6s1pBO6dJUVQylD4dgP1szmXcpMYEVGuqm4X/qCp9S7manFLHFmsR5
+        CJYpsCqZ6xe7Sq6Tf2QUWhYjNdlH1sYy12eDJzRRpilg3gtP5+Q8dzqm2eufCA25
+        kw1QizyDhCBly+rnh9Dkhp6IvFXLAO8EJq+tDfajZzYJzfadmHbttcx5wEefoykQ
+        yXUQ+6cAD6XVIw==
+X-ME-Sender: <xms:N588X8KwWFC_U57RE3oCuumqKNEYqG2vsPBa59U_GMDeUp8FIfnZ0A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtjedggeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
+    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:N588X8KqX1v6vj5FhmS5MLOGPvTe_eJAogOJN1eLopydltvl_cYRGA>
+    <xmx:N588X8tYXnmwDT_5TT21SWG-W8K-G_M8nrBTaKMVxJhC2rmckoRkIg>
+    <xmx:N588X5ac-ZoU_UMa7vUNGg_QpK3F-MXI4s_I_OVCCUwh9isWSLPz9A>
+    <xmx:OZ88X-xJaIMI8woR2nE5VF7K6IZbcSseR5PD3hoaHGEwukn_ufhXBQ>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2E17830600A9;
+        Tue, 18 Aug 2020 23:40:39 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] ASoC: sun8i-codec: Hook up component probe function
+Date:   Tue, 18 Aug 2020 22:40:38 -0500
+Message-Id: <20200819034038.46418-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200819113405.55582925@canb.auug.org.au>
+References: <20200819113405.55582925@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1haWwtLS0tLQ0KPiBTZW5kZXIgOiBBbGFuIFN0ZXJuIDxzdGVybkBy
-b3dsYW5kLmhhcnZhcmQuZWR1Pg0KPiBUaW1lIDogMjAyMC83LzI0ICAwOjM5DQo+IFJlY2VpdmVy
-IDogQWxleCBXaWxsaWFtc29uIDxhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNvbT4NCj4gQ0MgOiBX
-ZWl0YW8gV2FuZyhCSi1SRCkgPFdlaXRhb1dhbmdAemhhb3hpbi5jb20+OyBHcmVnIEtIDQo+IDxn
-cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IFdlaXRhb1dhbmctb2MNCj4gPFdlaXRhb1dhbmct
-b2NAemhhb3hpbi5jb20+OyBtYXRoaWFzLm55bWFuQGxpbnV4LmludGVsLmNvbTsNCj4gdWxmLmhh
-bnNzb25AbGluYXJvLm9yZzsgdmtvdWxAa2VybmVsLm9yZzsgaHNsZXN0ZXI5NkBnbWFpbC5jb207
-DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IENhcnN0ZW5fU2NobWlkQG1lbnRvci5jb207IGVmcmVtb3ZAbGludXguY29tOyBUb255
-IFcuIFdhbmcoWEEtUkQpDQo+IDxUb255V1dhbmdAemhhb3hpbi5jb20+OyBDb2JlIENoZW4oQkot
-UkQpIDxDb2JlQ2hlbkB6aGFveGluLmNvbT47DQo+IFRpbSBHdW8oQkotUkQpIDxUaW1HdW9Aemhh
-b3hpbi5jb20+OyB3d3Q4NzIzQDE2My5jb20NCj4gU3ViamVjdCA6IFJlOiBbUEFUQ0hdIFVTQjpG
-aXgga2VybmVsIE5VTEwgcG9pbnRlciB3aGVuIHVuYmluZCBVSENJIGZvcm0gdmZpby1wY2kNCj4g
-DQo+IE9uIFRodSwgSnVsIDIzLCAyMDIwIGF0IDEwOjE3OjM1QU0gLTA2MDAsIEFsZXggV2lsbGlh
-bXNvbiB3cm90ZToNCj4gPiBUaGUgSU9NTVUgZ3JvdXBpbmcgcmVzdHJpY3Rpb24gZG9lcyBzb2x2
-ZSB0aGUgaGFyZHdhcmUgaXNzdWUsIHNvIGxvbmcNCj4gPiBhcyBvbmUgZHJpdmVyIGRvZXNuJ3Qg
-YmxpbmRseSBhc3N1bWUgdGhlIGRyaXZlciBwcml2YXRlIGRhdGEgZm9yDQo+ID4gYW5vdGhlciBk
-ZXZpY2UgYW5kIG1vZGlmeSBpdC4NCj4gDQo+IENvcnJlY3Rpb246IFRoZSBJT01NVSBncm91cGlu
-ZyByZXN0cmljdGlvbiBzb2x2ZXMgdGhlIGhhcmR3YXJlIGlzc3VlIGZvcg0KPiB2ZmlvLXBjaS4g
-IEl0IHdvbid0IG5lY2Vzc2FyaWx5IGhlbHAgaWYgc29tZSBvdGhlciBkcml2ZXIgY29tZXMgYWxv
-bmcgYW5kIHdhbnRzDQo+IHRvIGJpbmQgdG8gdGhpcyBoYXJkd2FyZS4NCj4gDQo+ID4gICBJIGRv
-IGFncmVlIHRoYXQgeW91ciBzb2x1dGlvbiB3b3VsZA0KPiA+IHdvcmssIHJlcXVpcmluZyBhbGwg
-ZGV2aWNlcyBhcmUgdW5ib3VuZCBiZWZvcmUgYW55IGNhbiBiZSBib3VuZCwgYnV0DQo+ID4gaXQg
-YWxzbyBzZWVtcyBkaWZmaWN1bHQgdG8gbWFuYWdlLiAgVGhlIGlzc3VlIGlzIGxhcmdlbHkgdW5p
-cXVlIHRvIFVTQg0KPiA+IEFGQUlLLiAgT24gdGhlIG90aGVyIGhhbmQsIGRyaXZlcnMgY29vcmRp
-bmF0aW5nIHdpdGggZWFjaCBvdGhlciB0bw0KPiA+IHJlZ2lzdGVyIHRoZWlyIF9wcml2YXRlXyBk
-YXRhIGFzIHNoYXJlLWFibGUgd2l0aGluIGEgc2V0IG9mIGRyaXZlcnMNCj4gPiBzZWVtcyBsaWtl
-IGEgbXVjaCBtb3JlIGRpcmVjdCBhbmQgZXhwbGljaXQgaW50ZXJhY3Rpb24gYmV0d2VlbiB0aGUN
-Cj4gPiBkcml2ZXJzLiAgVGhhbmtzLA0KPiANCj4gWWVzLCB0aGF0IG1ha2VzIHNlbnNlLiAgQnV0
-IGl0IHdvdWxkIGhhdmUgdG8gYmUgaW1wbGVtZW50ZWQgaW4gdGhlIGRyaXZlciBjb3JlLA0KPiBu
-b3QgaW4gcGFydGljdWxhciBzdWJzeXN0ZW1zIGxpa2UgVVNCIG9yIFBDSS4gIEFuZCBpdCBtaWdo
-dCBiZSBzZWVuIGFzIG92ZXJraWxsLA0KPiBnaXZlbiB0aGF0IG9ubHkgVUhDSS9PSENJL0VIQ0kg
-ZGV2aWNlcyByZXF1aXJlIHRoaXMgc29ydCBvZiBzaGFyaW5nIEFGQUlLLg0KPiANCj4gQWxzbywg
-d2hlbiB5b3UgdGhpbmsgYWJvdXQgaXQsIHdoYXQgZm9ybSB3b3VsZCBzdWNoIGNvb3JkaW5hdGlv
-biBhbW9uZyBkcml2ZXJzDQo+IHRha2U/ICBGcm9tIHlvdXIgZGVzY3JpcHRpb24sIGl0IHNvdW5k
-cyBsaWtlIHRoZSBkcml2ZXJzIHdvdWxkIGFncmVlIHRvIGF2b2lkDQo+IGFjY2Vzc2luZyBlYWNo
-IG90aGVyJ3MgcHJpdmF0ZSBkYXRhIGlmIHRoZSBwcm9wZXIgcmVnaXN0cmF0aW9uIHdhc24ndCBp
-biBwbGFjZS4NCj4gDQo+IE9uIHRoZSBvdGhlciBoYW5kLCBhIHN0cm9uZ2VyIGFuZCBwZXJoYXBz
-IG1vcmUgcm9idXN0IGFwcHJvYWNoIHdvdWxkIGJlIHRvDQo+IGVuZm9yY2UgdGhlIGNvbmRpdGlv
-biB0aGF0IG5vbi1jb29wZXJhdGluZyBkcml2ZXJzIGFyZSBuZXZlciBib3VuZCB0byBkZXZpY2Vz
-DQo+IGluIHRoZSBzYW1lIGdyb3VwIGF0IHRoZSBzYW1lIHRpbWUuICBUaGF0J3MgYmFzaWNhbGx5
-IHdoYXQgSSdtIHByb3Bvc2luZyBoZXJlDQo+IC0tIHRoZSBxdWVzdGlvbiBpcyB3aGV0aGVyIHRo
-ZSBlbmZvcmNlbWVudCBzaG91bGQgYmUgaW5zdGl0dXRlZCBpbiB0aGUga2VybmVsIG9yDQo+IHNo
-b3VsZCBtZXJlbHkgYmUgcGFydCBvZiBhIHN0YW5kYXJkIHByb3RvY29sIGZvbGxvd2VkIGJ5IHVz
-ZXJzcGFjZSBkcml2ZXJzLg0KPiANCj4gR2l2ZW4gdGhhdCBpdCdzIGN1cnJlbnRseSBuZWVkZWQg
-aW4gb25seSBvbmUgcGxhY2UsIGl0IHNlZW1zIHJlYXNvbmFibGUgdG8gbGVhdmUNCj4gdGhpcyBh
-cyBhICJnZW50bGVtZW4ncyBhZ3JlZW1lbnQiIGluIHVzZXJzcGFjZSBmb3IgdGhlIHRpbWUgYmVp
-bmcgaW5zdGVhZCBvZg0KPiBhZGRpbmcgaXQgdG8gdGhlIGtlcm5lbC4NCkJ1dCBRZW11IGFuZCBW
-aXJ0LW1hbmFnZXIgZG9uJ3QgY29tcGx5IHdpdGggdGhpcyAiZ2VudGxlbWVuJ3MgYWdyZWVtZW50
-IiBldmVuIGlmIHRoZSBFSENJIGFuZCBVSENJIHNpdCBpbiB0aGUgc2FtZSBJT01NVSBncm91cC4g
-DQpBbmQgdGhlIGN1cnJlbnQgYmVoYXZpb3Igb2YgUWVtdSBhbmQgbGludXggVVNCIGRyaXZlciB3
-aWxsIGNhdXNlIGEgY2F0YXN0cm9waGUuIA0KTWF5YmUgdGhlIGhhY2tlcnMgY2FuIHVzZSB0aGlz
-IEJVRyB0byBhdHRhY2sgdGhlIGNvbXB1dGVyLg0KV2Ugc2hvdWxkbid0IGJlbGlldmUgdGhlIFZN
-TSBhbHdheXMgY29tcGx5IHdpdGggdGhlICJnZW50bGVtZW4ncyBhZ3JlZW1lbnQiLCBJIHRoaW5r
-Lg0KPiANCj4gQWxhbiBTdGVybg0K
+Due to a mistake made while reordering patches, commit 90cac932976e
+("ASoC: sun8i-codec: Fix DAPM to match the hardware topology") added
+the sun8i_codec_component_probe function without referencing it from
+the component definition. Add the reference so the probe function gets
+called as expected.
+
+Fixes: 90cac932976e ("ASoC: sun8i-codec: Fix DAPM to match the hardware topology")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ sound/soc/sunxi/sun8i-codec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index 304683a71acd..e3a1347d7ecd 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -584,6 +584,7 @@ static const struct snd_soc_component_driver sun8i_soc_component = {
+ 	.num_dapm_widgets	= ARRAY_SIZE(sun8i_codec_dapm_widgets),
+ 	.dapm_routes		= sun8i_codec_dapm_routes,
+ 	.num_dapm_routes	= ARRAY_SIZE(sun8i_codec_dapm_routes),
++	.probe			= sun8i_codec_component_probe,
+ 	.idle_bias_on		= 1,
+ 	.use_pmdown_time	= 1,
+ 	.endianness		= 1,
+-- 
+2.26.2
+
