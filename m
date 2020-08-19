@@ -2,143 +2,132 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F82C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9A42078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7225C207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:17:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZVpoGnox";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="c+wEvtok"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OPGqsRDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHSTPm (ORCPT
+        id S1726970AbgHSTRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:15:42 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27318 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgHSTPk (ORCPT
+        Wed, 19 Aug 2020 15:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgHSTRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:15:40 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JJ6Z4h010475;
-        Wed, 19 Aug 2020 12:15:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=fZe8R9hSNR3bAEvWFDXAJhqcVXjDPmgFVqcjilsCCKg=;
- b=ZVpoGnox+NqD8dqyCTJHLY4PYxrw3r8ZU8eZJXc/+WuSwW5Ek9zl7rZATJnFRvTXLPNc
- KnaBksoc95tqqaskg0kd8NJYSAryl6XcQtMhWoA+c1saJwEH9cC+sBWkgywHz7nU8cBX
- Pit/PdqSQT6V2tvAyqe3+T5O3liBugwYzOo= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 3304pb26y7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 19 Aug 2020 12:15:25 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 19 Aug 2020 12:15:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PHE3sdORZ2QasZBiCTIOmqDmFni2fnP1h4nr1gb6xrmoWXCFnGwPqa23pB1omPYDcjApdo42wVToizGXXaRZ38tvOz77eR+VSjlKvOVcq7jgsGeGjyOvstD3M72xlqIFtbD0Ey7eO3xW0/J80amq7T9hEOqW1RxyOSRMU8alVEQuktZRpES6j3eVflFNehoolyJ00AHNAuXeYFljRZchxIW0e+mFTpNQW4NNjBKYlPgNky0PMTairkLN3jCn6AYBvAGviO1hmSSaW64FzhEMPAncSkyN0RmqmmbXIZvcbKZrr9lABBYGXFOXw0Cx414Xx9YHfQfUgCR+DX33vLw2sQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZe8R9hSNR3bAEvWFDXAJhqcVXjDPmgFVqcjilsCCKg=;
- b=Sh9LjgjtduRc0kOKA+WCzsh+Ifc/7fRH0W2XEz7pnsQX1v1cXXfZ7G9hg75uOiu4XjLgNkwx6V/ul7NKZay0RC8o0HVGxFbMPGJSU2M/fAjSikeTvqfl8DNObxX86o4CGrRrJpgy5/I/ukoQKuhU4OcnF4sMe2JBV+x5Z9u50AzhSRfwulliHX4qk85te/GrvsVmw+9b02K1NhfS9TkNXbFnY5t9qsaMc0rqWOycwu1G+5G2SzpKxxNMqZfLQIqigI0CMHJVIBLa3pGa2dlTXl14N+K5AhhyL4WfEig+O2yxlHgjzD02DNAFCh/lY7i6Mf/pWCBJ2YLsKcPFaPe8Mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZe8R9hSNR3bAEvWFDXAJhqcVXjDPmgFVqcjilsCCKg=;
- b=c+wEvtokwW1KFIRwtSTonJjLHrwBnvwpKtLa/prJQKTCW6aDPNNY+ZbvoyN3yP0BFyaVw+gRpXiXguWdRTY8B+WqU6XLjOVTBO07NhVVupVMWx1xhs/aXvcCDjRR87k54wgYfDCg0S958b9/0ZvnxnUyRUM8mTRutgtzZz9opUU=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB2582.namprd15.prod.outlook.com (2603:10b6:a03:154::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Wed, 19 Aug
- 2020 19:15:23 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 19:15:23 +0000
-Subject: Re: [PATCH bpf-next 3/6] bpf: sockmap: call sock_map_update_elem
- directly
-To:     Lorenz Bauer <lmb@cloudflare.com>, <jakub@cloudflare.com>,
-        <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     <kernel-team@cloudflare.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-4-lmb@cloudflare.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <1dfcc278-98cf-525c-7f35-483f461b2f5c@fb.com>
-Date:   Wed, 19 Aug 2020 12:15:18 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200819092436.58232-4-lmb@cloudflare.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:208:236::13) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c0a8:11e8::10d3] (2620:10d:c091:480::1:d29f) by MN2PR05CA0044.namprd05.prod.outlook.com (2603:10b6:208:236::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.16 via Frontend Transport; Wed, 19 Aug 2020 19:15:21 +0000
-X-Originating-IP: [2620:10d:c091:480::1:d29f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 21cb0444-aeb6-4046-b7b4-08d84474389e
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2582:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2582C829F862397AD7EC59D6D35D0@BYAPR15MB2582.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:1201;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(346002)(136003)(376002)(396003)(39860400002)(4744005)(31696002)(83380400001)(5660300002)(31686004)(86362001)(16526019)(53546011)(6486002)(186003)(316002)(52116002)(36756003)(66946007)(4326008)(6666004)(2906002)(478600001)(8676002)(110136005)(66556008)(7416002)(66476007)(8936002)(2616005)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21cb0444-aeb6-4046-b7b4-08d84474389e
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 19:15:23.1885
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CSBgROU53/dyxtSgmB9mZ6MMz7jC4+Q+Kl7rX0Vg1tPN9J/5ejGlYk/J7hH74tjY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2582
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_12:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 impostorscore=0 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- mlxlogscore=986 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190155
-X-FB-Internal: deliver
+        Wed, 19 Aug 2020 15:17:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9E8C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:17:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id r1so27191704ybg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=efiHHkgEE+CqxH/d5/JVGKFvb03OVNHvP+6tS83wQTA=;
+        b=OPGqsRDr301KcIzCldz6WJJy9VBaYiXVyvRIguhEG0mHItwSbwmZ3OYYYnr3lSQw8z
+         saZGrGV98qN5vUKsUZ6K+jx72/kiM7nPUPFzUiNs2zk/+IEd9Aqcepwu7b242kUUu2En
+         T3bZL+t8wWTa5W9dTY+OfCYRh603Ox4p2mtxHTr6ZGaHVCf7P1ztBgCjy6rtaQxlT8dD
+         DiE1NCywYnYaxxC91+VVqOXFdmlUzkXUGU0a/FSjXkvJbT4sjkwP0tU9mCM2ss++dNMg
+         wVjnZOGXx0WpVNHVwWyA8RtQP+2QopXWlNUa5/SeQi9Z9c5DR2U4ThJd/2cfAtYdHAUa
+         rF3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=efiHHkgEE+CqxH/d5/JVGKFvb03OVNHvP+6tS83wQTA=;
+        b=V23RCRNSltoTboFJRLxy+KBkBuWne5Zhmph0B23ipZgnQFQ3S6g+6k/YK7Q9OLjZOq
+         Itwjh2eCsJLdi+pDGO8umIn/81POjRryZPjmG3jiiFt/y+LIEX9a8gi5wg7aXA6RpT2A
+         UASG0Vv3uxB/xf4Ju4qNd4Kw2N8SX9X1W47F5IO6q0R7W7fcX6w/B6ZWtcsFvXda3NHg
+         lpK74/seZoYg28VS/oe0v+zV0C+IdigagjjXJOCUWKgsvm4C6b3SDgf0BuuHTsahmATU
+         CqRpClCXNGRIz/iKmpmuT1L+g56eeNe49u/3MR+Z9jyuhHSbsv5t809ou51tH7mdM0U2
+         820w==
+X-Gm-Message-State: AOAM532CaP1BiRpjnJjYUMv5yyqCoAZ+yXhUJcxqQoazgD8S108F5l5h
+        RG2B4FHQJKM3Dpqr44CB0C50MevFEZGzR7y76BE=
+X-Google-Smtp-Source: ABdhPJy/hRQI6MDpI3HydaZnOmr3CT858pQRkKElz+rZHlgLweGs650io4t9lHlAbTzpTPNopzfL6lZbGKAASJ4cZz8=
+X-Received: by 2002:a25:25cc:: with SMTP id l195mr36922173ybl.383.1597864622679;
+ Wed, 19 Aug 2020 12:17:02 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 12:16:49 -0700
+Message-Id: <20200819191654.1130563-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v2 0/5] -ffreestanding/-fno-builtin-* patches
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "=?UTF-8?q?D=C3=A1vid=20Bolvansk=C3=BD?=" <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A recent "libcall optimization" addition to LLVM will emit libcalls to
+stpcpy, which the kernel doesn't provide an implementation, breaking
+almost all kernel builds with ToT Clang. Disable it for clang.
 
+We discussed providing an implementation, but the interface is generally
+unsafe as it provides no bounds checking.
 
-On 8/19/20 2:24 AM, Lorenz Bauer wrote:
-> Don't go via map->ops to call sock_map_update_elem, since we know
-> what function to call in bpf_map_update_value. Since
-> check_map_func_compatibility doesn't allow calling
-> BPF_FUNC_map_update_elem from BPF context, we can remove
-> ops->map_update_elem and rename the function to
-> sock_map_update_elem_sys.
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+-fno-builtin-foo doesn't prevent GCC from emitting calls to foo, and GCC
+doesn't currently do the same libcall optimizations. If it ever does,
+then we can resurrect these implementations, but right now, YAGNI. So we
+only add these flags to CLANG_FLAGS to solve a Clang specific issue.
 
-Acked-by: Yonghong Song <yhs@fb.com>
+The first patch is critical, I'm hoping Masahiro will pick it for the
+Kbuild tree and help us to get the fix in 5.9.
+
+The rest are cleanups; sending them for feedback/review/testing.  Once
+the first hits mainline, I plan to resend the rest to the x86
+maintainers for inclusion in tip.
+
+Nick Desaulniers (5):
+  Makefile: add -fno-builtin-stpcpy
+  Makefile: add -fno-builtin-bcmp
+  Revert "lib/string.c: implement a basic bcmp"
+  x86/boot: use -fno-builtin-bcmp
+  x86: don't build CONFIG_X86_32 as -ffreestanding
+
+ Makefile               |  2 ++
+ arch/x86/Makefile      |  3 ---
+ arch/x86/boot/Makefile |  1 +
+ arch/x86/boot/string.c |  8 --------
+ include/linux/string.h |  3 ---
+ lib/string.c           | 20 --------------------
+ 6 files changed, 3 insertions(+), 34 deletions(-)
+
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
