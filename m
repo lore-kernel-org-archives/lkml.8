@@ -4,58 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB085C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88962075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C1520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597839358;
-	bh=zgqO4dt8oDjrOVT4/c1Xvgcktui1wNIAoIAn1aAlAEY=;
+	s=default; t=1597839375;
+	bh=ecmZFbmjBgtZFzBQbq7gL6gCy7ddk1819UscZzDFstI=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=qqM8qHRz6y/UwqvwcXcYPs74zV7NTdPdLYWMKGjI3SS2iiHcXGVtCD8Ts3kJ9r8JW
-	 9JJLKMEyNUB+BE/Ejof2DWQWjpM1QfIP+jVwAc3jsNsQntVQaSfd9LiIVF1Id1Nh83
-	 7KL8MioIuM/urQAhfyfTUiz563wHJCCtYrKIBwY4=
+	b=ulhzwdgtnxDhlKfq8IggEetxJ5lgzbLjwmQUZZfacDENSVvyz5K/+uBuo8Ad2q9Qm
+	 bUDNTrKoLKuhW96A/8eHwXQDXCNPStSsA5jSFZTdFHgDhR1LpUFiBkD/0XC4AZbCKu
+	 E1Ft6S78ErZMT3ICOSyaLwsA9ehmr3gxiVoKx3tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgHSMP5 (ORCPT
+        id S1728052AbgHSMQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 08:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgHSMP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:15:57 -0400
+        id S1727903AbgHSMQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:16:07 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A05B1206FA;
-        Wed, 19 Aug 2020 12:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24871206FA;
+        Wed, 19 Aug 2020 12:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597839356;
-        bh=zgqO4dt8oDjrOVT4/c1Xvgcktui1wNIAoIAn1aAlAEY=;
+        s=default; t=1597839366;
+        bh=ecmZFbmjBgtZFzBQbq7gL6gCy7ddk1819UscZzDFstI=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=efaVO3WJCaG9BaPttCL8jMRBOA31XsXEJaCMkZ4lY1wL87sOaTuVFsUBgaJ98LxWg
-         afHJExSfN1wnl3Zg1JIDBUPhWbCbFu9MoBL7K2Pv1ln2RLR1C9r4Oxjw+It6gQqA8o
-         Pb+JnsWixqPz2axn7rjZIIbNAWiOo0vX+dv9vWs0=
-Date:   Wed, 19 Aug 2020 13:15:24 +0100
+        b=hbtL9rqc+f0ahjMfQ7jdq544edl5NKyL0HrVpeIQ9L/wztWBedr3Kzxl3MW+n+jbJ
+         47R4RlyxN3ixMxTBnVwL6hmxczc+XgEy4MTUOsst5+ZzP0TJT5ylvR3UnMVpBaVfvi
+         sGojJEHs2v72klVNkInXRY+K/7AM9YQIKlufeccs=
+Date:   Wed, 19 Aug 2020 13:15:35 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, shengjiu.wang@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Cc:     Linux-imx@nxp.com
-In-Reply-To: <1597712771-32433-1-git-send-email-Anson.Huang@nxp.com>
-References: <1597712771-32433-1-git-send-email-Anson.Huang@nxp.com>
-Subject: Re: [PATCH V2] dt-bindings: sound: Convert NXP spdif to json-schema
-Message-Id: <159783932455.55025.17846366989004171430.b4-ty@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Chen-Yu Tsai <wens@csie.org>
+In-Reply-To: <20200819034038.46418-1-samuel@sholland.org>
+References: <20200819113405.55582925@canb.auug.org.au> <20200819034038.46418-1-samuel@sholland.org>
+Subject: Re: [PATCH] ASoC: sun8i-codec: Hook up component probe function
+Message-Id: <159783932454.55025.7710161905600832608.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 09:06:11 +0800, Anson Huang wrote:
-> Convert the NXP SPDIF binding to DT schema format using json-schema.
+On Tue, 18 Aug 2020 22:40:38 -0500, Samuel Holland wrote:
+> Due to a mistake made while reordering patches, commit 90cac932976e
+> ("ASoC: sun8i-codec: Fix DAPM to match the hardware topology") added
+> the sun8i_codec_component_probe function without referencing it from
+> the component definition. Add the reference so the probe function gets
+> called as expected.
 
 Applied to
 
@@ -63,8 +69,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: Convert NXP spdif to json-schema
-      commit: c5040fec3d550e27d0a49f05564204da6c90d10b
+[1/1] ASoC: sun8i-codec: Hook up component probe function
+      commit: ed7f0fbc9dca0961ac9a713c778319b7f24315ae
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
