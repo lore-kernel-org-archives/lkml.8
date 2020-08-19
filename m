@@ -2,186 +2,128 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ABAC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C39C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC3920888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi"
+	by mail.kernel.org (Postfix) with ESMTP id 5804620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597881396;
+	bh=rAUkMixEoHXPMqidT/E+A5kXiu7RBG3wyH4hmu/8B3Q=;
+	h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=jaROrrOgbzifVhsUiHu0jnSpPReXBHwfV9yhk7GYHmWlZqatjjPTz2PFHxKL+TFUg
+	 Hw2qoJkdUW67PBqNWNzz/z8sGos3ea/m71+4lgVDETguJmhTGyuPl1m5TVKyey45YD
+	 AYC7VkDb1snZuCXifiHjeyET47OOZNYj4tm715Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHSXym (ORCPT
+        id S1726816AbgHSX4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 19:54:42 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:54730 "EHLO mx.0dd.nl"
+        Wed, 19 Aug 2020 19:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgHSXyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 19:54:40 -0400
-X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 19:54:38 EDT
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd00::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S1726362AbgHSX40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 19:56:26 -0400
+Received: from localhost (unknown [70.37.104.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 622575FB19;
-        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi";
-        dkim-atps=neutral
-Received: from www (unknown [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id 1AE02687EC9;
-        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 1AE02687EC9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1597880773;
-        bh=yV6u6+GKP89ZhLaPI4Lclma8HJH4chY3sZJwJgORk04=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qGHOkhBi2BTnqCwqZeHEocVi0xr7Hlg1vEMcqqjBkt7QaRBDN87wOOJsh+wstepJc
-         BLBrC0D257eGFvdyNvkLXFw7tnEgF9TlxcWZNKHcWzxamHDQkgWmFMvNev3biAagL+
-         obPPQiN1S161exlA+7gLw44fgJ1tA3e1wannKNZUl+omiK78VI73vMbmpdKL2JCf8M
-         jEg9PcmXnsGis7G4+BRnCdGye6An3tITSzJohT4BePTEVfdsqqsu5769Kx/vFCx4xM
-         KUMF64MUQNhaVummXc5au5TALXk37O4RdLEY22WLMnjDgzkX7ww7Je19UbkJ2njkTf
-         dYy2Z1eIRviMQ==
-Received: from pc-rene.lan.vdorst.com (pc-rene.lan.vdorst.com
- [192.168.2.14]) by www.vdorst.com (Horde Framework) with HTTPS; Wed, 19 Aug
- 2020 23:46:13 +0000
-Date:   Wed, 19 Aug 2020 23:46:13 +0000
-Message-ID: <20200819234613.Horde.oQiJhMCnUINwnQP-5_MyHh-@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, f.fainelli@gmail.com,
-        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, Sean Wang <Sean.Wang@mediatek.com>,
-        frank-w@public-files.de, dqfext@gmail.com
-Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
- MT7531 switch
-References: <cover.1597729692.git.landen.chao@mediatek.com>
- <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
- <20200818160901.GF2330298@lunn.ch> <1597830248.31846.78.camel@mtksdccf07>
-In-Reply-To: <1597830248.31846.78.camel@mtksdccf07>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A24320888;
+        Wed, 19 Aug 2020 23:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597881385;
+        bh=rAUkMixEoHXPMqidT/E+A5kXiu7RBG3wyH4hmu/8B3Q=;
+        h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=NpmdyagyeODOjX0cmwGNOiY7W3ZKvRBz8NcDfxU/dASWaDYV5mNfpWC/mjlAK6OVV
+         gsXAtge5tYz81Ruku/vbQ2wyPWWhsjQNgimMg3Bjd4WAtDscJCPVMOM3oyVDGmMt3m
+         ThvZbiNzLzziaSWXZNXUESgHM+DepKoZ89C2OtO8=
+Date:   Wed, 19 Aug 2020 23:56:24 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Andrei Botila <andrei.botila@nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH 2/9] crypto: caam/qi - add fallback for XTS with more than 8B IV
+In-Reply-To: <20200806114127.8650-3-andrei.botila@oss.nxp.com>
+References: <20200806114127.8650-3-andrei.botila@oss.nxp.com>
+Message-Id: <20200819235625.9A24320888@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Landen Chao <landen.chao@mediatek.com>:
+Hi
 
-> On Wed, 2020-08-19 at 00:09 +0800, Andrew Lunn wrote:
->> On Tue, Aug 18, 2020 at 03:14:10PM +0800, Landen Chao wrote:
->> > Add new support for MT7531:
->> >
->> > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
->> > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
->> > port 6 only supports SGMII interface. Cpu port 5 supports either RGMII
->> > or SGMII in different HW sku. Due to SGMII interface support, pll, and
->> > pad setting are different from MT7530. This patch adds different initial
->> > setting, and SGMII phylink handlers of MT7531.
->> >
->> > MT7531 SGMII interface can be configured in following mode:
->> > - 'SGMII AN mode' with in-band negotiation capability
->> >     which is compatible with PHY_INTERFACE_MODE_SGMII.
->> > - 'SGMII force mode' without in-bnad negotiation
->>
->> band
-> Sorry, I'll fix it.
->>
->> >     which is compatible with 10B/8B encoding of
->> >     PHY_INTERFACE_MODE_1000BASEX with fixed full-duplex and fixed pause.
->> > - 2.5 times faster clocked 'SGMII force mode' without in-bnad negotiation
->>
->> band
-> Sorry, I'll fix it.
->>
->> > +static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
->> > +			      phy_interface_t interface)
->> > +{
->> > +	u32 val;
->> > +
->> > +	if (!mt7531_is_rgmii_port(priv, port)) {
->> > +		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
->> > +			port);
->> > +		return -EINVAL;
->> > +	}
->> > +
->> > +	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
->> > +	val |= GP_CLK_EN;
->> > +	val &= ~GP_MODE_MASK;
->> > +	val |= GP_MODE(MT7531_GP_MODE_RGMII);
->> > +	val &= ~(TXCLK_NO_REVERSE | RXCLK_NO_DELAY);
->> > +	switch (interface) {
->> > +	case PHY_INTERFACE_MODE_RGMII:
->> > +		val |= TXCLK_NO_REVERSE;
->> > +		val |= RXCLK_NO_DELAY;
->> > +		break;
->> > +	case PHY_INTERFACE_MODE_RGMII_RXID:
->> > +		val |= TXCLK_NO_REVERSE;
->> > +		break;
->> > +	case PHY_INTERFACE_MODE_RGMII_TXID:
->> > +		val |= RXCLK_NO_DELAY;
->> > +		break;
->> > +	case PHY_INTERFACE_MODE_RGMII_ID:
->> > +		break;
->> > +	default:
->> > +		return -EINVAL;
->> > +	}
->>
->> You need to be careful here. If the MAC is doing the RGMII delays, you
->> need to ensure the PHY is not. What interface mode is passed to the
->> PHY?
-> Hi Andrew,
->
-> mt7531 RGMII port is a MAC-only port, it can be connected to CPU MAC or
-> external phy. In bpi-r64 board, mt7531 RGMII is connected to CPU MAC, so
-> I tend to implement RGMII logic for use case of bpi-r64.
->
-> In general, according to phy.rst, RGMII delay should be done by phy, but
-> some MoCA product need RGMII delay in MAC. These two requirements
-> conflict. Is there any suggestion to solve the conflict?
->
-> If mt7531 RGMII implementation needs to satisfy either phy.rst or
-> special MoCA product, I would like to satisfy phy.rst and remove MAC
-> RGMII delay in v3. For special product needs MAC RGMII delay, this patch
-> can be used in its local codebase.
+[This is an automated email]
 
-Hi Landen,
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: b189817cf789 ("crypto: caam/qi - add ablkcipher and authenc algorithms").
 
-With the current mainline code [1], the dsa code tries to detect how the MAC5
-is used. All the three modes are supported. MAC5 -> PHY0, MAC5 ->  
-PHY4, MAC5 ->
-EXTERNAL PHY and MAC5 to external MAC.
+The bot has tested the following trees: v5.8.1, v5.7.15, v5.4.58, v4.19.139, v4.14.193.
 
-When MAC5 is a DSA port it skips settings the delay settings. See [2].
+v5.8.1: Failed to apply! Possible dependencies:
+    528f776df67c ("crypto: qat - allow xts requests not multiple of block")
+    a85211f36f3d ("crypto: qat - fallback for xts with 192 bit keys")
+    b185a68710e0 ("crypto: qat - validate xts key")
+    b8aa7dc5c753 ("crypto: drivers - set the flag CRYPTO_ALG_ALLOCATES_MEMORY")
+    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
 
-Maybe you can use a similar concept.
+v5.7.15: Failed to apply! Possible dependencies:
+    528f776df67c ("crypto: qat - allow xts requests not multiple of block")
+    a85211f36f3d ("crypto: qat - fallback for xts with 192 bit keys")
+    b185a68710e0 ("crypto: qat - validate xts key")
+    b8aa7dc5c753 ("crypto: drivers - set the flag CRYPTO_ALG_ALLOCATES_MEMORY")
+    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
 
-Greats,
+v5.4.58: Failed to apply! Possible dependencies:
+    64db5e7439fb ("crypto: sparc/aes - convert to skcipher API")
+    66d7fb94e4ff ("crypto: blake2s - generic C library implementation and selftest")
+    674f368a952c ("crypto: remove CRYPTO_TFM_RES_BAD_KEY_LEN")
+    746b2e024c67 ("crypto: lib - tidy up lib/crypto Kconfig and Makefile")
+    7988fb2c03c8 ("crypto: s390/aes - convert to skcipher API")
+    7f725f41f627 ("crypto: powerpc - convert SPE AES algorithms to skcipher API")
+    7f9b0880925f ("crypto: blake2s - implement generic shash driver")
+    91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
+    b4d0c0aad57a ("crypto: arm - use Kconfig based compiler checks for crypto opcodes")
+    b95bba5d0114 ("crypto: skcipher - rename the crypto_blkcipher module and kconfig option")
+    d00c06398154 ("crypto: s390/paes - convert to skcipher API")
+    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
+    ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
 
-René
+v4.19.139: Failed to apply! Possible dependencies:
+    0a5dff9882e5 ("crypto: arm/ghash - provide a synchronous version")
+    1ca1b917940c ("crypto: chacha20-generic - refactor to allow varying number of rounds")
+    5ca7badb1f62 ("crypto: caam/jr - ablkcipher -> skcipher conversion")
+    674f368a952c ("crypto: remove CRYPTO_TFM_RES_BAD_KEY_LEN")
+    8a5a79d5556b ("crypto: x86/chacha20 - Add a 4-block AVX2 variant")
+    99680c5e9182 ("crypto: arm - convert to use crypto_simd_usable()")
+    9b17608f15b9 ("crypto: x86/chacha20 - Use larger block functions more aggressively")
+    9dbe3072c6b1 ("crypto: caam/qi - ablkcipher -> skcipher conversion")
+    a5dd97f86211 ("crypto: x86/chacha20 - Add a 2-block AVX2 variant")
+    aec48adce85d ("crypto: caam/qi - remove ablkcipher IV generation")
+    c3b734dd325d ("crypto: x86/chacha20 - Support partial lengths in 8-block AVX2 variant")
+    cf5448b5c3d8 ("crypto: caam/jr - remove ablkcipher IV generation")
+    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
+    db8e15a24957 ("crypto: x86/chacha20 - Support partial lengths in 4-block SSSE3 variant")
+    e4e72063d3c0 ("crypto: x86/chacha20 - Support partial lengths in 1-block SSSE3 variant")
+
+v4.14.193: Failed to apply! Possible dependencies:
+    5ca7badb1f62 ("crypto: caam/jr - ablkcipher -> skcipher conversion")
+    662f70ede597 ("crypto: caam - remove needless ablkcipher key copy")
+    7e0880b9fbbe ("crypto: caam - add Derived Key Protocol (DKP) support")
+    87ec3a0b1c2d ("crypto: caam - prepare for gcm(aes) support over QI interface")
+    9dbe3072c6b1 ("crypto: caam/qi - ablkcipher -> skcipher conversion")
+    cf5448b5c3d8 ("crypto: caam/jr - remove ablkcipher IV generation")
 
 
-[1]  
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n1303
-[2]  
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n598
+NOTE: The patch will not be queued to stable trees until it is upstream.
 
->
-> Landen
->>
->> 	Andrew
+How should we proceed with this patch?
 
-
-
+-- 
+Thanks
+Sasha
