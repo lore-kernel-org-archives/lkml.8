@@ -2,101 +2,193 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4610C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC00520786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC7D207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgHSKWV (ORCPT
+        id S1726702AbgHSKXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:22:21 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:17713 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbgHSKWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:22:20 -0400
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 07JALZed012120
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Aug 2020 18:21:35 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 19 Aug 2020 18:21:38 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] btrfs: prevent hung check firing during long sync IO
-Date:   Wed, 19 Aug 2020 18:14:51 +0800
-Message-ID: <20200819101451.24266-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Aug 2020 06:23:01 -0400
+Received: from mail.v3.sk ([167.172.186.51]:51988 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727840AbgHSKWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:22:54 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id C0E06DFA74;
+        Wed, 19 Aug 2020 10:21:57 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id RHCgBtIg0UIt; Wed, 19 Aug 2020 10:21:56 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 1FE04DEE69;
+        Wed, 19 Aug 2020 10:21:56 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id W-4M_VkZglvD; Wed, 19 Aug 2020 10:21:55 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id B66A8DFA71;
+        Wed, 19 Aug 2020 10:21:55 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v4 1/2] dt-bindings: display: himax,hx8837: Add Himax HX8837 bindings
+Date:   Wed, 19 Aug 2020 12:22:45 +0200
+Message-Id: <20200819102246.634039-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200819102246.634039-1-lkundrak@v3.sk>
+References: <[PATCH v4 0/2] drm/bridge: hx8837: add a Himax HX8837 display controller driver>
+ <20200819102246.634039-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 07JALZed012120
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For sync and flush io, it may take long time to complete.
-So it's better to use wait_for_completion_io_timeout() in a
-while loop to avoid prevent hung check and crash(when set
-/proc/sys/kernel/hung_task_panic).
+Himax HX8837 is a secondary display controller used to drive the panel
+on OLPC platforms.
 
-This is similar to prevent hung task check in submit_bio_wait(),
-blk_execute_rq().
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
 ---
- fs/btrfs/disk-io.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Changes since v3:
+- Moved to bindings/display/
+- Added the ports
+- Converted to YAML
+- Removed Pavel's Ack, because the changes are substantial
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 9ae25f632..1eb560de0 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -17,6 +17,7 @@
- #include <linux/error-injection.h>
- #include <linux/crc32c.h>
- #include <linux/sched/mm.h>
-+#include <linux/sched/sysctl.h>
- #include <asm/unaligned.h>
- #include <crypto/hash.h>
- #include "ctree.h"
-@@ -3699,12 +3700,21 @@ static void write_dev_flush(struct btrfs_device *device)
- static blk_status_t wait_dev_flush(struct btrfs_device *device)
- {
- 	struct bio *bio = device->flush_bio;
-+	unsigned long hang_check;
- 
- 	if (!test_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state))
- 		return BLK_STS_OK;
- 
- 	clear_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state);
--	wait_for_completion_io(&device->flush_wait);
+Changes since v2:
+- s/betweend/between/
+
+Changes since v1:
+- s/load-gpio/load-gpios/
+- Use interrupt bindings instead of gpio for the IRQ
+
+ .../bindings/display/bridge/himax,hx8837.yaml | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/hima=
+x,hx8837.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/himax,hx883=
+7.yaml b/Documentation/devicetree/bindings/display/bridge/himax,hx8837.ya=
+ml
+new file mode 100644
+index 0000000000000..f5b0a00f5089d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/himax,hx8837.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2018,2019,2020 Lubomir Rintel <lkundrak@v3.sk>
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/himax,hx8837.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	/* Prevent hang_check timer from firing at us during very long I/O */
-+	hang_check = sysctl_hung_task_timeout_secs;
-+	if (hang_check)
-+		while (!wait_for_completion_io_timeout(&device->flush_wait,
-+						hang_check * (HZ/2)))
-+			;
-+	else
-+		wait_for_completion_io(&device->flush_wait);
- 
- 	return bio->bi_status;
- }
--- 
-2.17.1
++title: HX8837 Display Controller Device Tree Bindings
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++properties:
++  compatible:
++    const: himax,hx8837
++
++  reg:
++    const: 0xd
++
++  load-gpios:
++    maxItems: 1
++    description: GPIO specifier of DCON_LOAD pin (active high)
++
++  stat-gpios:
++    minItems: 2
++    description: GPIO specifier of DCON_STAT0 and DCON_STAT1 pins (activ=
+e high)
++
++  interrupts:
++    maxItems: 1
++    description: Interrupt specifier of DCON_IRQ pin (edge falling)
++
++  ports:
++    type: object
++
++    properties:
++      port@0:
++        type: object
++        description: |
++          Video port for RGB input.
++
++      port@1:
++        type: object
++        description: |
++          Video port connected to the panel.
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - load-gpios
++  - stat-gpios
++  - interrupts
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++       =20
++        lcd-controller@d {
++            compatible =3D "himax,hx8837";
++            reg =3D <0x0d>;
++            stat-gpios =3D <&gpio 100 GPIO_ACTIVE_HIGH>,
++                         <&gpio 101 GPIO_ACTIVE_HIGH>;
++            load-gpios =3D <&gpio 142 GPIO_ACTIVE_HIGH>;
++            interrupts =3D <&gpio 124 IRQ_TYPE_EDGE_FALLING>;
++   =20
++            ports {
++                #address-cells =3D <0x01>;
++                #size-cells =3D <0x00>;
++   =20
++                port@0 {
++                    reg =3D <0x00>;
++                    dcon_rgb_in: endpoint {
++                        remote-endpoint =3D <&lcd0_rgb_out>;
++                    };
++                };
++   =20
++                port@1 {
++                    reg =3D <0x01>;
++                    dcon_gettl_out: endpoint {
++                        remote-endpoint =3D <&panel_dettl_in>;
++                    };
++                };
++            };
++        };
++    };
+--=20
+2.26.2
 
