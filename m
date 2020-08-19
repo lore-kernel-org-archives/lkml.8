@@ -2,106 +2,125 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F99DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18ED2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ParQHmrO"
+	by mail.kernel.org (Postfix) with ESMTP id 832472078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgHSPzG (ORCPT
+        id S1728811AbgHSPzz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgHSPzD (ORCPT
+        Wed, 19 Aug 2020 11:55:55 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26443 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728415AbgHSPzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:55:03 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF042C061757;
-        Wed, 19 Aug 2020 08:55:03 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i19so12317603lfj.8;
-        Wed, 19 Aug 2020 08:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=31Qym4k8331f6H4k76WgLs9RnH9R3abh8NK+iPJ0pQ8=;
-        b=ParQHmrOzrGsP3e8fhsiAiGjWynHT+odEmSfEkdgFcYE/+EQafA+ybVP3YAc1Dxz9E
-         27+5cq+fFaPMGVyaOMMxJpwnxvv8nYc2vRQFpcgSgK6p62joE/f6qdx7KldywxEogdY7
-         CFVBvmCIGQrkg97ni13iqPUqTQeG7RoUkfk+CPPqVTDCbGxcJAoWBxduM4pDSErKNneb
-         VjhShTP2TTUj1v5u5GrI4yTEn9l3iPL53IdQG9oRB+Fzz3RY27xmJfJVU6A5ljf+dS+Y
-         d0z0JbhPisKdgb7xtwyN5o7BmFZhKWWQpsdGP3UFkxzTngWz0SN9SvIZlh8iKXuBi6pP
-         9JcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=31Qym4k8331f6H4k76WgLs9RnH9R3abh8NK+iPJ0pQ8=;
-        b=UhEoy9DFXxWff05nIWEanrzEoNt6J3RzsjxJiFraScrKocl9QKEwQbQ2j3diGLsT3p
-         scIQw6xd8RfUmUJWrcKnkFQqitRRREVWo0FXyZb7oS+gVhE5Ma6RFg3D9JclwVhAGEQz
-         zurMdTrKfUbFVh4RAxFgNbxDNc0nYk3YxI4THu3KX7IVMYq+6blWOo7wS6s78TR7SV6m
-         hmfbMTip3CeSgp3Ft1yI5Us74zuo9WpEW85zvFaVnHw1OtRhSYD+YfM176HWSQIA/AiX
-         A3mKotdyCoEXrxFDFrD0B7MHw17VzOC/TRAeEY5mPGf81nWl3wXfAd9yNl1xTO6nld0+
-         QS7A==
-X-Gm-Message-State: AOAM5304vc+2h6hejd/FewrP0mbsRxpBp2fIdy5UJRwQ+Po/PefdPFOI
-        yTBfR60/Pq64jfVCMu/GcaAeeu8xPxQdGjsmTTk=
-X-Google-Smtp-Source: ABdhPJzo8ojYd7PedEirG4KP1WXU+RDi395iO/dPgxj2okrypI9Ncnu33CdFRKWevZJNZ0mb8YOPvY5MOjj7/ncEWrM=
-X-Received: by 2002:a05:6512:2010:: with SMTP id a16mr12109645lfb.196.1597852502174;
- Wed, 19 Aug 2020 08:55:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org> <20200817220425.9389-9-ebiederm@xmission.com>
- <CAHk-=whCU_psWXHod0-WqXXKB4gKzgW9q=d_ZEFPNATr3kG=QQ@mail.gmail.com>
- <875z9g7oln.fsf@x220.int.ebiederm.org> <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
- <20200818110556.q5i5quflrcljv4wa@wittgenstein> <87pn7m22kn.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87pn7m22kn.fsf@x220.int.ebiederm.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Aug 2020 08:54:50 -0700
-Message-ID: <CAADnVQKpDaaogmbZPD0bv3SrTXo9i5eSBMz1dd=3wOn9pxDOWA@mail.gmail.com>
-Subject: Re: [PATCH 09/17] file: Implement fnext_task
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Wed, 19 Aug 2020 11:55:52 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-16-hHSNbmghP5KK9A30MkCOpQ-1; Wed, 19 Aug 2020 16:55:49 +0100
+X-MC-Unique: hHSNbmghP5KK9A30MkCOpQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 19 Aug 2020 16:55:47 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 19 Aug 2020 16:55:47 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Matthew Wilcox' <willy@infradead.org>
+CC:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Christoph Hewllig <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "<linux-fsdevel@vger.kernel.org>" <linux-fsdevel@vger.kernel.org>,
-        criu@openvz.org, bpf <bpf@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        "Fenghua Yu" <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Ley Foon Tan" <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Stafford Horne" <shorne@gmail.com>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Tom Zanussi" <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "uclinux-h8-devel@lists.sourceforge.jp" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "kgdb-bugreport@lists.sourceforge.net" 
+        <kgdb-bugreport@lists.sourceforge.net>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Thread-Topic: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Thread-Index: AQHWdjo738I4JRuBMEmE9DxJ3r/Mo6k/jYog///0u4CAABKhYA==
+Date:   Wed, 19 Aug 2020 15:55:47 +0000
+Message-ID: <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
+References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
+ <20200818174447.GV17456@casper.infradead.org>
+ <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+ <20200819084556.im5zfpm2iquzvzws@wittgenstein>
+ <20200819111851.GY17456@casper.infradead.org>
+ <87a6yq222c.fsf@x220.int.ebiederm.org>
+ <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
+ <87mu2qznlv.fsf@x220.int.ebiederm.org>
+ <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
+ <20200819154521.GE17456@casper.infradead.org>
+In-Reply-To: <20200819154521.GE17456@casper.infradead.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 6:25 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> The bug in the existing code is that bpf_iter does get_file instead
-> of get_file_rcu.  Does anyone have any sense of how to add debugging
-> to get_file to notice when it is being called in the wrong context?
+From: Matthew Wilcox
+> Sent: 19 August 2020 16:45
+> 
+> On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
+> > Does linux have an O(1) (or do I mean o(1)) pid allocator?
+> > Or does it have to do a linear scan to find a gap??
+> 
+> O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
+> number of PIDs currently allocated, and it's log_64 rather than log_2
+> (which makes no difference to O() but does make a bit of a difference
+> to performance)
 
-That bug is already fixed in bpf tree.
-See commit cf28f3bbfca0 ("bpf: Use get_file_rcu() instead of
-get_file() for task_file iterator")
+Still worse that O(1) - when that is just replacing a variable
+with a value read out of an array.
+Made pid lookup a trivial O(1) as well.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
