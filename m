@@ -2,164 +2,209 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58443C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B6C20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F91E207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XsGUJB1H"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GVLkRIrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgHSQ4h (ORCPT
+        id S1727116AbgHSQ5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
+        Wed, 19 Aug 2020 12:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgHSQ4Y (ORCPT
+        with ESMTP id S1726731AbgHSQ5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:56:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8E6C061348
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so11118035plt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DyPe34DueaqLfEcDqZqm300kn/odPwqy1uJt22bP0Z8=;
-        b=XsGUJB1Hdc8az/rXuro1bWhBsdgGdQHjYKQpuunAo8x0WekUdWBNsmSDFJj67GVWVG
-         5hPdTKlI6scfsCliWtIOLtIYsVj1YwZaDB5Moe7+6/awpbvAiGHWPGqlMMiQH755AjTS
-         vfPiJNDbB+aPu6VjtibhyAOy9LSk3+Tr2jZ+44/eXBtbf+XOZ8K+VQwL9BGEgF8JGQKK
-         5KG7zpuu/Xea1f/72jgUaeUpmt4D/ORaIe5NpGI/tYWzxvMEzO/L884n90j+BH7HiH1m
-         QMIIcf8a02yI8nCtJ4GjS4kGwrIFsNa8Q8Tri7Y3/f7lv1J5QYlIRrGUMNjHynb2RGMA
-         GacA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DyPe34DueaqLfEcDqZqm300kn/odPwqy1uJt22bP0Z8=;
-        b=tMFMXVpyCd28VwEun5g/qTZt1w0OmCrXrFAz15Pwp772QQ04bBjcKyei/udoYGzdHQ
-         RQxjcnsjkIBf9dTGApf3kMXz0tE33piNG7CsqqOvUOibwrEqdfViHBPYxegYGn3Z+wiK
-         l8dXU83sJqJ2eNNQ0xDnJsMrYkLVELDUFEwNW8VC9n1aEc7aYWbV4TRetWCwi62wXMGt
-         qJbqrG3QsBD/7J8vInzplsR5nq4THO2nSZQamhJmU/Z168cHek6Xkp/jahf8YHvOwwsB
-         2WDpEPg/8OjtopmjhPjzwDmpoxW3yRT78eCxrebjuoaM9CXA78uczWwZF0JvfejO6GrV
-         s/VQ==
-X-Gm-Message-State: AOAM531yw8uoZpzcnU7iGCB6eetwLtdi+CP1A6Svnxg51RdZgwMpgA9z
-        WmSjOURmP3D294HnmUgv6PSdMA==
-X-Google-Smtp-Source: ABdhPJwmU9GVpeA/a5GSwGnni05DgMGKqd87OvDU6WClq1X+wlrKxKnBzQboSPP7uq4T48DrxExHZQ==
-X-Received: by 2002:a17:90a:f2c7:: with SMTP id gt7mr4669042pjb.204.1597856175023;
-        Wed, 19 Aug 2020 09:56:15 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id w23sm25765910pgj.5.2020.08.19.09.56.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 09:56:14 -0700 (PDT)
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-To:     Allen <allen.lkml@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com>
- <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook>
- <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
- <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com>
- <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2b1a5987-9b54-d63e-b3da-d3024505776c@kernel.dk>
-Date:   Wed, 19 Aug 2020 10:56:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 12:57:07 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7B0C061757;
+        Wed, 19 Aug 2020 09:57:06 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8175329E;
+        Wed, 19 Aug 2020 18:56:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597856219;
+        bh=JSMuV5nAqp9B18iMvO4sKVXd8MjalDF0a0uByYXBzuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GVLkRIrCYOJf1UNRl4LLIVufPjmaatK0mmlWAGyeaFVSQL+fT9Y4xTVY7bO+30Kbp
+         Z6SwSWnw5mdu6D1H5au9CIcWREIVZSs0nFN7euhzh2Cf/NClI8HiwY4hZWppQqaD5U
+         ljH7aYtrkszJRobor9w6E4k1Q8NsXRnNtrn6bsA8=
+Date:   Wed, 19 Aug 2020 19:56:41 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vsagar@xilinx.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joe@perches.com" <joe@perches.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Dinesh Kumar <dineshk@xilinx.com>
+Subject: Re: [PATCH v3 3/3] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+Message-ID: <20200819165641.GS6049@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-4-vishal.sagar@xilinx.com>
+ <50cc4f4b-e788-c5ad-cd6a-b428b96d5377@xs4all.nl>
+ <20200715213315.GF6144@pendragon.ideasonboard.com>
+ <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 9:24 AM, Allen wrote:
->> [...]
->>>> Since both threads seem to have petered out, let me suggest in
->>>> kernel.h:
->>>>
->>>> #define cast_out(ptr, container, member) \
->>>>     container_of(ptr, typeof(*container), member)
->>>>
->>>> It does what you want, the argument order is the same as
->>>> container_of with the only difference being you name the containing
->>>> structure instead of having to specify its type.
->>>
->>> Not to incessantly bike shed on the naming, but I don't like
->>> cast_out, it's not very descriptive. And it has connotations of
->>> getting rid of something, which isn't really true.
->>
->> Um, I thought it was exactly descriptive: you're casting to the outer
->> container.  I thought about following the C++ dynamic casting style, so
->> out_cast(), but that seemed a bit pejorative.  What about outer_cast()?
->>
->>> FWIW, I like the from_ part of the original naming, as it has some
->>> clues as to what is being done here. Why not just from_container()?
->>> That should immediately tell people what it does without having to
->>> look up the implementation, even before this becomes a part of the
->>> accepted coding norm.
->>
->> I'm not opposed to container_from() but it seems a little less
->> descriptive than outer_cast() but I don't really care.  I always have
->> to look up container_of() when I'm using it so this would just be
->> another macro of that type ...
->>
-> 
->  So far we have a few which have been suggested as replacement
-> for from_tasklet()
-> 
-> - out_cast() or outer_cast()
-> - from_member().
-> - container_from() or from_container()
-> 
-> from_container() sounds fine, would trimming it a bit work? like from_cont().
+Hi Vishal,
 
-I like container_from() the most, since it's the closest to contain_of()
-which is a well known idiom for years. The lines will already be shorter
-without the need to specify the struct, so don't like the idea of
-squeezing container into cont for any of them. For most people, cont is
-usually short for continue, not container.
+(Hans, there's a question for you below)
+
+On Wed, Aug 19, 2020 at 01:47:49PM +0000, Vishal Sagar wrote:
+> On Thursday, July 16, 2020 3:03 AM Laurent Pinchart wrote:
+> > On Thu, Jun 25, 2020 at 11:43:01AM +0200, Hans Verkuil wrote:
+> > > On 18/06/2020 07:33, Vishal Sagar wrote:
+> > > > The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
+> > > > streams from SDI sources like SDI broadcast equipment like cameras and
+> > > > mixers. This block outputs either native SDI, native video or
+> > > > AXI4-Stream compliant data stream for further processing. Please refer
+> > > > to PG290 for details.
+> > > >
+> > > > The driver is used to configure the IP to add framer, search for
+> > > > specific modes, get the detected mode, stream parameters, errors, etc.
+> > > > It also generates events for video lock/unlock, bridge over/under flow.
+> > > >
+> > > > The driver supports 10/12 bpc YUV 422 media bus format currently. It
+> > > > also decodes the stream parameters based on the ST352 packet embedded in the
+> > > > stream. In case the ST352 packet isn't present in the stream, the core's
+> > > > detected properties are used to set stream properties.
+> > > >
+> > > > The driver currently supports only the AXI4-Stream IP configuration.
+> > > >
+> > > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > > ---
+> > > > v3
+> > > > - fixed KConfig with better description
+> > > > - removed unnecessary header files
+> > > > - converted uppercase to lowercase for all hex values
+> > > > - merged core struct to state struct
+> > > > - removed most one line functions and replaced with direct reg
+> > > >   read/write or macros
+> > > > - dt property bpp to bpc. default 10. not mandatory.
+> > > > - fixed subscribe events, log_status, s_stream
+> > > > - merged overflow/underflow to one event
+> > > > - moved all controls to xilinx-sdirxss.h
+> > > > - max events from 128 to 8
+> > > > - used FIELD_GET() instead of custom macro
+> > > > - updated the controls documentation
+> > > > - added spinlock
+> > > > - removed 3GB control and added mode to detect bitmask
+> > > > - fixed format for (width, height, colorspace, xfer func, etc)
+> > > > - added dv_timings_cap, s/g_dv_timings
+> > > > - fixed set/get_format
+> > > > - fix v4l control registrations
+> > > > - fix order of registration / deregistration in probe() remove()
+> > > > - fixed other comments from Hyun, Laurent and Hans
+> > > > - things yet to close
+> > > >   - adding source port for connector (Laurent's suggestion)
+> > > >   - adding new FIELD type for Transport Stream V4L2_FIELD_ALTERNATE_PROG (Han's suggestion)
+> > > >   - Update / remove EDH or CRC related controls
+> > > >
+> > > > v2
+> > > > - Added DV timing support based on Hans Verkuilś feedback
+> > > > - More documentation to custom v4l controls and events
+> > > > - Fixed Hyunś comments
+> > > > - Added macro for masking and shifting as per Joe Perches comments
+> > > > - Updated to latest as per Xilinx github repo driver like
+> > > >   adding new DV timings not in mainline yet uptill 03/21/20
+> > > >
+> > > >  drivers/media/platform/xilinx/Kconfig         |   11 +
+> > > >  drivers/media/platform/xilinx/Makefile        |    1 +
+> > > >  .../media/platform/xilinx/xilinx-sdirxss.c    | 2121 +++++++++++++++++
+> > > >  include/uapi/linux/v4l2-controls.h            |    6 +
+> > > >  include/uapi/linux/xilinx-sdirxss.h           |  283 +++
+> > > >  5 files changed, 2422 insertions(+)
+> > > >  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > >  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+
+[snip]
+
+> > > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > > new file mode 100644
+> > > > index 000000000000..e39aab7c656a
+> > > > --- /dev/null
+> > > > +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > > @@ -0,0 +1,2121 @@
+
+[snip]
+
+> > > > +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+> > > > +		ctrl->val = xsdirxss->ts_is_interlaced;
+> > > > +		break;
+> > >
+> > > I assume this control will disappear once you added support for
+> > > FIELD_ALTERNATE_PROG?
+> > 
+> > I'm not sure FIELD_ALTERNATE_PROG is a good idea. The v4l2_field
+> > specifies today how frames are split into multiple buffers. There's an
+> > implicit assumption that a frame split into two buffers is captured with
+> > interlacing. In the SDI case, the two concepts get decoupled, a
+> > progressive frame can be transmitted (and captured) in two separate
+> > parts. If we add a *_PROG field, we'll need to duplicate most of the
+> > v4l2_field values with a _PROG suffix, as the progressive frame can be
+> > captured in alternate buffers on a video node, but also in separate odd
+> > and even buffers on two video nodes. Tt the hardware level, data is
+> > transmitted with odd lines on one link, and even lines on a second link.
+> > There are then two instances of this IP core, one for each link. One
+> > instance would receive and process the even lines, the other instance
+> > the odd lines. The output of the two instances can then be connected to
+> > two separate DMA engines, or combined in the FPGA fabric, depending on
+> > how the user designs the system.
+> 
+> My apologies to give incorrect info regarding this.
+> In the progressive segmented frame, a progressive captured frame is sent
+> across to receiver over an interlaced transport. The 2 fields received
+> are similar to how V4L2_FIELD_ALTERNATE is except that the fields weren't
+> captured at 2 different times.
+
+I've now read more about progressive segmented frames, and I was indeed
+wrong about the fact that the two segments are transported over
+different links.
+
+I still wonder, however, if a _PROG suffix is the best option. Wouldn't
+we need to also add V4L2_FIELD_TOP_PROG, V4L2_FIELD_BOTTOM_PROG,
+V4L2_FIELD_SEQ_TB_PROG and V4L2_FIELD_SEQ_BT_PROG, not necessarily for
+this driver, but for other devices that would support capturing the
+odd/even segments only, or support capturing both segments in a single
+buffer, one after the other ?
+
+Maybe that's unavoidable, as enum v4l2_field combines both the buffer
+layout and the fact that the frame is interlaced or progressive. If we
+had to redesign it we could do better, but having to keep backward
+compatibility, duplicating most values with a _PROG suffix may be the
+best option.
+
+Hans, any opinion ?
+
+> So I will add the V4L2_FIELD_ALTERNATE_PROG in next patch version.
+
+[snip]
 
 -- 
-Jens Axboe
+Regards,
 
+Laurent Pinchart
