@@ -2,214 +2,94 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B573C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 523DD205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649DF206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bzm/fbE7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3WFT+H6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgHSNYR (ORCPT
+        id S1726609AbgHSNYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38990 "EHLO
+        Wed, 19 Aug 2020 09:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728266AbgHSNQr (ORCPT
+        with ESMTP id S1728143AbgHSNQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:16:47 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CD0C061342;
-        Wed, 19 Aug 2020 06:16:46 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b14so21497534qkn.4;
-        Wed, 19 Aug 2020 06:16:46 -0700 (PDT)
+        Wed, 19 Aug 2020 09:16:33 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E96C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:16:30 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o22so17653535qtt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=xdWyDz+u2EOtpmyFUK1CXM5+Hyv+ZC26YkFJP/naHPg=;
-        b=Bzm/fbE7Nh1X4MQ3wXtT6S/mWFOoLdWT+tkwMRO4uVjg308pgtlxGS2YK0VUCupRpu
-         DFeBQ1J5sFCYKcs4G+NThNYO6ZCBipQu82IZKbE90oGMkvwSpHTLmap26c2wJd8NUXok
-         AQ8t84SokEFTpYonC0dfjRYNCC3IoN1B1GnNYzvMOU11OJcT5QPmEbSDAdUilvlGCanx
-         UQ+w/33gReU/E27CY7wYVUizgaYqtYjOcdZzx9zwja5KboueCw9MKEN0jLoz7GPM+Mxr
-         PzaqYNOJzMortL5UcqcalR3iKDDTI9KhN7YX1iCJ+nR1hDQkRwsuVI5kHfhCRQzcp3HS
-         PFKg==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ukIFFNEkmWu6RobJHPqTePGGEQuwENadcCDhgJtfzhU=;
+        b=j3WFT+H6DJHS7Om7raw3H42KBCXviTCmnvdRJkrbff7AwxiK4dOo8ZsHPWI1xzVbMW
+         z4pnhgnMnJ8YISRBqVhlm6Fk/wjcTedAZUUHsJFLFumXcuCued1IwTvcCU6nAa+KkInI
+         whgvYFJ4LFbKrI8TvpI6x/FTQ2bRQCeQXVO9YNlfAnTuywtuKTj93pJwvcX9pxlFiOCG
+         ymS1/Wl7cjV5j1YrneNJRRE6vRc5sJU77xvKYDZcUvXUjXuALbXkMtk38meji6XYlCl2
+         MrkbPGeyOBqRP2fAZzk3zv9RpLrqnui89nc8EL6Kj/fKEZw43VrfGnFVh3V7lcuw5QXP
+         wqFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=xdWyDz+u2EOtpmyFUK1CXM5+Hyv+ZC26YkFJP/naHPg=;
-        b=AyHnw0VlaWwjJ08AEvX3pPLcc+/BbR2PE9ZczvUX58A6vJLD0sNf7QAU2tI9zZkw34
-         E0jBkXJaWu7IWHvbwXXUZE4RBhOpA7DE+Q5tdR5umepiOTWmIuJo0c9p3DLiZvwIVPOV
-         jtfjEZZ27LlK2DxNSDUDNEWUw4qypGLjG87aeE50VDf2gRjqsuhSNGNdWxMtxsJSSj++
-         snIqGfIAtT1LYnpEcq5Zbfmcnb9uV5szbkIHiSn+C7zUmoK9bxapsFsTP2HyDh3wRZW1
-         TXUGwAg8C4G9Ndf6FKC0XEwJfAENKd0NgM4IRJsv7J1L8Er2Ko4TP4LFUIRBihgjlnb2
-         YBZA==
-X-Gm-Message-State: AOAM530c/B5wl+QmxzMGgq46FMnadl1dWUuz33x6PWaYZUmHhGaFoTMJ
-        Euad/IzPIL9FKeeio1Vr+jw=
-X-Google-Smtp-Source: ABdhPJythoRp7/XtKV3U1Mk3gfpoaYYy+0NZPbE4tyRJIC46B5uTRlHvexjmeuY/h9iiSjprh7gBRA==
-X-Received: by 2002:a05:620a:1a:: with SMTP id j26mr21852014qki.183.1597843005805;
-        Wed, 19 Aug 2020 06:16:45 -0700 (PDT)
-Received: from [192.168.1.190] (pool-68-134-6-11.bltmmd.fios.verizon.net. [68.134.6.11])
-        by smtp.gmail.com with ESMTPSA id f4sm26418975qtp.38.2020.08.19.06.16.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 06:16:45 -0700 (PDT)
-Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
- interrupt - RIP: 0010:security_port_sid
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
-        Kees Cook <keescook@chromium.org>, casey@schaufler-ca.com,
-        yuehaibing@huawei.com, jeffv@google.com, kent.overstreet@gmail.com
-References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
- <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
- <CAHC9VhS-AYYtdGx5Xy1UDoMaeLE3C6bJBXBOuFav-KSGuYXh0A@mail.gmail.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Message-ID: <003ca06b-3ea9-1b58-5d46-cc09ec377609@gmail.com>
-Date:   Wed, 19 Aug 2020 09:16:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ukIFFNEkmWu6RobJHPqTePGGEQuwENadcCDhgJtfzhU=;
+        b=hN204Q4QsIwsb2mALHgwMyl+swkp51QD/NgbO/8JK1FW3+XORX8uEhZkmMu5ILO9X4
+         OVoXKuN8EBX6VyaigUX1QM+uh9LcxaZUf9dfx/ZGIsgLGICrSjUqXC86mASgobWvB9s5
+         aVCB5QIVDHcSXincCEt6H7nPMHfBILPrV64mX2Zo32p1eK87uIVIjbnqq/Sk9CXkljfK
+         nFlzppVavDaL5NcD5zNJWoblywYY7Ipo57CZRx7MRiV5kZmNfOlMprLnCDF0se7ji75W
+         Hrc7zTJidSinilDjw6nkdcNl04U2ephnxfQhkTfl9NIAfMJrQ5Y9JLhTWg4UyOopFT8w
+         1iyw==
+X-Gm-Message-State: AOAM532Zm6bFqp7H3gq6wydfAysF6gJFoc36T7ZttKkvPIfq+hhOQPK8
+        krbFIjqzs1N27ENjbbefHjA=
+X-Google-Smtp-Source: ABdhPJxjAVDucLlpJsFcN9VMNE8c4qYhCLipaYCs/n2o9ck1xUXg7Cd/tCNJ8HnylqqhsKF36TgRKg==
+X-Received: by 2002:aed:3728:: with SMTP id i37mr22703331qtb.347.1597842989944;
+        Wed, 19 Aug 2020 06:16:29 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 3sm24856186qkm.117.2020.08.19.06.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 06:16:29 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 19 Aug 2020 09:16:27 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] lib/string.c: Disable tree-loop-distribute-patterns
+Message-ID: <20200819131627.GA3779903@rani.riverdale.lan>
+References: <20200818234307.3382306-1-nivedita@alum.mit.edu>
+ <CAHk-=wik-oXnUpfZ6Hw37uLykc-_P0Apyn2XuX-odh-3Nzop8w@mail.gmail.com>
+ <20200819030442.GA3396810@rani.riverdale.lan>
+ <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhS-AYYtdGx5Xy1UDoMaeLE3C6bJBXBOuFav-KSGuYXh0A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiJLvqS1_O+yAQSZr-Lj49HdJyLpt3J_nW=otHLfEN4RA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 9:12 AM, Paul Moore wrote:
+On Tue, Aug 18, 2020 at 08:32:58PM -0700, Linus Torvalds wrote:
+> On Tue, Aug 18, 2020 at 8:04 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> 
+> > Might be worth optimizing strnlen etc with the word-at-a-time thing though.
+> 
+> Yeah, possibly. Except the kernel almost never uses strnlen for
+> anything bigger. At least I haven't seen it very much in the profiles.
 
-> On Wed, Aug 19, 2020 at 8:28 AM Stephen Smalley
-> <stephen.smalley.work@gmail.com> wrote:
->> On 8/19/20 6:11 AM, Naresh Kamboju wrote:
->>> Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
->>>
->>>    Kernel panic - not syncing: Fatal exception in interrupt
->>>
->>> metadata:
->>>     git branch: master
->>>     git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->>>     git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
->>>     git describe: next-20200819
->>>     make_kernelversion: 5.9.0-rc1
->>>     kernel-config:
->>> https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
->>>
->>> crash log:
->>> [    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
->>> [    3.704865] #PF: supervisor read access in kernel mode
->>> [    3.704865] #PF: error_code(0x0000) - not-present page
->>> [    3.704865] PGD 0 P4D 0
->>> [    3.704865] Oops: 0000 [#1] SMP NOPTI
->>> [    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
->>> 5.9.0-rc1-next-20200819 #1
->>> [    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
->>> BIOS 1.12.0-1 04/01/2014
->>> [    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
->>> [    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
->>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
->>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
->>> 00 48
->>> [    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
->>> [    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
->>> [    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
->>> [    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
->>> [    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
->>> [    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
->>> [    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
->>> knlGS:0000000000000000
->>> [    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
->>> [    3.721157] Call Trace:
->>> [    3.721157]  sel_netport_sid+0x120/0x1e0
->>> [    3.721157]  selinux_socket_bind+0x15a/0x250
->>> [    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
->>> [    3.721157]  ? __local_bh_enable_ip+0x46/0x70
->>> [    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
->>> [    3.721157]  security_socket_bind+0x35/0x50
->>> [    3.721157]  __sys_bind+0xcf/0x110
->>> [    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
->>> [    3.730888]  ? do_syscall_64+0x14/0x50
->>> [    3.730888]  ? trace_hardirqs_on+0x38/0xf0
->>> [    3.732120]  __x64_sys_bind+0x1a/0x20
->>> [    3.732120]  do_syscall_64+0x38/0x50
->>> [    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>> [    3.732120] RIP: 0033:0x7f5ef37f3057
->>> [    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
->>> 02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
->>> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
->>> 01 48
->>> [    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
->>> 0000000000000031
->>> [    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
->>> [    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
->>> [    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
->>> [    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
->>> [    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
->>> [    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
->>> 000000RIP: 0010:security_port_sid0000000000
->>> [    3.744849] Modules linked in:
->>> [    3.744849] CR2: 00000000000001c8
->>> [    3.744849] ---[ end trace 485eaaecdce54971 ]---
->>> [    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
->>> [    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
->>> 41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
->>> 8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
->>> 00 48
->>> [    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
->>> [    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
->>> [    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
->>> [    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
->>> [    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
->>> [    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
->>> [    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
->>> knlGS:0000000000000000
->>> [    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
->>> [    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
->>> Fatal exception in interrupt
->>> [    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
->>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->>> [    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
->>> interrupt ]---
->>>
->>> full test log link,
->>> https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
->>>
->>> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
->> Thank you for the report.  It appears from the log that you are enabling
->> SELinux but not loading any policy?  If that is correct, then I believe
->> I know the underlying cause and can create a patch.
-> Yes, I'm guessing the bind() hook is the culprit.
->
-> I'm beginning to think we should try forcing a run of the
-> selinux-testsuite on a system with SELinux enabled but without a
-> loaded policy.  The test suite will fail in spectacular fashion, but
-> it will be a good way to shake out some of these corner cases.
-
-It's due to the lack of explicit selinux_initialized(state) guards in 
-security_port_sid() and the rest of those functions. Previously, they 
-happened to work because the policydb was statically allocated and could 
-be accessed even before initial policy load.  With the encapsulation of 
-the policy state and dynamic allocation, they need to check 
-selinux_initialized() first and return immediately if it isn't 1.  I 
-have a patch in the works.  With respect to testing, even just doing a 
-simple boot test with SELinux enabled but no policy would have detected 
-this one; it just isn't part of my usual workflow.
-
+strscpy could be implemented as strnlen+memcpy. I'd think that wouldn't
+be much slower, especially if strnlen is optimized and the arch has a
+good implementation of memcpy?
