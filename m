@@ -2,66 +2,79 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FD420738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6DC20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHSCqH (ORCPT
+        id S1727792AbgHSCrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 22:46:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9840 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726605AbgHSCqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:46:07 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6215E2109F3325E8A1F8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:46:05 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 10:45:59 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <arnd@arndb.de>, <Sergey.Semin@baikalelectronics.ru>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] bus: bt1-apb: remove duplicate include
-Date:   Wed, 19 Aug 2020 10:43:51 +0800
-Message-ID: <20200819024351.37982-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 22:47:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15030 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727047AbgHSCrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:47:45 -0400
+IronPort-SDR: L6pEgruXE4aIiFCpbNo2xc1LQGzJPGqaQEjFiMwADumXCSP/Q5mwpN0k/Fy74MuNnGRvNbGiuT
+ qBn0XIf6/Stw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="216562473"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="216562473"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 19:47:44 -0700
+IronPort-SDR: HTPu3kc4NDfnQNpcql8xFm6h7Bcvs/ijovcCEMgk88lATFsD/VWz2NgT1MF8RUnPoQA28XFtl2
+ q0wEHbI0ZNow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="320315331"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Aug 2020 19:47:43 -0700
+Date:   Wed, 19 Aug 2020 10:48:58 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][RFC] ACPI: processor: Print more information when
+ acpi_processor_evaluate_cst() failed
+Message-ID: <20200819024858.GA25038@chenyu-office.sh.intel.com>
+References: <20200816151230.14524-1-yu.c.chen@intel.com>
+ <CAJZ5v0jz5EH7bB5Goia=qd_P5eVLoONbscSvvEAqU7svodg_MA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jz5EH7bB5Goia=qd_P5eVLoONbscSvvEAqU7svodg_MA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove linux/clk.h which is included more than once
+On Tue, Aug 18, 2020 at 12:46:12PM +0200, Rafael J. Wysocki wrote:
+> On Sun, Aug 16, 2020 at 5:12 PM Chen Yu <yu.c.chen@intel.com> wrote:
+> >
+> > Some platforms have bogus _CST which might cause expectd behavior
+> > in the cpu idle driver. Some bogus _CST might be unable to be
+> > disassembled by acpica-tools due to broken format.
+> > Print extra log if the _CST extraction/verification failed.
+> > This can be used to help the user narrow down why the cpu
+> > idle driver fails to behave as expected.
+> >
+> > Suggested-by: Zhang Rui <rui.zhang@intel.com>
+> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> 
+> This is fine by me as a general idea, but please change the log level to "info".
+>
+Okay, I will send a new version. Thanks!
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/bus/bt1-apb.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/bus/bt1-apb.c b/drivers/bus/bt1-apb.c
-index b25ff941e7c7..74b1b712ef3a 100644
---- a/drivers/bus/bt1-apb.c
-+++ b/drivers/bus/bt1-apb.c
-@@ -22,7 +22,6 @@
- #include <linux/clk.h>
- #include <linux/reset.h>
- #include <linux/time64.h>
--#include <linux/clk.h>
- #include <linux/sysfs.h>
- 
- #define APB_EHB_ISR			0x00
--- 
-2.17.1
-
+thanks,
+Chenyu
