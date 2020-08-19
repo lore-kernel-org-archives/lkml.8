@@ -2,137 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C90C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C966C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 784D0207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0A22072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5lGJ4Vj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjTCQsyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgHSKc2 (ORCPT
+        id S1727794AbgHSKgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41712 "EHLO
+        Wed, 19 Aug 2020 06:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbgHSKcW (ORCPT
+        with ESMTP id S1727019AbgHSKgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:32:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86683C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:32:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 9so1549105wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:32:22 -0700 (PDT)
+        Wed, 19 Aug 2020 06:36:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEDAC061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:36:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f7so21003011wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NV+AsSWtKgo9V3/Cia9q0raOuFNDesH+Q29wP1zWBh4=;
-        b=B5lGJ4VjjJ0e8bFa5P9jabfVMJ2SDPRUYFM7GR79AU7H5PS7dHY0qLWGNgYNE40kxe
-         KdNa5QE2zFmlsilJf1GOdlQECUEqFBq/M/SuwI4dKc0/AwbNc6/TGn1E62JqjyCvgHAq
-         1PV8a8aEEwQ3ZwcumuPpv6ZMGZaJO6iWY/dJoQe6+0EdXyQw+DbdSkjssIMQQRIBMc6b
-         s2VS0Jrye6Qzif4pBIJmA33Ab0sbcl7kPqSKP9mTjvhz6j8c5uRHGQ07fBMz/U2aRWeU
-         fC26cTKMUYAuZYk9iwCvOelEWfptsBVaQ7Uw4GnyOMY76lP8PMBOOgsNWEBE9DVw4R6Y
-         GHJA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gqSQwu4Ak76ivz5DMvC1qM1RY6caUZn/vouX4UHQw3I=;
+        b=CjTCQsyG1PMArt9IepD1AZqckRAk1VWAupEx7JQzkjyj4JJtTiWuflR0Sq2kWOlrIf
+         AaWwWJUo9s790go1/kOWmsg3VfSuAnCqhaYqnGEB6NvqzaiMeVKL89+mPVfkyKYPRlBv
+         F3ln4glh1kKamDQItyNdbbUd7KHQSe8bFfn4AizOyXRJqpf+aUiB9OfBMIVowmmj2Dkh
+         32sW2AQHtksXyyfuS9GtW7tEBbufEqgBBuEtIhHGMLcPJifWSr5hNYlXBV2WgAPKdYLb
+         OaXZiEsEgE4phiiHO9APtrdwmO5dgImWpr7tt84CkOXUGcvVgNU47iRONft3akrqJZK5
+         hGHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NV+AsSWtKgo9V3/Cia9q0raOuFNDesH+Q29wP1zWBh4=;
-        b=rvYC8ZJMW4yc6DQhb7ComUif98siOF2EWS7AbfN7NSpqxmy0ftFsRU1SKniiRdJO0w
-         kj1gB78eY2nh72pcCUQiAs8rQFDUDWcuvir4WC2rpFa+jLKEnvdgE9Qvf7pQ+ngNIx/Q
-         zH/uXB84JU/Wm49f+ba3AKp2praf0wCzGim3W2qZ6K8+rCDZPSzUtddb+29+YQhv0WOl
-         XmI4Qsphoe8uKVCIU+nspb++JRRM4D47pLrpoBZP+Lf0EaU/icpn43kYVD14o/zG77CC
-         F6CApLjTYQ4CSuZMzUclMRfMQMhqIhq3XuR9x9gr1LfKT63u1/KcFK1eUcpeCP6x9BXG
-         ywsQ==
-X-Gm-Message-State: AOAM532ToNwa21zUrIN8a5eBanjXJnaSmqH+3Y0DSbELXM9v0zvrOybr
-        +S26qjX5xtULqfUJZrToPHN9FmcgelhzPMP8xWY=
-X-Google-Smtp-Source: ABdhPJz+viaPlrYERgK5MAmEg65lIg4xfE1p/n9zOxz9KVwyCf2C+pTAPZVcWcXsVfCSDePwL6IxtloMUbN+Mo/cQ1I=
-X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr4446682wmh.4.1597833140938;
- Wed, 19 Aug 2020 03:32:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gqSQwu4Ak76ivz5DMvC1qM1RY6caUZn/vouX4UHQw3I=;
+        b=bIpeA71eF207O6BrZrx4c4XnSfqER5Cx1Dj5/1vHA433CAllT7jcmoWM28eEWxkyhw
+         Lbs1t8SzEa3cViyfNv9cnr15UtYZWdHB685+cxMpwVWlFCr2CCiKAtJncUtoqtB9wEt5
+         0fbH3YmztWhY6TY4kuVCpvXiakymzWitXMqVgsiakmfgOFxsjylim4Zl5QphTVSGlcvZ
+         4p+yYV8PpWqphZm+8MG89oCRL81TMcoR1F+vdWXHkVGe0/YiID1hXYpzfWVDI/Latf7h
+         Nt8VpQCHxxAuPx0BvCAt063ATQxLq5R4xrlj0N/HWtSPUN+ccM4duOcZu6LWp5g81j0Y
+         sVMA==
+X-Gm-Message-State: AOAM530V2uNx8IQ0m7d3UdrYg959i1VAdDK3kWBJCW863NvRxfc+wQrw
+        XpcgujxNL4bUgir8arigh7jmGA==
+X-Google-Smtp-Source: ABdhPJzE34UTUHjY+WGW7nyIcaHkOe0CiQFL3LKWYRMXnifP8QvLNy0lyjk41fn9cLNJWf7pqvvz6Q==
+X-Received: by 2002:a5d:60cb:: with SMTP id x11mr23007048wrt.281.1597833393382;
+        Wed, 19 Aug 2020 03:36:33 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id b203sm5105222wmc.22.2020.08.19.03.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 03:36:32 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:36:31 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
+        Bryan Wu <cooloney@gmail.com>, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: backlight: sky81452-backlight: Fix refcount
+ imbalance on error
+Message-ID: <20200819103631.bptd34ij3fid4ych@holly.lan>
+References: <20200819030456.7054-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053252epcas5p4ee61d64bba5f6a131105e40330984f5e@epcas5p4.samsung.com>
- <20200818052936.10995-2-joshi.k@samsung.com> <20200818071141.GA2544@lst.de>
- <CA+1E3rJg0QOX4YgwWJf8Sm=6C-un4TsRX00E31fbFFPT9LYhXg@mail.gmail.com> <CY4PR04MB375148979AA403CF47EADE0BE75D0@CY4PR04MB3751.namprd04.prod.outlook.com>
-In-Reply-To: <CY4PR04MB375148979AA403CF47EADE0BE75D0@CY4PR04MB3751.namprd04.prod.outlook.com>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Wed, 19 Aug 2020 16:01:54 +0530
-Message-ID: <CA+1E3r+C2KQENu=fO_+FZoUEvqZrAQcxziwSGt=FVidv85KQxA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] nvme: set io-scheduler requirement for ZNS
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Selvakumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819030456.7054-1-dinghao.liu@zju.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 3:08 PM Damien Le Moal <Damien.LeMoal@wdc.com> wrote:
->
-> On 2020/08/19 18:27, Kanchan Joshi wrote:
-> > On Tue, Aug 18, 2020 at 12:46 PM Christoph Hellwig <hch@lst.de> wrote:
-> >>
-> >> On Tue, Aug 18, 2020 at 10:59:35AM +0530, Kanchan Joshi wrote:
-> >>> Set elevator feature ELEVATOR_F_ZBD_SEQ_WRITE required for ZNS.
-> >>
-> >> No, it is not.
-> >
-> > Are you saying MQ-Deadline (write-lock) is not needed for writes on ZNS?
-> > I see that null-block zoned and SCSI-ZBC both set this requirement. I
-> > wonder how it became different for NVMe.
->
-> It is not required for an NVMe ZNS drive that has zone append native support.
-> zonefs and upcoming btrfs do not use regular writes, removing the requirement
-> for zone write locking.
+On Wed, Aug 19, 2020 at 11:04:56AM +0800, Dinghao Liu wrote:
+> When of_property_read_u32_array() returns an error code, a
+> pairing refcount decrement is needed to keep np's refcount
+> balanced.
+> 
+> Fixes: f705806c9f355 ("backlight: Add support Skyworks SKY81452 backlight driver")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-I understand that if a particular user (zonefs, btrfs etc) is not
-sending regular-write and sending append instead, write-lock is not
-required.
-But if that particular user or some other user (say F2FS) sends
-regular write(s), write-lock is needed.
-Above block-layer, both the opcodes REQ_OP_WRITE and
-REQ_OP_ZONE_APPEND are available to be used by users. And I thought
-write-lock is taken or not is a per-opcode thing and not per-user (FS,
-MD/DM, user-space etc.), is not that correct? And MQ-deadline can
-cater to both the opcodes, while other schedulers cannot serve
-REQ_OP_WRITE well for zoned-device.
-
-> In the context of your patch series, ELEVATOR_F_ZBD_SEQ_WRITE should be set only
-> and only if the drive does not have native zone append support.
-
-Sure I can keep it that way, once I get it right. If it is really not
-required for native-append drive, it should not be here at the place
-where I added.
-
-> And even in that
-> case, since for an emulated zone append the zone write lock is taken and
-> released by the emulation driver itself, ELEVATOR_F_ZBD_SEQ_WRITE is required
-> only if the user will also be issuing regular writes at high QD. And that is
-> trivially controllable by the user by simply setting the drive elevator to
-> mq-deadline. Conclusion: setting ELEVATOR_F_ZBD_SEQ_WRITE is not needed.
-
-Are we saying applications should switch schedulers based on the write
-QD  (use any-scheduler for QD1 and mq-deadline for QD-N).
-Even if it does that, it does not know what other applications would
-be doing. That seems hard-to-get-right and possible only in a
-tightly-controlled environment.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
-
--- 
-Joshi
+> ---
+>  drivers/video/backlight/sky81452-backlight.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
+> index 0ce181585008..8268ac43d54f 100644
+> --- a/drivers/video/backlight/sky81452-backlight.c
+> +++ b/drivers/video/backlight/sky81452-backlight.c
+> @@ -217,6 +217,7 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+>  					num_entry);
+>  		if (ret < 0) {
+>  			dev_err(dev, "led-sources node is invalid.\n");
+> +			of_node_put(np);
+>  			return ERR_PTR(-EINVAL);
+>  		}
+>  
+> -- 
+> 2.17.1
+> 
