@@ -2,91 +2,186 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86305C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ABAC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4AD20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC3920888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgHSXnc (ORCPT
+        id S1726751AbgHSXym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 19:43:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31506 "EHLO mga11.intel.com"
+        Wed, 19 Aug 2020 19:54:42 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:54730 "EHLO mx.0dd.nl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgHSXnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 19:43:31 -0400
-IronPort-SDR: AJTslrbvMK2dlnx4tkx5qzYFL9uCWdJaDiC/yCFyLYhwdBcn21NXCxVrZowznfWUq5h/AvXevc
- 2fDe8KspCbqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152817807"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="152817807"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 16:43:30 -0700
-IronPort-SDR: O5tYOSNL62+SuASdmhJb8445k2uVVEXg0Cat/zdHSQN6aLC25N3+dLbxQfsJ3rnL525bEGHKbu
- /ck8bJ7GJjnA==
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="497412099"
-Received: from dfugate-mobl1.amr.corp.intel.com (HELO dwf-u18040) ([10.212.117.189])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 16:43:29 -0700
-Message-ID: <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-From:   David Fugate <david.fugate@linux.intel.com>
-Reply-To: david.fugate@linux.intel.com
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        david.fugate@intel.com
-Date:   Wed, 19 Aug 2020 17:43:29 -0600
-In-Reply-To: <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
-         <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
-         <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de>
-         <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
-         <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
-         <d19605da52eb7aa3eb4132ad1781b5fbf636a8a0.camel@linux.intel.com>
-         <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
-Organization: Intel
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726362AbgHSXyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 19:54:40 -0400
+X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 19:54:38 EDT
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd00::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 622575FB19;
+        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi";
+        dkim-atps=neutral
+Received: from www (unknown [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id 1AE02687EC9;
+        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 1AE02687EC9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1597880773;
+        bh=yV6u6+GKP89ZhLaPI4Lclma8HJH4chY3sZJwJgORk04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qGHOkhBi2BTnqCwqZeHEocVi0xr7Hlg1vEMcqqjBkt7QaRBDN87wOOJsh+wstepJc
+         BLBrC0D257eGFvdyNvkLXFw7tnEgF9TlxcWZNKHcWzxamHDQkgWmFMvNev3biAagL+
+         obPPQiN1S161exlA+7gLw44fgJ1tA3e1wannKNZUl+omiK78VI73vMbmpdKL2JCf8M
+         jEg9PcmXnsGis7G4+BRnCdGye6An3tITSzJohT4BePTEVfdsqqsu5769Kx/vFCx4xM
+         KUMF64MUQNhaVummXc5au5TALXk37O4RdLEY22WLMnjDgzkX7ww7Je19UbkJ2njkTf
+         dYy2Z1eIRviMQ==
+Received: from pc-rene.lan.vdorst.com (pc-rene.lan.vdorst.com
+ [192.168.2.14]) by www.vdorst.com (Horde Framework) with HTTPS; Wed, 19 Aug
+ 2020 23:46:13 +0000
+Date:   Wed, 19 Aug 2020 23:46:13 +0000
+Message-ID: <20200819234613.Horde.oQiJhMCnUINwnQP-5_MyHh-@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, f.fainelli@gmail.com,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, Sean Wang <Sean.Wang@mediatek.com>,
+        frank-w@public-files.de, dqfext@gmail.com
+Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
+ MT7531 switch
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+ <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+ <20200818160901.GF2330298@lunn.ch> <1597830248.31846.78.camel@mtksdccf07>
+In-Reply-To: <1597830248.31846.78.camel@mtksdccf07>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-19 at 15:10 -0700, Keith Busch wrote:
-> You're the one who left that thread dangling. You offered to have
-> your
-> firmware accommodate the Intel sponsored feature that makes your
-> patch
-> unnecessary in the first place. Your follow up made no sense and you
-> have not responded to the queries about it.
+Quoting Landen Chao <landen.chao@mediatek.com>:
 
-There were queries? My key takeaways were a maintainer NAK followed by
-instructions to make the Intel drive align with the driver by
-implementing NOIOB. While I disagree with the rejection as it appeared
-to be based entirely on politics, I can accept it as the quirk wasn't
-in the spec.
+> On Wed, 2020-08-19 at 00:09 +0800, Andrew Lunn wrote:
+>> On Tue, Aug 18, 2020 at 03:14:10PM +0800, Landen Chao wrote:
+>> > Add new support for MT7531:
+>> >
+>> > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
+>> > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
+>> > port 6 only supports SGMII interface. Cpu port 5 supports either RGMII
+>> > or SGMII in different HW sku. Due to SGMII interface support, pll, and
+>> > pad setting are different from MT7530. This patch adds different initial
+>> > setting, and SGMII phylink handlers of MT7531.
+>> >
+>> > MT7531 SGMII interface can be configured in following mode:
+>> > - 'SGMII AN mode' with in-band negotiation capability
+>> >     which is compatible with PHY_INTERFACE_MODE_SGMII.
+>> > - 'SGMII force mode' without in-bnad negotiation
+>>
+>> band
+> Sorry, I'll fix it.
+>>
+>> >     which is compatible with 10B/8B encoding of
+>> >     PHY_INTERFACE_MODE_1000BASEX with fixed full-duplex and fixed pause.
+>> > - 2.5 times faster clocked 'SGMII force mode' without in-bnad negotiation
+>>
+>> band
+> Sorry, I'll fix it.
+>>
+>> > +static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
+>> > +			      phy_interface_t interface)
+>> > +{
+>> > +	u32 val;
+>> > +
+>> > +	if (!mt7531_is_rgmii_port(priv, port)) {
+>> > +		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
+>> > +			port);
+>> > +		return -EINVAL;
+>> > +	}
+>> > +
+>> > +	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
+>> > +	val |= GP_CLK_EN;
+>> > +	val &= ~GP_MODE_MASK;
+>> > +	val |= GP_MODE(MT7531_GP_MODE_RGMII);
+>> > +	val &= ~(TXCLK_NO_REVERSE | RXCLK_NO_DELAY);
+>> > +	switch (interface) {
+>> > +	case PHY_INTERFACE_MODE_RGMII:
+>> > +		val |= TXCLK_NO_REVERSE;
+>> > +		val |= RXCLK_NO_DELAY;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_RXID:
+>> > +		val |= TXCLK_NO_REVERSE;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_TXID:
+>> > +		val |= RXCLK_NO_DELAY;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_ID:
+>> > +		break;
+>> > +	default:
+>> > +		return -EINVAL;
+>> > +	}
+>>
+>> You need to be careful here. If the MAC is doing the RGMII delays, you
+>> need to ensure the PHY is not. What interface mode is passed to the
+>> PHY?
+> Hi Andrew,
+>
+> mt7531 RGMII port is a MAC-only port, it can be connected to CPU MAC or
+> external phy. In bpi-r64 board, mt7531 RGMII is connected to CPU MAC, so
+> I tend to implement RGMII logic for use case of bpi-r64.
+>
+> In general, according to phy.rst, RGMII delay should be done by phy, but
+> some MoCA product need RGMII delay in MAC. These two requirements
+> conflict. Is there any suggestion to solve the conflict?
+>
+> If mt7531 RGMII implementation needs to satisfy either phy.rst or
+> special MoCA product, I would like to satisfy phy.rst and remove MAC
+> RGMII delay in v3. For special product needs MAC RGMII delay, this patch
+> can be used in its local codebase.
 
-It's not fair to make this same "your drive should align with the
-driver" demand of Samsung because we *are* talking about a spec'ed
-feature here. Technical critques of their patches and real performance
-degrades observed are fair game and objective; "your company did
-the nastiest possible move violating the normal NVMe procedures to make
-it optional" is not.
+Hi Landen,
+
+With the current mainline code [1], the dsa code tries to detect how the MAC5
+is used. All the three modes are supported. MAC5 -> PHY0, MAC5 ->  
+PHY4, MAC5 ->
+EXTERNAL PHY and MAC5 to external MAC.
+
+When MAC5 is a DSA port it skips settings the delay settings. See [2].
+
+Maybe you can use a similar concept.
+
+Greats,
+
+René
+
+
+[1]  
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n1303
+[2]  
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n598
+
+>
+> Landen
+>>
+>> 	Andrew
+
+
 
