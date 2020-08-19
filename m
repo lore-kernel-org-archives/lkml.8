@@ -2,176 +2,176 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B095C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DB62063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXT5iDBP"
+	by mail.kernel.org (Postfix) with ESMTP id 1ECA420882
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgHSVQz (ORCPT
+        id S1727006AbgHSVTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgHSVQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:16:54 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEB0C061757;
-        Wed, 19 Aug 2020 14:16:53 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w17so19265983edt.8;
-        Wed, 19 Aug 2020 14:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:date:from:to:cc:message-id:in-reply-to:references;
-        bh=L+xw/TvXzS5DRJVpZyjyebx0Vc5+Vwu/ASyNp17Shxw=;
-        b=sXT5iDBPCqhvexexP0UNPc3NTSFzCnX6obN0oTekbXYys4YReg7gAGj4CZlHT5Wwpj
-         f2rsyl1WWZFv1TizDpw+ONIRN+WPoVPUJl8v50ORRkHZknOIxSDOCLvDGUAt9Gk8Bcq0
-         C8b6Mhyi0AHgEW/CG9jiEefdadwgwwKQkSlifmyCbx+wYFy56dF7XfPwOLqHr6pSl9gf
-         4VkddbdAgaqdZt8/Sz3JRbpt3WrIFfsOOPTSlB8b16KHQZEBc5/ufDkgMl7me21bJEMH
-         NYz3PL/aVuhIRisnGJTku+3Lgi1n3Qb4LlrRdqmKBW8MYCzrLwo+rVgrGlqNO5wCNnwx
-         7gbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
-         :references;
-        bh=L+xw/TvXzS5DRJVpZyjyebx0Vc5+Vwu/ASyNp17Shxw=;
-        b=PUpjslujFzHlFEmUnaNt/ukrE52XizrfncAem4uNLZ4RJlXC5qIHAOl6HR99Yr36lY
-         dgIWjO7CIznztX+ErQ2yjnAxB0WxHBzOG6gF6h6JsNTS3oNjVz6/NWrkHea9rm8ybIH0
-         1CYs7EeygxGsxPJPO3Gx9OocgPgfJMBW7tE8Q8FSswVYhQBNiCDMNpLfxn80NtttChTu
-         JLnpqGpQFfe5JQIGLdKOCoqaNf6Prtd+ArvB0UYgZQ63NdCqF+LzSWdZo0aV/nZQI0Ut
-         v0cm+JgZY9hRHYcauuwuIOS0lDEwFuQDHMUfvLITk10cA+bFUawa9G20YYMJVVis6GOx
-         20qQ==
-X-Gm-Message-State: AOAM532Fts2afU2UYS9qWWBImNrOtrqw9/xFItw4DdzD9q9zpwv86sT2
-        6O26bhkJqkVtVNpStYTFuRL6kBeYzquOdbvcShU=
-X-Google-Smtp-Source: ABdhPJyZ9Fpa9727PI1C6+RwTJZP1XISd5vH5YOM+f07DH3Ncyt2AUCjQtDSMUNBHgSUL4BKmLSrUA==
-X-Received: by 2002:aa7:c2c6:: with SMTP id m6mr27047423edp.118.1597871811854;
-        Wed, 19 Aug 2020 14:16:51 -0700 (PDT)
-Received: from gmail.com (relay4.tor.ian.sh. [51.75.64.187])
-        by smtp.gmail.com with ESMTPSA id fx15sm39815ejb.1.2020.08.19.14.16.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 14:16:51 -0700 (PDT)
-Subject: Re: [PATCH] Makefile: Yes. Finally remove '-Wdeclaration-after-statement'
-Date:   Wed, 19 Aug 2020 21:15:00 -0000
-From:   Michael Witten <mfwitten@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Levon <john.levon@joyent.com>,
-        John Levon <levon@movementarian.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Message-ID: <3b508e7d9d2a44079d161707819dfd88@gmail.com>
-In-Reply-To: <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
-  <20200816175303.GB1236603@ZenIV.linux.org.uk>
-  <20200817204223.GB12414@amd>
-  <87lfid6kpi.fsf@x220.int.ebiederm.org>
-  <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
-  <20200817220908.GA3701@amd>
-  <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
-  <20200818051717.GA3134537@gmail.com>
-  <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
-  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
-  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
-  <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
+        Wed, 19 Aug 2020 17:19:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:15408 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgHSVTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:19:14 -0400
+IronPort-SDR: Ut/Ju7w31/pBEIlpALGbJi19/EqFTZPVPpW3sXbexAaKPOBgieIu2//cCt+m7vbIX8fH34rDI7
+ 1Jw/MDzPzmDg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="142830421"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="142830421"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:19:13 -0700
+IronPort-SDR: YEB6o1oAEgFLHBCLQJOL+ziGzsZm1I6zOpmQinj63gVXn6ATkXCzPmByI17NpQETKS0QXMx0UE
+ Yw5SaucES8Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="278433817"
+Received: from pnp1.jf.intel.com ([10.23.15.21])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Aug 2020 14:19:12 -0700
+From:   vaibhav.shankar@intel.com
+To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, bp@alien8.de, x86@kernel.org, hpa@zytor.com
+Cc:     vaibhav.shankar@intel.com
+Subject: [PATCH v2] perf/x86/intel/uncore: Add BW counters for GT, IA and IO breakdown
+Date:   Wed, 19 Aug 2020 14:19:01 -0700
+Message-Id: <20200819211901.27287-1-vaibhav.shankar@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The quick RFC patch I just proposed in the parent email is
-broken in its implementation. I will submit an updated
-version soon.
+From: Vaibhav Shankar <vaibhav.shankar@intel.com>
 
-Michael Witten (Tue, 18 Aug 2020 22:05:00 -0000):
+Linux only has support to read total DDR reads and writes. Here we
+add support to enable bandwidth breakdown-GT, IA and IO. Breakdown
+of BW is important to debug and optimize memory access. This can also
+be used for telemetry and improving the system software. The offsets for
+GT, IA and IO are added and these free running counters can be accessed
+via MMIO space.
 
-> I think there's an important distinction to make between
-> the following 2 kinds of code:
->
->   * The curated code people just want to build.
->   * The new patches that maintainers are reviewing.
->
-> Certainly, maintainers should have a wide range of tools
-> at their disposal to probe the quality of a patch; then,
-> after bending rules of style to taste, the maintainers
-> declare the merged code to be curated, after which that
-> merged code need not be probed so invasively every time
-> it is built.
->
-> To this end, I propose the following new patch, which
-> introduces some build-time switches that will help
-> people make this distinction.
->
->   As you know, you can save this email to some path:
->
->     /path/to/email.eml
->
->   Then apply and review the patch as follows:
->
->     $ cd /path/to/linux/repo
->     $ git reset --hard HEAD
->     $ git checkout --detach origin/master
->     $ git am --scissors /path/to/email.eml
->     $ git log -1 -p
->
-> At this point, the patch is intended as a[n] RFC;
-> I haven't tested it, and just wanted to get the
-> idea out there.
->
-> Sincerely,
-> Michael Witten
->
-> ---8<------8<------8<------8<------8<------8<------8<------8<---
-> Subject: [PATCH] kbuild: Introduce "Warnings for maintainers"
-> This commit introduces the following new Kconfig options:
->
->   CONFIG_MAINTAINERS_WARNINGS
->     |
->     +-> CONFIG_WARN_DECLARATION_AFTER_STATEMENT
->     |
->     +-> CONFIG_WARN_MAYBE_UNINITIALIZED
->
-> These produce the following menu items:
->
->   -> Kernel hacking
->     -> Compile-time checks and compiler options
->       -> Warnings for maintainers                                [NEW]
->          * Warn about mixing variable definitions and statements [NEW]
->          * Warn about use of potentially uninitialized variables [NEW]
->
-> In short:
->
->   * CONFIG_MAINTAINERS_WARNINGS
->       is the umbrella control.
->
->   * CONFIG_WARN_DECLARATION_AFTER_STATEMENT
->       determines whether "-Wdeclaration-after-statement" is used.
->
->   * CONFIG_WARN_MAYBE_UNINITIALIZED
->       determines whether "-Wmaybe-uninitialized" is used.
->
-> Currently, the default is "y" for each, but it is expected that
-> eventually the default will be "n" for CONFIG_MAINTAINERS_WARNINGS.
->
-> Running "make" with "W=2" should turn both warnings on, unless
-> they are thwarted by some other Kbuild logic.
->
-> Signed-off-by: Michael Witten <mfwitten@gmail.com>
->
-> [... PATCH ...]
+The BW breakdown can be meaured using the following cmd:-
+perf stat -e uncore_imc/gt_requests/,uncore_imc/ia_requests/,
+             uncore_imc/io_requests/
+
+             30.57 MiB  uncore_imc/gt_requests/
+           1346.13 MiB  uncore_imc/ia_requests/
+            190.97 MiB  uncore_imc/io_requests/
+
+       5.984572733 seconds time elapsed
+
+     BW/s = <gt,ia,io>_requests/time elapsed
+
+Signed-off-by: Vaibhav Shankar <vaibhav.shankar@intel.com>
+---
+Changes in v2:
+	-Fix lkp warnings.
+	 >> arch/x86/events/intel/uncore_snb.c:441:37: warning: initialized field 
+	 >> overwritten [-Woverride-init]
+	-Fix commit message
+
+ arch/x86/events/intel/uncore_snb.c | 52 ++++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index cb94ba86efd2..eb6b9feb2d97 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -390,6 +390,18 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(data_writes.scale, "6.103515625e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(data_writes.unit, "MiB"),
+ 
++	INTEL_UNCORE_EVENT_DESC(gt_requests, "event=0x03"),
++	INTEL_UNCORE_EVENT_DESC(gt_requests.scale, "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(gt_requests.unit, "MiB"),
++
++	INTEL_UNCORE_EVENT_DESC(ia_requests, "event=0x04"),
++	INTEL_UNCORE_EVENT_DESC(ia_requests.scale, "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(ia_requests.unit, "MiB"),
++
++	INTEL_UNCORE_EVENT_DESC(io_requests, "event=0x05"),
++	INTEL_UNCORE_EVENT_DESC(io_requests.scale, "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(io_requests.unit, "MiB"),
++
+ 	{ /* end: all zeroes */ },
+ };
+ 
+@@ -405,13 +417,35 @@ static struct uncore_event_desc snb_uncore_imc_events[] = {
+ #define SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE	0x5054
+ #define SNB_UNCORE_PCI_IMC_CTR_BASE		SNB_UNCORE_PCI_IMC_DATA_READS_BASE
+ 
++/* BW break down- legacy counters */
++#define SNB_UNCORE_PCI_IMC_GT_REQUESTS		0x3
++#define SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE	0x5040
++#define SNB_UNCORE_PCI_IMC_IA_REQUESTS		0x4
++#define SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE	0x5044
++#define SNB_UNCORE_PCI_IMC_IO_REQUESTS		0x5
++#define SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE	0x5048
++
+ enum perf_snb_uncore_imc_freerunning_types {
+-	SNB_PCI_UNCORE_IMC_DATA		= 0,
++	SNB_PCI_UNCORE_IMC_DATA_READS		= 0,
++	SNB_PCI_UNCORE_IMC_DATA_WRITES,
++	SNB_PCI_UNCORE_IMC_GT_REQUESTS,
++	SNB_PCI_UNCORE_IMC_IA_REQUESTS,
++	SNB_PCI_UNCORE_IMC_IO_REQUESTS,
++
+ 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
+ };
+ 
+ static struct freerunning_counters snb_uncore_imc_freerunning[] = {
+-	[SNB_PCI_UNCORE_IMC_DATA]     = { SNB_UNCORE_PCI_IMC_DATA_READS_BASE, 0x4, 0x0, 2, 32 },
++	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
++							0x0, 0x0, 1, 32 },
++	[SNB_PCI_UNCORE_IMC_DATA_WRITES]	= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
++							0x0, 0x0, 1, 32 },
++	[SNB_PCI_UNCORE_IMC_GT_REQUESTS]	= { SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE,
++							0x0, 0x0, 1, 32 },
++	[SNB_PCI_UNCORE_IMC_IA_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE,
++							0x0, 0x0, 1, 32 },
++	[SNB_PCI_UNCORE_IMC_IO_REQUESTS]	= { SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE,
++							0x0, 0x0, 1, 32 },
+ };
+ 
+ static struct attribute *snb_uncore_imc_formats_attr[] = {
+@@ -525,6 +559,18 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
+ 		base = SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE;
+ 		idx = UNCORE_PMC_IDX_FREERUNNING;
+ 		break;
++	case SNB_UNCORE_PCI_IMC_GT_REQUESTS:
++		base = SNB_UNCORE_PCI_IMC_GT_REQUESTS_BASE;
++		idx = UNCORE_PMC_IDX_FREERUNNING;
++		break;
++	case SNB_UNCORE_PCI_IMC_IA_REQUESTS:
++		base = SNB_UNCORE_PCI_IMC_IA_REQUESTS_BASE;
++		idx = UNCORE_PMC_IDX_FREERUNNING;
++		break;
++	case SNB_UNCORE_PCI_IMC_IO_REQUESTS:
++		base = SNB_UNCORE_PCI_IMC_IO_REQUESTS_BASE;
++		idx = UNCORE_PMC_IDX_FREERUNNING;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -598,7 +644,7 @@ static struct intel_uncore_ops snb_uncore_imc_ops = {
+ 
+ static struct intel_uncore_type snb_uncore_imc = {
+ 	.name		= "imc",
+-	.num_counters   = 2,
++	.num_counters   = 5,
+ 	.num_boxes	= 1,
+ 	.num_freerunning_types	= SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
+ 	.mmio_map_size	= SNB_UNCORE_PCI_IMC_MAP_SIZE,
+-- 
+2.17.1
+
