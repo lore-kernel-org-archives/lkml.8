@@ -2,82 +2,160 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9132EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F44F207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ik2wmMPA"
+	by mail.kernel.org (Postfix) with ESMTP id A6740206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597842710;
+	bh=vxq1i+5+rO8RGMcDRwl1Kl6llTi6GXYX5kfyPA4jblo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tx0Fa7I+ZkG8KFu1UWuyJr1TjvhV+TJd5LKDUPdqU+ly9dJjeqGMK71WubvUTyHE3
+	 vzf78yUlJBTryHlCYASDW6mcXmleyumZWCsCCta7Jd5du0eHsz9GtHLfeajBfHKyun
+	 9MpdEQcyKqQFpcJM32cyHXS9ged2jroWVBQNFmGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgHSNLb (ORCPT
+        id S1728358AbgHSNLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:11:31 -0400
-Received: from forward1-smtp.messagingengine.com ([66.111.4.223]:48273 "EHLO
-        forward1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726560AbgHSNLL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:11:11 -0400
-X-Greylist: delayed 573 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 09:11:10 EDT
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailforward.nyi.internal (Postfix) with ESMTP id E241C194197D;
-        Wed, 19 Aug 2020 09:01:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 19 Aug 2020 09:01:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FQUJJ4
-        ivYQ+lk1mPpagdjqu+O8nCipPJWuj36SsFCY8=; b=ik2wmMPArMQsS7GdM799dW
-        Z2d7Jqw88uy8Q1YKkJUccVx9oleK92RoarvxWT3BJTawhoyK3Rrhf6J1dyAPnAGC
-        wflBwIxaiBC2+Cr02FsneZdxWTKggcBzH7/MLbevMe+h77yh7xEDiTXjW90ICasI
-        9mCloktwVu7D+hQ0IDdsztPiJFVpwsXcQfDeShwBTo1LuOsOv1Rs05hliuhmwfsT
-        /Hpp7nlkN6tT6JK19il2dB+x3dkbk0RyYukPyUI/HjbdX+uh4se3+Sv/vxjcglKY
-        IlDb97chqQxiauPZJJe5olrfi+sZ6o9Y/4fZuba5+F6uPVFBjZTfdHwFSL2odPpA
-        ==
-X-ME-Sender: <xms:rCI9X1-qI_GjNoEW-SK559H8NZSLZvyZWQl7zqOOyWFqhuS_y_zLqg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddtkedggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghkkhgr
-    ucfgnhgsvghrghcuoehpvghnsggvrhhgsehikhhirdhfiheqnecuggftrfgrthhtvghrnh
-    epgfffgeekteetvdejledufeelleeuudeigfevvdeileeludehiedugefhleehvdeunecu
-    kfhppeeivddrjeekrddujeelrddufedunecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepphgvnhgsvghrghesihhkihdrfhhi
-X-ME-Proxy: <xmx:rCI9X5sAy3BG4lCuP7996cLCL14do5WCDdJcpESgK8BJDmT1fGnfbg>
-    <xmx:rCI9XzDcPll05dprsTKe9FFd_DJXB-M9ymUY_1cYZLlADyJNdNgTIQ>
-    <xmx:rCI9X5dMulrIK9WUNRF0VxW2LQYCnPRsg-k_3pLUNIYJZFgxG-IlOw>
-    <xmx:ryI9X2Bl3P9yFxoYQAVe5Iy5X8ik_69m80XArRpfZWSe4UqnyUo-mA>
-Received: from localhost (62-78-179-131.bb.dnainternet.fi [62.78.179.131])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0AF87328005D;
-        Wed, 19 Aug 2020 09:01:31 -0400 (EDT)
-Date:   Wed, 19 Aug 2020 16:01:30 +0300
-From:   Pekka Enberg <penberg@iki.fi>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        penberg@kernel.org, rppt@kernel.org, eert@linux-m68k.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] x86/mpparse: remove duplicate include
-Message-ID: <20200819130130.GA1903671@nero>
-References: <20200819112910.7629-1-wanghai38@huawei.com>
+        Wed, 19 Aug 2020 09:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728149AbgHSNLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:11:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC432065F;
+        Wed, 19 Aug 2020 13:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597842695;
+        bh=vxq1i+5+rO8RGMcDRwl1Kl6llTi6GXYX5kfyPA4jblo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=skOvnyoi/s8DCceKzmupkt1jYOaWtFdAAqlQ/MFXOrVpqmMQl+hsMEEjs4HBhOLQu
+         0c0ztyi4uXIKad6aYvYHUv3AbWF2jtioPUcwcQoAVMj74KG+/FMhByNjrec9UmAV0D
+         o/Yb0Ae9Hr3NDLzjtRMcTZ4PqnDnfMAucqQAMsmk=
+Date:   Wed, 19 Aug 2020 15:11:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Kees Cook <keescook@chromium.org>, ulf.hansson@linaro.org,
+        linux-atm-general@lists.sourceforge.net, manohar.vanga@gmail.com,
+        airlied@linux.ie, Allen Pais <allen.lkml@gmail.com>,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, anton.ivanov@cambridgegreys.com,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, maximlevitsky@gmail.com,
+        richard@nod.at, deller@gmx.de, jassisinghbrar@gmail.com,
+        3chas3@gmail.com, intel-gfx@lists.freedesktop.org, kuba@kernel.org,
+        mporter@kernel.crashing.org, jdike@addtoit.com, oakad@yahoo.com,
+        s.hauer@pengutronix.de, linux-input@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-block@vger.kernel.org,
+        broonie@kernel.org, openipmi-developer@lists.sourceforge.net,
+        mitch@sfgoth.com, linux-arm-kernel@lists.infradead.org,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        martyn@welchs.me.uk, dmitry.torokhov@gmail.com,
+        linux-mmc@vger.kernel.org, sre@kernel.org,
+        linux-spi@vger.kernel.org, alex.bou9@gmail.com,
+        Allen Pais <allen.cryptic@gmail.com>,
+        stefanr@s5r6.in-berlin.de, daniel@ffwll.ch,
+        linux-ntb@googlegroups.com,
+        Romain Perier <romain.perier@gmail.com>, shawnguo@kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+Message-ID: <20200819131158.GA2591006@kroah.com>
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com>
+ <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook>
+ <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook>
+ <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com>
+ <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819112910.7629-1-wanghai38@huawei.com>
+In-Reply-To: <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:29:10PM +0800, Wang Hai wrote:
-> Remove asm/io_apic.h which is included more than once
+On Wed, Aug 19, 2020 at 07:00:53AM -0600, Jens Axboe wrote:
+> On 8/18/20 1:00 PM, James Bottomley wrote:
+> > On Mon, 2020-08-17 at 13:02 -0700, Jens Axboe wrote:
+> >> On 8/17/20 12:48 PM, Kees Cook wrote:
+> >>> On Mon, Aug 17, 2020 at 12:44:34PM -0700, Jens Axboe wrote:
+> >>>> On 8/17/20 12:29 PM, Kees Cook wrote:
+> >>>>> On Mon, Aug 17, 2020 at 06:56:47AM -0700, Jens Axboe wrote:
+> >>>>>> On 8/17/20 2:15 AM, Allen Pais wrote:
+> >>>>>>> From: Allen Pais <allen.lkml@gmail.com>
+> >>>>>>>
+> >>>>>>> In preparation for unconditionally passing the
+> >>>>>>> struct tasklet_struct pointer to all tasklet
+> >>>>>>> callbacks, switch to using the new tasklet_setup()
+> >>>>>>> and from_tasklet() to pass the tasklet pointer explicitly.
+> >>>>>>
+> >>>>>> Who came up with the idea to add a macro 'from_tasklet' that
+> >>>>>> is just container_of? container_of in the code would be
+> >>>>>> _much_ more readable, and not leave anyone guessing wtf
+> >>>>>> from_tasklet is doing.
+> >>>>>>
+> >>>>>> I'd fix that up now before everything else goes in...
+> >>>>>
+> >>>>> As I mentioned in the other thread, I think this makes things
+> >>>>> much more readable. It's the same thing that the timer_struct
+> >>>>> conversion did (added a container_of wrapper) to avoid the
+> >>>>> ever-repeating use of typeof(), long lines, etc.
+> >>>>
+> >>>> But then it should use a generic name, instead of each sub-system 
+> >>>> using some random name that makes people look up exactly what it
+> >>>> does. I'm not huge fan of the container_of() redundancy, but
+> >>>> adding private variants of this doesn't seem like the best way
+> >>>> forward. Let's have a generic helper that does this, and use it
+> >>>> everywhere.
+> >>>
+> >>> I'm open to suggestions, but as things stand, these kinds of
+> >>> treewide
+> >>
+> >> On naming? Implementation is just as it stands, from_tasklet() is
+> >> totally generic which is why I objected to it. from_member()? Not
+> >> great with naming... But I can see this going further and then we'll
+> >> suddenly have tons of these. It's not good for readability.
+> > 
+> > Since both threads seem to have petered out, let me suggest in
+> > kernel.h:
+> > 
+> > #define cast_out(ptr, container, member) \
+> > 	container_of(ptr, typeof(*container), member)
+> > 
+> > It does what you want, the argument order is the same as container_of
+> > with the only difference being you name the containing structure
+> > instead of having to specify its type.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> Not to incessantly bike shed on the naming, but I don't like cast_out,
+> it's not very descriptive. And it has connotations of getting rid of
+> something, which isn't really true.
 
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
+I agree, if we want to bike shed, I don't like this color either.
+
+> FWIW, I like the from_ part of the original naming, as it has some clues
+> as to what is being done here. Why not just from_container()? That
+> should immediately tell people what it does without having to look up
+> the implementation, even before this becomes a part of the accepted
+> coding norm.
+
+Why are people hating on the well-known and used container_of()?
+
+If you really hate to type the type and want a new macro, what about
+'container_from()'?  (noun/verb is nicer to sort symbols by...)
+
+But really, why is this even needed?
+
+thanks,
+
+greg k-h
