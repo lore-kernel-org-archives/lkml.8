@@ -2,87 +2,88 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE37C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDCD207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6C4207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n3gXik2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgHSVGT (ORCPT
+        id S1727785AbgHSVGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:06:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55834 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgHSVGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:06:18 -0400
-IronPort-SDR: KcQ6oSogylnGHzEJTJIQu2B4ps1m9HgOYNUfhLnNevyX2Kt6RXo7xyG19zeNswBgKGtWUOFz+S
- CzntsdbTfjjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="143012617"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="143012617"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:06:17 -0700
-IronPort-SDR: FWr17Dun6lUnUVRUieiFkiAHoWuXzqE9QHDABZwQLIJ3rv0tQ+AjCKZ2J4wybjEYVZfmZzOwD0
- Dagg/7c9HHxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="337083065"
-Received: from pbooyens-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.52.107])
-  by orsmga007.jf.intel.com with ESMTP; 19 Aug 2020 14:06:14 -0700
-Date:   Thu, 20 Aug 2020 00:06:13 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kprobes: Use module_name() macro
-Message-ID: <20200819210613.GD9942@linux.intel.com>
-References: <20200818050857.117998-1-jarkko.sakkinen@linux.intel.com>
- <20200818234956.c616371d8766e74aef5e7bd2@kernel.org>
- <20200818163356.GG137138@linux.intel.com>
- <20200818130045.7bb13992@oasis.local.home>
+        Wed, 19 Aug 2020 17:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgHSVGv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:06:51 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3184C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:06:50 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id g15so704plj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:06:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O1fpazQzH5RzZYR8qQqnmyk9zH8WRFTB4V0IGSi9KdM=;
+        b=n3gXik2Qgwut2dnhopHSM0ZTpUHIi6gVTF4XJRmDIngPNixlUNtHw0BoOxGRErlh+A
+         NEUpm5nS07FYpoIukKItm8njOq+7W7HIDGDyeNyMu9V6y77m0BVMDgF60gWCiJ/yhILr
+         rNBZhONTRkFZP0avtwKAX2L2fx7u95liCYCVGJy1fUyFFO6kG470mjAaO9JnjSrhlg4E
+         LOqr5LEaNL9zO47CAFdHNfn0m79qaXwsCP0VcKQpsHDPRQN34/mBhVJpm+X+wCPQM7fE
+         H/4G3VkM0prcDUokq+cvOa2llDTOpuWhWTPHey8eqP0ZulPhWDigdy6rWy4IJigjzjUo
+         OeDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O1fpazQzH5RzZYR8qQqnmyk9zH8WRFTB4V0IGSi9KdM=;
+        b=p5n/FY46i3I3p5rjuu8tEfrA8Zgljrz02VDR/6qtMxnI1WG+GsJY5gfQfCEuJbh3Er
+         OSzpQ2Ck0fxBUgr8WolB7IoY0rN48QvUXf2q1enqrqleVoPKKrS9g60lap27OyAivxhw
+         8NxUZjqP4S4pjPuGFh8VYFdnDiLbHgt6ekfwBq2urEPnwbb4HJpU31qgCbCr9F0H8UWz
+         P2C0Uz8imdU5mdsg8iXThTQJZeLawzCmnKvsYBrj3JtBYiOFlkpOKRiriD6tvRTa5qPQ
+         p2szvEMkaH/XLNP+5VykNSi1AuL6UtYgOBBgQnTw171rPQFkUxmfrmycyB1sAp0z1jts
+         Lu6g==
+X-Gm-Message-State: AOAM531ujiHSK9tglyXHxPhEYBnPn3H6z+ojVBsOLeFI+VGZCh8LxlvW
+        CsHZsZzWQKwRJsHOnIAnpGErO013XvAtSS0peENxAg==
+X-Google-Smtp-Source: ABdhPJzzCiHuuzGcxULeosyTXBOlK4ZIt+/tGPvNknk5TvX+B4AW7O4jdcVufduouBXWPpOhHI87w0ZcR36cvNaGFFs=
+X-Received: by 2002:a17:902:7405:: with SMTP id g5mr305146pll.325.1597871210318;
+ Wed, 19 Aug 2020 14:06:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818130045.7bb13992@oasis.local.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200718005141.440405-1-vitor@massaru.org>
+In-Reply-To: <20200718005141.440405-1-vitor@massaru.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 19 Aug 2020 14:06:39 -0700
+Message-ID: <CAFd5g47orvwzPOnFepDCjkv0nd08Ad2mmVp+XZgVmpGr5C2HwA@mail.gmail.com>
+Subject: Re: [PATCH v2] lib: Convert test_user_copy to KUnit test
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 01:00:45PM -0400, Steven Rostedt wrote:
-> On Tue, 18 Aug 2020 19:33:56 +0300
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>  
-> > 
-> > Great, thank you.
-> > 
-> > When this might get included to a PR, or at minimum land to linux-next?
-> > 
-> > Just thinking what to use as the baseline for the next version of my
-> > main series.
-> 
-> I can apply this to my tree along with Masami's latest bootconfig
-> patches. This will be for linux-next. I don't usually push to
-> linux-next until around -rc3. Would that be too late?
-> 
-> -- Steve
+On Fri, Jul 17, 2020 at 5:51 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
+>
+> This adds the conversion of the runtime tests of test_user_copy fuctions,
+> from `lib/test_user_copy.c` to KUnit tests.
+>
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
 
-Nope. I have piles of stuff to catch before getting to work with this
-(because coming back from vacation).
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-/Jarkko
+Thanks!
