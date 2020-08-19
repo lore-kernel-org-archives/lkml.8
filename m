@@ -2,120 +2,175 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D58C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C29207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66366206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gu4lCLZ8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="diOnhVLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgHSIzJ (ORCPT
+        id S1727864AbgHSIz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:55:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9845 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726794AbgHSIwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:55:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:37138 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgHSIwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 04:52:11 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3262A7CE5FA0FD472EB2;
-        Wed, 19 Aug 2020 16:51:57 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 16:51:49 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <axboe@kernel.dk>, <paolo.valente@linaro.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] block: Convert to use the preferred fallthrough macro
-Date:   Wed, 19 Aug 2020 04:50:44 -0400
-Message-ID: <20200819085044.41887-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+Date:   Wed, 19 Aug 2020 08:52:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597827128;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VEmp1dCGS2iHgtJ4L7r0DUbF4zfDD8HiadE5pe2z+lU=;
+        b=Gu4lCLZ8FzapLSKi62pzCUFUNcn317YXv87JkOuPE8bC67ZE/6EfdwM9l4waZtHS2gEZWw
+        X1G/iViEqtSGcg5pWSJBGSvKIS0ZdczDBmRrf69V/eUDsC3uYeAARbOveNUBweGb7dyi7o
+        P4Am9iRNlnvO3Fwv8Dg9TZgpltPPcli2OEyBkMvNLRHWiKzanRxapyrlv0epCzReMLFjIG
+        wwRBKm1Qbz1UvsJrTyKsY5vLteqhsY7svwgQXqrKD2Ez0wwK3M2Zc0vzNqtgQaNMskejf3
+        DnIt/PeiVmqRQw2yydONDG/rGxV7u1c2Kbb5NuojUIK9oSO1QtIoVznsvd+IMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597827128;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VEmp1dCGS2iHgtJ4L7r0DUbF4zfDD8HiadE5pe2z+lU=;
+        b=diOnhVLoxRjTpvJ/6j4NV0fTw/rG72kmoXSkMDf8aCh+fpm3N/V7j56WS+pWB0NaTUF8yQ
+        z3emW0B3SWrQIyBA==
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/x86/intel: Use switch in intel_pmu_disable/enable_event
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200723171117.9918-7-kan.liang@linux.intel.com>
+References: <20200723171117.9918-7-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Message-ID: <159782712833.3192.4230490784691479050.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro.
+The following commit has been merged into the perf/core branch of tip:
 
-Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Commit-ID:     58da7dbe6f036fefe504a4bb452afbd39bba73f7
+Gitweb:        https://git.kernel.org/tip/58da7dbe6f036fefe504a4bb452afbd39bba73f7
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Thu, 23 Jul 2020 10:11:09 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 18 Aug 2020 16:34:36 +02:00
+
+perf/x86/intel: Use switch in intel_pmu_disable/enable_event
+
+Currently, the if-else is used in the intel_pmu_disable/enable_event to
+check the type of an event. It works well, but with more and more types
+added later, e.g., perf metrics, compared to the switch statement, the
+if-else may impair the readability of the code.
+
+There is no harm to use the switch statement to replace the if-else
+here. Also, some optimizing compilers may compile a switch statement
+into a jump-table which is more efficient than if-else for a large
+number of cases. The performance gain may not be observed for now,
+because the number of cases is only 5, but the benefits may be observed
+with more and more types added in the future.
+
+Use switch to replace the if-else in the intel_pmu_disable/enable_event.
+
+If the idx is invalid, print a warning.
+
+For the case INTEL_PMC_IDX_FIXED_BTS in intel_pmu_disable_event, don't
+need to check the event->attr.precise_ip. Use return for the case.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200723171117.9918-7-kan.liang@linux.intel.com
 ---
- block/badblocks.c   | 2 +-
- block/bfq-iosched.c | 4 ++--
- block/blk-wbt.c     | 2 +-
- block/ioprio.c      | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/core.c | 36 +++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index 2e5f5697db35..d39056630d9c 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -525,7 +525,7 @@ ssize_t badblocks_store(struct badblocks *bb, const char *page, size_t len,
- 	case 3:
- 		if (newline != '\n')
- 			return -EINVAL;
--		/* fall through */
-+		fallthrough;
- 	case 2:
- 		if (length <= 0)
- 			return -EINVAL;
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index a4c0bec920cb..c34b090178a9 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4980,7 +4980,7 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
- 		pr_err("bdi %s: bfq: bad prio class %d\n",
- 				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
- 				ioprio_class);
--		/* fall through */
-+		fallthrough;
- 	case IOPRIO_CLASS_NONE:
- 		/*
- 		 * No prio set, inherit CPU scheduling settings.
-@@ -5112,7 +5112,7 @@ static struct bfq_queue **bfq_async_queue_prio(struct bfq_data *bfqd,
- 		return &bfqg->async_bfqq[0][ioprio];
- 	case IOPRIO_CLASS_NONE:
- 		ioprio = IOPRIO_NORM;
--		/* fall through */
-+		fallthrough;
- 	case IOPRIO_CLASS_BE:
- 		return &bfqg->async_bfqq[1][ioprio];
- 	case IOPRIO_CLASS_IDLE:
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 0fa615eefd52..fd410086fe1d 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -528,7 +528,7 @@ static inline bool wbt_should_throttle(struct rq_wb *rwb, struct bio *bio)
- 		if ((bio->bi_opf & (REQ_SYNC | REQ_IDLE)) ==
- 		    (REQ_SYNC | REQ_IDLE))
- 			return false;
--		/* fallthrough */
-+		fallthrough;
- 	case REQ_OP_DISCARD:
- 		return true;
- 	default:
-diff --git a/block/ioprio.c b/block/ioprio.c
-index 77bcab11dce5..04ebd37966f1 100644
---- a/block/ioprio.c
-+++ b/block/ioprio.c
-@@ -71,7 +71,7 @@ int ioprio_check_cap(int ioprio)
- 		case IOPRIO_CLASS_RT:
- 			if (!capable(CAP_SYS_ADMIN))
- 				return -EPERM;
--			/* fall through */
-+			fallthrough;
- 			/* rt has prio field too */
- 		case IOPRIO_CLASS_BE:
- 			if (data >= IOPRIO_BE_NR || data < 0)
--- 
-2.19.1
-
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index ac1408f..76eab81 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2180,17 +2180,28 @@ static void intel_pmu_disable_event(struct perf_event *event)
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	int idx = hwc->idx;
+ 
+-	if (idx < INTEL_PMC_IDX_FIXED) {
++	switch (idx) {
++	case 0 ... INTEL_PMC_IDX_FIXED - 1:
+ 		intel_clear_masks(event, idx);
+ 		x86_pmu_disable_event(event);
+-	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
+ 		intel_clear_masks(event, idx);
+ 		intel_pmu_disable_fixed(event);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED_BTS:
+ 		intel_pmu_disable_bts();
+ 		intel_pmu_drain_bts_buffer();
+-	} else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
++		return;
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		intel_clear_masks(event, idx);
++		break;
++	default:
++		intel_clear_masks(event, idx);
++		pr_warn("Failed to disable the event with invalid index %d\n",
++			idx);
++		return;
++	}
+ 
+ 	/*
+ 	 * Needs to be called after x86_pmu_disable_event,
+@@ -2262,18 +2273,27 @@ static void intel_pmu_enable_event(struct perf_event *event)
+ 	if (unlikely(event->attr.precise_ip))
+ 		intel_pmu_pebs_enable(event);
+ 
+-	if (idx < INTEL_PMC_IDX_FIXED) {
++	switch (idx) {
++	case 0 ... INTEL_PMC_IDX_FIXED - 1:
+ 		intel_set_masks(event, idx);
+ 		__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
+-	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
+ 		intel_set_masks(event, idx);
+ 		intel_pmu_enable_fixed(event);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED_BTS:
+ 		if (!__this_cpu_read(cpu_hw_events.enabled))
+ 			return;
+ 		intel_pmu_enable_bts(hwc->config);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
++		break;
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		intel_set_masks(event, idx);
++		break;
++	default:
++		pr_warn("Failed to enable the event with invalid index %d\n",
++			idx);
++	}
+ }
+ 
+ static void intel_pmu_add_event(struct perf_event *event)
