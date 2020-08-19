@@ -5,69 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A81C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73AC920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F1B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xP92MXSL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7i+hPgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgHSH1K (ORCPT
+        id S1728225AbgHSH13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
+        Wed, 19 Aug 2020 03:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgHSH0Q (ORCPT
+        with ESMTP id S1728138AbgHSH0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:26:16 -0400
+        Wed, 19 Aug 2020 03:26:46 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01BCC0612EF
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g8so1079782wmk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDF7C06134E
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:40 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 3so1129745wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cz1UC4tnS3N8DfKT/RtvxsKvZMZZyg6WgaNOLEC941U=;
-        b=xP92MXSLUJF3MJNxFN2jeR6pwzN57N/17nqzMGHc349bnPEp6WCiOuot+K7OgLfpJt
-         f0iYoa4HWJlB8sCgu0wHg+/N2DTzUhcBln+Rneg4GeQiflniB8HAy6sxoV0ZNCMJzZvq
-         G3z/S4LMbYHqIfaYEiLpccEGjThSuOHB8PkUjnPqN25gmPp9mNGcrW8CK/iwHlUl2TWV
-         4y0FXqmcVCp22aJZDOBa7fK+OjzFdIEmVnv2xLCQ9JMB6zGygnUjqPecdtoHPsNoX6D2
-         h40jX+Nq2G4g95pz6XLeCpAlECwkZkbtHuyMcS+H8TIY8Nn90RTKYb23YIa+6/o7nmOx
-         1hzw==
+        bh=RkOjJ69pRTSz/Fg8WRhIEqNj+FDSDFt6r37nJYyUwx8=;
+        b=E7i+hPgWDGeE0uSAdDfCAVUuhE+SKaulwFYSTh37d8JeSQd3u2Cq/RfEDGpA3UyWS6
+         t0owPciisQQYwXmfaran/Aa0SRE3aTMdC5mQ/e1Lk/WXvwckIlnG5Gi+baoykg2LKZ0x
+         KOBzaVPxVEmLUfNTniCAMckBq7T/VpkECTLwcbTtAOkIl64Sn0ffNqzLdYYd/uBS6t3q
+         QN1JyZS9//8rGMvTunx6EdnlJ5uT5FrnvbbXYY7M/0GbWORPlApgrqS1dsaTLvt8U4le
+         ufW74XFI1sqJmnlfoqIa0tpZb2QnIYbp91SzLEevHTYFONKvup6SD9XO9+DS3zfWDhHG
+         gRQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cz1UC4tnS3N8DfKT/RtvxsKvZMZZyg6WgaNOLEC941U=;
-        b=UG9ynQ019Xa0NsuM5KwgtXO+cv96AxFjzoaB1Tpdz48crvwUntwyM6gVDg2VFNZL3W
-         wxSaeKc0Tg3lw5XOEyE2j3hWm5i26j35adUFzloldTeqQasjddd1ErvBRn0HhIvhp2aw
-         eAAgwQVhJrR3bnVWyOSEDHqe0xUghRzB1eNIs60nQlV5vXkzBwcpW8Gc5460H9HNyPSr
-         PMzIqo+Y10sNdDr3L7bTgSEJFSl6GEz1HOXDF35RfaZHJJAf4Q4hsr9G88Y6mQ7LzB7R
-         RPGhhnl11eDb1oI8G0lj92M/zVcawLjqJ96O+ZbeppBnFHdN1aGLajhotX0YmUxzmcyf
-         ti2w==
-X-Gm-Message-State: AOAM53149L4W4MTH9LUx7kb63epl51PU7dLRITUaq/T+8hLcb02VNGp3
-        KvBNRUsP0s12lkphiFlv0Q8rKQ==
-X-Google-Smtp-Source: ABdhPJwtVnZKagyZXI9pcJiwCbCXkQ4Bf54YFPC6HZzcK+Hqr8GYuPzY3WQ0Lkp1eyxkiIw0iE6kGA==
-X-Received: by 2002:a05:600c:2184:: with SMTP id e4mr3459650wme.24.1597821875302;
-        Wed, 19 Aug 2020 00:24:35 -0700 (PDT)
+        bh=RkOjJ69pRTSz/Fg8WRhIEqNj+FDSDFt6r37nJYyUwx8=;
+        b=U61M3jcICUKz+a8g4qpEpl1GjFWt0l5oXVcW+3q8hkbl539dxhHRH3qd3TdGslFVAC
+         gbtl1Ez83pd8eQRggJF5ABFh4F4QGHIuOigOHHmIugt2yUkLbVZdO79eI8w1mO15o7bK
+         vasMCTx9ryAqYfUItGSVOJ6R+KBzT9yeXvedVsSRnqR36J+b2lTMZvk1lA+B38x4el+D
+         n4qn4xdCF7Pt5Qr+b4IesrYFH6OfAvVFZ/cxjP7HeYhIOGTCGGF+LFBdLZqr+G2TPjv5
+         e0j2wXRBkM6N3GcB9bHFcVCYH/rrKRM3eNSM5bUI8HhDpYL4MoARfQV0MG8WpgKg3Xnq
+         r6oA==
+X-Gm-Message-State: AOAM5314eKm8vKKkbfDbnRZTDv4WoZcj4M1P2KyvGCJ1NJkuvx2fofRe
+        Ux/F0ppDc2PvFq7whQBBIIrwwA==
+X-Google-Smtp-Source: ABdhPJxWnJ4rFuXa3H0fQxiqSyqn8xc8VRKNlceC+LocVAPn1vSeY0f4D2YWcEVeXiOh12M0YFh5/Q==
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr773879wmm.1.1597821879174;
+        Wed, 19 Aug 2020 00:24:39 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.34
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:34 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:38 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Linux Wireless <ilw@linux.intel.com>
-Subject: [PATCH 24/28] wireless: intel: iwlegacy: 4965: Demote a bunch of nonconformant kernel-doc headers
-Date:   Wed, 19 Aug 2020 08:23:58 +0100
-Message-Id: <20200819072402.3085022-25-lee.jones@linaro.org>
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH 27/28] wireless: marvell: libertas_tf: if_usb: Fix function documentation formatting errors
+Date:   Wed, 19 Aug 2020 08:24:01 +0100
+Message-Id: <20200819072402.3085022-28-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
@@ -78,157 +77,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kerneldoc expects attributes/parameters to be in '@*.: ' format and
+gets confused if the variable does not follow the type/attribute
+definitions.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/intel/iwlegacy/4965.c:35: warning: Function parameter or member 'il' not described in 'il4965_verify_inst_sparse'
- drivers/net/wireless/intel/iwlegacy/4965.c:35: warning: Function parameter or member 'image' not described in 'il4965_verify_inst_sparse'
- drivers/net/wireless/intel/iwlegacy/4965.c:35: warning: Function parameter or member 'len' not described in 'il4965_verify_inst_sparse'
- drivers/net/wireless/intel/iwlegacy/4965.c:66: warning: Function parameter or member 'il' not described in 'il4965_verify_inst_full'
- drivers/net/wireless/intel/iwlegacy/4965.c:66: warning: Function parameter or member 'image' not described in 'il4965_verify_inst_full'
- drivers/net/wireless/intel/iwlegacy/4965.c:66: warning: Function parameter or member 'len' not described in 'il4965_verify_inst_full'
- drivers/net/wireless/intel/iwlegacy/4965.c:105: warning: Function parameter or member 'il' not described in 'il4965_verify_ucode'
- drivers/net/wireless/intel/iwlegacy/4965.c:329: warning: Function parameter or member 'il' not described in 'il4965_load_bsm'
- drivers/net/wireless/intel/iwlegacy/4965.c:416: warning: Function parameter or member 'il' not described in 'il4965_set_ucode_ptrs'
- drivers/net/wireless/intel/iwlegacy/4965.c:451: warning: Function parameter or member 'il' not described in 'il4965_init_alive_start'
- drivers/net/wireless/intel/iwlegacy/4965.c:583: warning: Function parameter or member 'eeprom_voltage' not described in 'il4965_get_voltage_compensation'
- drivers/net/wireless/intel/iwlegacy/4965.c:583: warning: Function parameter or member 'current_voltage' not described in 'il4965_get_voltage_compensation'
- drivers/net/wireless/intel/iwlegacy/4965.c:668: warning: Function parameter or member 'il' not described in 'il4965_interpolate_chan'
- drivers/net/wireless/intel/iwlegacy/4965.c:668: warning: Function parameter or member 'channel' not described in 'il4965_interpolate_chan'
- drivers/net/wireless/intel/iwlegacy/4965.c:668: warning: Function parameter or member 'chan_info' not described in 'il4965_interpolate_chan'
- drivers/net/wireless/intel/iwlegacy/4965.c:1242: warning: Function parameter or member 'il' not described in 'il4965_send_tx_power'
- drivers/net/wireless/intel/iwlegacy/4965.c:1537: warning: Function parameter or member 'il' not described in 'il4965_txq_update_byte_cnt_tbl'
- drivers/net/wireless/intel/iwlegacy/4965.c:1537: warning: Function parameter or member 'txq' not described in 'il4965_txq_update_byte_cnt_tbl'
- drivers/net/wireless/intel/iwlegacy/4965.c:1537: warning: Function parameter or member 'byte_cnt' not described in 'il4965_txq_update_byte_cnt_tbl'
- drivers/net/wireless/intel/iwlegacy/4965.c:1564: warning: Function parameter or member 'il' not described in 'il4965_hw_get_temperature'
- drivers/net/wireless/intel/iwlegacy/4965.c:1564: warning: Excess function parameter 'stats' description in 'il4965_hw_get_temperature'
- drivers/net/wireless/intel/iwlegacy/4965.c:1633: warning: Function parameter or member 'il' not described in 'il4965_is_temp_calib_needed'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:56: warning: Function parameter or member 'urb' not described in 'if_usb_write_bulk_callback'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:73: warning: Function parameter or member 'cardp' not described in 'if_usb_free'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:146: warning: Function parameter or member 'intf' not described in 'if_usb_probe'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:146: warning: Function parameter or member 'id' not described in 'if_usb_probe'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:244: warning: Function parameter or member 'intf' not described in 'if_usb_disconnect'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:272: warning: Function parameter or member 'cardp' not described in 'if_usb_send_fw_pkt'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:372: warning: Function parameter or member 'cardp' not described in 'usb_tx_block'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:372: warning: Function parameter or member 'payload' not described in 'usb_tx_block'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:372: warning: Function parameter or member 'nb' not described in 'usb_tx_block'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:372: warning: Function parameter or member 'data' not described in 'usb_tx_block'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:625: warning: Function parameter or member 'urb' not described in 'if_usb_receive'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:714: warning: Function parameter or member 'priv' not described in 'if_usb_host_to_card'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:714: warning: Function parameter or member 'type' not described in 'if_usb_host_to_card'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:714: warning: Function parameter or member 'payload' not described in 'if_usb_host_to_card'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:714: warning: Function parameter or member 'nb' not described in 'if_usb_host_to_card'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:742: warning: Function parameter or member 'cardp' not described in 'if_usb_issue_boot_command'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:742: warning: Function parameter or member 'ivalue' not described in 'if_usb_issue_boot_command'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:766: warning: Function parameter or member 'data' not described in 'check_fwfile_format'
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c:766: warning: Function parameter or member 'totlen' not described in 'check_fwfile_format'
 
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Wireless <ilw@linux.intel.com>
+Cc: Colin Ian King <colin.king@canonical.com>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intel/iwlegacy/4965.c | 25 +++++++++++-----------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ .../net/wireless/marvell/libertas_tf/if_usb.c | 37 ++++++++++---------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965.c b/drivers/net/wireless/intel/iwlegacy/4965.c
-index fc8fa5818de7e..9fa556486511c 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965.c
-@@ -25,7 +25,7 @@
- #include "common.h"
- #include "4965.h"
- 
--/**
-+/*
-  * il_verify_inst_sparse - verify runtime uCode image in card vs. host,
-  *   using sample data 100 bytes apart.  If these sample points are good,
-  *   it's a pretty good bet that everything between them is good, too.
-@@ -57,7 +57,7 @@ il4965_verify_inst_sparse(struct il_priv *il, __le32 * image, u32 len)
- 	return ret;
- }
- 
--/**
-+/*
-  * il4965_verify_inst_full - verify runtime uCode image in card vs. host,
-  *     looking at all data.
+diff --git a/drivers/net/wireless/marvell/libertas_tf/if_usb.c b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+index bedc092150884..a92916dc81a96 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+@@ -50,7 +50,7 @@ static int if_usb_reset_device(struct lbtf_private *priv);
+ /**
+  *  if_usb_wrike_bulk_callback -  call back to handle URB status
+  *
+- *  @param urb		pointer to urb structure
++ *  @urb:		pointer to urb structure
   */
-@@ -96,7 +96,7 @@ il4965_verify_inst_full(struct il_priv *il, __le32 * image, u32 len)
- 	return ret;
- }
- 
--/**
-+/*
-  * il4965_verify_ucode - determine which instruction image is in SRAM,
-  *    and verify its contents
+ static void if_usb_write_bulk_callback(struct urb *urb)
+ {
+@@ -67,7 +67,7 @@ static void if_usb_write_bulk_callback(struct urb *urb)
+ /**
+  *  if_usb_free - free tx/rx urb, skb and rx buffer
+  *
+- *  @param cardp	pointer if_usb_card
++ *  @cardp:	pointer if_usb_card
   */
-@@ -292,7 +292,7 @@ il4965_verify_bsm(struct il_priv *il)
- 	return 0;
- }
- 
--/**
-+/*
-  * il4965_load_bsm - Load bootstrap instructions
+ static void if_usb_free(struct if_usb_card *cardp)
+ {
+@@ -136,8 +136,8 @@ static const struct lbtf_ops if_usb_ops = {
+ /**
+  *  if_usb_probe - sets the configuration values
   *
-  * BSM operation:
-@@ -402,7 +402,7 @@ il4965_load_bsm(struct il_priv *il)
- 	return 0;
- }
- 
--/**
-+/*
-  * il4965_set_ucode_ptrs - Set uCode address location
+- *  @ifnum	interface number
+- *  @id		pointer to usb_device_id
++ *  @intf:	USB interface structure
++ *  @id:	pointer to usb_device_id
   *
-  * Tell initialization uCode where to find runtime uCode.
-@@ -435,7 +435,7 @@ il4965_set_ucode_ptrs(struct il_priv *il)
- 	return 0;
- }
- 
--/**
-+/*
-  * il4965_init_alive_start - Called after N_ALIVE notification received
-  *
-  * Called after N_ALIVE notification received from "initialize" uCode.
-@@ -567,7 +567,7 @@ il4965_math_div_round(s32 num, s32 denom, s32 * res)
- 	return 1;
- }
- 
--/**
-+/*
-  * il4965_get_voltage_compensation - Power supply voltage comp for txpower
-  *
-  * Determines power supply voltage compensation for txpower calculations.
-@@ -654,7 +654,7 @@ il4965_interpolate_value(s32 x, s32 x1, s32 y1, s32 x2, s32 y2)
- 	}
- }
- 
--/**
-+/*
-  * il4965_interpolate_chan - Interpolate factory measurements for one channel
-  *
-  * Interpolates factory measurements from the two sample channels within a
-@@ -1231,7 +1231,7 @@ il4965_fill_txpower_tbl(struct il_priv *il, u8 band, u16 channel, u8 is_ht40,
- 	return 0;
- }
- 
--/**
-+/*
-  * il4965_send_tx_power - Configure the TXPOWER level user limit
-  *
-  * Uses the active RXON for channel, band, and characteristics (ht40, high)
-@@ -1528,7 +1528,7 @@ il4965_hw_channel_switch(struct il_priv *il,
- 	return il_send_cmd_pdu(il, C_CHANNEL_SWITCH, sizeof(cmd), &cmd);
- }
- 
--/**
-+/*
-  * il4965_txq_update_byte_cnt_tbl - Set up entry in Tx byte-count array
+  *  Returns: 0 on success, error code on failure
   */
- static void
-@@ -1553,9 +1553,8 @@ il4965_txq_update_byte_cnt_tbl(struct il_priv *il, struct il_tx_queue *txq,
- 		    bc_ent;
- }
- 
--/**
-+/*
-  * il4965_hw_get_temperature - return the calibrated temperature (in Kelvin)
-- * @stats: Provides the temperature reading from the uCode
+@@ -238,7 +238,7 @@ lbtf_deb_leave(LBTF_DEB_MAIN);
+ /**
+  *  if_usb_disconnect -  free resource and cleanup
   *
-  * A return of <0 indicates bogus data in the stats
+- *  @intf	USB interface structure
++ *  @intf:	USB interface structure
   */
-@@ -1619,7 +1618,7 @@ il4965_hw_get_temperature(struct il_priv *il)
- /* Adjust Txpower only if temperature variance is greater than threshold. */
- #define IL_TEMPERATURE_THRESHOLD   3
- 
--/**
-+/*
-  * il4965_is_temp_calib_needed - determines if new calibration is needed
+ static void if_usb_disconnect(struct usb_interface *intf)
+ {
+@@ -264,7 +264,7 @@ static void if_usb_disconnect(struct usb_interface *intf)
+ /**
+  *  if_usb_send_fw_pkt -  This function downloads the FW
   *
-  * If the temperature changed has changed sufficiently, then a recalibration
+- *  @priv	pointer to struct lbtf_private
++ *  @cardp:	pointer if_usb_card
+  *
+  *  Returns: 0
+  */
+@@ -360,10 +360,10 @@ static int if_usb_reset_device(struct lbtf_private *priv)
+ /**
+  *  usb_tx_block - transfer data to the device
+  *
+- *  @priv	pointer to struct lbtf_private
+- *  @payload	pointer to payload data
+- *  @nb		data length
+- *  @data	non-zero for data, zero for commands
++ *  @cardp:	pointer if_usb_card
++ *  @payload:	pointer to payload data
++ *  @nb:	data length
++ *  @data:	non-zero for data, zero for commands
+  *
+  *  Returns: 0 on success, nonzero otherwise.
+  */
+@@ -619,7 +619,7 @@ static inline void process_cmdrequest(int recvlength, uint8_t *recvbuff,
+ /**
+  *  if_usb_receive - read data received from the device.
+  *
+- *  @urb		pointer to struct urb
++ *  @urb:		pointer to struct urb
+  */
+ static void if_usb_receive(struct urb *urb)
+ {
+@@ -702,10 +702,10 @@ static void if_usb_receive(struct urb *urb)
+ /**
+  *  if_usb_host_to_card -  Download data to the device
+  *
+- *  @priv		pointer to struct lbtf_private structure
+- *  @type		type of data
+- *  @buf		pointer to data buffer
+- *  @len		number of bytes
++ *  @priv:		pointer to struct lbtf_private structure
++ *  @type:		type of data
++ *  @payload:		pointer to payload buffer
++ *  @nb:		number of bytes
+  *
+  *  Returns: 0 on success, nonzero otherwise
+  */
+@@ -734,7 +734,8 @@ static int if_usb_host_to_card(struct lbtf_private *priv, uint8_t type,
+ /**
+  *  if_usb_issue_boot_command - Issue boot command to Boot2.
+  *
+- *  @ivalue   1 boots from FW by USB-Download, 2 boots from FW in EEPROM.
++ *  @cardp:	pointer if_usb_card
++ *  @ivalue:   1 boots from FW by USB-Download, 2 boots from FW in EEPROM.
+  *
+  *  Returns: 0
+  */
+@@ -757,8 +758,8 @@ static int if_usb_issue_boot_command(struct if_usb_card *cardp, int ivalue)
+ /**
+  *  check_fwfile_format - Check the validity of Boot2/FW image.
+  *
+- *  @data	pointer to image
+- *  @totlen	image length
++ *  @data:	pointer to image
++ *  @totlen:	image length
+  *
+  *  Returns: 0 if the image is valid, nonzero otherwise.
+  */
 -- 
 2.25.1
 
