@@ -2,102 +2,98 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4822C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077FB206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4702054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QIUBzW0L"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UXqfqdhf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mGmT0S3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgHSHLy (ORCPT
+        id S1727997AbgHSHMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36604 "EHLO
+        Wed, 19 Aug 2020 03:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgHSG41 (ORCPT
+        with ESMTP id S1728012AbgHSHLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:56:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF59FC061389;
-        Tue, 18 Aug 2020 23:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=yG7qWXKBUIxg7RQ3+cci8dpYxavPbFHR4ZLuySoica4=; b=QIUBzW0L+6A9SSAc6/gO+tDQ+b
-        OxXtbUbEFqlmm0USEC/IXSplued4C+C6F0ZF30aKjG8eHH9Hw09fN5oDweD3DjZhb8ZVyBa3oNCMt
-        gHqvdLdvetFUsHVA2naOyxN49WiwYumPj0OJ9vWKMBhULQu9DljH3ttkuIFc8Xzwt6Kk9NdAWGMVc
-        M/hFcqjB5X000cNsrLFGiT0ucDiSShmdbC+Iz8B0HGkVX82jI1lTPPtC7Yho4FRHWN0jDXHB+oQYg
-        jtcO/Q7MNp4OEwi61wxBreFz6GJBwroT31V+Pbx43dXQbOQjKpB13S5G4CjWrDHb//3KK5l+B0jlz
-        QH4CysFQ==;
-Received: from [2001:4bb8:198:f3b2:86b6:2277:f429:37a1] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8I0s-0008Kv-H4; Wed, 19 Aug 2020 06:55:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH 01/28] mm: turn alloc_pages into an inline function
-Date:   Wed, 19 Aug 2020 08:55:28 +0200
-Message-Id: <20200819065555.1802761-2-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819065555.1802761-1-hch@lst.de>
-References: <20200819065555.1802761-1-hch@lst.de>
+        Wed, 19 Aug 2020 03:11:41 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F15C061389;
+        Wed, 19 Aug 2020 00:11:41 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 09:11:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597821099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9LpC0XaRf4DGoIdiCEBe93B/70c29C6ZKL34lno4gEY=;
+        b=UXqfqdhf3Nhc9cOurrtA2TRVB6hnQsJeLc4jDdGaJls1pj/UsfWp+nGO/gwk5XDW0Iu8tO
+        RVoOH4Vga+sEvnrLZmAUHMdrlpBkWRGmXH+5hh34iT48YYmNGeoDQ8rxwQtUh1A8CA1tYD
+        NP4DEWE6NsL1zok6BvhOiKnhJHAL/hCvc1UT933OjtS0wC6yfYLifyi51vj5ChOhhNd8hj
+        L4ZxGPfb2gzWAf842Pua2ljeoqxvjjZp5JYU/rXA2zKpMOAfocuEW6To/qWTc429MnOrgM
+        MUl7DATUcska8ZGULDPv58gkPUBtYWYQGYnFsp5zAj3xEwDuuLkrMpMmwSacEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597821099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9LpC0XaRf4DGoIdiCEBe93B/70c29C6ZKL34lno4gEY=;
+        b=mGmT0S3ySWU3Bb20vrlRlEUdsOchhjk/u4nsbuHBDIZ1O9b0/EizMooUkP9DSV0AITT7um
+        XzuYUqq/jYVDGkCQ==
+From:   'Sebastian Andrzej Siewior' <bigeasy@linutronix.de>
+To:     Thomas Graziadei <thomas.graziadei@omicronenergy.com>
+Cc:     Mark Marshall <markmarshall14@gmail.com>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Mark Marshall <mark.marshall@omicronenergy.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17 and
+ PowerPC e500
+Message-ID: <20200819071138.bypg3slqhw7r577r@linutronix.de>
+References: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
+ <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
+ <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
+ <20200529161518.svpxhkeljafbtdz2@linutronix.de>
+ <20200529163722.mdxzrj4n3lyzjtfu@linutronix.de>
+ <20200706165004.7m57fvspmwnjcjxh@linutronix.de>
+ <eeeae7d9-c028-47f0-ab5b-7983e32f36cb@EXC03-ATKLA.omicron.at>
+ <c1ef757b-4cd6-410e-a647-a3303cef4b1b@EXC03-ATKLA.omicron.at>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c1ef757b-4cd6-410e-a647-a3303cef4b1b@EXC03-ATKLA.omicron.at>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent a compiler error when a method call alloc_pages is
-added (which I plan to for the dma_map_ops).
+On 2020-08-12 14:45:22 [+0200], Thomas Graziadei wrote:
+> Hi Sebastian,
+Hi Thomas,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/gfp.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> any progress on your side?
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 67a0774e080b98..dd2577c5407112 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -550,8 +550,10 @@ extern struct page *alloc_pages_vma(gfp_t gfp_mask, int order,
- #define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
- 	alloc_pages_vma(gfp_mask, order, vma, addr, numa_node_id(), true)
- #else
--#define alloc_pages(gfp_mask, order) \
--		alloc_pages_node(numa_node_id(), gfp_mask, order)
-+static inline struct page *alloc_pages(gfp_t gfp_mask, unsigned int order)
-+{
-+	return alloc_pages_node(numa_node_id(), gfp_mask, order);
-+}
- #define alloc_pages_vma(gfp_mask, order, vma, addr, node, false)\
- 	alloc_pages(gfp_mask, order)
- #define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
--- 
-2.28.0
+due to lack of time none. But I am on it=E2=80=A6
 
+> Do you think the patch could be applied for the next versions?
+
+So I had a theory why it happens but then you said no so now I need
+to figure out why it happens so I can write it in the changelog.
+
+I believe you made it happen in qemu and you sent a .config and
+everything so I will stare into it as soon as I can.
+
+> Regards,
+> Thomas
+
+Sebastian
