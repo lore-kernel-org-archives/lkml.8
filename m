@@ -2,202 +2,155 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B99C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A02E207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1262063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHSGnS (ORCPT
+        id S1726982AbgHSGrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:43:18 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:42820 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgHSGnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:43:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id s21so13632194ioe.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 23:43:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=R3nMeROQnANHQhgA6eIg8Oz1+wqED/F0geLQt6U/548=;
-        b=e/AHgLc/vFubcPwxVuliLC0241tWl9Devcl0OVnqfR3earJ1z44199lUhEj8dH00G3
-         /iNEbk5O8zE0uDEODzB90hV70ZuVckAMJ3PW8UF5kvZNGl3v3EL+XO/6eg/qwli807Y2
-         yYXa84++D8hUcp3HvMKPT5rv3d5fvF+AA4tr215xALIJUzSV6VqigMVr6RMG7QugiPO8
-         uJns2tybpfyjiQI/Nll0faYmLBMaYr/kyqkxRpxcxotlSsCaMxx8kMhPWhfdHqirjcGb
-         6b8/nId4YIil0FVjOFh3BX8kUIIAkZSdgdaUMIgOkNqDvvK03Q9uQ3vWATKhOTbKxmu1
-         HfuQ==
-X-Gm-Message-State: AOAM532PZ/GyggEscPH3QUu4W7H9s0q+6auPOwsyHKqLB0RRoUXticu8
-        5VcQ8IlD4LO1DkUKMge0D7SvV0P4SrWIXunmbMmAAdpRMEMi
-X-Google-Smtp-Source: ABdhPJyWzUb0Hjy/Tie7V/hTCb5VNPTBqkVusY8sGIyiFIYvW/ROPS85zm+YFnmphK68poFXcJgqV3JCigV9PNg53JCIHqsB6ctN
-MIME-Version: 1.0
-X-Received: by 2002:a92:354d:: with SMTP id c74mr19524908ila.27.1597819394434;
- Tue, 18 Aug 2020 23:43:14 -0700 (PDT)
-Date:   Tue, 18 Aug 2020 23:43:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006bac5105ad3551e9@google.com>
-Subject: INFO: task can't die in tls_sk_proto_close
-From:   syzbot <syzbot+739db38bc09c5a792e31@syzkaller.appspotmail.com>
-To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
-        davem@davemloft.net, john.fastabend@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Aug 2020 02:47:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36074 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726858AbgHSGrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:47:13 -0400
+IronPort-SDR: 0kSZqH/6hMfKVukG6QBU+89wFGahWNJTPnN+2lhKGureZ5B9+9auAHeafK4v6bSVfOeX7MDbAv
+ Su/kqQiV2YSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142873154"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="142873154"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 23:47:12 -0700
+IronPort-SDR: DALWZK1vz4iWx0uSD7Bzuv9+EeAMOBmBT6Y4cSh1vRKwOQt1tcPfGcKBf8R4cZQBddE5tpgJ63
+ NRBznJtgsoPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="310679238"
+Received: from lxy-dell.sh.intel.com ([10.239.159.21])
+  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2020 23:47:09 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v10 0/9] KVM: Add virtualization support of split lock detection
+Date:   Wed, 19 Aug 2020 14:46:58 +0800
+Message-Id: <20200819064707.1033569-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi maintainers,
 
-syzbot found the following issue on:
-
-HEAD commit:    4993e4fe Add linux-next specific files for 20200814
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=107ad7d6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2055bd0d83d5ee16
-dashboard link: https://syzkaller.appspot.com/bug?extid=739db38bc09c5a792e31
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+739db38bc09c5a792e31@syzkaller.appspotmail.com
-
-INFO: task syz-executor.4:22039 can't die for more than 143 seconds.
-syz-executor.4  D28360 22039   6861 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
- do_wait_for_common kernel/sched/completion.c:85 [inline]
- __wait_for_common kernel/sched/completion.c:106 [inline]
- wait_for_common kernel/sched/completion.c:117 [inline]
- wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
- __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
- __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
- tls_sk_proto_close+0x4a7/0xaf0 net/tls/tls_main.c:305
- inet_release+0x12e/0x280 net/ipv4/af_inet.c:431
- inet6_release+0x4c/0x70 net/ipv6/af_inet6.c:475
- __sock_release+0xcd/0x280 net/socket.c:596
- sock_close+0x18/0x20 net/socket.c:1277
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416b81
-Code: Bad RIP value.
-RSP: 002b:00007ffedaaf5920 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416b81
-RDX: 0000000000000000 RSI: 0000000000000be4 RDI: 0000000000000003
-RBP: 0000000000000001 R08: 00000000f2ab2be2 R09: 00000000f2ab2be6
-R10: 00007ffedaaf5a10 R11: 0000000000000293 R12: 000000000118d940
-R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cf4c
-INFO: task syz-executor.4:22039 blocked for more than 143 seconds.
-      Not tainted 5.8.0-next-20200814-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.4  D28360 22039   6861 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
- do_wait_for_common kernel/sched/completion.c:85 [inline]
- __wait_for_common kernel/sched/completion.c:106 [inline]
- wait_for_common kernel/sched/completion.c:117 [inline]
- wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
- __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
- __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
- tls_sk_proto_close+0x4a7/0xaf0 net/tls/tls_main.c:305
- inet_release+0x12e/0x280 net/ipv4/af_inet.c:431
- inet6_release+0x4c/0x70 net/ipv6/af_inet6.c:475
- __sock_release+0xcd/0x280 net/socket.c:596
- sock_close+0x18/0x20 net/socket.c:1277
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416b81
-Code: Bad RIP value.
-RSP: 002b:00007ffedaaf5920 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416b81
-RDX: 0000000000000000 RSI: 0000000000000be4 RDI: 0000000000000003
-RBP: 0000000000000001 R08: 00000000f2ab2be2 R09: 00000000f2ab2be6
-R10: 00007ffedaaf5a10 R11: 0000000000000293 R12: 000000000118d940
-R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cf4c
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1165:
- #0: ffffffff89c66c40 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
-1 lock held by in:imklog/6547:
- #0: ffff88809f2578f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
-2 locks held by agetty/6565:
- #0: ffff8880a1f98098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
- #1: ffffc900025d12e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x223/0x1a30 drivers/tty/n_tty.c:2156
-3 locks held by kworker/1:3/7601:
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90008eb7da8 ((work_completion)(&(&sw_ctx_tx->tx_work.work)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffff888099161cd8 (&ctx->tx_lock){+.+.}-{3:3}, at: tx_work_handler+0x127/0x190 net/tls/tls_sw.c:2251
-1 lock held by syz-executor.3/31922:
- #0: ffff8880a237ae20 (sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1583 [inline]
- #0: ffff8880a237ae20 (sk_lock-AF_INET6){+.+.}-{0:0}, at: sctp_getsockopt net/sctp/socket.c:7820 [inline]
- #0: ffff8880a237ae20 (sk_lock-AF_INET6){+.+.}-{0:0}, at: sctp_getsockopt+0x249/0x6d0a net/sctp/socket.c:7793
-1 lock held by syz-executor.4/22039:
- #0: ffff8880855f7210 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:780 [inline]
- #0: ffff8880855f7210 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: __sock_release+0x86/0x280 net/socket.c:595
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 1165 Comm: khungtaskd Not tainted 5.8.0-next-20200814-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 3891 Comm: systemd-journal Not tainted 5.8.0-next-20200814-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0033:0x558c52df8321
-Code: 3b 44 24 78 0f 85 de 00 00 00 45 31 ed 45 31 e4 e9 f7 fe ff ff 4c 89 fe 48 8b 5c 24 10 44 89 ed e9 d8 fb ff ff e8 2f 31 ff ff <31> ed e9 1c fd ff ff 4c 8b 64 24 60 4d 85 e4 0f 84 bf 00 00 00 48
-RSP: 002b:00007ffc87c71ea0 EFLAGS: 00000246
-RAX: 00007ffc87c72780 RBX: 00007ffc87c74910 RCX: 000000000000004e
-RDX: 00007ffc87c72781 RSI: 000000000000000a RDI: 00007ffc87c72780
-RBP: 00007ffc87c72718 R08: 00007ffc87c72722 R09: 0000000000000000
-R10: 0000000000000000 R11: 00007f22fccae040 R12: 0000000000000000
-R13: 000000000000004f R14: 0000558c52dfb958 R15: 0005acdcf22a81cb
-FS:  00007f22fd9818c0 GS:  0000000000000000
-
+Please help review this new version and give comments. There is only one
+minor change from previous v9, i.e., adding patch 8.
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+This series aims to add the virtualization of split lock detection in
+KVM.
+
+Due to the fact that split lock detection is tightly coupled with CPU
+model and CPU model is configurable by host VMM, we elect to use
+paravirt method to expose and enumerate it for guest.
+
+Changes in v10
+ - rebase to v5.9-rc1;
+ - Add one patch to move the initialization of cpu_model_supports_sld to
+   split_lock_setup();
+
+Changes in v9
+https://lkml.kernel.org/r/20200509110542.8159-1-xiaoyao.li@intel.com
+ - rebase to v5.7-rc4
+ - Add one patch to rename TIF_SLD to TIF_SLD_DISABLED;
+ - Add one patch to remove bogus case in handle_guest_split_lock;
+ - Introduce flag X86_FEATURE_SPLIT_LOCK_DETECT_FATAL and thus drop
+   sld_state;
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT and X86_FEATURE_SPLIT_LOCK_DETECT_FATAL
+   to determine the SLD state of host;
+ - Introduce split_lock_virt_switch() and two wrappers for KVM instead
+   of sld_update_to(); 
+ - Use paravirt to expose and enumerate split lock detection for guest;
+ - Split lock detection can be exposed to guest when host is sld_fatal,
+   even though host is SMT available. 
+
+Changes in v8:
+https://lkml.kernel.org/r/20200414063129.133630-1-xiaoyao.li@intel.com
+ - rebase to v5.7-rc1.
+ - basic enabling of split lock detection already merged.
+ - When host is sld_warn and nosmt, load guest's sld bit when in KVM
+   context, i.e., between vmx_prepare_switch_to_guest() and before
+   vmx_prepare_switch_to_host(), KVM uses guest sld setting.  
+
+Changes in v7:
+https://lkml.kernel.org/r/20200325030924.132881-1-xiaoyao.li@intel.com
+ - only pick patch 1 and patch 2, and hold all the left.
+ - Update SLD bit on each processor based on sld_state.
+
+Changes in v6:
+https://lkml.kernel.org/r/20200324151859.31068-1-xiaoyao.li@intel.com
+ - Drop the sld_not_exist flag and use X86_FEATURE_SPLIT_LOCK_DETECT to
+   check whether need to init split lock detection. [tglx]
+ - Use tglx's method to verify the existence of split lock detectoin.
+ - small optimization of sld_update_msr() that the default value of
+   msr_test_ctrl_cache has split_lock_detect bit cleared.
+ - Drop the patch3 in v5 that introducing kvm_only option. [tglx]
+ - Rebase patch4-8 to kvm/queue.
+ - use the new kvm-cpu-cap to expose X86_FEATURE_CORE_CAPABILITIES in
+   Patch 6.
+
+Changes in v5:
+https://lkml.kernel.org/r/20200315050517.127446-1-xiaoyao.li@intel.com
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
+   detection is really supported.
+ - Add and export sld related helper functions in their related usecase 
+   kvm patches.
+
+Xiaoyao Li (9):
+  x86/split_lock: Rename TIF_SLD to TIF_SLD_DISABLED
+  x86/split_lock: Remove bogus case in handle_guest_split_lock()
+  x86/split_lock: Introduce flag X86_FEATURE_SLD_FATAL and drop
+    sld_state
+  x86/split_lock: Introduce split_lock_virt_switch() and two wrappers
+  x86/kvm: Introduce paravirt split lock detection enumeration
+  KVM: VMX: Enable MSR TEST_CTRL for guest
+  KVM: VMX: virtualize split lock detection
+  x86/split_lock: Set cpu_model_supports_sld to true after the existence
+    of split lock detection is verified BSP
+  x86/split_lock: Enable split lock detection initialization when
+    running as a guest on KVM
+
+ Documentation/virt/kvm/cpuid.rst     | 29 +++++++----
+ arch/x86/include/asm/cpu.h           | 36 ++++++++++++++
+ arch/x86/include/asm/cpufeatures.h   |  1 +
+ arch/x86/include/asm/thread_info.h   |  6 +--
+ arch/x86/include/uapi/asm/kvm_para.h |  8 ++--
+ arch/x86/kernel/cpu/intel.c          | 61 +++++++++++++++--------
+ arch/x86/kernel/kvm.c                |  3 ++
+ arch/x86/kernel/process.c            |  2 +-
+ arch/x86/kvm/cpuid.c                 |  6 +++
+ arch/x86/kvm/vmx/vmx.c               | 72 +++++++++++++++++++++++++---
+ arch/x86/kvm/vmx/vmx.h               |  3 ++
+ arch/x86/kvm/x86.c                   |  6 ++-
+ arch/x86/kvm/x86.h                   | 16 +++++++
+ 13 files changed, 207 insertions(+), 42 deletions(-)
+
+-- 
+2.18.4
+
