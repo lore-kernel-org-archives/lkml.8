@@ -2,186 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2166EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F732067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07AC204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x0M8887K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yK2bE2k6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k40ZfWjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgHSOEp (ORCPT
+        id S1728583AbgHSOEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:04:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46250 "EHLO
+        Wed, 19 Aug 2020 10:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgHSODX (ORCPT
+        with ESMTP id S1728479AbgHSODu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:03:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6245BC061348;
-        Wed, 19 Aug 2020 07:02:52 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:02:50 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597845770;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pQZOW0j4/RdzM1divCEavCZuXsVIoOqyikm/qS44wK8=;
-        b=x0M8887KRqa+3oZhKLipuAh6YH3dX5AlqUqfhKlDAXh45F+RnAu/712jbFxmzKdOvw4Rvo
-        A1+wkBh4kYpUnpk+a3x0feqS7O/9c6vl0wJsKXMFa95e0EaohFZavSTx4w3SRqJ8COm8pQ
-        PiGx4DJvRDJrZIAtOukwyiDR4IlL6tXvm98tWQi03gZMP06Lny4/Ixn5rTHbHIrlhdBYTg
-        zdCvfxNPl4W1zKX+/BOdV7wxT96cSK2ag0YsUZ+ni6ByhUOcbkyT39PygJEdNFkUwwuS1M
-        wkDruf1J1OmC2jST9hMMxUNFbqaBo7YnnY82rVl52/FpCkQfYHhH5YVafc7Udw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597845770;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pQZOW0j4/RdzM1divCEavCZuXsVIoOqyikm/qS44wK8=;
-        b=yK2bE2k6WjSPt62Ixp/Gaupoeoxq93rHZcNXRp8w9wtVS5rJzkMMGhAR6Cmm23kaJW4Jmw
-        r3/ir2VXcQcYTBAQ==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Split out SD_* flags declaration to
- its own file
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200817113003.20802-4-valentin.schneider@arm.com>
-References: <20200817113003.20802-4-valentin.schneider@arm.com>
+        Wed, 19 Aug 2020 10:03:50 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0FAC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:03:46 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id i20so7430267qkk.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 07:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g6uVxpmjtJrh49bROR/GEwsOKP2TcklwbBBYVDi6akw=;
+        b=k40ZfWjhNmOpU2w4xEJdm6hYDexLqDT/XT/LZhLcfGTms42rQmhxdYak5ItY+rLPAz
+         YE6o6c69VVxhMZQ8PrAU7Lf3yYPZeUa8Y8VIi1vzNWmB+IuDu+YnHG8rEqkaodSJ89tI
+         QKGsuWe7VZu4zUwr9Jq+nJjCtUfmsMBCgNTXbwvqY4Gt3+meRIVaKm5OiwnG2+XhezGn
+         15vK/bG82LdWRR2CCQbuImgrbBwkXcXHROOa+he4ZIH944XGveontqahgE+lmKX61azb
+         cgGwtr+7TZhOjl/67qnhlIItNmjd4f2MxemxLUK+yItzvbfGS/ID51nularJ2zC/s02z
+         MLCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g6uVxpmjtJrh49bROR/GEwsOKP2TcklwbBBYVDi6akw=;
+        b=FbYjABoNA1jIWMVqKzpKjEsNTbcSm8WLtPoczahcEbCJxC4mUqYmHvNQgTAoRzP+2l
+         ZUSrPH4enR0iddEC9R0sQGAMQR5xYxhZaUNp06uf0kl7T4NdPN9LRukJEMJmb1S0i5dR
+         /ki5k1/bkx7vh+453oc16SmG0j9uDzr4fie752TFFJn5HQHvSP4bLHB89pnjeJbMIJkh
+         eURp0ikmJB4AXwE2+Mqz0E349qL07TcPgZz95JOdDUSOFCkxdtpXXb8zPNw0YhgYCW9/
+         6DXXnWcwW2Pro5mXjXbXszaIPOMxXdm6tcmdMDVg1AKXSNJz2WddZBk5orMzKlM+7RSf
+         foFA==
+X-Gm-Message-State: AOAM532y3YA5rAG3LaIVBWGWLta9OAtUSaiQjcM1Wz1emR3h35lOTjqC
+        AscRTZVxvkVbbY42vsWdP89vv/dnW9I5FqcAwIwCIg==
+X-Google-Smtp-Source: ABdhPJzTU07eK90u56ieNkfWEiPbP/yb2qqk/uvaOdJWRiNqHdKO0nVyVmzZ2bxLFNkDl7vPDYck14pkaFJl67yPxyY=
+X-Received: by 2002:a05:620a:15c9:: with SMTP id o9mr17316392qkm.8.1597845824618;
+ Wed, 19 Aug 2020 07:03:44 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159784577024.3192.10076591546813969390.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <000000000000568fc005ad3b57c3@google.com>
+In-Reply-To: <000000000000568fc005ad3b57c3@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 19 Aug 2020 16:03:33 +0200
+Message-ID: <CACT4Y+bxvHp9gq_OEBAYdMTsm9vxw3CuviuDpxHCXcZHv_A0nw@mail.gmail.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free (4)
+To:     syzbot <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Wed, Aug 19, 2020 at 3:54 PM syzbot
+<syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1710d97a900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=df400f2f24a1677cd7e0
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15859986900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1228fea1900000
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com
+>
+> unregister_netdevice: waiting for lo to become free. Usage count = 1
 
-Commit-ID:     d54a9658a75633b839af7a2c6c758807678b8064
-Gitweb:        https://git.kernel.org/tip/d54a9658a75633b839af7a2c6c758807678b8064
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Mon, 17 Aug 2020 12:29:49 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Aug 2020 10:49:47 +02:00
+Based on the repro, it looks bpf/bpf link related:
 
-sched/topology: Split out SD_* flags declaration to its own file
+syz_emit_ethernet(0x86, &(0x7f0000000000)={@local, @empty=[0x2],
+@void, {@ipv4={0x800, @udp={{0x5, 0x4, 0x0, 0x0, 0x78, 0x0, 0x0, 0x0,
+0x11, 0x0, @empty, @empty}, {0x0, 0x1b59, 0x64, 0x0,
+@wg=@response={0x5, 0x0, 0x0, "020000010865390406030500000000010900",
+"9384bbeb3018ad591b661fe808b21b77",
+{"694c875dfb1be5d2a0057a62022a1564",
+"a329d3a73b8268129e5fa4316a5d8c69"}}}}}}}, 0x0)
+mkdirat(0xffffffffffffff9c, &(0x7f0000000000)='./file0\x00', 0x0)
+mount(0x0, &(0x7f0000000080)='./file0\x00',
+&(0x7f0000000040)='cgroup2\x00', 0x0, 0x0)
+r0 = openat$cgroup_root(0xffffffffffffff9c, &(0x7f0000000000), 0x200002, 0x0)
+r1 = bpf$PROG_LOAD(0x5, &(0x7f0000000080)={0x9, 0x4,
+&(0x7f0000000000)=@framed={{}, [@alu={0x8000000201a7f19, 0x0, 0x6,
+0x2, 0x1}]}, &(0x7f0000000100)='GPL\x00', 0x0, 0x0, 0x0, 0x0, 0x0, [],
+0x0, 0x0, 0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0}, 0x70)
+bpf$BPF_LINK_CREATE(0x1c, &(0x7f0000000100)={r1, r0, 0x2}, 0x10)
 
-To associate the SD flags with some metadata, we need some more structure
-in the way they are declared.
-
-Rather than shove that in a free-standing macro list, move the declaration
-in a separate file that can be re-imported with different SD_FLAG
-definitions. This is inspired by what is done with the syscall
-table (see uapi/asm/unistd.h and sys_call_table).
-
-The value assigned to a given SD flag now depends on the order it appears
-in sd_flags.h. No change in functionality.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: https://lore.kernel.org/r/20200817113003.20802-4-valentin.schneider@arm.com
----
- include/linux/sched/sd_flags.h | 35 +++++++++++++++++++++++++++++++++-
- include/linux/sched/topology.h | 26 ++++++++++++-------------
- 2 files changed, 48 insertions(+), 13 deletions(-)
- create mode 100644 include/linux/sched/sd_flags.h
-
-diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-new file mode 100644
-index 0000000..373dc45
---- /dev/null
-+++ b/include/linux/sched/sd_flags.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * sched-domains (multiprocessor balancing) flag declarations.
-+ */
-+
-+#ifndef SD_FLAG
-+# error "Incorrect import of SD flags definitions"
-+#endif
-+
-+/* Balance when about to become idle */
-+SD_FLAG(SD_BALANCE_NEWIDLE)
-+/* Balance on exec */
-+SD_FLAG(SD_BALANCE_EXEC)
-+/* Balance on fork, clone */
-+SD_FLAG(SD_BALANCE_FORK)
-+/* Balance on wakeup */
-+SD_FLAG(SD_BALANCE_WAKE)
-+/* Wake task to waking CPU */
-+SD_FLAG(SD_WAKE_AFFINE)
-+/* Domain members have different CPU capacities */
-+SD_FLAG(SD_ASYM_CPUCAPACITY)
-+/* Domain members share CPU capacity */
-+SD_FLAG(SD_SHARE_CPUCAPACITY)
-+/* Domain members share CPU pkg resources */
-+SD_FLAG(SD_SHARE_PKG_RESOURCES)
-+/* Only a single load balancing instance */
-+SD_FLAG(SD_SERIALIZE)
-+/* Place busy groups earlier in the domain */
-+SD_FLAG(SD_ASYM_PACKING)
-+/* Prefer to place tasks in a sibling domain */
-+SD_FLAG(SD_PREFER_SIBLING)
-+/* sched_domains of this level overlap */
-+SD_FLAG(SD_OVERLAP)
-+/* cross-node balancing */
-+SD_FLAG(SD_NUMA)
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 6ec7d7c..3e41c04 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -11,19 +11,19 @@
-  */
- #ifdef CONFIG_SMP
- 
--#define SD_BALANCE_NEWIDLE	0x0001	/* Balance when about to become idle */
--#define SD_BALANCE_EXEC		0x0002	/* Balance on exec */
--#define SD_BALANCE_FORK		0x0004	/* Balance on fork, clone */
--#define SD_BALANCE_WAKE		0x0008  /* Balance on wakeup */
--#define SD_WAKE_AFFINE		0x0010	/* Wake task to waking CPU */
--#define SD_ASYM_CPUCAPACITY	0x0020  /* Domain members have different CPU capacities */
--#define SD_SHARE_CPUCAPACITY	0x0040	/* Domain members share CPU capacity */
--#define SD_SHARE_PKG_RESOURCES	0x0080	/* Domain members share CPU pkg resources */
--#define SD_SERIALIZE		0x0100	/* Only a single load balancing instance */
--#define SD_ASYM_PACKING		0x0200  /* Place busy groups earlier in the domain */
--#define SD_PREFER_SIBLING	0x0400	/* Prefer to place tasks in a sibling domain */
--#define SD_OVERLAP		0x0800	/* sched_domains of this level overlap */
--#define SD_NUMA			0x1000	/* cross-node balancing */
-+/* Generate SD flag indexes */
-+#define SD_FLAG(name) __##name,
-+enum {
-+	#include <linux/sched/sd_flags.h>
-+	__SD_FLAG_CNT,
-+};
-+#undef SD_FLAG
-+/* Generate SD flag bits */
-+#define SD_FLAG(name) name = 1 << __##name,
-+enum {
-+	#include <linux/sched/sd_flags.h>
-+};
-+#undef SD_FLAG
- 
- #ifdef CONFIG_SCHED_SMT
- static inline int cpu_smt_flags(void)
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
