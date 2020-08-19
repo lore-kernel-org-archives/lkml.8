@@ -2,158 +2,106 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA56520888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwatJcZD"
+	by mail.kernel.org (Postfix) with ESMTP id 3863D20888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597853646;
+	bh=j5FiFlFlH41HiOvE414dXMd/9iwiRcR8XtF1M5BgrW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jsf0LN2g3NIFcYRP3UuO10xHaKBjPjlbRylcuOFggFKbActBte6GUMNHuHGBEG/Aj
+	 /vLoJ2K8kksRXSUopgAGdjRZ/RtPNCbJAUyfjkBKYzL3k6Bs7CvEL+JdB0XOSLdeKm
+	 Fy+7+Sa6d1C/IHkIKfjyxApTGnM8EA/vk/o2IAYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHSQOA (ORCPT
+        id S1726919AbgHSQOE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgHSQN0 (ORCPT
+        Wed, 19 Aug 2020 12:14:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35731 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgHSQN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:13:26 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0F9C061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:13:19 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s15so11617628pgc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=svPB6Dx2TnAYZrDOVEx7GGT/OFxWuzJDOOju30QjJAE=;
-        b=JwatJcZDWJUg7wm9SrtG/5bKuhac0JrlRAk2L1mqP90r5iyxNbrx1FrO5h+QLq3wzn
-         u/9/7f6WiMHmLKp4W7kd4ZNgnbYs304qcIEa149X5Kl7p2bsEsAurgGu46OiDUgo0KRr
-         cFZEzsVziWoUcb57aiu6qwn2r2hbBluDXvfew=
+        Wed, 19 Aug 2020 12:13:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m20so18582647eds.2;
+        Wed, 19 Aug 2020 09:13:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=svPB6Dx2TnAYZrDOVEx7GGT/OFxWuzJDOOju30QjJAE=;
-        b=UXtOF105GWXc3bxG3/3z3ysuWgY1UiJsGyFdpNh+W+Z30zmB5R9qmakMYtZpn1JZhj
-         rX/4KS6X+X/3cMtpUrvlQlI0WT+dGee4yDX9v9AnTrR9gOduCbcdZhdtZ5KjmPnTNO2l
-         2BhITBaUwftxRtfX1fS5qeONCw8QPKznDCaoHDvV8GF02EV2YqAAMLFdzIDCvtkw2zKh
-         NymxoeGLK7cWob1yOKG4cT0xM3A3YIsh2bqJVBVlyz6PRFtJFSauvorCVyxKHc95bxAI
-         LtJnwtxYwbqjDSZ/1vf6Nrfb6RYi+xYS58ptt4nYCdfDXV8uuqwPbqUHDe1EDzslE+2o
-         e+mg==
-X-Gm-Message-State: AOAM531IUDynx85uOPvXvJzJQyILdq5A0Gp5meR4Kn9IUvyyP9hiQQvN
-        XzaYSyfRRjjQgZxXgEWzhRw5bQ==
-X-Google-Smtp-Source: ABdhPJzcLsplNpOc6XnXL8EJZ1d7DWp1h/KUcd/QKTGpcnw4edJEuDOLVWlRLaoEjg+23g98e/it+A==
-X-Received: by 2002:a62:1d1:: with SMTP id 200mr19296177pfb.161.1597853594084;
-        Wed, 19 Aug 2020 09:13:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id 2sm31342643pfv.27.2020.08.19.09.13.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 09:13:13 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 09:13:11 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     skakit@codeaurora.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-Message-ID: <20200819161311.GF2995789@google.com>
-References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
- <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
- <20200817180158.GD2995789@google.com>
- <1cbbc8cf5c918c6a9eee5ef349707fc6@codeaurora.org>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=EkGUFNS7coQmfUryFTJlFWVBsaHRgnCxXeXJMC4zMxQ=;
+        b=GD1A2S4pNkGNOPqMkfM2ONnsyzY5JazvMhkRoUyWPpe8bpeZBbo0d90heSIegYjS75
+         DF+EHgwOepTOn6aA3nN18AigXBOQFpYzMbcDw350fwaXjPbGm/0NUp20fLl1KY/obrD/
+         5Of2airZVDhki5epwX1dti2kMRv//AJaI00npTgI9ILDFBv5Pfbsva8BFu7F2GJkTg9I
+         q4XtbD7Adi/f/y0sVy8ndOAoy8fh27VRrkeYRFguSYAR7JQcYK9R8RUDINbak9Zv2Vtm
+         ivxc6+H0C6c/VBy2hhA9U/pw5IQYtT3CM2eXL00vC/fa/TdcOZMQEuk67gtD+e838Zgn
+         niuQ==
+X-Gm-Message-State: AOAM5332Br9aqIBJ3YmXZAK7JZa83Icz/zqNahoziLPXuglkOBIS1l9f
+        PtYNazz6wm33YaDxr0NT66M=
+X-Google-Smtp-Source: ABdhPJwP5263fuZESXpeNUQpfcMaGgY5rsdcXOy8N4cFBHEIzeOdA1e94sgmB2rLn2bzLYJkXY8bgg==
+X-Received: by 2002:aa7:db59:: with SMTP id n25mr24634678edt.276.1597853605726;
+        Wed, 19 Aug 2020 09:13:25 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id x10sm17726281eds.21.2020.08.19.09.13.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 09:13:25 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 18:13:23 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 6/8] spi: spi-s3c64xx: Check return values
+Message-ID: <20200819161323.GA8067@kozik-lap>
+References: <20200819124833.GF18122@kozik-lap>
+ <CGME20200819154154eucas1p1e88747d2495e6d1074991419504066df@eucas1p1.samsung.com>
+ <dleftjwo1uzlqg.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1cbbc8cf5c918c6a9eee5ef349707fc6@codeaurora.org>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <dleftjwo1uzlqg.fsf%l.stelmach@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:19:25PM +0530, skakit@codeaurora.org wrote:
-> On 2020-08-17 23:31, Matthias Kaehlcke wrote:
-> > On Fri, Jul 24, 2020 at 09:28:01AM +0530, satya priya wrote:
-> > > Add sleep pin ctrl for BT uart, and also change the bias
-> > > configuration to match Bluetooth module.
-> > > 
-> > > Signed-off-by: satya priya <skakit@codeaurora.org>
-> > > ---
-> > > Changes in V2:
-> > >  - This patch adds sleep state for BT UART. Newly added in V2.
-> > > 
-> > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42
-> > > ++++++++++++++++++++++++++++-----
-> > >  1 file changed, 36 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > index 26cc491..bc919f2 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > @@ -469,20 +469,50 @@
-> > > 
-> > >  &qup_uart3_default {
-> > >  	pinconf-cts {
-> > > -		/*
-> > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
-> > > -		 * the Bluetooth module.
-> > > -		 */
-> > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
-> > 
-> > Has the pull from the Bluetooth module been removed or did the previous
-> > config
-> > incorrectly claim that the Bluetooth module has a pull-down?
-> > 
+On Wed, Aug 19, 2020 at 05:41:43PM +0200, Lukasz Stelmach wrote:
+> It was <2020-08-19 śro 14:48>, when Krzysztof Kozlowski wrote:
+> > On Wed, Aug 19, 2020 at 02:32:06PM +0200, Łukasz Stelmach wrote:
+> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >> ---
+> >>  drivers/spi/spi-s3c64xx.c | 12 ++++++++++++
+> >>  1 file changed, 12 insertions(+)
+> >
+> > Oh, come on, stop fixing the same local issue without fixing bigger
+> > picture... or at least documenting why bigger picture does not have to be
+> > fixed and simple 'return' is enough.
+> >
+> > That's the third, same fix for the same problem.
+> >
+> > https://lore.kernel.org/lkml/20190314064202.14864-1-kjlu@umn.edu/
+> > https://lore.kernel.org/lkml/20170207204520.h2eo3yn5kge56lk7@kozik-lap/
 > 
-> The previous config was incorrect, so we corrected it to match the pull of
-> BT.
-
-The pull config of the BT controller varies depending on its state, could
-you clarify which state you intend to match?
-
+> No wonder. There is a possible NULL dereference below. Now at least we
+> know something about conditions that led to this.
 > 
-> > >  		pins = "gpio38";
-> > > +		bias-disable;
-> > > +	};
-> > > +
-> > > +	pinconf-rts {
-> > > +		/* We'll drive 39 (RTS), so configure pull-down */
-> > > +		pins = "gpio39";
-> > > +		drive-strength = <2>;
-> > >  		bias-pull-down;
-> > > +	};
-> > > +
-> > > +	pinconf-tx {
-> > > +		/* We'll drive 40 (TX), so no pull */
-> > 
-> > The rationales for RTS and TX contradict each other. According to the
-> > comment
-> > the reason to configure a pull-down on RTS is that it is driven by the
-> > host.
-> > Then for TX the reason to configure no pull is that it is driven by the
-> > host.
-> > 
-> > Please make sure the comments *really* describe the rationale, otherwise
-> > they
-> > are just confusing.
-> 
-> The rationale for RTS is that we don't want it to be floating and want to
-> make sure that it is pulled down, to receive bytes. Will modify the comment
-> mentioning the same.
+> Should I drop the entire patch, or just the dmaengine_prep_slave_sg() part?
 
-Could you clarify what you mean with "to receive bytes"?
+The best would be to really go through the call stack and handle the
+error properly.
 
-Thanks
+This means returning an error code and propagating it further. It is not
+a trivial change...
 
-Matthias
+Best regards,
+Krzysztof
