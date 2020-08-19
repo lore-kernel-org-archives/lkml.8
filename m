@@ -2,157 +2,76 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A311C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AC3206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="imGxWJhr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L96aS3EG"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6E7206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgHSMiU (ORCPT
+        id S1726820AbgHSMic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
+        Wed, 19 Aug 2020 08:38:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgHSMiB (ORCPT
+        with ESMTP id S1728165AbgHSMht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:38:01 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D3CC061757;
-        Wed, 19 Aug 2020 05:38:01 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:37:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597840679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=lwW59TWfLQL9/3bZCi/CgmH2rjvRhAnceBj2jd3SReo=;
-        b=imGxWJhrhkFrnQ6z3tR+Tn958XvlBhli27vWGVVlvnb5U7529LWEvoBmnFzBrt9h+KvJzb
-        J/Mi16BTNBaP0RDORRxDLgpxddkXb5gD+rmjgvE2WIrTdPdl4cfYYEZ/9QzGi7IQZ1FYMM
-        XLzWdkNdAHqgU7t/6dZaHSTT3veW0NELHlDBrdVD++uBEW6+Puo6LPhvtFwOMLcWk2oAuC
-        Zf1OB9ZrA8yFytDcs/+GHiWmniFMZMMIJkANU4Pd7D4JA05/OjLdNtd+KB6TLGHQRkx9bY
-        L7Gbmdxj1Dh5CM+oK32cn0Ak6bA9oEQ1grOtb+lgIgQwe0aI8OORV+NWMyrV7w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597840679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=lwW59TWfLQL9/3bZCi/CgmH2rjvRhAnceBj2jd3SReo=;
-        b=L96aS3EG2/dopYg65zffBoCQs2OJ3KlrwOAI5sFEBi2GymemUk0tDk5n9DAPYbj0sZWHE1
-        U8+k+5QFGSljGJCg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
- preemption
-Message-ID: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Wed, 19 Aug 2020 08:37:49 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01DC1C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:37:48 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by laurent.telenet-ops.be with bizsmtp
+        id HQYk2300Q4C55Sk01QYkUN; Wed, 19 Aug 2020 14:32:44 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NGm-0002Di-Af; Wed, 19 Aug 2020 14:32:44 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NGm-0004wu-9f; Wed, 19 Aug 2020 14:32:44 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] MAINTAINERS: Add missing header files to BLOCK LAYER section
+Date:   Wed, 19 Aug 2020 14:32:43 +0200
+Message-Id: <20200819123243.18983-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During a context switch the scheduler invokes wq_worker_sleeping() with
-disabled preemption. Disabling preemption is needed because it protects
-access to `worker->sleeping'. As an optimisation it avoids invoking
-schedule() within the schedule path as part of possible wake up (thus
-preempt_enable_no_resched() afterwards).
+The various <linux/blk*.h> header files are part of the Block Layer.
+Add them to the corresponding section in the MAINTAINERS file, so
+scripts/get_maintainer.pl will pick them up.
 
-The io-wq has been added to the mix in the same section with disabled
-preemption. This breaks on PREEMPT_RT because io_wq_worker_sleeping()
-acquires a spinlock_t. Also within the schedule() the spinlock_t must be
-acquired after tsk_is_pi_blocked() otherwise it will block on the sleeping lock
-again while scheduling out.
-
-While playing with `io_uring-bench' I didn't notice a significant
-latency spike after converting io_wqe::lock to a raw_spinlock_t. The
-latency was more or less the same.
-
-I don't see a significant reason why this lock should become a
-raw_spinlock_t therefore I suggest to move it after the
-tsk_is_pi_blocked() check.
-The io_worker::flags are usually modified under the lock except in the
-scheduler path. Ideally the lock is always acquired since the
-IO_WORKER_F_UP flag is set early in the startup and IO_WORKER_F_RUNNING
-should be set unless the task loops within schedule(). I *think* ::flags
-requires the same protection like workqueue's ::sleeping and therefore I
-move the check within the locked section.
-
-Any feedback on this vs raw_spinlock_t?
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- fs/io-wq.c          |  8 ++++----
- kernel/sched/core.c | 10 +++++-----
- 2 files changed, 9 insertions(+), 9 deletions(-)
+v2:
+  - Add Reviewed-by.
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index e92c4724480ca..a7e07b3ac5b95 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -623,15 +623,15 @@ void io_wq_worker_sleeping(struct task_struct *tsk)
- 	struct io_worker *worker = kthread_data(tsk);
- 	struct io_wqe *wqe = worker->wqe;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 65141ec0a394a3f5..39d71867685be94b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3207,6 +3207,7 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+ F:	block/
+ F:	drivers/block/
++F:	include/linux/blk*
+ F:	kernel/trace/blktrace.c
+ F:	lib/sbitmap.c
  
-+	spin_lock_irq(&wqe->lock);
- 	if (!(worker->flags & IO_WORKER_F_UP))
--		return;
-+		goto out;
- 	if (!(worker->flags & IO_WORKER_F_RUNNING))
--		return;
-+		goto out;
- 
- 	worker->flags &= ~IO_WORKER_F_RUNNING;
--
--	spin_lock_irq(&wqe->lock);
- 	io_wqe_dec_running(wqe, worker);
-+out:
- 	spin_unlock_irq(&wqe->lock);
- }
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3bbb60b97c73c..b76c0f27bd95e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4694,18 +4694,18 @@ static inline void sched_submit_work(struct task_struct *tsk)
- 	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
- 	 * requires it.
- 	 */
--	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
-+	if (tsk->flags & PF_WQ_WORKER) {
- 		preempt_disable();
--		if (tsk->flags & PF_WQ_WORKER)
--			wq_worker_sleeping(tsk);
--		else
--			io_wq_worker_sleeping(tsk);
-+		wq_worker_sleeping(tsk);
- 		preempt_enable_no_resched();
- 	}
- 
- 	if (tsk_is_pi_blocked(tsk))
- 		return;
- 
-+	if (tsk->flags & PF_IO_WORKER)
-+		io_wq_worker_sleeping(tsk);
-+
- 	/*
- 	 * If we are going to sleep and we have plugged IO queued,
- 	 * make sure to submit it to avoid deadlocks.
 -- 
-2.28.0
+2.17.1
 
