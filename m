@@ -2,111 +2,67 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BDBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7763AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6F82083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBEE207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgHSL2m (ORCPT
+        id S1728124AbgHSL27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:28:42 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43158 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgHSL2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:28:16 -0400
-Received: by mail-io1-f72.google.com with SMTP id f19so14011449iol.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:28:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=fZ+jHgbDVnTePiqQLf+qDPU79cvKlvXb87FOaXtnhP4=;
-        b=Zb9yA8a19zdq5w9ohsC36wWjutLWejKB7av4oBBSY6YsgtJuCdBCJDAjrPAxKhHh+H
-         7PCBGXcXPPv7gulvqYgvSnfClniRRudzqD1YYIbq6zLNaWfNUXB8o6Ug/Zw4jYcru+5J
-         n3xm0jmJbroSsMmp4XEuIJBjCUlnrKDYrhTMTiuyLwqitFs0VvLYfECLnPFjrhTQKqrH
-         SIisxanDAqoKpUM/asOeT5p75U7d+DyG12u1XYNQG+A0+pNfutMjT6X+JFyD9JMD3rFv
-         rWziaTAmGFdwCxat2srJxH+RBrb8ZUSWfGIJw7KByS6r92Y3MLE3hdAgtjAYWRspFSuW
-         oK7w==
-X-Gm-Message-State: AOAM530ETpJwav/S7krBqWMOFcxErOuZnGv3ouPMdASuczMcLWYEzS+9
-        IcN+Y/jz97BocP5tIBB8gP6gn9Dmbmc4tAQfWxRZKJqgkMgf
-X-Google-Smtp-Source: ABdhPJyYxCaTjoXI5lwBslHbXVUaP0mdunUILc4ZtNELRPRKvkHL8k2pW1d50vmUXXUCxuPOh/VozsgqiR+8Aerk512vkbZi4J8M
+        Wed, 19 Aug 2020 07:28:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728106AbgHSL2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:28:33 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 65B808222144AFFC17C0;
+        Wed, 19 Aug 2020 19:28:32 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
+ 19:28:27 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <ysato@users.sourceforge.jp>, <dalias@libc.org>,
+        <linux-sh@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] sh: mach-sh03: remove duplicate include
+Date:   Wed, 19 Aug 2020 19:26:17 +0800
+Message-ID: <20200819112617.6015-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:d7cd:: with SMTP id g13mr9475062ilq.51.1597836495670;
- Wed, 19 Aug 2020 04:28:15 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 04:28:15 -0700
-In-Reply-To: <0000000000008e983905ac9d0182@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bbd1ff05ad394c92@google.com>
-Subject: Re: KASAN: use-after-free Read in rtl_fw_do_work
-From:   syzbot <syzbot+ff4b26b0bfbff2dc7960@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, davem@davemloft.net, kuba@kernel.org,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, pkshih@realtek.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Remove linux/rtc.h which is included more than once
 
-HEAD commit:    28157b8c USB: Better name for __check_usb_generic()
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=1064697a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccafc70ac3d5f49c
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff4b26b0bfbff2dc7960
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f0a00e900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162bc289900000
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ arch/sh/boards/mach-sh03/rtc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ff4b26b0bfbff2dc7960@syzkaller.appspotmail.com
-
-usb 6-1: Direct firmware load for rtlwifi/rtl8192cufw_TMSC.bin failed with error -2
-usb 6-1: Direct firmware load for rtlwifi/rtl8192cufw.bin failed with error -2
-==================================================================
-BUG: KASAN: use-after-free in rtl_fw_do_work+0x407/0x430 drivers/net/wireless/realtek/rtlwifi/core.c:87
-Read of size 8 at addr ffff8881ca9aff38 by task kworker/0:1/328
-
-CPU: 0 PID: 328 Comm: kworker/0:1 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x1c/0x210 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
- rtl_fw_do_work+0x407/0x430 drivers/net/wireless/realtek/rtlwifi/core.c:87
- request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-The buggy address belongs to the page:
-page:00000000fcdef481 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1ca9af
-flags: 0x200000000000000()
-raw: 0200000000000000 0000000000000000 ffffea00072a6bc8 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881ca9afe00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff8881ca9afe80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff8881ca9aff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                        ^
- ffff8881ca9aff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff8881ca9b0000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+diff --git a/arch/sh/boards/mach-sh03/rtc.c b/arch/sh/boards/mach-sh03/rtc.c
+index 8b23ed7c201c..165e2ccaab4d 100644
+--- a/arch/sh/boards/mach-sh03/rtc.c
++++ b/arch/sh/boards/mach-sh03/rtc.c
+@@ -14,7 +14,6 @@
+ #include <linux/rtc.h>
+ #include <linux/spinlock.h>
+ #include <linux/io.h>
+-#include <linux/rtc.h>
+ #include <linux/platform_device.h>
+ 
+ #define RTC_BASE	0xb0000000
+-- 
+2.17.1
 
