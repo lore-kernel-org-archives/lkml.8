@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC4C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6023C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34AA920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A70B207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvDYup/K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlyEM40X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgHSTAR (ORCPT
+        id S1727039AbgHSTAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        Wed, 19 Aug 2020 15:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgHSS75 (ORCPT
+        with ESMTP id S1727001AbgHSTAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:59:57 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350E5C061757;
-        Wed, 19 Aug 2020 11:59:56 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 74so12126943pfx.13;
-        Wed, 19 Aug 2020 11:59:56 -0700 (PDT)
+        Wed, 19 Aug 2020 15:00:15 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF84C061757;
+        Wed, 19 Aug 2020 12:00:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 189so11198396pgg.13;
+        Wed, 19 Aug 2020 12:00:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Mos/Rf0TNw2iPmzlPoU65K3iMb1m4mvroOxp61hE7Bc=;
-        b=WvDYup/Kp1NP5gsb3QLWv7Jw7zQT9EK0LsuAPX29ihhdIYei2e6sP8ZOSwFbJBVA7A
-         ta2CILvXyFXMkCKX1E3BhS7dgpZEurOt3qSG40eL6bvDwDjQyCIdmnK3NU9w0J4j2BgC
-         JJZUCVs3oSeiJClFYUixNODeI5caI1l6/cYxvQErqUZ+qF5k8O+TUH7FVa5pULf+/AWO
-         uqLQdyb5Z7Qz0ayAJOVWiVRNPc7iZioUD1GrHfM30nBFXUVftE4ibvYfffXNe8hM488y
-         d9HcZpaPJqC70ZvkdmRfMqp8kUEffjDVwNmtD3oJPusUE94/S01C7o/XL/NmeYKBcn2m
-         mGug==
+        bh=0Gdix+uPKbEr2q1rAkmQ4/zXt/qoiwYZqyXTLXnmDDk=;
+        b=XlyEM40XfAobLwrCnJxZ+PpEMMRq+xMolyrVrj2Tww7bjz1hZdQsPVecl2oXGO2qAP
+         Q8Oq7jWKduW4VFOrONqraQQKRNouWLsvhjGuFErzhO9S5d5F2F/LoY+IivVJja8W2rVz
+         G0H9ILJHMA16FuIjSL/G3o8gHb32786BH7x3EkMOnGeBgqiczEFCZTDuIt7Re78Zyo11
+         dorsoAnyjfy+je/HYLmnVCi5njPmKRQa/icsPmDmqBYtF5I2TOYrIg4gQfkxUE2Eah8l
+         +sM0imdXocGmRkbXfFZh4hyoamEY3SxoIce9Zk0IRNLN6x0XdYQgCr5VLk0+/xltYYtI
+         OXYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Mos/Rf0TNw2iPmzlPoU65K3iMb1m4mvroOxp61hE7Bc=;
-        b=OOqa9faRr4XMvJj2S0BcsFxk06Mo6hKr2LQ3Qulj2LBM9CYG8rhkb4K3q3I3RyHeNN
-         KuCJ4siP1J5DYAmwpowU+WzeExXQLdDLVLMduJGU1zWjNzLVfqfPKmrUfWxsn4buamRw
-         llW68GUi6bJeJh998kO5jK491KWMq16iLczY1oOF7vHpPJdTzalzCVsfU8ECcyX2homu
-         TWpDCnYvI8+CbyDM37hypf+lGPF6++vw3oBDKnJGmE3v97l7+doddfk2GT7mBYubdezb
-         z2kqUHN9RD5YgKWF/2l0qCx7/uTxLfDqYUQuCrfUdv3gH7DlP7iNch1MI5puA/D4PubD
-         JIbA==
-X-Gm-Message-State: AOAM533jk2zrvVzm60Kc63VMM+qrit/2W76wMGSbNQtEkAOdyAxOXaVI
-        yDLbwFfaI2JjhU3NVJpeUKw=
-X-Google-Smtp-Source: ABdhPJwDsXvmSlbi9dGwbb/sMCjJSWXePcYUjMwpqIZJfFJhndLVz+PO9CUrhtWaRPyT2nFY++fp4g==
-X-Received: by 2002:a63:5552:: with SMTP id f18mr16741377pgm.298.1597863596269;
-        Wed, 19 Aug 2020 11:59:56 -0700 (PDT)
+        bh=0Gdix+uPKbEr2q1rAkmQ4/zXt/qoiwYZqyXTLXnmDDk=;
+        b=B0eMigUuNQqWLxEQeOG+1Crz0EJ9YehmjLn2k39gidfdIn9cjMPnPXLr5JyETMId5n
+         wLKpyo6Rt1AMm9/AgVXfaq/OL8eW7ATCl2BiAD+l2EfSmIBZND2AE2r8MWfSr7rYEfle
+         P8/9Bv4sWR8pNJ6mrHhf5vRBtQEHqrV98Z0nf5tDNR5I1jxnmTJ2WvGjyRrcjP3LcYdR
+         yFSqrUhOBsz1uzYcLuogzk6GeftjGO0JWFx4pa8EOSZvCnTnaZTIa8Fz7FOmNMGUjn9b
+         8ozbGxhm3V1jQX7O+xu9CTgTaywiNuNXf7pzFjVjkcczZtXLQZhHhSVF8AUjvAP5ucfa
+         6aIQ==
+X-Gm-Message-State: AOAM533Ja2TJmbOfEA0Aj99GHQN2Lv6SwJKKwI0JlfSLrbjDamdJ0FYU
+        buFpnZlVZKX8+fjckonnlaM=
+X-Google-Smtp-Source: ABdhPJwNjXe8tcUGVq2N5g8hi4ZArg84gR7x1vh/f1D6Q037+6BQVLbl9UZX8Prk6wIYdvu218PL0A==
+X-Received: by 2002:a63:1342:: with SMTP id 2mr17049990pgt.214.1597863614285;
+        Wed, 19 Aug 2020 12:00:14 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id o134sm29149305pfg.200.2020.08.19.11.59.51
+        by smtp.gmail.com with ESMTPSA id o134sm29149305pfg.200.2020.08.19.12.00.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:59:55 -0700 (PDT)
+        Wed, 19 Aug 2020 12:00:13 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v3 09/12] fbdev: i740fb: use generic power management
-Date:   Thu, 20 Aug 2020 00:26:51 +0530
-Message-Id: <20200819185654.151170-10-vaibhavgupta40@gmail.com>
+Subject: [PATCH v3 12/12] fbdev: arkfb: use generic power management
+Date:   Thu, 20 Aug 2020 00:26:54 +0530
+Message-Id: <20200819185654.151170-13-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819185654.151170-1-vaibhavgupta40@gmail.com>
 References: <20200819185654.151170-1-vaibhavgupta40@gmail.com>
@@ -101,45 +101,50 @@ define a "struct dev_pm_ops" variable to bind PM callbacks. Also, remove
 unnecessary calls to the PCI Helper functions along with the legacy
 .suspend & .resume bindings.
 
-The i740fb_suspend() is not designed to function in the case of Freeze.
+The ark_pci_suspend() is not designed to function in the case of Freeze.
 Thus, the code checked for "if (state.event == PM_EVENT_FREEZE....)". This
 is because, in the legacy framework, this callback was invoked even in the
 event of Freeze. Hence, added the load of unnecessary function-call.
 
 The goal can be achieved by binding the callback with only ".suspend" and
-".poweroff" in the "i740fb_pm_ops" const variable. This also avoids the
-step of checking "if (state.event == PM_EVENT_FREEZE....)" every time the
-callback is invoked.
+".poweroff" in the "ark_pci_pm_ops" const variable. This also avoids the
+step of checking "state.event == PM_EVENT_FREEZE" every time the callback
+is invoked.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/i740fb.c | 40 +++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ drivers/video/fbdev/arkfb.c | 41 +++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/video/fbdev/i740fb.c b/drivers/video/fbdev/i740fb.c
-index c65ec7386e87..8d7f06fc8a5a 100644
---- a/drivers/video/fbdev/i740fb.c
-+++ b/drivers/video/fbdev/i740fb.c
-@@ -1175,16 +1175,11 @@ static void i740fb_remove(struct pci_dev *dev)
- 	}
+diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
+index 11ab9a153860..edf169d0816e 100644
+--- a/drivers/video/fbdev/arkfb.c
++++ b/drivers/video/fbdev/arkfb.c
+@@ -1085,12 +1085,11 @@ static void ark_pci_remove(struct pci_dev *dev)
  }
  
+ 
 -#ifdef CONFIG_PM
--static int i740fb_suspend(struct pci_dev *dev, pm_message_t state)
-+static int __maybe_unused i740fb_suspend(struct device *dev)
+ /* PCI suspend */
+ 
+-static int ark_pci_suspend (struct pci_dev* dev, pm_message_t state)
++static int __maybe_unused ark_pci_suspend(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct i740fb_par *par = info->par;
+ 	struct arkfb_info *par = info->par;
  
--	/* don't disable console during hibernation and wakeup from it */
--	if (state.event == PM_EVENT_FREEZE || state.event == PM_EVENT_PRETHAW)
--		return 0;
--
+ 	dev_info(info->device, "suspend\n");
+@@ -1098,7 +1097,7 @@ static int ark_pci_suspend (struct pci_dev* dev, pm_message_t state)
  	console_lock();
  	mutex_lock(&(par->open_lock));
  
-@@ -1197,19 +1192,15 @@ static int i740fb_suspend(struct pci_dev *dev, pm_message_t state)
+-	if ((state.event == PM_EVENT_FREEZE) || (par->ref_count == 0)) {
++	if (par->ref_count == 0) {
+ 		mutex_unlock(&(par->open_lock));
+ 		console_unlock();
+ 		return 0;
+@@ -1106,10 +1105,6 @@ static int ark_pci_suspend (struct pci_dev* dev, pm_message_t state)
  
  	fb_set_suspend(info, 1);
  
@@ -150,61 +155,65 @@ index c65ec7386e87..8d7f06fc8a5a 100644
  	mutex_unlock(&(par->open_lock));
  	console_unlock();
  
- 	return 0;
- }
+@@ -1119,9 +1114,9 @@ static int ark_pci_suspend (struct pci_dev* dev, pm_message_t state)
  
--static int i740fb_resume(struct pci_dev *dev)
-+static int __maybe_unused i740fb_resume(struct device *dev)
+ /* PCI resume */
+ 
+-static int ark_pci_resume (struct pci_dev* dev)
++static int __maybe_unused ark_pci_resume(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct i740fb_par *par = info->par;
+ 	struct arkfb_info *par = info->par;
  
- 	console_lock();
-@@ -1218,11 +1209,6 @@ static int i740fb_resume(struct pci_dev *dev)
+ 	dev_info(info->device, "resume\n");
+@@ -1132,14 +1127,6 @@ static int ark_pci_resume (struct pci_dev* dev)
  	if (par->ref_count == 0)
  		goto fail;
  
 -	pci_set_power_state(dev, PCI_D0);
 -	pci_restore_state(dev);
+-
 -	if (pci_enable_device(dev))
 -		goto fail;
 -
- 	i740fb_set_par(info);
+-	pci_set_master(dev);
+-
+ 	arkfb_set_par(info);
  	fb_set_suspend(info, 0);
  
-@@ -1231,10 +1217,17 @@ static int i740fb_resume(struct pci_dev *dev)
+@@ -1148,10 +1135,17 @@ static int ark_pci_resume (struct pci_dev* dev)
  	console_unlock();
  	return 0;
  }
 -#else
--#define i740fb_suspend NULL
--#define i740fb_resume NULL
+-#define ark_pci_suspend NULL
+-#define ark_pci_resume NULL
 -#endif /* CONFIG_PM */
 +
-+static const struct dev_pm_ops i740fb_pm_ops = {
++static const struct dev_pm_ops ark_pci_pm_ops = {
 +#ifdef CONFIG_PM_SLEEP
-+	.suspend	= i740fb_suspend,
-+	.resume		= i740fb_resume,
++	.suspend	= ark_pci_suspend,
++	.resume		= ark_pci_resume,
 +	.freeze		= NULL,
-+	.thaw		= i740fb_resume,
-+	.poweroff	= i740fb_suspend,
-+	.restore	= i740fb_resume,
-+#endif /* CONFIG_PM_SLEEP */
++	.thaw		= ark_pci_resume,
++	.poweroff	= ark_pci_suspend,
++	.restore	= ark_pci_resume,
++#endif
 +};
  
- #define I740_ID_PCI 0x00d1
- #define I740_ID_AGP 0x7800
-@@ -1251,8 +1244,7 @@ static struct pci_driver i740fb_driver = {
- 	.id_table	= i740fb_id_table,
- 	.probe		= i740fb_probe,
- 	.remove		= i740fb_remove,
--	.suspend	= i740fb_suspend,
--	.resume		= i740fb_resume,
-+	.driver.pm	= &i740fb_pm_ops,
+ /* List of boards that we are trying to support */
+ 
+@@ -1168,8 +1162,7 @@ static struct pci_driver arkfb_pci_driver = {
+ 	.id_table	= ark_devices,
+ 	.probe		= ark_pci_probe,
+ 	.remove		= ark_pci_remove,
+-	.suspend	= ark_pci_suspend,
+-	.resume		= ark_pci_resume,
++	.driver.pm	= &ark_pci_pm_ops,
  };
  
- #ifndef MODULE
+ /* Cleanup */
 -- 
 2.28.0
 
