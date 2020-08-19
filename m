@@ -2,117 +2,309 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCA7206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF1C206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HSSXVGM9"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="otdNTkSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgHSJgD (ORCPT
+        id S1727097AbgHSJiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:36:03 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:58787 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726949AbgHSJf5 (ORCPT
+        Wed, 19 Aug 2020 05:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgHSJhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:35:57 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 8KVWkbA44uuXO8KVZkg7t5; Wed, 19 Aug 2020 11:35:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1597829755; bh=CxYTG2B8CfhRvUngLtu1GxHqIUKSHBmXRcAVRnBlCTA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=HSSXVGM9VnGL3chhDro9FPZdZUl2h85fuzWoJTUO7sXVBf4GW5AfruNWlAao9/V5d
-         B6quzjQX8jVemXpGnS54YGoH+fc/D5AqVWD8LhNK8C3jke0f4e57mmIyHkrqntnfmO
-         Rxvehgfk+Ap1/KIdHOjilOsxok5wQX72PrNkbj+RSEQwVaYGbfSkKN8GYl9hW3Htp2
-         XOH1Ckviccu9HqY9hsnSAASFuoE+60Jq8gEXEsXuYgLP9oA2BsShLTniARgBXldKMy
-         j6GDcGeEHdblIeWSQdGDrVTm+MaDeKJ6cdgALuQQVVSN9oHaphrXut9Pg+/OUQ14FN
-         O6rSBI0VgimKQ==
-Subject: Re: [PATCH v2 5/6] media: s5p-mfc: Use standard frame skip mode
- control
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>
-References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
- <20200721074538.505-6-stanimir.varbanov@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b8b3d048-6f3b-4874-ee6a-547b8d6155b0@xs4all.nl>
-Date:   Wed, 19 Aug 2020 11:35:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 05:37:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80CC5C061343
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:37:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so20835609wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sAJPVYcsrbGx3N5LhQWWl+joMPHyHeZRVA3ccro29ww=;
+        b=otdNTkSBdCH8NouPaZoJ/IoaSoOX4VJpc/vHghqMUvq3A0/XmtaP151GhG7DgdwGxr
+         bnqWSyLJhzE9CdKrGzMvOqz/zt4s8DH5HbjiQVOn20o+5n82MPltEHrPuhi0HJTIHpcc
+         gRhDcO7Nc4DoUZuH7GZtQRWPYjb47f9aAzMv4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sAJPVYcsrbGx3N5LhQWWl+joMPHyHeZRVA3ccro29ww=;
+        b=DRQsf6CPJU8TE8Kza5JYfrj+2cjY+1sEPjn7JNzjixB9PMk2s8q9Kgwp0E6cJvqYtn
+         nmOnAj3aqC+DNoMhfsXeNzDk3GZMlHytgdHQERKWjLbi6WJPWUryKJlWf+TvyzUWKt0b
+         +vdQMTHqR7MX7E4DKhvt450UB4xRak0604WsdRoc9Lrr3NxpDJycYAvt3gyUv1Wm+X8M
+         znsi9xfCTv5ss5tqtdXmc/3a1n1uzpYwD9uYRLaleq+8lGVwJYnCYhAZK6AF1fEyHFqt
+         1dcctCwmyC9g31QjY6Mp7lCSfpp/tIQAm4NzMuNPzxMpH4P1DNh14qBazWeM0zWKnYYn
+         R5rQ==
+X-Gm-Message-State: AOAM5304NNNfYP+odjeWPF/GK8iagJ5iawgNZ/V0ZPPymJVLpAZaG1+n
+        nAhCWAbNv8p7ggcvLKY0KyZxEA==
+X-Google-Smtp-Source: ABdhPJwH3BKtvXWM6LtGEcfQiLJDAcZ6ofcvTHAtBCdHgYGX0o6naRXxaXP3o7K6v2ojtD/Vd/n67w==
+X-Received: by 2002:a05:6000:150:: with SMTP id r16mr23638240wrx.63.1597829865824;
+        Wed, 19 Aug 2020 02:37:45 -0700 (PDT)
+Received: from antares.lan (c.d.0.4.4.2.3.3.e.9.1.6.6.d.0.6.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:60d6:619e:3324:40dc])
+        by smtp.gmail.com with ESMTPSA id 3sm4204565wms.36.2020.08.19.02.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 02:37:45 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     jakub@cloudflare.com, john.fastabend@gmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next 1/6] net: sk_msg: simplify sk_psock initialization
+Date:   Wed, 19 Aug 2020 10:24:31 +0100
+Message-Id: <20200819092436.58232-2-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200819092436.58232-1-lmb@cloudflare.com>
+References: <20200819092436.58232-1-lmb@cloudflare.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721074538.505-6-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGCViA1b8puglAEz3WxnqYkrqYyMEto5toYfpM9n2g+gfWWbBINTBR4GkFtD8Lq9CXqGzjTfaJa3gu6/5x4uVJrfp6YFBFFH8Q7bpqYxp4BCFGENyq02
- 55/GM9SJflSITAwdYuklOz7L1UN/vFnLCwM6nml6ltkDYP4Bhqp/z5rhCfHiW7t4SNQtBxxgJnJnkj323v7aRNZbQ3kAgOHYrrCe+Q2XA3RHB4f3dz+JBNFo
- A04a+lpdQ07euRsNdDx5wNcbs8Yh8G65i0hbT7AbaJAD6eMz/ID3EmlvmcriGeDZPgqPlItqVDG9SfI/L9CbClox/2/ex6v2pB8bU0x3/WF39KJWLm0McOPA
- jNCESRo6JiI8U5dSSTVbpUfEAV+MiBYVvPtzv4D4ScFjgtTPJ74n6pwW60MLI0WM5CTbP5WhGSDqHQn6B694/aav22pWTurXtazejC37T0rc3otxHb7I6x1s
- 9ZVHCOClltdEGQ/yFpQQOXLJJvl0BgsF6Rdf7Wc0XuIUs+lp91wW+xFvW4aFASAK4jcmchwea3C/iZ951qyet3TtW0xtOoqYl4MLWX11Q93l7JNdWF7CHxbY
- yU9Rc8RNrFVkw05FpwvovGMh30rYLvsrUZ5IcOoLa9rLHq7pJKeLxPp+hMbGf04Kjpi272ofaycedzmamEisuLLDQdAQsD/h9XoKFPAuJYQIjLFWDVSpifWa
- 0V9UERKo21Y=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/07/2020 09:45, Stanimir Varbanov wrote:
-> Use the standard menu control for frame skip mode in the MFC
-> driver. The legacy private menu control is kept for backward
-> compatibility.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Initializing psock->sk_proto and other saved callbacks is only
+done in sk_psock_update_proto, after sk_psock_init has returned.
+The logic for this is difficult to follow, and needlessly complex.
 
-Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Instead, initialize psock->sk_proto whenever we allocate a new
+psock. Additionally, assert the following invariants:
 
-Regards,
+* The SK has no ULP: ULP does it's own finagling of sk->sk_prot
+* sk_user_data is unused: we need it to store sk_psock
 
-	Hans
+Protect our access to sk_user_data with sk_callback_lock, which
+is what other users like reuseport arrays, etc. do.
 
-> ---
->  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
-> index 912fe0c5ab18..3092eb6777a5 100644
-> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
-> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
-> @@ -261,6 +261,11 @@ static struct mfc_control controls[] = {
->  		.menu_skip_mask = 0,
->  		.default_value = V4L2_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE_DISABLED,
->  	},
-> +	{
-> +		.id = V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE,
-> +		.maximum = V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT,
-> +		.default_value = V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED,
-> +	},
->  	{
->  		.id = V4L2_CID_MPEG_MFC51_VIDEO_RC_FIXED_TARGET_BIT,
->  		.type = V4L2_CTRL_TYPE_BOOLEAN,
-> @@ -1849,6 +1854,7 @@ static int s5p_mfc_enc_s_ctrl(struct v4l2_ctrl *ctrl)
->  		p->seq_hdr_mode = ctrl->val;
->  		break;
->  	case V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE:
-> +	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
->  		p->frame_skip_mode = ctrl->val;
->  		break;
->  	case V4L2_CID_MPEG_MFC51_VIDEO_RC_FIXED_TARGET_BIT:
-> 
+The result is that an sk_psock is always fully initialized, and
+that psock->sk_proto is always the "original" struct proto.
+The latter allows us to use psock->sk_proto when initializing
+IPv6 TCP / UDP callbacks for sockmap.
+
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+---
+ include/linux/skmsg.h | 17 -----------------
+ net/core/skmsg.c      | 34 ++++++++++++++++++++++++++++------
+ net/core/sock_map.c   | 14 ++++----------
+ net/ipv4/tcp_bpf.c    | 13 +++++--------
+ net/ipv4/udp_bpf.c    |  9 ++++-----
+ 5 files changed, 41 insertions(+), 46 deletions(-)
+
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 1e9ed840b9fc..3119928fc103 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -340,23 +340,6 @@ static inline void sk_psock_update_proto(struct sock *sk,
+ 					 struct sk_psock *psock,
+ 					 struct proto *ops)
+ {
+-	/* Initialize saved callbacks and original proto only once, since this
+-	 * function may be called multiple times for a psock, e.g. when
+-	 * psock->progs.msg_parser is updated.
+-	 *
+-	 * Since we've not installed the new proto, psock is not yet in use and
+-	 * we can initialize it without synchronization.
+-	 */
+-	if (!psock->sk_proto) {
+-		struct proto *orig = READ_ONCE(sk->sk_prot);
+-
+-		psock->saved_unhash = orig->unhash;
+-		psock->saved_close = orig->close;
+-		psock->saved_write_space = sk->sk_write_space;
+-
+-		psock->sk_proto = orig;
+-	}
+-
+ 	/* Pairs with lockless read in sk_clone_lock() */
+ 	WRITE_ONCE(sk->sk_prot, ops);
+ }
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 6a32a1fd34f8..1c81caf9630f 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -494,14 +494,34 @@ static void sk_psock_backlog(struct work_struct *work)
+ 
+ struct sk_psock *sk_psock_init(struct sock *sk, int node)
+ {
+-	struct sk_psock *psock = kzalloc_node(sizeof(*psock),
+-					      GFP_ATOMIC | __GFP_NOWARN,
+-					      node);
+-	if (!psock)
+-		return NULL;
++	struct sk_psock *psock;
++	struct proto *prot;
+ 
++	write_lock_bh(&sk->sk_callback_lock);
++
++	if (inet_csk_has_ulp(sk)) {
++		psock = ERR_PTR(-EINVAL);
++		goto out;
++	}
++
++	if (sk->sk_user_data) {
++		psock = ERR_PTR(-EBUSY);
++		goto out;
++	}
++
++	psock = kzalloc_node(sizeof(*psock), GFP_ATOMIC | __GFP_NOWARN, node);
++	if (!psock) {
++		psock = ERR_PTR(-ENOMEM);
++		goto out;
++	}
++
++	prot = READ_ONCE(sk->sk_prot);
+ 	psock->sk = sk;
+-	psock->eval =  __SK_NONE;
++	psock->eval = __SK_NONE;
++	psock->sk_proto = prot;
++	psock->saved_unhash = prot->unhash;
++	psock->saved_close = prot->close;
++	psock->saved_write_space = sk->sk_write_space;
+ 
+ 	INIT_LIST_HEAD(&psock->link);
+ 	spin_lock_init(&psock->link_lock);
+@@ -516,6 +536,8 @@ struct sk_psock *sk_psock_init(struct sock *sk, int node)
+ 	rcu_assign_sk_user_data_nocopy(sk, psock);
+ 	sock_hold(sk);
+ 
++out:
++	write_unlock_bh(&sk->sk_callback_lock);
+ 	return psock;
+ }
+ EXPORT_SYMBOL_GPL(sk_psock_init);
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 119f52a99dc1..abe4bac40db9 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -184,8 +184,6 @@ static int sock_map_init_proto(struct sock *sk, struct sk_psock *psock)
+ {
+ 	struct proto *prot;
+ 
+-	sock_owned_by_me(sk);
+-
+ 	switch (sk->sk_type) {
+ 	case SOCK_STREAM:
+ 		prot = tcp_bpf_get_proto(sk, psock);
+@@ -272,8 +270,8 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
+ 		}
+ 	} else {
+ 		psock = sk_psock_init(sk, map->numa_node);
+-		if (!psock) {
+-			ret = -ENOMEM;
++		if (IS_ERR(psock)) {
++			ret = PTR_ERR(psock);
+ 			goto out_progs;
+ 		}
+ 	}
+@@ -322,8 +320,8 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
+ 
+ 	if (!psock) {
+ 		psock = sk_psock_init(sk, map->numa_node);
+-		if (!psock)
+-			return -ENOMEM;
++		if (IS_ERR(psock))
++			return PTR_ERR(psock);
+ 	}
+ 
+ 	ret = sock_map_init_proto(sk, psock);
+@@ -478,8 +476,6 @@ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+ 		return -EINVAL;
+ 	if (unlikely(idx >= map->max_entries))
+ 		return -E2BIG;
+-	if (inet_csk_has_ulp(sk))
+-		return -EINVAL;
+ 
+ 	link = sk_psock_init_link();
+ 	if (!link)
+@@ -855,8 +851,6 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+ 	WARN_ON_ONCE(!rcu_read_lock_held());
+ 	if (unlikely(flags > BPF_EXIST))
+ 		return -EINVAL;
+-	if (inet_csk_has_ulp(sk))
+-		return -EINVAL;
+ 
+ 	link = sk_psock_init_link();
+ 	if (!link)
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 7aa68f4aae6c..37f4cb2bba5c 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -567,10 +567,9 @@ static void tcp_bpf_rebuild_protos(struct proto prot[TCP_BPF_NUM_CFGS],
+ 	prot[TCP_BPF_TX].sendpage		= tcp_bpf_sendpage;
+ }
+ 
+-static void tcp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
++static void tcp_bpf_check_v6_needs_rebuild(struct proto *ops)
+ {
+-	if (sk->sk_family == AF_INET6 &&
+-	    unlikely(ops != smp_load_acquire(&tcpv6_prot_saved))) {
++	if (unlikely(ops != smp_load_acquire(&tcpv6_prot_saved))) {
+ 		spin_lock_bh(&tcpv6_prot_lock);
+ 		if (likely(ops != tcpv6_prot_saved)) {
+ 			tcp_bpf_rebuild_protos(tcp_bpf_prots[TCP_BPF_IPV6], ops);
+@@ -603,13 +602,11 @@ struct proto *tcp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
+ 	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
+ 	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
+ 
+-	if (!psock->sk_proto) {
+-		struct proto *ops = READ_ONCE(sk->sk_prot);
+-
+-		if (tcp_bpf_assert_proto_ops(ops))
++	if (sk->sk_family == AF_INET6) {
++		if (tcp_bpf_assert_proto_ops(psock->sk_proto))
+ 			return ERR_PTR(-EINVAL);
+ 
+-		tcp_bpf_check_v6_needs_rebuild(sk, ops);
++		tcp_bpf_check_v6_needs_rebuild(psock->sk_proto);
+ 	}
+ 
+ 	return &tcp_bpf_prots[family][config];
+diff --git a/net/ipv4/udp_bpf.c b/net/ipv4/udp_bpf.c
+index eddd973e6575..7a94791efc1a 100644
+--- a/net/ipv4/udp_bpf.c
++++ b/net/ipv4/udp_bpf.c
+@@ -22,10 +22,9 @@ static void udp_bpf_rebuild_protos(struct proto *prot, const struct proto *base)
+ 	prot->close  = sock_map_close;
+ }
+ 
+-static void udp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
++static void udp_bpf_check_v6_needs_rebuild(struct proto *ops)
+ {
+-	if (sk->sk_family == AF_INET6 &&
+-	    unlikely(ops != smp_load_acquire(&udpv6_prot_saved))) {
++	if (unlikely(ops != smp_load_acquire(&udpv6_prot_saved))) {
+ 		spin_lock_bh(&udpv6_prot_lock);
+ 		if (likely(ops != udpv6_prot_saved)) {
+ 			udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV6], ops);
+@@ -46,8 +45,8 @@ struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
+ {
+ 	int family = sk->sk_family == AF_INET ? UDP_BPF_IPV4 : UDP_BPF_IPV6;
+ 
+-	if (!psock->sk_proto)
+-		udp_bpf_check_v6_needs_rebuild(sk, READ_ONCE(sk->sk_prot));
++	if (sk->sk_family == AF_INET6)
++		udp_bpf_check_v6_needs_rebuild(psock->sk_proto);
+ 
+ 	return &udp_bpf_prots[family];
+ }
+-- 
+2.25.1
 
