@@ -2,214 +2,230 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F227C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6313B20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="DAz3p7rv"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4FD20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgHSP11 (ORCPT
+        id S1728926AbgHSP1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728619AbgHSPZM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:25:12 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA33C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:25:12 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 2so21892883qkf.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 08:25:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+A2+59kSj+DX9Rd94ppIvrv6gKF33YuW5sgvbibtK8o=;
-        b=DAz3p7rvAKv+rEtw7ziZcs1CbUb15JgAvkng7iuNUguAUs+2SlaMd1Eb9JS8/ypdDD
-         jDq2qHwEv21m/4lKf6lpxwg8OUDx0d6vPuNejy3Hg/NxuVdPNZQ6h1dJ/F4punH3baHX
-         4265Q3qIPsoGRMb+GmG9MsDVnLVSefoRlVK4Apb7d9w2YuWmNrVfaoZ+0MgBwCxPlkvx
-         vLG3CsDvm+r5hLjzbxqgKVhlnvUZ4oyUdEkLW/vPLS4DxeKe0b/gNdQapuu0beaVfee4
-         pfsJFk2ssLc7x5Akesh4zeZ2J75YtdylBt8SDN/P7IVAUJw6NCtqYmBPnl9TcPKpRAEk
-         cwiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+A2+59kSj+DX9Rd94ppIvrv6gKF33YuW5sgvbibtK8o=;
-        b=YlUbne1QtxuJx+KU8MSuLVD3iN6P9Bfa7UgUhkQQ0011xD0rMunIQpzY54mkLTkr1D
-         5ClPFlsviC6H0sSo5Va5kH+Q9UL5+NVnPNXaw9Vxt5r/S77sN47Kk/MylzPSSJehHIuk
-         9Z+KbB6cVt/AmNuBfxWCXyycxjlNBVoQJaoDKeeMLfZSbXXau3lhZU0uONeHE/mIn0D2
-         IvY+xmt0RskMcljeQ2cwxWC1b+l5ppNn0VSzHVC7r50QqSmOj/nRf5vlNPXebUnpX1YE
-         Tw/cdHG9mh5Xei8TFRuuq6kRq4DUZewR/fJQyH7t+CFR+3Gnx94Yl4m/HhWhI+VtoB4i
-         GqoA==
-X-Gm-Message-State: AOAM533BfXcPPXFWeuVk01oqT8gmeTDb4pMk+Sf3g4ADLFcM63Oy20q0
-        Fp5unO0KnjO3HwKsYJn3lNQKoQ==
-X-Google-Smtp-Source: ABdhPJwaOxJ5IQr4GSKj/8qzLxI7nwuxjhN1J7QQtHVAV0pVgF8h9m9O+HTZ4RHcMiTLdumoYIDa0Q==
-X-Received: by 2002:a37:44b:: with SMTP id 72mr22031222qke.494.1597850711106;
-        Wed, 19 Aug 2020 08:25:11 -0700 (PDT)
-Received: from localhost (mobile-166-177-185-175.mycingular.net. [166.177.185.175])
-        by smtp.gmail.com with ESMTPSA id k134sm24399096qke.60.2020.08.19.08.25.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 08:25:10 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:25:09 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Wambui Karuga <wambui.karugax@gmail.com>
-Subject: Re: [RFC 16/20] drm/i915/dp: Extract drm_dp_get_sink_count()
-Message-ID: <20200819152509.GD46474@art_vandelay>
-References: <20200811200457.134743-1-lyude@redhat.com>
- <20200811200457.134743-17-lyude@redhat.com>
+        Wed, 19 Aug 2020 11:27:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9783 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbgHSPZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:25:08 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7F5A234F37896C527B4D;
+        Wed, 19 Aug 2020 23:25:03 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 19 Aug 2020 23:24:53 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <dgilbert@interlog.com>,
+        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
+CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v8 17/18] scsi: megaraid_sas: Added support for shared host tagset for cpuhotplug
+Date:   Wed, 19 Aug 2020 23:20:35 +0800
+Message-ID: <1597850436-116171-18-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811200457.134743-17-lyude@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 04:04:53PM -0400, Lyude Paul wrote:
-> And of course, we'll also need to read the sink count from other drivers
-> as well if we're checking whether or not it's supported. So, let's
-> extract the code for this into another helper.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_helper.c         | 20 ++++++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_dp.c | 17 +++++------------
->  include/drm/drm_dp_helper.h             |  1 +
->  3 files changed, 26 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> index 05bb47e589731..0ff2959c8f8e8 100644
-> --- a/drivers/gpu/drm/drm_dp_helper.c
-> +++ b/drivers/gpu/drm/drm_dp_helper.c
-> @@ -722,6 +722,26 @@ bool drm_dp_has_sink_count(struct drm_connector *connector,
->  }
->  EXPORT_SYMBOL(drm_dp_has_sink_count);
->  
-> +/**
-> + * drm_dp_get_sink_count() - Retrieve the sink count for a given sink
-> + * @aux: The DP AUX channel to use
-> + *
-> + * Returns: The current sink count reported by @aux, or a negative error code
-> + * otherwise.
-> + */
-> +int drm_dp_get_sink_count(struct drm_dp_aux *aux)
-> +{
-> +	u8 count;
-> +	int ret;
-> +
-> +	ret = drm_dp_dpcd_readb(aux, DP_SINK_COUNT, &count);
-> +	if (ret < 1)
-> +		return -EIO;
+From: Kashyap Desai <kashyap.desai@broadcom.com>
 
-This should probably be:
-        if (ret < 0)
-                return ret;
-        else if (ret != 1)
-                return -EIO;
+Fusion adapters can steer completions to individual queues, and
+we now have support for shared host-wide tags.
+So we can enable multiqueue support for fusion adapters.
 
+Once driver enable shared host-wide tags, cpu hotplug feature is also
+supported as it was enabled using below patchsets -
+commit bf0beec0607d ("blk-mq: drain I/O when all CPUs in a hctx are
+offline")
 
-> +
-> +	return DP_GET_SINK_COUNT(count);
-> +}
-> +EXPORT_SYMBOL(drm_dp_get_sink_count);
-> +
->  /*
->   * I2C-over-AUX implementation
->   */
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 35a4779a442e2..e343965a483df 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4648,6 +4648,8 @@ intel_dp_has_sink_count(struct intel_dp *intel_dp)
->  static bool
->  intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  {
-> +	int ret;
-> +
->  	if (!intel_dp_read_dpcd(intel_dp))
->  		return false;
->  
-> @@ -4664,20 +4666,10 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  	}
->  
->  	if (intel_dp_has_sink_count(intel_dp)) {
-> -		u8 count;
-> -		ssize_t r;
-> -
-> -		r = drm_dp_dpcd_readb(&intel_dp->aux, DP_SINK_COUNT, &count);
-> -		if (r < 1)
-> +		ret = drm_dp_get_sink_count(&intel_dp->aux);
-> +		if (ret < 0)
->  			return false;
->  
-> -		/*
-> -		 * Sink count can change between short pulse hpd hence
-> -		 * a member variable in intel_dp will track any changes
-> -		 * between short pulse interrupts.
-> -		 */
+Currently driver has provision to disable host-wide tags using
+"host_tagset_enable" module parameter.
 
-I think you could probably keep this comment and relocate the intel_dp->sink_count
-assignment back.
+Once we do not have any major performance regression using host-wide
+tags, we will drop the hand-crafted interrupt affinity settings.
 
-With these nits (or something like them),
+Performance is also meeting the expecatation - (used both none and
+mq-deadline scheduler)
+24 Drive SSD on Aero with/without this patch can get 3.1M IOPs
+3 VDs consist of 8 SAS SSD on Aero with/without this patch can get 3.1M
+IOPs.
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Kashyap Desai <kashyap.desai@broadcom.com>
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/megaraid/megaraid_sas_base.c   | 39 +++++++++++++++++++++
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 29 ++++++++-------
+ 2 files changed, 55 insertions(+), 13 deletions(-)
 
-> -		intel_dp->sink_count = DP_GET_SINK_COUNT(count);
-> -
->  		/*
->  		 * SINK_COUNT == 0 and DOWNSTREAM_PORT_PRESENT == 1 implies that
->  		 * a dongle is present but no display. Unless we require to know
-> @@ -4685,6 +4677,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  		 * downstream port information. So, an early return here saves
->  		 * time from performing other operations which are not required.
->  		 */
-> +		intel_dp->sink_count = ret;
->  		if (!intel_dp->sink_count)
->  			return false;
->  	}
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index a1413a531eaf4..0c141fc81aaa8 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1635,6 +1635,7 @@ struct drm_dp_desc;
->  bool drm_dp_has_sink_count(struct drm_connector *connector,
->  			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
->  			   const struct drm_dp_desc *desc);
-> +int drm_dp_get_sink_count(struct drm_dp_aux *aux);
->  
->  void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
->  void drm_dp_aux_init(struct drm_dp_aux *aux);
-> -- 
-> 2.26.2
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 861f7140f52e..6960922d0d7f 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -37,6 +37,7 @@
+ #include <linux/poll.h>
+ #include <linux/vmalloc.h>
+ #include <linux/irq_poll.h>
++#include <linux/blk-mq-pci.h>
+ 
+ #include <scsi/scsi.h>
+ #include <scsi/scsi_cmnd.h>
+@@ -113,6 +114,10 @@ unsigned int enable_sdev_max_qd;
+ module_param(enable_sdev_max_qd, int, 0444);
+ MODULE_PARM_DESC(enable_sdev_max_qd, "Enable sdev max qd as can_queue. Default: 0");
+ 
++int host_tagset_enable = 1;
++module_param(host_tagset_enable, int, 0444);
++MODULE_PARM_DESC(host_tagset_enable, "Shared host tagset enable/disable Default: enable(1)");
++
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(MEGASAS_VERSION);
+ MODULE_AUTHOR("megaraidlinux.pdl@broadcom.com");
+@@ -3119,6 +3124,19 @@ megasas_bios_param(struct scsi_device *sdev, struct block_device *bdev,
+ 	return 0;
+ }
+ 
++static int megasas_map_queues(struct Scsi_Host *shost)
++{
++	struct megasas_instance *instance;
++
++	instance = (struct megasas_instance *)shost->hostdata;
++
++	if (shost->nr_hw_queues == 1)
++		return 0;
++
++	return blk_mq_pci_map_queues(&shost->tag_set.map[HCTX_TYPE_DEFAULT],
++			instance->pdev, instance->low_latency_index_start);
++}
++
+ static void megasas_aen_polling(struct work_struct *work);
+ 
+ /**
+@@ -3427,6 +3445,7 @@ static struct scsi_host_template megasas_template = {
+ 	.eh_timed_out = megasas_reset_timer,
+ 	.shost_attrs = megaraid_host_attrs,
+ 	.bios_param = megasas_bios_param,
++	.map_queues = megasas_map_queues,
+ 	.change_queue_depth = scsi_change_queue_depth,
+ 	.max_segment_size = 0xffffffff,
+ };
+@@ -6808,6 +6827,26 @@ static int megasas_io_attach(struct megasas_instance *instance)
+ 	host->max_lun = MEGASAS_MAX_LUN;
+ 	host->max_cmd_len = 16;
+ 
++	/* Use shared host tagset only for fusion adaptors
++	 * if there are managed interrupts (smp affinity enabled case).
++	 * Single msix_vectors in kdump, so shared host tag is also disabled.
++	 */
++
++	host->host_tagset = 0;
++	host->nr_hw_queues = 1;
++
++	if ((instance->adapter_type != MFI_SERIES) &&
++		(instance->msix_vectors > instance->low_latency_index_start) &&
++		host_tagset_enable &&
++		instance->smp_affinity_enable) {
++		host->host_tagset = 1;
++		host->nr_hw_queues = instance->msix_vectors -
++			instance->low_latency_index_start;
++	}
++
++	dev_info(&instance->pdev->dev,
++		"Max firmware commands: %d shared with nr_hw_queues = %d\n",
++		instance->max_fw_cmds, host->nr_hw_queues);
+ 	/*
+ 	 * Notify the mid-layer about the new controller
+ 	 */
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index 0824410f78f8..a4251121f173 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -359,24 +359,29 @@ megasas_get_msix_index(struct megasas_instance *instance,
+ {
+ 	int sdev_busy;
+ 
+-	/* nr_hw_queue = 1 for MegaRAID */
+-	struct blk_mq_hw_ctx *hctx =
+-		scmd->device->request_queue->queue_hw_ctx[0];
+-
+-	sdev_busy = atomic_read(&hctx->nr_active);
++	/* TBD - if sml remove device_busy in future, driver
++	 * should track counter in internal structure.
++	 */
++	sdev_busy = atomic_read(&scmd->device->device_busy);
+ 
+ 	if (instance->perf_mode == MR_BALANCED_PERF_MODE &&
+-	    sdev_busy > (data_arms * MR_DEVICE_HIGH_IOPS_DEPTH))
++	    sdev_busy > (data_arms * MR_DEVICE_HIGH_IOPS_DEPTH)) {
+ 		cmd->request_desc->SCSIIO.MSIxIndex =
+ 			mega_mod64((atomic64_add_return(1, &instance->high_iops_outstanding) /
+ 					MR_HIGH_IOPS_BATCH_COUNT), instance->low_latency_index_start);
+-	else if (instance->msix_load_balance)
++	} else if (instance->msix_load_balance) {
+ 		cmd->request_desc->SCSIIO.MSIxIndex =
+ 			(mega_mod64(atomic64_add_return(1, &instance->total_io_count),
+ 				instance->msix_vectors));
+-	else
++	} else if (instance->host->nr_hw_queues > 1) {
++		u32 tag = blk_mq_unique_tag(scmd->request);
++
++		cmd->request_desc->SCSIIO.MSIxIndex = blk_mq_unique_tag_to_hwq(tag) +
++			instance->low_latency_index_start;
++	} else {
+ 		cmd->request_desc->SCSIIO.MSIxIndex =
+ 			instance->reply_map[raw_smp_processor_id()];
++	}
+ }
+ 
+ /**
+@@ -956,9 +961,6 @@ megasas_alloc_cmds_fusion(struct megasas_instance *instance)
+ 	if (megasas_alloc_cmdlist_fusion(instance))
+ 		goto fail_exit;
+ 
+-	dev_info(&instance->pdev->dev, "Configured max firmware commands: %d\n",
+-		 instance->max_fw_cmds);
+-
+ 	/* The first 256 bytes (SMID 0) is not used. Don't add to the cmd list */
+ 	io_req_base = fusion->io_request_frames + MEGA_MPI2_RAID_DEFAULT_IO_FRAME_SIZE;
+ 	io_req_base_phys = fusion->io_request_frames_phys + MEGA_MPI2_RAID_DEFAULT_IO_FRAME_SIZE;
+@@ -1102,8 +1104,9 @@ megasas_ioc_init_fusion(struct megasas_instance *instance)
+ 		MR_HIGH_IOPS_QUEUE_COUNT) && cur_intr_coalescing)
+ 		instance->perf_mode = MR_BALANCED_PERF_MODE;
+ 
+-	dev_info(&instance->pdev->dev, "Performance mode :%s\n",
+-		MEGASAS_PERF_MODE_2STR(instance->perf_mode));
++	dev_info(&instance->pdev->dev, "Performance mode :%s (latency index = %d)\n",
++		MEGASAS_PERF_MODE_2STR(instance->perf_mode),
++		instance->low_latency_index_start);
+ 
+ 	instance->fw_sync_cache_support = (scratch_pad_1 &
+ 		MR_CAN_HANDLE_SYNC_CACHE_OFFSET) ? 1 : 0;
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.26.2
+
