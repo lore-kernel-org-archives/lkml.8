@@ -2,122 +2,235 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C21C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB9A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A0D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UaPDSEfV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NkvpzUvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHSWrm (ORCPT
+        id S1727046AbgHSWtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:47:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33536 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726209AbgHSWrm (ORCPT
+        Wed, 19 Aug 2020 18:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHSWtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:47:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597877260;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QXnTSgNfg8RNoeGnfUHV2QiCinLcEjZGZZliKpRTfWM=;
-        b=UaPDSEfVAjxlJU4F2oi5AfPU82SsvdNcsI8ks8QL7lTEy2N5b97wObP3IHWYi46GT4gvYE
-        5Zx6GH6MAfAom2ySAa/tcvJp2IzumdzR/A5sxTLRLVNb7HU+pFb4aaTW06rBEFG6vQS0jh
-        6VnhMe3rInX1anCYVZlbyysddSraYPQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-4rdRZyruNsOTxOvAhWr_RA-1; Wed, 19 Aug 2020 18:47:38 -0400
-X-MC-Unique: 4rdRZyruNsOTxOvAhWr_RA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C72F801AE5;
-        Wed, 19 Aug 2020 22:47:36 +0000 (UTC)
-Received: from treble (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EB4919C4F;
-        Wed, 19 Aug 2020 22:47:33 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 17:47:31 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kyle Huey <me@kylehuey.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [REGRESSION 5.8] x86/entry: DR0 break-on-write not working
-Message-ID: <20200819224731.3edo5lqw6lbuprdx@treble>
-References: <CAP045Ao5-+vvTzCOaCkfwztsd2Q0_8kh85UxuXW0bbcfVbF40w@mail.gmail.com>
- <20200819184149.GH2674@hirez.programming.kicks-ass.net>
- <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
- <20200819213534.GQ3982@worktop.programming.kicks-ass.net>
+        Wed, 19 Aug 2020 18:49:46 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C14C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:49:46 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id q9so20416865oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ds+P+VHRELlOlxwCcpje+JSh+rcyjYH+UGSM76wH/9E=;
+        b=NkvpzUvyGrJIQ6ExDre3XeXzkd5E3jCipnWnngYwXMMC5zhk6lT/8CzBvZcaGTzSqJ
+         C9qyl1mrN07B+1j4iDrTQXSRFS4jvOdFYXRzI0NQIDUw2T4wpjSDcYXp22KGObMYmCtb
+         XitVqbVwrHuOcdqScdmFklF6h975vRjoaiWs/22Jl2umA+IvEZcB/VASfJuBFxzFYmhj
+         IweDKQP7gjNoXG+sVohGL6xcnQ74hEckifqyPHvfWaGphHM82TvEIQ5XTflUPG9gvrB0
+         3f7qNhR24pJucsLKVu9hIf/+BP0e45H/YvFQWt6G0RCoXAQMOrKeq19NbbtRBJrNdaAg
+         l0ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ds+P+VHRELlOlxwCcpje+JSh+rcyjYH+UGSM76wH/9E=;
+        b=f9Cebrhh0CADpGlD6egwJ+pn+D/Ejfo6Wk/MltG04NMXBswpr0pFED0ATJ2dIaJuGH
+         Sfe6jLkU57F/mUwxZKrkwQNAVnfeg1vnhfKwVkT6ijumCJqTrgD/8DxxLUVrj3zX2JmD
+         BXTtamn41V6Zq2f+VZ1TNn8dvlDguUoVIfg6BU+Kk6X+cPCCcSQYFGCNPS4RsLIFlZzL
+         8gfJVHBs4u3YGwJq0DllCw6oxdbpaFfOhrtPI3jI3vjQ0km0oHz8ZZNugnACQL3uxsvr
+         aMf2FdnCbDLL7mRluZJlKOpbmSrrEjWdp9AGI/XrlkNDE9VzgEoYKiDKTIjmrXLdbb8R
+         bFJQ==
+X-Gm-Message-State: AOAM533X71epdeITIQvLuIYGs6qJTGVSjVuqSxuo34Xev/5WWPj2Q3YB
+        mmUXzS2tEfKS/clLmFrxneA03STKpbh7QtCZe2Db6w==
+X-Google-Smtp-Source: ABdhPJwb6yqXEEEEpisR2SPyN/wGvpBUVrove8z9LRQxEWLp1kan8BFylLm3VVXt3g2H6JMx961NCShr4ScSovIkwU0=
+X-Received: by 2002:a9d:22ca:: with SMTP id y68mr133348ota.56.1597877385026;
+ Wed, 19 Aug 2020 15:49:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200819213534.GQ3982@worktop.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200803211423.29398-1-graf@amazon.com> <20200803211423.29398-3-graf@amazon.com>
+In-Reply-To: <20200803211423.29398-3-graf@amazon.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 19 Aug 2020 15:49:32 -0700
+Message-ID: <CALMp9eS3Y845mPMD6H+5nmYDMvhPcDcFCWUXpLiscxo_9--EYQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] KVM: x86: Introduce allow list for MSR emulation
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>,
+        kvm list <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:35:34PM +0200, Peter Zijlstra wrote:
-> On Wed, Aug 19, 2020 at 12:28:16PM -0700, Kyle Huey wrote:
-> 
-> > > I'm guess that is not the expected outcome, is that the same failure you
-> > > saw?
-> > 
-> > Yes. Is status also 0x4d00 for you?
-> 
-> Indeed.
-> 
-> > The program is expected to complete with no assertions firing.
-> 
-> When I comment out the break-on-exec test, the break-on-write test
-> succeeds.
-> 
-> When I add a few printk()'s to our #DB handler (6) the program will
-> magically work again.
+On Mon, Aug 3, 2020 at 2:14 PM Alexander Graf <graf@amazon.com> wrote:
 
-I added some trace_printk()'s and I think the #DB handler is calling
-schedule????
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -901,6 +901,13 @@ struct kvm_hv {
+>         struct kvm_hv_syndbg hv_syndbg;
+>  };
+>
+> +struct msr_bitmap_range {
+> +       u32 flags;
+> +       u32 nmsrs;
+> +       u32 base;
+> +       unsigned long *bitmap;
+> +};
+> +
+>  enum kvm_irqchip_mode {
+>         KVM_IRQCHIP_NONE,
+>         KVM_IRQCHIP_KERNEL,       /* created with KVM_CREATE_IRQCHIP */
+> @@ -1005,6 +1012,9 @@ struct kvm_arch {
+>         /* Deflect RDMSR and WRMSR to user space when they trigger a #GP */
+>         bool user_space_msr_enabled;
+>
+> +       struct msr_bitmap_range msr_allowlist_ranges[10];
 
-exc_debug_user()
-  irqentry_exit_to_user_mode()
-    exit_to_user_mode_prepare()
-      exit_to_user_mode_loop()
-        schedule()
+Why 10? I think this is the only use of this constant, but a macro
+would still be nice, especially since the number appears to be
+arbitrary.
 
-So #DB schedules out, then the process scheduls in and tells ptrace to
-set the data breakpoint in DR7.  Then the #DB handler schedules back in
-and overwrites DR7 with the original value.
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index 0780f97c1850..c33fb1d72d52 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -192,6 +192,21 @@ struct kvm_msr_list {
+>         __u32 indices[0];
+>  };
+>
+> +#define KVM_MSR_ALLOW_READ  (1 << 0)
+> +#define KVM_MSR_ALLOW_WRITE (1 << 1)
+> +
+> +/* Maximum size of the of the bitmap in bytes */
+> +#define KVM_MSR_ALLOWLIST_MAX_LEN 0x600
 
-What amazes me is that it successfully schedules back to the end of the
-#DB handler finish and everything keeps working.
+Wouldn't 0x400 be a more natural size, since both Intel and AMD MSR
+permission bitmaps cover ranges of 8192 MSRs?
 
-Do we not have assertions in the scheduler to catch this?
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index e1139124350f..25e58ceb19de 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1472,6 +1472,38 @@ void kvm_enable_efer_bits(u64 mask)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_enable_efer_bits);
+>
+> +static bool kvm_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u32 type)
 
--- 
-Josh
+In another thread, when I suggested that a function should return
+bool, you said, "'I'm not a big fan of bool returning APIs unless they
+have an "is" in their name.' This function doesn't have "is" in its
+name. :-)
 
+> +{
+> +       struct kvm *kvm = vcpu->kvm;
+> +       struct msr_bitmap_range *ranges = kvm->arch.msr_allowlist_ranges;
+> +       u32 count = kvm->arch.msr_allowlist_ranges_count;
+
+Shouldn't the read of kvm->arch.msr_allowlist_ranges_count be guarded
+by the mutex, below?
+
+> +       u32 i;
+> +       bool r = false;
+> +
+> +       /* MSR allowlist not set up, allow everything */
+> +       if (!count)
+> +               return true;
+> +
+> +       /* Prevent collision with clear_msr_allowlist */
+> +       mutex_lock(&kvm->lock);
+> +
+> +       for (i = 0; i < count; i++) {
+> +               u32 start = ranges[i].base;
+> +               u32 end = start + ranges[i].nmsrs;
+> +               u32 flags = ranges[i].flags;
+> +               unsigned long *bitmap = ranges[i].bitmap;
+> +
+> +               if ((index >= start) && (index < end) && (flags & type)) {
+> +                       r = !!test_bit(index - start, bitmap);
+
+The !! seems gratuitous, since r is of type bool.
+
+> @@ -1483,6 +1515,9 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
+>  {
+>         struct msr_data msr;
+>
+> +       if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_ALLOW_WRITE))
+> +               return -ENOENT;
+
+Perhaps -EPERM is more appropriate here?
+
+>         switch (index) {
+>         case MSR_FS_BASE:
+>         case MSR_GS_BASE:
+> @@ -1528,6 +1563,9 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
+>         struct msr_data msr;
+>         int ret;
+>
+> +       if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_ALLOW_READ))
+> +               return -ENOENT;
+
+...and here?
+
+> +static bool msr_range_overlaps(struct kvm *kvm, struct msr_bitmap_range *range)
+
+Another bool function with no "is"? :-)
+
+> +{
+> +       struct msr_bitmap_range *ranges = kvm->arch.msr_allowlist_ranges;
+> +       u32 i, count = kvm->arch.msr_allowlist_ranges_count;
+> +       bool r = false;
+> +
+> +       for (i = 0; i < count; i++) {
+> +               u32 start = max(range->base, ranges[i].base);
+> +               u32 end = min(range->base + range->nmsrs,
+> +                             ranges[i].base + ranges[i].nmsrs);
+> +
+> +               if ((start < end) && (range->flags & ranges[i].flags)) {
+> +                       r = true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return r;
+> +}
+
+This seems like an awkward constraint. Would it be possible to allow
+overlapping ranges as long as the access types don't clash? So, for
+example, could I specify an allow list for READ of MSRs 0-0x1ffff and
+an allow list for WRITE of MSRs 0-0x1ffff? Actually, I don't see why
+you have to prohibit overlapping ranges at all.
+
+
+> +static int kvm_vm_ioctl_clear_msr_allowlist(struct kvm *kvm)
+> +{
+> +       int i;
+
+Nit: In earlier code, you use u32 for this index. (I'm actually a fan
+of int, myself.)
+
+
+> @@ -10086,6 +10235,8 @@ void kvm_arch_pre_destroy_vm(struct kvm *kvm)
+>
+>  void kvm_arch_destroy_vm(struct kvm *kvm)
+>  {
+> +       int i;
+
+It's 50/50 now, u32 vs. int. :-)
