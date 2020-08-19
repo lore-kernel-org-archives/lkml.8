@@ -4,98 +4,137 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05AAC20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AE120772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgHSGbC (ORCPT
+        id S1726735AbgHSGdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:31:02 -0400
-Received: from muru.com ([72.249.23.125]:40878 "EHLO muru.com"
+        Wed, 19 Aug 2020 02:33:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54924 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbgHSGbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:31:01 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 4026F807A;
-        Wed, 19 Aug 2020 06:30:59 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 09:31:27 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] gpio: omap: improve coding style for pin config flags
-Message-ID: <20200819063127.GU2994@atomide.com>
-References: <20200722120755.230741-1-drew@beagleboard.org>
+        id S1726685AbgHSGdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:33:08 -0400
+IronPort-SDR: VR+3QcAulfk/HIxfCiq8T2S1bybY+5vQK8lxbQRkQNUGpEV2tQfeUNAqVZZRweEBOv/QS7Of1T
+ 5LPkzzBzO9zQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="152675316"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="152675316"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 23:30:57 -0700
+IronPort-SDR: yWGynPXoF/ygcZzdiuq4SnHzVEviyzMnEv8e3E0nomUDhYzbJYzVNCN8LMryjRcCns9bAmMmcb
+ nwLn6d8Wq2LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="400730444"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 18 Aug 2020 23:30:54 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 19 Aug 2020 09:30:54 +0300
+Date:   Wed, 19 Aug 2020 09:30:54 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2 v4] tcpm: During PR_SWAP, source caps should be sent
+ only after tSwapSourceStart
+Message-ID: <20200819063054.GA2772165@kuha.fi.intel.com>
+References: <20200817183828.1895015-1-badhri@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722120755.230741-1-drew@beagleboard.org>
+In-Reply-To: <20200817183828.1895015-1-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-* Drew Fustini <drew@beagleboard.org> [200722 12:09]:
-> Change the handling of pin config flags from if/else to switch
-> statement to make the code more readable and cleaner.
+On Mon, Aug 17, 2020 at 11:38:27AM -0700, Badhri Jagan Sridharan wrote:
+> The patch addresses the compliance test failures while running
+> TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 of the "Deterministic PD
+> Compliance MOI" test plan published in https://www.usb.org/usbc.
+> For a product to be Type-C compliant, it's expected that these tests
+> are run on usb.org certified Type-C compliance tester as mentioned in
+> https://www.usb.org/usbc.
 > 
-> Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> The purpose of the tests TD.PD.CP.E3, TD.PD.CP.E4, TD.PD.CP.E5 is to
+> verify the PR_SWAP response of the device. While doing so, the test
+> asserts that Source Capabilities message is NOT received from the test
+> device within tSwapSourceStart min (20 ms) from the time the last bit
+> of GoodCRC corresponding to the RS_RDY message sent by the UUT was
+> sent. If it does then the test fails.
+> 
+> This is in line with the requirements from the USB Power Delivery
+> Specification Revision 3.0, Version 1.2:
+> "6.6.8.1 SwapSourceStartTimer
+> The SwapSourceStartTimer Shall be used by the new Source, after a
+> Power Role Swap or Fast Role Swap, to ensure that it does not send
+> Source_Capabilities Message before the new Sink is ready to receive
+> the
+> Source_Capabilities Message. The new Source Shall Not send the
+> Source_Capabilities Message earlier than tSwapSourceStart after the
+> last bit of the EOP of GoodCRC Message sent in response to the PS_RDY
+> Message sent by the new Source indicating that its power supply is
+> ready."
+> 
+> The patch makes sure that TCPM does not send the Source_Capabilities
+> Message within tSwapSourceStart(20ms) by transitioning into
+> SRC_STARTUP only after  tSwapSourceStart(20ms).
+> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-This looks OK to me:
-
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-I've lost track of the pending pinctrl/gpio/dts patches you've
-posted :) Care to also summarized the pending ones and repost
-them now that v5.9-rc1 is out?
-
-Regards,
-
-Tony
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 > ---
->  drivers/gpio/gpio-omap.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+> Changes since V1:
+> - Comment on the permissible values of tSwapSourceStart
 > 
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index e0eada82178c..7fbe0c9e1fc1 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -899,13 +899,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
->  	u32 debounce;
->  	int ret = -ENOTSUPP;
->  
-> -	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-> -	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-> -	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
-> +	switch (pinconf_to_config_param(config)) {
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
->  		ret = gpiochip_generic_config(chip, offset, config);
-> -	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
-> +		break;
-> +	case PIN_CONFIG_INPUT_DEBOUNCE:
->  		debounce = pinconf_to_config_argument(config);
->  		ret = omap_gpio_debounce(chip, offset, debounce);
-> +		break;
-> +	default:
-> +		break;
->  	}
->  
->  	return ret;
-> -- 
-> 2.25.1
+> Changes since V2:
+> - Fixing alignment issue pointed out by Guenter.
+> - Added Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > 
+> Changes since V3:
+> - Updated commit description and made it elaborate to address Heikki's
+>   suggestion.
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 2 +-
+>  include/linux/usb/pd.h        | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 3ef37202ee37..d38347bd3335 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -3555,7 +3555,7 @@ static void run_state_machine(struct tcpm_port *port)
+>  		 */
+>  		tcpm_set_pwr_role(port, TYPEC_SOURCE);
+>  		tcpm_pd_send_control(port, PD_CTRL_PS_RDY);
+> -		tcpm_set_state(port, SRC_STARTUP, 0);
+> +		tcpm_set_state(port, SRC_STARTUP, PD_T_SWAP_SRC_START);
+>  		break;
+>  
+>  	case VCONN_SWAP_ACCEPT:
+> diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+> index b6c233e79bd4..1df895e4680b 100644
+> --- a/include/linux/usb/pd.h
+> +++ b/include/linux/usb/pd.h
+> @@ -473,6 +473,7 @@ static inline unsigned int rdo_max_power(u32 rdo)
+>  #define PD_T_ERROR_RECOVERY	100	/* minimum 25 is insufficient */
+>  #define PD_T_SRCSWAPSTDBY      625     /* Maximum of 650ms */
+>  #define PD_T_NEWSRC            250     /* Maximum of 275ms */
+> +#define PD_T_SWAP_SRC_START	20	/* Minimum of 20ms */
+>  
+>  #define PD_T_DRP_TRY		100	/* 75 - 150 ms */
+>  #define PD_T_DRP_TRYWAIT	600	/* 400 - 800 ms */
+
+thanks,
+
+-- 
+heikki
