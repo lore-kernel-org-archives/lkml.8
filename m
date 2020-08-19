@@ -2,161 +2,127 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B95EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F35DC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A0820897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597850668;
-	bh=hHa5rHHEdmaLPV8IAAgl2hoR1WMKnusCrOaK/4DnvIM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zhyTaexzUdCfaKvPz100I3P65c5kgSKmj4uxBVbEAWRoqPd1dgpvzEtmnAa5yVxbz
-	 og03MLn6JlRkLyCnogC/Cd4uPdIzkx5bf9kcN2J+9QFdR7JD9fdBxcf+apWWPz8uby
-	 7rZuOEMvPtfgWxUD3CQlJiO16Ri4kTFfeTLRs/HY=
+	by mail.kernel.org (Postfix) with ESMTP id 7471620897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHSPY1 (ORCPT
+        id S1728668AbgHSPZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgHSPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:24:20 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E18B220897;
-        Wed, 19 Aug 2020 15:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597850660;
-        bh=hHa5rHHEdmaLPV8IAAgl2hoR1WMKnusCrOaK/4DnvIM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SzbRLU6uplI9w6fF5ALOG9qTdPUx4A/TcBFXF5MUcMy7oWkEp2G5W2+VgF7Jwd7fn
-         Ktrm0XTFXwDXpE1EcWltK4ppy8NwfHG9YElNZ5Wyc7T1xGGOzPNAF9wK59JeqeOP8C
-         tFbNuQD+Eq5tGugI17/6zzsdxmKZcc49JnubXs+Y=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8Pwn-004Fc2-Tn; Wed, 19 Aug 2020 16:24:18 +0100
+        Wed, 19 Aug 2020 11:25:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9781 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726894AbgHSPZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:25:06 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6DC731556ACDD80C64D7;
+        Wed, 19 Aug 2020 23:25:03 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 19 Aug 2020 23:24:52 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <dgilbert@interlog.com>,
+        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
+CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH v8 15/18] scsi: scsi_debug: Support host tagset
+Date:   Wed, 19 Aug 2020 23:20:33 +0800
+Message-ID: <1597850436-116171-16-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Aug 2020 16:24:17 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org,
-        jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de,
-        yj.chiang@mediatek.com
-Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller
- support
-In-Reply-To: <20200819145525.26315-1-mark-pk.tsai@mediatek.com>
-References: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
- <20200819145525.26315-1-mark-pk.tsai@mediatek.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <85749ec80ad0b9c85e3984c808d02b9c@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mark-pk.tsai@mediatek.com, alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, yj.chiang@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-19 15:55, Mark-PK Tsai wrote:
-> From: Marc Zyngier <maz@kernel.org>
-> 
->> On 2020-08-19 14:31, Mark-PK Tsai wrote:
->>> From: Marc Zyngier <maz@kernel.org>
->>> 
->>>> > +
->>>> > +static int mst_intc_domain_alloc(struct irq_domain *domain, unsigned
->>>> > int virq,
->>>> > +				 unsigned int nr_irqs, void *data)
->>>> > +{
->>>> > +	int i;
->>>> > +	irq_hw_number_t hwirq;
->>>> > +	struct irq_fwspec parent_fwspec, *fwspec = data;
->>>> > +	struct mst_intc_chip_data *cd = (struct mst_intc_chip_data
->>>> > *)domain->host_data;
->>>> 
->>>> No cast necessary here.
->>>> 
->>>> > +
->>>> > +	/* Not GIC compliant */
->>>> > +	if (fwspec->param_count != 3)
->>>> > +		return -EINVAL;
->>>> > +
->>>> > +	/* No PPI should point to this domain */
->>>> > +	if (fwspec->param[0])
->>>> > +		return -EINVAL;
->>>> > +
->>>> > +	if (fwspec->param[1] >= cd->nr_irqs)
->>>> 
->>>> This condition is bogus, as it doesn't take into account the nr_irqs
->>>> parameter.
->>>> 
->>> 
->>> 
->>> The hwirq number need to be in the irq map range. (property:
->>> mstar,irqs-map-range)
->>> If it's not, it must be incorrect configuration.
->> 
->> I agree. And since you are checking whether the configuration is
->> correct,
->> it'd better be completely correct.
->> 
->>> So how about use the condition as following?
->>> 
->>> if (hwirq >= cd->nr_irqs)
->>> 	return -EINVAL;
->> 
->> Again, this says nothing of the validity of (hwirq + nr_irqs - 1)...
->> 
-> 
-> How about move this to mst_intc_domain_translate? Then all the 
-> irq_fwspec
-> point to domain mst_intc should be valid.
-> 
-> The mst_intc_domain_translate will be as following:
-> 
-> static int mst_intc_domain_translate(struct irq_domain *d,
-> 				     struct irq_fwspec *fwspec,
-> 				     unsigned long *hwirq,
-> 				     unsigned int *type)
-> {
-> 	struct mst_intc_chip_data *cd = d->host_data;
-> 
-> 	if (is_of_node(fwspec->fwnode)) {
-> 		if (fwspec->param_count != 3)
-> 			return -EINVAL;
-> 
-> 		/* No PPI should point to this domain */
-> 		if (fwspec->param[0] != 0)
-> 			return -EINVAL;
-> 
-> 		if (fwspec->param[1] >= cd->nr_irqs)
-> 			return -EINVAL;
-> 
-> 		*hwirq = fwspec->param[1];
-> 		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> 		return 0;
-> 	}
-> 
-> 	return -EINVAL;
-> }
+When host_max_queue is set (> 0), set the Scsi_Host.host_tagset such that
+blk-mq will use a hostwide tagset over all SCSI host submission queues.
 
-It would make more sense.
+This means that we may expose all submission queues and always use the hwq
+chosen by blk-mq.
 
-         M.
+And since if sdebug_host_max_queue is set, sdebug_max_queue is fixed to the
+same value, we can simplify how sdebug_driver_template.can_queue is set.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/scsi_debug.c | 28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 064ed680c053..4238baa2b34b 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -4698,19 +4698,14 @@ static int resp_rwp_zone(struct scsi_cmnd *scp, struct sdebug_dev_info *devip)
+ static struct sdebug_queue *get_queue(struct scsi_cmnd *cmnd)
+ {
+ 	u16 hwq;
++	u32 tag = blk_mq_unique_tag(cmnd->request);
+ 
+-	if (sdebug_host_max_queue) {
+-		/* Provide a simple method to choose the hwq */
+-		hwq = smp_processor_id() % submit_queues;
+-	} else {
+-		u32 tag = blk_mq_unique_tag(cmnd->request);
++	hwq = blk_mq_unique_tag_to_hwq(tag);
+ 
+-		hwq = blk_mq_unique_tag_to_hwq(tag);
++	pr_debug("tag=%#x, hwq=%d\n", tag, hwq);
++	if (WARN_ON_ONCE(hwq >= submit_queues))
++		hwq = 0;
+ 
+-		pr_debug("tag=%#x, hwq=%d\n", tag, hwq);
+-		if (WARN_ON_ONCE(hwq >= submit_queues))
+-			hwq = 0;
+-	}
+ 	return sdebug_q_arr + hwq;
+ }
+ 
+@@ -7347,10 +7342,7 @@ static int sdebug_driver_probe(struct device *dev)
+ 
+ 	sdbg_host = to_sdebug_host(dev);
+ 
+-	if (sdebug_host_max_queue)
+-		sdebug_driver_template.can_queue = sdebug_host_max_queue;
+-	else
+-		sdebug_driver_template.can_queue = sdebug_max_queue;
++	sdebug_driver_template.can_queue = sdebug_max_queue;
+ 	if (!sdebug_clustering)
+ 		sdebug_driver_template.dma_boundary = PAGE_SIZE - 1;
+ 
+@@ -7367,11 +7359,11 @@ static int sdebug_driver_probe(struct device *dev)
+ 	}
+ 	/*
+ 	 * Decide whether to tell scsi subsystem that we want mq. The
+-	 * following should give the same answer for each host. If the host
+-	 * has a limit of hostwide max commands, then do not set.
++	 * following should give the same answer for each host.
+ 	 */
+-	if (!sdebug_host_max_queue)
+-		hpnt->nr_hw_queues = submit_queues;
++	hpnt->nr_hw_queues = submit_queues;
++	if (sdebug_host_max_queue)
++		hpnt->host_tagset = 1;
+ 
+ 	sdbg_host->shost = hpnt;
+ 	*((struct sdebug_host_info **)hpnt->hostdata) = sdbg_host;
 -- 
-Jazz is not dead. It just smells funny...
+2.26.2
+
