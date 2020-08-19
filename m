@@ -7,30 +7,31 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A45FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D4BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3417820897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9D920885
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgHSNdr (ORCPT
+        id S1728579AbgHSNdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:33:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:36922 "EHLO foss.arm.com"
+        Wed, 19 Aug 2020 09:33:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:36938 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgHSNdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:33:36 -0400
+        id S1728529AbgHSNdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:33:38 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45D5B1FB;
-        Wed, 19 Aug 2020 06:33:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C96312FC;
+        Wed, 19 Aug 2020 06:33:37 -0700 (PDT)
 Received: from monolith.localdoman (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 325C73F71F;
-        Wed, 19 Aug 2020 06:33:33 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 793E53F71F;
+        Wed, 19 Aug 2020 06:33:35 -0700 (PDT)
 From:   Alexandru Elisei <alexandru.elisei@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
         catalin.marinas@arm.com, swboyd@chromium.org,
         sumit.garg@linaro.org, Julien Thierry <julien.thierry@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -38,9 +39,9 @@ Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v6 3/7] arm64: perf: Remove PMU locking
-Date:   Wed, 19 Aug 2020 14:34:15 +0100
-Message-Id: <20200819133419.526889-4-alexandru.elisei@arm.com>
+Subject: [PATCH v6 4/7] arm64: perf: Defer irq_work to IPI_IRQ_WORK
+Date:   Wed, 19 Aug 2020 14:34:16 +0100
+Message-Id: <20200819133419.526889-5-alexandru.elisei@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200819133419.526889-1-alexandru.elisei@arm.com>
 References: <20200819133419.526889-1-alexandru.elisei@arm.com>
@@ -53,14 +54,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julien Thierry <julien.thierry@arm.com>
 
-The PMU is disabled and enabled, and the counters are programmed from
-contexts where interrupts or preemption is disabled.
+When handling events, armv8pmu_handle_irq() calls perf_event_overflow(),
+and subsequently calls irq_work_run() to handle any work queued by
+perf_event_overflow(). As perf_event_overflow() raises IPI_IRQ_WORK when
+queuing the work, this isn't strictly necessary and the work could be
+handled as part of the IPI_IRQ_WORK handler.
 
-The functions to toggle the PMU and to program the PMU counters access the
-registers directly and don't access data modified by the interrupt handler.
-That, and the fact that they're always called from non-preemptible
-contexts, means that we don't need to disable interrupts or use a spinlock.
+In the common case the IPI handler will run immediately after the PMU IRQ
+handler, and where the PE is heavily loaded with interrupts other handlers
+may run first, widening the window where some counters are disabled.
 
+In practice this window is unlikely to be a significant issue, and removing
+the call to irq_work_run() would make the PMU IRQ handler NMI safe in
+addition to making it simpler, so let's do that.
+
+Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -71,85 +79,42 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-[Explained why locking is not needed, removed WARN_ONs]
+[Reworded commit]
 Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 ---
- arch/arm64/kernel/perf_event.c | 28 ----------------------------
- 1 file changed, 28 deletions(-)
+ arch/arm64/kernel/perf_event.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index ac818abd65b6..80744c2f1454 100644
+index 80744c2f1454..5bf283518981 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
-@@ -672,15 +672,10 @@ static inline u32 armv8pmu_getreset_flags(void)
+@@ -780,20 +780,16 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 		if (!armpmu_event_set_period(event))
+ 			continue;
  
- static void armv8pmu_enable_event(struct perf_event *event)
- {
--	unsigned long flags;
--	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
--	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
--
- 	/*
- 	 * Enable counter and interrupt, and set the counter to count
- 	 * the event that we're interested in.
- 	 */
--	raw_spin_lock_irqsave(&events->pmu_lock, flags);
++		/*
++		 * Perf event overflow will queue the processing of the event as
++		 * an irq_work which will be taken care of in the handling of
++		 * IPI_IRQ_WORK.
++		 */
+ 		if (perf_event_overflow(event, &data, regs))
+ 			cpu_pmu->disable(event);
+ 	}
+ 	armv8pmu_start(cpu_pmu);
  
- 	/*
- 	 * Disable counter
-@@ -708,21 +703,10 @@ static void armv8pmu_enable_event(struct perf_event *event)
- 	 */
- 	isb();
- 	armv8pmu_enable_event_counter(event);
--
--	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
- }
- 
- static void armv8pmu_disable_event(struct perf_event *event)
- {
--	unsigned long flags;
--	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
--	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
--
 -	/*
--	 * Disable counter and interrupt
+-	 * Handle the pending perf events.
+-	 *
+-	 * Note: this call *must* be run with interrupts disabled. For
+-	 * platforms that can have the PMU interrupts raised as an NMI, this
+-	 * will not work.
 -	 */
--	raw_spin_lock_irqsave(&events->pmu_lock, flags);
+-	irq_work_run();
 -
- 	/*
- 	 * Disable counter
- 	 */
-@@ -732,30 +716,18 @@ static void armv8pmu_disable_event(struct perf_event *event)
- 	 * Disable interrupt for this counter
- 	 */
- 	armv8pmu_disable_event_irq(event);
--
--	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+ 	return IRQ_HANDLED;
  }
  
- static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- {
--	unsigned long flags;
--	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
--
--	raw_spin_lock_irqsave(&events->pmu_lock, flags);
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
--	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
- }
- 
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
- {
--	unsigned long flags;
--	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
--
--	raw_spin_lock_irqsave(&events->pmu_lock, flags);
- 	/* Disable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() & ~ARMV8_PMU_PMCR_E);
--	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
- }
- 
- static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
 -- 
 2.28.0
 
