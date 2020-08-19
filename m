@@ -2,83 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F056C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F6120738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597839397;
-	bh=pBCiNyZSJDtCPtcnxICUiMkHGj6Otqo1yumlFx0O7sg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=NHAKGLichQEp9ZZYGOl0ILyWQVnCmthaW3NCDIhVT97abfQJWwYuTiUBBnGTl2keU
-	 spqGcFo+2BBbq3KE4mvBW+EzYcWnZvbOVXmMGL5QUH8M6K7zpObisv+oOwK32/6rvB
-	 pj5TOoha2aigZIfEiOaAf7OwUjbcAjFhQcxgUMeY=
+	by mail.kernel.org (Postfix) with ESMTP id 2913B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:18:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ev/qRgG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgHSMQf (ORCPT
+        id S1728053AbgHSMSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726600AbgHSMQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:16:23 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2393C20738;
-        Wed, 19 Aug 2020 12:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597839383;
-        bh=pBCiNyZSJDtCPtcnxICUiMkHGj6Otqo1yumlFx0O7sg=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=MGHc4RFDSXIIbmIklx0Q7GenXfNhsBhFmTuVMNFYB4YoBwE2TyfUeblQJgv1BEl1I
-         GMCLiDe2gVUqx8PAniaUxWgYxQ5xYjxw+HEr3U8sJGihtF4KzPITRusrQG3zRxKM0J
-         8Enh3AA/1SNqUl+pU/SE6h3P6gsGqcGjSeEdh+7c=
-Date:   Wed, 19 Aug 2020 13:15:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, ChiYuan Huang <cy_huang@richtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-In-Reply-To: <20200819085959.1914471-1-axel.lin@ingics.com>
-References: <20200819085959.1914471-1-axel.lin@ingics.com>
-Subject: Re: [PATCH] regulator: rt4801: Select REGMAP_I2C to fix build error
-Message-Id: <159783935195.14214.16521566781285277264.b4-ty@kernel.org>
+        Wed, 19 Aug 2020 08:18:41 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3498 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgHSMSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:18:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3d188e0000>; Wed, 19 Aug 2020 05:18:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 19 Aug 2020 05:18:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 19 Aug 2020 05:18:36 -0700
+Received: from [10.21.180.203] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Aug
+ 2020 12:18:26 +0000
+Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
+ to devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+ <1597657072-3130-2-git-send-email-moshe@mellanox.com>
+ <20200817163612.GA2627@nanopsycho>
+ <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
+ <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@nvidia.com>
+Message-ID: <cd0e3d7e-4746-d26d-dd0c-eb36c9c8a10f@nvidia.com>
+Date:   Wed, 19 Aug 2020 15:18:22 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597839502; bh=qyxddY+ZMpyr1B0Q/HCmtCniMU+Ksoc1x35q4ykLbCk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:Content-Type:
+         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
+         X-ClientProxiedBy;
+        b=Ev/qRgG4hxTkvQbhMeF94aTFAm2rglurkWPF6kUqHYiT/0Ta1jRKU00wbi9uqUgeN
+         E/xCYfq8FsMGb3BFRGiOeuhfD0oQJIoRLT2MIpAgc/p8r4tc+JkD/coSHCjUUFYYWy
+         bSazyWxxsKKRXpfroBFCAHKyi24o3PnZFYR4yGgf/PL1g+3NSpOqqHL4JQdfQMx8kc
+         tdGYRK3Qu26fgqJ+e9jBV9LsV2YA5H2tUovFT2Slqe7f0nrC6YAUUOU0/IG3MEzDpm
+         77xAS/16o+UuGjrckSgvDYdHmi30lqX08z9aZNm0vDSsa2RH1jj8+dzhTv/D6q6ODi
+         qaa91E/wleScQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 16:59:59 +0800, Axel Lin wrote:
-> Fix build error when CONFIG_REGMAP_I2C is not set.
 
-Applied to
+On 8/19/2020 3:10 AM, Jakub Kicinski wrote:
+>
+> On Tue, 18 Aug 2020 12:10:36 +0300 Moshe Shemesh wrote:
+>> On 8/17/2020 7:36 PM, Jiri Pirko wrote:
+>>> Mon, Aug 17, 2020 at 11:37:40AM CEST, moshe@mellanox.com wrote:
+>>>> Add devlink reload action to allow the user to request a specific reload
+>>>> action. The action parameter is optional, if not specified then devlink
+>>>> driver re-init action is used (backward compatible).
+>>>> Note that when required to do firmware activation some drivers may need
+>>>> to reload the driver. On the other hand some drivers may need to reset
+>>> Sounds reasonable. I think it would be good to indicate that though. Not
+>>> sure how...
+>> Maybe counters on the actions done ? Actually such counters can be
+>> useful on debug, knowing what reloads we had since driver was up.
+> Wouldn't we need to know all types of reset of drivers may do?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Thanks!
+Right, we can't tell all reset types driver may have, but we can tell 
+which reload actions were done.
 
-[1/1] regulator: rt4801: Select REGMAP_I2C to fix build error
-      commit: 02532cb80543b50611656a6017bfec7477e2e200
+> I think documenting this clearly should be sufficient.
+>
+> A reset counter for the _requested_ reset type (fully maintained by
+> core), however - that may be useful. The question "why did this NIC
+> reset itself / why did the link just flap" comes up repeatedly.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+I will add counters on which reload were done. reload_down()/up() can 
+return which actions were actually done and devlink will show counters.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
