@@ -2,182 +2,202 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE390C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6B020786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C02920786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XZ5flqUE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JKKUjIko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgHSSOk (ORCPT
+        id S1726820AbgHSSPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgHSSOh (ORCPT
+        Wed, 19 Aug 2020 14:15:07 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5218 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgHSSPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:14:37 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA6FC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:14:37 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id i10so6244188pgk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4IFu7shAFZ4cq+fQUbjGl2XA19fNOk1l6Qpzfns4GcQ=;
-        b=XZ5flqUELQYx7RXKhgoyR6e13wzn+Ak05CXKhYZ40i7+Sxc1e4tQkGynmf0p4XOvlG
-         ofhFOdc3jtJkUaISvB7KcxJv/nSRS43/McXnpcIURhCffbwqs+XQLqfFWJ0sVL7oQWC8
-         VbaQLFMb88RDC4MZkaIsqZzmOp2HBgL3DFJ5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4IFu7shAFZ4cq+fQUbjGl2XA19fNOk1l6Qpzfns4GcQ=;
-        b=MH3xVD19AepTr0iaqFRqX1dOFptMNP2S7TDmVeS2IICzxQOKFdX52Os9cmhRBxs9PT
-         AcPr0oCLcpzmE+nVokdHTyC0ZpDTtiLwqbYdbI6fHiFay6hDi9DmTifnhoCR9oqLVLF5
-         Ob2sU1ugpt4ufsLNrX+Ti2OD/GhiL1C5IPxEDL/3I/JKmvWYogNUPRiXhAC+FivLIznk
-         +hRKP5OL0aibAOuZR9vB6o9DX9O/XGE7UhNX8eH+11s6NUE9v0alBwnXC/YrLneBeJte
-         zFWRkNaBnSbCGZLhpJaVp2Aoa7BpYhFlYKFz1FKLPakDonILSqHu30dQe37+Qc6trK95
-         2aWQ==
-X-Gm-Message-State: AOAM530vBWNmmSF0ldQMBNuyFUXsOZzZcsQEoG39LeysqGsFX/kdQP3R
-        7kfwoIp/eOE2RKFTLk8jQbHO/zJ4Y10aog==
-X-Google-Smtp-Source: ABdhPJzZu0ajG/Rgm+L5jIXEs1U/ToVIFDkCsmJUhQMYPUVmpsVorLDQg93dG5Msi3Cj29SgqtA+5w==
-X-Received: by 2002:a62:26c2:: with SMTP id m185mr20440979pfm.115.1597860877043;
-        Wed, 19 Aug 2020 11:14:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bv17sm3528421pjb.0.2020.08.19.11.14.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:14:35 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 11:14:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Nick Terrell <nickrterrell@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yann Collet <yann.collet.73@gmail.com>,
-        Gao Xiang <xiang@kernel.org>,
-        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>
-Subject: Re: [PATCH 1/1] x86/boot/compressed: Use builtin mem functions for
- decompressor
-Message-ID: <202008191111.4244B09D26@keescook>
-References: <9753118F-84DD-44C4-8B8C-F45B8EE0FC14@fb.com>
- <20200804234817.3922187-1-nivedita@alum.mit.edu>
- <20200804234817.3922187-2-nivedita@alum.mit.edu>
+        Wed, 19 Aug 2020 14:15:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f3d6bec0002>; Wed, 19 Aug 2020 11:14:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 19 Aug 2020 11:15:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 19 Aug 2020 11:15:03 -0700
+Received: from [10.2.49.218] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Aug
+ 2020 18:14:56 +0000
+Subject: Re: [PATCH] mm/gup: don't permit users to call get_user_pages with
+ FOLL_LONGTERM
+To:     Barry Song <song.bao.hua@hisilicon.com>,
+        <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, Jan Kara <jack@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Jonathan Corbet" <corbet@lwn.net>, Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
+References: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <e4265ac0-793d-053b-81b1-15e57c04b830@nvidia.com>
+Date:   Wed, 19 Aug 2020 11:14:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804234817.3922187-2-nivedita@alum.mit.edu>
+In-Reply-To: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1597860845; bh=gNdAT/etTZwZteED0BIN2T3CZYf5c64GDyXgROoUS1o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JKKUjIkoVN9iC4WXRB5nrYw218IysKH7+JRf9wi0cjxJrbhYBwzeU5CV+QVHgt1tF
+         XW03l6xc9F9fGw7Wr3N0EWXpC83URUk9jPN5SyYmRdGkht8QLZValtcSwUZ05bIwL0
+         fUC73aIfquDBW7xe298badhDUMs+2OuBVtpSYI+k1RAbSncdUuRLDISrRucv7RXUpW
+         1VOFlOxO7UptMfR0ahtUoUvreYKH4JmeZQnvZqvY3tplSsA/7E2U655uBLII6aOkjU
+         SoMDfOrkPqlsJII+J7QyGDd2OJy2w/tESfrhtPctzDjWobfW0RC4iZdsxhx0NayF8k
+         AH42Yl+2/kodg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 07:48:17PM -0400, Arvind Sankar wrote:
-> Since commits
-> 
->   c041b5ad8640 ("x86, boot: Create a separate string.h file to provide standard string functions")
->   fb4cac573ef6 ("x86, boot: Move memcmp() into string.h and string.c")
-> 
-> the decompressor stub has been using the compiler's builtin memcpy,
-> memset and memcmp functions, _except_ where it would likely have the
-> largest impact, in the decompression code itself.
-> 
-> Remove the #undef's of memcpy and memset in misc.c so that the
-> decompressor code also uses the compiler builtins.
-> 
-> The rationale given in the comment doesn't really apply: just because
-> some functions use the out-of-line version is no reason to not use the
-> builtin version in the rest.
-> 
-> Replace the comment with an explanation of why memzero and memmove are
-> being #define'd.
-> 
-> Drop the suggestion to #undef in boot/string.h as well: the out-of-line
-> versions are not really optimized versions, they're generic code that's
-> good enough for the preboot environment. The compiler will likely
-> generate better code for constant-size memcpy/memset/memcmp if it is
-> allowed to.
-> 
-> Most decompressors' performance is unchanged, with the exception of LZ4
-> and 64-bit ZSTD.
-> 
-> 	Before	After ARCH
-> LZ4	  73ms	 10ms   32
-> LZ4	 120ms	 10ms	64
-> ZSTD	  90ms	 74ms	64
-> 
-> Measurements on QEMU on 2.2GHz Broadwell Xeon, using defconfig kernels.
-> 
-> Decompressor code size has small differences, with the largest being
-> that 64-bit ZSTD decreases just over 2k. The largest code size increase
-> was on 64-bit XZ, of about 400 bytes.
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Suggested-by: Nick Terrell <nickrterrell@gmail.com>
-> Tested-by: Nick Terrell <nickrterrell@gmail.com>
+On 8/19/20 4:01 AM, Barry Song wrote:
+> gug prohibits users from calling get_user_pages() with FOLL_PIN. But it
 
-Did anyone pick this up? (Ingo can you snag it, or maybe akpm who took
-the LZ4-specific patch already?) This looks sane to me and provides some
-surprising performance benefits. :)
+Maybe Andrew can fix the typo above: gug --> gup.
 
-Acked-by: Kees Cook <keescook@chromium.org>
 
--Kees
+> allows users to call get_user_pages() with FOLL_LONGTERM only. It seems
+> insensible.
+>=20
+> since FOLL_LONGTERM is a stricter case of FOLL_PIN, we should prohibit
+> users from calling get_user_pages() with FOLL_LONGTERM while not with
+> FOLL_PIN.
+>=20
+> mm/gup_benchmark.c used to be the only user who did this improperly.
+> But it has been fixed by moving to use pin_user_pages().
 
+For future patches, you don't have to write everything in the
+commit log. Some things are better placed in a cover letter or after
+the "---" line, because they don't need to be recorded forever.
+
+Anyway, the diffs seem fine, assuming that you've audited the call sites.
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
+
+>=20
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 > ---
->  arch/x86/boot/compressed/misc.c | 7 ++-----
->  arch/x86/boot/string.h          | 5 +----
->  2 files changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-> index 39e592d0e0b4..e478e40fbe5a 100644
-> --- a/arch/x86/boot/compressed/misc.c
-> +++ b/arch/x86/boot/compressed/misc.c
-> @@ -30,12 +30,9 @@
->  #define STATIC		static
->  
->  /*
-> - * Use normal definitions of mem*() from string.c. There are already
-> - * included header files which expect a definition of memset() and by
-> - * the time we define memset macro, it is too late.
-> + * Provide definitions of memzero and memmove as some of the decompressors will
-> + * try to define their own functions if these are not defined as macros.
->   */
-> -#undef memcpy
-> -#undef memset
->  #define memzero(s, n)	memset((s), 0, (n))
->  #define memmove		memmove
->  
-> diff --git a/arch/x86/boot/string.h b/arch/x86/boot/string.h
-> index 995f7b7ad512..a232da487cd2 100644
-> --- a/arch/x86/boot/string.h
-> +++ b/arch/x86/boot/string.h
-> @@ -11,10 +11,7 @@ void *memcpy(void *dst, const void *src, size_t len);
->  void *memset(void *dst, int c, size_t len);
->  int memcmp(const void *s1, const void *s2, size_t len);
->  
-> -/*
-> - * Access builtin version by default. If one needs to use optimized version,
-> - * do "undef memcpy" in .c file and link against right string.c
-> - */
-> +/* Access builtin version by default. */
->  #define memcpy(d,s,l) __builtin_memcpy(d,s,l)
->  #define memset(d,c,l) __builtin_memset(d,c,l)
->  #define memcmp	__builtin_memcmp
-> -- 
-> 2.26.2
-> 
+>   mm/gup.c | 37 ++++++++++++++++++++++---------------
+>   1 file changed, 22 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ae096ea7583f..4da669f79566 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1789,6 +1789,25 @@ static long __get_user_pages_remote(struct mm_stru=
+ct *mm,
+>   				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
+>   }
+>  =20
+> +static bool is_valid_gup_flags(unsigned int gup_flags)
+> +{
+> +	/*
+> +	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
+> +	 * never directly by the caller, so enforce that with an assertion:
+> +	 */
+> +	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
+> +		return false;
+> +	/*
+> +	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
+> +	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
+> +	 * FOLL_PIN.
+> +	 */
+> +	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>   /**
+>    * get_user_pages_remote() - pin user pages in memory
+>    * @mm:		mm_struct of target mm
+> @@ -1854,11 +1873,7 @@ long get_user_pages_remote(struct mm_struct *mm,
+>   		unsigned int gup_flags, struct page **pages,
+>   		struct vm_area_struct **vmas, int *locked)
+>   {
+> -	/*
+> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
+> -	 * never directly by the caller, so enforce that with an assertion:
+> -	 */
+> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
+> +	if (!is_valid_gup_flags(gup_flags))
+>   		return -EINVAL;
+>  =20
+>   	return __get_user_pages_remote(mm, start, nr_pages, gup_flags,
+> @@ -1904,11 +1919,7 @@ long get_user_pages(unsigned long start, unsigned =
+long nr_pages,
+>   		unsigned int gup_flags, struct page **pages,
+>   		struct vm_area_struct **vmas)
+>   {
+> -	/*
+> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
+> -	 * never directly by the caller, so enforce that with an assertion:
+> -	 */
+> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
+> +	if (!is_valid_gup_flags(gup_flags))
+>   		return -EINVAL;
+>  =20
+>   	return __gup_longterm_locked(current->mm, start, nr_pages,
+> @@ -2810,11 +2821,7 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast_only);
+>   int get_user_pages_fast(unsigned long start, int nr_pages,
+>   			unsigned int gup_flags, struct page **pages)
+>   {
+> -	/*
+> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
+> -	 * never directly by the caller, so enforce that:
+> -	 */
+> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
+> +	if (!is_valid_gup_flags(gup_flags))
+>   		return -EINVAL;
+>  =20
+>   	/*
+>=20
 
--- 
-Kees Cook
