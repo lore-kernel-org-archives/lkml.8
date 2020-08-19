@@ -2,114 +2,85 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0959AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1CF20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE1220772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHSEH5 (ORCPT
+        id S1726211AbgHSEQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:07:57 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39564 "EHLO inva020.nxp.com"
+        Wed, 19 Aug 2020 00:16:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21778 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgHSEH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:07:56 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C9251A0291;
-        Wed, 19 Aug 2020 06:07:54 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A8D771A028A;
-        Wed, 19 Aug 2020 06:07:51 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EFB08402C3;
-        Wed, 19 Aug 2020 06:07:47 +0200 (CEST)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v3] soc: fsl: enable acpi support
-Date:   Wed, 19 Aug 2020 12:00:31 +0800
-Message-Id: <20200819040031.40204-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725275AbgHSEQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 00:16:08 -0400
+IronPort-SDR: B2HGZKG4e5Xha573wK//ux9O2DJoyvRC7j7DtVe1sKYu8nSPodfo0p5SsoG+FsgPjeLOgd3n7d
+ EFa5KqU3m3ag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142860431"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="142860431"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 21:16:07 -0700
+IronPort-SDR: yYEEsBJ88Yp4/3npUb5lXtlgmB1mqHQqfVYBWDeimD0/xCJwSnI81Tba7k1a/8xHc6fFLoVO07
+ zgaQ+Oin+3cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="278226300"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Aug 2020 21:16:06 -0700
+Received: from [10.249.73.187] (rtanwar-MOBL.gar.corp.intel.com [10.249.73.187])
+        by linux.intel.com (Postfix) with ESMTP id A6E45580583;
+        Tue, 18 Aug 2020 21:16:02 -0700 (PDT)
+Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+ <20200818083852.GC1891694@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
+Date:   Wed, 19 Aug 2020 12:16:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200818083852.GC1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Ma <peng.ma@nxp.com>
 
-This patch enables ACPI support in RCPM driver.
+Hi Andy,
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v3:
- - Add #ifdef CONFIG_ACPI for acpi_device_id
- - Rename rcpm_acpi_imx_ids to rcpm_acpi_ids
+On 18/8/2020 4:38 pm, Andy Shevchenko wrote:
+> On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
+>> Patch 1 adds dt binding document in YAML format.
+>> Patch 2 add PWM fan controller driver for LGM SoC.
+>>
+>> v7:
+>> - Address code quality related review concerns.
+>> - Rename fan related property to pwm-*.
+>> - Fix one make dt_binding_check reported error.
+> I guess it misses the answer why pwm-fan can't be integrated into the soup?
+>
 
-Change in v2:
- - Update acpi_device_id to fix conflict with other driver
+Can you please elaborate more? I could not understand your point clearly.
 
- drivers/soc/fsl/rcpm.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index a093dbe..55d1d73 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -2,7 +2,7 @@
- //
- // rcpm.c - Freescale QorIQ RCPM driver
- //
--// Copyright 2019 NXP
-+// Copyright 2019-2020 NXP
- //
- // Author: Ran Wang <ran.wang_1@nxp.com>
- 
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/acpi.h>
- 
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
- 
-@@ -125,6 +126,7 @@ static int rcpm_probe(struct platform_device *pdev)
- 
- 	ret = device_property_read_u32(&pdev->dev,
- 			"#fsl,rcpm-wakeup-cells", &rcpm->wakeup_cells);
-+
- 	if (ret)
- 		return ret;
- 
-@@ -139,10 +141,19 @@ static const struct of_device_id rcpm_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rcpm_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id rcpm_acpi_ids[] = {
-+	{"NXP0015",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, rcpm_acpi_ids);
-+#endif
-+
- static struct platform_driver rcpm_driver = {
- 	.driver = {
- 		.name = "rcpm",
- 		.of_match_table = rcpm_of_match,
-+		.acpi_match_table = ACPI_PTR(rcpm_acpi_ids),
- 		.pm	= &rcpm_pm_ops,
- 	},
- 	.probe = rcpm_probe,
--- 
-2.7.4
-
+Regards,
+Rahul
