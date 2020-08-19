@@ -2,133 +2,144 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E52142063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AjtBb2bH"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1EC2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHSVUD (ORCPT
+        id S1727793AbgHSVUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:20:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30285 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727045AbgHSVUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:20:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597871999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=d8aaFslZMGhZl5AC1zF/8lKFp9QgGd2sl23QtosnVQs=;
-        b=AjtBb2bHupOhnOUy+RV7vqaXo+7oM7rgeMozMdy9Rm8BC1430fcU12iwDmAsMwQHviKTYP
-        k2Tl4R831xTQx9aBQY/9cXXqNf2dR+3DYbn2+QUNHB+yT5iZVcCpJVdicaQ/lULr6348Ba
-        ZzEgiJaPBdc2qEqZ3Khr1u/7mIPX7yk=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-Jq55kAs_MZOrQxIrFE_Q2Q-1; Wed, 19 Aug 2020 17:19:55 -0400
-X-MC-Unique: Jq55kAs_MZOrQxIrFE_Q2Q-1
-Received: by mail-qv1-f71.google.com with SMTP id x4so16487575qvu.18
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:19:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d8aaFslZMGhZl5AC1zF/8lKFp9QgGd2sl23QtosnVQs=;
-        b=seV510J37Q5jlUuB5tzptXO8E570m3zF0ItXxhXLtN3YSf0lnMre5OndS6P4TWnwAH
-         WiRQ0ruVUkBn+wyJXmPQb0hEfp80biwXVThgBc5jYCCM3xkvNFvEfPywBUWQDDWQ0GFs
-         49FOcnTZkUfW+Pt0FjlTDwZaIOKM/OhXPZGI2x5EekXNCc8wNAU/L0cNKfmiEdwzB15U
-         rPQrF0TwrEcsJcxVDphlLzZ2otIOD4QfYj1+3xDy7Uzq2775ExKZRQR+ZML7FqcBNMbD
-         +N07Ih0cXwSQ4naVE0a+QBnEvX7B92LJvp3jlcVGs81nMBFUAjdE7Ev7iVLzGMMdSrky
-         IQoQ==
-X-Gm-Message-State: AOAM531uKXSi0Rd/FFNjV5u01eyZQVO2a0fRuftJL0lZIGST0MPlF0rs
-        OqPdk+0ZxxcFXUkGNMYNt5i4mxUELOry3/9uM97ju++xMc3TzVX36tpm6FxqinTC4H+tS4DdJDU
-        nUaIUjqy6Mvmf+ZglqnLBoTiF
-X-Received: by 2002:a0c:b52b:: with SMTP id d43mr176166qve.158.1597871995082;
-        Wed, 19 Aug 2020 14:19:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZf9ipn4932x+sExi1EY3BDhNG2nHiznmd/NazsmDhrrID6yRlma/qKP18WfWZY0hWvSKjuw==
-X-Received: by 2002:a0c:b52b:: with SMTP id d43mr176150qve.158.1597871994866;
-        Wed, 19 Aug 2020 14:19:54 -0700 (PDT)
-Received: from redhat.redhat.com (ip68-103-222-6.ks.ok.cox.net. [68.103.222.6])
-        by smtp.gmail.com with ESMTPSA id d198sm25876478qke.129.2020.08.19.14.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 14:19:54 -0700 (PDT)
-From:   Connor Kuehl <ckuehl@redhat.com>
-To:     corbet@lwn.net, pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: kvm: fix referenced ioctl symbol
-Date:   Wed, 19 Aug 2020 16:19:52 -0500
-Message-Id: <20200819211952.251984-1-ckuehl@redhat.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 19 Aug 2020 17:20:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9398 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727125AbgHSVUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:20:14 -0400
+IronPort-SDR: krgH/+iYRut+iFuajtIZo/e0f7gL3vqCIIOj6D5aIm4ISb0jWGCJ6z5Xfm6udaXv8XouLZRbva
+ 9tTKnTa+rHxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="156269931"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="156269931"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:20:14 -0700
+IronPort-SDR: Fpx7VDJGQljKL7tuZREc8dTprCHCCF5dffa0BcxNfrWn3OqWGDZ8i003lJdNxXAVmY0u+LCtJW
+ w7sITdpA5KPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="497377073"
+Received: from lkp-server01.sh.intel.com (HELO 4cedd236b688) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Aug 2020 14:20:12 -0700
+Received: from kbuild by 4cedd236b688 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k8VVE-0000ae-3e; Wed, 19 Aug 2020 21:20:12 +0000
+Date:   Thu, 20 Aug 2020 05:19:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 40eb0cb4939e462acfedea8c8064571e886b9773
+Message-ID: <5f3d974f.r+tWEt/epB5Wcw1M%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The actual symbol that is exported and usable is
-'KVM_MEMORY_ENCRYPT_OP', not 'KVM_MEM_ENCRYPT_OP'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 40eb0cb4939e462acfedea8c8064571e886b9773  x86/cpu: Fix typos and improve the comments in sync_core()
 
-$ git grep -l KVM_MEM_ENCRYPT_OP
-Documentation/virt/kvm/amd-memory-encryption.rst
+elapsed time: 722m
 
-$ git grep -l KVM_MEMORY_ENCRYPT_OP
-Documentation/virt/kvm/api.rst
-arch/x86/kvm/x86.c
-include/uapi/linux/kvm.h
-tools/include/uapi/linux/kvm.h
+configs tested: 73
+configs skipped: 37
 
-While we're in there, update the KVM API category for
-KVM_MEMORY_ENCRYPT_OP. It is called on a VM file descriptor.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Connor Kuehl <ckuehl@redhat.com>
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                          pcm027_defconfig
+arm                        mvebu_v7_defconfig
+arm                          pxa168_defconfig
+powerpc                     skiroot_defconfig
+sh                         ap325rxa_defconfig
+arc                 nsimosci_hs_smp_defconfig
+microblaze                      mmu_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20200818
+i386                 randconfig-a002-20200818
+i386                 randconfig-a001-20200818
+i386                 randconfig-a006-20200818
+i386                 randconfig-a003-20200818
+i386                 randconfig-a004-20200818
+x86_64               randconfig-a013-20200818
+x86_64               randconfig-a016-20200818
+x86_64               randconfig-a012-20200818
+x86_64               randconfig-a011-20200818
+x86_64               randconfig-a014-20200818
+x86_64               randconfig-a015-20200818
+i386                 randconfig-a016-20200818
+i386                 randconfig-a011-20200818
+i386                 randconfig-a015-20200818
+i386                 randconfig-a013-20200818
+i386                 randconfig-a012-20200818
+i386                 randconfig-a014-20200818
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- Documentation/virt/kvm/amd-memory-encryption.rst | 6 +++---
- Documentation/virt/kvm/api.rst                   | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-index 2d44388438cc..09a8f2a34e39 100644
---- a/Documentation/virt/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-@@ -53,11 +53,11 @@ key management interface to perform common hypervisor activities such as
- encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
- information, see the SEV Key Management spec [api-spec]_
- 
--The main ioctl to access SEV is KVM_MEM_ENCRYPT_OP.  If the argument
--to KVM_MEM_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
-+The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
-+to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
- and ``ENOTTY` if it is disabled (on some older versions of Linux,
- the ioctl runs normally even with a NULL argument, and therefore will
--likely return ``EFAULT``).  If non-NULL, the argument to KVM_MEM_ENCRYPT_OP
-+likely return ``EFAULT``).  If non-NULL, the argument to KVM_MEMORY_ENCRYPT_OP
- must be a struct kvm_sev_cmd::
- 
-        struct kvm_sev_cmd {
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index eb3a1316f03e..506c8426c583 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -4211,7 +4211,7 @@ H_GET_CPU_CHARACTERISTICS hypercall.
- 
- :Capability: basic
- :Architectures: x86
--:Type: system
-+:Type: vm
- :Parameters: an opaque platform specific structure (in/out)
- :Returns: 0 on success; -1 on error
- 
--- 
-2.25.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
