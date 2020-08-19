@@ -2,79 +2,145 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD01C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEB9206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06B4206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PSroFa98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHSMa5 (ORCPT
+        id S1727079AbgHSMck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgHSMay (ORCPT
+        Wed, 19 Aug 2020 08:32:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60078 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgHSMc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:30:54 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FB8C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:30:53 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by albert.telenet-ops.be with bizsmtp
-        id HQWs2300C4C55Sk06QWsQV; Wed, 19 Aug 2020 14:30:52 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8NEy-0002DJ-Ho; Wed, 19 Aug 2020 14:30:52 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8NEy-0004tu-GH; Wed, 19 Aug 2020 14:30:52 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] xtensa: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-Date:   Wed, 19 Aug 2020 14:30:51 +0200
-Message-Id: <20200819123051.18796-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Aug 2020 08:32:28 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200819123226euoutp0121f07e77e73aa2d957895ea3c65dbbb3~sq1RqjMMD2897628976euoutp01_
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:32:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200819123226euoutp0121f07e77e73aa2d957895ea3c65dbbb3~sq1RqjMMD2897628976euoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597840346;
+        bh=ehEA55cTOHzp/hMa1IHkDqb7+RqzzRP8GducSwbT9uw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PSroFa98Fmed1nwxfcqjXMuudOEqxwg6Tx7356ZYtuUtsyiWGjEpxFgDbmDiWzioI
+         i1awtD96oK8O46+kNtNA81FdeiBn0fJ4onSmDdJ2G81cLoUMfUjimEplFOhAGjyHBN
+         07M+Oh76hBt8eAUNaDpqk/5WORFqFBJC4UVHswB8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200819123226eucas1p2282009f27d2a3a6f20cee2b474ee357a~sq1RR8ZIx3168631686eucas1p2G;
+        Wed, 19 Aug 2020 12:32:26 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 42.FC.05997.ADB1D3F5; Wed, 19
+        Aug 2020 13:32:26 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200819123226eucas1p16c9b90330d957344f99f6ee461190085~sq1RA90g21043110431eucas1p19;
+        Wed, 19 Aug 2020 12:32:26 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200819123226eusmtrp229df06d59e344512679ff5ccc252e348~sq1Q-hoDU2933429334eusmtrp2R;
+        Wed, 19 Aug 2020 12:32:26 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-3b-5f3d1bda48c8
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 32.DF.06314.ADB1D3F5; Wed, 19
+        Aug 2020 13:32:26 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200819123225eusmtip22c5abf3c7b70d51305b66d17f306f693~sq1Q3Cpdz3236932369eusmtip2O;
+        Wed, 19 Aug 2020 12:32:25 +0000 (GMT)
+From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH 1/8] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
+ s3c64xx_enable_datapath()
+Date:   Wed, 19 Aug 2020 14:32:01 +0200
+Message-Id: <20200819123208.12337-2-l.stelmach@samsung.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200819123208.12337-1-l.stelmach@samsung.com>
+MIME-Version: 1.0
+Organization: Samsung R&D Institute Poland
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7q3pG3jDSb/lrBY/OM5k8XGGetZ
+        LaY+fMJm0f/4NbPF+fMb2C1uHlrBaLHp8TVWi8u75rBZzDi/j8mi8eNNdou1R+6yO3B7XF/y
+        idlj06pONo/NS+o9+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK+Ph9d2sBZPYKm6sf8DSwNjN
+        2sXIySEhYCJxZtd09i5GLg4hgRWMEssmT2KGcL4wSsw8fYURwvnMKHHzPUgLB1hL64IIiPhy
+        RokPXy+xQjjPGSU6T99lAZnLJuAo0b/0BFhCRGACk8TDc2/YQBLMAqUSPTsPgdnCAgkS345O
+        YAeZyiKgKtGytxIkzCtgLTFl33kmiPvkJdqXbwcr5xSwkXj4awobRI2gxMmZT8B28QtoSaxp
+        us4CMV5eonnrbGaI3nPsEr86uCFsF4lTS2FmCku8Or6FHcKWkfi/cz4TxGP1EpMnmYGcLCHQ
+        wyixbc4PFogaa4k7536xgdQwC2hKrN+lDxF2lNhz5ytUK5/EjbeCEBfwSUzaNp0ZIswr0dEm
+        BFGtIrGufw/UQCmJ3lcrGCcwKs1C8sssJPfPQti1gJF5FaN4amlxbnpqsVFearlecWJucWle
+        ul5yfu4mRmAyOv3v+JcdjLv+JB1iFOBgVOLhrThnHS/EmlhWXJl7iFGCg1lJhNfp7Ok4Id6U
+        xMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5akZqemFqQWwWSZODilGhhbL1k3Hk38u0Hz
+        7lcn/9XuqqXKnQ7fdl23XSizL/ewDHd+stziNJZCl698T04eavNo0o4RnfGD68/HPPH1czg3
+        Hee+I1l4eb7GwZfejNP/KlktKV8UviB7/6nJUuW/HKuObUmSPPCAr+vfi04z5cor1l+27vR4
+        3+Z0VqllHWv/hyVqlg9qXRyVWIozEg21mIuKEwG4CQEzQgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsVy+t/xe7q3pG3jDVYdZbdY/OM5k8XGGetZ
+        LaY+fMJm0f/4NbPF+fMb2C1uHlrBaLHp8TVWi8u75rBZzDi/j8mi8eNNdou1R+6yO3B7XF/y
+        idlj06pONo/NS+o9+rasYvT4vEkugDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng8
+        1srIVEnfziYlNSezLLVI3y5BL+Ph9d2sBZPYKm6sf8DSwNjN2sXIwSEhYCLRuiCii5GLQ0hg
+        KaNEx6ReZoi4lMTKueldjJxAprDEn2tdbBA1TxklDrbMZAJJsAk4SvQvPcEKkhARmMEk8eTG
+        ZFaQBLNAucSlWc/ZQQYJC8RJXDjAA2KyCKhKtOytBKngFbCWmLLvPBPEfHmJ9uXb2UBsTgEb
+        iYe/poDZQkA1XYsXMkHUC0qcnPmEBWQMs4C6xPp5QiBhfgEtiTVN11kglspLNG+dzTyBUWgW
+        ko5ZCB2zkFQtYGRexSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERh524793LyD8dLG4EOMAhyM
+        Sjy8Fees44VYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6MuJzFKiyfnA
+        pJBXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoGxX8Xe6f5MjWwz
+        9qXHG99nH+NvC+p+4Hp21SGGmL70EyJ6Rh9vLn+9R491/9/XhX9szzmuSH7iMVHTOShwy4de
+        VwatKYrPDyyc9L0+JXNtoeO3Yo3P63WMjP/Zf/jLZOXoVlh1x+1GiDNrUltrqXbx40+XujUY
+        12eEb3275ZLSh5wpj8QeKrAosRRnJBpqMRcVJwIA2w7Ux9ICAAA=
+X-CMS-MailID: 20200819123226eucas1p16c9b90330d957344f99f6ee461190085
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200819123226eucas1p16c9b90330d957344f99f6ee461190085
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200819123226eucas1p16c9b90330d957344f99f6ee461190085
+References: <20200819123208.12337-1-l.stelmach@samsung.com>
+        <CGME20200819123226eucas1p16c9b90330d957344f99f6ee461190085@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Xtensa time code is not a clock provider, and just needs to call
-of_clk_init().
+Fix issues with DMA transfers bigger than 512 on Exynos3250.
 
-Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 ---
-v2:
-  - Add Reviewed-by, Acked-by.
----
- arch/xtensa/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-s3c64xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/kernel/time.c b/arch/xtensa/kernel/time.c
-index 77971fe4cc95ba2b..e8ceb1528608188c 100644
---- a/arch/xtensa/kernel/time.c
-+++ b/arch/xtensa/kernel/time.c
-@@ -13,7 +13,7 @@
-  */
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index cf67ea60dc0e..fb5e2ba4b6b9 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -678,11 +678,11 @@ static int s3c64xx_spi_transfer_one(struct spi_master *master,
+ 		sdd->state &= ~RXBUSY;
+ 		sdd->state &= ~TXBUSY;
  
- #include <linux/clk.h>
--#include <linux/clk-provider.h>
-+#include <linux/of_clk.h>
- #include <linux/errno.h>
- #include <linux/sched.h>
- #include <linux/time.h>
+-		s3c64xx_enable_datapath(sdd, xfer, use_dma);
+-
+ 		/* Start the signals */
+ 		s3c64xx_spi_set_cs(spi, true);
+ 
++		s3c64xx_enable_datapath(sdd, xfer, use_dma);
++
+ 		spin_unlock_irqrestore(&sdd->lock, flags);
+ 
+ 		if (use_dma)
 -- 
-2.17.1
+2.26.2
 
