@@ -2,89 +2,145 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B0BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 488B820772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7674720772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brh0Ktr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgHSBCs (ORCPT
+        id S1727062AbgHSBHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:02:48 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:7052 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgHSBCp (ORCPT
+        Tue, 18 Aug 2020 21:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgHSBHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:02:45 -0400
-IronPort-SDR: 0qPuD+m6cR5LypoWJtvJWkR6V7SuTaXavDU8S7xNxCuahEMy+l/O3dt2o7J52ZxzgsoInEBvKt
- yMZKp5Ya0V279ZH/fd4pjZkzxqd5PBQyt4307awqvgX9SMgw829Aq4E6EiG9b+wMSHhRHqiOKE
- CLPWPi9EzB0etn8e6z9uPKpZgsyoFzJ0aWsJcVsSGxaxnVTm07AHqIF8tYfmqUMuBb/M0VplGq
- VUD9bK4OLB3vi1Vy8AIJorP5OLfDym03NB+ACQixY4ut8JV1ygbmQhKN3UsQtGoIM6l2As8BGM
- JU4=
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="47259371"
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by labrats.qualcomm.com with ESMTP; 18 Aug 2020 18:02:45 -0700
-Received: from wsp769891wss.qualcomm.com (HELO stor-presley.qualcomm.com) ([192.168.140.85])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 18 Aug 2020 18:02:43 -0700
-Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
-        id AFC3F215D9; Tue, 18 Aug 2020 18:02:43 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] scsi: ufs: Remove an unpaired ufshcd_scsi_unblock_requests() in err_handler()
-Date:   Tue, 18 Aug 2020 18:02:29 -0700
-Message-Id: <1597798958-24322-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 18 Aug 2020 21:07:22 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C3FC061389;
+        Tue, 18 Aug 2020 18:07:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u128so10821126pfb.6;
+        Tue, 18 Aug 2020 18:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+wK+rbb5LFUWKURBdXLnf6TcSgWtJm3SjVLoS6sfcuI=;
+        b=brh0Ktr9dycNhnLW0TLf+gpUU1vGvFAIch6QvlYZD2h3wpkxtOUXJpYuj5T7Mg4MoH
+         fdcfOOddoaJoAdFiceyY9Bvl65u1M5WXv5lsjc/zYiYr4Xx5oh79H1UlIZ0xsAkuCR0c
+         k8LPYnUO8G5h87s8/KZgQzG3FTKI/pYVyTykiElXJIwatK/4FDc5lplRbLdUBAVwncjI
+         aEp6y79FP44uK4F19CV+I0tQlN+6Rdf6A2RIyhkDyvRDkIhPwD9gElmk8RVC+3RvZyrJ
+         pYTprYuxPXU8Z1Q9pyHGlzh0Vn4ZO/lYZU8yyeE7oXzZYmrLYfBnfYQzwP7H6nHUXEVg
+         rQzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+wK+rbb5LFUWKURBdXLnf6TcSgWtJm3SjVLoS6sfcuI=;
+        b=Ufl+dvkZP2KHHT+10EzZn97wvpbZ5Zcx/A4sKdk8UTrXtRn8HdICXx2rwv1TwwVdTZ
+         V6eMkRd+qDs8do1ilpkBez+JOtmbqK5htYy7JTRkGDlVpngoJ0qMy/gk3/S0qXji6epe
+         lOMHWGxZG6M2ZmXAkzWtlTVfNvvhWR1aN23uA9b4JFTqXV2saIZTShswn6d9Hb9k8cRs
+         BH0RlQZEzV+qF9uQq5T0QZR05DBsYEJ8TLJql12RJShvQhfZM/p/gMF+qLAmrh9Ve6wp
+         hJjXEM2fVnZw9GS3N8znSlVsUALptYcjavTjQZRcRvcHbnF31RNm4pKntmsHUCvM+nGt
+         yP9Q==
+X-Gm-Message-State: AOAM530oPiELc/4C7MBKCqhxGkG3NSk8nNDFqH6CAoFKsFwEKC0aG+ZG
+        jee4KfymrQqoR4Zmn3kULyI=
+X-Google-Smtp-Source: ABdhPJwxddduoYdkGM2dQ7x6yTJRwPoAWBQclChxX2K6PuPejzkXW7RRl1/JLLhDhZgvN8XjQvEOeg==
+X-Received: by 2002:a62:8105:: with SMTP id t5mr17454448pfd.94.1597799240520;
+        Tue, 18 Aug 2020 18:07:20 -0700 (PDT)
+Received: from athina.mtv.corp.google.com ([2620:15c:211:0:a28c:fdff:fee1:f370])
+        by smtp.gmail.com with ESMTPSA id 193sm25881853pfu.169.2020.08.18.18.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 18:07:19 -0700 (PDT)
+From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
+To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH bpf-next 1/2] net-tun: add type safety to tun_xdp_to_ptr() and tun_ptr_to_xdp()
+Date:   Tue, 18 Aug 2020 18:07:09 -0700
+Message-Id: <20200819010710.3959310-1-zenczykowski@gmail.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5586dd8ea250 ("scsi: ufs: Fix a race condition between error handler
-and runtime PM ops") moves the ufshcd_scsi_block_requests() inside
-err_handler(), but forgets to remove the ufshcd_scsi_unblock_requests() in
-the early return path. Correct the coding mistake.
+From: Maciej Żenczykowski <maze@google.com>
 
-Fixes: 5586dd8ea250 ("scsi: ufs: Fix a race condition between error handler and runtime PM ops")
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Hongwu Su<hongwus@codeaurora.org>
+This reduces likelihood of incorrect use.
+
+Test: builds
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
 ---
+ drivers/net/tun.c      | 6 +++---
+ include/linux/if_tun.h | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-Change since v1:
-- Added Fixes tag.
-
- drivers/scsi/ufs/ufshcd.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2b55c2e..b8441ad 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5670,7 +5670,6 @@ static void ufshcd_err_handler(struct work_struct *work)
- 		if (hba->ufshcd_state != UFSHCD_STATE_ERROR)
- 			hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
- 		spin_unlock_irqrestore(hba->host->host_lock, flags);
--		ufshcd_scsi_unblock_requests(hba);
- 		return;
- 	}
- 	ufshcd_set_eh_in_progress(hba);
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 3c11a77f5709..5dd7f353eeef 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -225,13 +225,13 @@ bool tun_is_xdp_frame(void *ptr)
+ }
+ EXPORT_SYMBOL(tun_is_xdp_frame);
+ 
+-void *tun_xdp_to_ptr(void *ptr)
++void *tun_xdp_to_ptr(struct xdp_frame *xdp)
+ {
+-	return (void *)((unsigned long)ptr | TUN_XDP_FLAG);
++	return (void *)((unsigned long)xdp | TUN_XDP_FLAG);
+ }
+ EXPORT_SYMBOL(tun_xdp_to_ptr);
+ 
+-void *tun_ptr_to_xdp(void *ptr)
++struct xdp_frame *tun_ptr_to_xdp(void *ptr)
+ {
+ 	return (void *)((unsigned long)ptr & ~TUN_XDP_FLAG);
+ }
+diff --git a/include/linux/if_tun.h b/include/linux/if_tun.h
+index 5bda8cf457b6..6c37e1dbc5df 100644
+--- a/include/linux/if_tun.h
++++ b/include/linux/if_tun.h
+@@ -28,8 +28,8 @@ struct tun_xdp_hdr {
+ struct socket *tun_get_socket(struct file *);
+ struct ptr_ring *tun_get_tx_ring(struct file *file);
+ bool tun_is_xdp_frame(void *ptr);
+-void *tun_xdp_to_ptr(void *ptr);
+-void *tun_ptr_to_xdp(void *ptr);
++void *tun_xdp_to_ptr(struct xdp_frame *xdp);
++struct xdp_frame *tun_ptr_to_xdp(void *ptr);
+ void tun_ptr_free(void *ptr);
+ #else
+ #include <linux/err.h>
+@@ -48,11 +48,11 @@ static inline bool tun_is_xdp_frame(void *ptr)
+ {
+ 	return false;
+ }
+-static inline void *tun_xdp_to_ptr(void *ptr)
++static inline void *tun_xdp_to_ptr(struct xdp_frame *xdp)
+ {
+ 	return NULL;
+ }
+-static inline void *tun_ptr_to_xdp(void *ptr)
++static inline struct xdp_frame *tun_ptr_to_xdp(void *ptr)
+ {
+ 	return NULL;
+ }
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.28.0.220.ged08abb693-goog
 
