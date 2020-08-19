@@ -2,209 +2,133 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D43C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1974C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFB62078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001F2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gVPk5wRJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ta+g1ZgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHSVgR (ORCPT
+        id S1727097AbgHSVhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60048 "EHLO
+        Wed, 19 Aug 2020 17:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHSVgP (ORCPT
+        with ESMTP id S1726617AbgHSVhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:36:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78ED3C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UaMTQzQR/2iD7LYG3TBB/MsacjZTmGqhqlIGfP/7qyQ=; b=gVPk5wRJ1OVpBU+UO4Nn99K2Py
-        wKgQ8yNJ7e9p1Qs9SjO7zHIcoclTqoW4XqIwgbqx9e4oIGwtRUYeV71ZnUiER4vVB+PKimW0Oqxof
-        x3nra9YZl7BkRxUku+kMz+cv3X2DzPkYPmEQ7wQDfQsThDkkpTNnyLrt/5qTKV8xsYcg0cX0BRykf
-        hMoCE30BHD+mXBDJknaesJnDE+QhXTuTjoezkszkrpXVbItMlboKC0HGBKhA4e5HDiS6d+c+lZcMT
-        8o1Dia4T2to7XWZTKbWu29UCyZ4p85u2eka9AuqlO9k2TOZf3yyNV+m9w/NDnOoEu837bmg1jEJB5
-        hB1Ablfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8Vk9-0001Za-Ei; Wed, 19 Aug 2020 21:35:38 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D8EAD980C9E; Wed, 19 Aug 2020 23:35:34 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 23:35:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kyle Huey <me@kylehuey.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [REGRESSION 5.8] x86/entry: DR0 break-on-write not working
-Message-ID: <20200819213534.GQ3982@worktop.programming.kicks-ass.net>
-References: <CAP045Ao5-+vvTzCOaCkfwztsd2Q0_8kh85UxuXW0bbcfVbF40w@mail.gmail.com>
- <20200819184149.GH2674@hirez.programming.kicks-ass.net>
- <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
+        Wed, 19 Aug 2020 17:37:05 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D111C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:37:05 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id v21so20263187otj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 14:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CS+1467DMyFTqT+L2iSQMSr95xvUjx22mgQhPk7Fd0U=;
+        b=Ta+g1ZgTNyWRyOadjtYmnLrqkRKTp1Yqu3v85C1PlgWit/t/GfBuyJrf7KkLtWIp5c
+         obzIbdbmc69nlF0yFwItQxDewv3hhDIcu4hovzlskeqJwIK5mpzk6z3aUtqJgZ+DSflY
+         89K5nsJMI1E2px6cL3lCPAuXNqy6alXpd5Y8B86lVTMT5axCkRcmg1r9PnfhQ5ysxkGw
+         xuEboslpGgpoBK6kcsX6zimi7fbM/InmxLfMxBl2sylTbbrjYVKKzRv0miXc9y+CbO46
+         JPua5bOPXgPoLuzKVJq2PfJRU09D5n/WRI+3dX0QohzqYTWhWbS5DQscx/5yGjUDXe5V
+         X2jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CS+1467DMyFTqT+L2iSQMSr95xvUjx22mgQhPk7Fd0U=;
+        b=V7s6ejno5dNv+wfn5n/wkKtZFivj9csmCWg6Ge+bCN42WI4FAYjRS6FFpU+8z1e7IY
+         GqahCRs062C0zFuyv9CvQA428TJ8Pu3K4dBoEER5I1ItwxvR4iSYTV920C6Vbzqz2KhO
+         DnVx2XPR7+gBVDQB3g6+aeOZg3mxqQkgM1L6SdanVGW9DcGL/CRRzttVyXRFMNgw/yIV
+         9nVmvEslqvTl1nYe8RbcZjqMjb+PP7uhcFiIsqG0sNeSMTzrLQZsfc3+N7Vh8bSNEwzj
+         cDAulmWekxDRS64Ql/Hx7US0NwUeVLZCuK72J9+B8tnMxlVp91sF8nyHxknq/tRzm97j
+         kQtA==
+X-Gm-Message-State: AOAM530xC7zMuj0C7Q4krvq4uZA8GcdevgixYZKeroz1zCuIsu5QJBYt
+        88tc6cpGWWUZrlxlN+2lGuXPLJ298YIXyKrrN0l37A==
+X-Google-Smtp-Source: ABdhPJxpl82rAqK2FHLd0zX7VnPn8+94l8zujbb1JUnY5F6i+DaLJ+lsZzhjUgUndjPKQh1QUFVxfaVx/wGs30VKOyU=
+X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr21167646ots.102.1597873024596;
+ Wed, 19 Aug 2020 14:37:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 19 Aug 2020 14:36:52 -0700
+Message-ID: <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Liuyao An <anliuyao@huawei.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:28:16PM -0700, Kyle Huey wrote:
+On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+> So, IMO, the best is to keep it on staging for a while, until those
+> remaining bugs gets solved.
+>
+> I added this series, together with the regulator driver and
+> a few other patches (including a hack to fix a Kernel 5.8
+> regression at WiFi ) at:
+>
+>         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
 
-> > I'm guess that is not the expected outcome, is that the same failure you
-> > saw?
-> 
-> Yes. Is status also 0x4d00 for you?
+Sorry, one more small request: Could you create a branch that only has
+the DRM driver changes in it?
 
-Indeed.
+The reason I ask, is that since the HiKey960 isn't affected by the
+majority of the problems you listed as motivation for going through
+staging. So if we can validate that your tree works fine on HiKey960,
+the series can be cleaned up and submitted properly upstream to enable
+that SoC, and the outstanding 970 issues can be worked out afterwards
+against mainline.
 
-> The program is expected to complete with no assertions firing.
-
-When I comment out the break-on-exec test, the break-on-write test
-succeeds.
-
-When I add a few printk()'s to our #DB handler (6) the program will
-magically work again.
-
-I'm not much for ptrace(), but are we sure the test program is well
-behaved?
-
-The below also always works..
-
----
-/* -*- Mode: C; tab-width: 8; c-basic-offset: 2; indent-tabs-mode: nil; -*- */
-
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/ptrace.h>
-#include <stdarg.h>
-#include <assert.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <string.h>
-#include <stddef.h>
-#include <sys/user.h>
-
-/**
- * Print the printf-like arguments to stdout as atomic-ly as we can
- * manage.  Async-signal-safe.  Does not flush stdio buffers (doing so
- * isn't signal safe).
- */
-__attribute__((format(printf, 1, 2))) inline static int atomic_printf(
-    const char* fmt, ...) {
-  va_list args;
-  char buf[1024];
-  int len;
-
-  va_start(args, fmt);
-  len = vsnprintf(buf, sizeof(buf) - 1, fmt, args);
-  va_end(args);
-  return write(STDOUT_FILENO, buf, len);
-}
-
-/**
- * Write |str| on its own line to stdout as atomic-ly as we can
- * manage.  Async-signal-safe.  Does not flush stdio buffers (doing so
- * isn't signal safe).
- */
-inline static int atomic_puts(const char* str) {
-  return atomic_printf("%s\n", str);
-}
-
-inline static int check_cond(int cond) {
-  if (!cond) {
-    atomic_printf("FAILED: errno=%d (%s)\n", errno, strerror(errno));
-  }
-  return cond;
-}
-
-#define test_assert(cond) assert("FAILED: !" && check_cond(cond))
-
-#define NEW_VALUE 0xabcdef
-
-static void breakpoint(void) {}
-
-static char watch_var;
-
-int main(void) {
-  pid_t child;
-  int status;
-  int pipe_fds[2];
-
-  test_assert(0 == pipe(pipe_fds));
-
-  if (0 == (child = fork())) {
-    char ch;
-    read(pipe_fds[0], &ch, 1);
-    breakpoint();
-    watch_var = 1;
-    return 77;
-  }
-
-  test_assert(0 == ptrace(PTRACE_ATTACH, child, NULL, NULL));
-  test_assert(child == waitpid(child, &status, 0));
-  test_assert(status == ((SIGSTOP << 8) | 0x7f));
-  test_assert(1 == write(pipe_fds[1], "x", 1));
-
-  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
-                          (void*)offsetof(struct user, u_debugreg[0]),
-                          (void*)breakpoint));
-  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
-                          (void*)offsetof(struct user, u_debugreg[1]),
-                          &watch_var));
-  test_assert(0 == ptrace(PTRACE_POKEUSER, child,
-                          (void*)offsetof(struct user, u_debugreg[7]),
-                          (void*)0x100005));
-
-  test_assert(0 == ptrace(PTRACE_CONT, child, NULL, NULL));
-  test_assert(child == waitpid(child, &status, 0));
-  test_assert(status == ((SIGTRAP << 8) | 0x7f));
-  test_assert(0x1 == ptrace(PTRACE_PEEKUSER, child,
-                            (void*)offsetof(struct user, u_debugreg[6])));
-
-  test_assert(0 == ptrace(PTRACE_CONT, child, NULL, NULL));
-  test_assert(child == waitpid(child, &status, 0));
-  test_assert(status == ((SIGTRAP << 8) | 0x7f));
-  test_assert(0x2 == ptrace(PTRACE_PEEKUSER, child,
-                            (void*)offsetof(struct user, u_debugreg[6])));
-
-  test_assert(0 == ptrace(PTRACE_DETACH, child, NULL, NULL));
-
-  test_assert(child == waitpid(child, &status, 0));
-  test_assert(WIFEXITED(status));
-  test_assert(WEXITSTATUS(status) == 77);
-
-  atomic_puts("EXIT-SUCCESS");
-  return 0;
-}
-
+thanks
+-john
