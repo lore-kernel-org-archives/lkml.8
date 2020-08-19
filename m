@@ -2,98 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4822C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4702054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:12:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UXqfqdhf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mGmT0S3y"
+	by mail.kernel.org (Postfix) with ESMTP id CF7D020786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHSHMf (ORCPT
+        id S1726759AbgHSHQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgHSHLl (ORCPT
+        Wed, 19 Aug 2020 03:16:05 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:25516 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726711AbgHSHQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:11:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F15C061389;
-        Wed, 19 Aug 2020 00:11:41 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 09:11:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597821099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9LpC0XaRf4DGoIdiCEBe93B/70c29C6ZKL34lno4gEY=;
-        b=UXqfqdhf3Nhc9cOurrtA2TRVB6hnQsJeLc4jDdGaJls1pj/UsfWp+nGO/gwk5XDW0Iu8tO
-        RVoOH4Vga+sEvnrLZmAUHMdrlpBkWRGmXH+5hh34iT48YYmNGeoDQ8rxwQtUh1A8CA1tYD
-        NP4DEWE6NsL1zok6BvhOiKnhJHAL/hCvc1UT933OjtS0wC6yfYLifyi51vj5ChOhhNd8hj
-        L4ZxGPfb2gzWAf842Pua2ljeoqxvjjZp5JYU/rXA2zKpMOAfocuEW6To/qWTc429MnOrgM
-        MUl7DATUcska8ZGULDPv58gkPUBtYWYQGYnFsp5zAj3xEwDuuLkrMpMmwSacEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597821099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9LpC0XaRf4DGoIdiCEBe93B/70c29C6ZKL34lno4gEY=;
-        b=mGmT0S3ySWU3Bb20vrlRlEUdsOchhjk/u4nsbuHBDIZ1O9b0/EizMooUkP9DSV0AITT7um
-        XzuYUqq/jYVDGkCQ==
-From:   'Sebastian Andrzej Siewior' <bigeasy@linutronix.de>
-To:     Thomas Graziadei <thomas.graziadei@omicronenergy.com>
-Cc:     Mark Marshall <markmarshall14@gmail.com>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Mark Marshall <mark.marshall@omicronenergy.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>
-Subject: Re: Kernel crash due to memory corruption with v5.4.26-rt17 and
- PowerPC e500
-Message-ID: <20200819071138.bypg3slqhw7r577r@linutronix.de>
-References: <CAD4b4WK9W+dNZZ_WPt-9ZNpSHvyxdwPW86Rtq4AKOONuvyR37A@mail.gmail.com>
- <20200529131452.pgj7mx7xaz7n4kz3@linutronix.de>
- <CAD4b4WLS36JKepz31m98Z3Ve05d63GnfBGsuuWRXpjXZqPoBrA@mail.gmail.com>
- <20200529161518.svpxhkeljafbtdz2@linutronix.de>
- <20200529163722.mdxzrj4n3lyzjtfu@linutronix.de>
- <20200706165004.7m57fvspmwnjcjxh@linutronix.de>
- <eeeae7d9-c028-47f0-ab5b-7983e32f36cb@EXC03-ATKLA.omicron.at>
- <c1ef757b-4cd6-410e-a647-a3303cef4b1b@EXC03-ATKLA.omicron.at>
+        Wed, 19 Aug 2020 03:16:04 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J7FHPD002384;
+        Wed, 19 Aug 2020 03:15:49 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3304n5cf77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 03:15:49 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07J7FmpK059848
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 19 Aug 2020 03:15:48 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 19 Aug
+ 2020 03:15:47 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 19 Aug 2020 03:15:47 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07J7Fg8v020449;
+        Wed, 19 Aug 2020 03:15:45 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
+        <ardeleanalex@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 2/5] dmaengine: axi-dmac: move clock enable earlier
+Date:   Wed, 19 Aug 2020 10:16:30 +0300
+Message-ID: <20200819071633.76494-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200819071633.76494-1-alexandru.ardelean@analog.com>
+References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c1ef757b-4cd6-410e-a647-a3303cef4b1b@EXC03-ATKLA.omicron.at>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-19_04:2020-08-18,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=25 clxscore=1011 phishscore=0
+ priorityscore=1501 mlxlogscore=732 spamscore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-12 14:45:22 [+0200], Thomas Graziadei wrote:
-> Hi Sebastian,
-Hi Thomas,
+The clock may also be required to read registers from the IP core (if it is
+provided and the driver needs to control it).
+So, move it earlier in the probe.
 
-> any progress on your side?
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/dma/dma-axi-dmac.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-due to lack of time none. But I am on it=E2=80=A6
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 088c79137398..07665c60c21b 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -850,6 +850,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dmac->clk))
+ 		return PTR_ERR(dmac->clk);
+ 
++	ret = clk_prepare_enable(dmac->clk);
++	if (ret < 0)
++		return ret;
++
+ 	INIT_LIST_HEAD(&dmac->chan.active_descs);
+ 
+ 	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
+@@ -892,10 +896,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	dmac->chan.vchan.desc_free = axi_dmac_desc_free;
+ 	vchan_init(&dmac->chan.vchan, dma_dev);
+ 
+-	ret = clk_prepare_enable(dmac->clk);
+-	if (ret < 0)
+-		return ret;
+-
+ 	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
+ 
+ 	ret = axi_dmac_detect_caps(dmac, version);
+-- 
+2.17.1
 
-> Do you think the patch could be applied for the next versions?
-
-So I had a theory why it happens but then you said no so now I need
-to figure out why it happens so I can write it in the changelog.
-
-I believe you made it happen in qemu and you sent a .config and
-everything so I will stare into it as soon as I can.
-
-> Regards,
-> Thomas
-
-Sebastian
