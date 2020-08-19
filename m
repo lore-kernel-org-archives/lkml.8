@@ -2,196 +2,170 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF05C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C677C20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E0D20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apzowtx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHSH6R (ORCPT
+        id S1726951AbgHSH6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:58:17 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:53076 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726570AbgHSH6L (ORCPT
+        Wed, 19 Aug 2020 03:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgHSH6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:58:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U6D5.Xk_1597823875;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6D5.Xk_1597823875)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 19 Aug 2020 15:57:57 +0800
-Subject: Re: [RFC PATCH v2 5/5] mm: Split move_pages_to_lru into 3 separate
- passes
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
-        linux-kernel@vger.kernel.org, daniel.m.jordan@oracle.com,
-        linux-mm@kvack.org, shakeelb@google.com, willy@infradead.org,
-        hannes@cmpxchg.org, tj@kernel.org, cgroups@vger.kernel.org,
-        akpm@linux-foundation.org, richard.weiyang@gmail.com,
-        mgorman@techsingularity.net, iamjoonsoo.kim@lge.com
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042738.23414.60815.stgit@localhost.localdomain>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <084c58a7-7aac-820c-9606-19391c35b9b5@linux.alibaba.com>
-Date:   Wed, 19 Aug 2020 15:56:43 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 19 Aug 2020 03:58:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0859C061389;
+        Wed, 19 Aug 2020 00:58:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t11so10436237plr.5;
+        Wed, 19 Aug 2020 00:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nKF15E21rJWLju6nAeOokc2X10iJm45TmDDuTb7BDyo=;
+        b=apzowtx/JJMYaJFqB9aNKjQu09kNkBa68AGGbFzCPAXBOIxcNvo9zGM4wdTIhYFCQH
+         2PejIHHl6Pynxe9KrWu2drm/COx+KbANK43OHOxu7x3O/orJOXx0tG9GgWC43iTxMUaO
+         s5Ar5Uj0gkR895502pghrXlVmDa8++kb4k2CKrOnSJmcg/51W6EXKBAOubqp9xoJ6vRU
+         h8apUodiIHXB+7fNsGd7Om7RmEVj68rCWkaM4X9+GrtKe16lV84ulJJHurHjH8QymnGy
+         89z7XSFFuubH9a1kKLdJYqM/Gkg0Al67RH1LE+8ANVWa1he2wkrSjz8F6LDKK6Mg9YfH
+         CmgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nKF15E21rJWLju6nAeOokc2X10iJm45TmDDuTb7BDyo=;
+        b=PmdKJzz6/1/KLW5qsiNfcCn1kpZ0j/lYsj3gXSjxhYxvsuFL75+HF80ghLHBppOPhf
+         gqGxZFi3K5Wzof26EgB/lMOBqlRJY9La5R0BPWlNZVDT1bdBRfH0sqZTtel9V5kuHfHz
+         by2U3epi/BohJRmc5BqxFhwDpJUBIdxEh55bKP3AbZ70F8diAXEOYLzRpvtM43KtbEf5
+         0QnsNhNKgici4nxUWB4xBltAMoIwYqkMlUEwBIpq8HEV9ve/59hiykLix5RhcPT+SizQ
+         DNUjeeBJ6dWbScMDw8bqRFoiPaWMAdvKpA2//QAcwUzlhKrJKjwlw9trFJ9jHgjnUFPW
+         v2yQ==
+X-Gm-Message-State: AOAM531VbZSdmlIjLnFrP5GZuC385HUadGqPnZS7uLpgIAXJVl3Xd4vd
+        GZPg3UKELGeizItUxygZ81zJkd7Zxk1rJZmM2kw=
+X-Google-Smtp-Source: ABdhPJy2mpdctsp/Elqdf1ybhxRpmrmOnWPechCwAQFwProksNJSI1q8DyW0WdAG7ge6vQ2XPJBBgdi2oti2c3W8xbA=
+X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr17416466plt.262.1597823921415;
+ Wed, 19 Aug 2020 00:58:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200819042738.23414.60815.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200819071733.60028-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20200819071733.60028-1-heikki.krogerus@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 10:58:25 +0300
+Message-ID: <CAHp75VckB49ZoJetK6WxK08SszzxutQyNOm-TLEsMDwhow=3Fw@mail.gmail.com>
+Subject: Re: [PATCH] tools: usb: move to tools buildsystem
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 19, 2020 at 10:17 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Converting the Makefile to use the new tools buildsystem.
 
+In particular it allows you to build with `make O=...` which is very helpful!
 
-在 2020/8/19 下午12:27, Alexander Duyck 写道:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> The current code for move_pages_to_lru is meant to release the LRU lock
-> every time it encounters an unevictable page or a compound page that must
-> be freed. This results in a fair amount of code bulk because the lruvec has
-> to be reacquired every time the lock is released and reacquired.
-> 
-> Instead of doing this I believe we can break the code up into 3 passes. The
-> first pass will identify the pages we can move to LRU and move those. In
-> addition it will sort the list out leaving the unevictable pages in the
-> list and moving those pages that have dropped to a reference count of 0 to
-> pages_to_free. The second pass will return the unevictable pages to the
-> LRU. The final pass will free any compound pages we have in the
-> pages_to_free list before we merge it back with the original list and
-> return from the function.
-> 
-> The advantage of doing it this way is that we only have to release the lock
-> between pass 1 and 2, and then we reacquire the lock after pass 3 after we
-> merge the pages_to_free back into the original list. As such we only have
-> to release the lock at most once in an entire call instead of having to
-> test to see if we need to relock with each page.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > ---
->  mm/vmscan.c |   68 ++++++++++++++++++++++++++++++++++-------------------------
->  1 file changed, 39 insertions(+), 29 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 3ebe3f9b653b..6a2bdbc1a9eb 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1850,22 +1850,21 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  {
->  	int nr_pages, nr_moved = 0;
->  	LIST_HEAD(pages_to_free);
-> -	struct page *page;
-> -	struct lruvec *orig_lruvec = lruvec;
-> +	struct page *page, *next;
->  	enum lru_list lru;
->  
-> -	while (!list_empty(list)) {
-> -		page = lru_to_page(list);
-> +	list_for_each_entry_safe(page, next, list, lru) {
->  		VM_BUG_ON_PAGE(PageLRU(page), page);
-> -		list_del(&page->lru);
-> -		if (unlikely(!page_evictable(page))) {
-> -			if (lruvec) {
-> -				spin_unlock_irq(&lruvec->lru_lock);
-> -				lruvec = NULL;
-> -			}
-> -			putback_lru_page(page);
+>  tools/usb/Build    |  2 ++
+>  tools/usb/Makefile | 53 +++++++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 47 insertions(+), 8 deletions(-)
+>  create mode 100644 tools/usb/Build
+>
+> diff --git a/tools/usb/Build b/tools/usb/Build
+> new file mode 100644
+> index 0000000000000..2ad6f97458168
+> --- /dev/null
+> +++ b/tools/usb/Build
+> @@ -0,0 +1,2 @@
+> +testusb-y += testusb.o
+> +ffs-test-y += ffs-test.o
+> diff --git a/tools/usb/Makefile b/tools/usb/Makefile
+> index 01d758d73b6db..1b128e551b2e4 100644
+> --- a/tools/usb/Makefile
+> +++ b/tools/usb/Makefile
+> @@ -1,14 +1,51 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for USB tools
+> +include ../scripts/Makefile.include
+>
+> -PTHREAD_LIBS = -lpthread
+> -WARNINGS = -Wall -Wextra
+> -CFLAGS = $(WARNINGS) -g -I../include
+> -LDFLAGS = $(PTHREAD_LIBS)
+> +bindir ?= /usr/bin
+>
+> -all: testusb ffs-test
+> -%: %.c
+> -       $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+> +ifeq ($(srctree),)
+> +srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+> +srctree := $(patsubst %/,%,$(dir $(srctree)))
+> +endif
 > +
-> +		/*
-> +		 * if page is unevictable leave it on the list to be returned
-> +		 * to the LRU after we have finished processing the other
-> +		 * entries in the list.
-> +		 */
-> +		if (unlikely(!page_evictable(page)))
->  			continue;
-> -		}
+> +# Do not use make's built-in rules
+> +# (this improves performance and avoids hard-to-debug behaviour);
+> +MAKEFLAGS += -r
 > +
-> +		list_del(&page->lru);
->  
->  		/*
->  		 * The SetPageLRU needs to be kept here for list intergrity.
-> @@ -1878,20 +1877,14 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  		 *     list_add(&page->lru,)
->  		 *                                        list_add(&page->lru,)
->  		 */
-> -		lruvec = relock_page_lruvec_irq(page, lruvec);
+> +override CFLAGS += -O2 -Wall -Wextra -g -D_GNU_SOURCE -I$(OUTPUT)include -I$(srctree)/tools/include
+> +override LDFLAGS += -lpthread
+> +
+> +ALL_TARGETS := testusb ffs-test
+> +ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+> +
+> +all: $(ALL_PROGRAMS)
+> +
+> +export srctree OUTPUT CC LD CFLAGS
+> +include $(srctree)/tools/build/Makefile.include
+> +
+> +TESTUSB_IN := $(OUTPUT)testusb-in.o
+> +$(TESTUSB_IN): FORCE
+> +       $(Q)$(MAKE) $(build)=testusb
+> +$(OUTPUT)testusb: $(TESTUSB_IN)
+> +       $(QUIET_LINK)$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+> +
+> +FFS_TEST_IN := $(OUTPUT)ffs-test-in.o
+> +$(FFS_TEST_IN): FORCE
+> +       $(Q)$(MAKE) $(build)=ffs-test
+> +$(OUTPUT)ffs-test: $(FFS_TEST_IN)
+> +       $(QUIET_LINK)$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+>
+>  clean:
+> -       $(RM) testusb ffs-test
+> +       rm -f $(ALL_PROGRAMS)
+> +       find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete -o -name '\.*.o.cmd' -delete
+> +
+> +install: $(ALL_PROGRAMS)
+> +       install -d -m 755 $(DESTDIR)$(bindir);          \
+> +       for program in $(ALL_PROGRAMS); do              \
+> +               install $$program $(DESTDIR)$(bindir);  \
+> +       done
+> +
+> +FORCE:
+> +
+> +.PHONY: all install clean FORCE prepare
+> --
+> 2.28.0
+>
 
-It's actually changed the meaning from current func. which I had seen a bug if no relock.
-but after move to 5.9 kernel, I can not reprodce the bug any more. I am not sure if 5.9 fixed 
-the problem, and we don't need relock here. 
 
-For the rest of this patch. 
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
-
-
->  		SetPageLRU(page);
->  
->  		if (unlikely(put_page_testzero(page))) {
->  			__ClearPageLRU(page);
->  			__ClearPageActive(page);
->  
-> -			if (unlikely(PageCompound(page))) {
-> -				spin_unlock_irq(&lruvec->lru_lock);
-> -				lruvec = NULL;
-> -				destroy_compound_page(page);
-> -			} else
-> -				list_add(&page->lru, &pages_to_free);
-> -
-> +			/* defer freeing until we can release lru_lock */
-> +			list_add(&page->lru, &pages_to_free);
->  			continue;
->  		}
->  
-> @@ -1904,16 +1897,33 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  		if (PageActive(page))
->  			workingset_age_nonresident(lruvec, nr_pages);
->  	}
-> -	if (orig_lruvec != lruvec) {
-> -		if (lruvec)
-> -			spin_unlock_irq(&lruvec->lru_lock);
-> -		spin_lock_irq(&orig_lruvec->lru_lock);
-> -	}
->  
-> -	/*
-> -	 * To save our caller's stack, now use input list for pages to free.
-> -	 */
-> -	list_splice(&pages_to_free, list);
-> +	if (unlikely(!list_empty(list) || !list_empty(&pages_to_free))) {
-> +		spin_unlock_irq(&lruvec->lru_lock);
-> +
-> +		/* return any unevictable pages to the LRU list */
-> +		while (!list_empty(list)) {
-> +			page = lru_to_page(list);
-> +			list_del(&page->lru);
-> +			putback_lru_page(page);
-> +		}
-> +
-> +		/*
-> +		 * To save our caller's stack use input
-> +		 * list for pages to free.
-> +		 */
-> +		list_splice(&pages_to_free, list);
-> +
-> +		/* free any compound pages we have in the list */
-> +		list_for_each_entry_safe(page, next, list, lru) {
-> +			if (likely(!PageCompound(page)))
-> +				continue;
-> +			list_del(&page->lru);
-> +			destroy_compound_page(page);
-> +		}
-> +
-> +		spin_lock_irq(&lruvec->lru_lock);
-> +	}
->  
->  	return nr_moved;
->  }
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
