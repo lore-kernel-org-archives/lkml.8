@@ -2,25 +2,25 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163C2C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40C020758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15422076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iikeXZl9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="av9X5ckH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgHSWXQ (ORCPT
+        id S1728107AbgHSWXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:23:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41981 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726681AbgHSWVG (ORCPT
+        Wed, 19 Aug 2020 18:23:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47259 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726716AbgHSWVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 18:21:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,35 +29,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=y+9MJ9AUGEvGT2iI7OfaM8eWLvPkELwmthVnOBkeqIs=;
-        b=iikeXZl9inOzfzUcvPz/6YUEt9ZKYW1xkvKi0vhkrKk2h8jH/3vRJRRUPPrC1TaFmJA3I+
-        ubjLzmLisFIJLcjOiVO2DH1D/SzsCwtQDWbfYY1b9VC5mrq+QfAR1wjYg/APiTjUmiDH4G
-        MhapTjRSCDVQ1vyE/13fUBhTNOj99FE=
+        bh=Q2zRPiRf1LuVvr4XUg9MR8uGhP29GZ3Nl8VTq3KJoB8=;
+        b=av9X5ckHQ4W/b0In4MVE3xn/OCdOPikZMPueEQgnr/rPlEiTTqUKQjK33xJVMczPPAJT2L
+        Db3sEnIMvPTTWPsIsvhf5sPSxq8zd+goKvnb19hxhWfsWwKbJZDVAAzXsq88BSiTeWX8Sw
+        RdolrC2KhlKi2O9COq6oX669qOPi/Xo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-EYNoBz8-M263gTqHl_89AA-1; Wed, 19 Aug 2020 18:21:02 -0400
-X-MC-Unique: EYNoBz8-M263gTqHl_89AA-1
+ us-mta-566-qM5crSEtOOKMfT2xiQSndw-1; Wed, 19 Aug 2020 18:21:02 -0400
+X-MC-Unique: qM5crSEtOOKMfT2xiQSndw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 074AE1014DF9;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD321425D0;
         Wed, 19 Aug 2020 22:21:01 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-115-197.rdu2.redhat.com [10.10.115.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4744B7E303;
-        Wed, 19 Aug 2020 22:20:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74E567E307;
+        Wed, 19 Aug 2020 22:21:01 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id CDD4A2254FB; Wed, 19 Aug 2020 18:20:53 -0400 (EDT)
+        id 028AF2256E7; Wed, 19 Aug 2020 18:20:54 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org, virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, dan.j.williams@intel.com,
-        Jan Kara <jack@suse.cz>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Subject: [PATCH v3 02/18] dax: Create a range version of dax_layout_busy_page()
-Date:   Wed, 19 Aug 2020 18:19:40 -0400
-Message-Id: <20200819221956.845195-3-vgoyal@redhat.com>
+        dgilbert@redhat.com, dan.j.williams@intel.com
+Subject: [PATCH v3 09/18] fuse,virtiofs: Add a mount option to enable dax
+Date:   Wed, 19 Aug 2020 18:19:47 -0400
+Message-Id: <20200819221956.845195-10-vgoyal@redhat.com>
 In-Reply-To: <20200819221956.845195-1-vgoyal@redhat.com>
 References: <20200819221956.845195-1-vgoyal@redhat.com>
 MIME-Version: 1.0
@@ -68,141 +65,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtiofs device has a range of memory which is mapped into file inodes
-using dax. This memory is mapped in qemu on host and maps different
-sections of real file on host. Size of this memory is limited
-(determined by administrator) and depending on filesystem size, we will
-soon reach a situation where all the memory is in use and we need to
-reclaim some.
+Add a mount option to allow using dax with virtio_fs.
 
-As part of reclaim process, we will need to make sure that there are
-no active references to pages (taken by get_user_pages()) on the memory
-range we are trying to reclaim. I am planning to use
-dax_layout_busy_page() for this. But in current form this is per inode
-and scans through all the pages of the inode.
-
-We want to reclaim only a portion of memory (say 2MB page). So we want
-to make sure that only that 2MB range of pages do not have any
-references  (and don't want to unmap all the pages of inode).
-
-Hence, create a range version of this function named
-dax_layout_busy_page_range() which can be used to pass a range which
-needs to be unmapped.
-
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-nvdimm@lists.01.org
-Cc: Jan Kara <jack@suse.cz>
-Cc: Vishal L Verma <vishal.l.verma@intel.com>
-Cc: "Weiny, Ira" <ira.weiny@intel.com>
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/dax.c            | 29 +++++++++++++++++++++++------
- include/linux/dax.h |  6 ++++++
- 2 files changed, 29 insertions(+), 6 deletions(-)
+ fs/fuse/fuse_i.h    |  7 ++++
+ fs/fuse/inode.c     |  3 ++
+ fs/fuse/virtio_fs.c | 82 +++++++++++++++++++++++++++++++++++++--------
+ 3 files changed, 78 insertions(+), 14 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 95341af1a966..ddd705251d9f 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -559,7 +559,7 @@ static void *grab_mapping_entry(struct xa_state *xas,
- }
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index cf5e675100ec..04fdd7c41bd1 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -486,10 +486,14 @@ struct fuse_fs_context {
+ 	bool destroy:1;
+ 	bool no_control:1;
+ 	bool no_force_umount:1;
++	bool dax:1;
+ 	unsigned int max_read;
+ 	unsigned int blksize;
+ 	const char *subtype;
  
- /**
-- * dax_layout_busy_page - find first pinned page in @mapping
-+ * dax_layout_busy_page_range - find first pinned page in @mapping
-  * @mapping: address space to scan for a page with ref count > 1
-  *
-  * DAX requires ZONE_DEVICE mapped pages. These pages are never
-@@ -572,13 +572,19 @@ static void *grab_mapping_entry(struct xa_state *xas,
-  * establishment of new mappings in this address_space. I.e. it expects
-  * to be able to run unmap_mapping_range() and subsequently not race
-  * mapping_mapped() becoming true.
-+ *
-+ * Partial pages are included. If 'end' is LLONG_MAX, pages in the range
-+ * from 'start' to end of the file are inluded.
-  */
--struct page *dax_layout_busy_page(struct address_space *mapping)
-+struct page *dax_layout_busy_page_range(struct address_space *mapping,
-+					loff_t start, loff_t end)
- {
--	XA_STATE(xas, &mapping->i_pages, 0);
- 	void *entry;
- 	unsigned int scanned = 0;
- 	struct page *page = NULL;
-+	pgoff_t start_idx = start >> PAGE_SHIFT;
-+	pgoff_t end_idx;
-+	XA_STATE(xas, &mapping->i_pages, start_idx);
- 
- 	/*
- 	 * In the 'limited' case get_user_pages() for dax is disabled.
-@@ -589,6 +595,11 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
- 		return NULL;
- 
-+	/* If end == LLONG_MAX, all pages from start to till end of file */
-+	if (end == LLONG_MAX)
-+		end_idx = ULONG_MAX;
-+	else
-+		end_idx = end >> PAGE_SHIFT;
- 	/*
- 	 * If we race get_user_pages_fast() here either we'll see the
- 	 * elevated page count in the iteration and wait, or
-@@ -596,15 +607,15 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	 * against is no longer mapped in the page tables and bail to the
- 	 * get_user_pages() slow path.  The slow path is protected by
- 	 * pte_lock() and pmd_lock(). New references are not taken without
--	 * holding those locks, and unmap_mapping_range() will not zero the
-+	 * holding those locks, and unmap_mapping_pages() will not zero the
- 	 * pte or pmd without holding the respective lock, so we are
- 	 * guaranteed to either see new references or prevent new
- 	 * references from being established.
- 	 */
--	unmap_mapping_range(mapping, 0, 0, 0);
-+	unmap_mapping_pages(mapping, start_idx, end_idx - start_idx + 1, 0);
- 
- 	xas_lock_irq(&xas);
--	xas_for_each(&xas, entry, ULONG_MAX) {
-+	xas_for_each(&xas, entry, end_idx) {
- 		if (WARN_ON_ONCE(!xa_is_value(entry)))
- 			continue;
- 		if (unlikely(dax_is_locked(entry)))
-@@ -625,6 +636,12 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
- 	xas_unlock_irq(&xas);
- 	return page;
- }
-+EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
++	/* DAX device, may be NULL */
++	struct dax_device *dax_dev;
 +
-+struct page *dax_layout_busy_page(struct address_space *mapping)
-+{
-+	return dax_layout_busy_page_range(mapping, 0, LLONG_MAX);
-+}
- EXPORT_SYMBOL_GPL(dax_layout_busy_page);
+ 	/* fuse_dev pointer to fill in, should contain NULL on entry */
+ 	void **fudptr;
+ };
+@@ -761,6 +765,9 @@ struct fuse_conn {
  
- static int __dax_invalidate_entry(struct address_space *mapping,
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 6904d4e0b2e0..9016929db4c6 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -141,6 +141,7 @@ int dax_writeback_mapping_range(struct address_space *mapping,
- 		struct dax_device *dax_dev, struct writeback_control *wbc);
+ 	/** List of device instances belonging to this connection */
+ 	struct list_head devices;
++
++	/** DAX device, non-NULL if DAX is supported */
++	struct dax_device *dax_dev;
+ };
  
- struct page *dax_layout_busy_page(struct address_space *mapping);
-+struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t start, loff_t end);
- dax_entry_t dax_lock_page(struct page *page);
- void dax_unlock_page(struct page *page, dax_entry_t cookie);
- #else
-@@ -171,6 +172,11 @@ static inline struct page *dax_layout_busy_page(struct address_space *mapping)
- 	return NULL;
+ static inline struct fuse_conn *get_fuse_conn_super(struct super_block *sb)
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 2ac5713c4c32..beac337ccc10 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -589,6 +589,8 @@ static int fuse_show_options(struct seq_file *m, struct dentry *root)
+ 		seq_printf(m, ",max_read=%u", fc->max_read);
+ 	if (sb->s_bdev && sb->s_blocksize != FUSE_DEFAULT_BLKSIZE)
+ 		seq_printf(m, ",blksize=%lu", sb->s_blocksize);
++	if (fc->dax_dev)
++		seq_printf(m, ",dax");
+ 	return 0;
  }
  
-+static inline struct page *dax_layout_busy_page_range(struct address_space *mapping, pgoff_t start, pgoff_t nr_pages)
+@@ -1207,6 +1209,7 @@ int fuse_fill_super_common(struct super_block *sb, struct fuse_fs_context *ctx)
+ 	fc->destroy = ctx->destroy;
+ 	fc->no_control = ctx->no_control;
+ 	fc->no_force_umount = ctx->no_force_umount;
++	fc->dax_dev = ctx->dax_dev;
+ 
+ 	err = -ENOMEM;
+ 	root = fuse_get_root_inode(sb, ctx->rootmode);
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index 0fd3b5cecc5f..741cad4abad8 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -13,6 +13,7 @@
+ #include <linux/virtio_fs.h>
+ #include <linux/delay.h>
+ #include <linux/fs_context.h>
++#include <linux/fs_parser.h>
+ #include <linux/highmem.h>
+ #include <linux/uio.h>
+ #include "fuse_i.h"
+@@ -81,6 +82,45 @@ struct virtio_fs_req_work {
+ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 				 struct fuse_req *req, bool in_flight);
+ 
++enum {
++	OPT_DAX,
++};
++
++static const struct fs_parameter_spec virtio_fs_parameters[] = {
++	fsparam_flag	("dax",		OPT_DAX),
++	{}
++};
++
++static int virtio_fs_parse_param(struct fs_context *fc,
++				 struct fs_parameter *param)
 +{
-+	return NULL;
++	struct fs_parse_result result;
++	struct fuse_fs_context *ctx = fc->fs_private;
++	int opt;
++
++	opt = fs_parse(fc, virtio_fs_parameters, param, &result);
++	if (opt < 0)
++		return opt;
++
++	switch (opt) {
++	case OPT_DAX:
++		ctx->dax = 1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
 +}
 +
- static inline int dax_writeback_mapping_range(struct address_space *mapping,
- 		struct dax_device *dax_dev, struct writeback_control *wbc)
++static void virtio_fs_free_fc(struct fs_context *fc)
++{
++	struct fuse_fs_context *ctx = fc->fs_private;
++
++	if (ctx)
++		kfree(ctx);
++}
++
+ static inline struct virtio_fs_vq *vq_to_fsvq(struct virtqueue *vq)
  {
+ 	struct virtio_fs *fs = vq->vdev->priv;
+@@ -1220,23 +1260,27 @@ static const struct fuse_iqueue_ops virtio_fs_fiq_ops = {
+ 	.release			= virtio_fs_fiq_release,
+ };
+ 
+-static int virtio_fs_fill_super(struct super_block *sb)
++static inline void virtio_fs_ctx_set_defaults(struct fuse_fs_context *ctx)
++{
++	ctx->rootmode = S_IFDIR;
++	ctx->default_permissions = 1;
++	ctx->allow_other = 1;
++	ctx->max_read = UINT_MAX;
++	ctx->blksize = 512;
++	ctx->destroy = true;
++	ctx->no_control = true;
++	ctx->no_force_umount = true;
++}
++
++static int virtio_fs_fill_super(struct super_block *sb, struct fs_context *fsc)
+ {
+ 	struct fuse_conn *fc = get_fuse_conn_super(sb);
+ 	struct virtio_fs *fs = fc->iq.priv;
++	struct fuse_fs_context *ctx = fsc->fs_private;
+ 	unsigned int i;
+ 	int err;
+-	struct fuse_fs_context ctx = {
+-		.rootmode = S_IFDIR,
+-		.default_permissions = 1,
+-		.allow_other = 1,
+-		.max_read = UINT_MAX,
+-		.blksize = 512,
+-		.destroy = true,
+-		.no_control = true,
+-		.no_force_umount = true,
+-	};
+ 
++	virtio_fs_ctx_set_defaults(ctx);
+ 	mutex_lock(&virtio_fs_mutex);
+ 
+ 	/* After holding mutex, make sure virtiofs device is still there.
+@@ -1260,8 +1304,10 @@ static int virtio_fs_fill_super(struct super_block *sb)
+ 	}
+ 
+ 	/* virtiofs allocates and installs its own fuse devices */
+-	ctx.fudptr = NULL;
+-	err = fuse_fill_super_common(sb, &ctx);
++	ctx->fudptr = NULL;
++	if (ctx->dax)
++		ctx->dax_dev = fs->dax_dev;
++	err = fuse_fill_super_common(sb, ctx);
+ 	if (err < 0)
+ 		goto err_free_fuse_devs;
+ 
+@@ -1372,7 +1418,7 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
+ 		return PTR_ERR(sb);
+ 
+ 	if (!sb->s_root) {
+-		err = virtio_fs_fill_super(sb);
++		err = virtio_fs_fill_super(sb, fsc);
+ 		if (err) {
+ 			deactivate_locked_super(sb);
+ 			return err;
+@@ -1387,11 +1433,19 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
+ }
+ 
+ static const struct fs_context_operations virtio_fs_context_ops = {
++	.free		= virtio_fs_free_fc,
++	.parse_param	= virtio_fs_parse_param,
+ 	.get_tree	= virtio_fs_get_tree,
+ };
+ 
+ static int virtio_fs_init_fs_context(struct fs_context *fsc)
+ {
++	struct fuse_fs_context *ctx;
++
++	ctx = kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++	fsc->fs_private = ctx;
+ 	fsc->ops = &virtio_fs_context_ops;
+ 	return 0;
+ }
 -- 
 2.25.4
 
