@@ -2,174 +2,128 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D22C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262A3207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26EED207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SjDpvwZq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+fmKQvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgHSKLR (ORCPT
+        id S1727786AbgHSKMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHSKLQ (ORCPT
+        Wed, 19 Aug 2020 06:12:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52343 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726873AbgHSKMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:11:16 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FD2C061342
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:11:16 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id j188so11659195vsd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 03:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=y4FO5cAqB3SZpz4VRvo1nhldKsrJkQ6TRgib+7pzYvg=;
-        b=SjDpvwZqYxtOHCObUcm6slt6EBaXA5zpNsiIiroDWpj+Lju9UtnzT63d64RkVT8pgK
-         gefRLLDD0vykjfj6v4j2Wdhb54O5x7AMMzZhJxdBP1LHNetsDfHbxq5n9YwS49CPtadB
-         P8OLaamoDfeUlLF/MQL1970astHhK2wZFhH5wGNhOiAlaB2ru2EqAiwoPGUQL7fRycPQ
-         NYzl9aWkxz+53yPJwRs0+4MF2VXT6RhAwDyPD3obyiaWKOMhSud6CEFm4HuZgFD/M1sz
-         K5UlEzhsWpRlzB3ZxuODAzT2cMN+uX4XO2Vml+PnoBQEFnLhNlOTHI30I0DVgBdUJ7g4
-         6FWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=y4FO5cAqB3SZpz4VRvo1nhldKsrJkQ6TRgib+7pzYvg=;
-        b=cuqS5LU/t+CN7Uik/0rGYmB+h+eVLup/7E9y9O0SzdrAbFauSlffQ7eJSkY4WFA9SU
-         2EG9VghZwo7dqPJrqXrejMAk6+7tc16RG6lU/E8vTDpczYkiBcZLuqmf09grwPvfByN3
-         IpKC03FNd4MDEjM0X9EvW1S0VSSETp/J0dPImdSE6gE1q5c/BpDIY+2D162BYjwtrVUc
-         Dt4QMnOupaHzgbfSxRwttw/jQ4EbP1yrOISqy1eXMyzOm4JqF27WJYf+5CZTIAgG2QKu
-         +tKeLj4aA9+1b56jvFleuchSQpRLD+hGlVuYKy7ssVmkUxktY0qqmgyFNqjMPPbeN0Ha
-         TXKA==
-X-Gm-Message-State: AOAM530BAipl8NXwDf53GZIWU4s8QzafLUBDy2fw3HjiyZtFe1IxW7Hd
-        lFF40dEl/dCxB6xd5Kfpvl5brpl0ghl21NSSaaJ2jg==
-X-Google-Smtp-Source: ABdhPJxnoh7GyzgNwwBUXp6W3Slciha75RjgY4ldLN9aYhy/JUdOYNX+ljur0eYUKc3hod8uyWT2M945JOBAC1Ox9Q8=
-X-Received: by 2002:a67:e45:: with SMTP id 66mr13894325vso.191.1597831871908;
- Wed, 19 Aug 2020 03:11:11 -0700 (PDT)
+        Wed, 19 Aug 2020 06:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597831931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r5QdeRbhHn2AlG5sAKVL8b/64x3iAtlaAAOFCdmmchM=;
+        b=O+fmKQvFYR0cTVdgAcz9mPboc0+7gyhugZVkVICgi+s/va965C1jOvnDyhqq9GJlZ5KYyl
+        6TD+hi2R+lCAl20vFaZ/h6GgT2ABtnC60RRS7gMy6c9SsQeLbCd4uAvVQuE6l/4s/XL39Z
+        bYOIn2woGKKClG3InUsPt71MZcOtf0c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-52-rydfKskhNaaioFQJluNu2Q-1; Wed, 19 Aug 2020 06:12:09 -0400
+X-MC-Unique: rydfKskhNaaioFQJluNu2Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52B811084C8F;
+        Wed, 19 Aug 2020 10:12:08 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AC4C16597;
+        Wed, 19 Aug 2020 10:12:06 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v1 01/11] mm/memory_hotplug: inline __offline_pages() into offline_pages()
+Date:   Wed, 19 Aug 2020 12:11:47 +0200
+Message-Id: <20200819101157.12723-2-david@redhat.com>
+In-Reply-To: <20200819101157.12723-1-david@redhat.com>
+References: <20200819101157.12723-1-david@redhat.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 19 Aug 2020 15:41:00 +0530
-Message-ID: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
-Subject: Linux-next: Kernel panic - not syncing: Fatal exception in interrupt
- - RIP: 0010:security_port_sid
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
-        omosnace@redhat.com, rgb@redhat.com,
-        Kees Cook <keescook@chromium.org>, casey@schaufler-ca.com,
-        yuehaibing@huawei.com, jeffv@google.com, kent.overstreet@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel panic noticed on linux next 20200819 tag on x86_64 and i386.
+There is only a single user, offline_pages(). Let's inline, to make
+it look more similar to online_pages().
 
- Kernel panic - not syncing: Fatal exception in interrupt
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memory_hotplug.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 8eb858df0a5f6bcd371b5d5637255c987278b8c9
-  git describe: next-20200819
-  make_kernelversion: 5.9.0-rc1
-  kernel-config:
-https://builds.tuxbuild.com/izEMrcIH10iI6m0FU7O0LA/kernel.config
-
-crash log:
-[    3.704578] BUG: kernel NULL pointer dereference, address: 00000000000001c8
-[    3.704865] #PF: supervisor read access in kernel mode
-[    3.704865] #PF: error_code(0x0000) - not-present page
-[    3.704865] PGD 0 P4D 0
-[    3.704865] Oops: 0000 [#1] SMP NOPTI
-[    3.704865] CPU: 0 PID: 1 Comm: systemd Not tainted
-5.9.0-rc1-next-20200819 #1
-[    3.704865] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[    3.704865] RIP: 0010:security_port_sid+0x2f/0xb0
-[    3.704865] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
-41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
-8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
-00 48
-[    3.704865] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
-[    3.704865] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
-[    3.704865] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
-[    3.704865] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
-[    3.704865] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
-[    3.704865] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
-[    3.721157] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
-knlGS:0000000000000000
-[    3.721157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    3.721157] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
-[    3.721157] Call Trace:
-[    3.721157]  sel_netport_sid+0x120/0x1e0
-[    3.721157]  selinux_socket_bind+0x15a/0x250
-[    3.721157]  ? _raw_spin_trylock_bh+0x42/0x50
-[    3.721157]  ? __local_bh_enable_ip+0x46/0x70
-[    3.721157]  ? _raw_spin_unlock_bh+0x1a/0x20
-[    3.721157]  security_socket_bind+0x35/0x50
-[    3.721157]  __sys_bind+0xcf/0x110
-[    3.721157]  ? syscall_enter_from_user_mode+0x1f/0x1f0
-[    3.730888]  ? do_syscall_64+0x14/0x50
-[    3.730888]  ? trace_hardirqs_on+0x38/0xf0
-[    3.732120]  __x64_sys_bind+0x1a/0x20
-[    3.732120]  do_syscall_64+0x38/0x50
-[    3.732120]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[    3.732120] RIP: 0033:0x7f5ef37f3057
-[    3.732120] Code: ff ff ff ff c3 48 8b 15 3f 9e 2b 00 f7 d8 64 89
-02 b8 ff ff ff ff eb ba 66 2e 0f 1f 84 00 00 00 00 00 90 b8 31 00 00
-00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 11 9e 2b 00 f7 d8 64 89
-01 48
-[    3.738888] RSP: 002b:00007ffe638fbbb8 EFLAGS: 00000246 ORIG_RAX:
-0000000000000031
-[    3.738888] RAX: ffffffffffffffda RBX: 000055833cf9ef80 RCX: 00007f5ef37f3057
-[    3.738888] RDX: 000000000000001c RSI: 000055833cf9ef80 RDI: 000000000000002b
-[    3.743930] virtio_net virtio0 enp0s3: renamed from eth0
-[    3.738888] RBP: 000000000000002b R08: 0000000000000004 R09: 0000000000000000
-[    3.738888] R10: 00007ffe638fbbe4 R11: 0000000000000246 R12: 0000000000000000
-[    3.744849] R13: 00007ffe638fbbe4 R14: 0000000000000000 R15:
-000000RIP: 0010:security_port_sid0000000000
-[    3.744849] Modules linked in:
-[    3.744849] CR2: 00000000000001c8
-[    3.744849] ---[ end trace 485eaaecdce54971 ]---
-[    3.744849] RIP: 0010:security_port_sid+0x2f/0xb0
-[    3.744849] Code: 55 48 89 e5 41 57 49 89 ff 41 56 49 89 ce 41 55
-41 89 d5 41 54 41 89 f4 53 48 8b 7f 40 e8 c9 ca 94 00 49 8b 47 40 48
-8b 40 10 <48> 8b 98 c8 01 00 00 48 85 db 75 0e eb 65 48 8b 9b c0 00 00
-00 48
-[    3.744849] RSP: 0018:ffffb607c0013d00 EFLAGS: 00010246
-[    3.744849] RAX: 0000000000000000 RBX: ffffffffaef076f8 RCX: ffffb607c0013d9c
-[    3.744849] RDX: 0000000000000016 RSI: 0000000000000006 RDI: ffffffffaef08d10
-[    3.744849] RBP: ffffb607c0013d28 R08: 0000000000000218 R09: 0000000000000016
-[    3.744849] R10: ffffb607c0013d9c R11: ffff988ff9665260 R12: 0000000000000006
-[    3.744849] R13: 0000000000000016 R14: ffffb607c0013d9c R15: ffffffffaef05820
-[    3.744849] FS:  00007f5ef4fec840(0000) GS:ffff988ffbc00000(0000)
-knlGS:0000000000000000
-[    3.744849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    3.744849] CR2: 00000000000001c8 CR3: 000000013b04c000 CR4: 00000000003506f0
-[    3.7RIP: 0010:security_port_sid44849] Kernel panic - not syncing:
-Fatal exception in interrupt
-[    3.744849] Kernel Offset: 0x2c000000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[    3.744849] ---[ end Kernel panic - not syncing: Fatal exception in
-interrupt ]---
-
-full test log link,
-https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200819/testrun/3084905/suite/linux-log-parser/test/check-kernel-panic-1682816/log
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7f62d69660e06..c781d386d87f9 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1473,11 +1473,10 @@ static int count_system_ram_pages_cb(unsigned long start_pfn,
+ 	return 0;
+ }
+ 
+-static int __ref __offline_pages(unsigned long start_pfn,
+-		  unsigned long end_pfn)
++int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ {
+-	unsigned long pfn, nr_pages = 0;
+-	unsigned long offlined_pages = 0;
++	const unsigned long end_pfn = start_pfn + nr_pages;
++	unsigned long pfn, system_ram_pages = 0, offlined_pages = 0;
+ 	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	struct zone *zone;
+@@ -1494,9 +1493,9 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	 * memory holes PG_reserved, don't need pfn_valid() checks, and can
+ 	 * avoid using walk_system_ram_range() later.
+ 	 */
+-	walk_system_ram_range(start_pfn, end_pfn - start_pfn, &nr_pages,
++	walk_system_ram_range(start_pfn, nr_pages, &system_ram_pages,
+ 			      count_system_ram_pages_cb);
+-	if (nr_pages != end_pfn - start_pfn) {
++	if (system_ram_pages != nr_pages) {
+ 		ret = -EINVAL;
+ 		reason = "memory holes";
+ 		goto failed_removal;
+@@ -1631,11 +1630,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	return ret;
+ }
+ 
+-int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+-{
+-	return __offline_pages(start_pfn, start_pfn + nr_pages);
+-}
+-
+ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
+ {
+ 	int ret = !is_memblock_offlined(mem);
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+2.26.2
+
