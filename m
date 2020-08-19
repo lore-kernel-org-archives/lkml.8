@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F1CC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8EE5207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1145207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597837777;
-	bh=wBIBY+X1r1sF+0e8gMVmcy/w1ZZJwTcLyJ1eGkx0f2o=;
+	s=default; t=1597837774;
+	bh=wHvrnGSBf44aSfNbbWy1EhP6lE/jd7H3OnEElcdJj6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDc29Oj2ILq9iL0lyqd0oGbS4VISHZvu0h98qOquxzpegTVb8Ceod7UB1fQxV7WlS
-	 MbQSwYFm3JYJjlLl4gpntsevYIfp7mF+ODxR+chMOPLYl9m3WmrA5YrgSjnK7kSXEo
-	 2p1fAIkz7hDHYMhDhY8SAzrE4sx7Af6FTYdbpLbs=
+	b=ryRAsfDqiEtvnQ3Qrqb0G9ekI7lAnnChj1dPNIcy7YefhhEF8lv06/1oU5dKD1IiX
+	 fbIl+8+vr5yw9OwG325EbdBfmQraO7gfQMBVJq5eHv4flB+/ZcOodtLvxXdSS0aXBa
+	 N1ZGRCQxoZ/NuGs8d6LhVYpUFxu8eIA68CJLQud8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgHSLtf (ORCPT
+        id S1728284AbgHSLtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgHSLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728137AbgHSLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 07:46:54 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E28C22CA1;
+        by mail.kernel.org (Postfix) with ESMTPSA id 317FC22BEA;
         Wed, 19 Aug 2020 11:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597837582;
-        bh=wBIBY+X1r1sF+0e8gMVmcy/w1ZZJwTcLyJ1eGkx0f2o=;
+        bh=wHvrnGSBf44aSfNbbWy1EhP6lE/jd7H3OnEElcdJj6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSTjrhyDFxcP+8lGmQba2qYPR7QD1P0fephC5gBk7kGQuE2xsLVqeeW+PUnBI+M0U
-         IeVC0B/BqBbZstDI/kuYdQkKn9Bl489gM+03aDOtId+n5HWYj5F7Y8K3ooihlF3Dpb
-         6aTzONdLQ7IdIlMJiqsQrEYCh90joFRzjJpacQ1k=
+        b=chRc1MjSdEc+pBFsBSFlt0c6LOTES8NiKSFRyTcQ3vTfF4kxIF6uH2O963ARyGhWH
+         c+5u879UsDsC504iM2En/9cLVeWCVIlB/zVTxRxzR7sEF0ixOzfmca/j1KV5i8Eld0
+         RDs7ydPcxDsbtzs54zm2GDCjA1tyZAZnNj6zHNhs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k8MXs-00Euas-92; Wed, 19 Aug 2020 13:46:20 +0200
+        id 1k8MXs-00Euad-2q; Wed, 19 Aug 2020 13:46:20 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
@@ -51,11 +51,14 @@ Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Liwei Cai <cailiwei@hisilicon.com>, devel@driverdev.osuosl.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Liuyao An <anliuyao@huawei.com>, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 22/49] staging: hikey9xx/gpu: cleanup encoder attach logic
-Date:   Wed, 19 Aug 2020 13:45:50 +0200
-Message-Id: <6c864afac63d08385dd49bcab3cfd1b3c3430605.1597833138.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 17/49] staging: hikey9xx/gpu: change the includes to reflect upstream
+Date:   Wed, 19 Aug 2020 13:45:45 +0200
+Message-Id: <c39d02b40d01b1c86156393a41dc37ca14616fec.1597833138.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
 References: <cover.1597833138.git.mchehab+huawei@kernel.org>
@@ -66,130 +69,254 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Place both adv7535 and panel logic at the same routine,
-cleaning up things a little bit and fixing the includes.
+The includes there reflect a downstream version back on v4.4
+times. change them to reflect the current upstream and to
+avoid the need of using a -I flag at the Makefile.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../hikey9xx/gpu/kirin9xx_dw_drm_dsi.c        | 58 ++++++++++---------
- 1 file changed, 31 insertions(+), 27 deletions(-)
+ ...{kirin9xx_dpe_reg.h => kirin960_dpe_reg.h} |  3 +++
+ .../staging/hikey9xx/gpu/kirin970_dpe_reg.h   |  3 +++
+ .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.c     |  6 +++---
+ .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.h     |  4 ++--
+ .../staging/hikey9xx/gpu/kirin9xx_drm_drv.c   | 11 ++++++----
+ .../staging/hikey9xx/gpu/kirin9xx_drm_drv.h   | 10 +++++-----
+ .../staging/hikey9xx/gpu/kirin9xx_drm_dss.c   | 20 ++++++++++---------
+ .../hikey9xx/gpu/kirin9xx_drm_overlay_utils.c | 15 +++++++-------
+ .../hikey9xx/gpu/kirin9xx_dw_drm_dsi.c        |  2 ++
+ drivers/staging/hikey9xx/gpu/kirin9xx_pwm.c   | 12 ++++++-----
+ 10 files changed, 51 insertions(+), 35 deletions(-)
+ rename drivers/staging/hikey9xx/gpu/{kirin9xx_dpe_reg.h => kirin960_dpe_reg.h} (99%)
 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin960_dpe_reg.h
+similarity index 99%
+rename from drivers/staging/hikey9xx/gpu/kirin9xx_dpe_reg.h
+rename to drivers/staging/hikey9xx/gpu/kirin960_dpe_reg.h
+index 282ba9b55e43..995ab8f7c9f4 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_dpe_reg.h
++++ b/drivers/staging/hikey9xx/gpu/kirin960_dpe_reg.h
+@@ -24,6 +24,9 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ 
++#include <drm/drm_plane.h>
++#include <drm/drm_crtc.h>
++
+ #include <linux/ion.h>
+ #include <linux/hisi/hisi_ion.h>
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
+index 59e43722de56..ece49b99dca7 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
++++ b/drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
+@@ -24,6 +24,9 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ 
++#include <drm/drm_plane.h>
++#include <drm/drm_crtc.h>
++
+ #include <linux/ion.h>
+ #include <linux/hisi/hisi_ion.h>
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
+index fe8372838bb3..a15c335da026 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
+@@ -10,10 +10,10 @@
+  * GNU General Public License for more details.
+  *
+  */
+-#include <drm/drmP.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_mipi_dsi.h>
+ 
+-#include "drm_mipi_dsi.h"
+-#include "kirin_drm_dpe_utils.h"
++#include "kirin9xx_drm_dpe_utils.h"
+ 
+ int g_debug_set_reg_val = 0;
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
+index 89aaf6691f1d..0c5681d0a5ac 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
+@@ -17,9 +17,9 @@
+ #if defined (CONFIG_DRM_HISI_KIRIN970)
+ #include "kirin970_dpe_reg.h"
+ #else
+-#include "kirin_dpe_reg.h"
++#include "kirin960_dpe_reg.h"
+ #endif
+-#include "kirin_drm_drv.h"
++#include "kirin9xx_drm_drv.h"
+ 
+ void set_reg(char __iomem *addr, uint32_t val, uint8_t bw, uint8_t bs);
+ uint32_t set_bits32(uint32_t old_val, uint32_t val, uint8_t bw, uint8_t bs);
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
+index f5b05b26bc18..616fa7ca9c77 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
+@@ -18,13 +18,16 @@
+ #include <linux/component.h>
+ #include <linux/of_graph.h>
+ 
+-#include <drm/drmP.h>
+-#include <drm/drm_gem_cma_helper.h>
+-#include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc_helper.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_fb_cma_helper.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
++#include <drm/drm_probe_helper.h>
++#include <drm/drm_vblank.h>
+ 
+-#include "kirin_drm_drv.h"
++#include "kirin9xx_drm_drv.h"
+ 
+ #ifdef CONFIG_DRM_FBDEV_EMULATION
+ static bool fbdev = true;
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
+index 18a7478fee10..15ef96840e9f 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
+@@ -11,18 +11,18 @@
+ #ifndef __KIRIN_DRM_DRV_H__
+ #define __KIRIN_DRM_DRV_H__
+ 
+-#include <drm/drmP.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_print.h>
++
+ #include <linux/iommu.h>
+ #include <linux/ion.h>
+ #include <linux/hisi/hisi_ion.h>
+ #include <linux/hisi/hisi-iommu.h>
+ 
+-#include "drm_crtc.h"
+-#include "drm_fb_helper.h"
+-
+ #define MAX_CRTC	2
+ 
+-//#define CMA_BUFFER_USED
+ #define to_kirin_fbdev(x) container_of(x, struct kirin_fbdev, fb_helper)
+ 
+ /* display controller init/cleanup ops */
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dss.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dss.c
+index b4c1bb8288de..fd0ccbaebd3f 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dss.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_dss.c
+@@ -25,22 +25,24 @@
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ 
+-#include <drm/drmP.h>
+-#include <drm/drm_crtc.h>
+-#include <drm/drm_crtc_helper.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+-#include <drm/drm_plane_helper.h>
+-#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_fb_cma_helper.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_plane_helper.h>
++#include <drm/drm_vblank.h>
++#include <drm/drm_modeset_helper_vtables.h>
+ 
+-#include "kirin_drm_drv.h"
+-
+-#include "kirin_drm_dpe_utils.h"
++#include "kirin9xx_drm_drv.h"
++#include "kirin9xx_drm_dpe_utils.h"
+ #if defined (CONFIG_DRM_HISI_KIRIN970)
+ #include "kirin970_dpe_reg.h"
+ #else
+-#include "kirin_dpe_reg.h"
++#include "kirin960_dpe_reg.h"
+ #endif
+ 
+ //#define DSS_POWER_UP_ON_UEFI
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
+index 342a7f6fc964..4e79f630de96 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
+@@ -16,17 +16,18 @@
+  *
+  */
+ 
+-#include <drm/drmP.h>
+-#include <drm/drm_crtc.h>
+-#include <drm/drm_crtc_helper.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+-#include <drm/drm_plane_helper.h>
+-#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_fb_cma_helper.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_plane_helper.h>
+ 
+-#include "kirin_drm_dpe_utils.h"
+-#include "kirin_drm_drv.h"
++#include "kirin9xx_drm_dpe_utils.h"
++#include "kirin9xx_drm_drv.h"
+ 
+ static int mid_array[DSS_CHN_MAX_DEFINE] = {0xb, 0xa, 0x9, 0x8, 0x7, 0x6, 0x5, 0x4, 0x2, 0x1, 0x3, 0x0};
+ 
 diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_dw_drm_dsi.c b/drivers/staging/hikey9xx/gpu/kirin9xx_dw_drm_dsi.c
-index cba81ee2639d..e904943d9f9e 100644
+index 4fef154cd701..21fddeaa3c66 100644
 --- a/drivers/staging/hikey9xx/gpu/kirin9xx_dw_drm_dsi.c
 +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_dw_drm_dsi.c
-@@ -25,7 +25,8 @@
- #include <drm/drm_of.h>
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_mipi_dsi.h>
--#include <drm/drm_encoder_slave.h>
-+#include <drm/drm_encoder.h>
-+#include <drm/drm_device.h>
+@@ -28,6 +28,8 @@
+ #include <drm/drm_encoder_slave.h>
  #include <drm/drm_atomic_helper.h>
  #include <drm/drm_panel.h>
- #include <drm/drm_probe_helper.h>
-@@ -1483,17 +1484,31 @@ static const struct drm_encoder_funcs dw_encoder_funcs = {
- 
- static int dw_drm_encoder_init(struct device *dev,
- 			       struct drm_device *drm_dev,
--			       struct drm_encoder *encoder)
-+			       struct drm_encoder *encoder,
-+			       struct drm_bridge *bridge)
- {
- 	int ret;
--	u32 crtc_mask = drm_of_find_possible_crtcs(drm_dev, dev->of_node);
-+	u32 crtc_mask;
- 
-+	dev_info(dev, "%s:\n", __func__);
++#include <drm/drm_probe_helper.h>
 +
-+	/* Link drm_bridge to encoder */
-+	if (!bridge) {
-+		DRM_INFO("no dsi bridge to attach the encoder\n");
-+		return 0;
-+	}
+ 
+ #include "dw_dsi_reg.h"
+ #if defined (CONFIG_HISI_FB_970)
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_pwm.c b/drivers/staging/hikey9xx/gpu/kirin9xx_pwm.c
+index 3d25c48f0769..bb540f5d77a6 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_pwm.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_pwm.c
+@@ -10,18 +10,20 @@
+ * GNU General Public License for more details.
+ *
+ */
+-#include <drm/drmP.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_mipi_dsi.h>
 +
-+	crtc_mask = drm_of_find_possible_crtcs(drm_dev, dev->of_node);
- 	if (!crtc_mask) {
- 		DRM_ERROR("failed to find crtc mask\n");
- 		return -EINVAL;
- 	}
+ #include <linux/clk.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ #include <linux/of_address.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
++#include <linux/pinctrl/consumer.h>
  
-+	dev_info(dev, "Initializing CRTC encoder: %d\n",
-+		 crtc_mask);
-+
- 	encoder->possible_crtcs = crtc_mask;
-+	encoder->possible_clones = 0;
- 	ret = drm_encoder_init(drm_dev, encoder, &dw_encoder_funcs,
- 			       DRM_MODE_ENCODER_DSI, NULL);
- 	if (ret) {
-@@ -1503,7 +1518,14 @@ static int dw_drm_encoder_init(struct device *dev,
+-#include "drm_mipi_dsi.h"
+-#include "kirin_drm_dpe_utils.h"
+-#include "kirin_fb_panel.h"
+-#include "dw_dsi_reg.h"
++#include "kirin9xx_drm_dpe_utils.h"
++#include "kirin9xx_fb_panel.h"
++#include "kirin9xx_dw_dsi_reg.h"
  
- 	drm_encoder_helper_add(encoder, &dw_encoder_helper_funcs);
- 
--	return 0;
-+	/* associate the bridge to dsi encoder */
-+	ret = drm_bridge_attach(encoder, bridge, NULL, 0);
-+	if (ret) {
-+		DRM_ERROR("failed to attach external bridge\n");
-+		drm_encoder_cleanup(encoder);
-+	}
-+
-+	return ret;
- }
- 
- static int dsi_host_attach(struct mipi_dsi_host *host,
-@@ -1677,22 +1699,6 @@ static int dsi_host_init(struct device *dev, struct dw_dsi *dsi)
- 	return 0;
- }
- 
--static int dsi_bridge_init(struct drm_device *dev, struct dw_dsi *dsi)
--{
--	struct drm_encoder *encoder = &dsi->encoder;
--	struct drm_bridge *bridge = dsi->bridge;
--	int ret;
--
--	/* associate the bridge to dsi encoder */
--	ret = drm_bridge_attach(encoder, bridge, NULL, 0);
--	if (ret) {
--		DRM_ERROR("failed to attach external bridge\n");
--		return ret;
--	}
--
--	return 0;
--}
--
- static int dsi_connector_get_modes(struct drm_connector *connector)
- {
- 	struct dw_dsi *dsi = connector_to_dsi(connector);
-@@ -1766,6 +1772,7 @@ static int dsi_connector_init(struct drm_device *dev, struct dw_dsi *dsi)
- 	if (ret)
- 		return ret;
- 
-+	dev_info(dev->dev, "Attaching CRTC encoder\n");
- 	ret = drm_connector_attach_encoder(connector, encoder);
- 	if (ret)
- 		return ret;
-@@ -1784,16 +1791,13 @@ static int dsi_bind(struct device *dev, struct device *master, void *data)
- 	struct drm_device *drm_dev = data;
- 	int ret;
- 
--	ret = dw_drm_encoder_init(dev, drm_dev, &dsi->encoder);
-+	DRM_INFO("dsi_bind\n");
-+
-+	ret = dw_drm_encoder_init(dev, drm_dev, &dsi->encoder,
-+				  dsi->bridge);
- 	if (ret)
- 		return ret;
- 
--	if (dsi->bridge) {
--		ret = dsi_bridge_init(drm_dev, dsi);
--		if (ret)
--			return ret;
--	}
--
- 	if (dsi->panel) {
- 		ret = dsi_connector_init(drm_dev, dsi);
- 		if (ret)
+ /* default pwm clk */
+ #define DEFAULT_PWM_CLK_RATE	(80 * 1000000L)
 -- 
 2.26.2
 
