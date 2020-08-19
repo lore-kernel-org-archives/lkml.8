@@ -2,74 +2,126 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5278EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A4F20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EE820738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="tPi4mYXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHSFpz (ORCPT
+        id S1726636AbgHSFsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 01:45:55 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36334 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgHSFpy (ORCPT
+        Wed, 19 Aug 2020 01:48:12 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:58282 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbgHSFsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 01:45:54 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B2B3C803202D;
-        Wed, 19 Aug 2020 05:45:46 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rm8l1j1x8qWq; Wed, 19 Aug 2020 08:45:45 +0300 (MSK)
-Date:   Wed, 19 Aug 2020 08:45:45 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Wang Hai <wanghai38@huawei.com>
-CC:     <arnd@arndb.de>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] bus: bt1-apb: remove duplicate include
-Message-ID: <20200819054545.grzebs7fkwtrglah@mobilestation>
-References: <20200819024351.37982-1-wanghai38@huawei.com>
+        Wed, 19 Aug 2020 01:48:10 -0400
+Received: from hanazono.local (unknown [140.206.66.42])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 203536009E;
+        Wed, 19 Aug 2020 13:47:48 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1597816068; bh=KRrHwfUQuKjAb85/oLK3ZUF0M9g04e+91BLM9g/wlMs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=tPi4mYXHmiuOAuKaFwBNtsdr5U02fwW3w1htFvAszZB68OljMlR04sbip5fMIv8Y7
+         jFdHvcKj2WihUyCSoBgtKpkd3ZtUUiQo3oCzFhkMguYlK0DbUm9Pp2qDBu/73tj3CS
+         ny1O4WJ1Y0YIWB+2yg1eJ/1IdVhNMBaf++j8c+yQ=
+Subject: Re: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of
+ enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
+To:     Youling Tang <tangyouling@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <a3a3dfc1-1148-e6db-9ea3-2405c3fe5329@xen0n.name>
+Date:   Wed, 19 Aug 2020 13:47:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0)
+ Gecko/20100101 Thunderbird/81.0a1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200819024351.37982-1-wanghai38@huawei.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:43:51AM +0800, Wang Hai wrote:
-> Remove linux/clk.h which is included more than once
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Hi Youling,
 
-Thanks!
 
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-
+On 2020/8/18 19:32, Youling Tang wrote:
+> After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
+>
+> Fix the following build error:
+>
+> drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
+>   VIRTUAL,
+>   ^
+> In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
+>                  from ./arch/mips/include/asm/mmzone.h:12,
+>                  from ./include/linux/mmzone.h:962,
+>                  from ./include/linux/gfp.h:6,
+>                  from ./include/linux/slab.h:15,
+>                  from ./include/linux/genhd.h:16,
+>                  from ./include/linux/blkdev.h:8,
+>                  from drivers/md/persistent-data/dm-block-manager.h:11,
+>                  from drivers/md/dm-thin-metadata.h:10,
+>                  from drivers/md/dm-thin.c:7:
+> ./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
+> definition of ‘VIRTUAL’ was here VIRTUAL = 3
+>                                  ^
+> scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
+> make[2]: *** [drivers/md/dm-thin.o] Error 1
+>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 > ---
->  drivers/bus/bt1-apb.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/bus/bt1-apb.c b/drivers/bus/bt1-apb.c
-> index b25ff941e7c7..74b1b712ef3a 100644
-> --- a/drivers/bus/bt1-apb.c
-> +++ b/drivers/bus/bt1-apb.c
-> @@ -22,7 +22,6 @@
->  #include <linux/clk.h>
->  #include <linux/reset.h>
->  #include <linux/time64.h>
-> -#include <linux/clk.h>
->  #include <linux/sysfs.h>
+>  arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
+>  arch/mips/loongson64/env.c                         | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> index afc92b7..a4ef4ac 100644
+> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
+> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+> @@ -195,7 +195,7 @@ struct boot_params {
+>  enum loongson_bridge_type {
+>  	LS7A = 1,
+>  	RS780E = 2,
+> -	VIRTUAL = 3
+> +	VIRT = 3
+
+I believe this is only masking the root cause, which is redundant
+#include directives inside mach-specific headers. I'll send my version
+of fix shortly.
+
+Anyway, thanks for your help!
+
+>  };
 >  
->  #define APB_EHB_ISR			0x00
-> -- 
-> 2.17.1
-> 
+>  struct loongson_system_configuration {
+> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+> index 134cb8e..623b3f1 100644
+> --- a/arch/mips/loongson64/env.c
+> +++ b/arch/mips/loongson64/env.c
+> @@ -180,8 +180,8 @@ void __init prom_init_env(void)
+>  		loongson_sysconf.early_config = rs780e_early_config;
+>  		break;
+>  	default:
+> -		pr_info("The bridge chip is VIRTUAL\n");
+> -		loongson_sysconf.bridgetype = VIRTUAL;
+> +		pr_info("The bridge chip is VIRT\n");
+> +		loongson_sysconf.bridgetype = VIRT;
+>  		loongson_sysconf.early_config = virtual_early_config;
+>  		loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
+>  		break;
