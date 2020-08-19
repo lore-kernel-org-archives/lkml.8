@@ -2,192 +2,126 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF68C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B86C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C2420888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5A4207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LWFzLVz0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sew6Y1J2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHSQwl (ORCPT
+        id S1726715AbgHSQ4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44356 "EHLO
+        Wed, 19 Aug 2020 12:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgHSQwi (ORCPT
+        with ESMTP id S1725939AbgHSQ4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:52:38 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94CFC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=vyTO7e1m1lmgS5TU+7Cm5fJjmrYf/a6JM+Zc1QkCYd0=; b=LWFzLVz0+jrPpPMC05bSgwxWGw
-        4zVBsitQHBJUN0ZkwITdepzIM72Z8rYUsaXs88k7HyU17SOD9vGzPfw/IrB6iNSor5CGNIDOBy0kP
-        xgYHgjCorq+GL7w4gye9S35qZ0or/az5W6FZF0anuHFp2otHt311cuYbU7fOO+G0BY/4BJEbcVlnf
-        eQnfcNnShN1S+L1B9/3ApUDCkf1FsEpHgMaDxKKj4kMmbwnyWwqpEhX+pMxdlydwH1CQBzT4viX7B
-        qB1noplbooxqjMjK4ea0llH7I5R3vsFP6fqopnhgOa5jxydScHJQexiHan4VsqFo5nY8e9rbppmsa
-        F0qZyeNw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8RKB-0003sd-Rp; Wed, 19 Aug 2020 16:52:32 +0000
-Subject: Re: [PATCH v2] seqlock: <linux/seqlock.h>: fix multiple kernel-doc
- warnings
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        kernel test robot <lkp@intel.com>
-References: <20200817000200.20993-1-rdunlap@infradead.org>
- <20200819092511.GA2674@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8f3a1feb-1b52-00a3-45b7-0b0b13d3dc7d@infradead.org>
-Date:   Wed, 19 Aug 2020 09:52:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 12:56:03 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824E8C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:01 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x6so11669869pgx.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 09:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fw18yt5oodIRRiawAuh3iFJI1I/EC1h04v5SNRebUsg=;
+        b=Sew6Y1J2+dlN3Uy+W3XUFS6PgjkaKPbXMVxa7xBZ+gCv4djz6NyGAIbaXCwueFoTYe
+         iyIbA4f1MeJTnuO0RwXLrXDPus/ZPDbPZXDHXtMKSMpAUGVNWilkA0q4h1eIvPjo4odh
+         p6rpR7pBpdtWyCiQG1pVi+2EuCslEn/Udct8hfSa5tixiLe8SEDiE18ryRA7sWYR0Fdr
+         V/S2FWeeU1PwzxAEVGFDIvGK+v1o+lPEvoPeJfodr9WOqy0Vks2G83dG6esuDiYeMRC+
+         lL05EcmyMvEnWLTlZqU9oRYLn0ySCUDnqtMGYOMWgvR6uvNpSg6cDwRLeuA4GPlFvHpe
+         xjIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fw18yt5oodIRRiawAuh3iFJI1I/EC1h04v5SNRebUsg=;
+        b=aQkwXDpnqGq1kO2yHLeGAchyMcgDCTuMzi5LNQpD+MX9x3KhrPJHiwvqJKsoWEkWEp
+         a+SR2WLuMWrEcvw3czAzCYCh1MYALWIJVtCflnfiXXttzm74GIDYK5HJpb28RqrDxEIc
+         dspk9ClkKyav5MuxMeOXe3yzLdpBriHD+gncw8+oePH2mnYqnfPDUMVKXJ2w0QKSqx0u
+         DnUlMefcbsQv8r94uBfdjkMbYAi4MQQa29gS7Bwvf/hcJT3bN/DLg418IsOpZg431bui
+         94zm822rivamxDw57amlC1tqgIgjMqyMoGeN7vxZV7SEJbG5rsQ01g/L+GzY48afKOGj
+         8YFw==
+X-Gm-Message-State: AOAM531b3TYC/1oxx3Cc4KzUJj34X8W/CeSJQYaNK7QgvQlpmk3EC6HO
+        1bQOg//p8lkR3xSwdq8uYhjBerFlZJoB/8h1lgWE9A==
+X-Google-Smtp-Source: ABdhPJzOWbQWvNJq8r8P1UhTJyhu2WyFpFjSVInsNFgdbZK2Da66wr9Md6WMUOHmlaNm9oKe0eLSigHu+DmV7vDjPMw=
+X-Received: by 2002:aa7:96e5:: with SMTP id i5mr16953870pfq.108.1597856160632;
+ Wed, 19 Aug 2020 09:56:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200819092511.GA2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200819094437.GE1891694@smile.fi.intel.com> <CAK7LNATQ1oAQm19-mzCKdMQsiQsYT9BRH5H7zukpFSzJw5WZZQ@mail.gmail.com>
+ <CAHp75VcKpkZQ78xygzWTQhNsy8aLBzKzqVJTtzygzTYnWeqmyQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcKpkZQ78xygzWTQhNsy8aLBzKzqVJTtzygzTYnWeqmyQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 19 Aug 2020 09:55:49 -0700
+Message-ID: <CAKwvOdnuSyExtcddmcnS-08Mj6oNyZfqax4JQJSLBVFkD8S+JA@mail.gmail.com>
+Subject: Re: -Werror for `make W=0`
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>, X86 ML <x86@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 2:25 AM, peterz@infradead.org wrote:
-> On Sun, Aug 16, 2020 at 05:02:00PM -0700, Randy Dunlap wrote:
-> 
->> --- lnx-59-rc1.orig/include/linux/seqlock.h
->> +++ lnx-59-rc1/include/linux/seqlock.h
-> 
->> @@ -173,7 +173,6 @@ seqcount_##lockname##_init(seqcount_##lo
->>  	seqcount_init(&s->seqcount);					\
->>  	__SEQ_LOCK(s->lock = lock);					\
->>  }									\
->> -									\
->>  static __always_inline seqcount_t *					\
->>  __seqcount_##lockname##_ptr(seqcount_##lockname##_t *s)			\
->>  {									\
-> 
-> I think I'd rather like that empty line there..
-> 
->> @@ -218,9 +217,9 @@ SEQCOUNT_LOCKTYPE(struct mutex,		mutex,
->>  SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
->>  
->>  /**
->> - * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
->> - * @name:	Name of the seqcount_LOCKNAME_t instance
->> - * @lock:	Pointer to the associated LOCKTYPE
->> + * SEQCOUNT_LOCKTYPE_ZERO - static initializer for seqcount_LOCKNAME_t
->> + * @seq_name:	Name of the seqcount_LOCKNAME_t instance
->> + * @assoc_lock:	Pointer to the associated LOCKTYPE
->>   */
->>  
->>  #define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
-> 
-> And this hunk seems wrong, SEQCOUNT_LOCKTYPE_ZERO() is not the intended
-> API, SEQCNT_*_ZERO() are.
-> 
-> 
-> I've edited the patch like below, is that OK with you?
+On Wed, Aug 19, 2020 at 4:50 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Aug 19, 2020 at 1:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > On Wed, Aug 19, 2020 at 6:44 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Hi!
+> > >
+> > > Maybe silly idea, but would it make sense to enable -Werror for default warning
+> > > level, let's say W=0, at some point?
+> > >
+> >
+> > Every GCC release adds new warning options.
+> >
+> > Enabling -Werror by default means
+> > the kernel build is suddenly broken
+> > with new compilers, correct?
+>
+> Probably, and at the same time we keep our hand on the pulse of the
+> changes, right?
+> Adding those warnings to W=1, 2, ... block might be not the bad idea after all.
+>
+> Maybe some flag CONFIG_DEBUG_WERROR ? Then CIs or other early stage
+> users can enable by default and be informed.
 
-Hi Peter,
-Yes, this looks good. Thanks for your help.
+Google's pixel kernel team carries an out of tree patch creating
+exactly such a config.  It helps them keep their kernels building
+warning free.
 
+Flip side is that if a build isn't warning free, it can be difficult
+to get there; you need to at least disable the config to see how many
+warnings you have, and identify which are lower hanging fruit.  It
+also makes compiler upgrades excessively difficult.  In my experience
+on Android, if folks are too busy to address compiler warnings, then
+new warnings added by a new compiler version just get turned off and
+never addressed.  My experience with the kernel has been that fixes
+for different warnings also take varying amounts of time to get
+accepted and work their way through mainline, meanwhile builds are
+broken.
 
-> ---
-> Subject: seqlock: Fix multiple kernel-doc warnings
-> From: Randy Dunlap <rdunlap@infradead.org>
-> Date: Sun, 16 Aug 2020 17:02:00 -0700
-> 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix kernel-doc warnings in <linux/seqlock.h>.
-> 
-> ../include/linux/seqlock.h:152: warning: Incorrect use of kernel-doc format:  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
-> ../include/linux/seqlock.h:164: warning: Incorrect use of kernel-doc format:  * SEQCOUNT_LOCKTYPE() - Instantiate seqcount_LOCKNAME_t and helpers
-> ../include/linux/seqlock.h:229: warning: Function parameter or member 'seq_name' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-> ../include/linux/seqlock.h:229: warning: Function parameter or member 'assoc_lock' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-> ../include/linux/seqlock.h:229: warning: Excess function parameter 'name' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-> ../include/linux/seqlock.h:229: warning: Excess function parameter 'lock' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-> ../include/linux/seqlock.h:695: warning: duplicate section name 'NOTE'
-> 
-> Demote kernel-doc notation for the macros "seqcount_LOCKNAME_init()" and
-> "SEQCOUNT_LOCKTYPE()"; scripts/kernel-doc does not handle them correctly.
-> 
-> Rename function parameters in SEQCNT_LOCKNAME_ZERO() documentation
-> to match the macro's argument names. Change the macro name in the
-> documentation to SEQCOUNT_LOCKTYPE_ZERO() to match the macro's name.
-> 
-> For raw_write_seqcount_latch(), rename the second NOTE: to NOTE2:
-> to prevent a kernel-doc warning. However, the generated output is not
-> quite as nice as it could be for this.
-> 
-> Fix a typo: s/LOCKTYPR/LOCKTYPE/
-> 
-> Fixes: 0efc94c5d15c ("seqcount: Compress SEQCNT_LOCKNAME_ZERO()")
-> Fixes: e4e9ab3f9f91 ("seqlock: Fold seqcount_LOCKNAME_init() definition")
-> Fixes: a8772dccb2ec ("seqlock: Fold seqcount_LOCKNAME_t definition")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200817000200.20993-1-rdunlap@infradead.org
-> ---
-> v2: do not move the definition of seqcount_LOCKNAME_init().
-> Fix build errors reported by kernel test robot.
-> Actually build a kernel with these changes.
-> 
->  include/linux/seqlock.h |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> --- a/include/linux/seqlock.h
-> +++ b/include/linux/seqlock.h
-> @@ -138,7 +138,7 @@ static inline void seqcount_lockdep_read
->  #endif
->  
->  /**
-> - * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPR associated
-> + * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPE associated
->   * @seqcount:	The real sequence counter
->   * @lock:	Pointer to the associated spinlock
->   *
-> @@ -148,7 +148,7 @@ static inline void seqcount_lockdep_read
->   * that the write side critical section is properly serialized.
->   */
->  
-> -/**
-> +/*
->   * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
->   * @s:		Pointer to the seqcount_LOCKNAME_t instance
->   * @lock:	Pointer to the associated LOCKTYPE
-> @@ -217,7 +217,7 @@ SEQCOUNT_LOCKTYPE(rwlock_t,		rwlock,		fa
->  SEQCOUNT_LOCKTYPE(struct mutex,		mutex,		true,	s->lock)
->  SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
->  
-> -/**
-> +/*
->   * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
->   * @name:	Name of the seqcount_LOCKNAME_t instance
->   * @lock:	Pointer to the associated LOCKTYPE
-> @@ -688,7 +688,7 @@ static inline int raw_read_seqcount_t_la
->   *	to miss an entire modification sequence, once it resumes it might
->   *	observe the new entry.
->   *
-> - * NOTE:
-> + * NOTE2:
->   *
->   *	When data is a dynamic data structure; one should use regular RCU
->   *	patterns to manage the lifetimes of the objects within.
-> 
-
-
+I agree that it's ideal to have no warnings, but from my perspective
+-Werror is a major impediment to upgrading the tools. Wouldn't
+recommend.
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks,
+~Nick Desaulniers
