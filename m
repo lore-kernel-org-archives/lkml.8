@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC85C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA477206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC38207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3/0LhiS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="APlJQv4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgHSKMx (ORCPT
+        id S1727997AbgHSKMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 19 Aug 2020 06:12:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27037 "EHLO
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25345 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727936AbgHSKMl (ORCPT
+        with ESMTP id S1727926AbgHSKMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:12:41 -0400
+        Wed, 19 Aug 2020 06:12:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597831958;
+        s=mimecast20190719; t=1597831957;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=02PQzB1kPDmfrqChvReYSzfnL6m1liJXDCfleAanZCo=;
-        b=T3/0LhiSYAfATcFghzLR4mD8Nc0IURKvvIaMlBp4xHEArRr4BTqrImEWiuJqZqi5xRMfyY
-        mfnRGStwaxoGP/QxnxUF2BacoCzNXW1zj1h7eWPNvGZwQsfdEXiCfrGLQlDxiYtji8WkU8
-        5QPrk45+9Ri2O7fhhxtV7lH5zRZVNho=
+        bh=CWo5Jpi3Mz1v9jmBD5sqKDaxq4fd3i5IMfeKh874bis=;
+        b=APlJQv4yW/KzxzlliyC1ppwkAGjx9JeMziXSoGWMqtsMEybjjZtOftqvSfnYC0cU/ZyZFH
+        LiKjoXL6eV6xN4oFFUgUu3FP3LA3e9yV0DMzYpLFCkSnuC8/ITDLbsAFB2DDwtwhuUkhNc
+        0eFGX8W+gR8r+/RpB5+eJ3DdOIjBP98=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-533-589Q5jnAOJi5TQQAnyC9SA-1; Wed, 19 Aug 2020 06:12:34 -0400
-X-MC-Unique: 589Q5jnAOJi5TQQAnyC9SA-1
+ us-mta-312-HAvIWK1fOG2LGWHGdhiw8w-1; Wed, 19 Aug 2020 06:12:35 -0400
+X-MC-Unique: HAvIWK1fOG2LGWHGdhiw8w-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1863C186A566;
-        Wed, 19 Aug 2020 10:12:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 664EB10066FB;
+        Wed, 19 Aug 2020 10:12:34 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD47916597;
-        Wed, 19 Aug 2020 10:12:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6634926366;
+        Wed, 19 Aug 2020 10:12:32 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
@@ -54,17 +54,10 @@ Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Baoquan He <bhe@redhat.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Oscar Salvador <osalvador@suse.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Michel Lespinasse <walken@google.com>,
-        linux-ia64@vger.kernel.org
-Subject: [PATCH v1 10/11] mm: pass migratetype into memmap_init_zone() and move_pfn_range_to_zone()
-Date:   Wed, 19 Aug 2020 12:11:56 +0200
-Message-Id: <20200819101157.12723-11-david@redhat.com>
+        Charan Teja Reddy <charante@codeaurora.org>
+Subject: [PATCH v1 11/11] mm/memory_hotplug: mark pageblocks MIGRATE_ISOLATE while onlining memory
+Date:   Wed, 19 Aug 2020 12:11:57 +0200
+Message-Id: <20200819101157.12723-12-david@redhat.com>
 In-Reply-To: <20200819101157.12723-1-david@redhat.com>
 References: <20200819101157.12723-1-david@redhat.com>
 MIME-Version: 1.0
@@ -75,9 +68,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the memory hotplug path, we want to start with MIGRATE_ISOLATE, to
-un-isolate the pages after memory onlining is complete. Let's allow
-passing in the migratetype.
+Currently, it can happen that pages are allocated (and freed) via the buddy
+before we finished basic memory onlining.
+
+For example, pages are exposed to the buddy and can be allocated before
+we actually mark the sections online. Allocated pages could suddenly
+fail pfn_to_online_page() checks. We had similar issues with pcp
+handling, when pages are allocated+freed before we reach
+zone_pcp_update() in online_pages() [1].
+
+Instead, mark all pageblocks MIGRATE_ISOLATE, such that allocations are
+impossible. Once done with the heavy lifting, use
+undo_isolate_page_range() to move the pages to the MIGRATE_MOVABLE
+freelist, marking them ready for allocation. Similar to offline_pages(),
+we have to manually adjust zone->nr_isolate_pageblock.
+
+[1] https://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -85,176 +91,106 @@ Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Michel Lespinasse <walken@google.com>
-Cc: linux-ia64@vger.kernel.org
+Cc: Charan Teja Reddy <charante@codeaurora.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/ia64/mm/init.c            |  4 ++--
- include/linux/memory_hotplug.h |  3 ++-
- include/linux/mm.h             |  3 ++-
- mm/memory_hotplug.c            | 11 ++++++++---
- mm/memremap.c                  |  3 ++-
- mm/page_alloc.c                | 21 ++++++++++++---------
- 6 files changed, 28 insertions(+), 17 deletions(-)
+ mm/Kconfig          |  2 +-
+ mm/memory_hotplug.c | 32 ++++++++++++++++++++++----------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
 
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 0b3fb4c7af292..82b7a46ddd23d 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -538,7 +538,7 @@ virtual_memmap_init(u64 start, u64 end, void *arg)
- 	if (map_start < map_end)
- 		memmap_init_zone((unsigned long)(map_end - map_start),
- 				 args->nid, args->zone, page_to_pfn(map_start),
--				 MEMMAP_EARLY, NULL);
-+				 MEMMAP_EARLY, NULL, MIGRATE_MOVABLE);
- 	return 0;
- }
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 6c974888f86f9..85a16ce1dbc49 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -152,6 +152,7 @@ config HAVE_BOOTMEM_INFO_NODE
+ # eventually, we can have this option just 'select SPARSEMEM'
+ config MEMORY_HOTPLUG
+ 	bool "Allow for memory hot-add"
++	select MEMORY_ISOLATION
+ 	depends on SPARSEMEM || X86_64_ACPI_NUMA
+ 	depends on ARCH_ENABLE_MEMORY_HOTPLUG
+ 	depends on 64BIT || BROKEN
+@@ -178,7 +179,6 @@ config MEMORY_HOTPLUG_DEFAULT_ONLINE
  
-@@ -548,7 +548,7 @@ memmap_init (unsigned long size, int nid, unsigned long zone,
- {
- 	if (!vmem_map) {
- 		memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY,
--				NULL);
-+				 NULL, MIGRATE_MOVABLE);
- 	} else {
- 		struct page *start;
- 		struct memmap_init_callback_data args;
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 0b461691d1a49..cbafeda859380 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -346,7 +346,8 @@ extern int add_memory_resource(int nid, struct resource *resource);
- extern int add_memory_driver_managed(int nid, u64 start, u64 size,
- 				     const char *resource_name);
- extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
--		unsigned long nr_pages, struct vmem_altmap *altmap);
-+				   unsigned long nr_pages,
-+				   struct vmem_altmap *altmap, int migratetype);
- extern void remove_pfn_range_from_zone(struct zone *zone,
- 				       unsigned long start_pfn,
- 				       unsigned long nr_pages);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 8ab941cf73f44..c842aa2a97ba2 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2409,7 +2409,8 @@ extern int __meminit __early_pfn_to_nid(unsigned long pfn,
- 
- extern void set_dma_reserve(unsigned long new_dma_reserve);
- extern void memmap_init_zone(unsigned long, int, unsigned long, unsigned long,
--		enum memmap_context, struct vmem_altmap *);
-+			    enum memmap_context, struct vmem_altmap *,
-+			    int migratetype);
- extern void setup_per_zone_wmarks(void);
- extern int __meminit init_per_zone_wmark_min(void);
- extern void mem_init(void);
+ config MEMORY_HOTREMOVE
+ 	bool "Allow for memory hot remove"
+-	select MEMORY_ISOLATION
+ 	select HAVE_BOOTMEM_INFO_NODE if (X86_64 || PPC64)
+ 	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	depends on MIGRATION
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 3aba0d956f9b1..1c16a5def781e 100644
+index 1c16a5def781e..35d56cbd3e45b 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -693,9 +693,14 @@ static void __meminit resize_pgdat_range(struct pglist_data *pgdat, unsigned lon
-  * Associate the pfn range with the given zone, initializing the memmaps
-  * and resizing the pgdat/zone data to span the added pages. After this
-  * call, all affected pages are PG_reserved.
-+ *
-+ * All aligned pageblocks are initialized to the specified migratetype
-+ * (usually MIGRATE_MOVABLE). Besides setting the migratetype, no related
-+ * zone stats (e.g., nr_isolate_pageblock) are touched.
-  */
- void __ref move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
--		unsigned long nr_pages, struct vmem_altmap *altmap)
-+				  unsigned long nr_pages,
-+				  struct vmem_altmap *altmap, int migratetype)
- {
- 	struct pglist_data *pgdat = zone->zone_pgdat;
- 	int nid = pgdat->node_id;
-@@ -720,7 +725,7 @@ void __ref move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
- 	 * are reserved so nobody should be touching them so we should be safe
- 	 */
- 	memmap_init_zone(nr_pages, nid, zone_idx(zone), start_pfn,
--			MEMMAP_HOTPLUG, altmap);
-+			 MEMMAP_HOTPLUG, altmap, migratetype);
- 
- 	set_zone_contiguous(zone);
- }
-@@ -800,7 +805,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+@@ -805,7 +805,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
  
  	/* associate pfn range with the zone */
  	zone = zone_for_pfn_range(online_type, nid, pfn, nr_pages);
--	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL);
-+	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_MOVABLE);
+-	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_MOVABLE);
++	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_ISOLATE);
  
  	arg.start_pfn = pfn;
  	arg.nr_pages = nr_pages;
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 8afcc54c89286..04dc1f4ed634e 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -342,7 +342,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+@@ -816,6 +816,14 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+ 	if (ret)
+ 		goto failed_addition;
  
- 		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
- 		move_pfn_range_to_zone(zone, PHYS_PFN(res->start),
--				PHYS_PFN(resource_size(res)), params.altmap);
-+				       PHYS_PFN(resource_size(res)),
-+				       params.altmap, MIGRATE_MOVABLE);
- 	}
++	/*
++	 * Fixup the number of isolated pageblocks before marking the sections
++	 * onlining, such that undo_isolate_page_range() works correctly.
++	 */
++	spin_lock_irqsave(&zone->lock, flags);
++	zone->nr_isolate_pageblock += nr_pages / pageblock_nr_pages;
++	spin_unlock_irqrestore(&zone->lock, flags);
++
+ 	/*
+ 	 * If this zone is not populated, then it is not in zonelist.
+ 	 * This means the page allocator ignores this zone.
+@@ -833,21 +841,25 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+ 	zone->zone_pgdat->node_present_pages += nr_pages;
+ 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
  
- 	mem_hotplug_done();
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 5db0b35f95e20..9f2dc61968689 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5970,10 +5970,15 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
-  * Initially all pages are reserved - free ones are freed
-  * up by memblock_free_all() once the early boot process is
-  * done. Non-atomic initialization, single-pass.
-+ *
-+ * All aligned pageblocks are initialized to the specified migratetype
-+ * (usually MIGRATE_MOVABLE). Besides setting the migratetype, no related
-+ * zone stats (e.g., nr_isolate_pageblock) are touched.
-  */
- void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
--		unsigned long start_pfn, enum memmap_context context,
--		struct vmem_altmap *altmap)
-+				unsigned long start_pfn,
-+				enum memmap_context context,
-+				struct vmem_altmap *altmap, int migratetype)
- {
- 	unsigned long pfn, end_pfn = start_pfn + size;
- 	struct page *page;
-@@ -6017,14 +6022,12 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 			__SetPageReserved(page);
++	node_states_set_node(nid, &arg);
++	if (need_zonelists_rebuild)
++		build_all_zonelists(NULL);
++	zone_pcp_update(zone);
++
++	/* Basic onlining is complete, allow allocation of onlined pages. */
++	undo_isolate_page_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE);
++
+ 	/*
+ 	 * When exposing larger, physically contiguous memory areas to the
+ 	 * buddy, shuffling in the buddy (when freeing onlined pages, putting
+ 	 * them either to the head or the tail of the freelist) is only helpful
+ 	 * for maintaining the shuffle, but not for creating the initial
+ 	 * shuffle. Shuffle the whole zone to make sure the just onlined pages
+-	 * are properly distributed across the whole freelist.
++	 * are properly distributed across the whole freelist. Make sure to
++	 * shuffle once pageblocks are no longer isolated.
+ 	 */
+ 	shuffle_zone(zone);
  
- 		/*
--		 * Mark the block movable so that blocks are reserved for
--		 * movable at startup. This will force kernel allocations
--		 * to reserve their blocks rather than leaking throughout
--		 * the address space during boot when many long-lived
--		 * kernel allocations are made.
-+		 * Usually, we want to mark the pageblock MIGRATE_MOVABLE,
-+		 * such that unmovable allocations won't be scattered all
-+		 * over the place during system boot.
- 		 */
- 		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
--			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
-+			set_pageblock_migratetype(page, migratetype);
- 			cond_resched();
- 		}
- 		pfn++;
-@@ -6124,7 +6127,7 @@ void __meminit __weak memmap_init(unsigned long size, int nid,
- 		if (end_pfn > start_pfn) {
- 			size = end_pfn - start_pfn;
- 			memmap_init_zone(size, nid, zone, start_pfn,
--					 MEMMAP_EARLY, NULL);
-+					 MEMMAP_EARLY, NULL, MIGRATE_MOVABLE);
- 		}
- 	}
- }
+-	node_states_set_node(nid, &arg);
+-	if (need_zonelists_rebuild)
+-		build_all_zonelists(NULL);
+-	zone_pcp_update(zone);
+-
+ 	init_per_zone_wmark_min();
+ 
+ 	kswapd_run(nid);
+@@ -1550,9 +1562,9 @@ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ 	pr_info("Offlined Pages %ld\n", nr_pages);
+ 
+ 	/*
+-	 * Onlining will reset pagetype flags and makes migrate type
+-	 * MOVABLE, so just need to decrease the number of isolated
+-	 * pageblocks zone counter here.
++	 * The memory sections are marked offline, and the pageblock flags
++	 * effectively stale; nobody should be touching them. Fixup the number
++	 * of isolated pageblocks, memory onlining will properly revert this.
+ 	 */
+ 	spin_lock_irqsave(&zone->lock, flags);
+ 	zone->nr_isolate_pageblock -= nr_pages / pageblock_nr_pages;
 -- 
 2.26.2
 
