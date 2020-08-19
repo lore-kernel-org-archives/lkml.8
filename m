@@ -2,155 +2,135 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A33C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EBB2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2A8204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0g7/SVpo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ep91QEHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgHSOHg (ORCPT
+        id S1728687AbgHSOGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:07:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:38040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgHSOHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:07:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 671BB1045;
-        Wed, 19 Aug 2020 07:07:14 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9DCD3F71F;
-        Wed, 19 Aug 2020 07:07:07 -0700 (PDT)
-Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
-        linux-ia64@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        linux-mm@kvack.org, Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        linux-scsi@vger.kernel.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        linux-mips@vger.kernel.org
-References: <20200819065555.1802761-1-hch@lst.de>
- <20200819065555.1802761-6-hch@lst.de>
- <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
- <62e4f4fc-c8a5-3ee8-c576-fe7178cb4356@arm.com>
- <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
-Date:   Wed, 19 Aug 2020 15:07:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 10:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgHSOCt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:02:49 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4E5C061757;
+        Wed, 19 Aug 2020 07:02:50 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 14:02:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597845767;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fduUs2llT1q1Xx3qiiobcLkR9jqkNHnZPxzfLXB5oxw=;
+        b=0g7/SVporcjlPY/43UB6iiM7WsMZacKIEkOZB2tRSEsfLhPgpFBYMVmTty94VOsqZEYK0f
+        ny9uPVrolykELmYw+kwTprQMcqr14hgC7Q9ew/ECAUD6VUsE2JATn3SMd4++qVO3b7recQ
+        xkaiwNojVaTPe5P0lbIJXJkuvA/Vj95ZKGxH4cLX9Ru7BDSjXyAx0X1n37esr6Aj6wP/xi
+        rPT0ggQCheRLvvdJLW8hE/o5h/vcjz47nCBmXFlZ8rsCmrfBqAipOxAP5kdu4m/5ZA7mKP
+        vS8mN2xK9gTJVX4mbzYotyeEsjdbsHuqfAsvY4xHrb7sH6eOQeJD+U6qursNRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597845767;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fduUs2llT1q1Xx3qiiobcLkR9jqkNHnZPxzfLXB5oxw=;
+        b=Ep91QEHm6JnBtL1sz142ElHWO/aCq/Lr0+5RVHZjOmcaG4hJI0UFhswfzgd/aX2pI1OLKg
+        /NKEz2UQTAQL27Ag==
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/topology: Use prebuilt SD flag degeneration mask
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200817113003.20802-9-valentin.schneider@arm.com>
+References: <20200817113003.20802-9-valentin.schneider@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Message-ID: <159784576699.3192.17019412360260680450.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-19 13:49, Tomasz Figa wrote:
-> On Wed, Aug 19, 2020 at 1:51 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> Hi Tomasz,
->>
->> On 2020-08-19 12:16, Tomasz Figa wrote:
->>> Hi Christoph,
->>>
->>> On Wed, Aug 19, 2020 at 8:56 AM Christoph Hellwig <hch@lst.de> wrote:
->>>>
->>>> The V4L2-FLAG-MEMORY-NON-CONSISTENT flag is entirely unused,
->>>
->>> Could you explain what makes you think it's unused? It's a feature of
->>> the UAPI generally supported by the videobuf2 framework and relied on
->>> by Chromium OS to get any kind of reasonable performance when
->>> accessing V4L2 buffers in the userspace.
->>>
->>>> and causes
->>>> weird gymanstics with the DMA_ATTR_NON_CONSISTENT flag, which is
->>>> unimplemented except on PARISC and some MIPS configs, and about to be
->>>> removed.
->>>
->>> It is implemented by the generic DMA mapping layer [1], which is used
->>> by a number of architectures including ARM64 and supposed to be used
->>> by new architectures going forward.
->>
->> AFAICS all that V4L2_FLAG_MEMORY_NON_CONSISTENT does is end up
->> controling whether DMA_ATTR_NON_CONSISTENT is added to vb2_queue::dma_attrs.
->>
->> Please can you point to where DMA_ATTR_NON_CONSISTENT does anything at
->> all on arm64?
->>
-> 
-> With the default config it doesn't, but with
-> CONFIG_DMA_NONCOHERENT_CACHE_SYNC enabled it makes dma_pgprot() keep
-> the pgprot value as is, without enforcing coherence attributes.
+The following commit has been merged into the sched/core branch of tip:
 
-How active are the PA-RISC and MIPS ports of Chromium OS?
+Commit-ID:     6f349818621dff364fc000909135d0065e9756c9
+Gitweb:        https://git.kernel.org/tip/6f349818621dff364fc000909135d0065e9756c9
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Mon, 17 Aug 2020 12:29:54 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 19 Aug 2020 10:49:48 +02:00
 
-Hacking CONFIG_DMA_NONCOHERENT_CACHE_SYNC into an architecture that 
-doesn't provide dma_cache_sync() is wrong, since at worst it may break 
-other drivers. If downstream is wildly misusing an API then so be it, 
-but it's hardly a strong basis for an upstream argument.
+sched/topology: Use prebuilt SD flag degeneration mask
 
->> Also, I posit that videobuf2 is not actually relying on
->> DMA_ATTR_NON_CONSISTENT anyway, since it's clearly not using it properly:
->>
->> "By using this API, you are guaranteeing to the platform
->> that you have all the correct and necessary sync points for this memory
->> in the driver should it choose to return non-consistent memory."
->>
->> $ git grep dma_cache_sync drivers/media
->> $
-> 
-> AFAIK dma_cache_sync() isn't the only way to perform the cache
-> synchronization. The earlier patch series that I reviewed relied on
-> dma_get_sgtable() and then dma_sync_sg_*() (which existed in the
-> vb2-dc since forever [1]). However, it looks like with the final code
-> the sgtable isn't acquired and the synchronization isn't happening, so
-> you have a point.
+Leverage SD_DEGENERATE_GROUPS_MASK in sd_degenerate() and
+sd_parent_degenerate().
 
-Using the streaming sync calls on coherent allocations has also always 
-been wrong per the API, regardless of the bodies of code that have 
-happened to get away with it for so long.
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: https://lore.kernel.org/r/20200817113003.20802-9-valentin.schneider@arm.com
+---
+ kernel/sched/topology.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-> FWIW, I asked back in time what the plan is for non-coherent
-> allocations and it seemed like DMA_ATTR_NON_CONSISTENT and
-> dma_sync_*() was supposed to be the right thing to go with. [2] The
-> same thread also explains why dma_alloc_pages() isn't suitable for the
-> users of dma_alloc_attrs() and DMA_ATTR_NON_CONSISTENT.
-
-AFAICS even back then Christoph was implying getting rid of 
-NON_CONSISTENT and *replacing* it with something streaming-API-based - 
-i.e. this series - not encouraging mixing the existing APIs. It doesn't 
-seem impossible to implement a remapping version of this new 
-dma_alloc_pages() for IOMMU-backed ops if it's really warranted 
-(although at that point it seems like "non-coherent" vb2-dc starts to 
-have significant conceptual overlap with vb2-sg).
-
-Robin.
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index cbdaf08..38e6671 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -160,15 +160,9 @@ static int sd_degenerate(struct sched_domain *sd)
+ 		return 1;
+ 
+ 	/* Following flags need at least 2 groups */
+-	if (sd->flags & (SD_BALANCE_NEWIDLE |
+-			 SD_BALANCE_FORK |
+-			 SD_BALANCE_EXEC |
+-			 SD_SHARE_CPUCAPACITY |
+-			 SD_ASYM_CPUCAPACITY |
+-			 SD_SHARE_PKG_RESOURCES)) {
+-		if (sd->groups != sd->groups->next)
+-			return 0;
+-	}
++	if ((sd->flags & SD_DEGENERATE_GROUPS_MASK) &&
++	    (sd->groups != sd->groups->next))
++		return 0;
+ 
+ 	/* Following flags don't use groups */
+ 	if (sd->flags & (SD_WAKE_AFFINE))
+@@ -190,13 +184,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+ 
+ 	/* Flags needing groups don't count if only 1 group in parent */
+ 	if (parent->groups == parent->groups->next) {
+-		pflags &= ~(SD_BALANCE_NEWIDLE |
+-			    SD_BALANCE_FORK |
+-			    SD_BALANCE_EXEC |
+-			    SD_ASYM_CPUCAPACITY |
+-			    SD_SHARE_CPUCAPACITY |
+-			    SD_SHARE_PKG_RESOURCES |
+-			    SD_PREFER_SIBLING);
++		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
+ 		if (nr_node_ids == 1)
+ 			pflags &= ~SD_SERIALIZE;
+ 	}
