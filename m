@@ -2,135 +2,93 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5769C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB57206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K1/KzMTQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WnqpwVgb"
+	by mail.kernel.org (Postfix) with ESMTP id 88BE5206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgHSMeF (ORCPT
+        id S1728357AbgHSMeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
+        Wed, 19 Aug 2020 08:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgHSMdU (ORCPT
+        with ESMTP id S1728169AbgHSMeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:33:20 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EB3C061343;
-        Wed, 19 Aug 2020 05:33:19 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 12:33:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597840392;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gz8UFoO9G0Yh9/6TrSb8u8gXd0brblx69nGkW5rqEoU=;
-        b=K1/KzMTQL5QedjJaPE1qJurZ3ueisJbFZQm/iFt9B2tMYHzEUALU1DIXZWAyMa7g0Rb3uq
-        sfgmoMyjVK6ooA8U0zwwUw/lEYwj/7/U/oCgI4mBmDiF7gu9qnowBREkUHs2PKABXPBy6L
-        7cxg4xyEIPwEaznrcMt9qibwDb7ZFzvlIHru11tQ6scVwC9e+9hnNU6ff7p9AjiKQ9sT3M
-        WuUKSpR0hACcOMbR4RrC0u+UgXftr6jkxgMPQPgfKqT5CKEnFQ7X7yLwq1/gKwtQxKzjkF
-        BrEGJLMUV8CUsqDsfkHJMGSTPGKvDA89nRaUYWyGNSDLCp1kp4b85vV75hmcfA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597840392;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gz8UFoO9G0Yh9/6TrSb8u8gXd0brblx69nGkW5rqEoU=;
-        b=WnqpwVgbMoH8q+8fa5O9Kx5r5wibtprfQU43ctxpdyGVSTNPS+GfkC+49Anj7qLMwbiEv6
-        /M++KnRQFG+5b4Cw==
-From:   "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Use container_of() in delayed_work handlers
-Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200708163929.2783-5-james.morse@arm.com>
-References: <20200708163929.2783-5-james.morse@arm.com>
-MIME-Version: 1.0
-Message-ID: <159784039176.3192.15237802095890922512.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Aug 2020 08:34:07 -0400
+X-Greylist: delayed 79 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 19 Aug 2020 05:34:06 PDT
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B45CC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 05:34:05 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by laurent.telenet-ops.be with bizsmtp
+        id HQa42300H4C55Sk01Qa4fQ; Wed, 19 Aug 2020 14:34:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NI4-0002EB-9D; Wed, 19 Aug 2020 14:34:04 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NI4-0004zN-6W; Wed, 19 Aug 2020 14:34:04 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3] block: Make request_queue.rpm_status an enum
+Date:   Wed, 19 Aug 2020 14:34:03 +0200
+Message-Id: <20200819123403.19136-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cache branch of tip:
+request_queue.rpm_status is assigned values of the rpm_status enum only,
+so reflect that in its type.
 
-Commit-ID:     f995801ba3a0660cb352c8beb794379c82781ca3
-Gitweb:        https://git.kernel.org/tip/f995801ba3a0660cb352c8beb794379c82781ca3
-Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Wed, 08 Jul 2020 16:39:23 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 18 Aug 2020 17:05:08 +02:00
+Note that including <linux/pm.h> is (currently) a no-op, as it is
+already included through <linux/genhd.h> and <linux/device.h>, but it is
+better to play it safe.
 
-x86/resctrl: Use container_of() in delayed_work handlers
-
-mbm_handle_overflow() and cqm_handle_limbo() are both provided with
-the domain's work_struct when called, but use get_domain_from_cpu()
-to find the domain, along with the appropriate error handling.
-
-container_of() saves some list walking and bitmap testing, use that
-instead.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lkml.kernel.org/r/20200708163929.2783-5-james.morse@arm.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+v3:
+  - #include <linux/pm.h>, as requested by Bart,
 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index d6b92d7..54dffe5 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -477,19 +477,13 @@ void cqm_handle_limbo(struct work_struct *work)
- 	mutex_lock(&rdtgroup_mutex);
+v2:
+  - Add Acked-by.
+---
+ include/linux/blkdev.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index bb5636cc17b91a75..0a1730b30ad210b4 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -24,6 +24,7 @@
+ #include <linux/percpu-refcount.h>
+ #include <linux/scatterlist.h>
+ #include <linux/blkzoned.h>
++#include <linux/pm.h>
  
- 	r = &rdt_resources_all[RDT_RESOURCE_L3];
--	d = get_domain_from_cpu(cpu, r);
--
--	if (!d) {
--		pr_warn_once("Failure to get domain for limbo worker\n");
--		goto out_unlock;
--	}
-+	d = container_of(work, struct rdt_domain, cqm_limbo.work);
+ struct module;
+ struct scsi_ioctl_command;
+@@ -458,7 +459,7 @@ struct request_queue {
  
- 	__check_limbo(d, false);
+ #ifdef CONFIG_PM
+ 	struct device		*dev;
+-	int			rpm_status;
++	enum rpm_status		rpm_status;
+ 	unsigned int		nr_pending;
+ #endif
  
- 	if (has_busy_rmid(r, d))
- 		schedule_delayed_work_on(cpu, &d->cqm_limbo, delay);
- 
--out_unlock:
- 	mutex_unlock(&rdtgroup_mutex);
- }
- 
-@@ -519,10 +513,7 @@ void mbm_handle_overflow(struct work_struct *work)
- 		goto out_unlock;
- 
- 	r = &rdt_resources_all[RDT_RESOURCE_L3];
--
--	d = get_domain_from_cpu(cpu, r);
--	if (!d)
--		goto out_unlock;
-+	d = container_of(work, struct rdt_domain, mbm_over.work);
- 
- 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
- 		mbm_update(r, d, prgrp->mon.rmid);
+-- 
+2.17.1
+
