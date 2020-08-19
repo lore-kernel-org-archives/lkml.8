@@ -2,85 +2,156 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B562A2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B20E2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHSJBv (ORCPT
+        id S1727017AbgHSJDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:01:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58644 "EHLO mx2.suse.de"
+        Wed, 19 Aug 2020 05:03:01 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:58563 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgHSJBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:01:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E007DB6B9;
-        Wed, 19 Aug 2020 09:02:12 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5CB2A1E1312; Wed, 19 Aug 2020 11:01:46 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 11:01:46 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     Wang Hai <wanghai38@huawei.com>, jack@suse.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ext2: remove duplicate include
-Message-ID: <20200819090146.GG1902@quack2.suse.cz>
-References: <20200819025434.65763-1-wanghai38@huawei.com>
- <20200819050049.F103511C073@d06av25.portsmouth.uk.ibm.com>
+        id S1726825AbgHSJDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:03:00 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 07J92gdZ019875
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Aug 2020 11:02:42 +0200
+Received: from [167.87.31.209] ([167.87.31.209])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07J92fJD018281;
+        Wed, 19 Aug 2020 11:02:42 +0200
+Subject: Re: [PATCH v4 3/3] phy: omap-usb2-phy: disable PHY charger detect
+To:     Roger Quadros <rogerq@ti.com>, kishon@ti.com
+Cc:     robh+dt@kernel.org, nsekhar@ti.com, vigneshr@ti.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Bin Liu <b-liu@ti.com>
+References: <20200716082252.21266-1-rogerq@ti.com>
+ <20200716082252.21266-4-rogerq@ti.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <ef391fb2-c75e-5b35-b3e2-96db21c66ab3@siemens.com>
+Date:   Wed, 19 Aug 2020 11:02:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819050049.F103511C073@d06av25.portsmouth.uk.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200716082252.21266-4-rogerq@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 10:30:49, Ritesh Harjani wrote:
+On 16.07.20 10:22, Roger Quadros wrote:
+> AM654x PG1.0 has a silicon bug that D+ is pulled high after POR, which
+> could cause enumeration failure with some USB hubs.  Disabling the
+> USB2_PHY Charger Detect function will put D+ into the normal state.
 > 
+> Using property "ti,disable-charger-det" in the DT usb2-phy node to
+> enable this workaround for AM654x PG1.0.
 > 
-> On 8/19/20 8:24 AM, Wang Hai wrote:
-> > Remove linux/fiemap.h which is included more than once
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> This addresses Silicon Errata:
+> i2075 - "USB2PHY: USB2PHY Charger Detect is Enabled by Default Without VBUS
+> Presence"
 > 
+> Signed-off-by: Bin Liu <b-liu@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  drivers/phy/ti/phy-omap-usb2.c | 35 +++++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
 > 
-> LGTM, please feel free to add,
-> Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
+> index cb2dd3230fa7..21c3904d4efc 100644
+> --- a/drivers/phy/ti/phy-omap-usb2.c
+> +++ b/drivers/phy/ti/phy-omap-usb2.c
+> @@ -26,6 +26,10 @@
+>  #define USB2PHY_ANA_CONFIG1		0x4c
+>  #define USB2PHY_DISCON_BYP_LATCH	BIT(31)
+>  
+> +#define USB2PHY_CHRG_DET			0x14
+> +#define USB2PHY_CHRG_DET_USE_CHG_DET_REG	BIT(29)
+> +#define USB2PHY_CHRG_DET_DIS_CHG_DET		BIT(28)
+> +
+>  /* SoC Specific USB2_OTG register definitions */
+>  #define AM654_USB2_OTG_PD		BIT(8)
+>  #define AM654_USB2_VBUS_DET_EN		BIT(5)
+> @@ -43,6 +47,7 @@
+>  #define OMAP_USB2_HAS_START_SRP			BIT(0)
+>  #define OMAP_USB2_HAS_SET_VBUS			BIT(1)
+>  #define OMAP_USB2_CALIBRATE_FALSE_DISCONNECT	BIT(2)
+> +#define OMAP_USB2_DISABLE_CHRG_DET		BIT(3)
+>  
+>  struct omap_usb {
+>  	struct usb_phy		phy;
+> @@ -236,6 +241,13 @@ static int omap_usb_init(struct phy *x)
+>  		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
+>  	}
+>  
+> +	if (phy->flags & OMAP_USB2_DISABLE_CHRG_DET) {
+> +		val = omap_usb_readl(phy->phy_base, USB2PHY_CHRG_DET);
+> +		val |= USB2PHY_CHRG_DET_USE_CHG_DET_REG |
+> +		       USB2PHY_CHRG_DET_DIS_CHG_DET;
+> +		omap_usb_writel(phy->phy_base, USB2PHY_CHRG_DET, val);
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -366,14 +378,12 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>  	phy->mask		= phy_data->mask;
+>  	phy->power_on		= phy_data->power_on;
+>  	phy->power_off		= phy_data->power_off;
+> +	phy->flags		= phy_data->flags;
+>  
+> -	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
+> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -		phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
+> -		if (IS_ERR(phy->phy_base))
+> -			return PTR_ERR(phy->phy_base);
+> -		phy->flags |= OMAP_USB2_CALIBRATE_FALSE_DISCONNECT;
+> -	}
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(phy->phy_base))
+> +		return PTR_ERR(phy->phy_base);
+>  
+>  	phy->syscon_phy_power = syscon_regmap_lookup_by_phandle(node,
+>  							"syscon-phy-power");
+> @@ -405,6 +415,17 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Errata i2075: USB2PHY: USB2PHY Charger Detect is Enabled by
+> +	 * Default Without VBUS Presence.
+> +	 *
+> +	 * AM654x SR1.0 has a silicon bug due to which D+ is pulled high after
+> +	 * POR, which could cause enumeration failure with some USB hubs.
+> +	 * Disabling the USB2_PHY Charger Detect function will put D+
+> +	 * into the normal state.
+> +	 */
+> +	if (of_property_read_bool(node, "ti,disable-charger-det"))
+> +		phy->flags |= OMAP_USB2_DISABLE_CHRG_DET;
+>  
+>  	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
+>  	if (IS_ERR(phy->wkupclk)) {
+> 
 
-Thanks. I've added the patch to my tree.
+Why a property, rather than SoC detection like in [1] and your previous
+downstream version?
 
-								Honza
+Jan
 
-> 
-> > ---
-> >   fs/ext2/inode.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
-> > index 80662e1f7889..de6b97612410 100644
-> > --- a/fs/ext2/inode.c
-> > +++ b/fs/ext2/inode.c
-> > @@ -36,7 +36,6 @@
-> >   #include <linux/iomap.h>
-> >   #include <linux/namei.h>
-> >   #include <linux/uio.h>
-> > -#include <linux/fiemap.h>
-> >   #include "ext2.h"
-> >   #include "acl.h"
-> >   #include "xattr.h"
-> > 
-> 
+[1] https://patchwork.kernel.org/patch/11710643/
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
