@@ -2,183 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF91C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B026204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216412076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bjJ8VjOA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F9KtcfA+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DyQ12eXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHSOCe (ORCPT
+        id S1728411AbgHSODM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:02:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42411 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHSOCG (ORCPT
+        Wed, 19 Aug 2020 10:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgHSOCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:02:06 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200819140204euoutp028baea15cb77b1dc6def845f97a00055d~ssDiAIKDh0917409174euoutp02F;
-        Wed, 19 Aug 2020 14:02:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200819140204euoutp028baea15cb77b1dc6def845f97a00055d~ssDiAIKDh0917409174euoutp02F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597845724;
-        bh=G0KaFBK2CZOU69zOLC6mp4OXLhcPCTgcVzd+ZtgbOV8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bjJ8VjOA7GgPeoDJDyJxwIJdKROX7S/2VKhAgICUY43w1mp80dLR0wcMnqsmv+P46
-         i5cnP7v7qPkotbBpNUbAGO/otIRiIR4WI/aeYgIfqc+dgOJbC+IXJrjOxJbGPVXON+
-         W33kmeultdlrvuEr1dSUpdaUD5jd43c8w5PyVoGc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200819140204eucas1p1bf05e0c76107014d05c384237c65c654~ssDhuGFOF3126731267eucas1p1q;
-        Wed, 19 Aug 2020 14:02:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 27.0A.06456.CD03D3F5; Wed, 19
-        Aug 2020 15:02:04 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200819140203eucas1p2818858289f2394b32f3c647e47705cd2~ssDhUV4h00344603446eucas1p2E;
-        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200819140203eusmtrp2a760cde922a7e1fcb7bf52db161217e1~ssDhTmUHu1908919089eusmtrp2X;
-        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-4c-5f3d30dc2339
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D7.71.06017.BD03D3F5; Wed, 19
-        Aug 2020 15:02:03 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200819140203eusmtip27e08d854e0e7ea177b3ee2ff5a345014~ssDhK20we2707227072eusmtip27;
-        Wed, 19 Aug 2020 14:02:03 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 1/8] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
- s3c64xx_enable_datapath()
-Date:   Wed, 19 Aug 2020 16:01:52 +0200
-In-Reply-To: <20200819131635.GD5441@sirena.org.uk> (Mark Brown's message of
-        "Wed, 19 Aug 2020 14:16:35 +0100")
-Message-ID: <dleftj4koy20q7.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 19 Aug 2020 10:02:47 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C76DC061383;
+        Wed, 19 Aug 2020 07:02:46 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 14:02:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597845762;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ckJeiS/DWXHXyS8NzN3xiQGdTAKjAdTUNsWAa4Smc4=;
+        b=F9KtcfA+U7ABojo1+QaSBTOvfbljwPjrU3zmUejWaNXilwzCznU0RW+Jl6sAU3ho+zAEfv
+        K3gjHfQVCIyZxmIcjGwn/1iF4F/wUvmcvkzYDhxkY98F+6rE8RNiIpMC6WacAelEF/mYMS
+        sMOc/ZARp8YVcIXX0lRIA9dbFgB53O+O18EvAQl1pvCIB03AhUzZhM0ND0v9hFaw3y4Xf2
+        v08w4WGKu8ea6XwKcSOW5/hwlu41DurJqAnJ7JUd2mF9DYWlniIwI6M8gYn+t6L0c3quMB
+        i1XP002ZgXEwU83HzgAJ6CwXvAhXeBRNertculuEf95eBbzV7G8iii90GJjmMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597845762;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ckJeiS/DWXHXyS8NzN3xiQGdTAKjAdTUNsWAa4Smc4=;
+        b=DyQ12eXkc3sE7lKU1IgRyjsCRv3EGw7P+Wkp42P/YrXjPBLKhY52mikuBWWGXMOwmEdFeb
+        Xs8YvpWK2sXs6PCA==
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/topology: Mark SD_NUMA as SDF_NEEDS_GROUPS
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200817113003.20802-17-valentin.schneider@arm.com>
+References: <20200817113003.20802-17-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUhTURzlvo/tuZpdp+EPk7BpgUWaZvmsDAuV9UHYH1EEtVZ7TMlN2VP7
-        gMigxMxlauXXxI/EZDm1pVaiQipaWc5KK8soU1jOPigTl2XmfAr9d+4553fu+V0uQ8qe0V5M
-        nC6J0+tU8XKRhGrs/NWzdnBduHKdOc+FveGwEezt/FqavTY0ImKzhsdI1mqtE7OW4Zc0+6LJ
-        KGLzra0Ee+77gJg1d7wTR0gUryp+kAqL6aJIcafirOJyvQkpxi3LY+iDki1qLj4uhdMHbj0i
-        iS1Kf4ASv7qfrMkZJlJRF85ALgzgEGjsb6EzkISR4SoEd6sNSDj8RGDPtc8fxhHkXrKIFkYy
-        yx8SgnATQcXUZ9IpyLANgaOWzUAMI8IBYDYfcNIe2Bf6J1sop5/E1QQUDZmRU3DHahhryiSc
-        mMIr4XfD9bkcF5wIpbbWOSzFoZD6vngOL8VhUP/pvVjg3eBRwQjlxCTWQoH181xTwG/E0D1Y
-        TgtNI6H9avN8a3ewd9WLBewNM/dLCGdRwGchN2ejMJuJoNHooATPZhjsmZqf3QaOsQlK8LvC
-        6y9uwr2ukNOYRwq0FNLTZILbD2qymudTvMBgr0ICVkBR5y1SeLcLCEbSXtJXkE/hf+sU/rdO
-        4Wwsif2htilQoNdAZdkYKeBwqKn5RpUi2oQ8uWReq+H4IB13IoBXaflknSbgWILWgmY/V/ff
-        rh/30MTzo20IM0i+WBojD1fKaFUKf0rbhvxmkz7W3epFXpQuQcfJPaTbn3YflknVqlOnOX2C
-        Up8cz/FtaBlDyT2l68tHD8mwRpXEHee4RE6/oBKMi1cqWu6I31QV0cuNtoeUvTOu/tLX2bRz
-        z9dQzfnbFQ0mkzLbc0Xn6aG3XWqtzche2D/eCwMNGUv3Pota6xZX/sDecWY68ciaEH/N3ukA
-        nH3Pu98neNdMc1CfYdL6ZGL9wJ9Cw4eSqMW+kTt2b6iTxlTui/adLH48GR22KlhlWPSwZ0k/
-        llN8rCpoNannVf8A0tOAvGQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsVy+t/xe7q3DWzjDXon6Vks/vGcyWLjjPWs
-        FlMfPmGz6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gsGj/eZLdYe+QuuwOXx/Uln5g9Nq3q
-        ZPPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX0
-        7WxSUnMyy1KL9O0S9DJmdxxkLHgnXLFu0mOmBsbjAl2MnBwSAiYSPYtOMHUxcnEICSxllJg1
-        4zmQwwGUkJJYOTcdokZY4s+1LjaImqeMEkvbzrKD1LAJ6EmsXRsBUiMioCxx9fteFhCbWWAp
-        k8T7u64gtrBAksSlA5fA4kIChhJ35l9nBrFZBFQlfm+dBmZzChRILHi+D8zmFTCXaLg/F8wW
-        FbCU2PLiPjtEXFDi5MwnUPOzJb6ufs48gVFgFpLULCSpWUDXMQtoSqzfpQ8R1pZYtvA1M4Rt
-        K7Fu3XuWBYysqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQJjbtuxn1t2MHa9Cz7EKMDBqMTD
-        G6BkGy/EmlhWXJl7iFEFaMyjDasvMEqx5OXnpSqJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU
-        6M+JzFKiyfnANJFXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHR
-        +7/wN+FloaraCtOyjuy4sXiffrzvRrGT/YeKGaLCbnM4d52ZcXVSlIO9fOMjk8aj0Z6HPxw/
-        vWDHt3UL3feGfFI8tm1vtKj0vMqQlZG/tG9+WzSrovhc5ixG1pDCsLTsNUo72XNfdLsvfVZQ
-        /1aHK+eS64UTHyfw8O5UOaphY+Jxz2RpqMYOJZbijERDLeai4kQARSYUcNsCAAA=
-X-CMS-MailID: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
-X-Msg-Generator: CA
-X-RootMTR: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200819140203eucas1p2818858289f2394b32f3c647e47705cd2
-References: <20200819131635.GD5441@sirena.org.uk>
-        <CGME20200819140203eucas1p2818858289f2394b32f3c647e47705cd2@eucas1p2.samsung.com>
+Message-ID: <159784576167.3192.9507446083732831397.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The following commit has been merged into the sched/core branch of tip:
 
-It was <2020-08-19 =C5=9Bro 14:16>, when Mark Brown wrote:
-> On Wed, Aug 19, 2020 at 02:58:22PM +0200, Krzysztof Kozlowski wrote:
->> On Wed, Aug 19, 2020 at 02:51:27PM +0200, Lukasz Stelmach wrote:
->
->> > Honestly, I don't know and I couldn't find out why. It makes stuff
->> > work. There has been a commit like this before
->
->> >     0f5a751ace25 spi/s3c64xx: Enable GPIO /CS prior to starting hardwa=
-re
->
->> > Apparently, it was lost in
->
->> >     0732a9d2a155 spi/s3c64xx: Use core message handling
->
->> Then describe at least this... maybe Mark knows why he brough back old
->> code after refactoring?
->
-> I'm not sure what's being referred to as being lost in the second commit
-> TBH.
+Commit-ID:     5f4a1c4ea44728aa80be21dbf3a0469b5ca81d88
+Gitweb:        https://git.kernel.org/tip/5f4a1c4ea44728aa80be21dbf3a0469b5ca81d88
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Mon, 17 Aug 2020 12:30:02 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 19 Aug 2020 10:49:50 +02:00
 
-Order of enable_cs() and enable_datapath(). The order 0f5a sets makes
-(for a reaseon I don't know) my devices work. In the latter commit,
-which rewrites "everything", enable_datapath() is called before what
-later (in aa4964c4eb3e) became s3c64xx_spi_set_cs().
+sched/topology: Mark SD_NUMA as SDF_NEEDS_GROUPS
 
-> The first commit is simple code motion rather than a correctness
-> thing, and more related to the handling of GPIO controlled chip
-> selects according to the description (which people should be using
-> with that controller anyway where possible IIRC, the native chip
-> select has too many assumptions about what it's doing).
+There would be no point in preserving a sched_domain with a single group
+just because it has this flag set. Add it to SD_DEGENERATE_GROUPS_MASK.
 
-Funny, but without the automatic CS control (see the next patch in this
-series) my stuff does not work.
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: https://lore.kernel.org/r/20200817113003.20802-17-valentin.schneider@arm.com
+---
+ include/linux/sched/sd_flags.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> I don't know that I ever actually used a system that used the native
-> chip select as the actual chip select.  Perhaps some quirk was
-> introduced where the chip select signal does something?
->
-> The commit is also lacking a description of what the issues that are
-> being fixed are.
-
-On Exynos3250 DMA transfers from SPI longer than 512 fail.
-
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl89MNAACgkQsK4enJil
-gBBcTwf8DWZyT4x0kvjwQlAAh0rUJ1GbGposDAteYzB8RPbEbM2FM4VIu1KDKnLY
-iJbyrxEKE+R2dTx1ckWHqDnQdXNXoYiKdWfo4v0FqSwdyNdHN4kqNTaVtfMMmGwA
-HEIJBdTImd20d8CZV0Qmb41+s3Po8YvEKIFpFALqcXvBSN8fi8PJRX8hYzbr0kck
-2KKMARpA/n+uYjINC2wABjCybdwURL/a0bSdYRDNC3TJDZQyJKzHFjQNRcF28VYS
-3UCnsVgJdJGjzvRh0wdFqkU+2GsU5/2phTX9wkgh8o6x5jSgCKj1ivvcK2TL1yj3
-8ldjR9PmxxV5GaBOPlgTZTUJPiJ/GA==
-=KAWn
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
+index 29af5f0..34b21e9 100644
+--- a/include/linux/sched/sd_flags.h
++++ b/include/linux/sched/sd_flags.h
+@@ -151,5 +151,6 @@ SD_FLAG(SD_OVERLAP, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
+  * Cross-node balancing
+  *
+  * SHARED_PARENT: Set for all NUMA levels above NODE.
++ * NEEDS_GROUPS: No point in preserving domain if it has a single group.
+  */
+-SD_FLAG(SD_NUMA, SDF_SHARED_PARENT)
++SD_FLAG(SD_NUMA, SDF_SHARED_PARENT | SDF_NEEDS_GROUPS)
