@@ -1,130 +1,110 @@
-Return-Path: <SRS0=faA3=B4=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F50AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D722C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C40F20709
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Aug 2020 23:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FA1207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMyjMFHM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iRxnC/nO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgHRXzE (ORCPT
+        id S1727792AbgHSAEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 19:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
+        Tue, 18 Aug 2020 20:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgHRXzD (ORCPT
+        with ESMTP id S1726983AbgHSAEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 19:55:03 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5560C061389;
-        Tue, 18 Aug 2020 16:55:03 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 189so9851759pgg.13;
-        Tue, 18 Aug 2020 16:55:03 -0700 (PDT)
+        Tue, 18 Aug 2020 20:04:32 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B031C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:04:32 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id 77so19180734ilc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=7422GZO6a07uIkKor7gPEwTDJ5nsCQ3Ry5yAt5O8lbE=;
-        b=gMyjMFHMZ82HKryOjvxwx+F/WntkodrlGmMyg6R7N0IHb5pHbZJ2k0ralLblXfYqL/
-         HQZjT2RKaUaN3Uk3JabTmTarIRkc3O68LG7LcQH8kYO86uTGmkxmC9Ytu/uttNCVZa2o
-         x3obkAAD8V+AhQ0gZu2rje3wjt0tugdGmVYAwn1DUd2a0Lt/pCFhkrAI/1sFTvK2+ZrH
-         8bsq4C+a5mGB7fkRfk8nDdyDoV7XhBrorbH+5b5BDCVx6zy1RK7cx4R2mmh8fIFE+Lba
-         qsiBqHi5nQQiyojMGEz1nD9G4jfH0RSejMBTfanRtuUDRIbO/WFS5JiKmxNHmj5fbCNB
-         fxow==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tSr61lwzUj+xHSrVPasO0EWAim4EWvQCGpCMT13xijE=;
+        b=iRxnC/nOppybcAojsVo0p009Ul4zniX0CYq561gKj8/PGz6vtBky6WbKCJrbe18woB
+         5Gvd5XtTTWz91U/YGzWZbeMIl2nAmOC04oYv1IbPzj9MHxd2KH0zLxsJpbs6p8q6BZre
+         QQaR2gGM+yBASU5DXhq6FjMbneA1G2B1uEYTU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=7422GZO6a07uIkKor7gPEwTDJ5nsCQ3Ry5yAt5O8lbE=;
-        b=M27Um82/BV7LZqfa0zQy7DHUJaWCqPzLMw0eiLEpM5tuAKWBZA3WW6WiFRjbKBQ0Rw
-         a+BEk1Hyl38TSuWxiQcEr+rmdHPH/o3jvFxkx/zqtD8msAOGYqDX1diiDEePYHgwp2+S
-         oR5rdqiRyVAwfHBOfVlAikeGc64BAHpPx9eGgKWLDLLImi7NgKrPg8MzXuL190fPBdOg
-         pXul0jSFE0DhTn3+najdYjmzjfzU9cDgX4kbdHk4YV5sF6IBlBcmApIo0OQ2MVIUrqln
-         Sgxxf6LjuHU3yRVuLKEJNCeBlPWwQYbdo6w/r70AbsR8cTeHjoa0ear/yy82TlUd/Scq
-         Jp1w==
-X-Gm-Message-State: AOAM532wljonu2vb9AHG4/YhAoqH8GMdseuSgJgSbwI3CfECxrV/c3Df
-        iAlk5GAwoQaFHORCpa5iDQJJempKtKA=
-X-Google-Smtp-Source: ABdhPJyzpeAN/fom5Hv0bXjaUwSL/42Sf1RXPTAqHPvb7BVJcMMUtDCYGB20BWOdQLzx7mJ5D5fnvg==
-X-Received: by 2002:a63:471b:: with SMTP id u27mr14757480pga.139.1597794903474;
-        Tue, 18 Aug 2020 16:55:03 -0700 (PDT)
-Received: from localhost (193-116-193-175.tpgi.com.au. [193.116.193.175])
-        by smtp.gmail.com with ESMTPSA id q12sm27030752pfg.135.2020.08.18.16.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 16:55:02 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 09:54:57 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
- synchronisation with actual irq state
-To:     peterz@infradead.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-References: <20200723105615.1268126-1-npiggin@gmail.com>
-        <20200807111126.GI2674@hirez.programming.kicks-ass.net>
-        <1597220073.mbvcty6ghk.astroid@bobo.none>
-        <20200812103530.GL2674@hirez.programming.kicks-ass.net>
-        <1597735273.s0usqkrlsk.astroid@bobo.none>
-        <20200818154143.GT2674@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200818154143.GT2674@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tSr61lwzUj+xHSrVPasO0EWAim4EWvQCGpCMT13xijE=;
+        b=bxrIOZgDt3SqLgh5/kYZF55MnvcX2fIOgMn67n4f6dSAhd44ynPt7Vmjs7O9tkotnM
+         rjuvIg288MTckpIly09QUyxYnLPFONkFvV2Asqmh8ZrqZ8YroSybH/KT2OnrYFbepCSj
+         rMse4T8SmDuHM0vJqJ4lFfQLQlYwNBGZyjLLmCKAbw0FyvEiVbhdqWDOjOVteURZ02X6
+         I+Ycfe0QmTFTY+ES/b0/nVZFFQ6AS+y+1crDQCXH+/7cchV4cdY6WeG5D1JksSuA1jUY
+         7arpz4/azgmgYRucCpoXqBDKLeEZ7CjlLVKcrWVud3h722eDBPXAQEr4EiDi0BuwyGoV
+         RTxw==
+X-Gm-Message-State: AOAM531kzoRpftqll7jy61zncsA9NUYcBpoetyDN9j+/gzGwFTewxOkQ
+        +yh2Up9AfA4jV4shEIdMWcyErZiXlOIk4NTaOPb4hA==
+X-Google-Smtp-Source: ABdhPJyjicQKK5V/J7U3GZuUT4FkgXC3VrgTQLkpPiyoQZ8ZkEKKjjrWqZbrDqtBGQ5xliwSol1cNNHVoDy1sY6cHN0=
+X-Received: by 2002:a92:660e:: with SMTP id a14mr20285569ilc.262.1597795471360;
+ Tue, 18 Aug 2020 17:04:31 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1597793862.l8c4pmmzpq.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200814064557.17365-1-qiang.zhang@windriver.com>
+ <20200814185124.GA2113@pc636> <CAEXW_YSJXHQq=z+fhHH+ZAVBDRnOYAzo6wHTFaqd9AQYHhQ6yg@mail.gmail.com>
+ <20200818171807.GI27891@paulmck-ThinkPad-P72> <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+ <20200818210355.GM27891@paulmck-ThinkPad-P72> <20200818215511.GA2538@pc636> <20200818220245.GO27891@paulmck-ThinkPad-P72>
+In-Reply-To: <20200818220245.GO27891@paulmck-ThinkPad-P72>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 18 Aug 2020 20:04:20 -0400
+Message-ID: <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
+Subject: Re: [PATCH] rcu: shrink each possible cpu krcp
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, qiang.zhang@windriver.com,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from peterz@infradead.org's message of August 19, 2020 1:41 am:
-> On Tue, Aug 18, 2020 at 05:22:33PM +1000, Nicholas Piggin wrote:
->> Excerpts from peterz@infradead.org's message of August 12, 2020 8:35 pm:
->> > On Wed, Aug 12, 2020 at 06:18:28PM +1000, Nicholas Piggin wrote:
->> >> Excerpts from peterz@infradead.org's message of August 7, 2020 9:11 p=
-m:
->> >> >=20
->> >> > What's wrong with something like this?
->> >> >=20
->> >> > AFAICT there's no reason to actually try and add IRQ tracing here, =
-it's
->> >> > just a hand full of instructions at the most.
->> >>=20
->> >> Because we may want to use that in other places as well, so it would
->> >> be nice to have tracing.
->> >>=20
->> >> Hmm... also, I thought NMI context was free to call local_irq_save/re=
-store
->> >> anyway so the bug would still be there in those cases?
->> >=20
->> > NMI code has in_nmi() true, in which case the IRQ tracing is disabled
->> > (except for x86 which has CONFIG_TRACE_IRQFLAGS_NMI).
->> >=20
->>=20
->> That doesn't help. It doesn't fix the lockdep irq state going out of
->> synch with the actual irq state. The code which triggered this with the
->> special powerpc irq disable has in_nmi() true as well.
->=20
-> Urgh, you're talking about using lockdep_assert_irqs*() from NMI
-> context?
->=20
-> If not, I'm afraid I might've lost the plot a little on what exact
-> failure case we're talking about.
->=20
+On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
 
-Hm, I may have been a bit confused actually. Since your Fix=20
-TRACE_IRQFLAGS vs NMIs patch it might now work.
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index b8ccd7b5af82..6decb9ad2421 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
+> >  {
+> >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+> > +       struct kfree_rcu_cpu *krcp;
+> >
+> >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+> >                 return 0;
+> >
+> > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
+> > +       krcp = this_cpu_ptr(&krc)
+> > +       schedule_delayed_work(&krcp->monitor_work, 0);
+> > +
+> >
+> > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
+> > Maybe be never.
+>
+> Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
+> hard time getting too worried about it.  ;-)
 
-I'm worried powerpc disables trace irqs trace_hardirqs_off()
-before nmi_enter() might still be a problem, but not sure
-actually. Alexey did you end up re-testing with Peter's patch
-or current upstream?
+Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
+on the cache reaper who's job is to flush the per-cpu caches. So I
+believe during CPU offlining, the per-cpu slab caches are flushed.
 
-Thanks,
-Nick
+thanks,
+
+ - Joel
