@@ -2,111 +2,116 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED78C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BAF2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597802391;
-	bh=rVLBUJQJtomTeCFFIC/cNibqoLCbArMVHOAk4Bjz0pY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Cob3Wxrit86OcQLl4jTMl6DqTA4x9veZL6hjltYltgM38x9t1qItF9WA2rCIcICKt
-	 OCMYwMktWpXWPVoZK7tReZbfBONh1T2QocA9wjX9UBqXqfCD56qbB02pXXitqXbkKy
-	 qnKXZEz8jfjczdUnZDEp+PNCHGGp83q+OdgFZSxA=
+	by mail.kernel.org (Postfix) with ESMTP id 037082067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:00:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyuFA3kT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgHSB7t (ORCPT
+        id S1727828AbgHSCAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
+        Tue, 18 Aug 2020 22:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgHSB7s (ORCPT
+        with ESMTP id S1726815AbgHSCAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:59:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A75C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:59:46 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 185so23566983ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:59:46 -0700 (PDT)
+        Tue, 18 Aug 2020 22:00:39 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F84C061389;
+        Tue, 18 Aug 2020 19:00:37 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c10so465906pjn.1;
+        Tue, 18 Aug 2020 19:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9exB8ZTcwLia2sz4SxcTMYrc7X+fUZoixqks6xkGbbw=;
-        b=fhXX37S2dWTvZf3nyXGAek5Bh0VxvSnrhtiQ42Ig6uY1fIm1pe5CuLtSHIT3/GqQUa
-         qFS8b+fxDiqwWgdHAgskDCpLTsKT0JY7EFGtwJ5rgV34b4dwVX8iUfYOgLUknC19IzWF
-         2fMEsc3wskb3M4IdaNpMXE055qvEM3iUQLU+A=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PN3fIhrJJyl3pPILHSdeC20nIVFKLI7QiZuW9O5IrG8=;
+        b=nyuFA3kTs2vyDGWig2dHP/Ats5sZqUVGiHjlEiAlC7fXpMSOaL1Me1NmdnnY9yJXfg
+         n2+leRzk4IrRkKQr9MaJHE4t7uMUp1+UOUOgiWHobt5sWglD0qSV+E1mKVc2pDyLJpe8
+         zF2w87+6FhxbDkIumxHyCcujBTmQsBvFjJpNsViuaSs63zzjOnqk99ns8B7/MOBAeU1T
+         /Coah0bsoyQoXM9Md+in2c8+vA/2CSpRx/B6BmBUHOfk13WpQ+0XYURdi67708dvrQLQ
+         LNzjm1u8WBH6/tqSt3ChxzKhj1B5hpSVcUJbOkDhheVHGCIhAqFoHuPdE4eH3lcBiasj
+         FCRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9exB8ZTcwLia2sz4SxcTMYrc7X+fUZoixqks6xkGbbw=;
-        b=rc2OJz1TTGVEZlZ9b8LERy0c6306QldxlBzOn5hXcaeRcgN64BJmrqLgstAQ7s5BU0
-         TeiVe62t4yTIXsvitSxprUBqiNeg38wD7iOsxs0gfx7Ezi0E2VVBCeBVNcVIISbnqz/P
-         eDw3UdiZyL4T9HoIOb/6AtBRC3OV5TzIR1D6+t+MBB/M/D7W8lBY7LRZ8pobPPifxpOf
-         4rKzh2f4cZeQ4J41ZC7uZjLnuTPvFUge66pcKBTFwbJvGcEgbhFsDNhPOfTXLzCEDY+B
-         1FGAYvrFsaPyI8GtfpUbXgoQH09tBDz3ZquO7cWFNg6aAf7MRBbUuUbgsnz0F5n8QjBF
-         kV1w==
-X-Gm-Message-State: AOAM531tssxOh8LUzUtGweWbe8YAYGqxBarP7iDK0HelOQSGrM4muo55
-        NeYRGBzkYfK51BmGZK57d9TBSNnH5OIYsA==
-X-Google-Smtp-Source: ABdhPJyMCEf9ZrMCXOTawfHQPNw+JuR8ks5ujNtd4Wzube5NMp3Yow4jEqD9bH93SnwHX4mKMKOElw==
-X-Received: by 2002:a2e:5852:: with SMTP id x18mr10323150ljd.132.1597802384780;
-        Tue, 18 Aug 2020 18:59:44 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id m20sm7004814lfb.72.2020.08.18.18.59.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 18:59:44 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id 185so23566941ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:59:43 -0700 (PDT)
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr10334797ljc.371.1597802383309;
- Tue, 18 Aug 2020 18:59:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PN3fIhrJJyl3pPILHSdeC20nIVFKLI7QiZuW9O5IrG8=;
+        b=X7YszeNH432Q5c/0RtA3xeriMNuEkghk5eJ3B0gnHZfSy9PS3ACZcCZroOfcbpHxgY
+         czsQUzivGictq532G9GGYQMSKrZAYm3xitoodVmwai/K9uH+eM8aI6z0UfHlvCN5Yell
+         lv2n5/Y0ygPaHD42Hh0QEYQ0lqirAjwmuYFz65Hk0mPjrNUU29tf/NZtwfUzl7f8bYK5
+         wRShB9t37aWc8K6uBo+HDzBIu1UVijNd0k/r5bl5K/u/Pgkbuzw38ret1hrt91rSyq8c
+         NQgB9a8ZK14HS9HDd3FSFf5KtZ6U+9cIQz7D3+5io8VJb8+/KeILv6sCg8RVvUF2k/Bs
+         9G+w==
+X-Gm-Message-State: AOAM531Rk16VEjALnooEpNM/cqgGYVMiJcfbl+PLyoU7txZL+Cjo9xyg
+        mmNfmUeegLbI+RvyjuGQOXg=
+X-Google-Smtp-Source: ABdhPJyHoPlHv2D4U6jfifzRErwvbcJHRRK4idYx+IiPISLEG7z6KKd8UIDsQ02S29N9d7Z7a3s/UA==
+X-Received: by 2002:a17:90a:77ca:: with SMTP id e10mr2157509pjs.150.1597802436327;
+        Tue, 18 Aug 2020 19:00:36 -0700 (PDT)
+Received: from athina.mtv.corp.google.com ([2620:15c:211:0:a28c:fdff:fee1:f370])
+        by smtp.gmail.com with ESMTPSA id q6sm1120812pjr.20.2020.08.18.19.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 19:00:35 -0700 (PDT)
+From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
+To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH bpf-next] net-veth: add type safety to veth_xdp_to_ptr() and veth_ptr_to_xdp()
+Date:   Tue, 18 Aug 2020 19:00:27 -0700
+Message-Id: <20200819020027.4072288-1-zenczykowski@gmail.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-References: <20200817161132.GA4711@amd> <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
- <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
-In-Reply-To: <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Aug 2020 18:59:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
-Message-ID: <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to mainline
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Pavel Machek <pavel@ucw.cz>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 6:13 PM Dave Airlie <airlied@gmail.com> wrote:
->
-> I think there's been some discussion about reverting that change for
-> other reasons, but it's quite likely the culprit.
+From: Maciej Żenczykowski <maze@google.com>
 
-Hmm. It reverts cleanly, but the end result doesn't work, because of
-other changes.
+This reduces likelihood of incorrect use.
 
-Reverting all of
+Test: builds
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+---
+ drivers/net/veth.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-   763fedd6a216 ("drm/i915: Remove i915_gem_object_get_dirty_page()")
-   7ac2d2536dfa ("drm/i915/gem: Delete unused code")
-   9e0f9464e2ab ("drm/i915/gem: Async GPU relocations only")
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index e56cd562a664..b80cbffeb88e 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -234,14 +234,14 @@ static bool veth_is_xdp_frame(void *ptr)
+ 	return (unsigned long)ptr & VETH_XDP_FLAG;
+ }
+ 
+-static void *veth_ptr_to_xdp(void *ptr)
++static struct xdp_frame *veth_ptr_to_xdp(void *ptr)
+ {
+ 	return (void *)((unsigned long)ptr & ~VETH_XDP_FLAG);
+ }
+ 
+-static void *veth_xdp_to_ptr(void *ptr)
++static void *veth_xdp_to_ptr(struct xdp_frame *xdp)
+ {
+-	return (void *)((unsigned long)ptr | VETH_XDP_FLAG);
++	return (void *)((unsigned long)xdp | VETH_XDP_FLAG);
+ }
+ 
+ static void veth_ptr_free(void *ptr)
+-- 
+2.28.0.220.ged08abb693-goog
 
-seems to at least build.
-
-Pavel, does doing those three reverts make things work for you?
-
-               Linus
