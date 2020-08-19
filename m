@@ -2,84 +2,261 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B65C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D722078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF652078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MTL94uuG"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="eznmiXT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgHSTSQ (ORCPT
+        id S1726951AbgHSTSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
+        Wed, 19 Aug 2020 15:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHSTSN (ORCPT
+        with ESMTP id S1726585AbgHSTSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:18:13 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1A8C061757;
-        Wed, 19 Aug 2020 12:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Oai+oxzNPuIfgriKFZ7IPO9e3XuWOzJ6eg1UgB7h7Gc=; b=MTL94uuGp7VWO1sIxU/Kyr7fZh
-        +e35aZqq/1xl3ZdqcbyhO/pOOdXpNkMqJmOi9pFpOAy+sqUjLX/GnUpqd3YZT8wQ//qKk+BehM0gp
-        F6QQomcAlhyITzvIsT1L07XVqW29a5Gqi0oX5Sp8Efbn8ujGxFks/ROebwoAwG6Lboaw=;
-Received: from p200300ccff0e87001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:8700:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k8Tas-0007ns-Kv; Wed, 19 Aug 2020 21:17:54 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k8TYk-0008UT-TE; Wed, 19 Aug 2020 21:15:42 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     tony@atomide.com, linux@armlinux.org.uk,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] ARM: omap2plus_defconfig: enable twl4030_madc as a loadable module
-Date:   Wed, 19 Aug 2020 21:15:24 +0200
-Message-Id: <20200819191524.32581-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Aug 2020 15:18:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9CCC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:18:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id 88so22611542wrh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IkV7VhnsBdLN5xuM+4/Dxe2A0Bhih4c3yWE1VbJNFHA=;
+        b=eznmiXT/ntOWTcbnncE2n/WNhmHddQZEgFJUBCiShFAcFDlu9FzB3r2ycGBZ3UmF3N
+         PiinjnQH0SB4qCQRoV/7274AhJc9J9KY+TpaOFTg7ON6MmrpQtRVZdyNNPdw3JKckvVx
+         JoK+fssO/3zqRKD1Zplv74ZxQetjyp1iS4yCM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IkV7VhnsBdLN5xuM+4/Dxe2A0Bhih4c3yWE1VbJNFHA=;
+        b=AuujsIvUIC7L9NYX1N4N2EKSxDK1p2IOHaD03JEwGXDPvlNxQVYQCYhnot732XlNiQ
+         QFAvGOtRtJu9cxJJ6WJVGqmAHzoRVzV240FwvvNeS63s0+x31jGryphfFaWEq7ad5n84
+         5cX11e0WCwcAwpfb7BmD8zhLB0ZJhecpyfS+0sfU1yi0AGnOEm+VdjAaiBlLqcMXhU8k
+         rb4YlJh5UYTuKp0BmycPUwkkY3FFo4aKeNhJnABn5zfxN2ycPRLIKssLQNXsVHgin9SU
+         m8zG/eGwzugvZ+7cy2H4mWnMK/NVK/zbIKv6mIGhhI/ycTIemmeI2oogi4dMTmgF9Jzq
+         Jbsw==
+X-Gm-Message-State: AOAM532poPm0JV5DdasO5HC5j08hrIFw6bGbpXzuR0kcDfSj+h7c/6cD
+        2wR7EQKRbuOulLx1r7ZzBpXJlzcJdIVRi5ia+9p7
+X-Google-Smtp-Source: ABdhPJwd8eZe43zhhxrKSyHk8/9Xy7z3Xl6wnyt0GLOGhtBxLf3mrLHEx+ftJjVR/96tWAd3U/iDbcJGcHrccbxH9fI=
+X-Received: by 2002:adf:f7c3:: with SMTP id a3mr25600526wrq.162.1597864727706;
+ Wed, 19 Aug 2020 12:18:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200814214725.28818-1-atish.patra@wdc.com> <20200814214725.28818-2-atish.patra@wdc.com>
+ <2dce83a8-bda4-7664-9661-4e0542eecd57@arm.com>
+In-Reply-To: <2dce83a8-bda4-7664-9661-4e0542eecd57@arm.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 19 Aug 2020 12:18:36 -0700
+Message-ID: <CAOnJCULbzjsefufgBgonBowgctEqeuLKixskD=5ph8-jUOmM+g@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH 1/6] numa: Move numa implementation to common code
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nick Hu <nickhu@andestech.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        Steven Price <steven.price@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Zong Li <zong.li@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADC is used by twl4030_charger to read voltages. If a dtb contains
-the ADC but the module is not build, probing twl4030_charger will be
-endlessly deferred, so just enable CONFIG_TWL4030_MADC in the config.
+On Tue, Aug 18, 2020 at 8:19 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+>
+>
+> On 08/15/2020 03:17 AM, Atish Patra wrote:
+> > ARM64 numa implementation is generic enough that RISC-V can reuse that
+> > implementation with very minor cosmetic changes. This will help both
+> > ARM64 and RISC-V in terms of maintanace and feature improvement
+> >
+> > Move the numa implementation code to common directory so that both ISAs
+> > can reuse this. This doesn't introduce any function changes for ARM64.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/arm64/Kconfig                            |  1 +
+> >  arch/arm64/include/asm/numa.h                 | 45 +---------------
+> >  arch/arm64/mm/Makefile                        |  1 -
+> >  drivers/base/Kconfig                          |  6 +++
+> >  drivers/base/Makefile                         |  1 +
+> >  .../mm/numa.c => drivers/base/arch_numa.c     |  0
+> >  include/asm-generic/numa.h                    | 51 +++++++++++++++++++
+> >  7 files changed, 60 insertions(+), 45 deletions(-)
+> >  rename arch/arm64/mm/numa.c => drivers/base/arch_numa.c (100%)
+> >  create mode 100644 include/asm-generic/numa.h
+> >
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 6d232837cbee..955a0cf75b16 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -960,6 +960,7 @@ config HOTPLUG_CPU
+> >  # Common NUMA Features
+> >  config NUMA
+> >       bool "NUMA Memory Allocation and Scheduler Support"
+> > +     select GENERIC_ARCH_NUMA
+>
+> So this introduces a generic NUMA framework selectable with GENERIC_ARCH_NUMA.
+>
+> >       select ACPI_NUMA if ACPI
+> >       select OF_NUMA
+> >       help
+> > diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+> > index 626ad01e83bf..8c8cf4297cc3 100644
+> > --- a/arch/arm64/include/asm/numa.h
+> > +++ b/arch/arm64/include/asm/numa.h
+> > @@ -3,49 +3,6 @@
+> >  #define __ASM_NUMA_H
+> >
+> >  #include <asm/topology.h>
+> > -
+> > -#ifdef CONFIG_NUMA
+> > -
+> > -#define NR_NODE_MEMBLKS              (MAX_NUMNODES * 2)
+> > -
+> > -int __node_distance(int from, int to);
+> > -#define node_distance(a, b) __node_distance(a, b)
+> > -
+> > -extern nodemask_t numa_nodes_parsed __initdata;
+> > -
+> > -extern bool numa_off;
+> > -
+> > -/* Mappings between node number and cpus on that node. */
+> > -extern cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
+> > -void numa_clear_node(unsigned int cpu);
+> > -
+> > -#ifdef CONFIG_DEBUG_PER_CPU_MAPS
+> > -const struct cpumask *cpumask_of_node(int node);
+> > -#else
+> > -/* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+> > -static inline const struct cpumask *cpumask_of_node(int node)
+> > -{
+> > -     return node_to_cpumask_map[node];
+> > -}
+> > -#endif
+> > -
+> > -void __init arm64_numa_init(void);
+> > -int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> > -void __init numa_set_distance(int from, int to, int distance);
+> > -void __init numa_free_distance(void);
+> > -void __init early_map_cpu_to_node(unsigned int cpu, int nid);
+> > -void numa_store_cpu_info(unsigned int cpu);
+> > -void numa_add_cpu(unsigned int cpu);
+> > -void numa_remove_cpu(unsigned int cpu);
+> > -
+> > -#else        /* CONFIG_NUMA */
+> > -
+> > -static inline void numa_store_cpu_info(unsigned int cpu) { }
+> > -static inline void numa_add_cpu(unsigned int cpu) { }
+> > -static inline void numa_remove_cpu(unsigned int cpu) { }
+> > -static inline void arm64_numa_init(void) { }
+> > -static inline void early_map_cpu_to_node(unsigned int cpu, int nid) { }
+> > -
+> > -#endif       /* CONFIG_NUMA */
+> > +#include <asm-generic/numa.h>
+> >
+> >  #endif       /* __ASM_NUMA_H */
+> > diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+> > index d91030f0ffee..928c308b044b 100644
+> > --- a/arch/arm64/mm/Makefile
+> > +++ b/arch/arm64/mm/Makefile
+> > @@ -6,7 +6,6 @@ obj-y                         := dma-mapping.o extable.o fault.o init.o \
+> >  obj-$(CONFIG_HUGETLB_PAGE)   += hugetlbpage.o
+> >  obj-$(CONFIG_PTDUMP_CORE)    += dump.o
+> >  obj-$(CONFIG_PTDUMP_DEBUGFS) += ptdump_debugfs.o
+> > -obj-$(CONFIG_NUMA)           += numa.o
+> >  obj-$(CONFIG_DEBUG_VIRTUAL)  += physaddr.o
+> >  KASAN_SANITIZE_physaddr.o    += n
+> >
+> > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> > index 8d7001712062..73c2151de194 100644
+> > --- a/drivers/base/Kconfig
+> > +++ b/drivers/base/Kconfig
+> > @@ -210,4 +210,10 @@ config GENERIC_ARCH_TOPOLOGY
+> >         appropriate scaling, sysfs interface for reading capacity values at
+> >         runtime.
+> >
+> > +config GENERIC_ARCH_NUMA
+> > +     bool
+> > +     help
+> > +       Enable support for generic numa implementation. Currently, RISC-V
+> > +       and ARM64 uses it.
+> > +
+> >  endmenu
+> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> > index 157452080f3d..c3d02c644222 100644
+> > --- a/drivers/base/Makefile
+> > +++ b/drivers/base/Makefile
+> > @@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL) += pinctrl.o
+> >  obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
+> >  obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
+> >  obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
+> > +obj-$(CONFIG_GENERIC_ARCH_NUMA) += arch_numa.o
+> >
+> >  obj-y                        += test/
+> >
+> > diff --git a/arch/arm64/mm/numa.c b/drivers/base/arch_numa.c
+> > similarity index 100%
+> > rename from arch/arm64/mm/numa.c
+> > rename to drivers/base/arch_numa.c
+>
+> drivers/base/ does not seem right place to host generic NUMA code.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- arch/arm/configs/omap2plus_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+I chose drivers/base because the common topology code is also present there.
+drivers/base/arch_topology.c under GENERIC_ARCH_TOPOLOGY
+The idea is to keep all common arch(at least between RISC-V & ARM64)
+related code at one place.
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index fe383f5a92fb..c9a32000f1d4 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -510,6 +510,7 @@ CONFIG_IIO_ST_ACCEL_3AXIS=m
- CONFIG_CPCAP_ADC=m
- CONFIG_INA2XX_ADC=m
- CONFIG_TI_AM335X_ADC=m
-+CONFIG_TWL4030_MADC=m
- CONFIG_SENSORS_ISL29028=m
- CONFIG_BMP280=m
- CONFIG_PWM=y
+> Probably it should be either mm/ or kernel/. The other question here
+
+I am fine with mm/arch_numa.c as well if that is preferred over driver/base.
+
+> would be if existing arm64 NUMA implementation is sufficient enough
+> for generic NUMA. I would expect any platform selecting this config
+> should get some NUMA enabled, will be that be true with present code ?
+
+It is for RISC-V. Here is the RISC-V support patch (last patch in the series)
+
+http://lists.infradead.org/pipermail/linux-riscv/2020-August/001659.html
+
+> Otherwise it will be difficult to name it as GENERIC_ARCH_NUMA.
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
 -- 
-2.20.1
-
+Regards,
+Atish
