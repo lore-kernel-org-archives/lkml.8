@@ -2,279 +2,104 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF212C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0943C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A824120B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hvsEVEvL"
+	by mail.kernel.org (Postfix) with ESMTP id B36B7207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgHSG6m (ORCPT
+        id S1728189AbgHSG6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgHSG55 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:57:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8BEC061389;
-        Tue, 18 Aug 2020 23:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=lNMBC694MGzhD+uJcSmWDHi7UPoDvxCv6DsPxBphUDM=; b=hvsEVEvLhFqVJsYwQI9fVfL5lp
-        KW/X5c84TRVEWiCq+JWY6sNEc2oPPEGv+njCJOloQQfIY5LUVW8trunjunigerqOpw/bNuW3d15Nk
-        KgKieclLAYJPG4mvEkrbXHTLSkS3oIM/sohwRcqd7QHlpj3mv/N3/MXfm3eBRP5C0/LNJ5ouorMBE
-        EFFTa7MVts6kBXsmWo/w+5Hd0w5Fe84gvTgCYwvRXDgUbWV9izyuuyq+19e30v6LdcypJRbfFaF/y
-        BVzr8sMb9JqE5r5zxB/kHyoI/WzgowY0Vk+Xyd6UQArjHPMonvBv0ewspWNMbu/2jhayLSYkMZBFZ
-        7BeuNtag==;
-Received: from [2001:4bb8:198:f3b2:86b6:2277:f429:37a1] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8I1v-00007x-Sa; Wed, 19 Aug 2020 06:57:05 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH 28/28] nvme-pci: use dma_alloc_pages backed dmapools
-Date:   Wed, 19 Aug 2020 08:55:55 +0200
-Message-Id: <20200819065555.1802761-29-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819065555.1802761-1-hch@lst.de>
-References: <20200819065555.1802761-1-hch@lst.de>
+        Wed, 19 Aug 2020 02:58:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:29640 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728089AbgHSG6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:58:45 -0400
+IronPort-SDR: QEgpoTTnnMkEDWCT7mowxzyeQu3AqxfAKML93F0IeXg5x2rkYPocK2SodPqhoIiv9wy1qmKPpd
+ ei4gQEX/McEQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="173107488"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="173107488"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 23:57:26 -0700
+IronPort-SDR: mpXpKRmaLdaHbRyBhNIUX8gOdfa2tGzXchNdovhuh6Zk9QzF9XL14EXa4z+iNhNamAMOSSCJ7u
+ BbEn9v8VddRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="400736106"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 18 Aug 2020 23:57:22 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 19 Aug 2020 09:57:21 +0300
+Date:   Wed, 19 Aug 2020 09:57:21 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI
+ flash chip writable
+Message-ID: <20200819065721.GA1375436@lahna.fi.intel.com>
+References: <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
+ <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com>
+ <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
+ <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
+ <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com>
+ <CAFmMkTFzmC=aY0gR6urLu-8Oq8aeHBUWi-TodG8XhXKCcC057A@mail.gmail.com>
+ <CAK8P3a13N_wNORz_3cYHTN8t29pPrY+dJ+g+1Ga_MmG1TmrUQw@mail.gmail.com>
+ <CAFmMkTGm3pMsBzEenYOsRbhOZKFhbHiZ5LxPyVmTdYTTRpKzVQ@mail.gmail.com>
+ <CAK8P3a2_RV33kiJ0c34aopZ4iG7LYBR-u=-+BbC+Upyjh1T0Eg@mail.gmail.com>
+ <CAFmMkTHqQO1Gj7VeXr4Y_Umb1KzZc2Pf=1pDQvPPpb_XeAFPqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFmMkTHqQO1Gj7VeXr4Y_Umb1KzZc2Pf=1pDQvPPpb_XeAFPqQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch from coherent DMA pools to those backed by dma_alloc_pages.  This
-helps device with non-coherent DMA to avoid host accesses to uncached
-memory for every submission of a larger than single entry I/O.
+On Tue, Aug 18, 2020 at 12:55:59PM -0300, Daniel Gutson wrote:
+> > If you care about other (malicious) code writing to the driver, please explain
+> > what the specific attack scenario is that you are worried about, and
+> > why you think
+> > this is not sufficient. What code would be able to write to the device
+> > if not the
+> > device driver itself?
+> 
+> Maybe Mika can answer this better, but what I'm trying to do is to
+> limit the possibility of
+> damage, as explained in the Kconfig:
+> "Intel PCH/PCU SPI flash PCI driver (DANGEROUS)"
+> "Say N here unless you know what you are doing. Overwriting the
+>   SPI flash may render the system unbootable."
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/pci.c | 80 ++++++++++++++++++++---------------------
- 1 file changed, 40 insertions(+), 40 deletions(-)
+Right, the PCI part of the driver unconditionally (and wrongly) tried to
+set the chip writeable.
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a33adab62acbaf..fb34dbcb973673 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -114,8 +114,8 @@ struct nvme_dev {
- 	struct blk_mq_tag_set admin_tagset;
- 	u32 __iomem *dbs;
- 	struct device *dev;
--	struct dma_pool *prp_page_pool;
--	struct dma_pool *prp_small_pool;
-+	struct dma_pool prp_page_pool;
-+	struct dma_pool prp_small_pool;
- 	unsigned online_queues;
- 	unsigned max_qid;
- 	unsigned io_queues[HCTX_MAX_TYPES];
-@@ -536,7 +536,7 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 
- 
- 	if (iod->npages == 0)
--		dma_pool_free(dev->prp_small_pool, nvme_pci_iod_list(req)[0],
-+		dma_pool_free(&dev->prp_small_pool, nvme_pci_iod_list(req)[0],
- 			dma_addr);
- 
- 	for (i = 0; i < iod->npages; i++) {
-@@ -553,7 +553,7 @@ static void nvme_unmap_data(struct nvme_dev *dev, struct request *req)
- 			next_dma_addr = le64_to_cpu(prp_list[last_prp]);
- 		}
- 
--		dma_pool_free(dev->prp_page_pool, addr, dma_addr);
-+		dma_pool_free(&dev->prp_page_pool, addr, dma_addr);
- 		dma_addr = next_dma_addr;
- 	}
- 
-@@ -611,10 +611,10 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 
- 	nprps = DIV_ROUND_UP(length, NVME_CTRL_PAGE_SIZE);
- 	if (nprps <= (256 / 8)) {
--		pool = dev->prp_small_pool;
-+		pool = &dev->prp_small_pool;
- 		iod->npages = 0;
- 	} else {
--		pool = dev->prp_page_pool;
-+		pool = &dev->prp_page_pool;
- 		iod->npages = 1;
- 	}
- 
-@@ -630,6 +630,11 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 	for (;;) {
- 		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
- 			__le64 *old_prp_list = prp_list;
-+
-+			dma_sync_single_for_device(dev->dev, prp_dma,
-+						   i * sizeof(*prp_list),
-+						   DMA_TO_DEVICE);
-+
- 			prp_list = dma_pool_alloc(pool, GFP_ATOMIC, &prp_dma);
- 			if (!prp_list)
- 				return BLK_STS_RESOURCE;
-@@ -653,6 +658,8 @@ static blk_status_t nvme_pci_setup_prps(struct nvme_dev *dev,
- 		dma_len = sg_dma_len(sg);
- 	}
- 
-+	dma_sync_single_for_device(dev->dev, prp_dma, i * sizeof(*prp_list),
-+				   DMA_TO_DEVICE);
- done:
- 	cmnd->dptr.prp1 = cpu_to_le64(sg_dma_address(iod->sg));
- 	cmnd->dptr.prp2 = cpu_to_le64(iod->first_dma);
-@@ -706,10 +713,10 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
- 	}
- 
- 	if (entries <= (256 / sizeof(struct nvme_sgl_desc))) {
--		pool = dev->prp_small_pool;
-+		pool = &dev->prp_small_pool;
- 		iod->npages = 0;
- 	} else {
--		pool = dev->prp_page_pool;
-+		pool = &dev->prp_page_pool;
- 		iod->npages = 1;
- 	}
- 
-@@ -728,6 +735,10 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
- 		if (i == SGES_PER_PAGE) {
- 			struct nvme_sgl_desc *old_sg_desc = sg_list;
- 			struct nvme_sgl_desc *link = &old_sg_desc[i - 1];
-+	
-+			dma_sync_single_for_device(dev->dev, sgl_dma,
-+						   i * sizeof(*sg_list),
-+						   DMA_TO_DEVICE);
- 
- 			sg_list = dma_pool_alloc(pool, GFP_ATOMIC, &sgl_dma);
- 			if (!sg_list)
-@@ -743,6 +754,8 @@ static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
- 		sg = sg_next(sg);
- 	} while (--entries > 0);
- 
-+	dma_sync_single_for_device(dev->dev, sgl_dma, i * sizeof(*sg_list),
-+				   DMA_TO_DEVICE);
- 	return BLK_STS_OK;
- }
- 
-@@ -2457,30 +2470,6 @@ static int nvme_disable_prepare_reset(struct nvme_dev *dev, bool shutdown)
- 	return 0;
- }
- 
--static int nvme_setup_prp_pools(struct nvme_dev *dev)
--{
--	dev->prp_page_pool = dma_pool_create("prp list page", dev->dev,
--						NVME_CTRL_PAGE_SIZE,
--						NVME_CTRL_PAGE_SIZE, 0);
--	if (!dev->prp_page_pool)
--		return -ENOMEM;
--
--	/* Optimisation for I/Os between 4k and 128k */
--	dev->prp_small_pool = dma_pool_create("prp list 256", dev->dev,
--						256, 256, 0);
--	if (!dev->prp_small_pool) {
--		dma_pool_destroy(dev->prp_page_pool);
--		return -ENOMEM;
--	}
--	return 0;
--}
--
--static void nvme_release_prp_pools(struct nvme_dev *dev)
--{
--	dma_pool_destroy(dev->prp_page_pool);
--	dma_pool_destroy(dev->prp_small_pool);
--}
--
- static void nvme_free_tagset(struct nvme_dev *dev)
- {
- 	if (dev->tagset.tags)
-@@ -2851,10 +2840,6 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	INIT_WORK(&dev->remove_work, nvme_remove_dead_ctrl_work);
- 	mutex_init(&dev->shutdown_lock);
- 
--	result = nvme_setup_prp_pools(dev);
--	if (result)
--		goto unmap;
--
- 	quirks |= check_vendor_combination_bug(pdev);
- 
- 	if (!noacpi && nvme_acpi_storage_d3(pdev)) {
-@@ -2867,6 +2852,18 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
- 	}
- 
-+	result = dma_pool_init(dev->dev, &dev->prp_page_pool, "prp list page",
-+			NVME_CTRL_PAGE_SIZE, NVME_CTRL_PAGE_SIZE, 0,
-+			DMA_TO_DEVICE);
-+	if (result)
-+		goto unmap;
-+
-+	/* Optimisation for I/Os between 4k and 128k */
-+	result = dma_pool_init(dev->dev, &dev->prp_small_pool, "prp list 256",
-+			256, 256, 0, DMA_TO_DEVICE);
-+	if (result)
-+		goto release_prp_page_pool;
-+
- 	/*
- 	 * Double check that our mempool alloc size will cover the biggest
- 	 * command we support.
-@@ -2880,7 +2877,7 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 						GFP_KERNEL, node);
- 	if (!dev->iod_mempool) {
- 		result = -ENOMEM;
--		goto release_pools;
-+		goto release_prp_small_pool;
- 	}
- 
- 	result = nvme_init_ctrl(&dev->ctrl, &pdev->dev, &nvme_pci_ctrl_ops,
-@@ -2897,8 +2894,10 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
-  release_mempool:
- 	mempool_destroy(dev->iod_mempool);
-- release_pools:
--	nvme_release_prp_pools(dev);
-+ release_prp_small_pool:
-+	dma_pool_exit(&dev->prp_small_pool);
-+ release_prp_page_pool:
-+	dma_pool_exit(&dev->prp_page_pool);
-  unmap:
- 	nvme_dev_unmap(dev);
-  put_pci:
-@@ -2963,7 +2962,8 @@ static void nvme_remove(struct pci_dev *pdev)
- 	nvme_free_host_mem(dev);
- 	nvme_dev_remove_admin(dev);
- 	nvme_free_queues(dev, 0);
--	nvme_release_prp_pools(dev);
-+	dma_pool_exit(&dev->prp_small_pool);
-+	dma_pool_exit(&dev->prp_page_pool);
- 	nvme_dev_unmap(dev);
- 	nvme_uninit_ctrl(&dev->ctrl);
- }
--- 
-2.28.0
+What this whole thing tries to protect is that the user does not
+accidentally write to the flash chip. It contains BIOS and other
+important firmware so touching it (if it is not locked in the BIOS side)
+may potentially brick the system. That's why we also require that
+command line parameter so the user who knows what he or she is doing can
+enable it for writing.
 
+Actually thinking about this bit more, to make PCI and the platform
+parts consistent we can make the "writeable" control this for the PCI
+part as well. So what if we add a callback to struct intel_spi_boardinfo
+that the PCI driver populates and then the "core" driver uses to enable
+writing when "writeable" is set to 1.
