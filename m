@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA07C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0603FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9929C20888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D285C20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="KEVm/sGP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="vqBrpVaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgHSWmB (ORCPT
+        id S1728057AbgHSWmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        Wed, 19 Aug 2020 18:42:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbgHSWko (ORCPT
+        with ESMTP id S1727871AbgHSWkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:40:44 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A52C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:42 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id k17so34249qvj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:42 -0700 (PDT)
+        Wed, 19 Aug 2020 18:40:42 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79707C061344
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:39 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id b16so15881580pfp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=o5hcafLIur4TPskQP5E6KPZVFbh+qjZrYmSthTwVB04=;
-        b=KEVm/sGPyfyG51HlhTXV0YroOEI5zQYZmoLUdxXgIMqVb18ASyPW/KbBdlS7ux/IYv
-         py7s5CBpnuj5Z2kI0U5feqHgVdccNJ+ILv5x/tYIgODbbvld+P0r4wahQGtF0n0SOEe+
-         YeshFbT8qj9ZXs9EgwKnXGF7Mwlc35Fi/xc3ryWZp9MNsYPfcpSuUnoyD/sjHjkd8fMe
-         HyQ6yQr7/g1qaABSsKISXqpygyG+prMVRoGAr81nHP3iHvFjQg4CnPfYp/0Ob3zKEpGQ
-         gPHLQRFCRb51ZDeq8u5vgR6X66B0t92iLLHDiNdQi0I8CUu8qonHMcXHm4Iaw5HGqpVI
-         IcdQ==
+        bh=4lUOSfg5crC/CXFRp8F/K1Jb1PQLzPLA9O5+4H789wU=;
+        b=vqBrpVaLG5hgyuLORPxN8M2fiZFQB9dD18R/Ooo0adUnZ41ijb7pOrysJRfD0R3QWh
+         Ad1zPUlUDRdgRHl6q1yvEdA+t0YasDSvU5kcljOIAHzujqBZo1fV5ygeNVw0jYT0poGC
+         bWQahRedPnzPBQkh0DEDaII0mgLKbi4mi+sMdw8Za+uAtyt4OPAhkWNN1Mtu4TZgFAU4
+         6C74G1IiRmIW8+IF4ZDmaSUcoh4dyqUx7pc2wnJeY0+MV50EipBwVjS36jTc6VQflbvT
+         5LnFtOofo9HL8sPEOxaDyAC5Ia/2Hzl6Bvm7qCu4zPqc0pfm+ZZI2hu0FhiRVl6ZuIzW
+         Cb6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=o5hcafLIur4TPskQP5E6KPZVFbh+qjZrYmSthTwVB04=;
-        b=s+hodMrho3m1/xzP5+xSLf0jrSskt60jEtD78SbsZ0hBcuj/uW5wVKKkEq8UKuAinh
-         qZm2UAuiCBpSuGxbmk46nREXdnrQGpPTNPU5nNOfEYR7BDkO+MsQe8tWbhJMM5FSLXDQ
-         kn0Wa2NkDn4x2NCJAat00koPDZLQ1TsQYBy/rTsM0oAwDqgh8Bt1998Z95NAIGYQ9lHe
-         3SJJDmLEBAieaYSDO2sOg7VRW4ueMiRlgpuSMJbKkVC6jQLgxTUtJY+7as1pYu0fU8QY
-         A/pDEYWqJzsn2tcNqu4C4/NWceG615pkDfrT6UiNe8o1Aec6J/R2Clfvs17Bji/LQ7KK
-         AQ3g==
-X-Gm-Message-State: AOAM530l5o3FkV2rDvPdNCn/N7U3TyEm08WZJARIXtHN+Fg10gZ4FJlm
-        JqAnmZVZ98yjKr1MIcIZTfiOx3wfVbs=
-X-Google-Smtp-Source: ABdhPJxyHUudWy1NYp/N8b6eKKKkk9EiTNiuow7ZaLf2G2NTFN8IF+TFATrnL0TqyK5NApAWp9Is+3Q5V9c=
+        bh=4lUOSfg5crC/CXFRp8F/K1Jb1PQLzPLA9O5+4H789wU=;
+        b=emIX5fgd3vW71fWNO2zEVZFhuk+U4+gw4vkxGkskF4rgT8CQaAtcoRUB3n/B/cm8HI
+         5prsxkn+s1XZ8313HrjXQNomssCjwqPjSpzJQopM8qO8/KY7v9Ol6aYg4WN29u2WAheI
+         +l5ZMNy5NawxNIrm7dUIrx4nJO/J6/0LxsTzQtyYFSLqBVc/l5ve67E34qVjmssp9Lzc
+         SLKRSqe1zs1RbRevKtfGyJ7rrYeI3wo2FvOvFwWuKuOAQObKSvu6/d1xWmdyQBiMm6qL
+         kfWMDlwcIUc23rYGSgQ86x73dsG/iK4YOJ3bxIYSPpEfo1Rzbp6zXSnv31RUeRVmp1/o
+         zrlA==
+X-Gm-Message-State: AOAM532XcTIXG3LDAWZ+EPdiqoPrRj6KN+afHY3HSMCKpEoo9Z40xiNt
+        u2djjv070xyJG3ybpakMzOz+SmLXlRI=
+X-Google-Smtp-Source: ABdhPJw60HhYSD5xD+NKMghulZyrwy7CSfEqKWANtTW3eDGeqH3EPOr0UctlJdOGdV4ZXKaGvMSwbdfQlz4=
 X-Received: from haoluo.svl.corp.google.com ([2620:15c:2cd:202:f693:9fff:fef4:e444])
- (user=haoluo job=sendgmr) by 2002:a0c:ee41:: with SMTP id m1mr476956qvs.214.1597876842123;
- Wed, 19 Aug 2020 15:40:42 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 15:40:26 -0700
+ (user=haoluo job=sendgmr) by 2002:aa7:8ec4:: with SMTP id b4mr34434pfr.227.1597876838302;
+ Wed, 19 Aug 2020 15:40:38 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 15:40:24 -0700
 In-Reply-To: <20200819224030.1615203-1-haoluo@google.com>
-Message-Id: <20200819224030.1615203-5-haoluo@google.com>
+Message-Id: <20200819224030.1615203-3-haoluo@google.com>
 Mime-Version: 1.0
 References: <20200819224030.1615203-1-haoluo@google.com>
 X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-Subject: [PATCH bpf-next v1 4/8] bpf/libbpf: BTF support for typed ksyms
+Subject: [PATCH bpf-next v1 2/8] bpf: Propagate BPF_PSEUDO_BTF_ID to uapi
+ headers in /tools
 From:   Hao Luo <haoluo@google.com>
 To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
@@ -84,252 +85,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a ksym is defined with a type, libbpf will try to find the ksym's btf
-information from kernel btf. If a valid btf entry for the ksym is found,
-libbpf can pass in the found btf id to the verifier, which validates the
-ksym's type and value.
-
-Typeless ksyms (i.e. those defined as 'void') will not have such btf_id,
-but it has the symbol's address (read from kallsyms) and its value is
-treated as a raw pointer.
+Propagate BPF_PSEUDO_BTF_ID from include/linux/uapi/bpf.h to
+tools/include/linux/uapi/bpf.h.
 
 Signed-off-by: Hao Luo <haoluo@google.com>
 ---
- tools/lib/bpf/libbpf.c | 130 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 114 insertions(+), 16 deletions(-)
+ tools/include/uapi/linux/bpf.h | 38 ++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 4a81c6b2d21b..94eff612c7c2 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -357,7 +357,16 @@ struct extern_desc {
- 			bool is_signed;
- 		} kcfg;
- 		struct {
--			unsigned long long addr;
-+			/*
-+			 *  1. If ksym is typeless, the field 'addr' is valid.
-+			 *  2. If ksym is typed, the field 'vmlinux_btf_id' is
-+			 *     valid.
-+			 */
-+			bool is_typeless;
-+			union {
-+				unsigned long long addr;
-+				int vmlinux_btf_id;
-+			};
- 		} ksym;
- 	};
- };
-@@ -382,6 +391,7 @@ struct bpf_object {
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 0480f893facd..468376f2910b 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -346,18 +346,38 @@ enum bpf_link_type {
+ #define BPF_F_TEST_STATE_FREQ	(1U << 3)
  
- 	bool loaded;
- 	bool has_pseudo_calls;
-+	bool has_typed_ksyms;
+ /* When BPF ldimm64's insn[0].src_reg != 0 then this can have
+- * two extensions:
+- *
+- * insn[0].src_reg:  BPF_PSEUDO_MAP_FD   BPF_PSEUDO_MAP_VALUE
+- * insn[0].imm:      map fd              map fd
+- * insn[1].imm:      0                   offset into value
+- * insn[0].off:      0                   0
+- * insn[1].off:      0                   0
+- * ldimm64 rewrite:  address of map      address of map[0]+offset
+- * verifier type:    CONST_PTR_TO_MAP    PTR_TO_MAP_VALUE
++ * the following extensions:
++ *
++ * insn[0].src_reg:  BPF_PSEUDO_MAP_FD
++ * insn[0].imm:      map fd
++ * insn[1].imm:      0
++ * insn[0].off:      0
++ * insn[1].off:      0
++ * ldimm64 rewrite:  address of map
++ * verifier type:    CONST_PTR_TO_MAP
+  */
+ #define BPF_PSEUDO_MAP_FD	1
++/*
++ * insn[0].src_reg:  BPF_PSEUDO_MAP_VALUE
++ * insn[0].imm:      map fd
++ * insn[1].imm:      offset into value
++ * insn[0].off:      0
++ * insn[1].off:      0
++ * ldimm64 rewrite:  address of map[0]+offset
++ * verifier type:    PTR_TO_MAP_VALUE
++ */
+ #define BPF_PSEUDO_MAP_VALUE	2
++/*
++ * insn[0].src_reg:  BPF_PSEUDO_BTF_ID
++ * insn[0].imm:      kernel btd id of VAR
++ * insn[1].imm:      0
++ * insn[0].off:      0
++ * insn[1].off:      0
++ * ldimm64 rewrite:  address of the kernel variable
++ * verifier type:    PTR_TO_BTF_ID or PTR_TO_MEM, depending on whether the var
++ *                   is struct/union.
++ */
++#define BPF_PSEUDO_BTF_ID	3
  
- 	/*
- 	 * Information when doing elf related work. Only valid if fd
-@@ -2521,6 +2531,10 @@ static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
- 	if (obj->btf_ext && obj->btf_ext->core_relo_info.len)
- 		need_vmlinux_btf = true;
- 
-+	/* Support for typed ksyms needs kernel BTF */
-+	if (obj->has_typed_ksyms)
-+		need_vmlinux_btf = true;
-+
- 	bpf_object__for_each_program(prog, obj) {
- 		if (!prog->load)
- 			continue;
-@@ -2975,10 +2989,10 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
- 			ext->type = EXT_KSYM;
- 
- 			vt = skip_mods_and_typedefs(obj->btf, t->type, NULL);
--			if (!btf_is_void(vt)) {
--				pr_warn("extern (ksym) '%s' is not typeless (void)\n", ext_name);
--				return -ENOTSUP;
--			}
-+			ext->ksym.is_typeless = btf_is_void(vt);
-+
-+			if (!obj->has_typed_ksyms && !ext->ksym.is_typeless)
-+				obj->has_typed_ksyms = true;
- 		} else {
- 			pr_warn("unrecognized extern section '%s'\n", sec_name);
- 			return -ENOTSUP;
-@@ -2992,9 +3006,9 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
- 	/* sort externs by type, for kcfg ones also by (align, size, name) */
- 	qsort(obj->externs, obj->nr_extern, sizeof(*ext), cmp_externs);
- 
--	/* for .ksyms section, we need to turn all externs into allocated
--	 * variables in BTF to pass kernel verification; we do this by
--	 * pretending that each extern is a 8-byte variable
-+	/* for .ksyms section, we need to turn all typeless externs into
-+	 * allocated variables in BTF to pass kernel verification; we do
-+	 * this by pretending that each typeless extern is a 8-byte variable
- 	 */
- 	if (ksym_sec) {
- 		/* find existing 4-byte integer type in BTF to use for fake
-@@ -3012,7 +3026,7 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
- 
- 		sec = ksym_sec;
- 		n = btf_vlen(sec);
--		for (i = 0, off = 0; i < n; i++, off += sizeof(int)) {
-+		for (i = 0, off = 0; i < n; i++) {
- 			struct btf_var_secinfo *vs = btf_var_secinfos(sec) + i;
- 			struct btf_type *vt;
- 
-@@ -3025,9 +3039,14 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
- 				return -ESRCH;
- 			}
- 			btf_var(vt)->linkage = BTF_VAR_GLOBAL_ALLOCATED;
--			vt->type = int_btf_id;
-+			if (ext->ksym.is_typeless) {
-+				vt->type = int_btf_id;
-+				vs->size = sizeof(int);
-+			}
- 			vs->offset = off;
--			vs->size = sizeof(int);
-+			off += vs->size;
-+			pr_debug("ksym var_secinfo: var '%s', type #%d, size %d, offset %d\n",
-+				 ext->name, vt->type, vs->size, vs->offset);
- 		}
- 		sec->size = off;
- 	}
-@@ -5300,8 +5319,13 @@ bpf_program__relocate(struct bpf_program *prog, struct bpf_object *obj)
- 				insn[0].imm = obj->maps[obj->kconfig_map_idx].fd;
- 				insn[1].imm = ext->kcfg.data_off;
- 			} else /* EXT_KSYM */ {
--				insn[0].imm = (__u32)ext->ksym.addr;
--				insn[1].imm = ext->ksym.addr >> 32;
-+				if (ext->ksym.is_typeless) { /* typelss ksyms */
-+					insn[0].imm = (__u32)ext->ksym.addr;
-+					insn[1].imm = ext->ksym.addr >> 32;
-+				} else { /* typed ksyms */
-+					insn[0].src_reg = BPF_PSEUDO_BTF_ID;
-+					insn[0].imm = ext->ksym.vmlinux_btf_id;
-+				}
- 			}
- 			break;
- 		case RELO_CALL:
-@@ -6019,6 +6043,10 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
- 		if (!ext || ext->type != EXT_KSYM)
- 			continue;
- 
-+		/* Typed ksyms have the verifier to fill their addresses. */
-+		if (!ext->ksym.is_typeless)
-+			continue;
-+
- 		if (ext->is_set && ext->ksym.addr != sym_addr) {
- 			pr_warn("extern (ksym) '%s' resolution is ambiguous: 0x%llx or 0x%llx\n",
- 				sym_name, ext->ksym.addr, sym_addr);
-@@ -6037,10 +6065,72 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
- 	return err;
- }
- 
-+static int bpf_object__resolve_ksyms_btf_id(struct bpf_object *obj)
-+{
-+	struct extern_desc *ext;
-+	int i, id;
-+
-+	if (!obj->btf_vmlinux) {
-+		pr_warn("support of typed ksyms needs kernel btf.\n");
-+		return -ENOENT;
-+	}
-+
-+	for (i = 0; i < obj->nr_extern; i++) {
-+		const struct btf_type *v, *vx; /* VARs in object and vmlinux btf */
-+		const struct btf_type *t, *tx; /* TYPEs in btf */
-+		__u32 vt, vtx; /* btf_ids of TYPEs */
-+
-+		ext = &obj->externs[i];
-+		if (ext->type != EXT_KSYM)
-+			continue;
-+
-+		if (ext->ksym.is_typeless)
-+			continue;
-+
-+		if (ext->is_set) {
-+			pr_warn("typed ksym '%s' resolved as typeless ksyms.\n",
-+				ext->name);
-+			return -EFAULT;
-+		}
-+
-+		id = btf__find_by_name_kind(obj->btf_vmlinux, ext->name,
-+					    BTF_KIND_VAR);
-+		if (id <= 0) {
-+			pr_warn("no btf entry for ksym '%s' in vmlinux.\n",
-+				ext->name);
-+			return -ESRCH;
-+		}
-+
-+		vx = btf__type_by_id(obj->btf_vmlinux, id);
-+		tx = skip_mods_and_typedefs(obj->btf_vmlinux, vx->type, &vtx);
-+
-+		v = btf__type_by_id(obj->btf, ext->btf_id);
-+		t = skip_mods_and_typedefs(obj->btf, v->type, &vt);
-+
-+		if (!btf_ksym_type_match(obj->btf_vmlinux, vtx, obj->btf, vt)) {
-+			const char *tname, *txname; /* names of TYPEs */
-+
-+			txname = btf__name_by_offset(obj->btf_vmlinux, tx->name_off);
-+			tname = btf__name_by_offset(obj->btf, t->name_off);
-+
-+			pr_warn("ksym '%s' expects type '%s' (vmlinux_btf_id: #%d), "
-+				"but got '%s' (btf_id: #%d)\n", ext->name,
-+				txname, vtx, tname, vt);
-+			return -EINVAL;
-+		}
-+
-+		ext->is_set = true;
-+		ext->ksym.vmlinux_btf_id = id;
-+		pr_debug("extern (ksym) %s=vmlinux_btf_id(#%d)\n", ext->name, id);
-+	}
-+	return 0;
-+}
-+
- static int bpf_object__resolve_externs(struct bpf_object *obj,
- 				       const char *extra_kconfig)
- {
--	bool need_config = false, need_kallsyms = false;
-+	bool need_config = false;
-+	bool need_kallsyms = false, need_vmlinux_btf = false;
- 	struct extern_desc *ext;
- 	void *kcfg_data = NULL;
- 	int err, i;
-@@ -6071,7 +6161,10 @@ static int bpf_object__resolve_externs(struct bpf_object *obj,
- 			   strncmp(ext->name, "CONFIG_", 7) == 0) {
- 			need_config = true;
- 		} else if (ext->type == EXT_KSYM) {
--			need_kallsyms = true;
-+			if (ext->ksym.is_typeless)
-+				need_kallsyms = true;
-+			else
-+				need_vmlinux_btf = true;
- 		} else {
- 			pr_warn("unrecognized extern '%s'\n", ext->name);
- 			return -EINVAL;
-@@ -6100,6 +6193,11 @@ static int bpf_object__resolve_externs(struct bpf_object *obj,
- 		if (err)
- 			return -EINVAL;
- 	}
-+	if (need_vmlinux_btf) {
-+		err = bpf_object__resolve_ksyms_btf_id(obj);
-+		if (err)
-+			return -EINVAL;
-+	}
- 	for (i = 0; i < obj->nr_extern; i++) {
- 		ext = &obj->externs[i];
- 
-@@ -6132,10 +6230,10 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
- 	}
- 
- 	err = bpf_object__probe_loading(obj);
-+	err = err ? : bpf_object__load_vmlinux_btf(obj);
- 	err = err ? : bpf_object__resolve_externs(obj, obj->kconfig);
- 	err = err ? : bpf_object__sanitize_and_load_btf(obj);
- 	err = err ? : bpf_object__sanitize_maps(obj);
--	err = err ? : bpf_object__load_vmlinux_btf(obj);
- 	err = err ? : bpf_object__init_kern_struct_ops_maps(obj);
- 	err = err ? : bpf_object__create_maps(obj);
- 	err = err ? : bpf_object__relocate(obj, attr->target_btf_path);
+ /* when bpf_call->src_reg == BPF_PSEUDO_CALL, bpf_call->imm == pc-relative
+  * offset to another bpf function
 -- 
 2.28.0.220.ged08abb693-goog
 
