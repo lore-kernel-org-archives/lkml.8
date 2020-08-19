@@ -2,105 +2,87 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1081C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BBE20639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XWTJLEFc"
+	by mail.kernel.org (Postfix) with ESMTP id 982972063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597852140;
+	bh=M+KmLvjZXimpBFj9/QwTW6ppu9PIQJ7dauQO7HVxdsQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=06nuS9x6ALBsmkG6zZI9TPSvQna3nhkm5axSVOn0+CYIo3llEHOdw875BWDMP/5Cv
+	 ngE+z67tmvcBcj3ZKLVg/8wvCIWC4p/OBPFsiWnjqI4L6uvPnMgEA4e2IwWtVH60Xc
+	 3+bEruId8Gq8TE7Bwby2VpX6SRR0bSmbzLZzD5Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgHSPqD (ORCPT
+        id S1728499AbgHSPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbgHSPpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:45:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00627C061757;
-        Wed, 19 Aug 2020 08:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sby85tADECWKuR0AV6X1Y6cFL27+oWWhcAc5MYjw2/M=; b=XWTJLEFcqr4laLVNr3nsFyNyqX
-        e+SlsapfynluFr3CfcykzGtYbYd/ET2mgqoBRiOVbPUY8SD8UznsRe7aqpmT4yJa07+5QvcGTgtQs
-        NjJR7HbwXfjtd/izhMgK433mSVsy/igtYk09QsTK022Hm28n/+XM2fL5PtoubxdQ40tWDVTyhIuRT
-        xaethkRRZPAUxksaFJVBQU1o+nyfyuU7Yfihft4a81CRFxM7X/FIh5aq48j/BGpFRbaXHEM8n52Tl
-        qJ2z2eNi0akCUR7VXHmnHWWmlPzXgusPelGvE9FjtcJuRVy7NaCzfptySDFjBm3Q4YK7AXK1R4nWU
-        EDEctJUg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8QHB-0002JA-TO; Wed, 19 Aug 2020 15:45:21 +0000
-Date:   Wed, 19 Aug 2020 16:45:21 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Christoph Hewllig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Wed, 19 Aug 2020 11:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgHSPs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:48:58 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD85220639;
+        Wed, 19 Aug 2020 15:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597852138;
+        bh=M+KmLvjZXimpBFj9/QwTW6ppu9PIQJ7dauQO7HVxdsQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=agAmgtUPMIWENJAki83v0ilnSFnKZPItSyS7xLAaljX4C64Iu/cA8Zuh4izqsGOrM
+         qp2NfsywEVraFZ6KIJbtXTU5sa6bRTVb6bX7ZoLCWRoOhfd1iCiuwOaTIaqKyOTL5c
+         5XKg1OWe3L2zQSZASVuzy1HoK/7EyZWYGgecLvaI=
+Date:   Wed, 19 Aug 2020 08:48:56 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     jakub@cloudflare.com, john.fastabend@gmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "uclinux-h8-devel@lists.sourceforge.jp" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "kgdb-bugreport@lists.sourceforge.net" 
-        <kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
-Message-ID: <20200819154521.GE17456@casper.infradead.org>
-References: <20200818173411.404104-1-christian.brauner@ubuntu.com>
- <20200818174447.GV17456@casper.infradead.org>
- <20200819074340.GW2674@hirez.programming.kicks-ass.net>
- <20200819084556.im5zfpm2iquzvzws@wittgenstein>
- <20200819111851.GY17456@casper.infradead.org>
- <87a6yq222c.fsf@x220.int.ebiederm.org>
- <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
- <87mu2qznlv.fsf@x220.int.ebiederm.org>
- <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 2/6] bpf: sockmap: merge sockmap and sockhash
+ update functions
+Message-ID: <20200819084856.01716806@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200819092436.58232-3-lmb@cloudflare.com>
+References: <20200819092436.58232-1-lmb@cloudflare.com>
+        <20200819092436.58232-3-lmb@cloudflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
-> Does linux have an O(1) (or do I mean o(1)) pid allocator?
-> Or does it have to do a linear scan to find a gap??
+On Wed, 19 Aug 2020 10:24:32 +0100 Lorenz Bauer wrote:
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -559,10 +559,12 @@ static bool sock_map_sk_state_allowed(const struct =
+sock *sk)
+>  	return false;
+>  }
+> =20
+> -static int sock_map_update_elem(struct bpf_map *map, void *key,
+> -				void *value, u64 flags)
+> +static int sock_hash_update_common(struct bpf_map *map, void *key,
+> +				   struct sock *sk, u64 flags);
+> +
+> +int sock_map_update_elem(struct bpf_map *map, void *key,
+> +			 void *value, u64 flags)
+>  {
+> -	u32 idx =3D *(u32 *)key;
+>  	struct socket *sock;
+>  	struct sock *sk;
+>  	int ret;
 
-O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
-number of PIDs currently allocated, and it's log_64 rather than log_2
-(which makes no difference to O() but does make a bit of a difference
-to performance)
+net/core/sock_map.c:565:5: warning: no previous prototype for =E2=80=98sock=
+_map_update_elem=E2=80=99 [-Wmissing-prototypes]
+  565 | int sock_map_update_elem(struct bpf_map *map, void *key,
+      |     ^~~~~~~~~~~~~~~~~~~~
