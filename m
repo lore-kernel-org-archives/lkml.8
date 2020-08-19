@@ -2,80 +2,64 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8150520772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A425F20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgHSH4w (ORCPT
+        id S1726187AbgHSH5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:56:52 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:20542 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726211AbgHSH4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:56:52 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app3 (Coremail) with SMTP id cC_KCgBnS9wy2zxfb4rfAg--.28925S4;
-        Wed, 19 Aug 2020 15:56:38 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] RDMA/rxe: Fix memleak in rxe_mem_init_user
-Date:   Wed, 19 Aug 2020 15:56:32 +0800
-Message-Id: <20200819075632.22285-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgBnS9wy2zxfb4rfAg--.28925S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr1rtw4kGw48CFy7Jr1rtFb_yoWxtrc_Ar
-        48trZ7XFWFkrnaka17GFnxWry2yws0qr1kX3WqqFyfA34a93Z5Ca4SvFnxCw4UWr4F9FZ8
-        ArZrWw4xCFW5CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-        7VUbhiSPUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowAcsR
+        Wed, 19 Aug 2020 03:57:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:57622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgHSH5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:57:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85314101E;
+        Wed, 19 Aug 2020 00:57:37 -0700 (PDT)
+Received: from [10.163.66.190] (unknown [10.163.66.190])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4051E3F6CF;
+        Wed, 19 Aug 2020 00:57:35 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] mm/pageblock: remove false sharing in
+ pageblock_flags
+To:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <715f1588-9cd5-b845-51a5-ca58549c4d28@arm.com>
+Date:   Wed, 19 Aug 2020 13:27:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When page_address() fails, umem should be freed just
-like when rxe_mem_alloc() fails.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/infiniband/sw/rxe/rxe_mr.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
-index cdd811a45120..ce24144de16a 100644
---- a/drivers/infiniband/sw/rxe/rxe_mr.c
-+++ b/drivers/infiniband/sw/rxe/rxe_mr.c
-@@ -205,6 +205,7 @@ int rxe_mem_init_user(struct rxe_pd *pd, u64 start,
- 			vaddr = page_address(sg_page_iter_page(&sg_iter));
- 			if (!vaddr) {
- 				pr_warn("null vaddr\n");
-+				ib_umem_release(umem);
- 				err = -ENOMEM;
- 				goto err1;
- 			}
--- 
-2.17.1
+On 08/19/2020 11:17 AM, Alex Shi wrote:
+> Current pageblock_flags is only 4 bits, so it has to share a char size
+> in cmpxchg when get set, the false sharing cause perf drop.
+> 
+> If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
+> the only cost is half char per pageblock, which is half char per 128MB
+> on x86, 4 chars in 1 GB.
 
+Agreed that increase in memory utilization is negligible here but does
+this really improve performance ?
