@@ -2,113 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8012C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7532820738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E2120738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5s2kMYY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HfCIuaUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgHSS1F (ORCPT
+        id S1726897AbgHSS1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58912 "EHLO
+        Wed, 19 Aug 2020 14:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgHSS0z (ORCPT
+        with ESMTP id S1726817AbgHSS0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:26:55 -0400
+        Wed, 19 Aug 2020 14:26:53 -0400
 Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98856C061342;
-        Wed, 19 Aug 2020 11:26:54 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id e4so1499892pjd.0;
-        Wed, 19 Aug 2020 11:26:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DF1C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:26:52 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id j13so1502555pjd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:26:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bJRIu4AKXa9o6BirWluUiYhtcb7eVkTRiaHn64Lt67A=;
-        b=A5s2kMYYEMQBYDn6wv+r02A1jmwG3l4a/IGeihq1wRmt1DhLX21RW8W35ONRjviVOV
-         jSkYPCJbJryj2V9YuatJeCJvWQpvBRBCnVwGFCcnsy7CLUirDG4ZsGTCQOw0eYF8GbAx
-         wV+vUTyJPZs8jZRP3cLxLOp2qLKQJAEV70ZaZa08yRcIqahOdBq7IgOce+rM8WsZ0BFc
-         ilVz9aDaVQxk1FYp2PKkBnqtQBZOo35wlWXdcTxkydG3dtnSWOVikHAqNCTxLE57eME/
-         8HKUCZ3x5of9TbEAzN66xeNY4LHV7ad+nBkSmKqpBW2U8TAVuLtKGA3zKUq0DEyN0i0r
-         KG8Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fvIFX0if5musGR/AuULcq2bjqGRTVsjqU+8CFLDy+hw=;
+        b=HfCIuaUTEFVRCg2xF4Xl2CLjgnUSrDLPxH/LNGSnFxEGH64THvX9qUz3m4bt8HSp5A
+         5IOSlR76HwB4xah21PaZoxVCk/d5M2Fet5xlwBPpGNFA8wnWRG9OyQNkRg8KituxX3NV
+         MTPc1JXnrxUn7fsZcRSXehWMmRr7FpBpWz7sU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bJRIu4AKXa9o6BirWluUiYhtcb7eVkTRiaHn64Lt67A=;
-        b=bVy+OaMQpvimB9jR24TY1+TwOO/C1OtaNWo0CQJWDVQnhjO3vPOpO9eJtL95Td4VUb
-         VYPtLRXq4IrBtX18e8m0p4FpshL5ShBCh1xKHF5OWVfQ8uusiU5xIb9zh8vMvs1T28he
-         bm2dSDBHUuwbMCYWdlWGfYKC9luZeo058qLClEtd9slreCdhFN3xgnIIVqIscSewcFwi
-         tJYnQojPdH/W4l3RmK/k0GpxR8ezreHMvF/OKErZe6ndGFNXnEgixU5+9oyW7tR0LQyb
-         kS3akEuDQYZgckIG/Imjhncsm9ejUMdThYoIs3DmjRwyHIVU9FRSast84VTBWtkYvs7w
-         dZ9w==
-X-Gm-Message-State: AOAM53112Dko0WEpPZvqDFkCqRa4RGzVfpOLefw+dsjA0U981+93HypC
-        Ek1qfTmD68WDQXre1QwL/Xg=
-X-Google-Smtp-Source: ABdhPJy1X+nX5eyvmZ5gcfbh8dE7g5MajewTIuS7k22bWzoCv7cWfFyRyh6+WmGJJ78bhHaF3n4uXw==
-X-Received: by 2002:a17:90b:684:: with SMTP id m4mr5139519pjz.4.1597861614160;
-        Wed, 19 Aug 2020 11:26:54 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l78sm29448483pfd.130.2020.08.19.11.26.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fvIFX0if5musGR/AuULcq2bjqGRTVsjqU+8CFLDy+hw=;
+        b=O8y2KmGrPPHnSMzh4Bh3x+4hTr84DJ46lcnsDa8FzfRqjzfo/oeEa+elYwWqs5fwwz
+         1/2wLm0JJti05y4xfp1UFpivq/f5wsjn0dkmPHXOhcM6VDS1wvA9LAyTs7pFCbNETf/p
+         XCGcDmw4vuVLshxqnC+7d5RX3XV2au/TRDqZJ4dfM+m6pDzD7YYODyNHCChOf0L7Yr7r
+         c7nG1rFWTASzR9/UekBaUDoltP09bN55FoBFUE24OIsi3bX4gL/9KnNTyQ1Ei84eJ2f/
+         DdJK5X2034bdEpCmPl0yVKVc/kDU85csmTMbQ4hx/aDVIgXua9CiC5NkyQlRT/CuYuzP
+         /73g==
+X-Gm-Message-State: AOAM533zCv+hXABNn1dC0zjOe3oFaaU/lVk/euIfqxsSC6lQWhH4efPO
+        1shIgYokMzzNBKSmSrlTuwroJA==
+X-Google-Smtp-Source: ABdhPJwxgsz0D4aicIwYdouVEzk6AM/3p47+iWecIKeauBam4yUoUFDdg69JVb1+UpjSN7L/1wYAnQ==
+X-Received: by 2002:a17:902:a58a:: with SMTP id az10mr19250739plb.329.1597861612317;
+        Wed, 19 Aug 2020 11:26:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z29sm29495220pfj.182.2020.08.19.11.26.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 11:26:53 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-mips@linux-mips.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH mips-fixes 2/2] MIPS: BMIPS: Also call bmips_cpu_setup() for secondary cores
-Date:   Wed, 19 Aug 2020 11:26:45 -0700
-Message-Id: <20200819182645.30132-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819182645.30132-1-f.fainelli@gmail.com>
-References: <20200819182645.30132-1-f.fainelli@gmail.com>
+        Wed, 19 Aug 2020 11:26:49 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 11:26:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        fweisbec@gmail.com, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH RFC 00/12] Core-sched v6+: kernel protection and hotplug
+ fixes
+Message-ID: <202008191116.1A1F51186D@keescook>
+References: <20200815031908.1015049-1-joel@joelfernandes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200815031908.1015049-1-joel@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The initialization done by bmips_cpu_setup() typically affects both
-threads of a given core, on 7435 which supports 2 cores and 2 threads,
-logical CPU number 2 and 3 would not run this initialization.
+On Fri, Aug 14, 2020 at 11:18:56PM -0400, Joel Fernandes (Google) wrote:
+> This series is continuation of main core-sched v6 series [1] and adds support
 
-Fixes: 738a3f79027b ("MIPS: BMIPS: Add early CPU initialization code")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/mips/kernel/smp-bmips.c | 2 ++
- 1 file changed, 2 insertions(+)
+- Is this really "RFC"? Seeing multiple authors implies this is looking
+  to get merged. :)
 
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 2f513506a3d5..1dbfb5aadffd 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -239,6 +239,8 @@ static int bmips_boot_secondary(int cpu, struct task_struct *idle)
-  */
- static void bmips_init_secondary(void)
- {
-+	bmips_cpu_setup();
-+
- 	switch (current_cpu_type()) {
- 	case CPU_BMIPS4350:
- 	case CPU_BMIPS4380:
+- Is this on top of the v6 core-sched series (or instead of)? (That
+  series doesn't seem to be RFC any more either, IMO, if it's at v6.) If
+  this replaces that series, isn't this v7? I don't see the v6
+  core-sched series in -next anywhere?
+
+- Whatever the case, please include the series version in the "[PATCH vN ...]"
+  portion of the Subject, otherwise things like "b4" don't really know what's
+  happening.
+
+Sorry for the drive-by comments, but I was really confused trying to
+understand how this fit together. :)
+
 -- 
-2.17.1
-
+Kees Cook
