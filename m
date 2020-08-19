@@ -2,132 +2,85 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59380C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCA4208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D18120657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgHSDFN (ORCPT
+        id S1727851AbgHSDFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:05:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:45388 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgHSDFM (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:05:12 -0400
-IronPort-SDR: f5CvnXkEXvNh3RIqMMQAyb2TORvQnyhh3GBv8vREkxUG5FMXFYYvnZkdUp5Lu6XZkQiWKfo1Sa
- c6wi2I9jjfcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="154303446"
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="154303446"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 20:05:12 -0700
-IronPort-SDR: s+saYji99ULqmAoVtci/uAy6Q6OAVxXDlPQIPfE9XSjw3yHMoiO7WpUm1bsKP3kIja8ArQq9jQ
- puitc8RCXNDw==
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="472059985"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 20:05:08 -0700
-Subject: Re: [PATCH v3] perf parse-events: Set exclude_guest=1 for user-space
- counting
-To:     "Jin, Yao" <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20200814012120.16647-1-yao.jin@linux.intel.com>
- <20200814124722.GG13995@kernel.org>
- <b061052d-592d-67d7-045f-481974b0687a@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <3521b375-6f00-e815-94e5-49eae2a7c989@linux.intel.com>
-Date:   Wed, 19 Aug 2020 11:05:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <b061052d-592d-67d7-045f-481974b0687a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Aug 2020 23:05:23 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:52404 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726605AbgHSDFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 23:05:22 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app2 (Coremail) with SMTP id by_KCgDX3+faljxfrTj_AQ--.23396S4;
+        Wed, 19 Aug 2020 11:05:03 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
+        Bryan Wu <cooloney@gmail.com>, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] video: backlight: sky81452-backlight: Fix refcount imbalance on error
+Date:   Wed, 19 Aug 2020 11:04:56 +0800
+Message-Id: <20200819030456.7054-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgDX3+faljxfrTj_AQ--.23396S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrWrCF1rZr1fZFWDWw1kuFg_yoWfWrXEkw
+        nFqr93WFsrtr40yrsrJF1furWFkFWDZFn8ZFy0vFySya4DC3ZxWFyvvr4DWF13J3WrtF13
+        Aw1akr4fuw40kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r48MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjQBMtUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowAasX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+When of_property_read_u32_array() returns an error code, a
+pairing refcount decrement is needed to keep np's refcount
+balanced.
 
-On 2020/8/17 10:32, Jin, Yao wrote:
-> Hi Arnaldo,
-> 
-> On 8/14/2020 8:47 PM, Arnaldo Carvalho de Melo wrote:
->> Em Fri, Aug 14, 2020 at 09:21:20AM +0800, Jin Yao escreveu:
->>> Currently if we run 'perf record -e cycles:u', exclude_guest=0.
->>>
->>> But it doesn't make sense in most cases that we request for
->>> user-space counting but we also get the guest report.
->>>
->>> Of course, we also need to consider perf kvm usage case that
->>> authorized perf users on the host may only want to count guest
->>> user space events. For example,
->>>
->>> perf kvm --guest record -e cycles:u
->> Ok, probably this works, but what if I want to record guest user samples
->> without using 'perf kvm'?
->>
->> Can we have a 'U' modifier, perhaps, for that?
->>
->> I.e.
->>
->> perf record -e cycles:uU would not set exclude_host not exclude_guest,
->> cycles:u excludes guest user, cycles:U excludes host user, would that be
->> possible?
->>
->> Anyway, I think that with what we have, your patch makes sense, having a
->> way to, without using 'perf kvm' still be able to sample the guest can
->> be done on top. of this.
->>
->> Xu, can we get your Reviewed-by if this addresses your concerns?
+Fixes: f705806c9f355 ("backlight: Add support Skyworks SKY81452 backlight driver")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/video/backlight/sky81452-backlight.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-My concern is about do not break the perf kvm usages and Yao did it in v3.
-
-Tested-by: Like Xu <like.xu@linux.intel.com>
-
->>
->> - Arnaldo
-> 
-> Do you suggest we will create a new modifier 'U' as a follow-up patch?
-> 
-> cycles:u - Count host user space but it doesn't count the guest user space 
-> (exclude_host = 0, exclude_guest = 1, exclude_kernel = 1, exclude_user = 0, 
-> exclude_hv = 1)
-> 
-> cycles:U - Count the guest user space but it doesn't count the host user 
-> space (exclude_host = 1, exclude_guest = 0, exclude_kernel = 1, 
-> exclude_user = 0, exclude_hv = 1)
-> 
-> Is above understanding correct?
-
-Do we really need to support sample guests without using perf kvm?
-
-If it's true, I would prefer "cycles:uG" to cover guest user space
-events only, "cycles:kG" to cover guest kernel space events only,
-and only host events are sampled without the ":G" modifier by default.
-
-I am not sure if ":G" has been used in perf.
-
-At the very least, this v3 patch may not
-block the follow-up patch from Yao (if any).
-
-Thanks,
-Like Xu
-
-> 
-> Thanks
-> Jin Yao
+diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
+index 0ce181585008..8268ac43d54f 100644
+--- a/drivers/video/backlight/sky81452-backlight.c
++++ b/drivers/video/backlight/sky81452-backlight.c
+@@ -217,6 +217,7 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
+ 					num_entry);
+ 		if (ret < 0) {
+ 			dev_err(dev, "led-sources node is invalid.\n");
++			of_node_put(np);
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 
+-- 
+2.17.1
 
