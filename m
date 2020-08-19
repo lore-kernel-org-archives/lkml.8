@@ -2,112 +2,166 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B273B2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E855D2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ard4s932"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="mbKaFtKy";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="vY6KQW15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgHSNFX (ORCPT
+        id S1728650AbgHSNGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:05:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgHSNEn (ORCPT
+        Wed, 19 Aug 2020 09:06:00 -0400
+Received: from relay2.mymailcheap.com ([217.182.66.162]:58758 "EHLO
+        relay2.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbgHSNFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:04:43 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658A7C061383;
-        Wed, 19 Aug 2020 06:04:42 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 140so12011976lfi.5;
-        Wed, 19 Aug 2020 06:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NDGVB4uc/9L8D6EYysA1otupkiXzJkfvAe8wQHNLxGA=;
-        b=Ard4s932bJYSYryZTKI5z99QM0+nDxvZnETpFePakQOdmcZu0nh6+SK4cSRXAWUpvy
-         DT5JwCtY1KAS+tkXlG6XVjhS2mg/4nCr2Qjud2UWkaVscXSfSV/6edu5jbYGw0CTNiZu
-         YU9/NpNTp42WF76ysCVoai4EnTX8RzIds09S22UUybPEbST6AChWpEjqb6t5yeWy3bIa
-         Kq5W7/lRoV2XtnFAWx+owWqLiAS/CuuXcwUSTcCPgIxwvKJ9GjeJ0Sg6UZr4Qe5aBK2x
-         4RTA0BTT1VTjDZqE2jtc5XJiaGqmzrTTLP7IbVPBneVpm8rHzRpvEe1y/RHD96dZlWqh
-         n4wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NDGVB4uc/9L8D6EYysA1otupkiXzJkfvAe8wQHNLxGA=;
-        b=pf41kKNNxH+3hDoKWNpnsQZaurQAPwUqzsj0cU/UDfeWUvLfIanRW5qG0UqriSl+dG
-         PNxNBAfzEE7t3pP6OaJ118hD7x4y/2yWlY0gWd5j7cs/Qz7krUNy+k+Omkixh2jizk21
-         bHt8BAShZZmVWp9pGlqSs2KhEokEf1rhG5ZWVlHwZoTu/Ly4BH1QGW2jjCc3TLSL4yGf
-         +QAj0CevjZl3RYP2nFTcLjchdf/rT5ROnpHJc5532Elj0Ct328A2pzlhVpiSk6hPboZW
-         rfm+W+rZT+cfWWBCn6CCeY+/tMI2sm83ptDwgp0xqz2UIytzHRhAbdLCDSbcvcrTiRHA
-         8pKg==
-X-Gm-Message-State: AOAM530IfzIU0Srkx4o0fCyE+Y+3mlmcnESoyY6gV+nVkCfoT1ttWAjS
-        LnvxoR/DWZBFAKgZGLyCHtmUQ/fE24Q3xY6WdgM=
-X-Google-Smtp-Source: ABdhPJyvznro++qCXyBYE7EoK74ppQEV9P6teSEM88ogypMzGoowstNWZ9Z5nzJX9vWeeM1LsWOd0NxqUwA+aqMfUjQ=
-X-Received: by 2002:a05:6512:3253:: with SMTP id c19mr11944089lfr.139.1597842280844;
- Wed, 19 Aug 2020 06:04:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615154114.13184-1-mayflowerera@gmail.com>
- <20200615.182343.221546986577273426.davem@davemloft.net> <CAMdQvKvJ7MXihELmPW2LC3PAgXMK2OG6bJjPNJkCgE6eZftDVw@mail.gmail.com>
- <CAMdQvKtrzFtg9PwZhyMQ96S48ZLG5gAu3gk8m=k+tFVMHeshXQ@mail.gmail.com> <CAMdQvKubUYCMRt0V+koj8nKAq+nZNABJZMAXX7jB-_fRiPeJog@mail.gmail.com>
-In-Reply-To: <CAMdQvKubUYCMRt0V+koj8nKAq+nZNABJZMAXX7jB-_fRiPeJog@mail.gmail.com>
-From:   Era Mayflower <mayflowerera@gmail.com>
-Date:   Wed, 19 Aug 2020 13:03:37 +0000
-Message-ID: <CAMdQvKuDzSXpMRr9N4_jXJO4R5dp9UZ-+WByZW+KRBmCLubN_w@mail.gmail.com>
-Subject: Re: [PATCH] macsec: Support 32bit PN netlink attribute for XPN links
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Wed, 19 Aug 2020 09:05:43 -0400
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay2.mymailcheap.com (Postfix) with ESMTPS id 6D8CA3E90B;
+        Wed, 19 Aug 2020 15:05:40 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id 462BE2A51B;
+        Wed, 19 Aug 2020 15:05:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1597842340;
+        bh=xgLkVUqX1IfZYjssicJSiWH/uVLGQkqOteQNJcfZxgg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=mbKaFtKy06YKcGxwccQ4lrKzs9lbShJ7nRHdJ3t+LLYF3rJCXs1Lry3vRlHPH+KC2
+         Qlb2vd2ovJTRAfRonEACZY2CnuTisJt70G3smrjIpgcYDqLFeYP+UK/I6SRHvNFa+X
+         OaDTpUtUIRnW3m3JhJwFC0Q+gmzNb+DYEtHpdUCQ=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZluiADmQ2_V1; Wed, 19 Aug 2020 15:05:39 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Wed, 19 Aug 2020 15:05:39 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id A99B84117F;
+        Wed, 19 Aug 2020 13:05:38 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="vY6KQW15";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from ice-e5v2.lan (unknown [59.41.160.120])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 9B86F4132F;
+        Wed, 19 Aug 2020 13:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+        t=1597842048; bh=xgLkVUqX1IfZYjssicJSiWH/uVLGQkqOteQNJcfZxgg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=vY6KQW15+Bs4w4Wzy8Zdqr5c+13OR24BLC6YsCxKoSgG68J3sNHveU2HqPkzw/qTY
+         pQcEnfHyqxsspkZks3DYPkzNAR6fXZ5QJniWPQN3srJvqdyBFXbMJjT8wygm6iYgwx
+         Iz8bV06TfFQ4rhEpo25OhOA4AA0+VD7wGdYKFDMw=
+Message-ID: <6cff597419622f78321bf18528ca22020e7835c5.camel@aosc.io>
+Subject: Re: [PATCH 1/1] mfd: mfd-core: Ensure disabled devices are ignored
+ without error
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Wed, 19 Aug 2020 21:00:41 +0800
+In-Reply-To: <20200819105406.3249846-1-lee.jones@linaro.org>
+References: <20200819105406.3249846-1-lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A99B84117F
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
+         RECEIVED_SPAMHAUS_PBL(0.00)[59.41.160.120:received];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[3];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DMARC_NA(0.00)[aosc.io];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[aosc.io:+];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 10:23 AM Era Mayflower <mayflowerera@gmail.com> wrote:
->
-> On Wed, Jun 17, 2020 at 1:32 AM Era Mayflower <mayflowerera@gmail.com> wrote:
-> >
-> > On Wed, Jun 17, 2020 at 10:02 AM Era Mayflower <mayflowerera@gmail.com> wrote:
-> > >
-> > > On Tue, Jun 16, 2020 at 1:23 AM David Miller <davem@davemloft.net> wrote:
-> > > >
-> > > > From: Era Mayflower <mayflowerera@gmail.com>
-> > > > Date: Tue, 16 Jun 2020 00:41:14 +0900
-> > > >
-> > > > > +     if (tb_sa[MACSEC_SA_ATTR_PN]) {
-> > > >
-> > > > validate_add_rxsa() requires that MACSET_SA_ATTR_PN be non-NULL, so
-> > > > you don't need to add this check here.
-> > > >
-> > >
-> > > validate_add_rxsa() did not originally contain that requirement.
-> > > It does exist in validate_add_txsa(), which means that providing a PN
-> > > is necessary only when creating TXSA.
-> > > When creating an RXSA without providing a PN it will be set to 1
-> > > (init_rx_sa+15).
-> > > This is the original behavior which of course can be changed.
-> > >
-> > > - Era.
-> >
-> > Sorry for the time issues, just noticed I sent the previous mail with
-> > future time.
-> > Fixed it permanently on my computer.
->
-> Hello, is there any news?
->
-> - Era.
+在 2020-08-19星期三的 11:54 +0100，Lee Jones写道：
+> Commit e49aa9a9bd22 ("mfd: core: Make a best effort attempt to match
+> devices with the correct of_nodes") changed the semantics for
+> disabled
+> devices in mfd_add_device().  Instead of silently ignoring a disabled
+> child device, an error was returned.  On receipt of the error
+> mfd_add_devices() the precedes to remove *all* child devices and
+> returns an all-failed error to the caller, which will inevitably fail
+> the parent device as well.
+> 
+> This patch reverts back to the old semantics and ignores child
+> devices
+> which are disabled in Device Tree.
+> 
+> Fixes: e49aa9a9bd22 ("mfd: core: Make a best effort attempt to match
+> devices with the correct of_nodes")
+> Reported-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-This patch is important to help projects like iproute2 use XPN macsec links.
-Please let me know if there is anything I need to fix.
+Tested-by: Icenowy Zheng <icenowy@aosc.io>
 
-- Era.
+> ---
+>  drivers/mfd/mfd-core.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index c3651f06684fa..30f90a15ceaab 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -126,10 +126,6 @@ static int mfd_match_of_node_to_dev(struct
+> platform_device *pdev,
+>  	const __be32 *reg;
+>  	u64 of_node_addr;
+>  
+> -	/* Skip devices 'disabled' by Device Tree */
+> -	if (!of_device_is_available(np))
+> -		return -ENODEV;
+> -
+>  	/* Skip if OF node has previously been allocated to a device */
+>  	list_for_each_entry(of_entry, &mfd_of_node_list, list)
+>  		if (of_entry->np == np)
+> @@ -212,6 +208,12 @@ static int mfd_add_device(struct device *parent,
+> int id,
+>  	if (IS_ENABLED(CONFIG_OF) && parent->of_node && cell-
+> >of_compatible) {
+>  		for_each_child_of_node(parent->of_node, np) {
+>  			if (of_device_is_compatible(np, cell-
+> >of_compatible)) {
+> +				/* Ignore 'disabled' devices error free
+> */
+> +				if (!of_device_is_available(np)) {
+> +					ret = 0;
+> +					goto fail_alias;
+> +				}
+> +
+>  				ret = mfd_match_of_node_to_dev(pdev,
+> np, cell);
+>  				if (ret == -EAGAIN)
+>  					continue;
